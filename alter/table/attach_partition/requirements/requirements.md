@@ -24,7 +24,7 @@
 * 9 [Attach Partition or Part From the Detached Folder](#attach-partition-or-part-from-the-detached-folder)
     * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart](#rqsrs-034clickhousealtertableattachpartitionorpart)
     * 9.2 [Conditions for Attaching Partition or Part from the Detached Folder](#conditions-for-attaching-partition-or-part-from-the-detached-folder)
-    * 9.3 [Role Based Access Control  ](#role-based-access-control-)
+    * 9.3 [Role Based Access Control When Attach Partition or Part From the Detached Folder](#role-based-access-control-when-attach-partition-or-part-from-the-detached-folder)
         * 9.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionorPart.RBAC  ](#rqsrs-034clickhousealtertableattachpartitionorpartrbac-)
 * 10 [Attach Partition From Another Table](#attach-partition-from-another-table)
     * 10.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom](#rqsrs-034clickhousealtertableattachpartitionfrom)
@@ -37,7 +37,7 @@
         * 10.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas](#rqsrs-034clickhousealtertableattachpartitionfromreplicas)
     * 10.6 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
         * 10.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards](#rqsrs-034clickhousealtertableattachpartitionfromshards)
-    * 10.7 [Conditions](#conditions)
+    * 10.7 [Conditions when Attach Partition From Another Table](#conditions-when-attach-partition-from-another-table)
         * 10.7.1 [Tables With Different Structure](#tables-with-different-structure)
             * 10.7.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Structure](#rqsrs-034clickhousealtertableattachpartitionfromconditionsdifferentstructure)
         * 10.7.2 [Tables With Different `ORDER BY` Key](#tables-with-different-order-by-key)
@@ -50,7 +50,7 @@
             * 10.7.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionsdifferentindicesandprojections)
         * 10.7.6 [Tables With Different Partition Key](#tables-with-different-partition-key)
             * 10.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionsdifferentkeypartitionkey)
-    * 10.8 [Role Based Access Control](#role-based-access-control)
+    * 10.8 [Role Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
         * 10.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC](#rqsrs-034clickhousealtertableattachpartitionrbac)
 * 11 [References](#references)
 
@@ -176,7 +176,7 @@ After the query is executed the data SHALL be immediately available for querying
 
 ...
 
-### Role Based Access Control  
+### Role Based Access Control When Attach Partition or Part From the Detached Folder
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionorPart.RBAC  
 version: 1.0
@@ -235,7 +235,7 @@ version: 1.0
 
 [ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on tables that are on different shards.
 
-### Conditions
+### Conditions when Attach Partition From Another Table
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` only when,
 
@@ -290,7 +290,7 @@ version: 1.0
 [ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the target table has more granular partitioning than the [source table]. 
 Is is allowed to attach partition from the table with different partition expression when destination partition expression does not re-partition.
 
-### Role Based Access Control
+### Role Based Access Control when Attach Partition From Another Table
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC
 version: 1.0
