@@ -21,7 +21,11 @@ def feature(self):
 
     with Pool(5) as executor:
         for name in aggregate_functions:
-            func = f"hex({name}State({{params}}))"
+            if "alias" in name:
+                name_ = name.replace("_alias", "")
+                func = f"hex({name_}State({{params}}))"
+            else:
+                func = f"hex({name}State({{params}}))"
             try:
                 scenario = load(f"aggregate_functions.tests.{name}", "scenario")
             except ModuleNotFoundError as e:
