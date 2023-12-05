@@ -420,8 +420,12 @@ def regression(
     if storages is None:
         storages = ["minio"]
 
+    regression_storage_module = None
+    regression_storage_kwargs = {}
+
     if "minio" in storages:
-        minio_regression(
+        regression_storage_module = minio_regression
+        regression_storage_kwargs = dict(
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
@@ -431,7 +435,8 @@ def regression(
         )
 
     if "aws_s3" in storages:
-        aws_s3_regression(
+        regression_storage_module = aws_s3_regression
+        regression_storage_kwargs = dict(
             bucket=aws_s3_bucket,
             region=aws_s3_region,
             key_id=aws_s3_key_id,
@@ -442,7 +447,8 @@ def regression(
         )
 
     if "gcs" in storages:
-        gcs_regression(
+        regression_storage_module = gcs_regression
+        regression_storage_kwargs = dict(
             uri=gcs_uri,
             key_id=gcs_key_id,
             access_key=gcs_key_secret,
@@ -450,6 +456,10 @@ def regression(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
         )
+
+    assert regression_storage_module is not None
+
+    Module(test=regression_storage_module)(**regression_storage_kwargs)
 
 
 if main():
