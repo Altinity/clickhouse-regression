@@ -163,6 +163,9 @@ Regressions:
 * Net Exception: Cannot assign requested address when trying to insert data from the s3 storage  
   https://github.com/ClickHouse/ClickHouse/issues/56678
 
+* Starting 23.8 MemoryTracker messages will be ignored if the amount is too small
+  https://github.com/ClickHouse/ClickHouse/issues/57522
+  https://github.com/mymarilyn/clickhouse-driver/issues/403
 
 * TBD
 
