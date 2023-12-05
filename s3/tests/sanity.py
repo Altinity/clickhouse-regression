@@ -71,7 +71,7 @@ def sanity(self, policy, server="clickhouse1"):
 
 
 @TestFeature
-@Name("aws s3 sanity")
+@Name("sanity")
 def aws_s3(self, uri, key_id, access_key, node="clickhouse1"):
     """Check that S3 storage is working correctly by
     storing data using different S3 policies.
@@ -104,7 +104,7 @@ def aws_s3(self, uri, key_id, access_key, node="clickhouse1"):
 
 
 @TestFeature
-@Name("minio sanity")
+@Name("sanity")
 def minio(self, uri, key, secret, node="clickhouse1"):
     """Check that S3 storage is working correctly by
     storing data using different S3 policies.

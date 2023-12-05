@@ -1041,7 +1041,7 @@ def s3_disk(self):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_AWSS3Backup("1.0"))
-@Name("aws s3 backup")
+@Name("backup")
 def aws_s3(self, uri, access_key, key_id, bucket, region, node="clickhouse1"):
     """Test manual backup and metadata back up with aws s3 storage."""
     self.context.node = self.context.cluster.node(node)
@@ -1059,7 +1059,7 @@ def aws_s3(self, uri, access_key, key_id, bucket, region, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_GCSBackup("1.0"))
-@Name("gcs backup")
+@Name("backup")
 def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     """Test manual backup and metadata back up with gcs storage."""
     self.context.node = self.context.cluster.node(node)
@@ -1076,7 +1076,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_MinIOBackup("1.0"))
-@Name("minio backup")
+@Name("backup")
 def minio(self, uri, key, secret, node="clickhouse1"):
     """Test manual backup and metadata back up with minio storage."""
     self.context.node = self.context.cluster.node(node)

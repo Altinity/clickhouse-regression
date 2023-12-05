@@ -2228,7 +2228,7 @@ def outline(self):
     else:
         self.context.zero_copy_replication_setting = "allow_s3_zero_copy_replication"
 
-    self.context.zero_copy_replication_setting = "allow_object_storage_vfs"
+    # self.context.zero_copy_replication_setting = "allow_object_storage_vfs"
 
     with Given("I have two S3 disks configured"):
         uri_tiered = self.context.uri + "tiered/"
@@ -2277,7 +2277,7 @@ def outline(self):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_AllowS3ZeroCopyReplication("1.0"))
-@Name("aws s3 zero copy replication")
+@Name("zero copy replication")
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
@@ -2292,7 +2292,7 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_AllowS3ZeroCopyReplication("1.0"))
-@Name("gcs zero copy replication")
+@Name("zero copy replication")
 def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     skip("GCS is not supported for zero copy replication")
     self.context.node = self.context.cluster.node(node)
@@ -2308,7 +2308,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_AllowS3ZeroCopyReplication("1.0"))
-@Name("minio zero copy replication")
+@Name("zero copy replication")
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"

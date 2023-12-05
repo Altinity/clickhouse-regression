@@ -2744,7 +2744,7 @@ def disk_tests(self):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS("1.0"), RQ_SRS_015_S3_AWS_Disk_Configuration("1.0"))
-@Name("aws s3 disk")
+@Name("disk")
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
@@ -2759,7 +2759,7 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS("1.0"), RQ_SRS_015_S3_GCS_Disk_Configuration("1.0"))
-@Name("gcs disk")
+@Name("disk")
 def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "gcs"
@@ -2776,7 +2776,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO("1.0"), RQ_SRS_015_S3_MinIO_Disk_Configuration("1.0"))
-@Name("minio disk")
+@Name("disk")
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"

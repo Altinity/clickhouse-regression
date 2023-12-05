@@ -106,6 +106,12 @@ def argparser(parser):
         default=os.getenv("GCS_KEY_SECRET"),
     )
 
+    parser.add_argument(
+        "--with-vfs",
+        help="Enable allow_object_storage_vfs",
+        action='store_true',
+    )
+
 
 xfails = {
     ":/compression/:": [
@@ -119,86 +125,83 @@ xfails = {
     ":/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
     ],
-    "disk invalid/GCS": [
+    ":/gcs/disk invalid/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
-    ":/:/:zero copy replication/alter": [
+    ":/:/zero copy replication/alter": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
     ],
-    ":/:/:zero copy replication/alter repeat": [
+    ":/:/zero copy replication/alter repeat": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
     ],
-    ":/:/:zero copy replication/ttl move": [
+    ":/:/zero copy replication/ttl move": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/:/:zero copy replication/ttl delete": [
+    ":/:/zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/:/:zero copy replication/GCS": [
+    ":/gcs/zero copy replication/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
-    ":/:/:zero copy replication/delete": [(Fail, "Under investigation")],
-    "aws s3 zero copy replication/:": [(Fail, "Under investigation")],
-    "minio backup/:/alter freeze": [(Fail, "External disks do not create backups")],
-    "minio disk/environment credentials/:": [
+    ":/:/zero copy replication/delete": [(Fail, "Under investigation")],
+    ":/aws s3/zero copy replication/:": [(Fail, "Under investigation")],
+    ":/minio/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
+    ":/minio/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
-    "gcs disk/environment credentials/:": [
+    ":/gcs/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
-    ": backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
-    "aws s3 backup/:/:": [
+    ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
+    ":/aws s3/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
     ],
-    ":/s3 disk/metadata restore two tables": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30527")
-    ],
-    "minio zero copy replication/performance alter": [
+    ":/minio/zero copy replication/performance alter": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "minio zero copy replication/performance select": [
+    ":/minio/zero copy replication/performance select": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "gcs table function/wildcard/:": [
+    ":/gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
     ],
-    ":/:/: disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
-    "gcs disk/delete/gcs truncate err log": [
+    ":/:/disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
+    ":/gcs/disk/delete/gcs truncate err log": [
         (Fail, "Exception appears in error log but not in ClickHouse.")
     ],
-    "aws s3 table function/ssec/:": [
+    ":/aws s3/table function/ssec/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    "aws s3 table function/ssec/:/:": [
+    ":/aws s3/table function/ssec/:/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    "aws s3 table function/ssec encryption check": [
+    ":/aws s3/table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
-    ":/:/: disk/low cardinality offset": [
+    ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
 }
 
 ffails = {
-    "minio disk/environment credentials": (Skip, "timeout"),
-    "gcs disk/environment credentials": (Skip, "timeout"),
-    "aws s3 backup": (
+    ":/minio/disk/environment credentials": (Skip, "AWS S3 credentials not set for minio tests."),
+    ":/gcs/disk/environment credentials": (Skip, "AWS S3 credentials not set for gcs tests."),
+    ":/aws s3/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
     ),
-    "gcs backup": (
+    ":/gcs/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
     ),
-    "aws s3 disk/ssec": (Skip, "SSEC option with disk not working"),
-    "aws s3 table function/ssec encryption check": (
+    ":/aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
+    ":/aws s3/table function/ssec encryption check": (
         Skip,
         "SSEC currently not working. Timeout",
     ),
-    ":/:/: backup/:/metadata:": (
+    ":/:/backup/:/metadata:": (
         XFail,
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
@@ -427,6 +430,7 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     stress,
+    with_vfs,
 ):
     """S3 Storage regression."""
 
@@ -474,8 +478,10 @@ def regression(
 
     assert storage_module is not None
 
-    # Module(test=normal_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
-    Module(test=vfs_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
+    if with_vfs:
+        Module(test=vfs_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
+    else:
+        Module(test=normal_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
 
 
 if main():
