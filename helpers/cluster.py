@@ -319,7 +319,7 @@ class ClickHouseNode(Node):
                 "export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_TIME_US=10000"
             )
 
-    def wait_clickhouse_healthy(self, timeout=300):
+    def wait_clickhouse_healthy(self, timeout=300, check_version=True):
         with By(f"waiting until ClickHouse server on {self.name} is healthy"):
             for attempt in retries(timeout=timeout, delay=1):
                 with attempt:
@@ -330,13 +330,17 @@ class ClickHouseNode(Node):
                         != 0
                     ):
                         fail("ClickHouse server is not healthy")
-            node_version = self.query(
-                "SELECT version()", no_checks=1, steps=False
-            ).output
-            if current().context.clickhouse_version is None:
-                current().context.clickhouse_version = node_version
-            else:
-                assert check_clickhouse_version(f"={node_version}")(current()), error()
+
+            if check_version:
+                node_version = self.query(
+                    "SELECT version()", no_checks=1, steps=False
+                ).output
+                if current().context.clickhouse_version is None:
+                    current().context.clickhouse_version = node_version
+                else:
+                    assert check_clickhouse_version(f"={node_version}")(
+                        current()
+                    ), error()
 
     def clickhouse_pid(self):
         """Return ClickHouse server pid if present
@@ -382,6 +386,7 @@ class ClickHouseNode(Node):
         retry_count=5,
         user=None,
         thread_fuzzer=False,
+        check_version=True,
     ):
         """Start ClickHouse server."""
         pid = self.clickhouse_pid()
@@ -425,7 +430,7 @@ class ClickHouseNode(Node):
                         fail("no pid file yet")
 
         if wait_healthy:
-            self.wait_clickhouse_healthy(timeout=timeout)
+            self.wait_clickhouse_healthy(timeout=timeout, check_version=check_version)
 
     def restart_clickhouse(
         self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None
@@ -1381,7 +1386,11 @@ class Cluster(object):
 
             for name in self.nodes["clickhouse"]:
                 self.node(name).wait_healthy()
-                if name.startswith("clickhouse"):
+                if name.startswith("clickhouse-2"):
+                    self.node(name).start_clickhouse(
+                        thread_fuzzer=self.thread_fuzzer, check_version=False
+                    )
+                elif name.startswith("clickhouse"):
                     self.node(name).start_clickhouse(thread_fuzzer=self.thread_fuzzer)
 
         self.running = True
