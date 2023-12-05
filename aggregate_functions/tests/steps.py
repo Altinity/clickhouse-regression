@@ -124,6 +124,8 @@ aggregate_functions = [
     "sumKahan",
     "sumMap",
     "minMap",
+    "minMap_alias",
+    "maxMap_alias",
     "maxMap",
     "sumMapFiltered",
     "sumMapFilteredWithOverflow",
