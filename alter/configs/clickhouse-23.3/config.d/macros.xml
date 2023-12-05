@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <macros>
+        <replica>clickhouse-23-3</replica>
+        <shard>01</shard>
+        <shard2>04</shard2>
+    </macros>
+</clickhouse>
