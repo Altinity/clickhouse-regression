@@ -27,7 +27,7 @@ def global_setting(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -147,7 +147,7 @@ def drop_replica(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -308,7 +308,7 @@ def add_replica(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -500,7 +500,7 @@ def drop_alter_replica(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -646,7 +646,7 @@ def metadata(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with mergetree_config(settings):
         try:
@@ -753,10 +753,8 @@ def alter(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {
-            self.context.zero_copy_replication_setting: "1",
-            "old_parts_lifetime": "5",
-        }
+        settings = self.context.zero_copy_replication_settings.copy()
+        settings["old_parts_lifetime"] = "1"
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -940,10 +938,8 @@ def alter_repeat(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {
-            self.context.zero_copy_replication_setting: "1",
-            "old_parts_lifetime": "5",
-        }
+        settings = self.context.zero_copy_replication_settings.copy()
+        settings["old_parts_lifetime"] = "1"
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1063,7 +1059,7 @@ def insert_multiple_replicas(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1226,7 +1222,7 @@ def delete(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1329,7 +1325,7 @@ def delete_all(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1424,10 +1420,8 @@ def ttl_move(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {
-            self.context.zero_copy_replication_setting: "1",
-            "old_parts_lifetime": "5",
-        }
+        settings = self.context.zero_copy_replication_settings.copy()
+        settings["old_parts_lifetime"] = "1"
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1590,7 +1584,7 @@ def ttl_delete(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1733,7 +1727,7 @@ def performance_insert(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     try:
         with When("I create a replicated table on each node"):
@@ -1810,7 +1804,7 @@ def performance_select(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     try:
         with When("I create a replicated table on each node"):
@@ -1929,7 +1923,7 @@ def performance_alter(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     try:
         with When("I create a replicated table on each node"):
@@ -2097,7 +2091,7 @@ def consistency_during_double_mutation(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -2221,14 +2215,16 @@ def consistency_during_conflicting_mutation(self):
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
+
     if check_clickhouse_version(">=21.8")(self):
-        self.context.zero_copy_replication_setting = (
-            "allow_remote_fs_zero_copy_replication"
-        )
+        self.context.zero_copy_replication_setting = "allow_remote_fs_zero_copy_replication"
     else:
         self.context.zero_copy_replication_setting = "allow_s3_zero_copy_replication"
 
-    # self.context.zero_copy_replication_setting = "allow_object_storage_vfs"
+    if self.context.allow_object_storage_vfs_enabled:
+        self.context.zero_copy_replication_settings = {}
+    else:
+        self.context.zero_copy_replication_settings = {self.context.zero_copy_replication_setting: "1"}
 
     with Given("I have two S3 disks configured"):
         uri_tiered = self.context.uri + "tiered/"

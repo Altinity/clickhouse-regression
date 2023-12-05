@@ -435,6 +435,7 @@ def regression(
     """S3 Storage regression."""
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.allow_object_storage_vfs_enabled = with_vfs
 
     if storages is None:
         storages = ["minio"]
