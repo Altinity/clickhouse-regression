@@ -125,7 +125,7 @@ def s3_disk(self):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AutomaticReconnects_AWS("1.0"))
-@Name("aws s3 reconnect")
+@Name("reconnect")
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     """Check that ClickHouse reconnects to aws s3."""
     self.context.node = self.context.cluster.node(node)
@@ -140,7 +140,7 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AutomaticReconnects_GCS("1.0"))
-@Name("gcs reconnect")
+@Name("reconnect")
 def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     """Check that ClickHouse reconnects to gcs."""
     self.context.node = self.context.cluster.node(node)
@@ -155,7 +155,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AutomaticReconnects_MinIO("1.0"))
-@Name("minio reconnect")
+@Name("reconnect")
 def minio(self, uri, key, secret, node="clickhouse1"):
     """Check that ClickHouse reconnects to minio."""
     self.context.node = self.context.cluster.node(node)

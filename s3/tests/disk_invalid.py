@@ -331,7 +331,7 @@ def outline(self):
 
 
 @TestFeature
-@Name("aws s3 invalid disk")
+@Name("invalid disk")
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
@@ -343,7 +343,7 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
 
 
 @TestFeature
-@Name("gcs invalid disk")
+@Name("invalid disk")
 def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "gcs"
@@ -355,7 +355,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 
 
 @TestFeature
-@Name("minio invalid disk")
+@Name("invalid disk")
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"
