@@ -122,22 +122,22 @@ xfails = {
     "disk invalid/GCS": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
-    ":zero copy replication/alter": [
+    ":/:/:zero copy replication/alter": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
     ],
-    ":zero copy replication/alter repeat": [
+    ":/:/:zero copy replication/alter repeat": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
     ],
-    ":zero copy replication/ttl move": [
+    ":/:/:zero copy replication/ttl move": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":zero copy replication/ttl delete": [
+    ":/:/:zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":zero copy replication/GCS": [
+    ":/:/:zero copy replication/GCS": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
-    ":zero copy replication/delete": [(Fail, "Under investigation")],
+    ":/:/:zero copy replication/delete": [(Fail, "Under investigation")],
     "aws s3 zero copy replication/:": [(Fail, "Under investigation")],
     "minio backup/:/alter freeze": [(Fail, "External disks do not create backups")],
     "minio disk/environment credentials/:": [
@@ -164,7 +164,7 @@ xfails = {
     "gcs table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
     ],
-    ": disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
+    ":/:/: disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
     "gcs disk/delete/gcs truncate err log": [
         (Fail, "Exception appears in error log but not in ClickHouse.")
     ],
@@ -177,7 +177,7 @@ xfails = {
     "aws s3 table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
-    ": disk/low cardinality offset": [
+    ":/:/: disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
 }
@@ -198,16 +198,17 @@ ffails = {
         Skip,
         "SSEC currently not working. Timeout",
     ),
-    ": backup/:/metadata:": (
+    ":/:/: backup/:/metadata:": (
         XFail,
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
-    ":disk/cache*": (
+    ":/:/:disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
+    "vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
 }
 
 
@@ -387,6 +388,20 @@ def gcs_regression(
             uri=uri, key_id=key_id, access_key=access_key
         )
 
+@TestModule
+@Name("normal")
+def normal_regression(self, storage_module, storage_kwargs):
+    Module(test=storage_module)(**storage_kwargs)
+
+@TestModule
+@Name("vfs")
+def vfs_regression(self, storage_module, storage_kwargs):
+    if check_clickhouse_version("<23.11")(self):
+        skip("Not supported < 23.11")
+    settings = {"allow_object_storage_vfs":"1"}
+    mergetree_config(config_file="enable_vfs.xml", restart=True, settings=settings)
+    Module(test=storage_module)(**storage_kwargs)
+
 
 @TestModule
 @Name("s3")
@@ -420,12 +435,12 @@ def regression(
     if storages is None:
         storages = ["minio"]
 
-    regression_storage_module = None
-    regression_storage_kwargs = {}
+    storage_module = None
+    storage_kwargs = {}
 
     if "minio" in storages:
-        regression_storage_module = minio_regression
-        regression_storage_kwargs = dict(
+        storage_module = minio_regression
+        storage_kwargs = dict(
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
@@ -435,8 +450,8 @@ def regression(
         )
 
     if "aws_s3" in storages:
-        regression_storage_module = aws_s3_regression
-        regression_storage_kwargs = dict(
+        storage_module = aws_s3_regression
+        storage_kwargs = dict(
             bucket=aws_s3_bucket,
             region=aws_s3_region,
             key_id=aws_s3_key_id,
@@ -447,8 +462,8 @@ def regression(
         )
 
     if "gcs" in storages:
-        regression_storage_module = gcs_regression
-        regression_storage_kwargs = dict(
+        storage_module = gcs_regression
+        storage_kwargs = dict(
             uri=gcs_uri,
             key_id=gcs_key_id,
             access_key=gcs_key_secret,
@@ -457,9 +472,10 @@ def regression(
             collect_service_logs=collect_service_logs,
         )
 
-    assert regression_storage_module is not None
+    assert storage_module is not None
 
-    Module(test=regression_storage_module)(**regression_storage_kwargs)
+    # Module(test=normal_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
+    Module(test=vfs_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
 
 
 if main():
