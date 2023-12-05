@@ -89,7 +89,7 @@ def query_0(self, filename: str, database: str):
 
 @TestStep
 def query_1(self, filename: str, database: str):
-    r = "SELECT pickup_ntaname, count(*) AS count FROM {filename} GROUP BY pickup_ntaname ORDER BY count DESC LIMIT 10;"
+    r = "SELECT pickup_longitude, count(*) AS count FROM {filename} GROUP BY pickup_longitude ORDER BY count DESC LIMIT 10;"
 
     clickhouse_query = r.format(filename=f"file({filename})")
     duckdb_query = r.format(filename=f"'/data1/{filename}'")
@@ -144,10 +144,10 @@ def query_4(self, filename: str, database: str):
 @TestStep
 def query_5(self, filename: str, database: str):
     clickhouse_query = (
-        f"SELECT MIN(pickup_datetime), MAX(pickup_datetime) FROM file('{filename}');"
+        f"SELECT MIN(pickup_date), MAX(pickup_date) FROM file('{filename}');"
     )
     duckdb_query = (
-        f"SELECT MIN(pickup_datetime), MAX(pickup_datetime) FROM '/data1/{filename}';"
+        f"SELECT MIN(pickup_date), MAX(pickup_date) FROM '/data1/{filename}';"
     )
 
     run_query(
@@ -160,8 +160,8 @@ def query_5(self, filename: str, database: str):
 
 @TestStep
 def query_6(self, filename: str, database: str):
-    clickhouse_query = f"SELECT trip_id, COUNT(*) FROM file('{filename}') GROUP BY trip_id ORDER BY COUNT(*) DESC LIMIT 10;;"
-    duckdb_query = f"SELECT trip_id, COUNT(*) FROM '/data1/{filename}' GROUP BY trip_id ORDER BY COUNT(*) DESC LIMIT 10;;"
+    clickhouse_query = f"SELECT id, COUNT(*) FROM file('{filename}') GROUP BY id ORDER BY COUNT(*) DESC LIMIT 10;;"
+    duckdb_query = f"SELECT id, COUNT(*) FROM '/data1/{filename}' GROUP BY id ORDER BY COUNT(*) DESC LIMIT 10;;"
 
     run_query(
         clickhouse_query=clickhouse_query,

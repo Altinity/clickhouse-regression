@@ -102,7 +102,9 @@ def regression(
     node="clickhouse1",
 ):
     """Alter regression."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+    nodes = {
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse-23-3")
+    }
 
     self.context.clickhouse_version = clickhouse_version
     self.context.storage = "minio"
