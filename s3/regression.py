@@ -212,7 +212,7 @@ ffails = {
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
-    ":/:/:disk/cache*": (
+    ":/:/disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
