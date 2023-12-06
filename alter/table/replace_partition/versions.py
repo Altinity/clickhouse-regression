@@ -99,6 +99,7 @@ def feature(self):
     Versions:
         ClickHouse 23.3
         ClickHouse 23.8
+        The version that is provided on a test program run
     """
     self.context.current_node = self.context.cluster.node("clickhouse1")
     self.context.node = self.context.cluster.node("clickhouse-23-3")
