@@ -231,7 +231,6 @@ def minio_regression(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    with_vfs,
 ):
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -250,35 +249,37 @@ def minio_regression(
 
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
-        if with_vfs:
+        if self.context.allow_object_storage_vfs_enabled:
             with Given("I enable allow_object_storage_vfs"):
                 add_vfs_config()
 
-        Feature(test=load("s3.tests.table_function", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.backup", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.table_function_invalid", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.disk", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.disk_invalid", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.sanity", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.reconnect", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
-        Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+        with Module(self.context.object_storage_mode):
+
+            Feature(test=load("s3.tests.table_function", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.backup", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.table_function_invalid", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.disk", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.disk_invalid", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.sanity", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.reconnect", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
+            Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
 
 
 @TestModule
@@ -292,7 +293,6 @@ def aws_s3_regression(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    with_vfs,
 ):
     """Setup and run aws s3 tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -331,34 +331,40 @@ def aws_s3_regression(
         self.context.cluster = cluster
         self.context.cluster.bucket = bucket
 
-        if with_vfs:
+        if self.context.allow_object_storage_vfs_enabled:
             with Given("I enable allow_object_storage_vfs"):
                 add_vfs_config()
 
-        Feature(test=load("s3.tests.table_function", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.disk", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.sanity", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.reconnect", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.backup", "aws_s3"))(
-            uri=uri, key_id=key_id, access_key=access_key, region=region, bucket=bucket
-        )
+        with Module(self.context.object_storage_mode):
+
+            Feature(test=load("s3.tests.table_function", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.disk", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.sanity", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.reconnect", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.backup", "aws_s3"))(
+                uri=uri,
+                key_id=key_id,
+                access_key=access_key,
+                region=region,
+                bucket=bucket,
+            )
 
 
 @TestModule
@@ -371,7 +377,6 @@ def gcs_regression(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    with_vfs,
 ):
     """Setup and run gcs tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -395,43 +400,30 @@ def gcs_regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        if with_vfs:
+        if self.context.allow_object_storage_vfs_enabled:
             with Given("I enable allow_object_storage_vfs"):
                 add_vfs_config()
 
-        Feature(test=load("s3.tests.table_function", "gcs"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.table_function_invalid", "gcs"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.disk", "gcs"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.disk_invalid", "gcs"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
-        Feature(test=load("s3.tests.backup", "gcs"))(
-            uri=uri, key_id=key_id, access_key=access_key
-        )
+        with Module(self.context.object_storage_mode):
 
-
-@TestModule
-@Name("normal")
-def normal_regression(self, storage_module, storage_kwargs):
-    Module(test=storage_module)(**storage_kwargs)
-
-
-@TestModule
-@Name("vfs")
-def vfs_regression(self, storage_module, storage_kwargs):
-    if check_clickhouse_version("<23.11")(self):
-        skip("Not supported < 23.11")
-
-    Module(test=storage_module)(with_vfs=True, **storage_kwargs)
+            Feature(test=load("s3.tests.table_function", "gcs"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.table_function_invalid", "gcs"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.disk", "gcs"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.disk_invalid", "gcs"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
+            Feature(test=load("s3.tests.backup", "gcs"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
 
 
 @TestModule
@@ -464,6 +456,12 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
     self.context.allow_object_storage_vfs_enabled = with_vfs
+    self.context.object_storage_mode = "normal"
+
+    if self.context.allow_object_storage_vfs_enabled:
+        self.context.object_storage_mode = "vfs"
+        if check_clickhouse_version("<23.11")(self):
+            skip("Not supported < 23.11")
 
     if storages is None:
         storages = ["minio"]
@@ -506,15 +504,7 @@ def regression(
         )
 
     assert storage_module is not None
-
-    if with_vfs:
-        Module(test=vfs_regression)(
-            storage_module=storage_module, storage_kwargs=storage_kwargs
-        )
-    else:
-        Module(test=normal_regression)(
-            storage_module=storage_module, storage_kwargs=storage_kwargs
-        )
+    Module(test=storage_module)(**storage_kwargs)
 
 
 if main():
