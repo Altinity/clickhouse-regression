@@ -41,7 +41,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 * [Ubuntu] 22.04
 * [Python 3] >= 3.8
 * [TestFlows] >= 1.9.51
-* [Docker Compose] == 1.29.2
+* [Docker Compose] V2
 
 ## [Prerequisites](#table-of-contents)
 
@@ -524,4 +524,4 @@ Artifacts: Specify whether to upload to internal or public s3 bucket. 'altinity-
 [TestFlows]: https://testflows.com
 [TestFlows Handbook]: https://testflows.com/handbook/
 [Docker]: https://www.docker.com/
-[Docker Compose]: https://docs.docker.com/compose/
+[Docker Compose]: https://docs.docker.com/compose/install/standalone/
