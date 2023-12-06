@@ -136,6 +136,8 @@ def feature(self):
         "uniqExact",  # problem on 23.8 aarch
         "welchTTest",  # problem on 22.8 aarch
         "studentTTest",
+        "sequenceCount",
+        "sequenceMatch"
     ]
 
     test_funcs = [i for i in aggregate_functions]
