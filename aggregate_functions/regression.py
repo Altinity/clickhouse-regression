@@ -11,7 +11,7 @@ from helpers.argparser import argparser
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version
 
-from aggregate_functions.tests.steps import aggregate_functions
+from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
@@ -134,6 +134,14 @@ def regression(
 
     with Pool(5) as executor:
         for name in aggregate_functions:
+            if name in window_functions:
+                scenario = load(
+                    f"aggregate_functions.tests.window_functions", "scenario"
+                )
+                Scenario(
+                    name=f"{name}", test=scenario, parallel=True, executor=executor
+                )(func=name)
+                continue
             try:
                 scenario = load(f"aggregate_functions.tests.{name}", "scenario")
             except ModuleNotFoundError:
@@ -149,7 +157,6 @@ def regression(
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
-
 
 
 if main():
