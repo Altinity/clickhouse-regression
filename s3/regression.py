@@ -249,11 +249,10 @@ def minio_regression(
 
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
-        if self.context.object_storage_mode == "vfs":
-            with Given("I enable allow_object_storage_vfs"):
-                add_vfs_config()
-
         with Module(self.context.object_storage_mode):
+            if self.context.object_storage_mode == "vfs":
+                with Given("I enable allow_object_storage_vfs"):
+                    add_vfs_config()
 
             Feature(test=load("s3.tests.table_function", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
@@ -331,11 +330,10 @@ def aws_s3_regression(
         self.context.cluster = cluster
         self.context.cluster.bucket = bucket
 
-        if self.context.object_storage_mode == "vfs":
-            with Given("I enable allow_object_storage_vfs"):
-                add_vfs_config()
-
         with Module(self.context.object_storage_mode):
+            if self.context.object_storage_mode == "vfs":
+                with Given("I enable allow_object_storage_vfs"):
+                    add_vfs_config()
 
             Feature(test=load("s3.tests.table_function", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
@@ -400,11 +398,10 @@ def gcs_regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        if self.context.object_storage_mode == "vfs":
-            with Given("I enable allow_object_storage_vfs"):
-                add_vfs_config()
-
         with Module(self.context.object_storage_mode):
+            if self.context.object_storage_mode == "vfs":
+                with Given("I enable allow_object_storage_vfs"):
+                    add_vfs_config()
 
             Feature(test=load("s3.tests.table_function", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
