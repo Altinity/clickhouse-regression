@@ -1,8 +1,8 @@
 version: '2.3'
 
 services:
-  clickhouse-22-8:
-    image: altinity/clickhouse-server:22.8.15.25.altinitystable
+  clickhouse-23-8:
+    image: altinity/clickhouse-server:23.8.5.17.altinitytest
     init: true
     expose:
       - "9000"
