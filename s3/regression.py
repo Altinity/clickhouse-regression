@@ -125,7 +125,7 @@ xfails = {
     ":/:/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
     ],
-    ":/gcs/disk invalid/:": [
+    "gcs/:/disk invalid/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
     ":/:/zero copy replication/alter": [
@@ -140,44 +140,44 @@ xfails = {
     ":/:/zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/gcs/zero copy replication/:": [
+    "gcs/:/zero copy replication/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
     ":/:/zero copy replication/delete": [(Fail, "Under investigation")],
-    ":/aws s3/zero copy replication/:": [(Fail, "Under investigation")],
-    ":/minio/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
-    ":/minio/disk/environment credentials/:": [
+    "aws s3/:/zero copy replication/:": [(Fail, "Under investigation")],
+    "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
+    "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
-    ":/gcs/disk/environment credentials/:": [
+    "gcs/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
     ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
-    ":/aws s3/backup/:/:": [
+    "aws s3/:/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
     ],
-    ":/minio/zero copy replication/performance alter": [
+    "minio/:/zero copy replication/performance alter": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    ":/minio/zero copy replication/performance select": [
+    "minio/:/zero copy replication/performance select": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    ":/gcs/table function/wildcard/:": [
+    "gcs/:/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
     ],
     ":/:/disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
-    ":/gcs/disk/delete/gcs truncate err log": [
+    "gcs/:/disk/delete/gcs truncate err log": [
         (Fail, "Exception appears in error log but not in ClickHouse.")
     ],
-    ":/aws s3/table function/ssec/:": [
+    "aws s3/:/table function/ssec/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    ":/aws s3/table function/ssec/:/:": [
+    "aws s3/:/table function/ssec/:/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    ":/aws s3/table function/ssec encryption check": [
+    "aws s3/:/table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
     ":/:/disk/low cardinality offset": [
@@ -186,24 +186,24 @@ xfails = {
 }
 
 ffails = {
-    ":/minio/disk/environment credentials": (
+    "minio/:/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for minio tests.",
     ),
-    ":/gcs/disk/environment credentials": (
+    "gcs/:/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    ":/aws s3/backup": (
+    "aws s3/:/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
     ),
-    ":/gcs/backup": (
+    "gcs/:/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
     ),
-    ":/aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
-    ":/aws s3/table function/ssec encryption check": (
+    "aws s3/:/disk/ssec": (Skip, "SSEC option with disk not working"),
+    "aws s3/:/table function/ssec encryption check": (
         Skip,
         "SSEC currently not working. Timeout",
     ),
@@ -217,7 +217,7 @@ ffails = {
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
-    "vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
+    ":/vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
 }
 
 
