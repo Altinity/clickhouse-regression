@@ -2224,7 +2224,7 @@ def outline(self):
     else:
         self.context.zero_copy_replication_setting = "allow_s3_zero_copy_replication"
 
-    if self.context.allow_object_storage_vfs_enabled:
+    if self.context.object_storage_mode == "vfs":
         self.context.zero_copy_replication_settings = {}
     else:
         self.context.zero_copy_replication_settings = {
