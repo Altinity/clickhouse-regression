@@ -155,6 +155,7 @@ def feature(
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
+    with_vfs=False,
     environ=None,
 ):
     """Execute tests for tiered storage feature."""
@@ -174,6 +175,10 @@ def feature(
 
         args = {"cluster": cluster}
         common_args = dict(args=args, flags=TE)
+
+        if with_vfs:
+            with Given("I enable allow_object_storage_vfs"):
+                add_vfs_config()
 
         with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
             Scenario(
@@ -385,10 +390,6 @@ def regression(
     elif with_s3gcs:
         name = "with s3gcs"
 
-    if with_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            add_vfs_config()
-
     Feature(name, test=feature)(
         local=local,
         clickhouse_binary_path=clickhouse_binary_path,
@@ -397,6 +398,7 @@ def regression(
         with_s3amazon=with_s3amazon,
         with_s3gcs=with_s3gcs,
         environ=environ,
+        with_vfs=with_vfs,
     )
 
 
