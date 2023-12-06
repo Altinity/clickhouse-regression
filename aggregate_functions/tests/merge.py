@@ -24,7 +24,7 @@ def array_on_duplicate_keys(ordered_pairs):
 
 @TestCheck
 def check(
-    self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False
+    self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False, is_parametric=False
 ):
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
@@ -49,7 +49,10 @@ def check(
         )
 
     with Then("I check the result"):
-        correct_form = func.replace(short_name, short_name + "Merge")
+        if is_parametric:
+            correct_form = func.replace(short_name, short_name + "Merge")
+        else:
+            correct_form = func + "Merge"
         execute_query(
             f"SELECT {correct_form}(state) FROM {self.context.table.name}",
             snapshot_name=snapshot_name,
@@ -57,7 +60,7 @@ def check(
 
 
 @TestScenario
-def merge(self, scenario, short_name):
+def merge(self, scenario, short_name, is_parametric):
     snapshot_id, func = scenario()
     snapshot_id = snapshot_id.lower().replace(
         "merge", "state"
@@ -122,6 +125,7 @@ def merge(self, scenario, short_name):
                             snapshot_name=name,
                             is_low_cardinality="LowCardinality" in datatypes,
                             short_name=short_name,
+                            is_parametric=is_parametric
                         )
         join()
 
@@ -138,8 +142,8 @@ def feature(self):
         "stochasticLinearRegression",
         "stochasticLogisticRegression",
         "sumMap",
-        "maxMap", 
-        "minMap", 
+        "maxMap",
+        "minMap",
         "quantileTDigestWeighted",
         "uniq",
         "uniqHLL12",  # problem on 22.8 and 23.8
@@ -149,6 +153,12 @@ def feature(self):
         "welchTTest",  # problem on 22.8 aarch
         "studentTTest",
     ]
+    parametric = ['histogram', 'windowFunnel', 'uniqUpTo', 'sumMapFiltered', 'exponentialMovingAverage',
+                  'groupArraySample', 'meanZTest', 'quantilesBFloat16', 'quantilesBFloat16Weighted',
+                  'quantilesDeterministic', 'quantilesExact', 'quantilesExactExclusive', 'quantilesExactLow',
+                  'quantilesExactHigh', 'quantilesExactInclusive', 'quantilesExactWeighted', 'quantilesTDigest',
+                  'quantilesTDigestWeighted', 'quantilesTiming', 'quantilesTimingWeighted', 'sparkbar', 'topK',
+                  'topKWeighted', 'quantiles']
 
     test_funcs = [i for i in aggregate_functions]
     for i in not_implemented:
@@ -163,11 +173,14 @@ def feature(self):
                 with Scenario(f"{name}Merge"):
                     skip(reason=f"{name}State() test is not implemented")
             else:
+                is_parametric = False
+                if name in parametric:
+                    is_parametric=True
                 Scenario(
                     f"{name}Merge",
                     description=f"Get snapshot name to retrieve state of {name} function",
                     test=merge,
                     parallel=True,
                     executor=executor,
-                )(scenario=scenario, short_name=name)
+                )(scenario=scenario, short_name=name, is_parametric=is_parametric)
         join()
