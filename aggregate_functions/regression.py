@@ -133,15 +133,9 @@ def regression(
         self.context.table.insert_test_data()
 
     with Pool(5) as executor:
-        for name in aggregate_functions:
-            if name in window_functions:
-                scenario = load(
-                    f"aggregate_functions.tests.window_functions", "scenario"
-                )
-                Scenario(
-                    name=f"{name}", test=scenario, parallel=True, executor=executor
-                )(func=name)
-                continue
+        for name in [
+            name for name in aggregate_functions if name not in window_functions
+        ]:
             try:
                 scenario = load(f"aggregate_functions.tests.{name}", "scenario")
             except ModuleNotFoundError:
@@ -153,6 +147,7 @@ def regression(
 
         join()
 
+    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
     Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
