@@ -23,7 +23,9 @@ def datatype(self, func, table, col1_name, col2_name):
 
 @TestScenario
 @Name("maxMappedArrays")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxMappedArrays("1.0"))
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxMappedArrays("1.0")
+)
 def scenario(
     self,
     func="maxMappedArrays({params})",

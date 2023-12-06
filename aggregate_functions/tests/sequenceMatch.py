@@ -6,6 +6,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceMatch,
 )
 
+
 @TestCheck
 def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
@@ -15,11 +16,18 @@ def datatype(self, func, table, col1_name, col2_name):
         f"SELECT {func_.format(params=params)} FROM {table.name} FORMAT JSONEachRow"
     )
 
+
 @TestScenario
 @Name("sequenceMatch")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceMatch("1.0"))
 def scenario(
-    self, func="sequenceMatch({params})", table=None, decimal=True, snapshot_id=None, date=True, datetime=True
+    self,
+    func="sequenceMatch({params})",
+    table=None,
+    decimal=True,
+    snapshot_id=None,
+    date=True,
+    datetime=True,
 ):
     """Check sequenceMatch parametric aggregate function"""
 
@@ -31,23 +39,17 @@ def scenario(
     with Check("constant"):
         func_ = func.replace("({params})", f"('(?1)(?2)')({{params}})")
         params = "1,1,1"
-        execute_query(
-            f"SELECT {func_.format(params=params)}"
-        )
+        execute_query(f"SELECT {func_.format(params=params)}")
 
     with Check("zero rows"):
         func_ = func.replace("({params})", f"('(?1)(?2)')({{params}})")
         params = "number, number=1, number=1"
-        execute_query(
-            f"SELECT {func_.format(params=params)} FROM numbers(0)"
-        )
+        execute_query(f"SELECT {func_.format(params=params)} FROM numbers(0)")
 
     with Check("single row"):
         func_ = func.replace("({params})", f"('(?1)(?2)')({{params}})")
         params = "number, number=1, number=1"
-        execute_query(
-            f"SELECT {func_.format(params=params)} FROM numbers(1)"
-        )
+        execute_query(f"SELECT {func_.format(params=params)} FROM numbers(1)")
 
     with Check("with group by"):
         func_ = func.replace("({params})", f"('(?1)(?2)')({{params}})")
@@ -136,15 +138,23 @@ def scenario(
                 for col1, col2 in permutations:
                     col1_name, col1_type = col1.name, col1.datatype.name
                     col2_name, col2_type = col2.name, col2.datatype.name
-                    if ((isinstance(unwrap(col1.datatype), Date) or isinstance(
-                        unwrap(col1.datatype), DateTime64)) and not (isinstance(unwrap(col2.datatype), Date) or isinstance(
-                        unwrap(col2.datatype), DateTime64))
+                    if (
+                        isinstance(unwrap(col1.datatype), Date)
+                        or isinstance(unwrap(col1.datatype), DateTime64)
+                    ) and not (
+                        isinstance(unwrap(col2.datatype), Date)
+                        or isinstance(unwrap(col2.datatype), DateTime64)
                     ):
                         Check(
                             f"{col1_type},{col2_type}",
                             test=datatype,
                             parallel=True,
                             executor=executor,
-                        )(func=func, table=table, col1_name=col1_name, col2_name=col2_name)
+                        )(
+                            func=func,
+                            table=table,
+                            col1_name=col1_name,
+                            col2_name=col2_name,
+                        )
 
                 join()

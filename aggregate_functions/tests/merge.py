@@ -49,6 +49,8 @@ def check(
         )
 
     with Then("I check the result"):
+        if "alias" in short_name:
+            short_name = short_name.replace("_alias", "")
         if is_parametric:
             correct_form = func.replace(short_name, short_name + "Merge")
         else:
@@ -152,6 +154,8 @@ def feature(self):
         "uniqExact",  # problem on 23.8 aarch
         "welchTTest",  # problem on 22.8 aarch
         "studentTTest",
+        "sequenceCount",
+        "sequenceMatch"
     ]
     parametric = ['histogram', 'windowFunnel', 'uniqUpTo', 'sumMapFiltered', 'exponentialMovingAverage',
                   'groupArraySample', 'meanZTest', 'quantilesBFloat16', 'quantilesBFloat16Weighted',
