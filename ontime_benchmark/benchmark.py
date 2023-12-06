@@ -65,6 +65,13 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
+    self.context.object_storage_mode = "normal"
+
+    if with_vfs:
+        self.context.object_storage_mode = "vfs"
+        if check_clickhouse_version("<23.11")(self):
+            skip("Not supported < 23.11")
+
     if storages is None:
         storages = ["minio"]
 
@@ -156,12 +163,8 @@ def regression(
                         },
                     }
 
-                self.context.object_storage_mode = "vfs" if with_vfs else "normal"
-
                 with Feature(self.context.object_storage_mode):
                     if self.context.object_storage_mode == "vfs":
-                        if check_clickhouse_version("<23.11")(self):
-                            skip("Not supported < 23.11")
                         with Given("I enable allow_object_storage_vfs"):
                             add_vfs_config()
 
