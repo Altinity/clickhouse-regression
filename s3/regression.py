@@ -210,17 +210,17 @@ ffails = {
     ":/:/backup/:/metadata:": (
         XFail,
         "Under development for 22.8 and newer.",
-        (lambda test: check_clickhouse_version(">=22.8")(test)),
+        check_clickhouse_version(">=22.8"),
     ),
     ":/:/disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
-        (lambda test: check_clickhouse_version(">=22.8")(test)),
+        check_clickhouse_version(">=22.8"),
     ),
     ":/:/invalid disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
-        (lambda test: check_clickhouse_version(">=22.8")(test)),
+        check_clickhouse_version(">=22.8"),
     ),
     ":/vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
 }
