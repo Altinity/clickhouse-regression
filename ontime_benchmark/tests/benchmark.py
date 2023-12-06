@@ -292,7 +292,9 @@ def zero_copy_replication(self, format=None):
         """
 
     with Given("I have merge tree configuration set to use zero copy replication"):
-        if check_clickhouse_version(">=21.8")(self):
+        if self.context.object_storage_mode == "vfs":
+            settings = {}
+        elif check_clickhouse_version(">=21.8")(self):
             settings = {"allow_remote_fs_zero_copy_replication": "1"}
         else:
             settings = {"allow_s3_zero_copy_replication": "1"}
