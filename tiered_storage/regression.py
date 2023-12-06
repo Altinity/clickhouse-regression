@@ -12,6 +12,7 @@ from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
+from s3.tests.common import add_vfs_config
 
 
 def argparser(parser):
@@ -85,6 +86,12 @@ def argparser(parser):
         help="S3 gcs key secret",
         type=Secret(name="gcs_key_secret"),
         default=os.getenv("GCS_KEY_SECRET"),
+    )
+
+    parser.add_argument(
+        "--with-vfs",
+        help="Enable allow_object_storage_vfs",
+        action="store_true",
     )
 
     return parser
@@ -331,6 +338,7 @@ def regression(
     gcs_key_secret=None,
     gcs_key_id=None,
     gcs_uri=None,
+    with_vfs=False,
 ):
     """Tiered Storage regression."""
     environ = {}
@@ -376,6 +384,10 @@ def regression(
         name = "with s3amazon"
     elif with_s3gcs:
         name = "with s3gcs"
+
+    if with_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            add_vfs_config()
 
     Feature(name, test=feature)(
         local=local,

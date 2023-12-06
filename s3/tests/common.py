@@ -469,6 +469,21 @@ def mergetree_config(
     return add_config(config, restart=restart, nodes=nodes)
 
 
+@TestStep(Given)
+def add_vfs_config(
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    config_file="enable_vfs.xml",
+    restart=True,
+    nodes=None,
+):
+    entries = {"merge_tree": {"allow_object_storage_vfs": "1"}}
+    config = create_xml_config_content(
+        entries, config_d_dir=config_d_dir, config_file=config_file
+    )
+    return add_config(config, restart=restart, nodes=nodes)
+
+
 @contextmanager
 def subshell(bash, command, name, prompt=None):
     def spawn(command):

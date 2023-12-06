@@ -51,6 +51,7 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     format,
+    with_vfs,
     node="clickhouse1",
 ):
     """Storage Benchmark."""
@@ -154,6 +155,10 @@ def regression(
                             }
                         },
                     }
+
+                if with_vfs:
+                    with Given("I enable allow_object_storage_vfs"):
+                        add_vfs_config()
 
                 with s3_storage(disks, policies, timeout=360):
                     Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
