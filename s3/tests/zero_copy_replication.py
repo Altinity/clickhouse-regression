@@ -288,6 +288,7 @@ def drop_replica(self):
                 minio_enabled=minio_enabled,
             )
 
+
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
 def add_replica(self):
@@ -2217,14 +2218,18 @@ def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
 
     if check_clickhouse_version(">=21.8")(self):
-        self.context.zero_copy_replication_setting = "allow_remote_fs_zero_copy_replication"
+        self.context.zero_copy_replication_setting = (
+            "allow_remote_fs_zero_copy_replication"
+        )
     else:
         self.context.zero_copy_replication_setting = "allow_s3_zero_copy_replication"
 
     if self.context.allow_object_storage_vfs_enabled:
         self.context.zero_copy_replication_settings = {}
     else:
-        self.context.zero_copy_replication_settings = {self.context.zero_copy_replication_setting: "1"}
+        self.context.zero_copy_replication_settings = {
+            self.context.zero_copy_replication_setting: "1"
+        }
 
     with Given("I have two S3 disks configured"):
         uri_tiered = self.context.uri + "tiered/"
