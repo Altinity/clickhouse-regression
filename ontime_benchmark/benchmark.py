@@ -156,14 +156,19 @@ def regression(
                         },
                     }
 
-                if with_vfs:
-                    with Given("I enable allow_object_storage_vfs"):
-                        add_vfs_config()
+                object_storage_mode = "vfs" if with_vfs else "normal"
 
-                with s3_storage(disks, policies, timeout=360):
-                    Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
-                        format=format
-                    )
+                with Feature(object_storage_mode):
+                    if object_storage_mode == "vfs":
+                        if check_clickhouse_version("<23.11")(self):
+                            skip("Not supported < 23.11")
+                        with Given("I enable allow_object_storage_vfs"):
+                            add_vfs_config()
+
+                    with s3_storage(disks, policies, timeout=360):
+                        Feature(
+                            test=load("ontime_benchmark.tests.benchmark", "feature")
+                        )(format=format)
 
 
 if main():

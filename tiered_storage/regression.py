@@ -139,6 +139,7 @@ xfails = {
 ffails = {
     ":/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
     "/tiered storage/with s3amazon/alter table policy": (XFail, "Investigating"),
+    ":/vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
 }
 
 
@@ -176,148 +177,164 @@ def feature(
         args = {"cluster": cluster}
         common_args = dict(args=args, flags=TE)
 
-        if with_vfs:
-            with Given("I enable allow_object_storage_vfs"):
-                add_vfs_config()
+        object_storage_mode = "vfs" if with_vfs else "normal"
 
-        with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
-            Scenario(
-                run=load("tiered_storage.tests.startup_and_queries", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.metadata", "scenario"), **common_args
-            )
-            Scenario(
-                run=load("tiered_storage.tests.no_changes_to_queries", "scenario"),
-                **common_args,
-            )
-            # Scenario(run=load("tiered_storage.tests.disk_config_either_keep_free_space_bytes_or_ratio", "scenario"), **common_args)
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.volume_config_either_max_data_part_size_bytes_or_ratio",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.system_tables", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.system_detached_parts", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.attach_or_replace_partition_different_policies",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.query_parser", "scenario"), **common_args
-            )
-            Scenario(
-                run=load("tiered_storage.tests.keep_free_space", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.no_warning_about_zero_max_data_part_size",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.round_robin", "scenario"), **common_args
-            )
-            Scenario(
-                run=load("tiered_storage.tests.max_data_part_size", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.jbod_overflow", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.start_stop_moves", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.mutate_to_another_disk", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.alter_table_policy", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.simple_replication_and_moves", "scenario"
-                ),
-                **common_args,
-            )
-            # Scenario(run=load("tiered_storage.tests.simple_replication_and_moves_no_space", "scenario"), **common_args)
-            Scenario(
-                run=load("tiered_storage.tests.download_appropriate_disk", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.download_appropriate_disk_advanced",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.download_appropriate_disk_max_data_part_size",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(run=load("tiered_storage.tests.rename", "scenario"), **common_args)
-            Scenario(run=load("tiered_storage.tests.freeze", "scenario"), **common_args)
-            Scenario(
-                run=load("tiered_storage.tests.double_move_while_select", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.background_move.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.alter_move.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.manual_move_with_downtime", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.merge_parts_different_volumes", "scenario"
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.merge_parts_different_volumes_no_space",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.ttl_moves.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.change_config_norestart.feature", "feature"
-                ),
-                **common_args,
-            )
+        with Feature(object_storage_mode):
+            if object_storage_mode == "vfs":
+                with Given("I enable allow_object_storage_vfs"):
+                    add_vfs_config()
+
+            with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
+                Scenario(
+                    run=load("tiered_storage.tests.startup_and_queries", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.metadata", "scenario"), **common_args
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.no_changes_to_queries", "scenario"),
+                    **common_args,
+                )
+                # Scenario(run=load("tiered_storage.tests.disk_config_either_keep_free_space_bytes_or_ratio", "scenario"), **common_args)
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.volume_config_either_max_data_part_size_bytes_or_ratio",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.system_tables", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.system_detached_parts", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.attach_or_replace_partition_different_policies",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.query_parser", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.keep_free_space", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.no_warning_about_zero_max_data_part_size",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.round_robin", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.max_data_part_size", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.jbod_overflow", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.start_stop_moves", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.mutate_to_another_disk", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.alter_table_policy", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.simple_replication_and_moves", "scenario"
+                    ),
+                    **common_args,
+                )
+                # Scenario(run=load("tiered_storage.tests.simple_replication_and_moves_no_space", "scenario"), **common_args)
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.download_appropriate_disk", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.download_appropriate_disk_advanced",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.download_appropriate_disk_max_data_part_size",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.rename", "scenario"), **common_args
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.freeze", "scenario"), **common_args
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.double_move_while_select", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.background_move.feature", "feature"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.alter_move.feature", "feature"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.manual_move_with_downtime", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.merge_parts_different_volumes", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.merge_parts_different_volumes_no_space",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.ttl_moves.feature", "feature"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.change_config_norestart.feature",
+                        "feature",
+                    ),
+                    **common_args,
+                )
 
 
 @TestModule
