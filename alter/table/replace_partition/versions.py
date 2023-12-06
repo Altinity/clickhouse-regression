@@ -49,6 +49,7 @@ def populate_table_with_data_and_replace_partition(
 
 @TestOutline
 def different_clickhouse_versions(self, node):
+    """Create destination and source tables and try to replace partition on a given node."""
     destination_table_name = f"destination_{getuid()}"
     source_table_name = f"source_{getuid()}"
     with Given(
@@ -90,6 +91,15 @@ def replace_partition_on_specified(self):
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Versions("1.0"))
 @Name("clickhouse versions")
 def feature(self):
+    """Check that replace partition works when there are multiple nodes in a cluster and each node has different
+    ClickHouse versions. Destination and source tables are created on one of the ClickHouse versions, and we try to
+    replace partition on each node.
+
+
+    Versions:
+        ClickHouse 23.3
+        ClickHouse 23.8
+    """
     self.context.current_node = self.context.cluster.node("clickhouse1")
     self.context.node = self.context.cluster.node("clickhouse-23-3")
     self.context.node_23_8 = self.context.cluster.node("clickhouse-23-8")
