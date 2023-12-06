@@ -49,6 +49,8 @@ def check(
         )
 
     with Then("I check the result"):
+        if "alias" in short_name:
+            short_name = short_name.replace("_alias", "")
         if is_parametric:
             correct_form = func.replace(short_name, short_name + "Merge")
         else:
