@@ -123,6 +123,7 @@ aggregate_functions = [
     "sumCount",
     "sumKahan",
     "sumMap",
+    "sumMap_alias",
     "minMap",
     "minMap_alias",
     "maxMap_alias",
