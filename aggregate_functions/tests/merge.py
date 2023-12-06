@@ -24,7 +24,14 @@ def array_on_duplicate_keys(ordered_pairs):
 
 @TestCheck
 def check(
-    self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False, is_parametric=False
+    self,
+    func,
+    datatypes,
+    hex_repr,
+    snapshot_name,
+    short_name,
+    is_low_cardinality=False,
+    is_parametric=False,
 ):
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
@@ -127,7 +134,7 @@ def merge(self, scenario, short_name, is_parametric):
                             snapshot_name=name,
                             is_low_cardinality="LowCardinality" in datatypes,
                             short_name=short_name,
-                            is_parametric=is_parametric
+                            is_parametric=is_parametric,
                         )
         join()
 
@@ -155,14 +162,34 @@ def feature(self):
         "welchTTest",  # problem on 22.8 aarch
         "studentTTest",
         "sequenceCount",
-        "sequenceMatch"
+        "sequenceMatch",
     ]
-    parametric = ['histogram', 'windowFunnel', 'uniqUpTo', 'sumMapFiltered', 'exponentialMovingAverage',
-                  'groupArraySample', 'meanZTest', 'quantilesBFloat16', 'quantilesBFloat16Weighted',
-                  'quantilesDeterministic', 'quantilesExact', 'quantilesExactExclusive', 'quantilesExactLow',
-                  'quantilesExactHigh', 'quantilesExactInclusive', 'quantilesExactWeighted', 'quantilesTDigest',
-                  'quantilesTDigestWeighted', 'quantilesTiming', 'quantilesTimingWeighted', 'sparkbar', 'topK',
-                  'topKWeighted', 'quantiles']
+    parametric = [
+        "histogram",
+        "windowFunnel",
+        "uniqUpTo",
+        "sumMapFiltered",
+        "exponentialMovingAverage",
+        "groupArraySample",
+        "meanZTest",
+        "quantilesBFloat16",
+        "quantilesBFloat16Weighted",
+        "quantilesDeterministic",
+        "quantilesExact",
+        "quantilesExactExclusive",
+        "quantilesExactLow",
+        "quantilesExactHigh",
+        "quantilesExactInclusive",
+        "quantilesExactWeighted",
+        "quantilesTDigest",
+        "quantilesTDigestWeighted",
+        "quantilesTiming",
+        "quantilesTimingWeighted",
+        "sparkbar",
+        "topK",
+        "topKWeighted",
+        "quantiles",
+    ]
 
     test_funcs = [i for i in aggregate_functions]
     for i in not_implemented:
@@ -179,7 +206,7 @@ def feature(self):
             else:
                 is_parametric = False
                 if name in parametric:
-                    is_parametric=True
+                    is_parametric = True
                 Scenario(
                     f"{name}Merge",
                     description=f"Get snapshot name to retrieve state of {name} function",
