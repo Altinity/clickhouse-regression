@@ -109,7 +109,7 @@ def argparser(parser):
     parser.add_argument(
         "--with-vfs",
         help="Enable allow_object_storage_vfs",
-        action='store_true',
+        action="store_true",
     )
 
 
@@ -186,8 +186,14 @@ xfails = {
 }
 
 ffails = {
-    ":/minio/disk/environment credentials": (Skip, "AWS S3 credentials not set for minio tests."),
-    ":/gcs/disk/environment credentials": (Skip, "AWS S3 credentials not set for gcs tests."),
+    ":/minio/disk/environment credentials": (
+        Skip,
+        "AWS S3 credentials not set for minio tests.",
+    ),
+    ":/gcs/disk/environment credentials": (
+        Skip,
+        "AWS S3 credentials not set for gcs tests.",
+    ),
     ":/aws s3/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
@@ -391,17 +397,19 @@ def gcs_regression(
             uri=uri, key_id=key_id, access_key=access_key
         )
 
+
 @TestModule
 @Name("normal")
 def normal_regression(self, storage_module, storage_kwargs):
     Module(test=storage_module)(**storage_kwargs)
+
 
 @TestModule
 @Name("vfs")
 def vfs_regression(self, storage_module, storage_kwargs):
     if check_clickhouse_version("<23.11")(self):
         skip("Not supported < 23.11")
-    settings = {"allow_object_storage_vfs":"1"}
+    settings = {"allow_object_storage_vfs": "1"}
     mergetree_config(config_file="enable_vfs.xml", restart=True, settings=settings)
     Module(test=storage_module)(**storage_kwargs)
 
@@ -480,9 +488,13 @@ def regression(
     assert storage_module is not None
 
     if with_vfs:
-        Module(test=vfs_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
+        Module(test=vfs_regression)(
+            storage_module=storage_module, storage_kwargs=storage_kwargs
+        )
     else:
-        Module(test=normal_regression)(storage_module=storage_module, storage_kwargs=storage_kwargs)
+        Module(test=normal_regression)(
+            storage_module=storage_module, storage_kwargs=storage_kwargs
+        )
 
 
 if main():
