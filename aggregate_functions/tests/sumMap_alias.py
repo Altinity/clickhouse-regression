@@ -9,9 +9,9 @@ from aggregate_functions.tests.maxMappedArrays import scenario as checks
 
 
 @TestScenario
-@Name("sumMappedArrays")
+@Name("sumMap_alias")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_SumMap("1.0"))
-def scenario(self, func="sumMappedArrays({params})", table=None, snapshot_id=None):
+def scenario(self, func="sumMap({params})", table=None, snapshot_id=None):
     """Check sumMap(sumMappedArrays) aggregate function by using the same tests as for maxMap(maxMappedArrays)."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
