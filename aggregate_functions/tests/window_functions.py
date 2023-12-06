@@ -13,9 +13,19 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import execute_query
+from aggregate_functions.tests.steps import window_functions
 
 
 @TestScenario
+def check(self, arguments, func, func_):
+    execute_query(
+        f"SELECT {func_}({arguments}) FROM values('sample_data Int8, sample_index Int8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))",
+        exitcode=36,
+        message=f"DB::Exception: The function '{func}' can only be used as a window function, not as an aggregate function: While executing AggregatingTransform.",
+    )
+
+
+@TestFeature
 @Name("window_functions")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LagInFrame("1.0"),
@@ -37,10 +47,7 @@ from aggregate_functions.tests.steps import execute_query
         "1.0"
     ),
 )
-def scenario(
-    self,
-    func,
-):
+def feature(self):
     """Check that window function can not be used as aggregate functions."""
 
     functions_with_two_arguments = [
@@ -56,18 +63,18 @@ def scenario(
         "exponentialTimeDecayedAvg",
     ]
 
-    if func in functions_with_two_arguments:
-        arguments = "sample_data,sample_index"
-    else:
-        arguments = "sample_data"
+    with Pool(5) as executor:
+        for func in window_functions:
+            if func in functions_with_two_arguments:
+                arguments = "sample_data,sample_index"
+            else:
+                arguments = "sample_data"
 
-    func_ = func
-    if func in parametric_functions:
-        func_ += "(5)"
+            func_ = func
+            if func in parametric_functions:
+                func_ += "(5)"
+            Scenario(name=f"{func}", test=check, parallel=True, executor=executor)(
+                func=func, arguments=arguments, func_=func_
+            )
 
-    with Check(f"expect error for {func} window function"):
-        execute_query(
-            f"SELECT {func_}({arguments}) FROM values('sample_data Int8, sample_index Int8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))",
-            exitcode=36,
-            message=f"DB::Exception: The function '{func}' can only be used as a window function, not as an aggregate function: While executing AggregatingTransform.",
-        )
+        join()
