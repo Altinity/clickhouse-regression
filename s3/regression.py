@@ -249,7 +249,7 @@ def minio_regression(
 
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
-        if self.context.allow_object_storage_vfs_enabled:
+        if self.context.object_storage_mode == "vfs":
             with Given("I enable allow_object_storage_vfs"):
                 add_vfs_config()
 
@@ -331,7 +331,7 @@ def aws_s3_regression(
         self.context.cluster = cluster
         self.context.cluster.bucket = bucket
 
-        if self.context.allow_object_storage_vfs_enabled:
+        if self.context.object_storage_mode == "vfs":
             with Given("I enable allow_object_storage_vfs"):
                 add_vfs_config()
 
@@ -400,7 +400,7 @@ def gcs_regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        if self.context.allow_object_storage_vfs_enabled:
+        if self.context.object_storage_mode == "vfs":
             with Given("I enable allow_object_storage_vfs"):
                 add_vfs_config()
 
@@ -455,10 +455,9 @@ def regression(
     """S3 Storage regression."""
 
     self.context.clickhouse_version = clickhouse_version
-    self.context.allow_object_storage_vfs_enabled = with_vfs
     self.context.object_storage_mode = "normal"
 
-    if self.context.allow_object_storage_vfs_enabled:
+    if with_vfs:
         self.context.object_storage_mode = "vfs"
         if check_clickhouse_version("<23.11")(self):
             skip("Not supported < 23.11")
