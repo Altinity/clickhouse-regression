@@ -217,6 +217,11 @@ ffails = {
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
+    ":/:/invalid disk/cache*": (
+        XFail,
+        "Under development for 22.8 and newer.",
+        (lambda test: check_clickhouse_version(">=22.8")(test)),
+    ),
     ":/vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
 }
 
