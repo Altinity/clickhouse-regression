@@ -103,7 +103,13 @@ def regression(
 ):
     """Alter regression."""
     nodes = {
-        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse-23-3")
+        "clickhouse": (
+            "clickhouse1",
+            "clickhouse2",
+            "clickhouse3",
+            "clickhouse-23-3",
+            "clickhouse-23-8",
+        )
     }
 
     self.context.clickhouse_version = clickhouse_version

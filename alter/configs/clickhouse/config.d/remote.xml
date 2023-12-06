@@ -18,6 +18,23 @@
                 </replica>
             </shard>
         </replicated_cluster>
+        <replicated_different_versions>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse-23-3</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse-23-8</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </replicated_different_versions>
         <!--
         <replicated_cluster_readonly>
             <shard>
