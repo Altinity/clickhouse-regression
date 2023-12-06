@@ -6,6 +6,8 @@ import hashlib
 import threading
 import tempfile
 import re
+import json
+import shutil
 
 from testflows._core.cli.arg.common import description
 
@@ -822,6 +824,7 @@ class Cluster(object):
         collect_service_logs=False,
         use_zookeeper_nodes=False,
         frame=None,
+        rm_instances_files=True,
     ):
         self._bash = {}
         self._control_shell = None
@@ -876,6 +879,9 @@ class Cluster(object):
             raise TypeError(
                 f"docker compose file '{docker_compose_file_path}' does not exist"
             )
+
+        if rm_instances_files:
+            shutil.rmtree(os.path.join(docker_compose_project_dir,"..","_instances"), ignore_errors=True)
 
         if self.clickhouse_binary_path:
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
@@ -1232,6 +1238,25 @@ class Cluster(object):
                     node=node,
                     command=f'echo -e "\n-- sending stop to: {node} --\n" >> /var/log/clickhouse-server/clickhouse-server.log',
                 )
+
+        # Edit permissions on server files for external manipulation
+        for node in self.nodes["clickhouse"]:
+            with self.lock:
+                container_id = self.node_container_id(node)
+
+            r = self.command(
+                node=None, command=f"docker inspect {container_id}", exitcode=0
+            )
+            mounts = json.loads(r.output)[0]["Mounts"]
+            docker_exposed_dirs = [
+                m["Destination"] for m in mounts if "_instances" in m["Source"]
+            ]
+
+            for exposed_dir in docker_exposed_dirs:
+                self.command(
+                    node=node, command=f"chmod a+rwX -R {exposed_dir}", no_checks=True
+                )
+
         try:
             bash = self.bash(None)
             with self.lock:
