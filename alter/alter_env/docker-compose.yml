@@ -32,7 +32,19 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-23.3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-23.3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-23.3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
 
+  clickhouse-23-8:
+    extends:
+      file: clickhouse-service-23-8.yml
+      service: clickhouse-23-8
+    hostname: clickhouse-23-8
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-23.8/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-23.8/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-23.8/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -132,6 +144,8 @@ services:
       clickhouse3:
         condition: service_healthy
       clickhouse-23-3:
+        condition: service_healthy
+      clickhouse-23-8:
         condition: service_healthy
       zookeeper:
         condition: service_healthy

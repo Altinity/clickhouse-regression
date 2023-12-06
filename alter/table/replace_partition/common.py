@@ -177,6 +177,7 @@ def replace_partition_and_validate_data(
     validate=None,
     exitcode=None,
     message=None,
+    node=None,
 ):
     """
     Replace partition and validate that the data on the destination table is the same data as on the source table.
@@ -195,7 +196,8 @@ def replace_partition_and_validate_data(
         validate (bool, optional): A flag determining whether to perform validation checks after the partition replacement.
         Defaults to True.
     """
-    node = self.context.node
+    if node is None:
+        node = self.context.node
 
     if validate is None:
         validate = True
@@ -225,6 +227,7 @@ def replace_partition_and_validate_data(
         sleep(delay_before)
 
         replace_partition(
+            node=node,
             destination_table=destination_table,
             source_table=source_table,
             partition=partition_to_replace,
@@ -237,6 +240,7 @@ def replace_partition_and_validate_data(
     if validate:
         with Then("checking that the partition was replaced on the destination table"):
             check_partition_was_replaced(
+                node=node,
                 destination_table=destination_table,
                 source_table=source_table,
                 source_table_before_replace=source_data_before,
