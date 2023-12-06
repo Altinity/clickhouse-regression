@@ -121,8 +121,8 @@ xfails = {
         (Fail, "GCS multi-part upload and download does not work")
     ],
     "table function/GCS/wildcard/:": [(Fail, "GCS path wildcards do not work")],
-    ":/generic url": [(Fail, "not yet supported")],
-    ":/:/remote host filter": [
+    ":/:/disk/generic url": [(Fail, "not yet supported")],
+    ":/:/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
     ],
     ":/gcs/disk invalid/:": [
