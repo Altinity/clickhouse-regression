@@ -151,6 +151,19 @@ aggregate_functions = [
     "windowFunnel",
 ]
 
+window_functions = [
+    "row_number",
+    "nth_value",
+    "rank",
+    "dense_rank",
+    "lagInFrame",
+    "leadInFrame",
+    "exponentialTimeDecayedSum",
+    "exponentialTimeDecayedMax",
+    "exponentialTimeDecayedCount",
+    "exponentialTimeDecayedAvg",
+]
+
 
 def permutations_with_replacement(n, r):
     """Return all possible permutations with replacement."""
@@ -178,7 +191,10 @@ def execute_query(
         if check_clickhouse_version(">=22.8")(current()):
             snapshot_name += ">=22.8"
 
-    assert "snapshot_id" in current().context, "test must set self.context.snapshot_id"
+    if message is None and exitcode is None:
+        assert (
+            "snapshot_id" in current().context
+        ), "test must set self.context.snapshot_id"
 
     with When("I execute query", description=sql):
         if format and not "FORMAT" in sql:
