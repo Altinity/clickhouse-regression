@@ -98,36 +98,34 @@ def argparser(parser):
 
 
 xfails = {
-    ":/manual move with downtime/*/all paths should start with :": [
+    ":/:/manual move with downtime/*/all paths should start with :": [
         (Fail, "https://altinity.atlassian.net/browse/CH-124")
     ],
-    ":/ttl moves/alter with existing parts": [(Fail, "not yet supported")],
-    ":/ttl moves/alter policy and ttl with existing parts": [
+    ":/:/ttl moves/alter with existing parts": [(Fail, "not yet supported")],
+    ":/:/ttl moves/alter policy and ttl with existing parts": [
         (Fail, "not yet supported")
     ],
-    ":/ttl moves/alter with merge": [(Fail, "not yet supported")],
-    ":/ttl moves/materialize ttl": [(Error, "not yet supported")],
-    ":/ttl moves/mutation update column in ttl": [(Error, "not yet supported")],
-    # ":/ttl moves/alter delete": [(Fail, "known issue")],
-    ":/double move while select": [(Fail, "not yet supported")],
-    ":/background move/concurrent read": [(Fail, "known issue")],
-    ":/disk space bytes": [(Fail, "not yet supported")],
-    ":/attach or replace partition different policies": [(Fail, "known issue")],
-    # ":/ttl moves/multi column ttl": [(Fail, "bug")],
-    ":/ttl moves/alter column in ttl/*": [
+    ":/:/ttl moves/alter with merge": [(Fail, "not yet supported")],
+    ":/:/ttl moves/materialize ttl": [(Error, "not yet supported")],
+    ":/:/ttl moves/mutation update column in ttl": [(Error, "not yet supported")],
+    ":/:/double move while select": [(Fail, "not yet supported")],
+    ":/:/background move/concurrent read": [(Fail, "known issue")],
+    ":/:/disk space bytes": [(Fail, "not yet supported")],
+    ":/:/attach or replace partition different policies": [(Fail, "known issue")],
+    ":/:/ttl moves/alter column in ttl/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39808")
     ],
-    ":/ttl moves/delete": [
+    ":/:/ttl moves/delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
-    ":/ttl moves/defaults to delete": [
+    ":/:/ttl moves/defaults to delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
-    ":/alter move/concurrent/concurrent alter move and drop": [(Fail, "unstable test")],
-    ":/alter move/concurrent/concurrent alter move insert and select": [
+    ":/:/alter move/concurrent/concurrent alter move and drop": [(Fail, "unstable test")],
+    ":/:/alter move/concurrent/concurrent alter move insert and select": [
         (Fail, "unstable test")
     ],
-    ":/query parser": [
+    ":/:/query parser": [
         (
             Fail,
             "Incorrect message https://github.com/ClickHouse/ClickHouse/pull/51854",
@@ -137,8 +135,8 @@ xfails = {
 }
 
 ffails = {
-    ":/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
-    "/tiered storage/with s3amazon/alter table policy": (XFail, "Investigating"),
+    ":/:/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
+    "/tiered storage/with s3amazon/:/alter table policy": (XFail, "Investigating"),
     ":/vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
 }
 
