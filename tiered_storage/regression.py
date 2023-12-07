@@ -131,7 +131,7 @@ xfails = {
 ffails = {
     ":/:/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
     "/tiered storage/with s3amazon/:/alter table policy": (XFail, "Investigating"),
-    ":/vfs": (Skip, "Not supported < 23.11", check_clickhouse_version("<23.11")),
+    ":/vfs": (Skip, "vfs not supported on < 23.11", check_clickhouse_version("<23.11")),
 }
 
 
