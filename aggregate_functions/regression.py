@@ -11,7 +11,7 @@ from helpers.argparser import argparser
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version
 
-from aggregate_functions.tests.steps import aggregate_functions
+from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
@@ -132,8 +132,12 @@ def regression(
     with And("I populate table with test data"):
         self.context.table.insert_test_data()
 
+    Feature(run=load("aggregate_functions.tests.function_list", "feature"))
+
     with Pool(5) as executor:
-        for name in aggregate_functions:
+        for name in [
+            name for name in aggregate_functions if name not in window_functions
+        ]:
             try:
                 scenario = load(f"aggregate_functions.tests.{name}", "scenario")
             except ModuleNotFoundError:
@@ -145,11 +149,11 @@ def regression(
 
         join()
 
+    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
     Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
-
 
 
 if main():
