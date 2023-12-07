@@ -54,7 +54,9 @@ xfails = {
 
 xflags = {}
 
-ffails = {}
+ffails = {
+    ":/vfs": (Skip, "vfs not supported on < 23.11", check_clickhouse_version("<23.11")),
+}
 
 
 def argparser(parser):
