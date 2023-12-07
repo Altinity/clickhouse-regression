@@ -126,6 +126,8 @@ def feature(self):
         "stochasticLinearRegression",
         "stochasticLogisticRegression",
         "sumMap",
+        "sumMapFiltered",  # parameters of different type
+        "sumMapFilteredWithOverflow",  # parameters of different type
         "maxMap",
         "minMap",
         "quantileTDigestWeighted",

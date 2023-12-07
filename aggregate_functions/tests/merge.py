@@ -153,6 +153,8 @@ def feature(self):
         "sumMap",
         "maxMap",
         "minMap",
+        "sumMapFiltered",  # parameters of different type
+        "sumMapFilteredWithOverflow",  # parameters of different type
         "quantileTDigestWeighted",
         "uniq",
         "uniqHLL12",  # problem on 22.8 and 23.8
