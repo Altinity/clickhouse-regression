@@ -324,7 +324,7 @@ def between_current_row_and_current_row(self):
         )
 
         execute_query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN CURRENT ROW AND CURRENT ROW) AS sum FROM empsalary WHERE depname = 'develop'",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN CURRENT ROW AND CURRENT ROW) AS sum FROM empsalary WHERE depname = 'develop' ORDER BY empno",
             expected=expected,
         )
 
@@ -394,7 +394,7 @@ def between_current_row_and_unbounded_following(self):
         )
 
         execute_query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS sum FROM empsalary WHERE depname = 'develop'",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS sum FROM empsalary WHERE depname = 'develop' ORDER BY empno",
             expected=expected,
         )
 
@@ -419,7 +419,8 @@ def between_current_row_and_unbounded_following(self):
         execute_query(
             "SELECT * FROM (SELECT sum(unique1) over (order by four range between current row and unbounded following) AS sum,"
             "unique1, four "
-            "FROM tenk1 WHERE unique1 < 10) ORDER BY unique1",
+            "FROM tenk1 WHERE unique1 < 10) "
+            "ORDER BY unique1, four",
             expected=expected,
         )
 
@@ -467,7 +468,7 @@ def between_current_row_and_expr_following_with_order_by(self):
     )
 
     execute_query(
-        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING) AS sum FROM empsalary",
+        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING) AS sum FROM empsalary ORDER BY empno",
         expected=expected,
     )
 
@@ -537,7 +538,8 @@ def between_unbounded_preceding_and_current_row(self):
             "SELECT four, ten,"
             "sum(ten) over (partition by four order by ten range between unbounded preceding and current row) AS sum,"
             "last_value(ten) over (partition by four order by ten range between unbounded preceding and current row) AS last_value "
-            "FROM (select distinct ten, four from tenk1)",
+            "FROM (select distinct ten, four from tenk1) "
+            "ORDER BY four, ten",
             expected=expected,
         )
 
@@ -625,7 +627,8 @@ def between_unbounded_preceding_and_unbounded_following(self):
             "SELECT four, ten, "
             "sum(ten) over (partition by four order by ten range between unbounded preceding and unbounded following) AS sum, "
             "last_value(ten) over (partition by four order by ten range between unbounded preceding and unbounded following) AS last_value "
-            "FROM (select distinct ten, four from tenk1)",
+            "FROM (select distinct ten, four from tenk1) "
+            "ORDER BY four, ten",
             expected=expected,
         )
 
@@ -993,7 +996,7 @@ def between_expr_preceding_and_current_row_with_order_by(self):
     )
 
     execute_query(
-        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN 500 PRECEDING AND CURRENT ROW) AS sum FROM empsalary",
+        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY empno RANGE BETWEEN 500 PRECEDING AND CURRENT ROW) AS sum FROM empsalary ORDER BY empno",
         expected=expected,
     )
 
@@ -1081,7 +1084,8 @@ def between_expr_preceding_and_expr_following_with_order_by(self):
         execute_query(
             "SELECT sum(unique1) over (partition by four order by unique1 range between 5 preceding and 6 following) AS sum, "
             "unique1, four "
-            "FROM tenk1 WHERE unique1 < 10",
+            "FROM tenk1 WHERE unique1 < 10 "
+            "ORDER BY four, unique1",
             expected=expected,
         )
 
@@ -1115,7 +1119,8 @@ def between_expr_preceding_and_expr_preceding_with_order_by(self):
         execute_query(
             "SELECT * FROM (SELECT sum(unique1) over (order by four range between 2 preceding and 1 preceding) AS sum, "
             "unique1, four "
-            "FROM tenk1 WHERE unique1 < 10) ORDER BY four, unique1",
+            "FROM tenk1 WHERE unique1 < 10) "
+            "ORDER BY four, unique1",
             expected=expected,
         )
 
@@ -1140,7 +1145,8 @@ def between_expr_preceding_and_expr_preceding_with_order_by(self):
         execute_query(
             "SELECT * FROM (SELECT sum(unique1) over (order by four desc range between 2 preceding and 1 preceding) AS sum, "
             "unique1, four "
-            "FROM tenk1 WHERE unique1 < 10) ORDER BY four, unique1",
+            "FROM tenk1 WHERE unique1 < 10) "
+            "ORDER BY four, unique1",
             expected=expected,
         )
 
@@ -1345,7 +1351,7 @@ def between_expr_following_and_current_row_zero_special_case(self):
         )
 
         execute_query(
-            "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 0 FOLLOWING AND CURRENT ROW) AS sum FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 0 FOLLOWING AND CURRENT ROW) AS sum FROM values('number Int8', (1),(1),(2),(3)) ORDER BY number",
             expected=expected,
         )
 
@@ -1362,7 +1368,7 @@ def between_expr_following_and_current_row_zero_special_case(self):
         )
 
         execute_query(
-            "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND CURRENT ROW) AS sum FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND CURRENT ROW) AS sum FROM values('number Int8', (1),(1),(2),(3)) ORDER BY number",
             expected=expected,
         )
 
@@ -1387,7 +1393,7 @@ def between_expr_following_and_unbounded_following_with_order_by(self):
     )
 
     execute_query(
-        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM values('number Int8', (1),(1),(2),(3)) ORDER BY number",
         expected=expected,
     )
 
@@ -1414,7 +1420,7 @@ def between_expr_following_and_expr_preceding_with_order_by_zero_special_case(se
     )
 
     execute_query(
-        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 0 FOLLOWING AND 0 PRECEDING) AS sum FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 0 FOLLOWING AND 0 PRECEDING) AS sum FROM values('number Int8', (1),(1),(2),(3)) ORDER BY number",
         expected=expected,
     )
 
@@ -1490,7 +1496,8 @@ def between_unbounded_preceding_and_current_row_with_expressions_in_order_by_and
         "SELECT four, toInt8(ten/4) as two, "
         "sum(toInt8(ten/4)) over (partition by four order by toInt8(ten/4) range between unbounded preceding and current row) AS sum, "
         "last_value(toInt8(ten/4)) over (partition by four order by toInt8(ten/4) range between unbounded preceding and current row) AS last_value "
-        "FROM (select distinct ten, four from tenk1)",
+        "FROM (select distinct ten, four from tenk1) "
+        "ORDER BY four, two, sum",
         expected=expected,
     )
 
@@ -1505,13 +1512,13 @@ def between_current_row_and_unbounded_following_modifying_named_window(self):
      sum | unique1 | four
     -----+---------+------
       45 |       0 |    0
-      45 |       8 |    0
       45 |       4 |    0
+      45 |       8 |    0
+      33 |       1 |    1
       33 |       5 |    1
       33 |       9 |    1
-      33 |       1 |    1
-      18 |       6 |    2
       18 |       2 |    2
+      18 |       6 |    2
       10 |       3 |    3
       10 |       7 |    3
     """
@@ -1520,7 +1527,8 @@ def between_current_row_and_unbounded_following_modifying_named_window(self):
     execute_query(
         "SELECT * FROM (SELECT sum(unique1) over (w range between current row and unbounded following) AS sum,"
         "unique1, four "
-        "FROM tenk1 WHERE unique1 < 10 WINDOW w AS (order by four)) ORDER BY unique1",
+        "FROM tenk1 WHERE unique1 < 10 WINDOW w AS (order by four)) "
+        "ORDER BY four, unique1",
         expected=expected,
     )
 
@@ -1549,7 +1557,8 @@ def between_current_row_and_unbounded_following_in_named_window(self):
         "SELECT first_value(unique1) over w AS first_value, "
         "last_value(unique1) over w AS last_value, unique1, four "
         "FROM tenk1 WHERE unique1 < 10 "
-        "WINDOW w AS (order by unique1 range between current row and unbounded following)",
+        "WINDOW w AS (order by unique1 range between current row and unbounded following) "
+        "ORDER BY first_value, unique1",
         expected=expected,
     )
 
@@ -1572,7 +1581,7 @@ def between_expr_preceding_and_expr_following_with_partition_by_two_columns(self
         """
         select f1, sum(f1) over (partition by f1, f2 order by f2
                                  range between 1 following and 2 following) AS sum
-        from t1 where f1 = f2
+        from t1 where f1 = f2 ORDER BY f1, sum
         """,
         expected=expected,
     )
@@ -1620,7 +1629,7 @@ def between_expr_preceding_and_expr_following_with_partition_and_order_by(self):
         """
         select f1, sum(f1) over (partition by f1 order by f2
                                  range between 1 preceding and 1 following) AS sum
-        from t1 where f1 = f2
+        from t1 where f1 = f2 ORDER BY f1, sum
         """,
         expected=expected,
     )
@@ -1652,6 +1661,7 @@ def order_by_decimal(self):
         from numerics
         window w as (order by f_numeric range between
                      1 preceding and 1 following)
+        ORDER BY id
         """,
         expected=expected,
     )
@@ -1683,6 +1693,7 @@ def order_by_float(self):
         from numerics
         window w as (order by f_float4 range between
                      1 preceding and 1 following)
+        ORDER BY id
         """,
         expected=expected,
     )
@@ -1716,6 +1727,7 @@ def with_nulls(self):
            union all select null, 43)
         window w as
           (order by x asc nulls first range between 2 preceding and 2 following)
+        ORDER BY x, y
         """,
         expected=expected,
     )
