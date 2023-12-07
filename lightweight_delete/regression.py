@@ -93,6 +93,7 @@ def regression(
     force_run=False,
     stress=None,
     parallel=None,
+    allow_vfs=False,
 ):
     """Lightweight Delete regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}

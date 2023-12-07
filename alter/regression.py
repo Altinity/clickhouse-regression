@@ -87,7 +87,8 @@ def regression(
     clickhouse_version,
     clickhouse_binary_path,
     collect_service_logs,
-    stress
+    stress,
+    allow_vfs=False,
 ):
     """Alter regression."""
     nodes = {

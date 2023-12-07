@@ -17,7 +17,12 @@ from parquet.performance.tests.duckdb.reports import (
 
 @TestStep(Given)
 def performance_cluster(
-    self, duckdb_binary_path, clickhouse_binary_path, stress, clickhouse_version
+    self,
+    duckdb_binary_path,
+    clickhouse_binary_path,
+    stress,
+    clickhouse_version,
+    allow_vfs=False,
 ):
     nodes = {"clickhouse": ("clickhouse1",), "duckdb": ("duckdb1",)}
 

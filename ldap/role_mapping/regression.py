@@ -81,6 +81,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse LDAP role mapping regression module."""
     nodes = {

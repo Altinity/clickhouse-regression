@@ -53,6 +53,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse disk level encryption regression."""
     nodes = {
