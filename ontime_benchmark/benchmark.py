@@ -51,7 +51,7 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     format,
-    with_vfs,
+    allow_vfs,
     node="clickhouse1",
 ):
     """Storage Benchmark."""
@@ -67,7 +67,7 @@ def regression(
 
     self.context.object_storage_mode = "normal"
 
-    if with_vfs:
+    if allow_vfs:
         self.context.object_storage_mode = "vfs"
         if check_clickhouse_version("<23.11")(self):
             skip("Not supported < 23.11")

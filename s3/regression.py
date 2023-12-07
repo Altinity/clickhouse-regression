@@ -107,7 +107,7 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--with-vfs",
+        "--allow-vfs",
         help="Enable allow_object_storage_vfs",
         action="store_true",
     )
@@ -452,14 +452,14 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     stress,
-    with_vfs,
+    allow_vfs,
 ):
     """S3 Storage regression."""
 
     self.context.clickhouse_version = clickhouse_version
     self.context.object_storage_mode = "normal"
 
-    if with_vfs:
+    if allow_vfs:
         self.context.object_storage_mode = "vfs"
         if check_clickhouse_version("<23.11")(self):
             skip("Not supported < 23.11")

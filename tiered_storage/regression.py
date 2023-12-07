@@ -89,7 +89,7 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--with-vfs",
+        "--allow-vfs",
         help="Enable allow_object_storage_vfs",
         action="store_true",
     )
@@ -154,7 +154,7 @@ def feature(
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
-    with_vfs=False,
+    allow_vfs=False,
     environ=None,
 ):
     """Execute tests for tiered storage feature."""
@@ -175,7 +175,7 @@ def feature(
         args = {"cluster": cluster}
         common_args = dict(args=args, flags=TE)
 
-        object_storage_mode = "vfs" if with_vfs else "normal"
+        object_storage_mode = "vfs" if allow_vfs else "normal"
 
         with Feature(object_storage_mode):
             if object_storage_mode == "vfs":
@@ -358,7 +358,7 @@ def regression(
     gcs_key_secret=None,
     gcs_key_id=None,
     gcs_uri=None,
-    with_vfs=False,
+    allow_vfs=False,
 ):
     """Tiered Storage regression."""
     environ = {}
@@ -413,7 +413,7 @@ def regression(
         with_s3amazon=with_s3amazon,
         with_s3gcs=with_s3gcs,
         environ=environ,
-        with_vfs=with_vfs,
+        allow_vfs=allow_vfs,
     )
 
 
