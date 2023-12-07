@@ -175,7 +175,7 @@ def between_current_row_and_current_row(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN CURRENT ROW AND CURRENT ROW) AS sum FROM empsalary",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN CURRENT ROW AND CURRENT ROW) AS sum FROM empsalary ORDER BY empno, salary, sum",
         expected=expected,
     )
 
@@ -242,7 +242,7 @@ def between_current_row_and_unbounded_following(self):
     execute_query(
         "SELECT sum(unique1) over (order by unique1 rows between current row and unbounded following) AS sum,"
         "unique1, four "
-        "FROM tenk1 WHERE unique1 < 10",
+        "FROM tenk1 WHERE unique1 < 10 ORDER BY unique1, four, sum",
         expected=expected,
     )
 
@@ -272,6 +272,7 @@ def between_current_row_and_expr_following(self):
         SELECT i, b, groupBitAnd(b) OVER w AS bool_and, groupBitOr(b) OVER w AS bool_or
           FROM VALUES('i Int8, b UInt8', (1,1), (2,1), (3,0), (4,0), (5,1))
           WINDOW w AS (ORDER BY i ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING)
+          ORDER BY i, b, bool_or
         """,
         expected=expected,
     )
@@ -364,7 +365,7 @@ def between_unbounded_preceding_and_expr_preceding(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS sum FROM empsalary",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS sum FROM empsalary ORDER BY empno, sum, salary",
         expected=expected,
     )
 
@@ -395,7 +396,7 @@ def between_unbounded_preceding_and_unbounded_following(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary ORDER BY empno, sum, salary",
         expected=expected,
     )
 
@@ -428,7 +429,7 @@ def between_unbounded_preceding_and_expr_following(self):
     execute_query(
         "SELECT sum(unique1) over (order by unique1 rows between unbounded preceding and 1 following) AS sum,"
         "unique1, four "
-        "FROM tenk1 WHERE unique1 < 10",
+        "FROM tenk1 WHERE unique1 < 10 ORDER BY unique1, four, sum",
         expected=expected,
     )
 
@@ -526,7 +527,7 @@ def between_expr_following_and_unbounded_following(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 4 FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 4 FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary ORDER BY empno, salary, sum",
         expected=expected,
     )
 
@@ -559,7 +560,7 @@ def between_expr_following_and_expr_following(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 FOLLOWING AND 4 FOLLOWING) AS sum FROM empsalary",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 FOLLOWING AND 4 FOLLOWING) AS sum FROM empsalary ORDER BY empno, sum, salary",
         expected=expected,
     )
 
@@ -583,7 +584,7 @@ def between_expr_preceding_and_current_row(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) AS sum FROM empsalary WHERE salary > 5000",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) AS sum FROM empsalary WHERE salary > 5000 ORDER BY empno, sum, salary",
         expected=expected,
     )
 
@@ -624,7 +625,7 @@ def between_expr_preceding_and_unbounded_following(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary WHERE salary > 5000",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary WHERE salary > 5000 ORDER BY empno, sum, salary",
         expected=expected,
     )
 
@@ -674,7 +675,7 @@ def between_expr_preceding_and_expr_preceding(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND 0 PRECEDING) AS sum FROM empsalary",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND 0 PRECEDING) AS sum FROM empsalary ORDER BY empno, sum, salary",
         expected=expected,
     )
 
@@ -698,7 +699,7 @@ def between_expr_preceding_and_expr_following(self):
     )
 
     execute_query(
-        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS sum FROM empsalary WHERE salary > 5000",
+        "SELECT empno, salary, sum(salary) OVER (ORDER BY empno ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS sum FROM empsalary WHERE salary > 5000 ORDER BY empno, sum, salary",
         expected=expected,
     )
 
@@ -731,7 +732,7 @@ def between_expr_following_and_expr_following_ref(self):
     execute_query(
         "SELECT sum(unique1) over (order by unique1 rows between 1 following and 3 following) AS sum,"
         "unique1, four "
-        "FROM tenk1 WHERE unique1 < 10",
+        "FROM tenk1 WHERE unique1 < 10 ORDER BY unique1, four, sum",
         expected=expected,
     )
 
@@ -764,7 +765,7 @@ def between_expr_preceding_and_expr_preceding_ref(self):
     execute_query(
         "SELECT sum(unique1) over (order by unique1 rows between 2 preceding and 1 preceding) AS sum,"
         "unique1, four "
-        "FROM tenk1 WHERE unique1 < 10",
+        "FROM tenk1 WHERE unique1 < 10 ORDER BY unique1, four, sum",
         expected=expected,
     )
 
@@ -797,7 +798,7 @@ def between_expr_preceding_and_expr_following_ref(self):
     execute_query(
         "SELECT sum(unique1) over (order by unique1 rows between 2 preceding and 2 following) AS sum, "
         "unique1, four "
-        "FROM tenk1 WHERE unique1 < 10",
+        "FROM tenk1 WHERE unique1 < 10 ORDER BY unique1, four, sum",
         expected=expected,
     )
 

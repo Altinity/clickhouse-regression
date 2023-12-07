@@ -287,6 +287,7 @@ def subquery_multiple_window_functions(self):
                   min(salary) OVER (PARTITION BY depname, empno order by enroll_date) AS depminsalary
            FROM empsalary)
         WHERE depname = 'sales'
+        ORDER BY depname, depsalary
         """,
         expected=expected,
     )

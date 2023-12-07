@@ -10,21 +10,21 @@ def partition_clause(self):
         """
      sum 
     -------
-    25100
-    25100
-    25100
-    25100
-    25100
     7400
     7400
     14600
     14600
     14600
+    25100
+    25100
+    25100
+    25100
+    25100
     """
     )
 
     execute_query(
-        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname)",
+        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname) ORDER BY sum",
         expected=expected,
     )
 
@@ -50,7 +50,7 @@ def orderby_clause(self):
     )
 
     execute_query(
-        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (ORDER BY depname)",
+        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (ORDER BY depname) ORDER BY sum",
         expected=expected,
     )
 
@@ -62,21 +62,21 @@ def frame_clause(self):
         """
      sum 
     -------
-    5000
-    3900
-    4800
-    4800
     3500
+    3900
     4200
-    6000
     4500
+    4800
+    4800
+    5000
     5200
     5200
+    6000
     """
     )
 
-    execute_query(
-        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (ORDER BY empno ROWS CURRENT ROW)",
+    execute_query(  
+        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (ORDER BY empno ROWS CURRENT ROW) ORDER BY sum",
         expected=expected,
     )
 
@@ -88,21 +88,21 @@ def partition_with_order_by(self):
         """
      sum 
     -------
-     4200
-     8700
-     19100
-     19100
-     25100
-     3500
-     7400
-     9600
-     9600
-     14600
+    3500
+    4200
+    7400
+    8700
+    9600
+    9600
+    14600
+    19100
+    19100
+    25100
     """
     )
 
     execute_query(
-        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY salary)",
+        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY salary) ORDER BY sum",
         expected=expected,
     )
 
@@ -114,21 +114,21 @@ def partition_with_frame(self):
         """
      sum 
     -------
-    4200
-    6000
-    4500
-    5200
-    5200
-    3900
     3500
+    3900
+    4200
+    4500
+    4800
+    4800
     5000
-    4800
-    4800
+    5200
+    5200
+    6000
     """
     )
 
     execute_query(
-        "SELECT sum(salary) OVER w AS sum FROM empsalary  WINDOW w AS (PARTITION BY depname, empno ROWS 1 PRECEDING)",
+        "SELECT sum(salary) OVER w AS sum FROM empsalary  WINDOW w AS (PARTITION BY depname, empno ROWS 1 PRECEDING) ORDER BY sum",
         expected=expected,
     )
 
@@ -141,20 +141,20 @@ def order_by_with_frame(self):
      sum 
     -------
     4200
-    10200
-    10500
-    9700
-    10400
-    9100
     7400
     8500
-    9800
+    9100
     9600
+    9700
+    9800
+    10200
+    10400
+    10500
     """
     )
 
     execute_query(
-        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (ORDER BY depname, empno ROWS 1 PRECEDING)",
+        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (ORDER BY depname, empno ROWS 1 PRECEDING) ORDER BY sum",
         expected=expected,
     )
 
@@ -166,21 +166,21 @@ def partition_with_order_by_and_frame(self):
         """
      sum 
     -------
+    3500
     4200
+    4800
+    7400
     8700
+    9600
     9700
+    9800
     10400
     11200
-    3500
-    7400
-    4800
-    9600
-    9800
     """
     )
 
     execute_query(
-        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY salary ROWS 1 PRECEDING)",
+        "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY salary ROWS 1 PRECEDING) ORDER BY sum",
         expected=expected,
     )
 

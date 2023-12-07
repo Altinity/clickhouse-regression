@@ -96,7 +96,7 @@ def aggregate_funcs_over_rows_frame(self, func):
     execute_query(
         f"""
         SELECT {func} OVER (ORDER BY salary, empno ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS func
-          FROM empsalary
+          FROM empsalary ORDER BY func DESC
         """,
         snapshot_name=snapshot_name,
     )
@@ -143,7 +143,7 @@ def var_pop(self):
     execute_query(
         """
         SELECT VAR_POP(n) OVER (ORDER BY i ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS var_pop
-          FROM values('i Int8, n Int32', (1,600),(2,470),(3,170),(4,430),(5,300))
+          FROM values('i Int8, n Int32', (1,600),(2,470),(3,170),(4,430),(5,300)) ORDER BY var_pop DESC
         """,
         expected=expected,
     )
@@ -167,7 +167,7 @@ def var_samp(self):
     execute_query(
         """
         SELECT VAR_SAMP(n) OVER (ORDER BY i ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS var_samp
-          FROM VALUES('i Int8, n Int16',(1,600),(2,470),(3,170),(4,430),(5,300))
+          FROM VALUES('i Int8, n Int16',(1,600),(2,470),(3,170),(4,430),(5,300)) ORDER BY var_samp DESC
         """,
         expected=expected,
     )
@@ -192,7 +192,7 @@ def stddevpop(self):
     execute_query(
         """
         SELECT stddevPop(n) OVER (ORDER BY i ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS stddev_pop
-          FROM VALUES('i Int8, n Nullable(Int16)',(1,NULL),(2,600),(3,470),(4,170),(5,430),(6,300))
+          FROM VALUES('i Int8, n Nullable(Int16)',(1,NULL),(2,600),(3,470),(4,170),(5,430),(6,300)) ORDER BY stddev_pop DESC
         """,
         expected=expected,
     )
@@ -217,7 +217,7 @@ def stddevsamp(self):
     execute_query(
         """
         SELECT stddevSamp(n) OVER (ORDER BY i ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS stddev_samp
-          FROM VALUES('i Int8, n Nullable(Int16)',(1,NULL),(2,600),(3,470),(4,170),(5,430),(6,300))
+          FROM VALUES('i Int8, n Nullable(Int16)',(1,NULL),(2,600),(3,470),(4,170),(5,430),(6,300)) ORDER BY stddev_samp DESC
         """,
         expected=expected,
     )
@@ -242,7 +242,7 @@ def aggregate_function_recovers_from_nan(self):
         """
         SELECT a, b,
                SUM(b) OVER(ORDER BY a ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) AS sum
-        FROM VALUES('a Int8, b Float64',(1,1),(2,2),(3,nan),(4,3),(5,4))
+        FROM VALUES('a Int8, b Float64',(1,1),(2,2),(3,nan),(4,3),(5,4)) ORDER BY a
         """,
         expected=expected,
     )
@@ -268,6 +268,7 @@ def bit_functions(self):
         SELECT i, b, groupBitAnd(b) OVER w AS bool_and, groupBitOr(b) OVER w AS bool_or
           FROM VALUES('i Int8, b UInt8', (1,1), (2,1), (3,0), (4,0), (5,1))
           WINDOW w AS (ORDER BY i ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING)
+          ORDER BY i
         """,
         expected=expected,
     )
@@ -294,7 +295,7 @@ def sum(self):
     )
 
     execute_query(
-        "SELECT sum(four) OVER (PARTITION BY ten ORDER BY unique2) AS sum_1, ten, four FROM tenk1 WHERE unique2 < 10",
+        "SELECT sum(four) OVER (PARTITION BY ten ORDER BY unique2) AS sum_1, ten, four FROM tenk1 WHERE unique2 < 10 ORDER BY ten, unique2",
         expected=expected,
     )
 
@@ -320,7 +321,7 @@ def nested_aggregates(self):
     )
 
     execute_query(
-        "SELECT ten, two, sum(hundred) AS gsum, sum(sum(hundred)) OVER (PARTITION BY two ORDER BY ten) AS wsum FROM tenk1 GROUP BY ten, two",
+        "SELECT ten, two, sum(hundred) AS gsum, sum(sum(hundred)) OVER (PARTITION BY two ORDER BY ten) AS wsum FROM tenk1 GROUP BY ten, two ORDER BY two, ten",
         expected=expected,
     )
 
@@ -332,21 +333,21 @@ def aggregate_and_window_function_in_the_same_window(self):
         """
       sum  | rank
     -------+------
+      3900 |    1
+      5000 |    1
       6000 |    1
+      7400 |    2
+     14600 |    2
+     14600 |    2
      16400 |    2
      16400 |    2
      20900 |    4
      25100 |    5
-      3900 |    1
-      7400 |    2
-      5000 |    1
-     14600 |    2
-     14600 |    2
     """
     )
 
     execute_query(
-        "SELECT sum(salary) OVER w AS sum, rank() OVER w AS rank FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY salary DESC)",
+        "SELECT sum(salary) OVER w AS sum, rank() OVER w AS rank FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY salary DESC) ORDER BY sum, rank",
         expected=expected,
     )
 
@@ -437,10 +438,11 @@ def avgWeighted(self):
         """
         )
 
-        execute_query(
-            "SELECT avgWeighted(toFloat64(salary) + 0.02, toDecimal64(empno, 9)) OVER (PARTITION BY empno) AS avg FROM (SELECT * FROM empsalary ORDER BY empno)",
-            expected=expected,
-        )
+        if check_clickhouse_version("<23.10")(self):
+            execute_query(
+                "SELECT avgWeighted(toFloat64(salary) + 0.02, toDecimal64(empno, 9)) OVER (PARTITION BY empno) AS avg FROM (SELECT * FROM empsalary ORDER BY empno)",
+                expected=expected,
+            )
 
 
 @TestFeature
