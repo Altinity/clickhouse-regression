@@ -88,12 +88,6 @@ def argparser(parser):
         default=os.getenv("GCS_KEY_SECRET"),
     )
 
-    parser.add_argument(
-        "--allow-vfs",
-        help="Enable allow_object_storage_vfs",
-        action="store_true",
-    )
-
     return parser
 
 
