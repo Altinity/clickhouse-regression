@@ -36,6 +36,12 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--allow-vfs",
+        help="Instruct the tests to enable allow_object_storage_vfs",
+        action="store_true",
+    )
+
+    parser.add_argument(
         "--collect-service-logs",
         action="store_true",
         default=False,
