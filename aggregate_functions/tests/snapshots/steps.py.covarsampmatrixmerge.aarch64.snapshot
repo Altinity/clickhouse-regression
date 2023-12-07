@@ -1,0 +1,124 @@
+_aggregate_functions_merge_covarSampMatrixMerge__inf_0 = r"""
+{"covarSampMatrixMerge(state)":[[null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_constant_0 = r"""
+{"covarSampMatrixMerge(state)":[[null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float32_Float32_0 = r"""
+{"covarSampMatrixMerge(state)":[[4.753148273039948e76,4.753148273039948e76],[4.753148273039948e76,4.753148273039948e76]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float32_Float64_0 = r"""
+{"covarSampMatrixMerge(state)":[[4.753148273039948e76,null],[null,null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float32_Int64_0 = r"""
+{"covarSampMatrixMerge(state)":[[4.753148273039948e76,5.441670321232197e56],[5.441670321232197e56,2.617227528055031e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float32_UInt64_0 = r"""
+{"covarSampMatrixMerge(state)":[[4.753148273039948e76,5.569217002325319e56],[5.569217002325319e56,5.57036553081555e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float64_Float32_0 = r"""
+{"covarSampMatrixMerge(state)":[[null,null],[null,4.753148273039948e76]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float64_Float64_0 = r"""
+{"covarSampMatrixMerge(state)":[[null,null],[null,null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float64_Int64_0 = r"""
+{"covarSampMatrixMerge(state)":[[null,null],[null,2.617227528055031e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Float64_UInt64_0 = r"""
+{"covarSampMatrixMerge(state)":[[null,null],[null,5.57036553081555e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Int64_Float32_0 = r"""
+{"covarSampMatrixMerge(state)":[[2.617227528055031e37,5.441670321232197e56],[5.441670321232197e56,4.753148273039948e76]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Int64_Float64_0 = r"""
+{"covarSampMatrixMerge(state)":[[2.617227528055031e37,null],[null,null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Int64_Int64_0 = r"""
+{"covarSampMatrixMerge(state)":[[2.617227528055031e37,2.617227528055031e37],[2.617227528055031e37,2.617227528055031e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_Int64_UInt64_0 = r"""
+{"covarSampMatrixMerge(state)":[[2.617227528055031e37,2.163191517933602e37],[2.163191517933602e37,5.57036553081555e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_UInt64_Float32_0 = r"""
+{"covarSampMatrixMerge(state)":[[5.57036553081555e37,5.569217002325319e56],[5.569217002325319e56,4.753148273039948e76]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_UInt64_Float64_0 = r"""
+{"covarSampMatrixMerge(state)":[[5.57036553081555e37,null],[null,null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_UInt64_Int64_0 = r"""
+{"covarSampMatrixMerge(state)":[[5.57036553081555e37,2.163191517933602e37],[2.163191517933602e37,2.617227528055031e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_datatypes_permutations_UInt64_UInt64_0 = r"""
+{"covarSampMatrixMerge(state)":[[5.57036553081555e37,5.57036553081555e37],[5.57036553081555e37,5.57036553081555e37]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_example1_0 = r"""
+{"covarSampMatrixMerge(state)":[[9.166666666666666,-1.9555555555555557],[-1.9555555555555557,45.63377777777778]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_example2_0 = r"""
+{"covarSampMatrixMerge(state)":[[9.166666666666666,-1.9555555555555557,4.5335],[-1.9555555555555557,45.63377777777778,7.206275555555554],[4.5335,7.206275555555554,38.011033788888895]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_example3_0 = r"""
+{"covarSampMatrixMerge(state)":[[9.166666666666666,-1.9555555555555557,4.5335,7.497763888888885],[-1.9555555555555557,45.63377777777778,7.206275555555554,2.3689913333333337],[4.5335,7.206275555555554,38.011033788888895,5.282962534999999],[7.497763888888885,2.3689913333333337,5.282962534999999,11.03352412358333]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_first_non_NULL_value_0 = r"""
+{"covarSampMatrixMerge(state)":[[1]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_inf_0 = r"""
+{"covarSampMatrixMerge(state)":[[null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_nan_0 = r"""
+{"covarSampMatrixMerge(state)":[[null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_some_negative_values_0 = r"""
+{"covarSampMatrixMerge(state)":[[9.166666666666666]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_with_another_aggregate_function_0 = r"""
+{"covarSampMatrixMerge(state)":[[4]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_with_another_aggregate_function_and_group_by_0 = r"""
+{"covarSampMatrixMerge(state)":[[null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_with_another_aggregate_function_and_group_by_1 = r"""
+{"covarSampMatrixMerge(state)":[[null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_with_another_aggregate_function_and_group_by_2 = r"""
+{"covarSampMatrixMerge(state)":[[null]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_with_group_by_0 = r"""
+{"covarSampMatrixMerge(state)":[[10]]}
+"""
+
+_aggregate_functions_merge_covarSampMatrixMerge_with_group_by_1 = r"""
+{"covarSampMatrixMerge(state)":[[10]]}
+"""
+
