@@ -60,6 +60,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse integration with LDAP regression module."""
     nodes = {

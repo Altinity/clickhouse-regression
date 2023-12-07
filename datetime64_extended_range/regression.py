@@ -122,6 +122,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=False,
+    allow_vfs=False,
 ):
     """ClickHouse DateTime64 Extended Range regression module."""
     nodes = {

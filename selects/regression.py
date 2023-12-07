@@ -88,6 +88,7 @@ def regression(
     collect_service_logs,
     stress=None,
     thread_fuzzer=None,
+    allow_vfs=False,
 ):
     """ClickHouse SELECT query regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
