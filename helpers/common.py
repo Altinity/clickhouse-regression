@@ -629,6 +629,70 @@ def replace_partition(
         node.query(query, **params)
 
 
+@TestStep(When)
+def attach_partition(
+    self,
+    destination_table,
+    partition=1,
+    exitcode=None,
+    user_name=None,
+    message=None,
+    node=None,
+    additional_parameters=None,
+):
+    """Adds a partition or part from the detached directory to the table."""
+    if node is None:
+        node = self.context.node
+
+    params = {}
+    query = f"ALTER TABLE {destination_table} ATTACH PARTITION {partition}"
+
+    if additional_parameters is not None:
+        query += f" {additional_parameters}"
+
+    with By("Executing the attach partition command"):
+        if user_name is not None:
+            params["settings"] = [("user", user_name)]
+        if message is not None:
+            params["message"] = message
+        if exitcode is not None:
+            params["exitcode"] = exitcode
+
+        node.query(query, **params)
+
+
+@TestStep(When)
+def detach_partition(
+    self,
+    destination_table,
+    partition=1,
+    exitcode=None,
+    user_name=None,
+    message=None,
+    node=None,
+    additional_parameters=None,
+):
+    """Moves a partition or part to the detached directory and forget it."""
+    if node is None:
+        node = self.context.node
+
+    params = {}
+    query = f"ALTER TABLE {destination_table} DETACH PARTITION {partition}"
+
+    if additional_parameters is not None:
+        query += f" {additional_parameters}"
+
+    with By("Executing the detach partition command"):
+        if user_name is not None:
+            params["settings"] = [("user", user_name)]
+        if message is not None:
+            params["message"] = message
+        if exitcode is not None:
+            params["exitcode"] = exitcode
+
+        node.query(query, **params)
+
+
 @TestStep(Given)
 def set_envs_on_node(self, envs, node=None):
     """Set environment variables on node.
