@@ -106,14 +106,8 @@ def argparser(parser):
         default=os.getenv("GCS_KEY_SECRET"),
     )
 
+
 xfails = {
-    ":/compression/:": [
-        (Fail, "compression fails when two commands are run consecutively")
-    ],
-    "table function/GCS/multipart": [
-        (Fail, "GCS multi-part upload and download does not work")
-    ],
-    "table function/GCS/wildcard/:": [(Fail, "GCS path wildcards do not work")],
     ":/:/disk/generic url": [(Fail, "not yet supported")],
     ":/:/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
@@ -133,11 +127,7 @@ xfails = {
     ":/:/zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    "gcs/:/zero copy replication/:": [
-        (Fail, "Google Cloud Storage does not work with disk storage")
-    ],
     ":/:/zero copy replication/delete": [(Fail, "Under investigation")],
-    "aws s3/:/zero copy replication/:": [(Fail, "Under investigation")],
     "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
     "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
@@ -186,6 +176,10 @@ ffails = {
     "gcs/:/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
+    ),
+    "gcs/:/zero copy replication": (
+        Skip,
+        "GCS is not supported for zero copy replication",
     ),
     "aws s3/:/backup": (
         Skip,
