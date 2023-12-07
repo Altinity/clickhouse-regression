@@ -93,6 +93,9 @@ def is_map(datatype):
     """Return True if data type is Map."""
     return isinstance(unwrap(datatype), Map)
 
+def is_array(datatype):
+    """Return True if data type is Array."""
+    return isinstance(unwrap(datatype), Array)
 
 def is_nullable(datatype):
     """Return True if data type is Nullable."""
