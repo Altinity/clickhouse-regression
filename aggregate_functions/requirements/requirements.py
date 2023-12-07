@@ -1663,6 +1663,22 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue = Requirement(
     num='3.1.4.1.1'
 )
 
+RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValueRespectNulls = Requirement(
+    name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValueRespectNulls',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support `first_value_respect_nulls` aggregate function.\n'
+        '\n'
+    ),
+    link=None,
+    level=5,
+    num='3.1.4.2.1'
+)
+
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LastValue = Requirement(
     name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue',
     version='1.0',
@@ -1676,7 +1692,23 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LastValue = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.2.1'
+    num='3.1.4.3.1'
+)
+
+RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LastValueRespectNulls = Requirement(
+    name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValueRespectNulls',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support `last_value_respect_nulls` aggregate function.\n'
+        '\n'
+    ),
+    link=None,
+    level=5,
+    num='3.1.4.4.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LagInFrame = Requirement(
@@ -1692,7 +1724,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LagInFrame = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.3.1'
+    num='3.1.4.5.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LeadInFrame = Requirement(
@@ -1708,7 +1740,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LeadInFrame = Requirement
     ),
     link=None,
     level=5,
-    num='3.1.4.4.1'
+    num='3.1.4.6.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_NthValue = Requirement(
@@ -1724,7 +1756,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_NthValue = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.5.1'
+    num='3.1.4.7.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_Rank = Requirement(
@@ -1740,7 +1772,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_Rank = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.6.1'
+    num='3.1.4.8.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_RowNumber = Requirement(
@@ -1756,7 +1788,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_RowNumber = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.7.1'
+    num='3.1.4.9.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SingleValueOrNull = Requirement(
@@ -1772,7 +1804,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SingleValueOrNull = Requi
     ),
     link=None,
     level=5,
-    num='3.1.4.8.1'
+    num='3.1.4.10.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersections = Requirement(
@@ -1788,7 +1820,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersections = Requir
     ),
     link=None,
     level=5,
-    num='3.1.4.9.1'
+    num='3.1.4.11.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersectionsPosition = Requirement(
@@ -1804,7 +1836,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersectionsPosition 
     ),
     link=None,
     level=5,
-    num='3.1.4.10.1'
+    num='3.1.4.12.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AggThrow = Requirement(
@@ -1820,7 +1852,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AggThrow = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.11.1'
+    num='3.1.4.13.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_BoundingRatio = Requirement(
@@ -1836,7 +1868,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_BoundingRatio = Requireme
     ),
     link=None,
     level=5,
-    num='3.1.4.12.1'
+    num='3.1.4.14.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_Contingency = Requirement(
@@ -1852,7 +1884,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_Contingency = Requirement
     ),
     link=None,
     level=5,
-    num='3.1.4.13.1'
+    num='3.1.4.15.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_CramersV = Requirement(
@@ -1868,7 +1900,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_CramersV = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.14.1'
+    num='3.1.4.16.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_CramersVBiasCorrected = Requirement(
@@ -1884,7 +1916,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_CramersVBiasCorrected = R
     ),
     link=None,
     level=5,
-    num='3.1.4.15.1'
+    num='3.1.4.17.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_DenseRank = Requirement(
@@ -1900,7 +1932,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_DenseRank = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.16.1'
+    num='3.1.4.18.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedAvg = Requirement(
@@ -1916,7 +1948,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedAvg
     ),
     link=None,
     level=5,
-    num='3.1.4.17.1'
+    num='3.1.4.19.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedCount = Requirement(
@@ -1932,7 +1964,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedCou
     ),
     link=None,
     level=5,
-    num='3.1.4.18.1'
+    num='3.1.4.20.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedMax = Requirement(
@@ -1948,7 +1980,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedMax
     ),
     link=None,
     level=5,
-    num='3.1.4.19.1'
+    num='3.1.4.21.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedSum = Requirement(
@@ -1964,7 +1996,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_ExponentialTimeDecayedSum
     ),
     link=None,
     level=5,
-    num='3.1.4.20.1'
+    num='3.1.4.22.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_UniqTheta = Requirement(
@@ -1980,7 +2012,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_UniqTheta = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.21.1'
+    num='3.1.4.23.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_QuantileExactExclusive = Requirement(
@@ -1996,7 +2028,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_QuantileExactExclusive = 
     ),
     link=None,
     level=5,
-    num='3.1.4.22.1'
+    num='3.1.4.24.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_QuantileExactInclusive = Requirement(
@@ -2012,7 +2044,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_QuantileExactInclusive = 
     ),
     link=None,
     level=5,
-    num='3.1.4.23.1'
+    num='3.1.4.25.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SumMapFilteredWithOverflow = Requirement(
@@ -2028,7 +2060,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SumMapFilteredWithOverflo
     ),
     link=None,
     level=5,
-    num='3.1.4.24.1'
+    num='3.1.4.26.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SumMapWithOverflow = Requirement(
@@ -2044,7 +2076,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SumMapWithOverflow = Requ
     ),
     link=None,
     level=5,
-    num='3.1.4.25.1'
+    num='3.1.4.27.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SumMappedArrays = Requirement(
@@ -2060,7 +2092,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SumMappedArrays = Require
     ),
     link=None,
     level=5,
-    num='3.1.4.26.1'
+    num='3.1.4.28.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_Nothing = Requirement(
@@ -2076,7 +2108,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_Nothing = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.27.1'
+    num='3.1.4.29.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxMappedArrays = Requirement(
@@ -2092,7 +2124,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxMappedArrays = Require
     ),
     link=None,
     level=5,
-    num='3.1.4.28.1'
+    num='3.1.4.30.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MinMappedArrays = Requirement(
@@ -2108,7 +2140,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MinMappedArrays = Require
     ),
     link=None,
     level=5,
-    num='3.1.4.29.1'
+    num='3.1.4.31.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_NonNegativeDerivative = Requirement(
@@ -2124,7 +2156,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_NonNegativeDerivative = R
     ),
     link=None,
     level=5,
-    num='3.1.4.30.1'
+    num='3.1.4.32.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_TheilsU = Requirement(
@@ -2140,7 +2172,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_TheilsU = Requirement(
     ),
     link=None,
     level=5,
-    num='3.1.4.31.1'
+    num='3.1.4.33.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AnalysisOfVariance = Requirement(
@@ -2156,7 +2188,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AnalysisOfVariance = Requ
     ),
     link=None,
     level=5,
-    num='3.1.4.32.1'
+    num='3.1.4.34.1'
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram = Requirement(
@@ -3192,68 +3224,72 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         Heading(name='Miscellaneous Functions', level=3, num='3.1.4'),
         Heading(name='first_value', level=4, num='3.1.4.1'),
         Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValue', level=5, num='3.1.4.1.1'),
-        Heading(name='last_value', level=4, num='3.1.4.2'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue', level=5, num='3.1.4.2.1'),
-        Heading(name='lagInFrame', level=4, num='3.1.4.3'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LagInFrame', level=5, num='3.1.4.3.1'),
-        Heading(name='leadInFrame', level=4, num='3.1.4.4'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LeadInFrame', level=5, num='3.1.4.4.1'),
-        Heading(name='nth_value', level=4, num='3.1.4.5'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NthValue', level=5, num='3.1.4.5.1'),
-        Heading(name='rank', level=4, num='3.1.4.6'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Rank', level=5, num='3.1.4.6.1'),
-        Heading(name='row_number', level=4, num='3.1.4.7'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.RowNumber', level=5, num='3.1.4.7.1'),
-        Heading(name='singleValueOrNull', level=4, num='3.1.4.8'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull', level=5, num='3.1.4.8.1'),
-        Heading(name='maxIntersections', level=4, num='3.1.4.9'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections', level=5, num='3.1.4.9.1'),
-        Heading(name='maxIntersectionsPosition', level=4, num='3.1.4.10'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersectionsPosition', level=5, num='3.1.4.10.1'),
-        Heading(name='aggThrow', level=4, num='3.1.4.11'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AggThrow', level=5, num='3.1.4.11.1'),
-        Heading(name='boundingRatio', level=4, num='3.1.4.12'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.BoundingRatio', level=5, num='3.1.4.12.1'),
-        Heading(name='contingency', level=4, num='3.1.4.13'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Contingency', level=5, num='3.1.4.13.1'),
-        Heading(name='cramersV', level=4, num='3.1.4.14'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersV', level=5, num='3.1.4.14.1'),
-        Heading(name='cramersVBiasCorrected', level=4, num='3.1.4.15'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersVBiasCorrected', level=5, num='3.1.4.15.1'),
-        Heading(name='dense_rank', level=4, num='3.1.4.16'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.DenseRank', level=5, num='3.1.4.16.1'),
-        Heading(name='exponentialTimeDecayedAvg', level=4, num='3.1.4.17'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedAvg', level=5, num='3.1.4.17.1'),
-        Heading(name='exponentialTimeDecayedCount', level=4, num='3.1.4.18'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedCount', level=5, num='3.1.4.18.1'),
-        Heading(name='exponentialTimeDecayedMax', level=4, num='3.1.4.19'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedMax', level=5, num='3.1.4.19.1'),
-        Heading(name='exponentialTimeDecayedSum', level=4, num='3.1.4.20'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedSum', level=5, num='3.1.4.20.1'),
-        Heading(name='uniqTheta', level=4, num='3.1.4.21'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqTheta', level=5, num='3.1.4.21.1'),
-        Heading(name='quantileExactExclusive', level=4, num='3.1.4.22'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactExclusive', level=5, num='3.1.4.22.1'),
-        Heading(name='quantileExactInclusive', level=4, num='3.1.4.23'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactInclusive', level=5, num='3.1.4.23.1'),
-        Heading(name='sumMapFilteredWithOverflow', level=4, num='3.1.4.24'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapFilteredWithOverflow', level=5, num='3.1.4.24.1'),
-        Heading(name='sumMapWithOverflow', level=4, num='3.1.4.25'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapWithOverflow', level=5, num='3.1.4.25.1'),
-        Heading(name='sumMappedArrays', level=4, num='3.1.4.26'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMappedArrays', level=5, num='3.1.4.26.1'),
-        Heading(name='nothing', level=4, num='3.1.4.27'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Nothing', level=5, num='3.1.4.27.1'),
-        Heading(name='maxMappedArrays', level=4, num='3.1.4.28'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxMappedArrays', level=5, num='3.1.4.28.1'),
-        Heading(name='minMappedArrays', level=4, num='3.1.4.29'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MinMappedArrays', level=5, num='3.1.4.29.1'),
-        Heading(name='nonNegativeDerivative', level=4, num='3.1.4.30'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NonNegativeDerivative', level=5, num='3.1.4.30.1'),
-        Heading(name='theilsU', level=4, num='3.1.4.31'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU', level=5, num='3.1.4.31.1'),
-        Heading(name='analysisOfVariance', level=4, num='3.1.4.32'),
-        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance', level=5, num='3.1.4.32.1'),
+        Heading(name='first_value_respect_nulls', level=4, num='3.1.4.2'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValueRespectNulls', level=5, num='3.1.4.2.1'),
+        Heading(name='last_value', level=4, num='3.1.4.3'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue', level=5, num='3.1.4.3.1'),
+        Heading(name='last_value_respect_nulls', level=4, num='3.1.4.4'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValueRespectNulls', level=5, num='3.1.4.4.1'),
+        Heading(name='lagInFrame', level=4, num='3.1.4.5'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LagInFrame', level=5, num='3.1.4.5.1'),
+        Heading(name='leadInFrame', level=4, num='3.1.4.6'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LeadInFrame', level=5, num='3.1.4.6.1'),
+        Heading(name='nth_value', level=4, num='3.1.4.7'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NthValue', level=5, num='3.1.4.7.1'),
+        Heading(name='rank', level=4, num='3.1.4.8'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Rank', level=5, num='3.1.4.8.1'),
+        Heading(name='row_number', level=4, num='3.1.4.9'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.RowNumber', level=5, num='3.1.4.9.1'),
+        Heading(name='singleValueOrNull', level=4, num='3.1.4.10'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull', level=5, num='3.1.4.10.1'),
+        Heading(name='maxIntersections', level=4, num='3.1.4.11'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections', level=5, num='3.1.4.11.1'),
+        Heading(name='maxIntersectionsPosition', level=4, num='3.1.4.12'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersectionsPosition', level=5, num='3.1.4.12.1'),
+        Heading(name='aggThrow', level=4, num='3.1.4.13'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AggThrow', level=5, num='3.1.4.13.1'),
+        Heading(name='boundingRatio', level=4, num='3.1.4.14'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.BoundingRatio', level=5, num='3.1.4.14.1'),
+        Heading(name='contingency', level=4, num='3.1.4.15'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Contingency', level=5, num='3.1.4.15.1'),
+        Heading(name='cramersV', level=4, num='3.1.4.16'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersV', level=5, num='3.1.4.16.1'),
+        Heading(name='cramersVBiasCorrected', level=4, num='3.1.4.17'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersVBiasCorrected', level=5, num='3.1.4.17.1'),
+        Heading(name='dense_rank', level=4, num='3.1.4.18'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.DenseRank', level=5, num='3.1.4.18.1'),
+        Heading(name='exponentialTimeDecayedAvg', level=4, num='3.1.4.19'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedAvg', level=5, num='3.1.4.19.1'),
+        Heading(name='exponentialTimeDecayedCount', level=4, num='3.1.4.20'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedCount', level=5, num='3.1.4.20.1'),
+        Heading(name='exponentialTimeDecayedMax', level=4, num='3.1.4.21'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedMax', level=5, num='3.1.4.21.1'),
+        Heading(name='exponentialTimeDecayedSum', level=4, num='3.1.4.22'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedSum', level=5, num='3.1.4.22.1'),
+        Heading(name='uniqTheta', level=4, num='3.1.4.23'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqTheta', level=5, num='3.1.4.23.1'),
+        Heading(name='quantileExactExclusive', level=4, num='3.1.4.24'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactExclusive', level=5, num='3.1.4.24.1'),
+        Heading(name='quantileExactInclusive', level=4, num='3.1.4.25'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactInclusive', level=5, num='3.1.4.25.1'),
+        Heading(name='sumMapFilteredWithOverflow', level=4, num='3.1.4.26'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapFilteredWithOverflow', level=5, num='3.1.4.26.1'),
+        Heading(name='sumMapWithOverflow', level=4, num='3.1.4.27'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapWithOverflow', level=5, num='3.1.4.27.1'),
+        Heading(name='sumMappedArrays', level=4, num='3.1.4.28'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMappedArrays', level=5, num='3.1.4.28.1'),
+        Heading(name='nothing', level=4, num='3.1.4.29'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Nothing', level=5, num='3.1.4.29.1'),
+        Heading(name='maxMappedArrays', level=4, num='3.1.4.30'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxMappedArrays', level=5, num='3.1.4.30.1'),
+        Heading(name='minMappedArrays', level=4, num='3.1.4.31'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MinMappedArrays', level=5, num='3.1.4.31.1'),
+        Heading(name='nonNegativeDerivative', level=4, num='3.1.4.32'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NonNegativeDerivative', level=5, num='3.1.4.32.1'),
+        Heading(name='theilsU', level=4, num='3.1.4.33'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU', level=5, num='3.1.4.33.1'),
+        Heading(name='analysisOfVariance', level=4, num='3.1.4.34'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance', level=5, num='3.1.4.34.1'),
         Heading(name='Parametric Functions', level=3, num='3.1.5'),
         Heading(name='histogram', level=4, num='3.1.5.1'),
         Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram', level=5, num='3.1.5.1.1'),
@@ -3429,7 +3465,9 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CovarSampMatrix,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CovarPopMatrix,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValueRespectNulls,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LastValue,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LastValueRespectNulls,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LagInFrame,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LeadInFrame,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_NthValue,
@@ -3710,68 +3748,72 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         * 3.1.4 [Miscellaneous Functions](#miscellaneous-functions)
             * 3.1.4.1 [first_value](#first_value)
                 * 3.1.4.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousfirstvalue)
-            * 3.1.4.2 [last_value](#last_value)
-                * 3.1.4.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslastvalue)
-            * 3.1.4.3 [lagInFrame](#laginframe)
-                * 3.1.4.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LagInFrame](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslaginframe)
-            * 3.1.4.4 [leadInFrame](#leadinframe)
-                * 3.1.4.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LeadInFrame](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousleadinframe)
-            * 3.1.4.5 [nth_value](#nth_value)
-                * 3.1.4.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NthValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnthvalue)
-            * 3.1.4.6 [rank](#rank)
-                * 3.1.4.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Rank](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousrank)
-            * 3.1.4.7 [row_number](#row_number)
-                * 3.1.4.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.RowNumber](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousrownumber)
-            * 3.1.4.8 [singleValueOrNull](#singlevalueornull)
-                * 3.1.4.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussinglevalueornull)
-            * 3.1.4.9 [maxIntersections](#maxintersections)
-                * 3.1.4.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersections)
-            * 3.1.4.10 [maxIntersectionsPosition](#maxintersectionsposition)
-                * 3.1.4.10.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersectionsPosition](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersectionsposition)
-            * 3.1.4.11 [aggThrow](#aggthrow)
-                * 3.1.4.11.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AggThrow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousaggthrow)
-            * 3.1.4.12 [boundingRatio](#boundingratio)
-                * 3.1.4.12.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.BoundingRatio](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousboundingratio)
-            * 3.1.4.13 [contingency](#contingency)
-                * 3.1.4.13.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Contingency](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscontingency)
-            * 3.1.4.14 [cramersV](#cramersv)
-                * 3.1.4.14.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersV](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscramersv)
-            * 3.1.4.15 [cramersVBiasCorrected](#cramersvbiascorrected)
-                * 3.1.4.15.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersVBiasCorrected](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscramersvbiascorrected)
-            * 3.1.4.16 [dense_rank](#dense_rank)
-                * 3.1.4.16.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.DenseRank](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousdenserank)
-            * 3.1.4.17 [exponentialTimeDecayedAvg](#exponentialtimedecayedavg)
-                * 3.1.4.17.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedAvg](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedavg)
-            * 3.1.4.18 [exponentialTimeDecayedCount](#exponentialtimedecayedcount)
-                * 3.1.4.18.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedCount](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedcount)
-            * 3.1.4.19 [exponentialTimeDecayedMax](#exponentialtimedecayedmax)
-                * 3.1.4.19.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedMax](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedmax)
-            * 3.1.4.20 [exponentialTimeDecayedSum](#exponentialtimedecayedsum)
-                * 3.1.4.20.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedSum](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedsum)
-            * 3.1.4.21 [uniqTheta](#uniqtheta)
-                * 3.1.4.21.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqTheta](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousuniqtheta)
-            * 3.1.4.22 [quantileExactExclusive](#quantileexactexclusive)
-                * 3.1.4.22.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactExclusive](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousquantileexactexclusive)
-            * 3.1.4.23 [quantileExactInclusive](#quantileexactinclusive)
-                * 3.1.4.23.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactInclusive](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousquantileexactinclusive)
-            * 3.1.4.24 [sumMapFilteredWithOverflow](#summapfilteredwithoverflow)
-                * 3.1.4.24.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapFilteredWithOverflow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummapfilteredwithoverflow)
-            * 3.1.4.25 [sumMapWithOverflow](#summapwithoverflow)
-                * 3.1.4.25.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapWithOverflow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummapwithoverflow)
-            * 3.1.4.26 [sumMappedArrays](#summappedarrays)
-                * 3.1.4.26.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummappedarrays)
-            * 3.1.4.27 [nothing](#nothing)
-                * 3.1.4.27.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Nothing](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnothing)
-            * 3.1.4.28 [maxMappedArrays](#maxmappedarrays)
-                * 3.1.4.28.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxmappedarrays)
-            * 3.1.4.29 [minMappedArrays](#minmappedarrays)
-                * 3.1.4.29.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MinMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousminmappedarrays)
-            * 3.1.4.30 [nonNegativeDerivative](#nonnegativederivative)
-                * 3.1.4.30.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NonNegativeDerivative](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnonnegativederivative)
-            * 3.1.4.31 [theilsU](#theilsu)
-                * 3.1.4.31.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoustheilsu)
-            * 3.1.4.32 [analysisOfVariance](#analysisofvariance)
-                * 3.1.4.32.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousanalysisofvariance)
+            * 3.1.4.2 [first_value_respect_nulls](#first_value_respect_nulls)
+                * 3.1.4.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValueRespectNulls](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousfirstvaluerespectnulls)
+            * 3.1.4.3 [last_value](#last_value)
+                * 3.1.4.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslastvalue)
+            * 3.1.4.4 [last_value_respect_nulls](#last_value_respect_nulls)
+                * 3.1.4.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValueRespectNulls](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslastvaluerespectnulls)
+            * 3.1.4.5 [lagInFrame](#laginframe)
+                * 3.1.4.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LagInFrame](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslaginframe)
+            * 3.1.4.6 [leadInFrame](#leadinframe)
+                * 3.1.4.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LeadInFrame](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousleadinframe)
+            * 3.1.4.7 [nth_value](#nth_value)
+                * 3.1.4.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NthValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnthvalue)
+            * 3.1.4.8 [rank](#rank)
+                * 3.1.4.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Rank](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousrank)
+            * 3.1.4.9 [row_number](#row_number)
+                * 3.1.4.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.RowNumber](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousrownumber)
+            * 3.1.4.10 [singleValueOrNull](#singlevalueornull)
+                * 3.1.4.10.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussinglevalueornull)
+            * 3.1.4.11 [maxIntersections](#maxintersections)
+                * 3.1.4.11.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersections)
+            * 3.1.4.12 [maxIntersectionsPosition](#maxintersectionsposition)
+                * 3.1.4.12.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersectionsPosition](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersectionsposition)
+            * 3.1.4.13 [aggThrow](#aggthrow)
+                * 3.1.4.13.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AggThrow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousaggthrow)
+            * 3.1.4.14 [boundingRatio](#boundingratio)
+                * 3.1.4.14.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.BoundingRatio](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousboundingratio)
+            * 3.1.4.15 [contingency](#contingency)
+                * 3.1.4.15.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Contingency](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscontingency)
+            * 3.1.4.16 [cramersV](#cramersv)
+                * 3.1.4.16.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersV](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscramersv)
+            * 3.1.4.17 [cramersVBiasCorrected](#cramersvbiascorrected)
+                * 3.1.4.17.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersVBiasCorrected](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscramersvbiascorrected)
+            * 3.1.4.18 [dense_rank](#dense_rank)
+                * 3.1.4.18.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.DenseRank](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousdenserank)
+            * 3.1.4.19 [exponentialTimeDecayedAvg](#exponentialtimedecayedavg)
+                * 3.1.4.19.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedAvg](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedavg)
+            * 3.1.4.20 [exponentialTimeDecayedCount](#exponentialtimedecayedcount)
+                * 3.1.4.20.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedCount](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedcount)
+            * 3.1.4.21 [exponentialTimeDecayedMax](#exponentialtimedecayedmax)
+                * 3.1.4.21.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedMax](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedmax)
+            * 3.1.4.22 [exponentialTimeDecayedSum](#exponentialtimedecayedsum)
+                * 3.1.4.22.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedSum](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedsum)
+            * 3.1.4.23 [uniqTheta](#uniqtheta)
+                * 3.1.4.23.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqTheta](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousuniqtheta)
+            * 3.1.4.24 [quantileExactExclusive](#quantileexactexclusive)
+                * 3.1.4.24.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactExclusive](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousquantileexactexclusive)
+            * 3.1.4.25 [quantileExactInclusive](#quantileexactinclusive)
+                * 3.1.4.25.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactInclusive](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousquantileexactinclusive)
+            * 3.1.4.26 [sumMapFilteredWithOverflow](#summapfilteredwithoverflow)
+                * 3.1.4.26.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapFilteredWithOverflow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummapfilteredwithoverflow)
+            * 3.1.4.27 [sumMapWithOverflow](#summapwithoverflow)
+                * 3.1.4.27.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapWithOverflow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummapwithoverflow)
+            * 3.1.4.28 [sumMappedArrays](#summappedarrays)
+                * 3.1.4.28.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummappedarrays)
+            * 3.1.4.29 [nothing](#nothing)
+                * 3.1.4.29.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Nothing](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnothing)
+            * 3.1.4.30 [maxMappedArrays](#maxmappedarrays)
+                * 3.1.4.30.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxmappedarrays)
+            * 3.1.4.31 [minMappedArrays](#minmappedarrays)
+                * 3.1.4.31.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MinMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousminmappedarrays)
+            * 3.1.4.32 [nonNegativeDerivative](#nonnegativederivative)
+                * 3.1.4.32.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NonNegativeDerivative](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnonnegativederivative)
+            * 3.1.4.33 [theilsU](#theilsu)
+                * 3.1.4.33.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoustheilsu)
+            * 3.1.4.34 [analysisOfVariance](#analysisofvariance)
+                * 3.1.4.34.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousanalysisofvariance)
         * 3.1.5 [Parametric Functions](#parametric-functions)
             * 3.1.5.1 [histogram](#histogram)
                 * 3.1.5.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
@@ -4586,12 +4628,26 @@ version: 1.0
 
 [ClickHouse] SHALL support `first_value` aggregate function.
 
+##### first_value_respect_nulls
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValueRespectNulls
+version: 1.0
+
+[ClickHouse] SHALL support `first_value_respect_nulls` aggregate function.
+
 ##### last_value
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue
 version: 1.0
 
 [ClickHouse] SHALL support `last_value` aggregate function.
+
+##### last_value_respect_nulls
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValueRespectNulls
+version: 1.0
+
+[ClickHouse] SHALL support `last_value_respect_nulls` aggregate function.
 
 ##### lagInFrame
 

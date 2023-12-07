@@ -153,6 +153,8 @@ def feature(self):
         "sumMap",
         "maxMap",
         "minMap",
+        "first_value_respect_nulls",
+        "last_value_respect_nulls",
         "sumMapFiltered",  # parameters of different type
         "sumMapFilteredWithOverflow",  # parameters of different type
         "quantileTDigestWeighted",
