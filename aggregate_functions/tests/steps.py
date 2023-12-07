@@ -12,6 +12,8 @@ from helpers.common import (
 
 # exhaustive list of all aggregate functions
 aggregate_functions = [
+    "aggThrow",
+    "analysisOfVariance",
     "any",
     "anyHeavy",
     "anyLast",
@@ -23,11 +25,14 @@ aggregate_functions = [
     "categoricalInformationValue",
     "contingency",
     "corr",
+    "corrMatrix",
     "corrStable",
     "count",
     "covarPop",
+    "covarPopMatrix",
     "covarPopStable",
     "covarSamp",
+    "covarSampMatrix",
     "covarSampStable",
     "cramersV",
     "cramersVBiasCorrected",
@@ -41,8 +46,11 @@ aggregate_functions = [
     "exponentialTimeDecayedMax",
     "exponentialTimeDecayedSum",
     "first_value",
+    "first_value_respect_nulls",
+    "flameGraph",
     "groupArray",
     "groupArrayInsertAt",
+    "groupArrayLast",
     "groupArrayMovingAvg",
     "groupArrayMovingSum",
     "groupArraySample",
@@ -56,10 +64,12 @@ aggregate_functions = [
     "groupUniqArray",
     "histogram",
     "intervalLengthSum",
+    "kolmogorovSmirnovTest",
     "kurtPop",
     "kurtSamp",
     "lagInFrame",
     "last_value",
+    "last_value_respect_nulls",
     "leadInFrame",
     "mannWhitneyUTest",
     "max",
@@ -72,6 +82,7 @@ aggregate_functions = [
     "nonNegativeDerivative",
     "nothing",
     "nth_value",
+    "ntile",
     "quantile",
     "quantileBFloat16",
     "quantileBFloat16Weighted",
@@ -82,6 +93,8 @@ aggregate_functions = [
     "quantileExactInclusive",
     "quantileExactLow",
     "quantileExactWeighted",
+    "quantileGK",
+    "quantileInterpolatedWeighted",
     "quantileTDigest",
     "quantileTDigestWeighted",
     "quantileTiming",
@@ -96,6 +109,8 @@ aggregate_functions = [
     "quantilesExactInclusive",
     "quantilesExactLow",
     "quantilesExactWeighted",
+    "quantilesGK",
+    "quantilesInterpolatedWeighted",
     "quantilesTDigest",
     "quantilesTDigestWeighted",
     "quantilesTiming",
@@ -122,12 +137,6 @@ aggregate_functions = [
     "sum",
     "sumCount",
     "sumKahan",
-    "sumMap",
-    "sumMap_alias",
-    "minMap",
-    "minMap_alias",
-    "maxMap_alias",
-    "maxMap",
     "sumMapFiltered",
     "sumMapFilteredWithOverflow",
     "sumMapWithOverflow",
@@ -149,6 +158,26 @@ aggregate_functions = [
     "varSampStable",
     "welchTTest",
     "windowFunnel",
+    "sumMap",
+    "sumMap_alias",
+    "minMap",
+    "minMap_alias",
+    "maxMap",
+    "maxMap_alias",
+]
+
+
+window_functions = [
+    "row_number",
+    "nth_value",
+    "rank",
+    "dense_rank",
+    "lagInFrame",
+    "leadInFrame",
+    "exponentialTimeDecayedSum",
+    "exponentialTimeDecayedMax",
+    "exponentialTimeDecayedCount",
+    "exponentialTimeDecayedAvg",
 ]
 
 
@@ -178,7 +207,10 @@ def execute_query(
         if check_clickhouse_version(">=22.8")(current()):
             snapshot_name += ">=22.8"
 
-    assert "snapshot_id" in current().context, "test must set self.context.snapshot_id"
+    if message is None and exitcode is None:
+        assert (
+            "snapshot_id" in current().context
+        ), "test must set self.context.snapshot_id"
 
     with When("I execute query", description=sql):
         if format and not "FORMAT" in sql:

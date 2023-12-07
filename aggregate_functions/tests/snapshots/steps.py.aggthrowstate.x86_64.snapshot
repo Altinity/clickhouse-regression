@@ -1,0 +1,4 @@
+_aggregate_functions_state_aggThrowState_NULL_for_all_rows = r"""
+{"hex(aggThrowStateDistinct(if(modulo(number, 2), NULL, NULL)))":null}
+"""
+
