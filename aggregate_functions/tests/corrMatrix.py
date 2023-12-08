@@ -5,6 +5,7 @@ from aggregate_functions.requirements import (
 from helpers.tables import common_columns
 from helpers.tables import is_numeric, is_nullable, is_low_cardinality
 
+
 @TestCheck
 def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
@@ -12,14 +13,20 @@ def datatype(self, func, table, col1_name, col2_name):
         f"SELECT {func.format(params=col1_name+','+col2_name)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name} FORMAT JSONEachRow"
     )
 
+
 @TestScenario
 @Name("corrMatrix")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CorrMatrix("1.0"))
-def scenario(self, func="corrMatrix({params})", table=None, snapshot_id=None, extended_precision=True, decimal=False):
+def scenario(
+    self,
+    func="corrMatrix({params})",
+    table=None,
+    snapshot_id=None,
+    extended_precision=True,
+    decimal=False,
+):
     """Check corrMatrix aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id
-    )
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
@@ -123,4 +130,3 @@ def scenario(self, func="corrMatrix({params})", table=None, snapshot_id=None, ex
                     )(func=func, table=table, col1_name=col1_name, col2_name=col2_name)
 
                 join()
-
