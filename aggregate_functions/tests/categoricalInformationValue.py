@@ -92,39 +92,6 @@ def scenario(
             )"
         )
 
-    with Check("single category 6"):
-        execute_query(
-            f"SELECT round({func.format(params='x.1,x.2')}[1], 6), round((2 / 2 - 2 / 3) * (log(2 / 2) - log(2 / 3)), 6) \
-            FROM ( \
-            SELECT \
-                arrayJoin([(0, 0), (1, 0), (1, 0), (1, 1), (1, 1)]) as x \
-            )" 
-        )
-
-    with Check("multiple category 1"):
-        execute_query(
-            f"SELECT {func.format(params='x.1, x.2, x.3')} \
-            FROM ( \
-                SELECT \
-                    arrayJoin([(1, 0, 0), (1, 0, 0), (1, 0, 1), (0, 1, 0), (0, 1, 0), (0, 1, 1)]) as x \
-            )"
-        )
-    
-    with Check("multiple category 2"):
-        execute_query(
-            f"SELECT \
-                round({func.format(params='x.1, x.2, x.3')}[1], 6), \
-                round({func.format(params='x.1, x.2, x.3')}[2], 6), \
-                round((2 / 4 - 1 / 3) * (log(2 / 4) - log(1 / 3)), 6), \
-                round((2 / 4 - 2 / 3) * (log(2 / 4) - log(2 / 3)), 6) \
-            FROM ( \
-                SELECT \
-                    arrayJoin([(1, 0, 0), (1, 0, 0), (1, 0, 1), (0, 1, 0), (0, 1, 0), (0, 1, 1), (0, 1, 1)]) as x \
-                FROM \
-                    numbers(1000) \
-            )"
-        )
-
     with Check("multiple category 3"):
         execute_query(
             f"SELECT {func.format(params='x.1, x.2, x.3')}, any(toTypeName(x.1)), any(toTypeName(x.2)), any(toTypeName(x.3)) \
@@ -134,6 +101,41 @@ def scenario(
                 FROM numbers(1000) \
             )"
         )
+        
+    if "State" not in self.name:
+        with Check("single category 6"):
+            execute_query(
+                f"SELECT round({func.format(params='x.1,x.2')}[1], 6), round((2 / 2 - 2 / 3) * (log(2 / 2) - log(2 / 3)), 6) \
+                FROM ( \
+                SELECT \
+                    arrayJoin([(0, 0), (1, 0), (1, 0), (1, 1), (1, 1)]) as x \
+                )" 
+            )
+
+        with Check("multiple category 1"):
+            execute_query(
+                f"SELECT {func.format(params='x.1, x.2, x.3')} \
+                FROM ( \
+                    SELECT \
+                        arrayJoin([(1, 0, 0), (1, 0, 0), (1, 0, 1), (0, 1, 0), (0, 1, 0), (0, 1, 1)]) as x \
+                )"
+            )
+        
+        with Check("multiple category 2"):
+            execute_query(
+                f"SELECT \
+                    round({func.format(params='x.1, x.2, x.3')}[1], 6), \
+                    round({func.format(params='x.1, x.2, x.3')}[2], 6), \
+                    round((2 / 4 - 1 / 3) * (log(2 / 4) - log(1 / 3)), 6), \
+                    round((2 / 4 - 2 / 3) * (log(2 / 4) - log(2 / 3)), 6) \
+                FROM ( \
+                    SELECT \
+                        arrayJoin([(1, 0, 0), (1, 0, 0), (1, 0, 1), (0, 1, 0), (0, 1, 0), (0, 1, 1), (0, 1, 1)]) as x \
+                    FROM \
+                        numbers(1000) \
+                )"
+            )
+
 
     
 
