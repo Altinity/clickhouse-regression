@@ -11,6 +11,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from alter.requirements.requirements import *
 from helpers.datatypes import *
+from s3.tests.common import enable_vfs
 
 xfails = {
     "/alter/replace partition/concurrent merges and mutations/mutations on unrelated partition": [
@@ -116,6 +117,10 @@ def regression(
             use_specific_version=True
         )
         self.context.cluster = cluster
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     Feature(run=load("alter.table.replace_partition.feature", "feature"))
 
