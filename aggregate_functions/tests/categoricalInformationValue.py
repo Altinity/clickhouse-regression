@@ -1,6 +1,3 @@
-from helpers.tables import common_columns
-from helpers.tables import is_numeric
-
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CategoricalInformationValue,
@@ -19,27 +16,30 @@ def scenario(
     snapshot_id=None
 ):
     """Check categoricalInformationValue aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("zero rows"):
         execute_query(
-            f"SELECT {func.format(params='x.1,x.2')} FROM (SELECT arrayJoin(arrayPopBack([(1, 0)])) as x)"
+            f"SELECT {func.format(params='x.1,x.2')}, any(toTypeName(x.1)), any(toTypeName(x.2)) FROM (SELECT arrayJoin(arrayPopBack([(1, 0)])) as x)"
         )
 
     with Check("single row"):
-        execute_query(f"SELECT {func.format(params='x,y')} FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (0, 0))")
+        execute_query(f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (0, 0))")
     
     with Check("NULL value handling"):
         execute_query(
-            f"SELECT {func.format(params='x,y')} FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
         )
 
     with Check("single NULL value"):
         execute_query(
-            f"SELECT {func.format(params='x,y')} FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (NULL,NULL))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (NULL,NULL))"
         )
 
     with Check("return type"):
@@ -49,7 +49,7 @@ def scenario(
 
     with Check("single category 1"):
         execute_query(
-            f"SELECT {func.format(params='x.1, x.2')} \
+            f"SELECT {func.format(params='x.1, x.2')}, any(toTypeName(x.1)), any(toTypeName(x.2)) \
             FROM ( \
                 SELECT \
                     arrayJoin([(1, 0), (1, 0), (1, 0), (1, 1), (1, 1)]) as x \
@@ -58,7 +58,7 @@ def scenario(
 
     with Check("single category 2"):
         execute_query(
-            f"SELECT {func.format(params='x.1, x.2')} \
+            f"SELECT {func.format(params='x.1, x.2')}, any(toTypeName(x.1)), any(toTypeName(x.2)) \
             FROM ( \
                 SELECT \
                     arrayJoin([(0, 0), (0, 1), (1, 0), (1, 1)]) as x \
@@ -67,7 +67,7 @@ def scenario(
 
     with Check("single category 3"):
         execute_query(
-            f"SELECT {func.format(params='x.1, x.2')} \
+            f"SELECT {func.format(params='x.1, x.2')}, any(toTypeName(x.1)), any(toTypeName(x.2)) \
             FROM ( \
                 SELECT \
                     arrayJoin([(0, 0), (0, 0), (1, 0), (1, 0)]) as x \
@@ -76,7 +76,7 @@ def scenario(
 
     with Check("single category 4"):
         execute_query(
-            f"SELECT {func.format(params='x.1, x.2')} \
+            f"SELECT {func.format(params='x.1, x.2')}, any(toTypeName(x.1)), any(toTypeName(x.2)) \
             FROM ( \
                 SELECT \
                     arrayJoin([(0, 1), (0, 1), (1, 1), (1, 1)]) as x \
@@ -85,7 +85,7 @@ def scenario(
 
     with Check("single category 5"):
         execute_query(
-            f"SELECT {func.format(params='x.1, x.2')} \
+            f"SELECT {func.format(params='x.1, x.2')}, any(toTypeName(x.1)), any(toTypeName(x.2)) \
             FROM ( \
                 SELECT \
                     arrayJoin([(0, 0), (0, 1), (1, 0), (1, 0)]) as x \
@@ -127,7 +127,7 @@ def scenario(
 
     with Check("multiple category 3"):
         execute_query(
-            f"SELECT {func.format(params='x.1, x.2, x.3')} \
+            f"SELECT {func.format(params='x.1, x.2, x.3')}, any(toTypeName(x.1)), any(toTypeName(x.2)), any(toTypeName(x.3)) \
             FROM ( \
                 SELECT \
                     arrayJoin([(1, 0, 0), (1, 0, 0), (1, 0, 1), (0, 1, 0), (0, 1, 0), (0, 1, 1)]) as x \
