@@ -244,7 +244,7 @@ def minio_regression(
         with Module(self.context.object_storage_mode):
             if self.context.object_storage_mode == "vfs":
                 with Given("I enable allow_object_storage_vfs"):
-                    add_vfs_config()
+                    enable_vfs()
 
             Feature(test=load("s3.tests.table_function", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
