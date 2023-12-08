@@ -166,7 +166,7 @@ def regression(
                 with Feature(self.context.object_storage_mode):
                     if self.context.object_storage_mode == "vfs":
                         with Given("I enable allow_object_storage_vfs"):
-                            add_vfs_config()
+                            enable_vfs()
 
                     with s3_storage(disks, policies, timeout=360):
                         Feature(
