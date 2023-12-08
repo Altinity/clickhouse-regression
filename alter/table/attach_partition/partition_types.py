@@ -66,9 +66,7 @@ def partition_with_empty_parts(self, table_name):
     with By("creating a partitioned table"):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
-    with And(
-        f"inserting data into {table_name} that will create multiple wide parts"
-    ):
+    with And(f"inserting data into {table_name} that will create multiple wide parts"):
         create_partitions_with_random_uint64(
             node=node, table_name=table_name, number_of_values=100
         )
@@ -112,7 +110,7 @@ def check_attach_partition(self, destination_table):
                """,
     ):
         destination_table(table_name=destination_table_name)
-        
+
     with When("I replace partition from the source table into the destination table"):
         attach_partition(
             destination_table=destination_table_name,
@@ -120,9 +118,7 @@ def check_attach_partition(self, destination_table):
         )
 
     with Then("I check that the partition on the destination table was replaced"):
-        check_partition_was_replaced(
-            destination_table=destination_table_name
-        )
+        check_partition_was_replaced(destination_table=destination_table_name)
 
 
 @TestSketch(Scenario)
