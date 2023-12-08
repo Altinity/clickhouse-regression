@@ -20,7 +20,7 @@ def positive_overflow_with_Int16(self):
     execute_query(
         """
         select number as x, last_value(x) over (order by toInt16(x) range between current row and 2147450884 following) AS last_value
-        from numbers(32764, 3)
+        from numbers(32764, 3) order by x
         """,
         expected=expected,
     )
@@ -42,7 +42,7 @@ def negative_overflow_with_Int16(self):
     execute_query(
         """
         select number as x, last_value(x) over (order by toInt16(x) desc range between current row and 2147450885 following) as last_value
-        from (SELECT -number - 32763 AS number FROM numbers(1, 3))
+        from (SELECT -number - 32763 AS number FROM numbers(1, 3)) order by x
         """,
         expected=expected,
     )
@@ -64,7 +64,7 @@ def positive_overflow_for_Int32(self):
     execute_query(
         """
         select number as x, last_value(x) over (order by x range between current row and 4 following) as last_value
-        from numbers(2147483644, 3) 
+        from numbers(2147483644, 3)  order by x
         """,
         expected=expected,
     )
@@ -86,7 +86,7 @@ def negative_overflow_for_Int32(self):
     execute_query(
         """
         select number as x, last_value(x) over (order by x desc range between current row and 5 following) as last_value
-        from (select -number-2147483643 AS number FROM numbers(1,3))
+        from (select -number-2147483643 AS number FROM numbers(1,3)) order by x desc
         """,
         expected=expected,
     )
@@ -108,7 +108,7 @@ def positive_overflow_for_Int64(self):
     execute_query(
         """
         select number as x, last_value(x) over (order by x range between current row and 4 following) as last_value
-        from numbers(9223372036854775804, 3) 
+        from numbers(9223372036854775804, 3) order by x
         """,
         expected=expected,
     )
@@ -130,7 +130,7 @@ def negative_overflow_for_Int64(self):
     execute_query(
         """
         select number as x, last_value(x) over (order by x desc range between current row and 5 following) as last_value
-        from (select -number-9223372036854775803 AS number from numbers(1,3)) 
+        from (select -number-9223372036854775803 AS number from numbers(1,3)) order by x desc
         """,
         expected=expected,
     )

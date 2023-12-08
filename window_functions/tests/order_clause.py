@@ -17,7 +17,7 @@ def single_expr_asc(self):
     )
 
     execute_query(
-        "SELECT x,s, sum(x) OVER (ORDER BY x ASC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b'))",
+        "SELECT x,s, sum(x) OVER (ORDER BY x ASC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b')) ORDER BY x",
         expected=expected,
     )
 
@@ -36,7 +36,7 @@ def single_expr_desc(self):
     )
 
     execute_query(
-        "SELECT x,s, sum(x) OVER (ORDER BY x DESC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b'))",
+        "SELECT x,s, sum(x) OVER (ORDER BY x DESC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b')) ORDER BY x DESC",
         expected=expected,
     )
 
@@ -56,7 +56,7 @@ def multiple_expr_desc_desc(self):
     )
 
     execute_query(
-        "SELECT x,s, sum(x) OVER (ORDER BY x DESC, s DESC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b'))",
+        "SELECT x,s, sum(x) OVER (ORDER BY x DESC, s DESC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b')) ORDER BY x DESC, s DESC",
         expected=expected,
     )
 
@@ -76,7 +76,7 @@ def multiple_expr_asc_asc(self):
     )
 
     execute_query(
-        "SELECT x,s, sum(x) OVER (ORDER BY x ASC, s ASC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b'))",
+        "SELECT x,s, sum(x) OVER (ORDER BY x ASC, s ASC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b')) ORDER BY x, s",
         expected=expected,
     )
 
@@ -96,7 +96,7 @@ def multiple_expr_asc_desc(self):
     )
 
     execute_query(
-        "SELECT x,s, sum(x) OVER (ORDER BY x ASC, s DESC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b'))",
+        "SELECT x,s, sum(x) OVER (ORDER BY x ASC, s DESC) AS sum FROM values('x Int8, s String', (1,'a'),(1,'b'),(2,'b')) ORDER BY x, s DESC",
         expected=expected,
     )
 
@@ -154,7 +154,7 @@ def by_column(self):
     )
 
     execute_query(
-        "SELECT depname, empno, salary, rank() OVER (PARTITION BY depname, empno ORDER BY salary) AS rank FROM empsalary",
+        "SELECT depname, empno, salary, rank() OVER (PARTITION BY depname, empno ORDER BY salary) AS rank FROM empsalary ORDER BY depname, empno",
         expected=expected,
     )
 
@@ -180,7 +180,7 @@ def by_expr(self):
     )
 
     execute_query(
-        "SELECT avg(four) OVER (PARTITION BY four ORDER BY thousand / 100) AS avg FROM tenk1 WHERE unique2 < 10",
+        "SELECT avg(four) OVER (PARTITION BY four ORDER BY thousand / 100) AS avg FROM tenk1 WHERE unique2 < 10 ORDER BY avg",
         expected=expected,
     )
 
