@@ -12,7 +12,7 @@ from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
-from s3.tests.common import add_vfs_config
+from s3.tests.common import enable_vfs
 
 
 def argparser(parser):
@@ -174,7 +174,7 @@ def feature(
         with Feature(object_storage_mode):
             if object_storage_mode == "vfs":
                 with Given("I enable allow_object_storage_vfs"):
-                    add_vfs_config()
+                    enable_vfs()
 
             with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
                 Scenario(

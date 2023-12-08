@@ -124,6 +124,7 @@ def regression(
             with Given("I enable lightweight delete"):
                 allow_experimental_lightweight_delete()
 
+
         Feature(
             run=load(
                 "lightweight_delete.tests.acceptance_concurrent_alter_and_delete",
