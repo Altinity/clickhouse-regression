@@ -795,7 +795,7 @@ def get_bucket_size(
 
 @TestStep
 def check_bucket_size(
-    self, name, prefix, expected_size, tolerance=None, minio_enabled=False
+    self, name, prefix, expected_size, tolerance=0, minio_enabled=False
 ):
     current_size = get_bucket_size(
         name=name,
@@ -804,10 +804,7 @@ def check_bucket_size(
         access_key=self.context.secret_access_key,
         key_id=self.context.access_key_id,
     )
-    if tolerance is None or tolerance == 0:
-        assert expected_size == current_size, error()
-    else:
-        assert abs(expected_size - current_size) <= tolerance, error()
+    assert abs(current_size - expected_size) <= tolerance, error()
 
 
 @TestStep(Given)
