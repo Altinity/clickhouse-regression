@@ -1,0 +1,56 @@
+_aggregate_functions_categoricalInformationValue_NULL_value_handling = r"""
+{"categoricalInformationValue(x, y)":[null]}
+"""
+
+_aggregate_functions_categoricalInformationValue_multiple_category_1 = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2), tupleElement(x, 3))":[0,0]}
+"""
+
+_aggregate_functions_categoricalInformationValue_multiple_category_2 = r"""
+{"round(arrayElement(categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2), tupleElement(x, 3)), 1), 6)":0.067578,"round(arrayElement(categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2), tupleElement(x, 3)), 2), 6)":0.047947,"round(multiply(minus(divide(2, 4), divide(1, 3)), minus(log(divide(2, 4)), log(divide(1, 3)))), 6)":0.067578,"round(multiply(minus(divide(2, 4), divide(2, 3)), minus(log(divide(2, 4)), log(divide(2, 3)))), 6)":0.047947}
+"""
+
+_aggregate_functions_categoricalInformationValue_multiple_category_3 = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2), tupleElement(x, 3))":[0,0]}
+"""
+
+_aggregate_functions_categoricalInformationValue_return_type = r"""
+{"toTypeName(categoricalInformationValue(x, y))":"Array(Float64)"}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_NULL_value = r"""
+{"categoricalInformationValue(x, y)":[null]}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_category_1 = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2))":[0]}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_category_2 = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2))":[0]}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_category_3 = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2))":[null]}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_category_4 = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2))":[null]}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_category_5 = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2))":[null]}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_category_6 = r"""
+{"round(arrayElement(categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2)), 1), 6)":0.135155,"round(multiply(minus(divide(2, 2), divide(2, 3)), minus(log(divide(2, 2)), log(divide(2, 3)))), 6)":0.135155}
+"""
+
+_aggregate_functions_categoricalInformationValue_single_row = r"""
+{"categoricalInformationValue(x, y)":[null]}
+"""
+
+_aggregate_functions_categoricalInformationValue_zero_rows = r"""
+{"categoricalInformationValue(tupleElement(x, 1), tupleElement(x, 2))":[null]}
+"""
+
