@@ -193,6 +193,7 @@ def feature(self):
         "topK",
         "topKWeighted",
         "quantiles",
+        "groupArrayLast"
     ]
 
     test_funcs = [i for i in aggregate_functions]

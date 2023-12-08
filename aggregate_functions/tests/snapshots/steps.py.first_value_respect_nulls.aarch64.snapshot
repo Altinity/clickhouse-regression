@@ -1,30 +1,141 @@
+_aggregate_functions_first_value_respect_nulls_NULL_for_all_rows = r"""
+{"first_value_respect_nullsDistinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_first_value_respect_nulls__inf = r"""
+{"first_value_respect_nulls(x)":null,"any(toTypeName(x))":"Float64"}
+"""
+
 _aggregate_functions_first_value_respect_nulls_constant = r"""
 {"first_value_respect_nulls(1)":1,"any(toTypeName(1))":"UInt8"}
 """
 
-_aggregate_functions_first_value_respect_nulls_zero_rows = r"""
-{"first_value_respect_nulls(number)":null,"any(toTypeName(number))":""}
+_aggregate_functions_first_value_respect_nulls_datatypes_Date = r"""
+{"first_value_respect_nulls(date)":"2149-06-06","any(toTypeName(date))":"Date"}
 """
 
-_aggregate_functions_first_value_respect_nulls_with_group_by = r"""
-{"even":0,"first_value_respect_nulls(number)":"0","any(toTypeName(number))":"UInt64"}
-{"even":1,"first_value_respect_nulls(number)":"1","any(toTypeName(number))":"UInt64"}
+_aggregate_functions_first_value_respect_nulls_datatypes_DateTime = r"""
+{"first_value_respect_nulls(datetime)":"2106-02-07 06:28:15","any(toTypeName(datetime))":"DateTime"}
 """
 
-_aggregate_functions_first_value_respect_nulls_some_negative_values = r"""
-{"first_value_respect_nulls(minus(number, 5))":"-4","any(toTypeName(number))":"UInt64"}
+_aggregate_functions_first_value_respect_nulls_datatypes_Decimal128_38_ = r"""
+{"first_value_respect_nulls(decimal128_38_)":0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_FixedString_51_ = r"""
+{"first_value_respect_nulls(fixedstring_51_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(fixedstring_51_))":"FixedString(51)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Float32 = r"""
+{"first_value_respect_nulls(float32)":3.4028235e38,"any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Float64 = r"""
+{"first_value_respect_nulls(float64)":1.7976909999999999e308,"any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Int64 = r"""
+{"first_value_respect_nulls(int64)":"9223372036854775807","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_DateTime_ = r"""
+{"first_value_respect_nulls(lowcardinality_datetime_)":"2106-02-07 06:28:15","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Date_ = r"""
+{"first_value_respect_nulls(lowcardinality_date_)":"2149-06-06","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_FixedString_51__ = r"""
+{"first_value_respect_nulls(lowcardinality_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(lowcardinality_fixedstring_51__))":"LowCardinality(FixedString(51))"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Float32_ = r"""
+{"first_value_respect_nulls(lowcardinality_float32_)":3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Float64_ = r"""
+{"first_value_respect_nulls(lowcardinality_float64_)":1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Int64_ = r"""
+{"first_value_respect_nulls(lowcardinality_int64_)":"9223372036854775807","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_String_ = r"""
+{"first_value_respect_nulls(lowcardinality_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(lowcardinality_string_))":"LowCardinality(String)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_UInt64_ = r"""
+{"first_value_respect_nulls(lowcardinality_uint64_)":"18446744073709551615","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_DateTime_ = r"""
+{"first_value_respect_nulls(nullable_datetime_)":"2106-02-07 06:28:15","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Date_ = r"""
+{"first_value_respect_nulls(nullable_date_)":"2149-06-06","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Decimal128_38__ = r"""
+{"first_value_respect_nulls(nullable_decimal128_38__)":0.99999999999999997752612184630461283328,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_FixedString_51__ = r"""
+{"first_value_respect_nulls(nullable_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(nullable_fixedstring_51__))":"Nullable(FixedString(51))"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Float32_ = r"""
+{"first_value_respect_nulls(nullable_float32_)":3.4028235e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Float64_ = r"""
+{"first_value_respect_nulls(nullable_float64_)":1.7976909999999999e308,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Int64_ = r"""
+{"first_value_respect_nulls(nullable_int64_)":"9223372036854775807","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_String_ = r"""
+{"first_value_respect_nulls(nullable_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(nullable_string_))":"Nullable(String)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_UInt64_ = r"""
+{"first_value_respect_nulls(nullable_uint64_)":"18446744073709551615","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_String = r"""
+{"first_value_respect_nulls(string)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_datatypes_UInt64 = r"""
+{"first_value_respect_nulls(uint64)":"18446744073709551615","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_first_value_respect_nulls_first_non_NULL_value = r"""
 {"first_value_respect_nulls(x)":null,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
-_aggregate_functions_first_value_respect_nulls_NULL_for_all_rows = r"""
-{"first_value_respect_nullsDistinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(number))":"UInt64"}
+_aggregate_functions_first_value_respect_nulls_inf = r"""
+{"first_value_respect_nulls(x)":null,"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_nan = r"""
+{"first_value_respect_nulls(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_first_value_respect_nulls_return_type = r"""
 {"toTypeName(first_value_respect_nulls(number))":"Nullable(UInt64)","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_some_negative_values = r"""
+{"first_value_respect_nulls(minus(number, 5))":"-4","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_first_value_respect_nulls_string_that_ends_with__0 = r"""
+{"first_value_respect_nulls(x)":"hello","any(toTypeName(x))":"String"}
 """
 
 _aggregate_functions_first_value_respect_nulls_with_another_aggregate_function = r"""
@@ -37,123 +148,12 @@ _aggregate_functions_first_value_respect_nulls_with_another_aggregate_function_a
 {"first_value_respect_nulls(x)":5,"y":"you","any(toTypeName(x))":"Nullable(Int8)"}
 """
 
-_aggregate_functions_first_value_respect_nulls_string_that_ends_with__0 = r"""
-{"first_value_respect_nulls(x)":"hello","any(toTypeName(x))":"String"}
+_aggregate_functions_first_value_respect_nulls_with_group_by = r"""
+{"even":0,"first_value_respect_nulls(number)":"0","any(toTypeName(number))":"UInt64"}
+{"even":1,"first_value_respect_nulls(number)":"1","any(toTypeName(number))":"UInt64"}
 """
 
-_aggregate_functions_first_value_respect_nulls_inf = r"""
-{"first_value_respect_nulls(x)":null,"any(toTypeName(x))":"Float64"}
-"""
-
-_aggregate_functions_first_value_respect_nulls__inf = r"""
-{"first_value_respect_nulls(x)":null,"any(toTypeName(x))":"Float64"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_nan = r"""
-{"first_value_respect_nulls(x)":null,"any(toTypeName(x))":"Float64"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_UInt64 = r"""
-{"first_value_respect_nulls(uint64)":"18446744073709551615","any(toTypeName(uint64))":"UInt64"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Int64 = r"""
-{"first_value_respect_nulls(int64)":"9223372036854775807","any(toTypeName(int64))":"Int64"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Float32 = r"""
-{"first_value_respect_nulls(float32)":3.4028235e38,"any(toTypeName(float32))":"Float32"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Float64 = r"""
-{"first_value_respect_nulls(float64)":1.7976909999999999e308,"any(toTypeName(float64))":"Float64"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Decimal128_38_ = r"""
-{"first_value_respect_nulls(decimal128_38_)":0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Date = r"""
-{"first_value_respect_nulls(date)":"2149-06-06","any(toTypeName(date))":"Date"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_String = r"""
-{"first_value_respect_nulls(string)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_DateTime = r"""
-{"first_value_respect_nulls(datetime)":"2106-02-07 06:28:15","any(toTypeName(datetime))":"DateTime"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_UInt64_ = r"""
-{"first_value_respect_nulls(nullable_uint64_)":"18446744073709551615","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_FixedString_51_ = r"""
-{"first_value_respect_nulls(fixedstring_51_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(fixedstring_51_))":"FixedString(51)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Int64_ = r"""
-{"first_value_respect_nulls(nullable_int64_)":"9223372036854775807","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Decimal128_38__ = r"""
-{"first_value_respect_nulls(nullable_decimal128_38__)":0.99999999999999997752612184630461283328,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Float32_ = r"""
-{"first_value_respect_nulls(nullable_float32_)":3.4028235e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Float64_ = r"""
-{"first_value_respect_nulls(nullable_float64_)":1.7976909999999999e308,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_Date_ = r"""
-{"first_value_respect_nulls(nullable_date_)":"2149-06-06","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_String_ = r"""
-{"first_value_respect_nulls(nullable_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(nullable_string_))":"Nullable(String)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_DateTime_ = r"""
-{"first_value_respect_nulls(nullable_datetime_)":"2106-02-07 06:28:15","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_UInt64_ = r"""
-{"first_value_respect_nulls(lowcardinality_uint64_)":"18446744073709551615","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_Nullable_FixedString_51__ = r"""
-{"first_value_respect_nulls(nullable_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(nullable_fixedstring_51__))":"Nullable(FixedString(51))"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Int64_ = r"""
-{"first_value_respect_nulls(lowcardinality_int64_)":"9223372036854775807","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Float32_ = r"""
-{"first_value_respect_nulls(lowcardinality_float32_)":3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Date_ = r"""
-{"first_value_respect_nulls(lowcardinality_date_)":"2149-06-06","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_Float64_ = r"""
-{"first_value_respect_nulls(lowcardinality_float64_)":1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_FixedString_51__ = r"""
-{"first_value_respect_nulls(lowcardinality_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(lowcardinality_fixedstring_51__))":"LowCardinality(FixedString(51))"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_String_ = r"""
-{"first_value_respect_nulls(lowcardinality_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(lowcardinality_string_))":"LowCardinality(String)"}
-"""
-
-_aggregate_functions_first_value_respect_nulls_datatypes_LowCardinality_DateTime_ = r"""
-{"first_value_respect_nulls(lowcardinality_datetime_)":"2106-02-07 06:28:15","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+_aggregate_functions_first_value_respect_nulls_zero_rows = r"""
+{"first_value_respect_nulls(number)":null,"any(toTypeName(number))":""}
 """
 
