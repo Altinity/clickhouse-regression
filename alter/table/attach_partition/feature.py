@@ -1,7 +1,7 @@
 from testflows.core import *
 
 from alter.table.attach_partition.requirements.requirements import (
-    SRS034_ClickHouse_Alter_Table_Attach_Partition
+    SRS034_ClickHouse_Alter_Table_Attach_Partition,
 )
 
 
