@@ -403,7 +403,8 @@ def last_value_with_no_frame(self):
     execute_query(
         "SELECT four, ten, sum(ten) over (partition by four order by ten) AS sum, "
         "last_value(ten) over (partition by four order by ten) AS last_value "
-        "FROM (select distinct ten, four from tenk1)",
+        "FROM (select distinct ten, four from tenk1) "
+        "ORDER BY four, ten",
         expected=expected,
     )
 
@@ -435,7 +436,8 @@ def last_value_with_lag_workaround(self):
     execute_query(
         "select last_value(salary) over(order by salary range between 1000 preceding and 1000 following) AS last_value, "
         "any(salary) over(order by salary rows between 1 preceding and 1 preceding) AS lag, "
-        "salary from empsalary",
+        "salary from empsalary "
+        "ORDER BY lag, salary",
         expected=expected,
     )
 
@@ -467,7 +469,7 @@ def first_value_with_lead_workaround(self):
     execute_query(
         "select first_value(salary) over(order by salary range between 1000 preceding and 1000 following) AS first_value, "
         "any(salary) over(order by salary rows between 1 following and 1 following) AS lead,"
-        "salary from empsalary",
+        "salary from empsalary ORDER BY salary, lead",
         expected=expected,
     )
 
@@ -518,7 +520,7 @@ def leadInFrame(self):
         )
 
         execute_query(
-            "select empno, salary, leadInFrame(salary) OVER (ORDER BY salary) AS lead FROM (SELECT * FROM empsalary ORDER BY empno)",
+            "select empno, salary, leadInFrame(salary) OVER (ORDER BY salary) AS lead FROM (SELECT * FROM empsalary ORDER BY empno) ORDER BY empno",
             expected=expected,
         )
 
@@ -564,7 +566,7 @@ def leadInFrame(self):
         )
 
         execute_query(
-            "select empno, salary, leadInFrame(salary) OVER () AS lead FROM (SELECT * FROM empsalary ORDER BY empno)",
+            "select empno, salary, leadInFrame(salary) OVER () AS lead FROM (SELECT * FROM empsalary ORDER BY empno) ORDER BY empno",
             expected=expected,
         )
 
@@ -582,7 +584,7 @@ def leadInFrame(self):
         )
 
         execute_query(
-            "select number, leadInFrame(number,1,0) OVER () AS lead FROM values('number Nullable(Int8)', (1),(1),(2),(3),(NULL))",
+            "select number, leadInFrame(number,1,0) OVER () AS lead FROM values('number Nullable(Int8)', (1),(1),(2),(3),(NULL)) ORDER BY number, lead",
             expected=expected,
         )
 
@@ -633,7 +635,7 @@ def lagInFrame(self):
         )
 
         execute_query(
-            "select empno, salary, lagInFrame(salary) OVER (ORDER BY salary) AS lag FROM (SELECT * FROM empsalary ORDER BY empno)",
+            "select empno, salary, lagInFrame(salary) OVER (ORDER BY salary) AS lag FROM (SELECT * FROM empsalary ORDER BY empno) ORDER BY salary, empno",
             expected=expected,
         )
 
@@ -679,7 +681,7 @@ def lagInFrame(self):
         )
 
         execute_query(
-            "select empno, salary, lagInFrame(salary) OVER () AS lag FROM (SELECT * FROM empsalary ORDER BY empno)",
+            "select empno, salary, lagInFrame(salary) OVER () AS lag FROM (SELECT * FROM empsalary ORDER BY empno) ORDER BY empno",
             expected=expected,
         )
 
@@ -697,7 +699,7 @@ def lagInFrame(self):
         )
 
         execute_query(
-            "select number, lagInFrame(number,1,0) OVER () AS lag FROM values('number Nullable(Int8)', (1),(1),(2),(3),(NULL))",
+            "select number, lagInFrame(number,1,0) OVER () AS lag FROM values('number Nullable(Int8)', (1),(1),(2),(3),(NULL)) ORDER BY number, lag",
             expected=expected,
         )
 

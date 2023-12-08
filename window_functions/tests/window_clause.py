@@ -25,7 +25,7 @@ def single_window(self):
     )
 
     execute_query(
-        "SELECT depname, empno, salary, sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY empno)",
+        "SELECT depname, empno, salary, sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (PARTITION BY depname ORDER BY empno) ORDER BY depname, empno",
         expected=expected,
     )
 
@@ -69,7 +69,8 @@ def multiple_identical_windows(self):
 
     execute_query(
         "SELECT sum(salary) OVER w1 AS sum, count(*) OVER w2 AS count "
-        "FROM empsalary WINDOW w1 AS (ORDER BY salary), w2 AS (ORDER BY salary)",
+        "FROM empsalary WINDOW w1 AS (ORDER BY salary), w2 AS (ORDER BY salary) "
+        "ORDER BY salary",
         expected=expected,
     )
 
@@ -97,7 +98,8 @@ def multiple_windows(self):
 
     execute_query(
         "SELECT empno, depname, salary, sum(salary) OVER w1 AS sum1, sum(salary) OVER w2 AS sum2 "
-        "FROM empsalary WINDOW w1 AS (PARTITION BY depname ORDER BY empno), w2 AS (ORDER BY empno ROWS 1 PRECEDING)",
+        "FROM empsalary WINDOW w1 AS (PARTITION BY depname ORDER BY empno), w2 AS (ORDER BY empno ROWS 1 PRECEDING) "
+        "ORDER BY empno",
         expected=expected,
     )
 
