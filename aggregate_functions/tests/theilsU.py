@@ -1,4 +1,5 @@
 from testflows.core import *
+from aggregate_functions.tests.steps import *
 
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_TheilsU,
@@ -12,7 +13,9 @@ from aggregate_functions.tests.corr import scenario as checks
 @Name("theilsU")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_TheilsU("1.0"))
 def scenario(self, func="theilsU({params})", table=None, snapshot_id=None):
-    """Check theilsU aggregate function by using the same checks as for covarPop."""
+    """Check theilsU aggregate function by using the same checks as for covarPop
+    as well as functions specific checks."""
+    
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     if "Merge" in self.name:
@@ -22,3 +25,8 @@ def scenario(self, func="theilsU({params})", table=None, snapshot_id=None):
         table = self.context.table
 
     checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
+
+    with Check("example2"):
+        execute_query(
+            f"SELECT {func.format(params='number % 10,number % 4')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(150)"
+        )
