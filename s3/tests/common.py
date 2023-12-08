@@ -782,9 +782,9 @@ def check_bucket_size(
     if tolerance is None or tolerance == 0:
         assert expected_size == current_size, error()
     else:
-        assert (
-            abs(expected_size - current_size) <= tolerance
-        ), "| expected - current | > tolerance"
+        assert abs(expected_size - current_size) <= tolerance, error(
+            "| expected - current | > tolerance"
+        )
 
 
 @TestStep(Given)
