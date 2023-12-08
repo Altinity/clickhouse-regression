@@ -159,7 +159,7 @@ def concurrent_replace(
             partition=partition_to_replace[1],
         )
         Check(
-            name=f"replace partition #{i} partition {partition_to_replace[3]}",
+            name=f"replace partition #{i} partition {partition_to_replace[2]}",
             test=replace_partition,
             parallel=True,
         )(
