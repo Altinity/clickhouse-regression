@@ -30,13 +30,13 @@ def create_partitions_with_random_parts(self, table_name, number_of_partitions):
     node = self.context.node
 
     with By(
-            f"Inserting data into a {table_name} table",
-            description="each insert creates a new part inside a partiion resulting in a partition with a set numebr of parts",
+        f"Inserting data into a {table_name} table",
+        description="each insert creates a new part inside a partiion resulting in a partition with a set numebr of parts",
     ):
         for partition in range(1, number_of_partitions):
             number_of_parts = random.randrange(1, 50)
             with By(
-                    f"creating {number_of_parts} parts inside the {partition} partition"
+                f"creating {number_of_parts} parts inside the {partition} partition"
             ):
                 for parts in range(1, number_of_parts):
                     node.query(
@@ -67,7 +67,7 @@ def source_table_with_partitions(self, table_name, number_of_partitions):
 
 @TestStep(Given)
 def create_two_tables(
-        self, destination_table=None, source_table=None, number_of_partitions=None
+    self, destination_table=None, source_table=None, number_of_partitions=None
 ):
     """Create two tables with the same structure having the specified number of partitions.
     The destination table will be used as the table where replace partition command will be
@@ -94,14 +94,14 @@ def create_two_tables(
 
 
 @TestScenario
-def concurrent_replace(
-        self,
-        number_of_partitions=None,
-        number_of_concurrent_queries=None,
-        destination_table=None,
-        source_table=None,
-        delay_before=None,
-        delay_after=None,
+def concurrent_replace_on_three_replicas(
+    self,
+    number_of_partitions=None,
+    number_of_concurrent_queries=None,
+    destination_table=None,
+    source_table=None,
+    delay_before=None,
+    delay_after=None,
 ):
     """Concurrently run multiple replace partitions on the destination table and
     validate that the data on both destination and source tables is the same."""
@@ -179,7 +179,6 @@ def concurrent_replace(
                 )
 
 
-
 @TestFeature
 @Requirements(
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace(
@@ -188,13 +187,13 @@ def concurrent_replace(
 )
 @Name("concurrent replace partitions on replicas")
 def feature(
-        self,
-        node="clickhouse1",
-        number_of_partitions=100,
-        number_of_concurrent_queries=100,
-        delay_before=None,
-        delay_after=None,
-        validate=True,
+    self,
+    node="clickhouse1",
+    number_of_partitions=100,
+    number_of_concurrent_queries=100,
+    delay_before=None,
+    delay_after=None,
+    validate=True,
 ):
     """
     On a cluster with a single shard and 3 replicas, we create destination and source tables and populate them with set
@@ -213,8 +212,8 @@ def feature(
     self.context.validate = validate
 
     with Given(
-            "I create destination and source tables for the replace partition command"
+        "I create destination and source tables for the replace partition command"
     ):
         create_two_tables()
 
-    Scenario(test=concurrent_replace)()
+    Scenario(run=concurrent_replace_on_three_replicas)
