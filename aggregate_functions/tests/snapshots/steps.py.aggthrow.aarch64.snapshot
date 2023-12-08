@@ -1,3 +1,7 @@
+_aggregate_functions_aggThrow_NULL_for_all_rows = r"""
+{"aggThrowDistinct(if(modulo(number, 2), NULL, NULL))":null}
+"""
+
 _aggregate_functions_aggThrow_aggThrow_NULL_for_all_rows = r"""
 {"aggThrowDistinct(if(modulo(number, 2), NULL, NULL))":null}
 """

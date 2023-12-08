@@ -1,0 +1,16 @@
+_aggregate_functions_merge_first_value_respect_nullsMerge_constant_0 = r"""
+{"first_value_respect_nullsMerge(state)":null}
+"""
+
+_aggregate_functions_merge_first_value_respect_nullsMerge_some_negative_values_0 = r"""
+{"first_value_respect_nullsMerge(state)":null}
+"""
+
+_aggregate_functions_merge_first_value_respect_nullsMerge_with_group_by_0 = r"""
+{"first_value_respect_nullsMerge(state)":null}
+"""
+
+_aggregate_functions_merge_first_value_respect_nullsMerge_with_group_by_1 = r"""
+{"first_value_respect_nullsMerge(state)":null}
+"""
+

@@ -68,6 +68,7 @@ aggregate_functions = [
     "kurtPop",
     "kurtSamp",
     "lagInFrame",
+    "largestTriangleThreeBuckets",
     "last_value",
     "last_value_respect_nulls",
     "leadInFrame",
