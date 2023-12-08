@@ -1,7 +1,7 @@
 from testflows.core import *
 
 from aggregate_functions.requirements import (
-    RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CovarSampMatrix
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CovarSampMatrix,
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id

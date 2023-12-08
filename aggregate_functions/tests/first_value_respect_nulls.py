@@ -8,6 +8,7 @@ from helpers.tables import is_map, is_array
 
 from aggregate_functions.tests.steps import *
 
+
 @TestCheck
 def datatype(self, func, table, col1_name):
     """Check different column types."""
@@ -15,14 +16,22 @@ def datatype(self, func, table, col1_name):
         f"SELECT {func.format(params=col1_name)}, any(toTypeName({col1_name})) FROM {table.name} FORMAT JSONEachRow"
     )
 
+
 @TestScenario
 @Name("first_value_respect_nulls")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValueRespectNulls("1.0"))
-def scenario(self, func="first_value_respect_nulls({params})", table=None, snapshot_id=None, decimal=True, extended_precision=True):
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValueRespectNulls("1.0")
+)
+def scenario(
+    self,
+    func="first_value_respect_nulls({params})",
+    table=None,
+    snapshot_id=None,
+    decimal=True,
+    extended_precision=True,
+):
     """Check first_value_respect_nulls aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id
-    )
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
