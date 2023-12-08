@@ -1369,16 +1369,15 @@ def delete_all(self):
                     )
 
             with Then("A nonzero amount of data should be added to S3"):
-                assert (
-                    get_bucket_size(
-                        name=bucket_name,
-                        prefix=bucket_path,
-                        minio_enabled=minio_enabled,
-                        access_key=self.context.secret_access_key,
-                        key_id=self.context.access_key_id,
-                    )
-                    > size_before
-                ), error()
+                size_now = get_bucket_size(
+                    name=bucket_name,
+                    prefix=bucket_path,
+                    minio_enabled=minio_enabled,
+                    access_key=self.context.secret_access_key,
+                    key_id=self.context.access_key_id,
+                )
+
+                assert size_now > size_before, error()
 
         finally:
             with Finally("I drop the table on each node"):
