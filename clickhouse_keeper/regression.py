@@ -142,6 +142,11 @@ ffails = {
         XFail,
         "not supported by TLSv1.2",
     ),
+    "/clickhouse keeper/alter column distributed/alter comment column": (
+        XFail,
+        "Fails on 23.10",
+        check_clickhouse_version("=23.10"),
+    ),
 }
 
 
