@@ -80,4 +80,10 @@ def feature(self):
                 "feature",
             )
         )
+        Feature(
+            run=load(
+                "alter.table.replace_partition.concurrent_replace_partitions_on_replicas",
+                "feature",
+            )
+        )
         join()
