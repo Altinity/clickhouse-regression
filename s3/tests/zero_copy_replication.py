@@ -382,7 +382,7 @@ def add_replica(self):
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
                 )
-                assert size_after + 1 == size, error()
+                assert size - size_after == 1, error()
 
             with And("I check simple queries on the first node"):
                 check_query_node(
@@ -1282,7 +1282,7 @@ def delete(self):
                     name=bucket_name,
                     prefix=bucket_path,
                     expected_size=size_after,
-                    tolerance=None,
+                    tolerance=0,
                     minio_enabled=minio_enabled,
                 )
 
@@ -1389,7 +1389,7 @@ def delete_all(self):
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=size_before,
-                tolerance=None,
+                tolerance=0,
                 minio_enabled=minio_enabled,
             )
 
