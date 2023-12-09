@@ -120,7 +120,16 @@ def regression(
 
     if allow_vfs:
         with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
+            enable_vfs(
+                nodes=[
+                    cluster.node(node)
+                    for node in [
+                        "clickhouse1",
+                        "clickhouse2",
+                        "clickhouse3",
+                    ]
+                ]
+            )
 
     Feature(run=load("alter.table.replace_partition.feature", "feature"))
 

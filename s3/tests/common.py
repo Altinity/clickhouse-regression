@@ -498,15 +498,15 @@ def check_vfs_enabled(self, nodes=None):
 
 
 @TestStep(Given)
-def enable_vfs(self):
+def enable_vfs(self, nodes=None):
     if check_clickhouse_version("<23.11")(self):
         skip("vfs not supported on < 23.11")
 
     with Given("I create and load enable_vfs.xml"):
-        add_vfs_config()
+        add_vfs_config(nodes=nodes)
 
     with Then("I check that VFS is enabled"):
-        check_vfs_enabled()
+        check_vfs_enabled(nodes=nodes)
 
 
 @contextmanager
