@@ -167,6 +167,7 @@ def feature(self):
         "studentTTest",
         "sequenceCount",
         "sequenceMatch",
+        "kolmogorovSmirnovTest",
     ]
     parametric = [
         "histogram",
