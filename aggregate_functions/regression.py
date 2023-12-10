@@ -25,6 +25,7 @@ issue_48917 = (
     check_clickhouse_version(">=23.2"),
 )
 issue_55997 = "https://github.com/ClickHouse/ClickHouse/issues/55997"
+issue_57683 = "https://github.com/ClickHouse/ClickHouse/issues/57683"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -77,6 +78,13 @@ xfails = {
             check_clickhouse_version("<23"),
         )
     ],
+    "/aggregate functions/window_functions/ntile/*": [
+        (
+            Fail,
+            "ntile works from 23.5",
+            check_clickhouse_version("<23"),
+        )
+    ],
     # 23.2
     "/aggregate functions/state/singleValueOrNullState/:": [
         (
@@ -84,6 +92,12 @@ xfails = {
             issue_47142,
             check_clickhouse_version(">=23"),
             r".*Exception: Nested type [^\n]+ cannot be inside Nullable type.*",
+        )
+    ],
+    "/aggregate functions/state/quantilesGKState/:": [
+        (
+            Fail,
+            issue_57683,
         )
     ],
 }

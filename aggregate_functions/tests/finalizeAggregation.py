@@ -140,6 +140,7 @@ def feature(self):
         "studentTTest",
         "sequenceCount",
         "sequenceMatch",
+        "kolmogorovSmirnovTest",
     ]
 
     test_funcs = [i for i in aggregate_functions]

@@ -15,7 +15,7 @@ from aggregate_functions.tests.corr import scenario as checks
 def scenario(self, func="theilsU({params})", table=None, snapshot_id=None):
     """Check theilsU aggregate function by using the same checks as for covarPop
     as well as functions specific checks."""
-    
+
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     if "Merge" in self.name:

@@ -167,6 +167,7 @@ def feature(self):
         "studentTTest",
         "sequenceCount",
         "sequenceMatch",
+        "kolmogorovSmirnovTest",
     ]
     parametric = [
         "histogram",
@@ -180,6 +181,8 @@ def feature(self):
         "quantilesBFloat16Weighted",
         "quantilesDeterministic",
         "quantilesExact",
+        "quantilesGK",
+        "quantilesInterpolatedWeighted",
         "quantilesExactExclusive",
         "quantilesExactLow",
         "quantilesExactHigh",
