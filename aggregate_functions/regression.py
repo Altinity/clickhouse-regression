@@ -100,6 +100,12 @@ xfails = {
             issue_57683,
         )
     ],
+    "/aggregate functions/merge/quantilesGKMerge/:": [
+        (
+            Fail,
+            issue_57683,
+        )
+    ],
 }
 
 
