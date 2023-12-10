@@ -1,0 +1,36 @@
+_aggregate_functions_merge_categoricalInformationValueMerge_NULL_value_handling_0 = r"""
+{"categoricalInformationValueMerge(state)":[null]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_multiple_category_3_0 = r"""
+{"categoricalInformationValueMerge(state)":[0,0]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_single_NULL_value_0 = r"""
+{"categoricalInformationValueMerge(state)":[null]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_single_category_1_0 = r"""
+{"categoricalInformationValueMerge(state)":[0]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_single_category_2_0 = r"""
+{"categoricalInformationValueMerge(state)":[0]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_single_category_3_0 = r"""
+{"categoricalInformationValueMerge(state)":[null]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_single_category_4_0 = r"""
+{"categoricalInformationValueMerge(state)":[null]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_single_category_5_0 = r"""
+{"categoricalInformationValueMerge(state)":[null]}
+"""
+
+_aggregate_functions_merge_categoricalInformationValueMerge_single_row_0 = r"""
+{"categoricalInformationValueMerge(state)":[null]}
+"""
+
