@@ -47,7 +47,8 @@ def scenario(
     if "State" not in self.name:
         for i in range(5, 100, 20):
             _func = func.replace(
-                "({params})", f"({i}, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)({{params}})"
+                "({params})",
+                f"({i}, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)({{params}})",
             )
             with Check(f"accuracy {i}"):
                 checks(
