@@ -34,7 +34,7 @@ def scenario(
 
     if check_clickhouse_version("<23.5"):
         skip(reason=f"first_value_respect_nulls works from 23.5")
-        
+
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     if "Merge" in self.name:

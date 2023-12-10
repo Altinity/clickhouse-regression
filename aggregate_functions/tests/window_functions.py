@@ -70,7 +70,7 @@ def feature(self):
                     "SELECT nonNegativeDerivative(number, cast(number, 'DateTime')) FROM numbers(10)",
                     exitcode=36,
                     message=f"DB::Exception: The function '{func}' can only be used as a window function, not as an aggregate function: While executing AggregatingTransform.",
-                    )
+                )
                 continue
 
             if func in functions_with_two_arguments:

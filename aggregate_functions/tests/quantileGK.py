@@ -24,9 +24,7 @@ def scenario(
     """Check quantileGK aggregate function by using the same tests as for avg."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    _func = func.replace(
-        "({params})", f"(100)({{params}})"
-    )
+    _func = func.replace("({params})", f"(100)({{params}})")
 
     if "Merge" in self.name:
         return self.context.snapshot_id, _func.replace("({params})", "")
@@ -46,9 +44,7 @@ def scenario(
 
     if "State" not in self.name:
         for i in range(5, 100, 20):
-            _func = func.replace(
-                "({params})", f"({i})({{params}})"
-            )
+            _func = func.replace("({params})", f"({i})({{params}})")
             with Check(f"accuracy {i}"):
                 checks(
                     func=_func,
