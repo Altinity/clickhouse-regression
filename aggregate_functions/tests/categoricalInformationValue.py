@@ -10,10 +10,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CategoricalInformationValue("1.0")
 )
 def scenario(
-    self,
-    func="categoricalInformationValue({params})",
-    table=None,
-    snapshot_id=None
+    self, func="categoricalInformationValue({params})", table=None, snapshot_id=None
 ):
     """Check categoricalInformationValue aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
@@ -30,8 +27,10 @@ def scenario(
         )
 
     with Check("single row"):
-        execute_query(f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (0, 0))")
-    
+        execute_query(
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (0, 0))"
+        )
+
     with Check("NULL value handling"):
         execute_query(
             f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM VALUES ('x Nullable(UInt8), y Nullable(UInt8)', (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
@@ -101,7 +100,7 @@ def scenario(
                 FROM numbers(1000) \
             )"
         )
-        
+
     if "State" not in self.name:
         with Check("single category 6"):
             execute_query(
@@ -109,7 +108,7 @@ def scenario(
                 FROM ( \
                 SELECT \
                     arrayJoin([(0, 0), (1, 0), (1, 0), (1, 1), (1, 1)]) as x \
-                )" 
+                )"
             )
 
         with Check("multiple category 1"):
@@ -120,7 +119,7 @@ def scenario(
                         arrayJoin([(1, 0, 0), (1, 0, 0), (1, 0, 1), (0, 1, 0), (0, 1, 0), (0, 1, 1)]) as x \
                 )"
             )
-        
+
         with Check("multiple category 2"):
             execute_query(
                 f"SELECT \
@@ -135,10 +134,3 @@ def scenario(
                         numbers(1000) \
                 )"
             )
-
-
-    
-
-    
-
-
