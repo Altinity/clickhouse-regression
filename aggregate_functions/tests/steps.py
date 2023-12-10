@@ -171,6 +171,7 @@ aggregate_functions = [
 window_functions = [
     "row_number",
     "nth_value",
+    "ntile",
     "rank",
     "dense_rank",
     "lagInFrame",
@@ -179,6 +180,7 @@ window_functions = [
     "exponentialTimeDecayedMax",
     "exponentialTimeDecayedCount",
     "exponentialTimeDecayedAvg",
+    "nonNegativeDerivative",
 ]
 
 

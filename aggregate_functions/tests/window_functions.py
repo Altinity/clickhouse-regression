@@ -19,7 +19,7 @@ from aggregate_functions.tests.steps import window_functions
 @TestScenario
 def check(self, arguments, func, func_):
     execute_query(
-        f"SELECT {func_}({arguments}) FROM values('sample_data Int8, sample_index Int8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))",
+        f"SELECT {func_}({arguments}) FROM values('sample_data UInt8, sample_index UInt8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))",
         exitcode=36,
         message=f"DB::Exception: The function '{func}' can only be used as a window function, not as an aggregate function: While executing AggregatingTransform.",
     )
@@ -65,6 +65,14 @@ def feature(self):
 
     with Pool(5) as executor:
         for func in window_functions:
+            if func == "nonNegativeDerivative":
+                execute_query(
+                    "SELECT nonNegativeDerivative(number, cast(number, 'DateTime')) FROM numbers(10)",
+                    exitcode=36,
+                    message=f"DB::Exception: The function '{func}' can only be used as a window function, not as an aggregate function: While executing AggregatingTransform.",
+                    )
+                continue
+
             if func in functions_with_two_arguments:
                 arguments = "sample_data,sample_index"
             else:

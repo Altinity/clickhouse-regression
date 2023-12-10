@@ -180,6 +180,8 @@ def feature(self):
         "quantilesBFloat16Weighted",
         "quantilesDeterministic",
         "quantilesExact",
+        "quantilesGK",
+        "quantilesInterpolatedWeighted",
         "quantilesExactExclusive",
         "quantilesExactLow",
         "quantilesExactHigh",
