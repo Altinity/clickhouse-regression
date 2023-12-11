@@ -17,7 +17,7 @@ def create_table_on_cluster(self, table_name, cluster=None):
     if cluster is None:
         cluster = "sharded_cluster"
 
-    node = self.context.node
+    node = self.context.node_1
 
     with By("creating a MergeTree table on a replicated_different_versions cluster"):
         node.query(
@@ -123,7 +123,7 @@ def concurrent_replace_on_three_replicas(
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
-    node_1 = self.context.node
+    node_1 = self.context.node_1
     node_2 = self.context.node_2
     node_3 = self.context.node_3
 
@@ -243,7 +243,7 @@ def feature(
     number of partitions. On each replica we concurrently execute replace partition on randomly picked partitions.
     At the end we validate that the data on the destination table partition is the same as the source table.
     """
-    self.context.node = self.context.cluster.node(node)
+    self.context.node_1 = self.context.cluster.node("clickhouse1")
     self.context.node_2 = self.context.cluster.node("clickhouse2")
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.delay_before = delay_before
