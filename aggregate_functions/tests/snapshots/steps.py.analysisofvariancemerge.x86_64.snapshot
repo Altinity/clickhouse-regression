@@ -1,0 +1,200 @@
+_aggregate_functions_merge_analysisOfVarianceMerge_NULL_value_handling_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.27999999999999997,"p_value":0.78125}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge__inf_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_corner_values_of_Int16_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.08574119562197839,"p_value":0.7887480518340512}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Decimal128_38__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":4.088649935729492,"p_value":0.07781192936801085}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Decimal128_38__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.7238735938216979,"p_value":0.4230216056209224}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Decimal128_38__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":5.90643918510011,"p_value":0.04118189355977919}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Float32_LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.6914641919294962,"p_value":0.22961987209908652}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Float32_Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.8250475642037969,"p_value":0.21874991476302597}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Float32_UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.04825641879509875,"p_value":0.8316270593142934}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Float64_LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Float64_Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Float64_UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Int64_LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.823215800073804,"p_value":0.39075234152136085}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Int64_Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":4.007822143932516,"p_value":0.08537287285307293}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Int64_UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.3556979457086875,"p_value":0.2778295969514898}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":4.178591811162507,"p_value":0.0751867323209714}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":4.74282923190387,"p_value":0.06585389615475656}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Float32__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.062972901557389,"p_value":0.8081825601090955}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Float64__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Float64__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":3.7954261604534705,"p_value":0.08723641593905318}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.18572156970539427,"p_value":0.679461088315453}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_Int64__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.988261330611253,"p_value":0.34928109508706084}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.3071389876218161,"p_value":0.5945896987430264}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.03911232752257599,"p_value":0.8488467730293016}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_LowCardinality_UInt64__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.2966139082949426,"p_value":0.28778036871105817}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.41459616382768705,"p_value":0.5401610389554741}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Decimal128_38___Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.4731546223294083,"p_value":0.5136796864995128}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Decimal128_38___UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.5591376683502194,"p_value":0.2519310730478018}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.0011546331791185641,"p_value":0.9738418156284431}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Float32__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.2657808065313195,"p_value":0.6220539165378176}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Float32__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.08688725194343862,"p_value":0.7767224288473649}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Float64__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Float64__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Float64__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.298987189850707,"p_value":0.2918913713852025}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Int64__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.7484218348233025,"p_value":0.2276410525065481}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_Int64__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":2.8868899013322626,"p_value":0.13310581536089827}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.040497209403076606,"p_value":0.846234233283319}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_UInt64__Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.6934117816556035,"p_value":0.43249524162694697}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_Nullable_UInt64__UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.7419611016267187,"p_value":0.41755981021284705}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_UInt64_LowCardinality_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.39749568528086904,"p_value":0.5459694208779899}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_UInt64_Nullable_UInt64__0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.21097646955420843,"p_value":0.6599267166640218}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_datatypes_permutations_UInt64_UInt64_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.024131490851478008,"p_value":0.8803988288394634}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_five_groups_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":1.1158190131624564,"p_value":0.41292979599185564}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_inf_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_nan_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_single_NULL_value_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.10138248847926264,"p_value":0.9058364112034473}}
+"""
+
+_aggregate_functions_merge_analysisOfVarianceMerge_some_negative_values_0 = r"""
+{"analysisOfVarianceMerge(state)":{"f_statistic":0.25,"p_value":0.6305360755569763}}
+"""
+
