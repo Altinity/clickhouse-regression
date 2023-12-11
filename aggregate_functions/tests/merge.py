@@ -182,6 +182,7 @@ def feature(self):
         "quantilesDeterministic",
         "quantilesExact",
         "quantilesGK",
+        "quantileGK",
         "quantilesInterpolatedWeighted",
         "quantilesExactExclusive",
         "quantilesExactLow",

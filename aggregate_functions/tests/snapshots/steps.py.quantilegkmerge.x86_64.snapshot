@@ -1,0 +1,248 @@
+_aggregate_functions_merge_quantileGKMerge_DateTime_0 = r"""
+{"quantileGKMerge(100)(state)":"1970-01-01 01:01:36"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Date_0 = r"""
+{"quantileGKMerge(100)(state)":"1970-04-07"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Decimal128_38__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Float32_0 = r"""
+{"quantileGKMerge(100)(state)":8.1448064e-33}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Float64_0 = r"""
+{"quantileGKMerge(100)(state)":1.9160847669382482e214}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Int16_0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Int32_0 = r"""
+{"quantileGKMerge(100)(state)":96}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Int64_0 = r"""
+{"quantileGKMerge(100)(state)":"552"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Int8_0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_DateTime__0 = r"""
+{"quantileGKMerge(100)(state)":"1993-06-24 06:40:16"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Date__0 = r"""
+{"quantileGKMerge(100)(state)":"1970-01-01"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Float32__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Float64__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Int16__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Int32__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Int64__0 = r"""
+{"quantileGKMerge(100)(state)":"0"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Int8__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_DateTime___0 = r"""
+{"quantileGKMerge(100)(state)":"1970-01-01 01:00:48"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_Date___0 = r"""
+{"quantileGKMerge(100)(state)":"2043-11-22"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"quantileGKMerge(100)(state)":1.35e-43}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"quantileGKMerge(100)(state)":-619336540}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"quantileGKMerge(100)(state)":"-1297036692682702843"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"quantileGKMerge(100)(state)":105}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"quantileGKMerge(100)(state)":"288230376151711744"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"quantileGKMerge(100)(state)":96}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_UInt16__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_UInt32__0 = r"""
+{"quantileGKMerge(100)(state)":96}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_UInt64__0 = r"""
+{"quantileGKMerge(100)(state)":"152"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_LowCardinality_UInt8__0 = r"""
+{"quantileGKMerge(100)(state)":3}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_NULL_value_handling_0 = r"""
+{"quantileGKMerge(100)(state)":-92}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_DateTime__0 = r"""
+{"quantileGKMerge(100)(state)":"1970-01-01 12:25:29"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Date__0 = r"""
+{"quantileGKMerge(100)(state)":"2102-04-14"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Decimal128_38___0 = r"""
+{"quantileGKMerge(100)(state)":1.34851523571670419898173234865599903087}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Float32__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Float64__0 = r"""
+{"quantileGKMerge(100)(state)":6.9218989039298e-310}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Int16__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Int32__0 = r"""
+{"quantileGKMerge(100)(state)":-619336540}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Int64__0 = r"""
+{"quantileGKMerge(100)(state)":"140100793596456"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_Int8__0 = r"""
+{"quantileGKMerge(100)(state)":-96}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_UInt16__0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_UInt32__0 = r"""
+{"quantileGKMerge(100)(state)":1589329440}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_UInt64__0 = r"""
+{"quantileGKMerge(100)(state)":"7022643612419582324"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_Nullable_UInt8__0 = r"""
+{"quantileGKMerge(100)(state)":255}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_UInt16_0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_UInt32_0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_UInt64_0 = r"""
+{"quantileGKMerge(100)(state)":"0"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_UInt8_0 = r"""
+{"quantileGKMerge(100)(state)":4}
+"""
+
+_aggregate_functions_merge_quantileGKMerge__inf_0 = r"""
+{"quantileGKMerge(100)(state)":6.92203016527403e-310}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_constant_0 = r"""
+{"quantileGKMerge(100)(state)":144}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_doc_example_0 = r"""
+{"quantileGKMerge(100)(state)":0}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_inf_0 = r"""
+{"quantileGKMerge(100)(state)":4.74e-322}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_inf___inf__nan_0 = r"""
+{"quantileGKMerge(100)(state)":4.74e-322}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_nan_0 = r"""
+{"quantileGKMerge(100)(state)":4.74e-322}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_single_NULL_value_0 = r"""
+{"quantileGKMerge(100)(state)":null}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_single_row_0 = r"""
+{"quantileGKMerge(100)(state)":"7596832600873918260"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_some_negative_values_0 = r"""
+{"quantileGKMerge(100)(state)":"8026370507369767785"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_with_group_by_0 = r"""
+{"quantileGKMerge(100)(state)":"0"}
+"""
+
+_aggregate_functions_merge_quantileGKMerge_with_group_by_1 = r"""
+{"quantileGKMerge(100)(state)":"7809911822117858911"}
+"""
+

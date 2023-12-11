@@ -1,0 +1,44 @@
+_aggregate_functions_state_categoricalInformationValueState_NULL_value_handling = r"""
+{"hex(categoricalInformationValueState(x, y))":"010000000000000000020000000000000000000000000000000200000000000000","any(toTypeName(x))":"Nullable(UInt8)","any(toTypeName(y))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_multiple_category_3 = r"""
+{"hex(categoricalInformationValueState(tupleElement(x, 1), tupleElement(x, 2), tupleElement(x, 3)))":"D007000000000000E803000000000000D007000000000000E803000000000000A00F000000000000D007000000000000","any(toTypeName(tupleElement(x, 1)))":"UInt8","any(toTypeName(tupleElement(x, 2)))":"UInt8","any(toTypeName(tupleElement(x, 3)))":"UInt8"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_return_type = r"""
+{"toTypeName(hex(categoricalInformationValueState(x, y)))":"String"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_single_NULL_value = r"""
+{"hex(categoricalInformationValueState(x, y))":"010000000000000000000000000000000000000000000000000000000000000000","any(toTypeName(x))":"Nullable(UInt8)","any(toTypeName(y))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_single_category_1 = r"""
+{"hex(categoricalInformationValueState(tupleElement(x, 1), tupleElement(x, 2)))":"0300000000000000020000000000000003000000000000000200000000000000","any(toTypeName(tupleElement(x, 1)))":"UInt8","any(toTypeName(tupleElement(x, 2)))":"UInt8"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_single_category_2 = r"""
+{"hex(categoricalInformationValueState(tupleElement(x, 1), tupleElement(x, 2)))":"0100000000000000010000000000000002000000000000000200000000000000","any(toTypeName(tupleElement(x, 1)))":"UInt8","any(toTypeName(tupleElement(x, 2)))":"UInt8"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_single_category_3 = r"""
+{"hex(categoricalInformationValueState(tupleElement(x, 1), tupleElement(x, 2)))":"0200000000000000000000000000000004000000000000000000000000000000","any(toTypeName(tupleElement(x, 1)))":"UInt8","any(toTypeName(tupleElement(x, 2)))":"UInt8"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_single_category_4 = r"""
+{"hex(categoricalInformationValueState(tupleElement(x, 1), tupleElement(x, 2)))":"0000000000000000020000000000000000000000000000000400000000000000","any(toTypeName(tupleElement(x, 1)))":"UInt8","any(toTypeName(tupleElement(x, 2)))":"UInt8"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_single_category_5 = r"""
+{"hex(categoricalInformationValueState(tupleElement(x, 1), tupleElement(x, 2)))":"0200000000000000000000000000000003000000000000000100000000000000","any(toTypeName(tupleElement(x, 1)))":"UInt8","any(toTypeName(tupleElement(x, 2)))":"UInt8"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_single_row = r"""
+{"hex(categoricalInformationValueState(x, y))":"010000000000000000000000000000000001000000000000000000000000000000","any(toTypeName(x))":"Nullable(UInt8)","any(toTypeName(y))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_state_categoricalInformationValueState_zero_rows = r"""
+{"hex(categoricalInformationValueState(tupleElement(x, 1), tupleElement(x, 2)))":"0000000000000000000000000000000000000000000000000000000000000000","any(toTypeName(tupleElement(x, 1)))":"","any(toTypeName(tupleElement(x, 2)))":""}
+"""
+
