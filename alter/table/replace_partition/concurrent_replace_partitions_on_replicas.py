@@ -11,8 +11,11 @@ from helpers.tables import create_table_partitioned_by_column
 
 
 @TestStep(Given)
-def create_table_on_cluster(self, table_name, cluster="replicated_cluster"):
+def create_table_on_cluster(self, table_name, cluster=None):
     """Create table on a cluster"""
+
+    if cluster is None:
+        cluster = "sharded_cluster"
 
     node = self.context.node
 
@@ -45,21 +48,23 @@ def create_partitions_with_random_parts(self, table_name, number_of_partitions):
 
 
 @TestStep(Given)
-def destination_table_with_partitions(self, table_name, number_of_partitions):
+def destination_table_with_partitions(
+    self, table_name, number_of_partitions, cluster=None
+):
     """Create a destination table with set number of partitions and parts."""
     with By(f"creating a {table_name} table with {number_of_partitions} partitions"):
-        create_table_on_cluster(table_name=table_name)
+        create_table_on_cluster(table_name=table_name, cluster=cluster)
         create_partitions_with_random_parts(
             table_name=table_name, number_of_partitions=number_of_partitions
         )
 
 
 @TestStep(Given)
-def source_table_with_partitions(self, table_name, number_of_partitions):
+def source_table_with_partitions(self, table_name, number_of_partitions, cluster=None):
     """Create a source table with set number of partitions and parts."""
 
     with By(f"creating a {table_name} table with {number_of_partitions} partitions"):
-        create_table_on_cluster(table_name=table_name)
+        create_table_on_cluster(table_name=table_name, cluster=cluster)
         create_partitions_with_random_parts(
             table_name=table_name, number_of_partitions=number_of_partitions
         )
@@ -67,7 +72,11 @@ def source_table_with_partitions(self, table_name, number_of_partitions):
 
 @TestStep(Given)
 def create_two_tables(
-    self, destination_table=None, source_table=None, number_of_partitions=None
+    self,
+    destination_table=None,
+    source_table=None,
+    number_of_partitions=None,
+    cluster=None,
 ):
     """Create two tables with the same structure having the specified number of partitions.
     The destination table will be used as the table where replace partition command will be
@@ -84,18 +93,23 @@ def create_two_tables(
 
     with By("creating destination table"):
         destination_table_with_partitions(
-            table_name=destination_table, number_of_partitions=number_of_partitions
+            table_name=destination_table,
+            number_of_partitions=number_of_partitions,
+            cluster=cluster,
         )
 
     with And("creating source table"):
         source_table_with_partitions(
-            table_name=source_table, number_of_partitions=number_of_partitions
+            table_name=source_table,
+            number_of_partitions=number_of_partitions,
+            cluster=cluster,
         )
 
 
-@TestScenario
+@TestOutline
 def concurrent_replace_on_three_replicas(
     self,
+    cluster=None,
     number_of_partitions=None,
     number_of_concurrent_queries=None,
     destination_table=None,
@@ -106,6 +120,8 @@ def concurrent_replace_on_three_replicas(
     """Concurrently run multiple replace partitions on the destination table and
     validate that the data on both destination and source tables is the same."""
     validate = self.context.validate
+    destination_table = "destination_" + getuid()
+    source_table = "source_" + getuid()
 
     node_1 = self.context.node
     node_2 = self.context.node_2
@@ -132,6 +148,15 @@ def concurrent_replace_on_three_replicas(
         source_table = self.context.source_table
 
     list_of_partitions_replaced = []
+
+    with Given(
+        "I create destination and source tables for the replace partition command"
+    ):
+        create_two_tables(
+            destination_table=destination_table,
+            source_table=source_table,
+            cluster=cluster,
+        )
 
     for i in range(number_of_concurrent_queries):
         partition_to_replace = random.sample(range(1, number_of_partitions), 3)
@@ -179,6 +204,18 @@ def concurrent_replace_on_three_replicas(
                 )
 
 
+@TestScenario
+def single_shard_three_replicas(self):
+    """Concurrently run replace partition on different replicas of a cluster with a single shard and three replicas."""
+    concurrent_replace_on_three_replicas(cluster="replicated_cluster")
+
+
+@TestScenario
+def multiple_shards_with_replicas(self):
+    """Concurrently run replace partition on a cluster with multiple shards."""
+    concurrent_replace_on_three_replicas(cluster="sharded_cluster")
+
+
 @TestFeature
 @Requirements(
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace(
@@ -205,15 +242,9 @@ def feature(
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.delay_before = delay_before
     self.context.delay_after = delay_after
-    self.context.destination_table = "destination_" + getuid()
-    self.context.source_table = "source_" + getuid()
     self.context.number_of_partitions = number_of_partitions
     self.context.number_of_concurrent_queries = number_of_concurrent_queries
     self.context.validate = validate
 
-    with Given(
-        "I create destination and source tables for the replace partition command"
-    ):
-        create_two_tables()
-
-    Scenario(run=concurrent_replace_on_three_replicas)
+    for scenario in loads(current_module(), Scenario):
+        scenario()
