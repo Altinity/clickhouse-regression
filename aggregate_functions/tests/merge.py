@@ -168,6 +168,7 @@ def feature(self):
         "sequenceCount",
         "sequenceMatch",
         "kolmogorovSmirnovTest",
+        "windowFunnel",
     ]
     parametric = [
         "histogram",
@@ -199,6 +200,7 @@ def feature(self):
         "quantiles",
         "groupArrayLast",
         "uniqUpTo",
+        "windowFunnel",
     ]
 
     test_funcs = [i for i in aggregate_functions]
