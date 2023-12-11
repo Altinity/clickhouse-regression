@@ -1,0 +1,1 @@
+docker buildx build --push -t registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8 --platform=linux/amd64,linux/arm64 .
