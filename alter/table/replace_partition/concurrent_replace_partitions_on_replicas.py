@@ -239,7 +239,7 @@ def feature(
     validate=True,
 ):
     """
-    On a cluster with a single shard and 3 replicas, we create destination and source tables and populate them with set
+    On a cluster we create destination and source tables and populate them with set
     number of partitions. On each replica we concurrently execute replace partition on randomly picked partitions.
     At the end we validate that the data on the destination table partition is the same as the source table.
     """
