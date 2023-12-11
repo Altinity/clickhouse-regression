@@ -17,7 +17,7 @@ def create_table_on_cluster(self, table_name, cluster=None):
     if cluster is None:
         cluster = "sharded_cluster"
 
-    node = self.context.node
+    node = self.context.node_1
 
     with By("creating a MergeTree table on a replicated_different_versions cluster"):
         node.query(
@@ -123,7 +123,7 @@ def concurrent_replace_on_three_replicas(
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
-    node_1 = self.context.node
+    node_1 = self.context.node_1
     node_2 = self.context.node_2
     node_3 = self.context.node_3
 
@@ -211,6 +211,12 @@ def single_shard_three_replicas(self):
 
 
 @TestScenario
+def single_shard_three_replicas_secure(self):
+    """Concurrently run replace partition on different replicas of a secured cluster with a single shard and three replicas."""
+    concurrent_replace_on_three_replicas(cluster="replicated_cluster_secure")
+
+
+@TestScenario
 def multiple_shards_with_replicas(self):
     """Concurrently run replace partition on a cluster with multiple shards."""
     concurrent_replace_on_three_replicas(cluster="sharded_cluster")
@@ -233,11 +239,11 @@ def feature(
     validate=True,
 ):
     """
-    On a cluster with a single shard and 3 replicas, we create destination and source tables and populate them with set
+    On a cluster we create destination and source tables and populate them with set
     number of partitions. On each replica we concurrently execute replace partition on randomly picked partitions.
     At the end we validate that the data on the destination table partition is the same as the source table.
     """
-    self.context.node = self.context.cluster.node(node)
+    self.context.node_1 = self.context.cluster.node("clickhouse1")
     self.context.node_2 = self.context.cluster.node("clickhouse2")
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.delay_before = delay_before
