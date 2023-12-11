@@ -476,12 +476,13 @@ def add_vfs_config(
     config_file="enable_vfs.xml",
     restart=True,
     nodes=None,
+    timeout=30,
 ):
     entries = {"merge_tree": {"allow_object_storage_vfs": "1"}}
     config = create_xml_config_content(
         entries, config_d_dir=config_d_dir, config_file=config_file
     )
-    return add_config(config, restart=restart, nodes=nodes)
+    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
 
 
 @TestStep(Then)
@@ -498,12 +499,12 @@ def check_vfs_enabled(self, nodes=None):
 
 
 @TestStep(Given)
-def enable_vfs(self, nodes=None):
+def enable_vfs(self, nodes=None, timeout=30):
     if check_clickhouse_version("<23.11")(self):
         skip("vfs not supported on < 23.11")
 
     with Given("I create and load enable_vfs.xml"):
-        add_vfs_config(nodes=nodes)
+        add_vfs_config(nodes=nodes, timeout=timeout)
 
     with Then("I check that VFS is enabled"):
         check_vfs_enabled(nodes=nodes)
