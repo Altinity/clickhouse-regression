@@ -211,6 +211,12 @@ def single_shard_three_replicas(self):
 
 
 @TestScenario
+def single_shard_three_replicas_secure(self):
+    """Concurrently run replace partition on different replicas of a secured cluster with a single shard and three replicas."""
+    concurrent_replace_on_three_replicas(cluster="replicated_cluster_secure")
+
+
+@TestScenario
 def multiple_shards_with_replicas(self):
     """Concurrently run replace partition on a cluster with multiple shards."""
     concurrent_replace_on_three_replicas(cluster="sharded_cluster")
