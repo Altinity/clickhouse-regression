@@ -129,6 +129,7 @@ def concurrent_replace(
             delay_before=delay_before,
             delay_after=delay_after,
         )
+    join()
 
     if not validate:
         with Then("checking that the partition was replaced on the destination table"):

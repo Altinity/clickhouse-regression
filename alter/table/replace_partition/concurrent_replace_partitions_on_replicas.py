@@ -30,7 +30,7 @@ def create_table_on_cluster(self, table_name, cluster=None):
 @TestStep(Given)
 def create_partitions_with_random_parts(self, table_name, number_of_partitions):
     """Create a number of partitions inside the table with random number of parts."""
-    node = self.context.node
+    node = self.context.node_1
 
     with By(
         f"Inserting data into a {table_name} table",
@@ -193,7 +193,7 @@ def concurrent_replace_on_three_replicas(
             source_table=source_table,
             partition=partition_to_replace[2],
         )
-
+    join()
     if not validate:
         with Then("checking that the partition was replaced on the destination table"):
             for i in list_of_partitions_replaced:
