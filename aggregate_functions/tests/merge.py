@@ -168,6 +168,8 @@ def feature(self):
         "sequenceCount",
         "sequenceMatch",
         "kolmogorovSmirnovTest",
+        "windowFunnel",
+        "quantileGK",
     ]
     parametric = [
         "histogram",
@@ -182,6 +184,7 @@ def feature(self):
         "quantilesDeterministic",
         "quantilesExact",
         "quantilesGK",
+        "quantileGK",
         "quantilesInterpolatedWeighted",
         "quantilesExactExclusive",
         "quantilesExactLow",
@@ -198,6 +201,7 @@ def feature(self):
         "quantiles",
         "groupArrayLast",
         "uniqUpTo",
+        "windowFunnel",
     ]
 
     test_funcs = [i for i in aggregate_functions]

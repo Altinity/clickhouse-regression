@@ -116,6 +116,40 @@ def concurrent_delete_drop_partition(self, node=None):
 
 
 @TestScenario
+def concurrent_delete_drop_partition_with_data_addition(self, node=None):
+    """Check that concurrent delete and drop partition perform without exeptions."""
+    if node is None:
+        node = self.context.node
+
+    table_name = f"table_{getuid()}"
+
+    with Given("I have a table"):
+        node.query(
+            f"CREATE TABLE {table_name} ( A Int64, B Int64 ) Engine MergeTree PARTITION BY B ORDER BY tuple()"
+        )
+
+    with Then(
+        "I perform concurrent operations",
+        description="I drop one partition and delete even rows from every partition",
+    ):
+        with Pool(5):
+            for _ in range(100):
+                Step(
+                    name="delete even rows from all partitions",
+                    test=delete_even,
+                    parallel=True,
+                )(column_name="A", table_name=table_name, node=node)
+                Step(
+                    name="drop first partition",
+                    test=alter_drop_partition,
+                    parallel=True,
+                )(table_name=table_name, partition_expr="1", node=node)
+                Step(name="add more rows", test=add_rows, parallel=True)(
+                    table_name=table_name, node=node
+                )
+
+
+@TestScenario
 def concurrent_delete_freeze_partition(self, node=None):
     """Check that concurrent delete and freeze partition perform correctly."""
     if node is None:

@@ -141,6 +141,8 @@ def feature(self):
         "sequenceCount",
         "sequenceMatch",
         "kolmogorovSmirnovTest",
+        "windowFunnel",
+        "quantileGK",
     ]
 
     test_funcs = [i for i in aggregate_functions]
