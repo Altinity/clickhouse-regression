@@ -939,6 +939,7 @@ def concurrent_replace_with_multiple_actions(
                             test=action,
                             parallel=True,
                         )()
+        join()
 
 
 @TestStep(When)
@@ -977,6 +978,7 @@ def replace_partition_with_single_concurrent_action(
                         test=actions,
                         parallel=True,
                     )()
+    join()
 
 
 @TestCheck
