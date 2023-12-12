@@ -5,7 +5,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from datetime64_extended_range.requirements import *
 from datetime64_extended_range.common import *
@@ -133,62 +133,64 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        with Pool(2) as pool:
-            try:
-                Scenario(
-                    run=load("datetime64_extended_range.tests.generic", "generic"),
-                    parallel=True,
-                    executor=pool,
-                )
-                Scenario(
-                    run=load(
-                        "datetime64_extended_range.tests.non_existent_time", "feature"
-                    ),
-                    parallel=True,
-                    executor=pool,
-                )
-                Scenario(
-                    run=load(
-                        "datetime64_extended_range.tests.reference_times",
-                        "reference_times",
-                    ),
-                    parallel=True,
-                    executor=pool,
-                )
-                Scenario(
-                    run=load(
-                        "datetime64_extended_range.tests.date_time_functions",
-                        "date_time_funcs",
-                    ),
-                    parallel=True,
-                    executor=pool,
-                )
-                Scenario(
-                    run=load(
-                        "datetime64_extended_range.tests.type_conversion",
-                        "type_conversion",
-                    ),
-                    parallel=True,
-                    executor=pool,
-                )
-                Scenario(
-                    run=load(
-                        "datetime64_extended_range.tests.format_conversion",
-                        "format_conversion",
-                    ),
-                    parallel=True,
-                    executor=pool,
-                )
-            finally:
-                join()
+    with Pool(2) as pool:
+        try:
+            Scenario(
+                run=load("datetime64_extended_range.tests.generic", "generic"),
+                parallel=True,
+                executor=pool,
+            )
+            Scenario(
+                run=load(
+                    "datetime64_extended_range.tests.non_existent_time", "feature"
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Scenario(
+                run=load(
+                    "datetime64_extended_range.tests.reference_times",
+                    "reference_times",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Scenario(
+                run=load(
+                    "datetime64_extended_range.tests.date_time_functions",
+                    "date_time_funcs",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Scenario(
+                run=load(
+                    "datetime64_extended_range.tests.type_conversion",
+                    "type_conversion",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Scenario(
+                run=load(
+                    "datetime64_extended_range.tests.format_conversion",
+                    "format_conversion",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+        finally:
+            join()
 
 
 if main():

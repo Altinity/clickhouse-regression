@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version, current_cpu
 from clickhouse_keeper.requirements import *
@@ -214,75 +214,77 @@ def regression(
     if not current_cpu() == "aarch64":
         nodes["zookeeper"] += ("zookeeper-fips",)
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        if check_clickhouse_version("<21.4")(self):
-            skip(reason="only supported on ClickHouse version >= 21.4")
+    if check_clickhouse_version("<21.4")(self):
+        skip(reason="only supported on ClickHouse version >= 21.4")
 
-        with Given("I check if the binary is FIPS compatible"):
-            if "fips" in current().context.clickhouse_version:
-                self.context.fips_mode = True
-            else:
-                self.context.fips_mode = False
-
-        if ssl:
-            create_3_3_cluster_config_ssl()
-            Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
-            Feature(
-                run=load(
-                    "clickhouse_keeper.tests.non_distributed_ddl_queries", "feature"
-                )
-            )
-            Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
-            Feature(
-                run=load("clickhouse_keeper.tests.alter_column_distributed", "feature")
-            )
-            Feature(
-                run=load(
-                    "clickhouse_keeper.tests.alter_partition_distributed", "feature"
-                )
-            )
-            Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
-
-            Feature(run=load("clickhouse_keeper.tests.ports_ssl_fips", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.fips", "feature"))
-
+    with Given("I check if the binary is FIPS compatible"):
+        if "fips" in current().context.clickhouse_version:
+            self.context.fips_mode = True
         else:
-            create_3_3_cluster_config()
-            Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.migration", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.cli_converter", "feature"))
-            Feature(
-                run=load(
-                    "clickhouse_keeper.tests.non_distributed_ddl_queries", "feature"
-                )
+            self.context.fips_mode = False
+
+    if ssl:
+        create_3_3_cluster_config_ssl()
+        Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
+        Feature(
+            run=load(
+                "clickhouse_keeper.tests.non_distributed_ddl_queries", "feature"
             )
-            Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
-            Feature(
-                run=load("clickhouse_keeper.tests.alter_column_distributed", "feature")
+        )
+        Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
+        Feature(
+            run=load("clickhouse_keeper.tests.alter_column_distributed", "feature")
+        )
+        Feature(
+            run=load(
+                "clickhouse_keeper.tests.alter_partition_distributed", "feature"
             )
-            Feature(
-                run=load(
-                    "clickhouse_keeper.tests.alter_partition_distributed", "feature"
-                )
+        )
+        Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
+
+        Feature(run=load("clickhouse_keeper.tests.ports_ssl_fips", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.fips", "feature"))
+
+    else:
+        create_3_3_cluster_config()
+        Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.migration", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.cli_converter", "feature"))
+        Feature(
+            run=load(
+                "clickhouse_keeper.tests.non_distributed_ddl_queries", "feature"
             )
-            Feature(
-                run=load("clickhouse_keeper.tests.four_letter_word_commands", "feature")
+        )
+        Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
+        Feature(
+            run=load("clickhouse_keeper.tests.alter_column_distributed", "feature")
+        )
+        Feature(
+            run=load(
+                "clickhouse_keeper.tests.alter_partition_distributed", "feature"
             )
-            Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
-            Feature(
-                run=load("clickhouse_keeper.tests.coordination_settings", "feature")
-            )
+        )
+        Feature(
+            run=load("clickhouse_keeper.tests.four_letter_word_commands", "feature")
+        )
+        Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
+        Feature(
+            run=load("clickhouse_keeper.tests.coordination_settings", "feature")
+        )
 
 
 if main():
