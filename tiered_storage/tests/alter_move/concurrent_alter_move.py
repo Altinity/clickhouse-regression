@@ -99,12 +99,16 @@ def scenario(self, cluster, node="clickhouse1"):
                     "in parallel I perform insert, alter move, update and optimize table"
                 ):
                     with Pool(15) as p:
+                        n_batches = 50
+                        n_inserts = 250
+                        n_other_queries_each = 500
+                        n_other_per_batch = n_other_queries_each // n_batches
                         tasks = []
-                        for i in range(5):
-                            tasks.append(p.submit(insert, (100,)))
-                            tasks.append(p.submit(alter_move, (100,)))
-                            tasks.append(p.submit(alter_update, (100,)))
-                            tasks.append(p.submit(optimize_table, (100,)))
+                        for i in range(n_batches):
+                            tasks.append(p.submit(insert, (n_inserts // n_batches,)))
+                            tasks.append(p.submit(alter_move, (n_other_per_batch,)))
+                            tasks.append(p.submit(alter_update, (n_other_per_batch,)))
+                            tasks.append(p.submit(optimize_table, (n_other_per_batch,)))
 
                         for task in tasks:
                             task.result(timeout=600)
@@ -119,7 +123,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         with When("I ensure all rows are in the table"):
                             r = node.query(f"SELECT COUNT() FROM {name}").output.strip()
                             with Then("it should return the result of 500"):
-                                assert r == "500", error()
+                                assert r == str(n_inserts), error()
             finally:
                 with Finally("I drop the table"):
                     node.query(f"DROP TABLE IF EXISTS {name} SYNC", timeout=360)
