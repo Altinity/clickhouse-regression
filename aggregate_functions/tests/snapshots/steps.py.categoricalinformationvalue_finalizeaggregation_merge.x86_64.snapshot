@@ -1,0 +1,36 @@
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('010000000000000000020000000000000000000000000000000200000000000000'), 'AggregateFunction(categoricalInformationValue, Nullable(UInt8) ,Nullable(UInt8))'))":[null]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_multiple_category_3_0 = r"""
+{"finalizeAggregation(CAST(unhex('D007000000000000E803000000000000D007000000000000E803000000000000A00F000000000000D007000000000000'), 'AggregateFunction(categoricalInformationValue, UInt8 ,UInt8 ,UInt8)'))":[0,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_single_NULL_value_0 = r"""
+{"finalizeAggregation(CAST(unhex('010000000000000000000000000000000000000000000000000000000000000000'), 'AggregateFunction(categoricalInformationValue, Nullable(UInt8) ,Nullable(UInt8))'))":[null]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_single_category_1_0 = r"""
+{"finalizeAggregation(CAST(unhex('0300000000000000020000000000000003000000000000000200000000000000'), 'AggregateFunction(categoricalInformationValue, UInt8 ,UInt8)'))":[0]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_single_category_2_0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000010000000000000002000000000000000200000000000000'), 'AggregateFunction(categoricalInformationValue, UInt8 ,UInt8)'))":[0]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_single_category_3_0 = r"""
+{"finalizeAggregation(CAST(unhex('0200000000000000000000000000000004000000000000000000000000000000'), 'AggregateFunction(categoricalInformationValue, UInt8 ,UInt8)'))":[null]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_single_category_4_0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000000000020000000000000000000000000000000400000000000000'), 'AggregateFunction(categoricalInformationValue, UInt8 ,UInt8)'))":[null]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_single_category_5_0 = r"""
+{"finalizeAggregation(CAST(unhex('0200000000000000000000000000000003000000000000000100000000000000'), 'AggregateFunction(categoricalInformationValue, UInt8 ,UInt8)'))":[null]}
+"""
+
+_aggregate_functions_finalizeAggregation_categoricalInformationValuefinalizeAggregation_single_row_0 = r"""
+{"finalizeAggregation(CAST(unhex('010000000000000000000000000000000001000000000000000000000000000000'), 'AggregateFunction(categoricalInformationValue, Nullable(UInt8) ,Nullable(UInt8))'))":[null]}
+"""
+
