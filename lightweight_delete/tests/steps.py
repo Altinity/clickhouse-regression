@@ -864,6 +864,24 @@ def delete_odd(
 
 
 @TestStep
+def add_rows(self, table_name, node=None):
+    "Add data in table `table_name`"
+    node.query(
+        f"INSERT INTO {table_name} SELECT number, intDiv(number,2) FROM numbers(20)"
+    )
+
+
+@TestStep
+def delete_even(self, table_name, column_name, node=None):
+    """Delete all even `column_name` rows in all partitions."""
+    delete(
+        table_name=table_name,
+        condition=f"{column_name} % 2 = 1",
+        node=node,
+    )
+
+
+@TestStep
 def alter_detach_partition(
     self,
     table_name,

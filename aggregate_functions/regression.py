@@ -85,6 +85,13 @@ xfails = {
             check_clickhouse_version("<23"),
         )
     ],
+    "/aggregate functions/analysisOfVariance/*": [
+        (
+            Fail,
+            "analysisOfVariance works from 22.10",
+            check_clickhouse_version("<=22.9"),
+        )
+    ],
     # 23.2
     "/aggregate functions/state/singleValueOrNullState/:": [
         (
@@ -104,6 +111,12 @@ xfails = {
         (
             Fail,
             issue_57683,
+        )
+    ],
+    "/aggregate functions/merge/quantileGKMerge/*": [
+        (
+            Fail,
+            "Need to investigate",
         )
     ],
 }
