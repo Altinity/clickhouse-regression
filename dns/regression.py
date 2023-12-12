@@ -7,7 +7,7 @@ from testflows.core import *
 
 append_path(sys.path, "..", pos=0)
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.common import *
 from helpers.argparser import argparser
 
@@ -40,16 +40,18 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        Scenario(run=load("dns.tests.lookup.scenario", "scenario"))
-        Feature(run=load("dns.tests.ipv6", "feature"))
+    Scenario(run=load("dns.tests.lookup.scenario", "scenario"))
+    Feature(run=load("dns.tests.ipv6", "feature"))
 
 
 if main():

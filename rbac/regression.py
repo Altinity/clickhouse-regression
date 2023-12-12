@@ -7,7 +7,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version
 from rbac.requirements import SRS_006_ClickHouse_Role_Based_Access_Control
@@ -307,21 +307,23 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        if check_clickhouse_version(">=23.2")(self):
-            for node in nodes["clickhouse"]:
-                add_rbac_config_file(node=cluster.node(node))
+    if check_clickhouse_version(">=23.2")(self):
+        for node in nodes["clickhouse"]:
+            add_rbac_config_file(node=cluster.node(node))
 
-        Feature(run=load("rbac.tests.syntax.feature", "feature"))
-        Feature(run=load("rbac.tests.privileges.feature", "feature"))
-        Feature(run=load("rbac.tests.views.feature", "feature"))
+    Feature(run=load("rbac.tests.syntax.feature", "feature"))
+    Feature(run=load("rbac.tests.privileges.feature", "feature"))
+    Feature(run=load("rbac.tests.views.feature", "feature"))
 
 
 if main():

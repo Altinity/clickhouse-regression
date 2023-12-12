@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from extended_precision_data_types.requirements import *
 
@@ -37,16 +37,18 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
         self.context.stress = stress
 
-        Feature(run=load("extended_precision_data_types.tests.feature", "feature"))
+    Feature(run=load("extended_precision_data_types.tests.feature", "feature"))
 
 
 if main():
