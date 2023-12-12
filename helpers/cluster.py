@@ -851,7 +851,7 @@ class Cluster(object):
 
         if docker_compose_project_dir is None:
             docker_compose_project_dir = os.path.join(
-                caller_dir, os.path.basename(caller_dir) + "_env"
+                self.configs_dir, os.path.basename(self.configs_dir) + "_env"
             )
 
         if not docker_compose_project_dir:
