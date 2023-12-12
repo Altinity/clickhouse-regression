@@ -117,10 +117,6 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
     ":/alter move/concurrent/concurrent alter move and drop": [(Fail, "unstable test")],
-    ":/alter move/concurrent/concurrent alter move": [
-        (Fail, "unstable test"),
-        (Error, "unstable test"),
-    ],
     ":/alter move/concurrent/concurrent alter move insert and select": [
         (Fail, "unstable test")
     ],
