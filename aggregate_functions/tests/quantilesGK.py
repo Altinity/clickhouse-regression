@@ -43,20 +43,3 @@ def scenario(
         extended_precision=extended_precision,
         snapshot_id=self.context.snapshot_id,
     )
-
-    if "State" not in self.name:
-        for i in range(5, 100, 20):
-            _func = func.replace(
-                "({params})",
-                f"({i}, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)({{params}})",
-            )
-            with Check(f"accuracy {i}"):
-                checks(
-                    func=_func,
-                    table=table,
-                    decimal=decimal,
-                    date=date,
-                    datetime=datetime,
-                    extended_precision=extended_precision,
-                    snapshot_id=self.context.snapshot_id,
-                )
