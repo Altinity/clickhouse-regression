@@ -1,550 +1,29 @@
-_aggregate_functions_windowFunnel_constant = r"""
-{"windowFunnel(6048000000000000)(1, 1, 1)":2,"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
-"""
-
-_aggregate_functions_windowFunnel_zero_rows = r"""
-{"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":0,"any(toTypeName(number))":"","any(toTypeName(1))":"","any(toTypeName(1))":""}
-"""
-
-_aggregate_functions_windowFunnel_single_row = r"""
-{"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":0,"any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
-"""
-
-_aggregate_functions_windowFunnel_with_group_by = r"""
-{"even":0,"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":0,"any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
-{"even":1,"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":2,"any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
-"""
-
 _aggregate_functions_windowFunnel_NULL_value_handling = r"""
 {"windowFunnel(6048000000000000)(time, equals(number, NULL), equals(number, 2))":null,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
 """
 
-_aggregate_functions_windowFunnel_single_NULL_value = r"""
-{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+_aggregate_functions_windowFunnel_constant = r"""
+{"windowFunnel(6048000000000000)(1, 1, 1)":2,"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
 """
 
-_aggregate_functions_windowFunnel_return_type = r"""
-{"toTypeName(windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 2)))":"UInt8","any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__1 = r"""
+{"windowFunnel(1)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_example1 = r"""
-{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(number))":"UInt32","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__10 = r"""
+{"windowFunnel(10)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_example2 = r"""
-{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2), equals(number, 3))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__1000 = r"""
+{"windowFunnel(1000)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_example3 = r"""
-{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2), equals(number, 4))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__10000 = r"""
+{"windowFunnel(10000)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_example4 = r"""
-{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
-"""
-
-_aggregate_functions_windowFunnel_doc_example = r"""
-{"windowFunnel(6048000000000000)(timestamp, equals(eventID, 1003), equals(eventID, 1009), equals(eventID, 1007), equals(eventID, 1010))":4,"any(toTypeName(timestamp))":"DateTime","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__1 = r"""
-{"windowFunnel(1)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__10 = r"""
-{"windowFunnel(10)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__10 = r"""
-{"windowFunnel(10)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__1000 = r"""
-{"windowFunnel(1000)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__1 = r"""
-{"windowFunnel(1)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__10000 = r"""
-{"windowFunnel(10000)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__100000000 = r"""
-{"windowFunnel(100000000)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_1 = r"""
-{"windowFunnel(1)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_10 = r"""
-{"windowFunnel(10)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_10000 = r"""
-{"windowFunnel(10000)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_1000 = r"""
-{"windowFunnel(1000)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__10 = r"""
-{"windowFunnel(10)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__1 = r"""
-{"windowFunnel(1)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__1000 = r"""
-{"windowFunnel(1000)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__10000 = r"""
-{"windowFunnel(10000)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__1 = r"""
-{"windowFunnel(1)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__1000 = r"""
-{"windowFunnel(1000)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__10 = r"""
-{"windowFunnel(10)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__10000 = r"""
-{"windowFunnel(10000)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__1 = r"""
-{"windowFunnel(1)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__10 = r"""
-{"windowFunnel(10)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__10000 = r"""
-{"windowFunnel(10000)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__1000 = r"""
-{"windowFunnel(1000)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__1 = r"""
-{"windowFunnel(1)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__10 = r"""
-{"windowFunnel(10)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__1000 = r"""
-{"windowFunnel(1000)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__10000 = r"""
-{"windowFunnel(10000)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_1 = r"""
-{"windowFunnel(1)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_1000 = r"""
-{"windowFunnel(1000)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_10000 = r"""
-{"windowFunnel(10000)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_10 = r"""
-{"windowFunnel(10)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_10 = r"""
-{"windowFunnel(10)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_1 = r"""
-{"windowFunnel(1)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_1000 = r"""
-{"windowFunnel(1000)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_10000 = r"""
-{"windowFunnel(10000)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
-"""
-
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
 _aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float32_1 = r"""
@@ -567,164 +46,164 @@ _aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float32_100000
 {"windowFunnel(100000000)(datetime, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__1 = r"""
-{"windowFunnel(1)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_1 = r"""
+{"windowFunnel(1)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__10 = r"""
-{"windowFunnel(10)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_10 = r"""
+{"windowFunnel(10)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__10000 = r"""
-{"windowFunnel(10000)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_1000 = r"""
+{"windowFunnel(1000)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__1000 = r"""
-{"windowFunnel(1000)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_10000 = r"""
+{"windowFunnel(10000)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Decimal128_38__100000000 = r"""
-{"windowFunnel(100000000)(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Float64_100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_1000 = r"""
-{"windowFunnel(1000)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_1 = r"""
+{"windowFunnel(1)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_1 = r"""
-{"windowFunnel(1)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_10 = r"""
+{"windowFunnel(10)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_10 = r"""
-{"windowFunnel(10)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_1000 = r"""
+{"windowFunnel(1000)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_10000 = r"""
-{"windowFunnel(10000)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_10000 = r"""
+{"windowFunnel(10000)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_100000000 = r"""
-{"windowFunnel(100000000)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_Int64_100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__1 = r"""
-{"windowFunnel(1)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__1 = r"""
+{"windowFunnel(1)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__10 = r"""
-{"windowFunnel(10)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__10 = r"""
+{"windowFunnel(10)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__10000 = r"""
-{"windowFunnel(10000)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__1000 = r"""
+{"windowFunnel(1000)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__1000 = r"""
-{"windowFunnel(1000)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__10000 = r"""
+{"windowFunnel(10000)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__100000000 = r"""
-{"windowFunnel(100000000)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float32__100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__1 = r"""
-{"windowFunnel(1)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__1 = r"""
+{"windowFunnel(1)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__10 = r"""
-{"windowFunnel(10)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__10 = r"""
+{"windowFunnel(10)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__1000 = r"""
-{"windowFunnel(1000)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__1000 = r"""
+{"windowFunnel(1000)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__10000 = r"""
-{"windowFunnel(10000)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__10000 = r"""
+{"windowFunnel(10000)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__100000000 = r"""
-{"windowFunnel(100000000)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Float64__100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__1000 = r"""
-{"windowFunnel(1000)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__1 = r"""
+{"windowFunnel(1)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__1 = r"""
-{"windowFunnel(1)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__10 = r"""
+{"windowFunnel(10)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__10 = r"""
-{"windowFunnel(10)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__1000 = r"""
+{"windowFunnel(1000)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__100000000 = r"""
-{"windowFunnel(100000000)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__10000 = r"""
+{"windowFunnel(10000)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__1 = r"""
-{"windowFunnel(1)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_Int64__100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__10000 = r"""
-{"windowFunnel(10000)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__1 = r"""
+{"windowFunnel(1)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__10 = r"""
-{"windowFunnel(10)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__10 = r"""
+{"windowFunnel(10)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__1000 = r"""
-{"windowFunnel(1000)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__1000 = r"""
+{"windowFunnel(1000)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__10000 = r"""
-{"windowFunnel(10000)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__10000 = r"""
+{"windowFunnel(10000)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__100000000 = r"""
-{"windowFunnel(100000000)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_LowCardinality_UInt64__100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_10 = r"""
-{"windowFunnel(10)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_1 = r"""
+{"windowFunnel(1)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_1 = r"""
-{"windowFunnel(1)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_10 = r"""
+{"windowFunnel(10)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_1000 = r"""
-{"windowFunnel(1000)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_1000 = r"""
+{"windowFunnel(1000)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_10000 = r"""
-{"windowFunnel(10000)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_10000 = r"""
+{"windowFunnel(10000)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_100000000 = r"""
-{"windowFunnel(100000000)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_DateTime_UInt64_100000000 = r"""
+{"windowFunnel(100000000)(datetime, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_1 = r"""
-{"windowFunnel(1)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__1 = r"""
+{"windowFunnel(1)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_10 = r"""
-{"windowFunnel(10)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__10 = r"""
+{"windowFunnel(10)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_1000 = r"""
-{"windowFunnel(1000)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__1000 = r"""
+{"windowFunnel(1000)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_10000 = r"""
-{"windowFunnel(10000)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__10000 = r"""
+{"windowFunnel(10000)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_100000000 = r"""
-{"windowFunnel(100000000)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__100000000 = r"""
+{"windowFunnel(100000000)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
 """
 
 _aggregate_functions_windowFunnel_datatypes_permutations_Date_Float32_1 = r"""
@@ -747,23 +226,544 @@ _aggregate_functions_windowFunnel_datatypes_permutations_Date_Float32_100000000 
 {"windowFunnel(100000000)(date, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__1 = r"""
-{"windowFunnel(1)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_1 = r"""
+{"windowFunnel(1)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__10 = r"""
-{"windowFunnel(10)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_10 = r"""
+{"windowFunnel(10)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__100000000 = r"""
-{"windowFunnel(100000000)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_1000 = r"""
+{"windowFunnel(1000)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__10000 = r"""
-{"windowFunnel(10000)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_10000 = r"""
+{"windowFunnel(10000)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
 """
 
-_aggregate_functions_windowFunnel_datatypes_permutations_Date_Decimal128_38__1000 = r"""
-{"windowFunnel(1000)(date, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Float64_100000000 = r"""
+{"windowFunnel(100000000)(date, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_1 = r"""
+{"windowFunnel(1)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_10 = r"""
+{"windowFunnel(10)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_1000 = r"""
+{"windowFunnel(1000)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_10000 = r"""
+{"windowFunnel(10000)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_Int64_100000000 = r"""
+{"windowFunnel(100000000)(date, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__1 = r"""
+{"windowFunnel(1)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__10 = r"""
+{"windowFunnel(10)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__1000 = r"""
+{"windowFunnel(1000)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__10000 = r"""
+{"windowFunnel(10000)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float32__100000000 = r"""
+{"windowFunnel(100000000)(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__1 = r"""
+{"windowFunnel(1)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__10 = r"""
+{"windowFunnel(10)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__1000 = r"""
+{"windowFunnel(1000)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__10000 = r"""
+{"windowFunnel(10000)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Float64__100000000 = r"""
+{"windowFunnel(100000000)(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__1 = r"""
+{"windowFunnel(1)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__10 = r"""
+{"windowFunnel(10)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__1000 = r"""
+{"windowFunnel(1000)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__10000 = r"""
+{"windowFunnel(10000)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_Int64__100000000 = r"""
+{"windowFunnel(100000000)(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__1 = r"""
+{"windowFunnel(1)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__10 = r"""
+{"windowFunnel(10)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__1000 = r"""
+{"windowFunnel(1000)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__10000 = r"""
+{"windowFunnel(10000)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_LowCardinality_UInt64__100000000 = r"""
+{"windowFunnel(100000000)(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_1 = r"""
+{"windowFunnel(1)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_10 = r"""
+{"windowFunnel(10)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_1000 = r"""
+{"windowFunnel(1000)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_10000 = r"""
+{"windowFunnel(10000)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_Date_UInt64_100000000 = r"""
+{"windowFunnel(100000000)(date, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Decimal128_38__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float32_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Float64_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__Int64_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_1 = r"""
+{"windowFunnel(1)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_10 = r"""
+{"windowFunnel(10)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_DateTime__UInt64_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Decimal128_38__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 500), greater(decimal128_38_, 1000), greater(decimal128_38_, 10000), greater(decimal128_38_, 100000))":0}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float32_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(float32, 100), greater(float32, 500), greater(float32, 1000), greater(float32, 10000), greater(float32, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Float64_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(float64, 100), greater(float64, 500), greater(float64, 1000), greater(float64, 10000), greater(float64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__Int64_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(int64, 100), greater(int64, 500), greater(int64, 1000), greater(int64, 10000), greater(int64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 500), greater(lowcardinality_float32_, 1000), greater(lowcardinality_float32_, 10000), greater(lowcardinality_float32_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 500), greater(lowcardinality_float64_, 1000), greater(lowcardinality_float64_, 10000), greater(lowcardinality_float64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 500), greater(lowcardinality_int64_, 1000), greater(lowcardinality_int64_, 10000), greater(lowcardinality_int64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64__100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 500), greater(lowcardinality_uint64_, 1000), greater(lowcardinality_uint64_, 10000), greater(lowcardinality_uint64_, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_1 = r"""
+{"windowFunnel(1)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_10 = r"""
+{"windowFunnel(10)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_1000 = r"""
+{"windowFunnel(1000)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_10000 = r"""
+{"windowFunnel(10000)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_datatypes_permutations_LowCardinality_Date__UInt64_100000000 = r"""
+{"windowFunnel(100000000)(lowcardinality_date_, greater(uint64, 100), greater(uint64, 500), greater(uint64, 1000), greater(uint64, 10000), greater(uint64, 100000))":5}
+"""
+
+_aggregate_functions_windowFunnel_doc_example = r"""
+{"windowFunnel(6048000000000000)(timestamp, equals(eventID, 1003), equals(eventID, 1009), equals(eventID, 1007), equals(eventID, 1010))":4,"any(toTypeName(timestamp))":"DateTime","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_example1 = r"""
+{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(number))":"UInt32","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_example2 = r"""
+{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2), equals(number, 3))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_example3 = r"""
+{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2), equals(number, 4))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_example4 = r"""
+{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_return_type = r"""
+{"toTypeName(windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 2)))":"UInt8","any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_single_NULL_value = r"""
+{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_single_row = r"""
+{"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":0,"any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_with_group_by = r"""
+{"even":0,"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":0,"any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+{"even":1,"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":2,"any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_windowFunnel_zero_rows = r"""
+{"windowFunnel(6048000000000000)(number, equals(number, 1), equals(number, 1))":0,"any(toTypeName(number))":"","any(toTypeName(1))":"","any(toTypeName(1))":""}
 """
 
