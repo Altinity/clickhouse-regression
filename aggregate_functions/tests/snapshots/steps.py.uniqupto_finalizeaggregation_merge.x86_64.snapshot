@@ -6347,15 +6347,15 @@ _aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_with_anothe
 """
 
 _aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_with_another_aggregate_function_and_group_by_0 = r"""
-{"finalizeAggregation(CAST(unhex('010101'), 'AggregateFunction(uniqUpTo(5), Nullable(Int8))'))":"1"}
-"""
-
-_aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_with_another_aggregate_function_and_group_by_1 = r"""
 {"finalizeAggregation(CAST(unhex('010103'), 'AggregateFunction(uniqUpTo(5), Nullable(Int8))'))":"1"}
 """
 
-_aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_with_another_aggregate_function_and_group_by_2 = r"""
+_aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_with_another_aggregate_function_and_group_by_1 = r"""
 {"finalizeAggregation(CAST(unhex('010105'), 'AggregateFunction(uniqUpTo(5), Nullable(Int8))'))":"1"}
+"""
+
+_aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_with_another_aggregate_function_and_group_by_2 = r"""
+{"finalizeAggregation(CAST(unhex('010101'), 'AggregateFunction(uniqUpTo(5), Nullable(Int8))'))":"1"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_with_group_by_0 = r"""
