@@ -8,6 +8,8 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
+from s3.tests.common import enable_vfs
+
 from extended_precision_data_types.requirements import *
 
 xfails = {}
@@ -48,6 +50,10 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.stress = stress
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     Feature(run=load("extended_precision_data_types.tests.feature", "feature"))
 
