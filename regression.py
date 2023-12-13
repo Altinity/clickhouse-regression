@@ -49,6 +49,11 @@ def regression(
                 executor=pool,
             )(**args)
             Feature(
+                test=load("alter.regression", "regression"),
+                parallel=True,
+                executor=pool,
+            )(**args)
+            Feature(
                 test=load("aggregate_functions.regression", "regression"),
                 parallel=True,
                 executor=pool,
