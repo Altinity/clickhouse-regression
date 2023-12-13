@@ -10,6 +10,7 @@ from helpers.tables import *
 from helpers.argparser import argparser
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version
+from s3.tests.common import enable_vfs
 
 from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
@@ -306,6 +307,10 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
+
+    if allow_vfs:
+        with And("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     with And("table with all data types"):
         self.context.table = create_table(
