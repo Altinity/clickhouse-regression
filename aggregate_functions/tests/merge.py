@@ -169,7 +169,6 @@ def feature(self):
         "sequenceMatch",
         "kolmogorovSmirnovTest",
         "windowFunnel",
-        "quantileGK",
     ]
     parametric = [
         "histogram",
