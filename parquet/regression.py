@@ -10,6 +10,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from s3.regression import argparser
+from s3.tests.common import enable_vfs
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
@@ -363,6 +364,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     with Given("I have a Parquet table definition"):
         columns = (
