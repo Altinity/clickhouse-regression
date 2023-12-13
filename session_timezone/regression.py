@@ -5,7 +5,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from session_timezone.requirements import *
 from session_timezone.common import *
@@ -41,22 +41,24 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        if check_clickhouse_version("<23.5")(self):
-            skip(reason="only supported on ClickHouse version >= 23.5")
+    if check_clickhouse_version("<23.5")(self):
+        skip(reason="only supported on ClickHouse version >= 23.5")
 
-        Feature(run=load("session_timezone.tests.sanity", "feature"))
-        Feature(run=load("session_timezone.tests.basic", "feature"))
-        Feature(run=load("session_timezone.tests.clickhouse_local", "feature"))
-        Feature(run=load("session_timezone.tests.date_functions", "feature"))
-        Feature(run=load("session_timezone.tests.tables_with_date_columns", "feature"))
+    Feature(run=load("session_timezone.tests.sanity", "feature"))
+    Feature(run=load("session_timezone.tests.basic", "feature"))
+    Feature(run=load("session_timezone.tests.clickhouse_local", "feature"))
+    Feature(run=load("session_timezone.tests.date_functions", "feature"))
+    Feature(run=load("session_timezone.tests.tables_with_date_columns", "feature"))
 
 
 if main():

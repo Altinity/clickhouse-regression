@@ -851,7 +851,7 @@ class Cluster(object):
 
         if docker_compose_project_dir is None:
             docker_compose_project_dir = os.path.join(
-                caller_dir, os.path.basename(caller_dir) + "_env"
+                self.configs_dir, os.path.basename(self.configs_dir) + "_env"
             )
 
         if not docker_compose_project_dir:
@@ -1474,6 +1474,7 @@ def create_cluster(
     docker_compose_file="docker-compose.yml",
     environ=None,
     thread_fuzzer=False,
+    use_zookeeper_nodes=False,
 ):
     """Create docker compose cluster."""
     with Cluster(
@@ -1488,5 +1489,6 @@ def create_cluster(
         docker_compose_file=docker_compose_file,
         environ=environ,
         thread_fuzzer=thread_fuzzer,
+        use_zookeeper_nodes=use_zookeeper_nodes,
     ) as cluster:
         yield cluster

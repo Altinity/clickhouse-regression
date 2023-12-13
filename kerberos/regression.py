@@ -6,7 +6,7 @@ from platform import processor as current_cpu
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from kerberos.requirements.requirements import *
 
@@ -48,17 +48,19 @@ def regression(
         env = f"{folder_name}_env"
     self.context.env = env
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        Feature(run=load("kerberos.tests.generic", "generic"), flags=TE)
-        Feature(run=load("kerberos.tests.config", "config"), flags=TE)
-        Feature(run=load("kerberos.tests.parallel", "parallel"), flags=TE)
+    Feature(run=load("kerberos.tests.generic", "generic"), flags=TE)
+    Feature(run=load("kerberos.tests.config", "config"), flags=TE)
+    Feature(run=load("kerberos.tests.parallel", "parallel"), flags=TE)
 
 
 if main():

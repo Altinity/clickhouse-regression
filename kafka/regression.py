@@ -5,7 +5,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 
 xfails = {}
@@ -34,36 +34,38 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        Scenario(run=load("kafka.tests.distributed", "scenario"), flags=TE)
-        Scenario(run=load("kafka.tests.non_replicated", "scenario"), flags=TE)
-        Scenario(
-            run=load("kafka.tests.non_replicated_4_consumers", "scenario"), flags=TE
-        )
-        Scenario(
-            run=load(
-                "kafka.tests.non_replicated_target_table_not_writable", "scenario"
-            ),
-            flags=TE,
-        )
-        Scenario(
-            run=load("kafka.tests.non_replicated_clickhouse_restart", "scenario"),
-            flags=TE,
-        )
-        Scenario(
-            run=load("kafka.tests.non_replicated_4_consumers_restart", "scenario"),
-            flags=TE,
-        )
-        Scenario(
-            run=load("kafka.tests.replicated_stop_and_restart", "scenario"), flags=TE
-        )
+    Scenario(run=load("kafka.tests.distributed", "scenario"), flags=TE)
+    Scenario(run=load("kafka.tests.non_replicated", "scenario"), flags=TE)
+    Scenario(
+        run=load("kafka.tests.non_replicated_4_consumers", "scenario"), flags=TE
+    )
+    Scenario(
+        run=load(
+            "kafka.tests.non_replicated_target_table_not_writable", "scenario"
+        ),
+        flags=TE,
+    )
+    Scenario(
+        run=load("kafka.tests.non_replicated_clickhouse_restart", "scenario"),
+        flags=TE,
+    )
+    Scenario(
+        run=load("kafka.tests.non_replicated_4_consumers_restart", "scenario"),
+        flags=TE,
+    )
+    Scenario(
+        run=load("kafka.tests.replicated_stop_and_restart", "scenario"), flags=TE
+    )
 
 
 if main():
