@@ -13,6 +13,7 @@ from window_functions.requirements import (
     RQ_SRS_019_ClickHouse_WindowFunctions,
 )
 from helpers.common import check_clickhouse_version
+from s3.tests.common import enable_vfs
 
 xfails = {
     "tests/:/frame clause/range frame/between expr following and expr following without order by error": [
@@ -220,6 +221,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     Feature(run=load("window_functions.tests.feature", "feature"), flags=TE)
 
