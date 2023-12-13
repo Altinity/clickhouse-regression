@@ -26,6 +26,7 @@ issue_48917 = (
 )
 issue_55997 = "https://github.com/ClickHouse/ClickHouse/issues/55997"
 issue_57683 = "https://github.com/ClickHouse/ClickHouse/issues/57683"
+issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -78,20 +79,6 @@ xfails = {
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/window_functions/ntile/*": [
-        (
-            Fail,
-            "ntile works from 23.5",
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/analysisOfVariance/*": [
-        (
-            Fail,
-            "analysisOfVariance works from 22.10",
-            check_clickhouse_version("<=22.9"),
-        )
-    ],
     # 23.2
     "/aggregate functions/state/singleValueOrNullState/:": [
         (
@@ -119,13 +106,156 @@ xfails = {
             "Need to investigate",
         )
     ],
+    "/aggregate functions/analysisOfVariance/*": 
+        (
+            XFail,
+            "analysisOfVariance works from 22.10",
+            check_clickhouse_version("<=22.9"),
+        )
+    ,
 }
 
+ffails = {
+     "/aggregate functions/state/retentionState/NULL value handling": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/retentionState/single NULL value/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/window_functions/ntile/*": 
+        (
+            XFail,
+            "ntile works from 23.5",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/analysisOfVariance/*": 
+        (
+            XFail,
+            "analysisOfVariance works from 22.10",
+            check_clickhouse_version("<=22.9"),
+        )
+    ,
+    "/aggregate functions/state/analysisOfVarianceState/*": 
+        (
+            XFail,
+            "analysisOfVariance works from 22.10",
+            check_clickhouse_version("<=22.9"),
+        )
+    ,
+    "/aggregate functions/corrMatrix/*": 
+        (
+            XFail,
+            "corrMatrix works from 23.2",
+            check_clickhouse_version("<=23.1"),
+        )
+    ,
+    "/aggregate functions/state/corrMatrixState/*": 
+        (
+            XFail,
+            "corrMatrix works from 23.2",
+            check_clickhouse_version("<=23.1"),
+        )
+    ,
+    "/aggregate functions/covarSampMatrix/*": 
+        (
+            XFail,
+            "covarSampMatrix works from 23.2",
+            check_clickhouse_version("<=23.1"),
+        )
+    ,
+    "/aggregate functions/state/covarSampMatrixState/*": 
+        (
+            XFail,
+            "covarSampMatrix works from 23.2",
+            check_clickhouse_version("<=23.1"),
+        )
+    ,
+    "/aggregate functions/covarPopMatrix/*": 
+        (
+            XFail,
+            "covarPopMatrix works from 23.2",
+            check_clickhouse_version("<=23.1"),
+        )
+    ,
+    "/aggregate functions/state/covarPopMatrixState/*": 
+        (
+            XFail,
+            "covarPopMatrix works from 23.2",
+            check_clickhouse_version("<=23.1"),
+        )
+    ,
+    "/aggregate functions/groupArrayLast/*": 
+        (
+            XFail,
+            "groupArrayLast works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/groupArrayLastState/*": 
+        (
+            XFail,
+            "groupArrayLast works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/kolmogorovSmirnovTest/*": 
+        (
+            XFail,
+            "kolmogorovSmirnovTest works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/kolmogorovSmirnovTestState/*": 
+        (
+            XFail,
+            "kolmogorovSmirnovTest works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/quantileGK/*": 
+        (
+            XFail,
+            "quantileGK works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/quantileGKState/*": 
+        (
+            XFail,
+            "quantileGK works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/quantilesGK/*": 
+        (
+            XFail,
+            "quantilesGK works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/quantilesGKState/*": 
+        (
+            XFail,
+            "quantilesGK works from 23",
+            check_clickhouse_version("<23"),
+        )
+    ,
+}
 
 @TestModule
 @ArgumentParser(argparser)
 @Name("aggregate functions")
 @XFails(xfails)
+@FFails(ffails)
 @Specifications(SRS_031_ClickHouse_Aggregate_Functions)
 def regression(
     self,
