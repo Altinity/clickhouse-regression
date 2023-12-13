@@ -87,19 +87,7 @@ def regression(
     clickhouse_version,
     clickhouse_binary_path,
     collect_service_logs,
-    storages,
     stress,
-    minio_uri,
-    gcs_uri,
-    aws_s3_region,
-    aws_s3_bucket,
-    minio_root_user,
-    minio_root_password,
-    aws_s3_access_key,
-    aws_s3_key_id,
-    gcs_key_secret,
-    gcs_key_id,
-    node="clickhouse1",
 ):
     """Alter regression."""
     nodes = {
