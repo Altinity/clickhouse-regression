@@ -8,7 +8,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from s3.regression import argparser
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
@@ -353,221 +353,224 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
-        with Given("I have a Parquet table definition"):
-            self.context.cluster = cluster
-            columns = (
-                cluster.node("clickhouse1")
-                .command("cat /var/lib/test_files/clickhouse_table_def.txt")
-                .output.strip()
-                .split(".")
-            )
-            self.context.parquet_table_columns = []
-            for column in columns:
-                name, datatype = column.split(" ", 1)
-                self.context.parquet_table_columns.append(
-                    Column(datatype=eval(datatype), name=name)
-                )
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
+        self.context.cluster = cluster
 
-        with And("I check that common code provides all necessary data types"):
-            columns = generate_all_column_types(include=parquet_test_columns())
-            datatypes = [type(column.datatype) for column in columns]
+    with Given("I have a Parquet table definition"):
+        columns = (
+            cluster.node("clickhouse1")
+            .command("cat /var/lib/test_files/clickhouse_table_def.txt")
+            .output.strip()
+            .split(".")
+        )
+        self.context.parquet_table_columns = []
+        for column in columns:
+            name, datatype = column.split(" ", 1)
+            self.context.parquet_table_columns.append(
+                Column(datatype=eval(datatype), name=name)
+            )
 
-            check_datatypes = [
-                UInt8,
-                Int8,
-                UInt16,
-                UInt32,
-                UInt64,
-                Int16,
-                Int32,
-                Int64,
-                Float32,
-                Float64,
-                Date,
-                DateTime,
-                String,
-                Array,
-                Tuple,
-                Map,
-                Nullable,
-                LowCardinality,
-                Decimal128,
-            ]
+    with And("I check that common code provides all necessary data types"):
+        columns = generate_all_column_types(include=parquet_test_columns())
+        datatypes = [type(column.datatype) for column in columns]
 
-            for datatype in check_datatypes:
-                assert datatype in datatypes, fail(
-                    f"Common code did not provide {datatype}"
-                )
+        check_datatypes = [
+            UInt8,
+            Int8,
+            UInt16,
+            UInt32,
+            UInt64,
+            Int16,
+            Int32,
+            Int64,
+            Float32,
+            Float64,
+            Date,
+            DateTime,
+            String,
+            Array,
+            Tuple,
+            Map,
+            Nullable,
+            LowCardinality,
+            Decimal128,
+        ]
 
-        with Pool(pool) as executor:
-            Feature(
-                run=load("parquet.tests.file", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
+        for datatype in check_datatypes:
+            assert datatype in datatypes, fail(
+                f"Common code did not provide {datatype}"
             )
-            Feature(
-                run=load("parquet.tests.query", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.int_list_multiple_chunks", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.url", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.mysql", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.postgresql", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.remote", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.chunked_array", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.broken", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.encoding", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.compression", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.datatypes", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.complex_datatypes", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.indexing", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.cache", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.glob", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.rowgroups", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.encrypted", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.fastparquet", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            join()
 
-        if storages is None:
-            pass
+    with Pool(pool) as executor:
+        Feature(
+            run=load("parquet.tests.file", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.query", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.int_list_multiple_chunks", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.url", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.mysql", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.postgresql", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.remote", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.chunked_array", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.broken", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.encoding", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.compression", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.datatypes", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.complex_datatypes", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.indexing", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.cache", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.glob", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.rowgroups", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.encrypted", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.fastparquet", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        join()
 
-        else:
-            if "aws_s3" in storages:
-                with Given("I make sure the S3 credentials are set"):
-                    if aws_s3_access_key == None:
-                        fail("AWS S3 access key needs to be set")
+    if storages is None:
+        pass
 
-                    if aws_s3_key_id == None:
-                        fail("AWS S3 key id needs to be set")
+    else:
+        if "aws_s3" in storages:
+            with Given("I make sure the S3 credentials are set"):
+                if aws_s3_access_key == None:
+                    fail("AWS S3 access key needs to be set")
 
-                    if aws_s3_bucket == None:
-                        fail("AWS S3 bucket needs to be set")
+                if aws_s3_key_id == None:
+                    fail("AWS S3 key id needs to be set")
 
-                    if aws_s3_region == None:
-                        fail("AWS S3 region needs to be set")
+                if aws_s3_bucket == None:
+                    fail("AWS S3 bucket needs to be set")
 
-                self.context.storage = "aws_s3"
-                self.context.aws_s3_bucket = aws_s3_bucket.value
-                self.context.uri = f"https://s3.{aws_s3_region.value}.amazonaws.com/{aws_s3_bucket.value}/data/parquet/"
-                self.context.access_key_id = aws_s3_key_id.value
-                self.context.secret_access_key = aws_s3_access_key.value
-                self.context.s3_client = boto3.client(
-                    "s3",
-                    aws_access_key_id=self.context.access_key_id,
-                    aws_secret_access_key=self.context.secret_access_key,
-                )
-                with Feature("aws s3"):
-                    Feature(run=load("parquet.tests.s3", "feature"))
+                if aws_s3_region == None:
+                    fail("AWS S3 region needs to be set")
 
-            if "minio" in storages:
-                self.context.storage = "minio"
-                self.context.uri = "http://minio:9001/root/data/parquet/"
-                self.context.access_key_id = "minio"
-                self.context.secret_access_key = "minio123"
+            self.context.storage = "aws_s3"
+            self.context.aws_s3_bucket = aws_s3_bucket.value
+            self.context.uri = f"https://s3.{aws_s3_region.value}.amazonaws.com/{aws_s3_bucket.value}/data/parquet/"
+            self.context.access_key_id = aws_s3_key_id.value
+            self.context.secret_access_key = aws_s3_access_key.value
+            self.context.s3_client = boto3.client(
+                "s3",
+                aws_access_key_id=self.context.access_key_id,
+                aws_secret_access_key=self.context.secret_access_key,
+            )
+            with Feature("aws s3"):
+                Feature(run=load("parquet.tests.s3", "feature"))
 
-                with Given("I have a minio client"):
-                    start_minio(access_key="minio", secret_key="minio123")
+        if "minio" in storages:
+            self.context.storage = "minio"
+            self.context.uri = "http://minio:9001/root/data/parquet/"
+            self.context.access_key_id = "minio"
+            self.context.secret_access_key = "minio123"
 
-                with Feature("minio"):
-                    Feature(run=load("parquet.tests.s3", "feature"))
+            with Given("I have a minio client"):
+                start_minio(access_key="minio", secret_key="minio123")
 
-            if "gcs" in storages:
-                with Feature("gcs"):
-                    fail("GCS not implemented")
+            with Feature("minio"):
+                Feature(run=load("parquet.tests.s3", "feature"))
+
+        if "gcs" in storages:
+            with Feature("gcs"):
+                fail("GCS not implemented")
 
 
 if main():
