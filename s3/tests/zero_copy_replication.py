@@ -2192,6 +2192,14 @@ def outline(self):
         }
 
     with s3_storage(disks, policies, restart=True):
+        with Check("Bucket should be empty before test begins"):
+            check_bucket_size(
+                name=self.context.bucket_name,
+                prefix=self.context.bucket_path,
+                expected_size=0,
+                tolerance=0,
+                minio_enabled=(self.context.storage == "minio"),
+            )
         for scenario in loads(current_module(), Scenario):
             scenario()
 

@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version, check_current_cpu, current_cpu
 
@@ -190,30 +190,32 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-        use_zookeeper_nodes=True,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            use_zookeeper_nodes=True,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        with Given("I check if the binary is FIPS compatible"):
-            if "fips" in current().context.clickhouse_version or force_fips:
-                self.context.fips_mode = True
+    with Given("I check if the binary is FIPS compatible"):
+        if "fips" in current().context.clickhouse_version or force_fips:
+            self.context.fips_mode = True
 
-        Feature(run=load("ssl_server.tests.check_certificate", "feature"))
-        Feature(run=load("ssl_server.tests.sanity", "feature"))
-        Feature(run=load("ssl_server.tests.ssl_context", "feature"))
-        Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
-        Feature(run=load("ssl_server.tests.verification_mode", "feature"))
-        Feature(run=load("ssl_server.tests.url_table_function", "feature"))
-        Feature(run=load("ssl_server.tests.dictionary", "feature"))
-        Feature(run=load("ssl_server.tests.fips", "feature"))
-        Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
-        Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
-        Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
+    Feature(run=load("ssl_server.tests.check_certificate", "feature"))
+    Feature(run=load("ssl_server.tests.sanity", "feature"))
+    Feature(run=load("ssl_server.tests.ssl_context", "feature"))
+    Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
+    Feature(run=load("ssl_server.tests.verification_mode", "feature"))
+    Feature(run=load("ssl_server.tests.url_table_function", "feature"))
+    Feature(run=load("ssl_server.tests.dictionary", "feature"))
+    Feature(run=load("ssl_server.tests.fips", "feature"))
+    Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
+    Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
+    Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
 
 
 if main():

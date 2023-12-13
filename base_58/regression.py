@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from base_58.requirements.requirements import *
 from helpers.argparser import argparser as argparser
 from helpers.common import check_clickhouse_version
@@ -40,32 +40,34 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
         self.context.stress = stress
 
-        if parallel is not None:
-            self.context.parallel = parallel
+    if parallel is not None:
+        self.context.parallel = parallel
 
-        if check_clickhouse_version("<22.7")(self):
-            skip(reason="only supported on ClickHouse version >= 22.7")
+    if check_clickhouse_version("<22.7")(self):
+        skip(reason="only supported on ClickHouse version >= 22.7")
 
-        Feature(run=load("base_58.tests.consistency", "feature"))
-        Feature(run=load("base_58.tests.null", "feature"))
-        Feature(run=load("base_58.tests.alias_input", "feature"))
-        Feature(run=load("base_58.tests.function_input", "feature"))
-        Feature(run=load("base_58.tests.compatibility", "feature"))
-        Feature(run=load("base_58.tests.memory_usage", "feature"))
-        Feature(run=load("base_58.tests.performance", "feature"))
-        Feature(run=load("base_58.tests.supported_types_constant", "feature"))
-        Feature(run=load("base_58.tests.supported_types_column", "feature"))
-        Feature(run=load("base_58.tests.unsupported_types_constant", "feature"))
-        Feature(run=load("base_58.tests.unsupported_types_column", "feature"))
+    Feature(run=load("base_58.tests.consistency", "feature"))
+    Feature(run=load("base_58.tests.null", "feature"))
+    Feature(run=load("base_58.tests.alias_input", "feature"))
+    Feature(run=load("base_58.tests.function_input", "feature"))
+    Feature(run=load("base_58.tests.compatibility", "feature"))
+    Feature(run=load("base_58.tests.memory_usage", "feature"))
+    Feature(run=load("base_58.tests.performance", "feature"))
+    Feature(run=load("base_58.tests.supported_types_constant", "feature"))
+    Feature(run=load("base_58.tests.supported_types_column", "feature"))
+    Feature(run=load("base_58.tests.unsupported_types_constant", "feature"))
+    Feature(run=load("base_58.tests.unsupported_types_column", "feature"))
 
 
 if main():
