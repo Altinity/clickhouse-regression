@@ -10,6 +10,7 @@ from helpers.cluster import create_cluster
 from base_58.requirements.requirements import *
 from helpers.argparser import argparser as argparser
 from helpers.common import check_clickhouse_version
+from s3.tests.common import enable_vfs
 
 xfails = {"alias input/alias instead of table and column": [(Fail, "not implemented")]}
 
@@ -57,6 +58,10 @@ def regression(
 
     if check_clickhouse_version("<22.7")(self):
         skip(reason="only supported on ClickHouse version >= 22.7")
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     Feature(run=load("base_58.tests.consistency", "feature"))
     Feature(run=load("base_58.tests.null", "feature"))
