@@ -7,6 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
+from s3.tests.common import enable_vfs
 
 xfails = {}
 
@@ -44,6 +45,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     Scenario(run=load("kafka.tests.distributed", "scenario"), flags=TE)
     Scenario(run=load("kafka.tests.non_replicated", "scenario"), flags=TE)

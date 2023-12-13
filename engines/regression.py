@@ -9,6 +9,7 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
+from s3.tests.common import enable_vfs
 
 from engines.requirements import *
 
@@ -64,6 +65,10 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     Feature(
         run=load(
