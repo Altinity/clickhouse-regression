@@ -6,6 +6,10 @@ _aggregate_functions_merge_last_valueMerge_Array_Bool__0 = r"""
 {"last_valueMerge(state)":[true]}
 """
 
+_aggregate_functions_merge_last_valueMerge_Array_DateTime64_3___0__22_8 = r"""
+{"last_valueMerge(state)":["2009-06-04 06:17:03.000"]}
+"""
+
 _aggregate_functions_merge_last_valueMerge_Array_DateTime64_3____22_8_0__22_8 = r"""
 {"last_valueMerge(state)":["2009-06-04 06:17:03.000"]}
 """
@@ -204,6 +208,10 @@ _aggregate_functions_merge_last_valueMerge_Array_Map_String_LowCardinality_Float
 
 _aggregate_functions_merge_last_valueMerge_Array_Nullable_Bool___0 = r"""
 {"last_valueMerge(state)":[false]}
+"""
+
+_aggregate_functions_merge_last_valueMerge_Array_Nullable_DateTime64_3____0__22_8 = r"""
+{"last_valueMerge(state)":["2004-11-26 12:24:18.000"]}
 """
 
 _aggregate_functions_merge_last_valueMerge_Array_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
@@ -3438,6 +3446,10 @@ _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_FixedString_51___B
 {"last_valueMerge(state)":{"TTTTTTTTTTTTTTTTT\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}}
 """
 
+_aggregate_functions_merge_last_valueMerge_Map_LowCardinality_FixedString_51___DateTime64_3___0__22_8 = r"""
+{"last_valueMerge(state)":{"bbbbbb\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2015-12-27 22:56:39.000"}}
+"""
+
 _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_FixedString_51___DateTime64_3____22_8_0__22_8 = r"""
 {"last_valueMerge(state)":{"bbbbbb\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2015-12-27 22:56:39.000"}}
 """
@@ -3638,6 +3650,10 @@ _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_FixedString_51___N
 {"last_valueMerge(state)":{"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}}
 """
 
+_aggregate_functions_merge_last_valueMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3____0__22_8 = r"""
+{"last_valueMerge(state)":{"JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2021-07-25 20:37:29.000"}}
+"""
+
 _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"last_valueMerge(state)":{"JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2021-07-25 20:37:29.000"}}
 """
@@ -3752,6 +3768,10 @@ _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__Array_Stri
 
 _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__Bool__0 = r"""
 {"last_valueMerge(state)":{"YYYYYYYYYYYYYYYYYYYYYYY":true}}
+"""
+
+_aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__DateTime64_3___0__22_8 = r"""
+{"last_valueMerge(state)":{"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk":"2006-02-15 07:51:16.000"}}
 """
 
 _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__DateTime64_3____22_8_0__22_8 = r"""
@@ -3952,6 +3972,10 @@ _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__Map_String
 
 _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__Nullable_Bool___0 = r"""
 {"last_valueMerge(state)":{"kkkkkkkkkkkkkkkkkk":false}}
+"""
+
+_aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__Nullable_DateTime64_3____0__22_8 = r"""
+{"last_valueMerge(state)":{"vvvvvvvvvvvvvvvv":"2011-07-15 07:47:53.000"}}
 """
 
 _aggregate_functions_merge_last_valueMerge_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8_0__22_8 = r"""
@@ -6014,6 +6038,10 @@ _aggregate_functions_merge_last_valueMerge_Map_UUID_Bool__0 = r"""
 {"last_valueMerge(state)":{"ba47d711-874e-c42e-8800-9a9ad3b15023":true}}
 """
 
+_aggregate_functions_merge_last_valueMerge_Map_UUID_DateTime64_3___0__22_8 = r"""
+{"last_valueMerge(state)":{"fd55ceef-c125-3b6f-8da2-801bd831324d":"2021-03-01 22:06:49.000"}}
+"""
+
 _aggregate_functions_merge_last_valueMerge_Map_UUID_DateTime64_3____22_8_0__22_8 = r"""
 {"last_valueMerge(state)":{"fd55ceef-c125-3b6f-8da2-801bd831324d":"2021-03-01 22:06:49.000"}}
 """
@@ -6214,6 +6242,10 @@ _aggregate_functions_merge_last_valueMerge_Map_UUID_Nullable_Bool___0 = r"""
 {"last_valueMerge(state)":{"2e5e926d-9af5-40a0-4a9e-9c46c24fd023":false}}
 """
 
+_aggregate_functions_merge_last_valueMerge_Map_UUID_Nullable_DateTime64_3____0__22_8 = r"""
+{"last_valueMerge(state)":{"15269920-3846-24cb-d36c-822fffe31150":"2006-10-18 12:00:18.000"}}
+"""
+
 _aggregate_functions_merge_last_valueMerge_Map_UUID_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"last_valueMerge(state)":{"15269920-3846-24cb-d36c-822fffe31150":"2006-10-18 12:00:18.000"}}
 """
@@ -6330,6 +6362,10 @@ _aggregate_functions_merge_last_valueMerge_Nullable_Bool__0 = r"""
 {"last_valueMerge(state)":false}
 """
 
+_aggregate_functions_merge_last_valueMerge_Nullable_DateTime64_3___0__22_8 = r"""
+{"last_valueMerge(state)":"2005-06-02 18:09:41.000"}
+"""
+
 _aggregate_functions_merge_last_valueMerge_Nullable_DateTime64_3____22_8_0__22_8 = r"""
 {"last_valueMerge(state)":"2005-06-02 18:09:41.000"}
 """
@@ -6408,6 +6444,10 @@ _aggregate_functions_merge_last_valueMerge_Nullable_UUID__0 = r"""
 
 _aggregate_functions_merge_last_valueMerge_String_0 = r"""
 {"last_valueMerge(state)":"gggggggggggggggggggggggggggggggggggg"}
+"""
+
+_aggregate_functions_merge_last_valueMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String___0__22_8 = r"""
+{"last_valueMerge(state)":[74,41815,3555402075,"16430146470570022334","85263013463528892424694633102767628288",73,-15166,1920332646,"3719386712239147048","-96243264969481581557194911125803163648",-1.6878632e38,-1.3650591408973272e159,0.29597949220510620206242357000967593472,"2017-11-29","2005-10-13 18:48:23","2012-03-18 15:02:21.000",false,"CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC","eeeeeeeeeeeeeeee\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","f27d446f-ab37-2b66-3171-ab26dc211ad3",194,35528,4032233400,"17749437647210450600","75608543056830635732780515207607279104",127,10491,1906463130,"3516086067502036465","-26617229583301913157621082259750895872",1.3037401e38,-1.264537928001235e124,-0.84992838543054194018412484901705603584,"2019-07-05","2022-09-12 05:53:48","2022-12-28 02:39:42.000",false,"kkkkkkkkkkkkkkkkk","vvvvvvvvvvvvvvvvvvvvvv\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","9a96fd84-ae43-9347-1e78-2b33a8328278",203,53459,599905549,"4298445037840394478","149566830236514028253525515512931524608",-122,25934,-1108836699,"8443032232846144162","-42389281493563937299042072992887017472",36893490000000000000,4.341599291285145e122,"2012-06-25","2005-05-11 12:15:48",false,"VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV","qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq\u0000\u0000","479cddd3-d1c9-c2bb-dd8b-d5afea931912",["ffffffffffffffffffffffffffffffffffffffffffffffffffffff"],{"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm":1.5814561578527273e46},["kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"]]}
 """
 
 _aggregate_functions_merge_last_valueMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String____22_8_0__22_8 = r"""

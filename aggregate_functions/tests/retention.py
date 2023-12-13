@@ -14,7 +14,9 @@ def scenario(
 ):
     """Check retention aggregate function"""
 
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=22.9")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=22.9"
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

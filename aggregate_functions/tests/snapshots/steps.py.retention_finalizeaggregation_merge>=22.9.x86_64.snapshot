@@ -123,31 +123,31 @@ _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_LowCardina
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_Float32__0 = r"""
-{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_Float64__0 = r"""
-{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_Int128__0 = r"""
-{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_Int16__0 = r"""
-{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_Int32__0 = r"""
-{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_Int64__0 = r"""
-{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_Int8__0 = r"""
-{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(retention, UInt8 ,UInt8)'))":[1,0]}
 """
 
 _aggregate_functions_finalizeAggregation_retentionfinalizeAggregation_Nullable_UInt128__0 = r"""
