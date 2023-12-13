@@ -9,6 +9,7 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version, check_current_cpu, current_cpu
+from s3.tests.common import enable_vfs
 
 from ssl_server.requirements import SRS017_ClickHouse_SSL
 
@@ -205,6 +206,10 @@ def regression(
     with Given("I check if the binary is FIPS compatible"):
         if "fips" in current().context.clickhouse_version or force_fips:
             self.context.fips_mode = True
+
+    if allow_vfs:
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
 
     Feature(run=load("ssl_server.tests.check_certificate", "feature"))
     Feature(run=load("ssl_server.tests.sanity", "feature"))
