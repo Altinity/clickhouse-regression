@@ -106,13 +106,6 @@ xfails = {
             "Need to investigate",
         )
     ],
-    "/aggregate functions/analysisOfVariance/*": 
-        (
-            XFail,
-            "analysisOfVariance works from 22.10",
-            check_clickhouse_version("<=22.9"),
-        )
-    ,
 }
 
 ffails = {
