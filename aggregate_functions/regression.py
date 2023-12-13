@@ -88,13 +88,7 @@ xfails = {
             r".*Exception: Nested type [^\n]+ cannot be inside Nullable type.*",
         )
     ],
-    "/aggregate functions/state/quantilesGKState/:": [
-        (
-            Fail,
-            issue_57683,
-        )
-    ],
-    "/aggregate functions/merge/quantilesGKMerge/:": [
+    "/aggregate functions/:/quantilesGK:/:": [
         (
             Fail,
             issue_57683,
@@ -109,7 +103,7 @@ xfails = {
 }
 
 ffails = {
-     "/aggregate functions/state/retentionState/NULL value handling": 
+    "/aggregate functions/state/retentionState/NULL value handling/*": 
         (
             XFail,
             issue_57801,
@@ -117,6 +111,34 @@ ffails = {
         )
     ,
     "/aggregate functions/state/retentionState/single NULL value/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/sequenceCountState/NULL value handling/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ,
+     "/aggregate functions/state/windowFunnelState/NULL value handling/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/windowFunnelState/single NULL value/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ,
+    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": 
         (
             XFail,
             issue_57801,
@@ -137,7 +159,7 @@ ffails = {
             check_clickhouse_version("<=22.9"),
         )
     ,
-    "/aggregate functions/state/analysisOfVarianceState/*": 
+    "/aggregate functions/:/analysisOfVariance:/*": 
         (
             XFail,
             "analysisOfVariance works from 22.10",
@@ -151,7 +173,7 @@ ffails = {
             check_clickhouse_version("<=23.1"),
         )
     ,
-    "/aggregate functions/state/corrMatrixState/*": 
+    "/aggregate functions/:/corrMatrix:/*": 
         (
             XFail,
             "corrMatrix works from 23.2",
@@ -165,7 +187,7 @@ ffails = {
             check_clickhouse_version("<=23.1"),
         )
     ,
-    "/aggregate functions/state/covarSampMatrixState/*": 
+    "/aggregate functions/:/covarSampMatrix:/*": 
         (
             XFail,
             "covarSampMatrix works from 23.2",
@@ -179,7 +201,7 @@ ffails = {
             check_clickhouse_version("<=23.1"),
         )
     ,
-    "/aggregate functions/state/covarPopMatrixState/*": 
+    "/aggregate functions/:/covarPopMatrix:/*": 
         (
             XFail,
             "covarPopMatrix works from 23.2",
@@ -193,7 +215,7 @@ ffails = {
             check_clickhouse_version("<23"),
         )
     ,
-    "/aggregate functions/state/groupArrayLastState/*": 
+    "/aggregate functions/:/groupArrayLast:/*": 
         (
             XFail,
             "groupArrayLast works from 23",
@@ -207,7 +229,7 @@ ffails = {
             check_clickhouse_version("<23"),
         )
     ,
-    "/aggregate functions/state/kolmogorovSmirnovTestState/*": 
+    "/aggregate functions/:/kolmogorovSmirnovTest:/*": 
         (
             XFail,
             "kolmogorovSmirnovTest works from 23",
@@ -221,7 +243,7 @@ ffails = {
             check_clickhouse_version("<23"),
         )
     ,
-    "/aggregate functions/state/quantileGKState/*": 
+    "/aggregate functions/:/quantileGK:/*": 
         (
             XFail,
             "quantileGK works from 23",
@@ -235,7 +257,7 @@ ffails = {
             check_clickhouse_version("<23"),
         )
     ,
-    "/aggregate functions/state/quantilesGKState/*": 
+    "/aggregate functions/:/quantilesGK:/*": 
         (
             XFail,
             "quantilesGK works from 23",
