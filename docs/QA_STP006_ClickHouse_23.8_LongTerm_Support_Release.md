@@ -189,7 +189,7 @@ Regressions:
   https://github.com/ClickHouse/ClickHouse/issues/54392
 * clickhouse starts with readonly table without try to fix it and reports ReplicasMaxAbsoluteDelay / ReadonlyReplica incorrectly  
   https://github.com/ClickHouse/ClickHouse/issues/53479
-* Some queries does not respect max_threads and can make server non-resposible by starting too many threads  
+* Some queries does not respect max_threads and can make server non-responsible by starting too many threads  
   https://github.com/ClickHouse/ClickHouse/issues/53287
 * Column is not under aggregate function and not in GROUP BY in mat view in 23.5  
   https://github.com/ClickHouse/ClickHouse/issues/50928
@@ -206,57 +206,57 @@ Regressions:
 
 ### Summary
 
-| Test Suite  | Result | Comments |
-| --- | --- | --- |
-| Stateless | [](#stateless) |   |
-| Stateful | [](#stateful)  |   |
-| Stress | []  |   |
-| Integration | [](#integration)  |   |
-| Key Value | [](#key-value)  |   |
-| Engines  | [](#engines)  |   |
-| Parquet | [](#parquet)  |   |
-| Tiered Storage (Local) | [](#tiered-storage)  |   |
-| Tiered Storage (MinIO) | [](#tiered-storage)  |   |
-| Tiered Storage (AWS) | [](#tiered-storage)  |   |
-| Tiered Storage (GCS) | [](#tiered-storage)  |   |
-| S3 (AWS) | [](#s3)  |  |
-| S3 (MinIO) | [](#s3)  |   |
-| S3 (GCS) | [](#s3) |   |
-| Selects | [](#selects) |   |
-| AES Encryption | [](#aes-encryption)  |   |
-| Atomic Insert | [](#atomic-insert) |   |
-| Base58 | []](#base58) |   |
-| DNS | [](#dns) |   |
-| Kafka | [](#kafka) |   |
-| Kerberos | [](#kerberos)  |   |
-| DateTime64 Extended Range | [](#datetime64-extended-range)  |   |
-| Extended Precision Data Types | [](#extended-precision-data-types) |   |
-| LDAP | [](#ldap)  |   |
-| RBAC | [](#rbac) |   |
-| Window Functions | [](#window-functions)  |   |
-| SSL Server | [](#ssl-server)  |   |
-| Disk Level Encryption | [](#disk-level-encryption)  |   |
-| ClickHouse Keeper | [](#clickhouse-keeper)  |   |
-| Map Type | [](#map-type) |   |
-| Ontime Bechmark | [](#ontime-benchmark)
-| Part Moves Between Shards | [](#part-moves-between-shards) |   |
-| Lightweight Delete | [](#lightweight-delete) |    |
-| Aggregate Functions | [](#aggregate-functions) |  |
-| Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)  |   |
-| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)  |  |
-| SQLAlchemy | [Pass](#sqlalchemy) |    |
-| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)  |   |
-| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)  |   |
-| Backup `clickhouse-backup` | [](#backup-clickhouse-backup)  |   |
-| Kubernetes `clickhouse-operator` | [](#kubernetes-clickhouse-operator) |   |
-| Altinity.Cloud | [](#altinitycloud)  |   |
-| Production Cluster Operation | [](#production-cluster-operation) |   |
-| Upgrade And Downgrade | [](#upgrade-and-downgrade) |   |
-| Grafana | [](#grafana) |   |
-| Tableau | [](#tableau)  |   |
-| Superset | [](#superset)  |   |
-| Trivy | [](#trivy) |   |
-| Scout | [](#scout) |   |
+| Test Suite  | Result                                | Comments |
+| --- |---------------------------------------| --- |
+| Stateless | [](#stateless)                        |   |
+| Stateful | [](#stateful)                         |   |
+| Stress | []                                    |   |
+| Integration | [](#integration)                      |   |
+| Key Value | [](#key-value)                        |   |
+| Engines  | [](#engines)                          |   |
+| Parquet | [](#parquet)                          |   |
+| Tiered Storage (Local) | [](#tiered-storage)                   |   |
+| Tiered Storage (MinIO) | [](#tiered-storage)                   |   |
+| Tiered Storage (AWS) | [](#tiered-storage)                   |   |
+| Tiered Storage (GCS) | [](#tiered-storage)                   |   |
+| S3 (AWS) | [](#s3)                               |  |
+| S3 (MinIO) | [](#s3)                               |   |
+| S3 (GCS) | [](#s3)                               |   |
+| Selects | [](#selects)                          |   |
+| AES Encryption | [](#aes-encryption)                   |   |
+| Atomic Insert | [](#atomic-insert)                    |   |
+| Base58 | []](#base58)                          |   |
+| DNS | [](#dns)                              |   |
+| Kafka | [](#kafka)                            |   |
+| Kerberos | [](#kerberos)                         |   |
+| DateTime64 Extended Range | [](#datetime64-extended-range)        |   |
+| Extended Precision Data Types | [](#extended-precision-data-types)    |   |
+| LDAP | [](#ldap)                             |   |
+| RBAC | [](#rbac)                             |   |
+| Window Functions | [](#window-functions)                 |   |
+| SSL Server | [](#ssl-server)                       |   |
+| Disk Level Encryption | [](#disk-level-encryption)            |   |
+| ClickHouse Keeper | [](#clickhouse-keeper)                |   |
+| Map Type | [](#map-type)                         |   |
+| Ontime Bechmark | [](#ontime-benchmark)                 
+| Part Moves Between Shards | [](#part-moves-between-shards)        |   |
+| Lightweight Delete | [](#lightweight-delete)               |    |
+| Aggregate Functions | [](#aggregate-functions)              |  |
+| Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)    |   |
+| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)         |  |
+| SQLAlchemy | [Pass](#sqlalchemy)                   |    |
+| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)         |   |
+| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)         |   |
+| Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)     |   |
+| Kubernetes `clickhouse-operator` | [](#kubernetes-clickhouse-operator)   |   |
+| Altinity.Cloud | [Pass](#altinitycloud)                |   |
+| Production Cluster Operation | [Pass](#production-cluster-operation) |   |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)        |   |
+| Grafana | [](#grafana)                          |   |
+| Tableau | [](#tableau)                          |   |
+| Superset | [](#superset)                         |   |
+| Trivy | [](#trivy)                            |   |
+| Scout | [](#scout)                            |   |
 
 ## Scope
 
@@ -509,8 +509,8 @@ The (https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
 ### Backup `clickhouse-backup`
 
-Results:
-Results (ACM):
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-backup/
+Results (ACM): https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
@@ -525,19 +525,19 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 
 #### Altinity.Cloud
 
-Results:
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/acm-launch-and-upgrade/launch_with_23.8.5.17.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
 ### Production Cluster Operation
 
-Results:
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/acm-launch-and-upgrade/launch_with_23.8.5.17.altinitytest/
 
 Operation on a production clusters.
 
 ### Upgrade and Downgrade
 
-Results:
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/acm-launch-and-upgrade/upgrade_downgrade_from_23.3.13.7.altinitystable_to_23.8.5.17.altinitytest/
 
 The upgrade and downgrade.
 

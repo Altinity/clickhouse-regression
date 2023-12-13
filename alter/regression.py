@@ -7,8 +7,8 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
-from s3.regression import argparser
+from helpers.cluster import create_cluster
+from helpers.argparser import argparser
 from alter.requirements.requirements import *
 from helpers.datatypes import *
 
@@ -106,15 +106,17 @@ def regression(
     self.context.access_key_id = "minio"
     self.context.secret_access_key = "minio123"
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        Feature(run=load("alter.table.replace_partition.feature", "feature"))
+    Feature(run=load("alter.table.replace_partition.feature", "feature"))
 
 
 if main():
