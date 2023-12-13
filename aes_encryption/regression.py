@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from aes_encryption.requirements import *
 
@@ -108,48 +108,50 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        with Pool(5) as pool:
-            try:
-                Feature(
-                    run=load("aes_encryption.tests.encrypt", "feature"),
-                    flags=TE,
-                    parallel=True,
-                    executor=pool,
-                )
-                Feature(
-                    run=load("aes_encryption.tests.decrypt", "feature"),
-                    flags=TE,
-                    parallel=True,
-                    executor=pool,
-                )
-                Feature(
-                    run=load("aes_encryption.tests.encrypt_mysql", "feature"),
-                    flags=TE,
-                    parallel=True,
-                    executor=pool,
-                )
-                Feature(
-                    run=load("aes_encryption.tests.decrypt_mysql", "feature"),
-                    flags=TE,
-                    parallel=True,
-                    executor=pool,
-                )
-                Feature(
-                    run=load("aes_encryption.tests.compatibility.feature", "feature"),
-                    flags=TE,
-                    parallel=True,
-                    executor=pool,
-                )
-            finally:
-                join()
+    with Pool(5) as pool:
+        try:
+            Feature(
+                run=load("aes_encryption.tests.encrypt", "feature"),
+                flags=TE,
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load("aes_encryption.tests.decrypt", "feature"),
+                flags=TE,
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load("aes_encryption.tests.encrypt_mysql", "feature"),
+                flags=TE,
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load("aes_encryption.tests.decrypt_mysql", "feature"),
+                flags=TE,
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load("aes_encryption.tests.compatibility.feature", "feature"),
+                flags=TE,
+                parallel=True,
+                executor=pool,
+            )
+        finally:
+            join()
 
 
 if main():

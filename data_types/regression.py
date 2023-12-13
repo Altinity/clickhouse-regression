@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version
 from data_types.requirements import SRS018_ClickHouse_Map_Data_Type
@@ -182,15 +182,17 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
 
-        Feature(run=load("data_types.tests.map", "feature"))
+    Feature(run=load("data_types.tests.map", "feature"))
 
 
 if main():
