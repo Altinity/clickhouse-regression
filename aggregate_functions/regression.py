@@ -225,12 +225,12 @@ ffails = {
     "/aggregate functions/largestTriangleThreeBuckets/*": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
-        check_clickhouse_version("<=23.9"),
+        check_clickhouse_version("<23.10"),
     ),
-    "/aggregate functions/:/largestTriangleThreeBuckets*Merge/*": (
+    "/aggregate functions/:/largestTriangleThreeBuckets*/*": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
-        check_clickhouse_version("<=23.9"),
+        check_clickhouse_version("<23.10"),
     ),
     "/aggregate functions/merge/largestTriangleThreeBucketsMerge/*": (
         Skip,
