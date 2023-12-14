@@ -7,7 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from requirements.requirements import (
+from example.requirements.requirements import (
     SRS_001_ClickHouse_Software_Requirements_Specification_Template,
 )
 
