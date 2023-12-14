@@ -298,6 +298,8 @@
                 * 3.1.5.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
             * 3.1.5.8 [sequenceNextNode](#sequencenextnode)
                 * 3.1.5.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode](#rqsrs-031clickhouseaggregatefunctionsparametricsequencenextnode)
+            * 3.1.5.9 [largestTriangleThreeBuckets](#largesttrianglethreebuckets)
+                * 3.1.5.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LargestTriangleThreeBuckets](#rqsrs-031clickhouseaggregatefunctionsparametriclargesttrianglethreebuckets)
     * 3.2 [Combinator Functions](#combinator-functions)
         * 3.2.1 [-If Suffix](#-if-suffix)
             * 3.2.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.If](#rqsrs-031clickhouseaggregatefunctionscombinatorif)
@@ -1391,6 +1393,13 @@ version: 1.0
 
 [ClickHouse] SHALL support [sequenceNextNode] parameteric aggregate function.
 
+##### largestTriangleThreeBuckets
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LargestTriangleThreeBuckets
+version: 1.0
+
+[ClickHouse] SHALL support [largestTriangleThreeBuckets] parameteric aggregate function.
+
 ### Combinator Functions
 
 #### -If Suffix
@@ -2048,6 +2057,7 @@ GROUP BY
 [median]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/median/
 [rankCorr]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/rankCorr/
 [histogram]:https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#histogram
+[largestTriangleThreeBuckets]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/largestTriangleThreeBuckets
 [sequenceMatch]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#function-sequencematch
 [sequenceCount]:https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#function-sequencecount
 [windowFunnel]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#windowfunnel
