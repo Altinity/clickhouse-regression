@@ -6351,9 +6351,9 @@ _aggregate_functions_state_uniqUpToState_with_another_aggregate_function = r"""
 """
 
 _aggregate_functions_state_uniqUpToState_with_another_aggregate_function_and_group_by = r"""
-{"hex(uniqUpToState(5)(x))":"010101","y":null,"any(toTypeName(x))":"Nullable(Int8)"}
 {"hex(uniqUpToState(5)(x))":"010103","y":"hello","any(toTypeName(x))":"Nullable(Int8)"}
 {"hex(uniqUpToState(5)(x))":"010105","y":"you","any(toTypeName(x))":"Nullable(Int8)"}
+{"hex(uniqUpToState(5)(x))":"010101","y":null,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_state_uniqUpToState_with_group_by = r"""
