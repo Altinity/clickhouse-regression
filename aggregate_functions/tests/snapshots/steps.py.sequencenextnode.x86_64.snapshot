@@ -1,0 +1,104 @@
+_aggregate_functions_sequenceNextNode_NULL_value_handling = r"""
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(ref, 'ref2'), equals(page, 'B'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_1 = r"""
+{"sequenceNextNode('forward', 'head')(dt, page, equals(page, 'A'), equals(page, 'A'), equals(page, 'B'))":"C"}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_10 = r"""
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(ref, 'ref3'), equals(page, 'A'))":"B"}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_11 = r"""
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(ref, 'ref2'), equals(page, 'B'))":"A"}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_2 = r"""
+{"sequenceNextNode('forward', 'head')(dt, page, equals(page, 'Basket'), equals(page, 'Basket'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('forward', 'head')(dt, page, equals(page, 'Basket'), equals(page, 'Basket'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('forward', 'head')(dt, page, equals(page, 'Basket'), equals(page, 'Basket'), equals(page, 'Gift'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_3 = r"""
+{"sequenceNextNode('backward', 'tail')(dt, page, equals(page, 'Home'), equals(page, 'Home'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('backward', 'tail')(dt, page, equals(page, 'Home'), equals(page, 'Home'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('backward', 'tail')(dt, page, equals(page, 'Home'), equals(page, 'Home'), equals(page, 'Gift'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_4 = r"""
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Basket"}
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Exit"}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_5 = r"""
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home'))":"Gift"}
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home'))":null}
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_6 = r"""
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_7 = r"""
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home'))":"Gift"}
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home'))":"Home"}
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_8 = r"""
+{"sequenceNextNode('forward', 'head')(dt, page, equals(ref, 'ref1'), equals(page, 'A'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_doc_example_9 = r"""
+{"sequenceNextNode('backward', 'tail')(dt, page, equals(ref, 'ref4'), equals(page, 'B'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_permutations_first_match_backward = r"""
+{"sequenceNextNode('backward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('backward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('backward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+"""
+
+_aggregate_functions_sequenceNextNode_permutations_first_match_forward = r"""
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Basket"}
+{"sequenceNextNode('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Exit"}
+"""
+
+_aggregate_functions_sequenceNextNode_permutations_head_forward = r"""
+{"sequenceNextNode('forward', 'head')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('forward', 'head')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('forward', 'head')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_permutations_last_match_backward = r"""
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Home"}
+"""
+
+_aggregate_functions_sequenceNextNode_permutations_last_match_forward = r"""
+{"sequenceNextNode('forward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Basket"}
+{"sequenceNextNode('forward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Basket"}
+{"sequenceNextNode('forward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":"Exit"}
+"""
+
+_aggregate_functions_sequenceNextNode_permutations_tail_backward = r"""
+{"sequenceNextNode('backward', 'tail')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('backward', 'tail')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":null}
+{"sequenceNextNode('backward', 'tail')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'))":null}
+"""
+
+_aggregate_functions_sequenceNextNode_return_type = r"""
+{"toTypeName(sequenceNextNode('backward', 'tail')(dt, page, equals(ref, 'ref4'), equals(page, 'B')))":"Nullable(String)"}
+"""
+
+_aggregate_functions_sequenceNextNode_single_NULL_value = r"""
+{"sequenceNextNode('backward', 'last_match')(dt, page, equals(ref, 'ref2'), equals(page, 'B'))":null}
+"""
+

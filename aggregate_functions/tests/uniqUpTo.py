@@ -22,12 +22,6 @@ def scenario(self, func="uniqUpTo({params})", table=None, snapshot_id=None):
     if table is None:
         table = self.context.table
 
-    if "Merge" in self.name:
-        return self.context.snapshot_id, func.replace("({params})", "")
-
-    if table is None:
-        table = self.context.table
-
     with Check("constant"):
         execute_query(f"SELECT {func.format(params='1')}, any(toTypeName(1))")
 
@@ -87,4 +81,3 @@ def scenario(self, func="uniqUpTo({params})", table=None, snapshot_id=None):
             execute_query(
                 f"SELECT {func.format(params=column.name)}, any(toTypeName({column.name})) FROM {table.name}"
             )
-

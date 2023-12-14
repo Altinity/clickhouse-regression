@@ -6,6 +6,10 @@ _aggregate_functions_merge_topKMerge_Array_Bool__0 = r"""
 {"topKMerge(3)(state)":[[true],[false]]}
 """
 
+_aggregate_functions_merge_topKMerge_Array_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[["1925-01-01 00:00:00.000"],["2283-11-11 23:59:59.999"],["2004-06-20 13:28:46.000"]]}
+"""
+
 _aggregate_functions_merge_topKMerge_Array_DateTime64_3____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[["1900-01-01 00:00:00.000"],["2299-12-31 23:59:59.999"],["2004-06-20 13:28:46.000"]]}
 """
@@ -206,6 +210,10 @@ _aggregate_functions_merge_topKMerge_Array_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[[true],[false],[null]]}
 """
 
+_aggregate_functions_merge_topKMerge_Array_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[["2283-11-11 23:59:59.999"],["1925-01-01 00:00:00.000"],[null]]}
+"""
+
 _aggregate_functions_merge_topKMerge_Array_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[["2299-12-31 23:59:59.999"],["1900-01-01 00:00:00.000"],[null]]}
 """
@@ -316,6 +324,10 @@ _aggregate_functions_merge_topKMerge_Array_UUID__0 = r"""
 
 _aggregate_functions_merge_topKMerge_Bool_0 = r"""
 {"topKMerge(3)(state)":[true,false]}
+"""
+
+_aggregate_functions_merge_topKMerge_DateTime64_3__0__22_8 = r"""
+{"topKMerge(3)(state)":["1925-01-01 00:00:00.000","2283-11-11 23:59:59.999","2016-04-03 08:30:07.000"]}
 """
 
 _aggregate_functions_merge_topKMerge_DateTime64_3___22_8_0__22_8 = r"""
@@ -518,6 +530,10 @@ _aggregate_functions_merge_topKMerge_Map_Bool_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"false":false},{"true":false},{"true":true}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Bool_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"false":"1925-01-01 00:00:00.000"},{"true":"2283-11-11 23:59:59.999"},{"true":"2021-12-03 17:26:34.000"}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Bool_DateTime64_3____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"false":"1900-01-01 00:00:00.000"},{"true":"2299-12-31 23:59:59.999"},{"true":"2021-12-03 17:26:34.000"}]}
 """
@@ -718,6 +734,10 @@ _aggregate_functions_merge_topKMerge_Map_Bool_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"true":true},{"false":false},{"false":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Bool_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"true":"2283-11-11 23:59:59.999"},{"false":"1925-01-01 00:00:00.000"},{"false":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Bool_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"true":"2299-12-31 23:59:59.999"},{"false":"1900-01-01 00:00:00.000"},{"false":null}]}
 """
@@ -832,6 +852,10 @@ _aggregate_functions_merge_topKMerge_Map_DateTime_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_DateTime_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"1970-01-01 01:00:00":false},{"2106-02-07 06:28:15":true},{"2019-05-08 11:14:11":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_DateTime_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"1970-01-01 01:00:00":"1925-01-01 00:00:00.000"},{"2106-02-07 06:28:15":"2283-11-11 23:59:59.999"},{"2008-11-06 22:11:44":"2019-11-05 13:58:48.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_DateTime_DateTime64_3____22_8_0__22_8 = r"""
@@ -1034,6 +1058,10 @@ _aggregate_functions_merge_topKMerge_Map_DateTime_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"2106-02-07 06:28:15":true},{"1970-01-01 01:00:00":false},{"1970-01-01 01:00:00":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_DateTime_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"2106-02-07 06:28:15":"2283-11-11 23:59:59.999"},{"1970-01-01 01:00:00":"1925-01-01 00:00:00.000"},{"1970-01-01 01:00:00":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_DateTime_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"2106-02-07 06:28:15":"2299-12-31 23:59:59.999"},{"1970-01-01 01:00:00":"1900-01-01 00:00:00.000"},{"1970-01-01 01:00:00":null}]}
 """
@@ -1148,6 +1176,10 @@ _aggregate_functions_merge_topKMerge_Map_Date_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_Date_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"1970-01-01":false},{"2149-06-06":true},{"2005-05-19":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_Date_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"1970-01-01":"1925-01-01 00:00:00.000"},{"2149-06-06":"2283-11-11 23:59:59.999"},{"2018-03-30":"2009-11-20 12:23:57.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_Date_DateTime64_3____22_8_0__22_8 = r"""
@@ -1350,6 +1382,10 @@ _aggregate_functions_merge_topKMerge_Map_Date_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"2149-06-06":true},{"1970-01-01":false},{"1970-01-01":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Date_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"2149-06-06":"2283-11-11 23:59:59.999"},{"1970-01-01":"1925-01-01 00:00:00.000"},{"1970-01-01":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Date_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"2149-06-06":"2299-12-31 23:59:59.999"},{"1970-01-01":"1900-01-01 00:00:00.000"},{"1970-01-01":null}]}
 """
@@ -1464,6 +1500,10 @@ _aggregate_functions_merge_topKMerge_Map_FixedString_51__Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_FixedString_51__Bool__0 = r"""
 {"topKMerge(3)(state)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"IIIIIII\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":true}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_FixedString_51__DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"rrrrrrrrrrrrrrrrrrrrrr\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2008-06-07 14:18:46.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_FixedString_51__DateTime64_3____22_8_0__22_8 = r"""
@@ -1666,6 +1706,10 @@ _aggregate_functions_merge_topKMerge_Map_FixedString_51__Nullable_Bool___0 = r""
 {"topKMerge(3)(state)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_FixedString_51__Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_FixedString_51__Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2299-12-31 23:59:59.999"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1900-01-01 00:00:00.000"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}]}
 """
@@ -1780,6 +1824,10 @@ _aggregate_functions_merge_topKMerge_Map_Int128_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_Int128_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"-170141183460469231722463931679029329921":true},{"170141183460469231722463931679029329921":false},{"0":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_Int128_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"-170141183460469231722463931679029329921":"2283-11-11 23:59:59.999"},{"170141183460469231722463931679029329921":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_Int128_DateTime64_3____22_8_0__22_8 = r"""
@@ -1982,6 +2030,10 @@ _aggregate_functions_merge_topKMerge_Map_Int128_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"-170141183460469231722463931679029329921":true},{"170141183460469231722463931679029329921":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Int128_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"-170141183460469231722463931679029329921":"2283-11-11 23:59:59.999"},{"170141183460469231722463931679029329921":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Int128_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"-170141183460469231722463931679029329921":"2299-12-31 23:59:59.999"},{"170141183460469231722463931679029329921":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -2096,6 +2148,10 @@ _aggregate_functions_merge_topKMerge_Map_Int16_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_Int16_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"32767":true},{"-32768":false},{"0":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_Int16_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"32767":"2283-11-11 23:59:59.999"},{"-32768":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_Int16_DateTime64_3____22_8_0__22_8 = r"""
@@ -2298,6 +2354,10 @@ _aggregate_functions_merge_topKMerge_Map_Int16_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"32767":true},{"-32768":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Int16_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"32767":"2283-11-11 23:59:59.999"},{"-32768":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Int16_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"32767":"2299-12-31 23:59:59.999"},{"-32768":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -2412,6 +2472,10 @@ _aggregate_functions_merge_topKMerge_Map_Int32_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_Int32_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"2147483647":true},{"-2147483648":false},{"0":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_Int32_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"2147483647":"2283-11-11 23:59:59.999"},{"-2147483648":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_Int32_DateTime64_3____22_8_0__22_8 = r"""
@@ -2614,6 +2678,10 @@ _aggregate_functions_merge_topKMerge_Map_Int32_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"2147483647":true},{"-2147483648":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Int32_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"2147483647":"2283-11-11 23:59:59.999"},{"-2147483648":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Int32_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"2147483647":"2299-12-31 23:59:59.999"},{"-2147483648":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -2728,6 +2796,10 @@ _aggregate_functions_merge_topKMerge_Map_Int64_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_Int64_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"9223372036854775807":true},{"-9223372036854775808":false},{"0":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_Int64_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"9223372036854775807":"2283-11-11 23:59:59.999"},{"-9223372036854775808":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_Int64_DateTime64_3____22_8_0__22_8 = r"""
@@ -2930,6 +3002,10 @@ _aggregate_functions_merge_topKMerge_Map_Int64_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"9223372036854775807":true},{"-9223372036854775808":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Int64_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"9223372036854775807":"2283-11-11 23:59:59.999"},{"-9223372036854775808":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Int64_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"9223372036854775807":"2299-12-31 23:59:59.999"},{"-9223372036854775808":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -3044,6 +3120,10 @@ _aggregate_functions_merge_topKMerge_Map_Int8_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_Int8_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"127":true},{"-128":false},{"0":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_Int8_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"127":"2283-11-11 23:59:59.999"},{"-128":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_Int8_DateTime64_3____22_8_0__22_8 = r"""
@@ -3246,6 +3326,10 @@ _aggregate_functions_merge_topKMerge_Map_Int8_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"127":true},{"-128":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_Int8_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"127":"2283-11-11 23:59:59.999"},{"-128":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_Int8_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"127":"2299-12-31 23:59:59.999"},{"-128":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -3360,6 +3444,10 @@ _aggregate_functions_merge_topKMerge_Map_LowCardinality_FixedString_51___Array_S
 
 _aggregate_functions_merge_topKMerge_Map_LowCardinality_FixedString_51___Bool__0 = r"""
 {"topKMerge(3)(state)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"TTTTTTTTTTTTTTTTT\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"ZZZZZZZZZZZZZ\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_LowCardinality_FixedString_51___DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"},{"bbbbbb\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2015-12-27 22:56:39.000"},{"FFFFFFFFFFFFFFFFFFFFFF\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2017-11-15 03:06:32.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_LowCardinality_FixedString_51___DateTime64_3____22_8_0__22_8 = r"""
@@ -3562,6 +3650,10 @@ _aggregate_functions_merge_topKMerge_Map_LowCardinality_FixedString_51___Nullabl
 {"topKMerge(3)(state)":[{"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"OOOOOOOOOOOOO\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2021-07-25 20:37:29.000"},{"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2021-11-21 04:59:40.000"},{"CCCCCCCCCCCCCCC\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2014-07-02 21:42:59.000"}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2021-07-25 20:37:29.000"},{"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2021-11-21 04:59:40.000"},{"CCCCCCCCCCCCCCC\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2014-07-02 21:42:59.000"}]}
 """
@@ -3676,6 +3768,10 @@ _aggregate_functions_merge_topKMerge_Map_LowCardinality_String__Array_String___0
 
 _aggregate_functions_merge_topKMerge_Map_LowCardinality_String__Bool__0 = r"""
 {"topKMerge(3)(state)":[{"":false},{"YYYYYYYYYYYYYYYYYYYYYYY":true},{"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_LowCardinality_String__DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"":"1925-01-01 00:00:00.000"},{"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk":"2006-02-15 07:51:16.000"},{"IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII":"2021-12-16 23:25:38.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_LowCardinality_String__DateTime64_3____22_8_0__22_8 = r"""
@@ -3878,6 +3974,10 @@ _aggregate_functions_merge_topKMerge_Map_LowCardinality_String__Nullable_Bool___
 {"topKMerge(3)(state)":[{"kkkkkkkkkkkkkkkkkk":false},{"ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd":false},{"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE":false}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_LowCardinality_String__Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"vvvvvvvvvvvvvvvv":"2011-07-15 07:47:53.000"},{"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF":"2011-03-25 08:58:41.000"},{"IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII":"2008-12-07 10:25:11.000"}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"vvvvvvvvvvvvvvvv":"2011-07-15 07:47:53.000"},{"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF":"2011-03-25 08:58:41.000"},{"IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII":"2008-12-07 10:25:11.000"}]}
 """
@@ -3992,6 +4092,10 @@ _aggregate_functions_merge_topKMerge_Map_String_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_String_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"":false},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"tttttttttttttt":true}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_String_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"":"1925-01-01 00:00:00.000"},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy":"2014-02-05 05:43:31.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_String_DateTime64_3____22_8_0__22_8 = r"""
@@ -4194,6 +4298,10 @@ _aggregate_functions_merge_topKMerge_Map_String_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"":false},{"":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_String_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"":"1925-01-01 00:00:00.000"},{"":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_String_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2299-12-31 23:59:59.999"},{"":"1900-01-01 00:00:00.000"},{"":null}]}
 """
@@ -4308,6 +4416,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt128_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_UInt128_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"0":false},{"340282366920938463426481119284349108225":true},{"204987595641282880263020049013184874495":true}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_UInt128_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"0":"1925-01-01 00:00:00.000"},{"340282366920938463426481119284349108225":"2283-11-11 23:59:59.999"},{"247819748213710485107815752420774240255":"2010-08-18 18:28:22.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_UInt128_DateTime64_3____22_8_0__22_8 = r"""
@@ -4510,6 +4622,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt128_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"340282366920938463426481119284349108225":true},{"0":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_UInt128_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"340282366920938463426481119284349108225":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_UInt128_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"340282366920938463426481119284349108225":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -4624,6 +4740,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt16_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_UInt16_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"0":false},{"65535":true},{"34829":true}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_UInt16_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"0":"1925-01-01 00:00:00.000"},{"65535":"2283-11-11 23:59:59.999"},{"61742":"2011-06-30 04:00:18.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_UInt16_DateTime64_3____22_8_0__22_8 = r"""
@@ -4826,6 +4946,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt16_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"65535":true},{"0":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_UInt16_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"65535":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_UInt16_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"65535":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -4940,6 +5064,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt32_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_UInt32_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"0":false},{"4294967295":true},{"399486676":true}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_UInt32_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"0":"1925-01-01 00:00:00.000"},{"4294967295":"2283-11-11 23:59:59.999"},{"3395228751":"2020-07-31 05:28:24.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_UInt32_DateTime64_3____22_8_0__22_8 = r"""
@@ -5142,6 +5270,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt32_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"4294967295":true},{"0":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_UInt32_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"4294967295":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_UInt32_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"4294967295":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -5256,6 +5388,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt64_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_UInt64_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"0":false},{"18446744073709551615":true},{"10236193416833050955":false}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_UInt64_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"0":"1925-01-01 00:00:00.000"},{"18446744073709551615":"2283-11-11 23:59:59.999"},{"8267603552200017545":"2021-11-02 15:13:03.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_UInt64_DateTime64_3____22_8_0__22_8 = r"""
@@ -5458,6 +5594,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt64_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"18446744073709551615":true},{"0":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_UInt64_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"18446744073709551615":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_UInt64_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"18446744073709551615":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -5572,6 +5712,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt8_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_UInt8_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"0":false},{"143":false},{"255":true}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_UInt8_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"0":"1925-01-01 00:00:00.000"},{"255":"2283-11-11 23:59:59.999"},{"166":"2015-11-26 05:34:16.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_UInt8_DateTime64_3____22_8_0__22_8 = r"""
@@ -5774,6 +5918,10 @@ _aggregate_functions_merge_topKMerge_Map_UInt8_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"255":true},{"0":false},{"0":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_UInt8_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"255":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_UInt8_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"255":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}]}
 """
@@ -5888,6 +6036,10 @@ _aggregate_functions_merge_topKMerge_Map_UUID_Array_String___0 = r"""
 
 _aggregate_functions_merge_topKMerge_Map_UUID_Bool__0 = r"""
 {"topKMerge(3)(state)":[{"00000000-0000-0000-0000-000000000000":false},{"ffffffff-ffff-ffff-ffff-ffffffffffff":true},{"54eabfb9-5796-94df-ad95-32a9d4040e25":true}]}
+"""
+
+_aggregate_functions_merge_topKMerge_Map_UUID_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":[{"00000000-0000-0000-0000-000000000000":"1925-01-01 00:00:00.000"},{"ffffffff-ffff-ffff-ffff-ffffffffffff":"2283-11-11 23:59:59.999"},{"e2cbbb65-3f50-1cbc-d1a7-d8b13c535f4c":"2007-10-07 19:25:47.000"}]}
 """
 
 _aggregate_functions_merge_topKMerge_Map_UUID_DateTime64_3____22_8_0__22_8 = r"""
@@ -6090,6 +6242,10 @@ _aggregate_functions_merge_topKMerge_Map_UUID_Nullable_Bool___0 = r"""
 {"topKMerge(3)(state)":[{"ffffffff-ffff-ffff-ffff-ffffffffffff":true},{"00000000-0000-0000-0000-000000000000":false},{"00000000-0000-0000-0000-000000000000":null}]}
 """
 
+_aggregate_functions_merge_topKMerge_Map_UUID_Nullable_DateTime64_3____0__22_8 = r"""
+{"topKMerge(3)(state)":[{"ffffffff-ffff-ffff-ffff-ffffffffffff":"2283-11-11 23:59:59.999"},{"00000000-0000-0000-0000-000000000000":"1925-01-01 00:00:00.000"},{"00000000-0000-0000-0000-000000000000":null}]}
+"""
+
 _aggregate_functions_merge_topKMerge_Map_UUID_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":[{"ffffffff-ffff-ffff-ffff-ffffffffffff":"2299-12-31 23:59:59.999"},{"00000000-0000-0000-0000-000000000000":"1900-01-01 00:00:00.000"},{"00000000-0000-0000-0000-000000000000":null}]}
 """
@@ -6202,6 +6358,10 @@ _aggregate_functions_merge_topKMerge_Nullable_Bool__0 = r"""
 {"topKMerge(3)(state)":[true,false]}
 """
 
+_aggregate_functions_merge_topKMerge_Nullable_DateTime64_3___0__22_8 = r"""
+{"topKMerge(3)(state)":["2283-11-11 23:59:59.999","1925-01-01 00:00:00.000","2005-11-23 12:39:15.000"]}
+"""
+
 _aggregate_functions_merge_topKMerge_Nullable_DateTime64_3____22_8_0__22_8 = r"""
 {"topKMerge(3)(state)":["2299-12-31 23:59:59.999","1900-01-01 00:00:00.000","2005-11-23 12:39:15.000"]}
 """
@@ -6280,6 +6440,10 @@ _aggregate_functions_merge_topKMerge_Nullable_UUID__0 = r"""
 
 _aggregate_functions_merge_topKMerge_String_0 = r"""
 {"topKMerge(3)(state)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"]}
+"""
+
+_aggregate_functions_merge_topKMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String___0__22_8 = r"""
+{"topKMerge(3)(state)":[[74,41815,3555402075,"16430146470570022334","85263013463528892424694633102767628288",73,-15166,1920332646,"3719386712239147048","-96243264969481581557194911125803163648",-1.6878632e38,-1.3650591408973272e159,0.29597949220510620206242357000967593472,"2017-11-29","2005-10-13 18:48:23","2012-03-18 15:02:21.000",false,"CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC","eeeeeeeeeeeeeeee\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","f27d446f-ab37-2b66-3171-ab26dc211ad3",194,35528,4032233400,"17749437647210450600","75608543056830635732780515207607279104",127,10491,1906463130,"3516086067502036465","-26617229583301913157621082259750895872",1.3037401e38,-1.264537928001235e124,-0.84992838543054194018412484901705603584,"2019-07-05","2022-09-12 05:53:48","2022-12-28 02:39:42.000",false,"kkkkkkkkkkkkkkkkk","vvvvvvvvvvvvvvvvvvvvvv\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","9a96fd84-ae43-9347-1e78-2b33a8328278",203,53459,599905549,"4298445037840394478","149566830236514028253525515512931524608",-122,25934,-1108836699,"8443032232846144162","-42389281493563937299042072992887017472",36893490000000000000,4.341599291285145e122,"2012-06-25","2005-05-11 12:15:48",false,"VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV","qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq\u0000\u0000","479cddd3-d1c9-c2bb-dd8b-d5afea931912",["ffffffffffffffffffffffffffffffffffffffffffffffffffffff"],{"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm":1.5814561578527273e46},["kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"]],[65,21095,3609478045,"6147576834895071750","323612267042642584202988408068435931135",-44,-2727,-631229466,"8623344331836912111","157289372293797675965057550927520544768",-1.3690206e38,-1.206433353043166e67,0.14191117421798970504748360781723099776,"2020-05-31","2016-02-21 02:22:57","2008-03-29 02:45:41.000",true,"tttt","FFFFF\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","fe4220a6-eca1-6b7b-2373-4801f6d4e5d2",200,45621,1724907642,"1383169870909097561","292637807970534523034403469080656214015",-84,12618,2040211500,"-5008786387573470233","-125205442968915490605902751650418741248",1.790755e38,4.876337839843503e244,0.31459628683290240136768065399934234112,"2016-11-23","2018-08-26 20:31:43","2011-04-25 03:18:02.000",false,"zzzzzzzzzzzzzzzzzzzz","rr\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","ff76c558-2cba-65a1-b3b8-abe9ce8750ad",218,61745,2241905145,"10689293440236217037","129008495914309911428020770846787263488",-123,14387,636574559,"-1207118979641261602","-48806444747473361923031955308967721984",-1.0842022e-19,-5550235033534103000,"2019-05-27","2012-10-15 17:05:12",false,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu","RRRRRRRRRRRRRRRRRRRRRR\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","23958d7a-aa15-bd88-9de7-2eceaa711e6e",["BBBBBBBBBBBBBBBBBBBBBBBBBBBB"],{"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK":-3.795743995824585e121},["WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"]],[181,56251,3573665640,"16184495943589408068","317184283855390490577330234332476911615",98,13947,231449213,"90960912541694290","-84092413030056936915616832044892376064",1.5964955e38,-1.6572861125581892e202,-0.26310507021448148160559404762742245632,"2020-06-30","2008-05-01 14:39:03","2006-10-10 05:36:16.000",true,"LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL","IIIIIIIIIIII\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","e44ad623-2156-e48a-4a2a-57dc34e10b85",19,52709,549054069,"8152584754809621762","166793621735490491420500736274280414208",69,-4285,1906403896,"-7844763157067824623","157025295310069092461108494373710527488",1.792973e38,-9.867991398386455e284,-0.28588705255610746107865683544229933312,"2013-02-25","2005-12-14 08:39:20","2009-06-10 08:02:22.000",true,"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW","wwwwwww\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","8177d552-276c-c9d8-797b-d001043cb172",218,48744,3819390806,"8884952941469915805","151823537735435123370906724713223098368",-27,-8833,1481091106,"-8984458962546741482","-123050634621487277159415870543588973568",-2,-1.2334129622566259e102,"2012-05-01","2006-11-24 23:50:46",false,"UUUUUUUUUUUUUUUUUUUUUUUUU","uuuuuuuuuuuuuuuuuuuuuuuuuu\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","4fc36392-2f97-9c8f-6801-660f78acf6c8",["yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"],{"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT":-1.6579833920119215e267},["WWWWWWWWWWWWWWWWWWWWWWWWWW"]]]}
 """
 
 _aggregate_functions_merge_topKMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String____22_8_0__22_8 = r"""

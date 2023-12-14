@@ -88,13 +88,7 @@ xfails = {
             r".*Exception: Nested type [^\n]+ cannot be inside Nullable type.*",
         )
     ],
-    "/aggregate functions/state/quantilesGKState/:": [
-        (
-            Fail,
-            issue_57683,
-        )
-    ],
-    "/aggregate functions/merge/quantilesGKMerge/:": [
+    "/aggregate functions/:/quantilesGK:/:": [
         (
             Fail,
             issue_57683,
@@ -109,140 +103,141 @@ xfails = {
 }
 
 ffails = {
-     "/aggregate functions/state/retentionState/NULL value handling": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/state/retentionState/single NULL value/*": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/window_functions/ntile/*": 
-        (
-            XFail,
-            "ntile works from 23.5",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/analysisOfVariance/*": 
-        (
-            XFail,
-            "analysisOfVariance works from 22.10",
-            check_clickhouse_version("<=22.9"),
-        )
-    ,
-    "/aggregate functions/state/analysisOfVarianceState/*": 
-        (
-            XFail,
-            "analysisOfVariance works from 22.10",
-            check_clickhouse_version("<=22.9"),
-        )
-    ,
-    "/aggregate functions/corrMatrix/*": 
-        (
-            XFail,
-            "corrMatrix works from 23.2",
-            check_clickhouse_version("<=23.1"),
-        )
-    ,
-    "/aggregate functions/state/corrMatrixState/*": 
-        (
-            XFail,
-            "corrMatrix works from 23.2",
-            check_clickhouse_version("<=23.1"),
-        )
-    ,
-    "/aggregate functions/covarSampMatrix/*": 
-        (
-            XFail,
-            "covarSampMatrix works from 23.2",
-            check_clickhouse_version("<=23.1"),
-        )
-    ,
-    "/aggregate functions/state/covarSampMatrixState/*": 
-        (
-            XFail,
-            "covarSampMatrix works from 23.2",
-            check_clickhouse_version("<=23.1"),
-        )
-    ,
-    "/aggregate functions/covarPopMatrix/*": 
-        (
-            XFail,
-            "covarPopMatrix works from 23.2",
-            check_clickhouse_version("<=23.1"),
-        )
-    ,
-    "/aggregate functions/state/covarPopMatrixState/*": 
-        (
-            XFail,
-            "covarPopMatrix works from 23.2",
-            check_clickhouse_version("<=23.1"),
-        )
-    ,
-    "/aggregate functions/groupArrayLast/*": 
-        (
-            XFail,
-            "groupArrayLast works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/state/groupArrayLastState/*": 
-        (
-            XFail,
-            "groupArrayLast works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/kolmogorovSmirnovTest/*": 
-        (
-            XFail,
-            "kolmogorovSmirnovTest works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/state/kolmogorovSmirnovTestState/*": 
-        (
-            XFail,
-            "kolmogorovSmirnovTest works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/quantileGK/*": 
-        (
-            XFail,
-            "quantileGK works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/state/quantileGKState/*": 
-        (
-            XFail,
-            "quantileGK works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/quantilesGK/*": 
-        (
-            XFail,
-            "quantilesGK works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
-    "/aggregate functions/state/quantilesGKState/*": 
-        (
-            XFail,
-            "quantilesGK works from 23",
-            check_clickhouse_version("<23"),
-        )
-    ,
+    "/aggregate functions/state/retentionState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/retentionState/single NULL value/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceCountState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/windowFunnelState/single NULL value/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/window_functions/ntile/*": (
+        Skip,
+        "ntile works from 23.5",
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/analysisOfVariance/*": (
+        Skip,
+        "analysisOfVariance works from 22.10",
+        check_clickhouse_version("<=22.9"),
+    ),
+    "/aggregate functions/:/analysisOfVariance:/*": (
+        Skip,
+        "analysisOfVariance works from 22.10",
+        check_clickhouse_version("<=22.9"),
+    ),
+    "/aggregate functions/corrMatrix/*": (
+        Skip,
+        "corrMatrix works from 23.2",
+        check_clickhouse_version("<=23.1"),
+    ),
+    "/aggregate functions/:/corrMatrix:/*": (
+        Skip,
+        "corrMatrix works from 23.2",
+        check_clickhouse_version("<=23.1"),
+    ),
+    "/aggregate functions/covarSampMatrix/*": (
+        Skip,
+        "covarSampMatrix works from 23.2",
+        check_clickhouse_version("<=23.1"),
+    ),
+    "/aggregate functions/:/covarSampMatrix:/*": (
+        Skip,
+        "covarSampMatrix works from 23.2",
+        check_clickhouse_version("<=23.1"),
+    ),
+    "/aggregate functions/covarPopMatrix/*": (
+        Skip,
+        "covarPopMatrix works from 23.2",
+        check_clickhouse_version("<=23.1"),
+    ),
+    "/aggregate functions/:/covarPopMatrix:/*": (
+        Skip,
+        "covarPopMatrix works from 23.2",
+        check_clickhouse_version("<=23.1"),
+    ),
+    "/aggregate functions/groupArrayLast/*": (
+        Skip,
+        "groupArrayLast works from 23",
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/:/groupArrayLast:/*": (
+        Skip,
+        "groupArrayLast works from 23",
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/kolmogorovSmirnovTest/*": (
+        Skip,
+        "kolmogorovSmirnovTest works from 23.4",
+        check_clickhouse_version("<23.4"),
+    ),
+    "/aggregate functions/:/kolmogorovSmirnovTest:/*": (
+        Skip,
+        "kolmogorovSmirnovTest works from 23.4",
+        check_clickhouse_version("<23.4"),
+    ),
+    "/aggregate functions/quantileGK/*": (
+        Skip,
+        "quantileGK works from 23.4",
+        check_clickhouse_version("<23.4"),
+    ),
+    "/aggregate functions/:/quantileGK:/*": (
+        Skip,
+        "quantileGK works from 23.4",
+        check_clickhouse_version("<23.4"),
+    ),
+    "/aggregate functions/quantilesGK/*": (
+        Skip,
+        "quantilesGK works from 23.4",
+        check_clickhouse_version("<23.4"),
+    ),
+    "/aggregate functions/:/quantilesGK:/*": (
+        Skip,
+        "quantilesGK works from 23.4",
+        check_clickhouse_version("<23.4"),
+    ),
+    "/aggregate functions/:/sequenceNextNode*Merge/*": (
+        Skip,
+        "sequenceNextNodeMerge needs to be done",
+    ),
+    "/aggregate functions/largestTriangleThreeBuckets/*": (
+        Skip,
+        "largestTriangleThreeBuckets works from 23.10",
+        check_clickhouse_version("<23.10"),
+    ),
+    "/aggregate functions/:/largestTriangleThreeBuckets*/*": (
+        Skip,
+        "largestTriangleThreeBuckets works from 23.10",
+        check_clickhouse_version("<23.10"),
+    ),
+    "/aggregate functions/merge/largestTriangleThreeBucketsMerge/*": (
+        Skip,
+        "largestTriangleThreeBuckets does not work with Merge, need to fix",
+    ),
 }
+
 
 @TestModule
 @ArgumentParser(argparser)
