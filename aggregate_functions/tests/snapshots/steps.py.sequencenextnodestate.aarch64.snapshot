@@ -1,0 +1,104 @@
+_aggregate_functions_state_sequenceNextNodeState_NULL_value_handling = r"""
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(ref, 'ref2'), equals(page, 'B')))":"010101014204000000010000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_1 = r"""
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(page, 'A'), equals(page, 'A'), equals(page, 'B')))":"0103014101000000010000000000000001014202000000020000000000000000014303000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_10 = r"""
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(ref, 'ref3'), equals(page, 'A')))":"0104014101000000010000000000000000014102000000010000000000000001014203000000000000000000000000014204000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_11 = r"""
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(ref, 'ref2'), equals(page, 'B')))":"0104014101000000000000000000000000014102000000000000000000000000014203000000010000000000000001014204000000010000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_2 = r"""
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(page, 'Basket'), equals(page, 'Basket'), equals(page, 'Gift')))":"010304476966740100000002000000000000000004486F6D6502000000000000000000000000044769667403000000020000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(page, 'Basket'), equals(page, 'Basket'), equals(page, 'Gift')))":"010304486F6D650100000000000000000000000004486F6D6502000000000000000000000000044769667403000000020000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(page, 'Basket'), equals(page, 'Basket'), equals(page, 'Gift')))":"010304486F6D6501000000000000000000000000044769667402000000020000000000000000044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_3 = r"""
+{"hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(page, 'Home'), equals(page, 'Home'), equals(page, 'Gift')))":"010304486F6D6502000000010000000000000001044769667403000000020000000000000000064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(page, 'Home'), equals(page, 'Home'), equals(page, 'Gift')))":"010304486F6D6502000000010000000000000001044769667403000000020000000000000000064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(page, 'Home'), equals(page, 'Home'), equals(page, 'Gift')))":"010304486F6D6501000000010000000000000001044769667402000000020000000000000000044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_4 = r"""
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404476966740100000001000000000000000104486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404486F6D650100000000000000000000000004486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010304486F6D6501000000000000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_5 = r"""
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home')))":"010404476966740100000001000000000000000104486F6D6502000000020000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home')))":"010404486F6D650100000002000000000000000004486F6D6502000000020000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home')))":"010304486F6D6501000000020000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_6 = r"""
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404476966740100000001000000000000000104486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404486F6D650100000000000000000000000004486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010304486F6D6501000000000000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_7 = r"""
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home')))":"010404476966740100000001000000000000000104486F6D6502000000020000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home')))":"010404486F6D650100000002000000000000000004486F6D6502000000020000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift'), equals(page, 'Home')))":"010304486F6D6501000000020000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_8 = r"""
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(ref, 'ref1'), equals(page, 'A')))":"0102014101000000010000000000000000014102000000010000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_doc_example_9 = r"""
+{"hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(ref, 'ref4'), equals(page, 'B')))":"0102014203000000010000000000000000014204000000010000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_permutations_first_match_backward = r"""
+{"hex(sequenceNextNodeState('backward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404476966740100000001000000000000000104486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404486F6D650100000000000000000000000004486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010304486F6D6501000000000000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_permutations_first_match_forward = r"""
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404476966740100000001000000000000000104486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404486F6D650100000000000000000000000004486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'first_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010304486F6D6501000000000000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_permutations_head_forward = r"""
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010204476966740100000001000000000000000104486F6D6502000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010204486F6D650100000000000000000000000004486F6D6502000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'head')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010204486F6D6501000000000000000000000000044769667402000000010000000000000001"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_permutations_last_match_backward = r"""
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404476966740100000001000000000000000104486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404486F6D650100000000000000000000000004486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010304486F6D6501000000000000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_permutations_last_match_forward = r"""
+{"hex(sequenceNextNodeState('forward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404476966740100000001000000000000000104486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010404486F6D650100000000000000000000000004486F6D6502000000000000000000000000044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('forward', 'last_match')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"010304486F6D6501000000000000000000000000044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_permutations_tail_backward = r"""
+{"hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"0102044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"0102044769667403000000010000000000000001064261736B657404000000000000000000000000"}
+{"hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(page, 'Gift'), equals(page, 'Gift')))":"0102044769667402000000010000000000000001044578697403000000000000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_return_type = r"""
+{"toTypeName(hex(sequenceNextNodeState('backward', 'tail')(dt, page, equals(ref, 'ref4'), equals(page, 'B'))))":"String"}
+"""
+
+_aggregate_functions_state_sequenceNextNodeState_single_NULL_value = r"""
+{"hex(sequenceNextNodeState('backward', 'last_match')(dt, page, equals(ref, 'ref2'), equals(page, 'B')))":"010103014102000000000000000000000000014103000000000000000000000001014204000000010000000000000000"}
+"""
+

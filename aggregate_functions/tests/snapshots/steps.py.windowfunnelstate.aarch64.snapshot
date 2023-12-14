@@ -1,3 +1,7 @@
+_aggregate_functions_state_windowFunnelState_NULL_value_handling = r"""
+{"hex(windowFunnelState(6048000000000000)(time, equals(number, NULL), equals(number, 2)))":null,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
 _aggregate_functions_state_windowFunnelState_constant = r"""
 {"hex(windowFunnelState(6048000000000000)(1, 1, 1))":"00020000000000000001020101","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
 """
@@ -744,6 +748,10 @@ _aggregate_functions_state_windowFunnelState_example4 = r"""
 
 _aggregate_functions_state_windowFunnelState_return_type = r"""
 {"toTypeName(hex(windowFunnelState(6048000000000000)(number, equals(number, 1), equals(number, 2))))":"String","any(toTypeName(number))":"UInt64","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_windowFunnelState_single_NULL_value = r"""
+{"hex(windowFunnelState(6048000000000000)(time, equals(number, 1), equals(number, 2)))":"01010200000000000000010001030002","any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_state_windowFunnelState_single_row = r"""
