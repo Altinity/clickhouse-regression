@@ -1,0 +1,280 @@
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_DateTime_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, DateTime)'))":"1970-01-01 01:00:00"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Date_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Date)'))":"1970-01-01"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Decimal128_38__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Decimal(38, 38))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Float32)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Float64)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Int128_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Int128)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Int16_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Int16)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Int32_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Int32)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Int64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Int8_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Int8)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_DateTime__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(DateTime))'))":"1970-01-01 01:00:00"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Date__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Date))'))":"1970-01-01"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Float32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Float64))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Int128__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Int128))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Int16))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Int32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Int64))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(Int8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_DateTime___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(DateTime)))'))":"1970-01-01 01:00:00"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Date___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Date)))'))":"1970-01-01"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Float32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Float32)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Float64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Float64)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Int128___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Int128)))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Int16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Int16)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Int32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Int32)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Int64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Int64)))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_Int8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(Int8)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_UInt128___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(UInt128)))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_UInt16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(UInt16)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_UInt32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(UInt32)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_UInt64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(UInt64)))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_Nullable_UInt8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, LowCardinality(Nullable(UInt8)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_UInt128__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(UInt128))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(UInt16))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(UInt32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(UInt64))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_LowCardinality_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, LowCardinality(UInt8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Int8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_DateTime__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(DateTime))'))":"1970-01-01 01:00:00"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Date__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Date))'))":"1970-01-01"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Decimal128_38___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Decimal(38, 38)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Float32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Float64))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Int128__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Int128))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Int16))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Int32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Int64))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(Int8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_UInt128__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(UInt128))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(UInt16))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(UInt32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(UInt64))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_Nullable_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(nothing, Nullable(UInt8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_UInt128_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt128)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_UInt16_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt16)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_UInt32_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt32)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_UInt8_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt8)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Float64)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_constant_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt8)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_doc_example_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Int8)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Float64)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_inf___inf__nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Float64)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Float64)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_single_NULL_value_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, Nullable(Int8))'))":null}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_single_row_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_some_negative_values_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_with_group_by_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_nothingfinalizeAggregation_with_group_by_1 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(nothing, UInt64)'))":"0"}
+"""
+
