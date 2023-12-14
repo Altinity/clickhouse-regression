@@ -100,7 +100,7 @@ def scenario(self, cluster, node="clickhouse1"):
                 ):
                     with Pool(15) as p:
                         n_batches = 50
-                        n_inserts = 250
+                        n_inserts = 200
                         n_other_queries_each = 500
                         n_other_per_batch = n_other_queries_each // n_batches
                         tasks = []

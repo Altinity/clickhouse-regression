@@ -1,0 +1,204 @@
+_aggregate_functions_state_analysisOfVarianceState_NULL_value_handling = r"""
+{"hex(analysisOfVarianceState(a, b))":"0103000000000000F03F0000000000001040000000000000084003000000000000F03F0000000000002440000000000000144003010000000000000002000000000000000200000000000000","any(toTypeName(a))":"Nullable(Int16)","any(toTypeName(b))":"UInt16"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState__inf = r"""
+{"hex(analysisOfVarianceState(a, b))":"036666666666660240000000000000F0FF000000000000224003285C8FC2F5281540000000000000F07F000000000080444003020000000000000002000000000000000200000000000000","any(toTypeName(a))":"Float64","any(toTypeName(b))":"UInt16"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_corner_values_of_Int16 = r"""
+{"hex(analysisOfVarianceState(a, b))":"02000000004000E040000000004000E040020000000380FFCF410000000580FFCF410203000000000000000200000000000000","any(toTypeName(a))":"Int16","any(toTypeName(b))":"UInt16"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Decimal128_38__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(decimal128_38_, modulo(lowcardinality_uint64_, 2)))":"02321F8703E166FEBF5F932D2C8AF7FA3F0263C18C283BF5FA3F842C74C4CC7A01400206000000000000000400000000000000","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Decimal128_38__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(decimal128_38_, modulo(nullable_uint64_, 2)))":"010202C8047B8B86EDBF5AB051CCDDA7E63F0272F32F70AB4EF33F7C93A2A0144E05400203000000000000000600000000000000","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Decimal128_38__UInt64 = r"""
+{"hex(analysisOfVarianceState(decimal128_38_, modulo(uint64, 2)))":"027EEE855D079100C02951B2E3B7B2FD3F0253B381A6C84BF93F8CB37905864F02400204000000000000000600000000000000","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Float32_LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(float32, modulo(lowcardinality_uint64_, 2)))":"020000009468450DC800000080C96BD7C702DA32DA443830085060D9F5D88F5302500206000000000000000400000000000000","any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(float32, modulo(nullable_uint64_, 2)))":"0102000000D0CA6004C8000000E82DA4F7C702F003D11626CA01504A08FF06A2B908500203000000000000000600000000000000","any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Float32_UInt64 = r"""
+{"hex(analysisOfVarianceState(float32, modulo(uint64, 2)))":"0200000078B972FDC700000008857901C802E4A92F71CA88F64F483738E5623F0F500204000000000000000600000000000000","any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Float64_LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(float64, modulo(lowcardinality_uint64_, 2)))":"02000000000000F0FF51776F82FDFFEF7F02000000000000F07F000000000000F07F0206000000000000000400000000000000","any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(float64, modulo(nullable_uint64_, 2)))":"0102000000000000F0FF51776F82FDFFEF7F02000000000000F07F000000000000F07F0203000000000000000600000000000000","any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Float64_UInt64 = r"""
+{"hex(analysisOfVarianceState(float64, modulo(uint64, 2)))":"0251776F82FDFFEFFF4DDD6CBA6563ED7F02000000000000F07F000000000000F07F0204000000000000000600000000000000","any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Int64_LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(int64, modulo(lowcardinality_uint64_, 2)))":"0226E05CA6E274B4C3A82292A2FB4AE34302B982E2580F89DC473486287C6C84D1470206000000000000000400000000000000","any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(int64, modulo(nullable_uint64_, 2)))":"0102D1E993DA2D17E1C33B382D94C6E9F04302006621D998ECD547EDA2E9FBE220D8470203000000000000000600000000000000","any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Int64_UInt64 = r"""
+{"hex(analysisOfVarianceState(int64, modulo(uint64, 2)))":"02FEBCC1444D03D2C3236527F005BEE94302E56E40C0D40AD347089ACA14A702DB470204000000000000000600000000000000","any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_float32_, modulo(lowcardinality_uint64_, 2)))":"0200000028BB26F2C7000000BFE880004802F23B4C4EA07B0050F62241AC7A02F84F0206000000000000000400000000000000","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_float32_, modulo(nullable_uint64_, 2)))":"0102000000E023D1F5C70000001B1D5602480220F78ADF4B38F84FDD51A7B4B76000500203000000000000000600000000000000","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
+{"hex(analysisOfVarianceState(lowcardinality_float32_, modulo(uint64, 2)))":"020000008054BEBD470000001C62FEE9470254EC4C46D11BFA4F86AE8C02EADDFE4F0204000000000000000600000000000000","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Float64__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_float64_, modulo(lowcardinality_uint64_, 2)))":"0251776F82FDFFEFFF51776F82FDFFEF7F02000000000000F07F000000000000F07F0206000000000000000400000000000000","any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_float64_, modulo(nullable_uint64_, 2)))":"010251776F82FDFFEFFF51776F82FDFFEF7F02000000000000F07F000000000000F07F0203000000000000000600000000000000","any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Float64__UInt64 = r"""
+{"hex(analysisOfVarianceState(lowcardinality_float64_, modulo(uint64, 2)))":"0251776F82FDFFEFFF51776F82FDFFEF7F02000000000000F07F000000000000F07F0204000000000000000600000000000000","any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_int64_, modulo(lowcardinality_uint64_, 2)))":"02F684F1B38D7CD8C3DEAB4D888818F443022B74C0B067D8E54763B9EEC42950DD470206000000000000000400000000000000","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_int64_, modulo(nullable_uint64_, 2)))":"0102E47AA5FD8E70AD43933DC846C11BEA43025F28097B8A27DC47AD3CB355B76CE6470203000000000000000600000000000000","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
+{"hex(analysisOfVarianceState(lowcardinality_int64_, modulo(uint64, 2)))":"025CC4EE089E1EC7C32C236FDC38DDF04302442E062380CDD447BAB9B481BC19EA470204000000000000000600000000000000","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_uint64_, modulo(lowcardinality_uint64_, 2)))":"020AAE9622D7A60A44EDC13134D770F94302E4075AA05D3A07481B1BCDBE4423F2470206000000000000000400000000000000","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(lowcardinality_uint64_, modulo(nullable_uint64_, 2)))":"0102A4A00B4D954AF843AEBE2916F8390B44027994A5212015F44735CBEDEE6F4106480203000000000000000600000000000000","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
+{"hex(analysisOfVarianceState(lowcardinality_uint64_, modulo(uint64, 2)))":"02928CFD61D8BBF343B8C8B08B56810D44022FC8D8585E99EF4766638A69A86508480204000000000000000600000000000000","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_decimal128_38__, modulo(lowcardinality_uint64_, 2)))":"0102C0F9D8BD55B89F3FC7863CC6C22CF53F02F6B18597ADB4FA3F65C170BE30CA05400205000000000000000400000000000000","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Decimal128_38___Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_decimal128_38__, modulo(nullable_uint64_, 2)))":"01024CCCABE1E3B7D1BFC2DD9E159D19FA3F024F5E81FDD8F9F63F39EB720B9BA707400203000000000000000600000000000000","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Decimal128_38___UInt64 = r"""
+{"hex(analysisOfVarianceState(nullable_decimal128_38__, modulo(uint64, 2)))":"01021A4D996CBF15E9BF9E48C0E9411B014002E79E3387A384F23FEDCA99C635E209400203000000000000000600000000000000","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_float32_, modulo(lowcardinality_uint64_, 2)))":"01020000005CE7EDF9C70000004008CAF5C70215B9FE11819BFB4FE0CA5352F6E106500205000000000000000400000000000000","any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_float32_, modulo(nullable_uint64_, 2)))":"0102000000A4501DF8C7000000F89E9AF7C702C156687DB188F24F0AFC9E1C5E6B0B500203000000000000000600000000000000","any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"hex(analysisOfVarianceState(nullable_float32_, modulo(uint64, 2)))":"0102000000E883A8F4C7000000B46B0FFBC702E414F61E8FE9FC4FF81CD84BEF3A06500203000000000000000600000000000000","any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Float64__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_float64_, modulo(lowcardinality_uint64_, 2)))":"010272496A82FDFFEFFF6E2C2F70FDFFEF7F02000000000000F07F000000000000F07F0205000000000000000400000000000000","any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_float64_, modulo(nullable_uint64_, 2)))":"010251776F82FDFFEFFF4D5A3470FDFFEF7F02000000000000F07F000000000000F07F0203000000000000000600000000000000","any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Float64__UInt64 = r"""
+{"hex(analysisOfVarianceState(nullable_float64_, modulo(uint64, 2)))":"010272496A82FDFFEFFF6E2C2F70FDFFEF7F02000000000000F07F000000000000F07F0203000000000000000600000000000000","any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_int64_, modulo(lowcardinality_uint64_, 2)))":"01020D471FFDB092DFC3BE0912D406ADE64302A4EDE58F121BE047E91DC6EC439FE2470205000000000000000400000000000000","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_int64_, modulo(nullable_uint64_, 2)))":"01021749CD22BCBAE2C34FAF4F786A9EE94302F1DBFE6029BCD147949D2CCC41DCE9470203000000000000000600000000000000","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"hex(analysisOfVarianceState(nullable_int64_, modulo(uint64, 2)))":"01022429D674371EE7C35C8F58CAE501EE4302D33C50DCA58BD54724ED838E83F4E7470203000000000000000600000000000000","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_uint64_, modulo(lowcardinality_uint64_, 2)))":"0102B3BEDD9757ED0944ACDC55AA98E2024402F3EF97C822F60648535530664DAAFE470205000000000000000400000000000000","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(nullable_uint64_, modulo(nullable_uint64_, 2)))":"01025CDA4B4BD420F64318D7460EC3DF104402D125B2C27B4DF247B507579A8B240D480203000000000000000600000000000000","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"hex(analysisOfVarianceState(nullable_uint64_, modulo(uint64, 2)))":"0102348DE87305E3F54363AA1FC436EF1044024FCAF8DF911FF14775B5B38B80BB0D480203000000000000000600000000000000","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
+{"hex(analysisOfVarianceState(uint64, modulo(lowcardinality_uint64_, 2)))":"02F0C16BE6880604441419CF8D1ECE024402F23592741B75FE47C00C5FEA86CFFE470206000000000000000400000000000000","any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"hex(analysisOfVarianceState(uint64, modulo(nullable_uint64_, 2)))":"0102A481543585A0F543329A90D964040C4402797E7CADF78BEF47BA81194453BF06480203000000000000000600000000000000","any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_datatypes_permutations_UInt64_UInt64 = r"""
+{"hex(analysisOfVarianceState(uint64, modulo(uint64, 2)))":"02EE3B4004256AFD430DBD1AF2941F084402A9811D0F3F0BFB4785E0E9A7B11C01480204000000000000000600000000000000","any(toTypeName(uint64))":"UInt64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_five_groups = r"""
+{"hex(analysisOfVarianceState(a, b))":"056666666666661640000000000000104000000000000008400000000000002640000000000000214005EC51B81E85EB224000000000000024400000000000001440E17A14AE472150400000000000A043400504000000000000000200000000000000020000000000000003000000000000000200000000000000","any(toTypeName(a))":"Float64","any(toTypeName(b))":"UInt16"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_inf = r"""
+{"hex(analysisOfVarianceState(a, b))":"036666666666660240000000000000F07F000000000000224003285C8FC2F5281540000000000000F07F000000000080444003020000000000000002000000000000000200000000000000","any(toTypeName(a))":"Float64","any(toTypeName(b))":"UInt16"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_nan = r"""
+{"hex(analysisOfVarianceState(a, b))":"036666666666660240000000000000F87F000000000000224003285C8FC2F5281540000000000000F87F000000000080444003020000000000000002000000000000000200000000000000","any(toTypeName(a))":"Float64","any(toTypeName(b))":"UInt16"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_return_type = r"""
+{"toTypeName(hex(analysisOfVarianceState(number, modulo(number, 2))))":"String","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_single_NULL_value = r"""
+{"hex(analysisOfVarianceState(a, b))":"01030000000000001440000000000000104000000000000008400300000000000026400000000000002440000000000000144003030000000000000002000000000000000200000000000000","any(toTypeName(a))":"Nullable(Int16)","any(toTypeName(b))":"UInt16"}
+"""
+
+_aggregate_functions_state_analysisOfVarianceState_some_negative_values = r"""
+{"hex(analysisOfVarianceState(minus(number, 10), modulo(number, 2)))":"0200000000000034C000000000000039C0020000000000005E400000000000A064400205000000000000000500000000000000","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
