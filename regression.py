@@ -4,13 +4,10 @@ from testflows.core import *
 
 append_path(sys.path, ".")
 
-from helpers.argparser import argparser
+from s3.regression import argparser
+
 
 ffails = {
-    "s3": (
-        Skip,
-        "Required inputs are not specified, must be launch seperately.",
-    ),
     "tiered_storage": (
         Skip,
         "Required inputs are not specified, must be launch seperately.",
@@ -25,10 +22,23 @@ ffails = {
 def regression(
     self,
     local,
-    clickhouse_binary_path,
     clickhouse_version,
+    clickhouse_binary_path,
     collect_service_logs,
+    storages,
+    minio_uri,
+    gcs_uri,
+    aws_s3_region,
+    aws_s3_bucket,
+    minio_root_user,
+    minio_root_password,
+    aws_s3_access_key,
+    aws_s3_key_id,
+    gcs_key_secret,
+    gcs_key_id,
+    node="clickhouse1",
     stress=None,
+
 ):
     """ClickHouse regression."""
     args = {
@@ -37,6 +47,25 @@ def regression(
         "clickhouse_version": clickhouse_version,
         "stress": stress,
         "collect_service_logs": collect_service_logs,
+    }
+
+    s3_args = {
+        "local": local,
+        "clickhouse_binary_path": clickhouse_binary_path,
+        "clickhouse_version": clickhouse_version,
+        "stress": stress,
+        "collect_service_logs": collect_service_logs,
+        "storages": storages,
+        "minio_uri": minio_uri,
+        "gcs_uri": gcs_uri,
+        "aws_s3_region": aws_s3_region,
+        "aws_s3_bucket": aws_s3_bucket,
+        "minio_root_user": minio_root_user,
+        "minio_root_password": minio_root_password,
+        "aws_s3_access_key": aws_s3_access_key,
+        "aws_s3_key_id": aws_s3_key_id,
+        "gcs_key_secret": gcs_key_secret,
+        "gcs_key_id": gcs_key_id
     }
 
     self.context.stress = stress
@@ -120,7 +149,7 @@ def regression(
                 executor=pool,
             )(**args)
             Feature(
-                test=load("map_type.regression", "regression"),
+                test=load("data_types.regression", "regression"),
                 parallel=True,
                 executor=pool,
             )(**args)
@@ -131,11 +160,6 @@ def regression(
             )(**args)
             Feature(
                 test=load("rbac.regression", "regression"), parallel=True, executor=pool
-            )(**args)
-            Feature(
-                test=load("s3.regression", "regression"),
-                parallel=True,
-                executor=pool,
             )(**args)
             Feature(
                 test=load("selects.regression", "regression"),
@@ -157,6 +181,11 @@ def regression(
                 parallel=True,
                 executor=pool,
             )(**args)
+            Feature(
+                test=load("s3.regression", "regression"),
+                parallel=True,
+                executor=pool,
+            )(**s3_args)
         finally:
             join()
 
