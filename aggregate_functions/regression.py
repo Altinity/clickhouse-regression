@@ -262,6 +262,11 @@ ffails = {
         Skip,
         "largestTriangleThreeBuckets does not work with Merge, need to fix",
     ),
+    "/aggregate functions/flameGraph/*": (
+        Skip,
+        "flameGraph works from 23.8",
+        check_clickhouse_version("<23.8"),
+    ),
 }
 
 
