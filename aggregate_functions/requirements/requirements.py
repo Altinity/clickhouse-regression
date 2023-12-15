@@ -2207,6 +2207,22 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AnalysisOfVariance = Requ
     num='3.1.4.35.1'
 )
 
+RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FlameGraph = Requirement(
+    name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support [flameGraph] aggregate function.\n'
+        '\n'
+    ),
+    link=None,
+    level=5,
+    num='3.1.4.36.1'
+)
+
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram = Requirement(
     name='RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram',
     version='1.0',
@@ -3324,6 +3340,8 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU', level=5, num='3.1.4.34.1'),
         Heading(name='analysisOfVariance', level=4, num='3.1.4.35'),
         Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance', level=5, num='3.1.4.35.1'),
+        Heading(name='flameGraph', level=4, num='3.1.4.36'),
+        Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph', level=5, num='3.1.4.36.1'),
         Heading(name='Parametric Functions', level=3, num='3.1.5'),
         Heading(name='histogram', level=4, num='3.1.5.1'),
         Heading(name='RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram', level=5, num='3.1.5.1.1'),
@@ -3535,6 +3553,7 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_NonNegativeDerivative,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_TheilsU,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AnalysisOfVariance,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FlameGraph,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceMatch,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceCount,
@@ -3854,6 +3873,8 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
                 * 3.1.4.34.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoustheilsu)
             * 3.1.4.35 [analysisOfVariance](#analysisofvariance)
                 * 3.1.4.35.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousanalysisofvariance)
+            * 3.1.4.36 [flameGraph](#flamegraph)
+                * 3.1.4.36.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousflamegraph)
         * 3.1.5 [Parametric Functions](#parametric-functions)
             * 3.1.5.1 [histogram](#histogram)
                 * 3.1.5.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
@@ -4908,6 +4929,13 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support [analysisOfVariance(anova)] aggregate function.
+
+##### flameGraph
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph
+version: 1.0
+
+[ClickHouse] SHALL support [flameGraph] aggregate function.
 
 #### Parametric Functions
 

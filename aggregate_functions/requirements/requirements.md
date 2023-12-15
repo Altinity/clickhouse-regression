@@ -281,6 +281,8 @@
                 * 3.1.4.34.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoustheilsu)
             * 3.1.4.35 [analysisOfVariance](#analysisofvariance)
                 * 3.1.4.35.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousanalysisofvariance)
+            * 3.1.4.36 [flameGraph](#flamegraph)
+                * 3.1.4.36.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousflamegraph)
         * 3.1.5 [Parametric Functions](#parametric-functions)
             * 3.1.5.1 [histogram](#histogram)
                 * 3.1.5.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
@@ -1335,6 +1337,13 @@ version: 1.0
 
 [ClickHouse] SHALL support [analysisOfVariance(anova)] aggregate function.
 
+##### flameGraph
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph
+version: 1.0
+
+[ClickHouse] SHALL support [flameGraph] aggregate function.
+
 #### Parametric Functions
 
 ##### histogram
@@ -2075,6 +2084,7 @@ GROUP BY
 [kolmogorovSmirnovTest]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/kolmogorovsmirnovtest
 [theilsU]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/theilsu
 [analysisOfVariance(anova)]: https://github.com/ClickHouse/ClickHouse/pull/42131
+[flameGraph]: https://github.com/ClickHouse/ClickHouse/pull/38953
 [corrMatrix]: https://github.com/ClickHouse/ClickHouse/pull/44680
 [covarSampMatrix]: https://github.com/ClickHouse/ClickHouse/pull/44680
 [covarPopMatrix]: https://github.com/ClickHouse/ClickHouse/pull/44680
