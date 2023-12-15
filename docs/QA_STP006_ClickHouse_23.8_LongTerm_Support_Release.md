@@ -111,7 +111,7 @@ The following team members SHALL be dedicated to the release:
 * Davit Mnatobishvili (parquet, LDAP, benchmarks, alter, extended precision data types)
 * Alsu Giliazova (aggregate functions, selects, lightweight_delete)
 * Stuart Gibb (clickhouse-keeper, RBAC, S3, tiered_storage)
-* Andrey Antipov (clickhouse-operator, disk level encryption, Python clickhouse-driver, JDBC driver, ODBC driver, clickhouse-sqlalchemy)
+* Andrey Antipov (clickhouse-, disk level encryption, Python clickhouse-driver, JDBC driver, ODBC driver, clickhouse-sqlalchemy)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
 * Dima Borovstov (Tableau)
 * Eugene Klimov (Grafana, Superset)
@@ -248,7 +248,7 @@ Regressions:
 | Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)         |   |
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)         |   |
 | Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)     |   |
-| Kubernetes `clickhouse-operator` | [](#kubernetes-clickhouse-operator)   |   |
+| Kubernetes `clickhouse-` | [Pass](#kubernetes-clickhouse-)   |   |
 | Altinity.Cloud | [Pass](#altinitycloud)                |   |
 | Production Cluster Operation | [Pass](#production-cluster-operation) |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)        |   |
@@ -516,9 +516,11 @@ Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhous
 
 ### Compatibility With Operation on Kubernetes
 
-#### Kubernetes `clickhouse-operator`
+#### Kubernetes `clickhouse-`
 
-Results:
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-/
+
+clickhouse-operator version: 0.23.0
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
 
