@@ -21,10 +21,8 @@ def array_on_duplicate_keys(ordered_pairs):
             d[k] = [v]
     return d
 
-
 @TestCheck
-def check(
-    self,
+def check(self,
     func,
     datatypes,
     hex_repr,
@@ -32,29 +30,15 @@ def check(
     short_name,
     is_low_cardinality=False,
     is_parametric=False,
-):
+    ):
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
-    with Given("I create temporary table"):
-        datatype_name = f"AggregateFunction({func}, {datatypes})"
-        self.context.table = create_table(
-            engine="MergeTree",
-            columns=[Column(name="state", datatype=DataType(name=datatype_name))],
-            order_by="tuple()",
+    with When("I cast the data"):
+        values = (
+            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
         )
-
-    with When("I insert data in temporary table"):
-        if is_low_cardinality:
-            values = (
-                f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
-            )
-        else:
-            values = f"(unhex('{hex_repr}'))"
-        self.context.node.query(
-            f"INSERT INTO {self.context.table.name} VALUES {values}"
-        )
-
+    
     with Then("I check the result"):
         if "alias" in short_name:
             short_name = short_name.replace("_alias", "")
@@ -63,8 +47,7 @@ def check(
         else:
             correct_form = func + "Merge"
         execute_query(
-            f"SELECT {correct_form}(state) FROM {self.context.table.name}",
-            snapshot_name=snapshot_name,
+            f"SELECT {correct_form}{values}", snapshot_name=snapshot_name,
         )
 
 
