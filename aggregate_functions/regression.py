@@ -212,55 +212,46 @@ ffails = {
         check_clickhouse_version("<23.8"),
     ),
     # states
-    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": 
-        (
-            XFail,
-            "need to invesigate",
-            check_clickhouse_version("<23"),
-        ),
-    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": 
-        (
-            XFail,
-            "need to invesigate",
-            check_clickhouse_version("<23"),
-        ),
-    "/aggregate functions/state/retentionState/NULL value handling/*": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        ),
-    "/aggregate functions/state/retentionState/single NULL value/*": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        ),
-    "/aggregate functions/state/sequenceCountState/NULL value handling/*": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        ),
-    "/aggregate functions/state/windowFunnelState/NULL value handling/*": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        ),
-    "/aggregate functions/state/windowFunnelState/single NULL value/*": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        ),
-    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": 
-        (
-            XFail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ,
+    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": (
+        XFail,
+        "need to invesigate",
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": (
+        XFail,
+        "need to invesigate",
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/retentionState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/retentionState/single NULL value/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceCountState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/windowFunnelState/single NULL value/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
 }
 
 
