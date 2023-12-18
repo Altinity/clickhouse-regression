@@ -39,6 +39,8 @@ def check(
     with When("I cast the data"):
         if '\'' in func:
             func_ = func.replace("'", "\\'")
+        else:
+            func_ = func
         values = (
             f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func_}, {datatypes})'))"
         )
