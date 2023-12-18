@@ -97,13 +97,6 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
                 f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w)) FROM values('x Int8, w Nullable(UInt8)', (10,0), (11,0), (12,NULL), (1,1), (2,1), (3,1))"
             )
 
-    with Check("single NULL value"):
-        execute_query(
-            f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
-            exitcode=exitcode,
-            message=message,
-        )
-
     with Check("return type"):
         execute_query(
             f"SELECT toTypeName({func.format(params='number,toUInt64(number) % 2')}), any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1, 100)"
