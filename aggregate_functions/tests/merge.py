@@ -37,8 +37,10 @@ def check(
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
     with When("I cast the data"):
+        if '\'' in func:
+            func_ = func.replace("'", "\\'")
         values = (
-            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
+            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func_}, {datatypes})'))"
         )
 
     with Then("I check the result"):
@@ -131,7 +133,6 @@ def merge(self, scenario, short_name, is_parametric):
 def feature(self):
     """Check aggregate functions `-Merge` combinator."""
     not_implemented = [
-        "mannWhitneyUTest",
         "quantileDeterministic",
         "quantilesDeterministic",
         "stochasticLinearRegression",
@@ -153,7 +154,6 @@ def feature(self):
         "studentTTest",
         "sequenceCount",
         "sequenceMatch",
-        #"kolmogorovSmirnovTest",
     ]
     parametric = [
         'exponentialMovingAverage',
