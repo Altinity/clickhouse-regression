@@ -1,23 +1,25 @@
+#!/usr/bin/env python3
 import os
 import sys
 from testflows.core import *
 
-append_path(sys.path, "..", "..")
+append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from s3.regression import argparser
 from s3.tests.common import enable_vfs
 
-from object_storage_vfs.requirements import SRS_038_ClickHouse_S3_External_Storage
+from object_storage_vfs.requirements import SRS_038_ClickHouse_Disk_Object_Storage_VFS
 
-xfails= {}
+xfails = {}
 
 ffails = {}
+
 
 @TestModule
 @Name("vfs")
 @ArgumentParser(argparser)
-@Specifications(SRS_038_ClickHouse_S3_External_Storage)
+@Specifications(SRS_038_ClickHouse_Disk_Object_Storage_VFS)
 @XFails(xfails)
 @FFails(ffails)
 def regression(
@@ -44,7 +46,7 @@ def regression(
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     if not allow_vfs:
-        skip('VFS is not enabled')
+        skip("VFS is not enabled")
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -58,3 +60,9 @@ def regression(
 
     with Given("I enable allow_object_storage_vfs"):
         enable_vfs()
+
+    Feature(run=load("object_storage_vfs.tests.outline", "feature"))
+
+
+if main():
+    regression()

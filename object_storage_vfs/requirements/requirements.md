@@ -11,10 +11,6 @@ using the [Revision History].
 
 ## Introduction
 
-[ClickHouse] currently has support for [AWS S3] storage and S3-compatible storage
-through storage disks configured for [S3] and through [S3] table functions. The user
-may import from [S3] storage and export to [S3] storage using the above methods.
-
 ## Terminology
 
 ## Requirements
@@ -61,3 +57,21 @@ version: 0.0
 version: 0.0
 
 [Clickhouse] DiskObjectStorageVFS shares performance requirements with [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
+
+
+## References
+
+- **AWS:** https://en.wikipedia.org/wiki/Amazon_Web_Services
+- **S3:** https://en.wikipedia.org/wiki/Amazon_S3
+- **ClickHouse:** https://clickhouse.tech
+- **GitHub Repository:** https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs
+- **Revision History:** https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md
+
+[AWS]: https://en.wikipedia.org/wiki/Amazon_Web_Services
+[AWS S3]: https://en.wikipedia.org/wiki/Amazon_S3
+[ClickHouse]: https://clickhouse.tech
+[GitHub]: https://github.com
+[Git]: https://git-scm.com/
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs
+[Revision History]: https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md
+[S3]: https://en.wikipedia.org/wiki/Amazon_S3
