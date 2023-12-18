@@ -21,8 +21,10 @@ def array_on_duplicate_keys(ordered_pairs):
             d[k] = [v]
     return d
 
+
 @TestCheck
-def check(self,
+def check(
+    self,
     func,
     datatypes,
     hex_repr,
@@ -30,7 +32,7 @@ def check(self,
     short_name,
     is_low_cardinality=False,
     is_parametric=False,
-    ):
+):
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
@@ -38,7 +40,7 @@ def check(self,
         values = (
             f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
         )
-    
+
     with Then("I check the result"):
         if "alias" in short_name:
             short_name = short_name.replace("_alias", "")
@@ -47,7 +49,8 @@ def check(self,
         else:
             correct_form = func + "Merge"
         execute_query(
-            f"SELECT {correct_form}{values}", snapshot_name=snapshot_name,
+            f"SELECT {correct_form}{values}",
+            snapshot_name=snapshot_name,
         )
 
 
