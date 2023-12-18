@@ -21,8 +21,10 @@ def scenario(
         snapshot_id=snapshot_id, clickhouse_version=">=23.11"
     )
 
+    func_ = func.replace("({params})", f"('greater')({{params}})")
+
     if "Merge" in self.name:
-        return self.context.snapshot_id, func.replace("({params})", "")
+        return self.context.snapshot_id, func_.replace("({params})", "")
 
     if table is None:
         table = self.context.table
