@@ -28,8 +28,12 @@ def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=Fal
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
     with When("I cast the data"):
+        if "'" in func:
+            func_ = func.replace("'", "\\'")
+        else:
+            func_ = func
         values = (
-            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
+            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func_}, {datatypes})'))"
         )
 
     with Then("I check the result"):
@@ -120,7 +124,6 @@ def finalizeAggregation(self, scenario, short_name):
 def feature(self):
     """Check aggregate function finalizeAggregation."""
     not_implemented = [
-        "mannWhitneyUTest",
         "quantileDeterministic",
         "quantilesDeterministic",
         "stochasticLinearRegression",
@@ -140,7 +143,6 @@ def feature(self):
         "studentTTest",
         "sequenceCount",
         "sequenceMatch",
-        "kolmogorovSmirnovTest",
         "windowFunnel",
         "quantileGK",
     ]

@@ -37,7 +37,7 @@ def check(
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
     with When("I cast the data"):
-        if '\'' in func:
+        if "'" in func:
             func_ = func.replace("'", "\\'")
         else:
             func_ = func
@@ -135,6 +135,7 @@ def merge(self, scenario, short_name, is_parametric):
 def feature(self):
     """Check aggregate functions `-Merge` combinator."""
     not_implemented = [
+        "windowFunnel",
         "quantileDeterministic",
         "quantilesDeterministic",
         "stochasticLinearRegression",
@@ -158,38 +159,37 @@ def feature(self):
         "sequenceMatch",
     ]
     parametric = [
-        'exponentialMovingAverage',
-        'groupArrayLast',
-        'groupArraySample',
-        'histogram',
+        "exponentialMovingAverage",
+        "groupArrayLast",
+        "groupArraySample",
+        "histogram",
         "kolmogorovSmirnovTest",
         "mannWhitneyUTest",
-        'meanZTest',
-        'quantileGK',
-        'quantiles',
-        'quantilesBFloat16',
-        'quantilesBFloat16Weighted',
-        'quantilesDeterministic',
-        'quantilesExact',
-        'quantilesExactExclusive',
-        'quantilesExactHigh',
-        'quantilesExactInclusive',
-        'quantilesExactLow',
-        'quantilesExactWeighted',
-        'quantilesGK',
-        'quantilesInterpolatedWeighted',
-        'quantilesTDigest',
-        'quantilesTDigestWeighted',
-        'quantilesTiming',
-        'quantilesTimingWeighted',
-        'sparkbar',
-        'sumMapFiltered',
-        'topK',
-        'topKWeighted',
-        'uniqUpTo',
-        'windowFunnel'
+        "meanZTest",
+        "quantileGK",
+        "quantiles",
+        "quantilesBFloat16",
+        "quantilesBFloat16Weighted",
+        "quantilesDeterministic",
+        "quantilesExact",
+        "quantilesExactExclusive",
+        "quantilesExactHigh",
+        "quantilesExactInclusive",
+        "quantilesExactLow",
+        "quantilesExactWeighted",
+        "quantilesGK",
+        "quantilesInterpolatedWeighted",
+        "quantilesTDigest",
+        "quantilesTDigestWeighted",
+        "quantilesTiming",
+        "quantilesTimingWeighted",
+        "sparkbar",
+        "sumMapFiltered",
+        "topK",
+        "topKWeighted",
+        "uniqUpTo",
+        "windowFunnel",
     ]
-
 
     test_funcs = [i for i in aggregate_functions]
     for i in not_implemented:
