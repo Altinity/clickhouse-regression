@@ -1,4 +1,3 @@
-
 _aggregate_functions_state_mannWhitneyUTestState_NULL_value_handling = r"""
 {"hex(mannWhitneyUTestState('greater')(x, modulo(x, 2)))":"01020300000000000000000000000000001040000000000000F03F00000000000008400000000000001440","any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(x))":"Nullable(Int8)"}
 """
