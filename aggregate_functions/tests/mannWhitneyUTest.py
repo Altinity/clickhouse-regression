@@ -35,8 +35,8 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if "State" not in self.name:
-        exitcode = 36 
-        message = "Exception:" 
+        exitcode = 36
+        message = "Exception:"
         with Check("constant"):
             execute_query(
                 f"SELECT {func.format(params='1,2')}, any(toTypeName(1)), any(toTypeName(2))",
@@ -64,7 +64,7 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
                 exitcode=exitcode,
                 message=message,
             )
-        
+
         with Check("single NULL value"):
             execute_query(
                 f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",

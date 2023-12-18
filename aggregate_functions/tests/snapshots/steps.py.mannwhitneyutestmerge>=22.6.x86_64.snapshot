@@ -1,0 +1,8 @@
+_aggregate_functions_merge_mannWhitneyUTestMerge_NULL_value_handling_0 = r"""
+{"mannWhitneyUTestMerge('greater')(CAST(unhex('010303000000000000000000000000000000000000000000001040000000000000F03F00000000000008400000000000001440'), 'AggregateFunction(mannWhitneyUTest(\\'greater\\'), Nullable(Int8) ,Nullable(Int8))'))":{"u_statistic":2,"p_value":0.9079806864017873}}
+"""
+
+_aggregate_functions_merge_mannWhitneyUTestMerge__inf_0 = r"""
+{"mannWhitneyUTestMerge('greater')(CAST(unhex('04020000000000000000000000000000F0FF000000000000104000000000000014406666666666660240CDCCCCCCCCCC1A40'), 'AggregateFunction(mannWhitneyUTest(\\'greater\\'), Float64 ,Int8)'))":{"u_statistic":2,"p_value":0.8764200133940464}}
+"""
+
