@@ -91,7 +91,7 @@ def scenario(
     with Check("example1"):
         params = "time, number=1, number=2"
         execute_query(
-            f"SELECT {func_.format(params=params)}, any(toTypeName(number)), any(toTypeName(1)), any(toTypeName(1)) FROM values('time Date, number UInt32', (1,1), (2,3), (3,2))"
+            f"SELECT {func_.format(params=params)}, any(toTypeName(time)), any(toTypeName(1)), any(toTypeName(1)) FROM values('time Date, number UInt32', (1,1), (2,3), (3,2))"
         )
 
     with Check("example2"):
