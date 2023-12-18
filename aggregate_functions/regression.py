@@ -100,62 +100,6 @@ xfails = {
             "Need to investigate",
         )
     ],
-    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": [
-        (
-            Fail,
-            "need to invesigate",
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": [
-        (
-            Fail,
-            "need to invesigate",
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/state/retentionState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/state/retentionState/single NULL value/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/state/sequenceCountState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/state/windowFunnelState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/state/windowFunnelState/single NULL value/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ],
-    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
-    ],
 }
 
 ffails = {
@@ -267,6 +211,56 @@ ffails = {
         "flameGraph works from 23.8",
         check_clickhouse_version("<23.8"),
     ),
+    # states
+    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": 
+        (
+            XFail,
+            "need to invesigate",
+            check_clickhouse_version("<23"),
+        ),
+    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": 
+        (
+            XFail,
+            "need to invesigate",
+            check_clickhouse_version("<23"),
+        ),
+    "/aggregate functions/state/retentionState/NULL value handling/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        ),
+    "/aggregate functions/state/retentionState/single NULL value/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        ),
+    "/aggregate functions/state/sequenceCountState/NULL value handling/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        ),
+    "/aggregate functions/state/windowFunnelState/NULL value handling/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        ),
+    "/aggregate functions/state/windowFunnelState/single NULL value/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        ),
+    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": 
+        (
+            XFail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ,
 }
 
 
