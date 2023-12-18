@@ -34,10 +34,9 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
-    if "State" in self.name:
-        exitcode = 36 if "State" not in func else 0
-        message = "Exception:" if "State" not in func else None
-
+    if "State" not in self.name:
+        exitcode = 36 
+        message = "Exception:" 
         with Check("constant"):
             execute_query(
                 f"SELECT {func.format(params='1,2')}, any(toTypeName(1)), any(toTypeName(2))",
