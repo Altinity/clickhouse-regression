@@ -82,6 +82,16 @@ The table from which a partition or part is taken.
 
 The table to which a partition or part is going to be attached.
 
+### Compact part_type
+
+All columns are stored in one file in a filesystem.
+
+### Wide part_type
+
+Each column is stored in a separate file in a filesystem.
+
+Data storing format is controlled by the min_bytes_for_wide_part and min_rows_for_wide_part settings of the MergeTree table.
+
 ## Attaching Partitions or Parts
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition
@@ -134,13 +144,13 @@ version: 1.0
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes
 version: 1.0
 
-| Partition Types                               |
-|-----------------------------------------------|
-| Partition with only compact parts             |
-| Partition with only wide parts                |
-| Partition with compact and wide parts (mixed) |
-| Partition with no parts                       |
-| Partition with empty parts                    |
+| Partition Types                                   |
+|---------------------------------------------------|
+| Partition with only [compact] parts               |
+| Partition with only [wide] parts                  |
+| Partition with [compact] and [wide] parts (mixed) |
+| Partition with no parts                           |
+| Partition with empty parts                        |
 
 The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.
 
@@ -322,6 +332,8 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 [Git]: https://git-scm.com/
 [source table]: #source-table
 [destination table]: #destination-table
+[compact]: #compact-part_type
+[wide]: #wide-part_type
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
 [Revision History]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
