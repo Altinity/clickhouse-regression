@@ -46,9 +46,9 @@ if __name__ == "__main__":
 
     arch = platform.uname()[-1]
     if arch == "x86_64":
-        build_url = "build_urls_package_release/build_report_package_release.json"
+        build_url = "build_report_package_release/build_report_package_release.json"
     elif arch == "aarch64":
-        build_url = "build_urls_package_aarch64/build_report_package_aarch64.json"
+        build_url = "build_report_package_aarch64/build_report_package_aarch64.json"
     else:
         raise Exception("Only x86_64 and ARM are supported.")
 
