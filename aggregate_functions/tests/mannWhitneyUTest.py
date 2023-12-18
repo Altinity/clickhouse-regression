@@ -64,6 +64,13 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
                 exitcode=exitcode,
                 message=message,
             )
+        
+        with Check("single NULL value"):
+            execute_query(
+                f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
+                exitcode=exitcode,
+                message=message,
+            )
 
     with Check("with group by"):
         execute_query(
