@@ -25,7 +25,6 @@ def scenario(
         func_ = func.replace("({params})", f"('greater')({{params}})")
         return self.context.snapshot_id, func_.replace("({params})", "")
 
-
     if table is None:
         table = self.context.table
 
