@@ -8,7 +8,7 @@ from object_storage_vfs.requirements import *
 
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings("1.0"))
-def incompatible_settings(self):
+def incompatible_with_zero_copy(self):
     """
     Check that using zero copy replication when vfs is enabled is not allowed.
     """
@@ -26,14 +26,13 @@ def incompatible_settings(self):
 
         with When("I create a replicated table on each node"):
             for i, node in enumerate(nodes):
-                node.restart()
                 r = node.query(
                     f"""
                     CREATE TABLE zero_copy_replication (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/vfs_zero_copy_replication', '{i + 1}')
                     ORDER BY d
-                    SETTINGS storage_policy='external', allow_remote_fs_zero_copy_replication=1
+                    SETTINGS storage_policy='external', allow_object_storage_vfs=1, allow_remote_fs_zero_copy_replication=1
                 """
                 )
 
@@ -47,21 +46,53 @@ def incompatible_settings(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings("1.0"))
+def error_when_disabled(self):
+    """
+    Check that using allow_object_storage_vfs when vfs is not enabled is not allowed.
+    """
+    node = current().context.node
+
+    try:
+        with When("VFS is not enabled"):
+            node.query(
+                "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
+                message='"allow_object_storage_vfs","0"',
+            )
+
+        with When("I create a table with allow_object_storage_vfs=1"):
+            r = node.query(
+                f"""
+                CREATE TABLE my_vfs_table (
+                    d UInt64
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                SETTINGS storage_policy='external', allow_object_storage_vfs=1
+                """,
+            )
+
+        with Then("Exitcode should not be zero"):
+            assert r.exitcode != 0
+
+    finally:
+        with Finally("I drop the table"):
+            node.query("DROP TABLE IF EXISTS my_vfs_table SYNC")
+
+
+@TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_PreservesData("1.0"))
-def data_preservation(self):
+def disable_vfs_with_vfs_table(self):
     """
     Check that toggling allow_object_storage_vfs does not cause data to be deleted.
     """
-
     node = current().context.node
 
-    with Check("Create table with VFS and disable VFS"):
-        try:
+    try:
+        with Check("I create a table with VFS enabled"):
             with Given("I enable allow_object_storage_vfs"):
                 enable_vfs()
 
             with And("I have a table with vfs"):
-                node.restart()
                 node.query(
                     f"""
                     CREATE TABLE my_vfs_table (
@@ -83,69 +114,81 @@ def data_preservation(self):
                     message="1000000",
                 )
 
+        with Check("Access the table without VFS"):
             with When("VFS is no longer enabled"):
-                node.restart()
                 node.query(
                     "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
                     message='"allow_object_storage_vfs","0"',
                 )
 
             with Then("The data becomes inaccessible"):
-                r = node.query(f"SELECT count(*) FROM my_vfs_table")
-                pause(r.output)
+                r = node.query(
+                    f"SELECT count(*) FROM my_vfs_table FORMAT JSON", message='"count()": "0"'
+                )
 
+        with Check("Enable vfs and access the table"):
             with Given("I enable allow_object_storage_vfs"):
                 enable_vfs()
 
             with Then("The data becomes accessible again"):
-                r = node.query(f"SELECT count(*) FROM my_vfs_table")
-                pause(r.output)
-
-        finally:
-            with Finally("I drop the tables on each node"):
-                node.query("DROP TABLE IF EXISTS my_vfs_table SYNC")
-
-    with Check("Create table without VFS and enable VFS"):
-        try:
-            with Given("VFS is not enabled"):
-                r = node.query(
-                    "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
-                    message='"allow_object_storage_vfs","0"',
-                )
-
-            with Given("I have a table without vfs"):
-                node.restart()
                 node.query(
-                    f"""
-                    CREATE TABLE my_non_vfs_table (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external', allow_object_storage_vfs=0
-                    """,
-                )
-
-            with And("I insert some data"):
-                node.query(
-                    f"INSERT INTO my_non_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
-                )
-                node.query(
-                    f"SELECT count(*) FROM my_non_vfs_table",
+                    f"SELECT count(*) FROM my_vfs_table",
                     message="1000000",
                 )
 
-            with Given("I enable allow_object_storage_vfs"):
-                enable_vfs()
+    finally:
+        with Finally("I drop the tables on each node"):
+            node.query("DROP TABLE IF EXISTS my_vfs_table SYNC")
 
-            with Then("The data remains accessible"):
-                r = node.query(
-                    f"SELECT count(*) FROM my_non_vfs_table",
-                    message="1000000",
-                )
 
-        finally:
-            with Finally("I drop the tables on each node"):
-                node.query("DROP TABLE IF EXISTS my_non_vfs_table SYNC")
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_PreservesData("1.0"))
+def enable_vfs_with_non_vfs_table(self):
+    """
+    Check that toggling allow_object_storage_vfs does not cause data to be deleted.
+    """
+
+    node = current().context.node
+    try:
+        with Given("VFS is not enabled"):
+            r = node.query(
+                "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
+                message='"allow_object_storage_vfs","0"',
+            )
+
+        with Given("I have a table without vfs"):
+            node.restart()
+            node.query(
+                f"""
+                CREATE TABLE my_non_vfs_table (
+                    d UInt64
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                SETTINGS storage_policy='external', allow_object_storage_vfs=0
+                """,
+            )
+
+        with And("I insert some data"):
+            node.query(
+                f"INSERT INTO my_non_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
+            )
+            node.query(
+                f"SELECT count(*) FROM my_non_vfs_table",
+                message="1000000",
+            )
+
+        with Given("I enable allow_object_storage_vfs"):
+            enable_vfs()
+
+        with Then("The data remains accessible"):
+            r = node.query(
+                f"SELECT count(*) FROM my_non_vfs_table",
+                message="1000000",
+            )
+
+    finally:
+        with Finally("I drop the tables on each node"):
+            node.query("DROP TABLE IF EXISTS my_non_vfs_table SYNC")
 
 
 # @TestScenario
