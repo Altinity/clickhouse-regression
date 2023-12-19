@@ -7,13 +7,50 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from s3.regression import argparser
-from s3.tests.common import enable_vfs
+from s3.tests.common import enable_vfs, start_minio
 
 from object_storage_vfs.requirements import SRS_038_ClickHouse_Disk_Object_Storage_VFS
 
 xfails = {}
 
 ffails = {}
+
+
+@TestModule
+@Name("minio")
+def minio_regression(
+    self,
+    uri,
+    root_user,
+    root_password,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
+):
+    """Setup and run minio tests."""
+    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+            environ={
+                "MINIO_ROOT_PASSWORD": root_password,
+                "MINIO_ROOT_USER": root_user,
+            },
+        )
+        self.context.cluster = cluster
+
+    with Given("I have a minio client"):
+        start_minio(access_key=root_user, secret_key=root_password)
+        uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
+
+    Feature(test=load("object_storage_vfs.tests.object_storage_vfs", "outline"))(
+        uri=uri_bucket_file, key=root_user, secret=root_password
+    )
 
 
 @TestModule
@@ -43,25 +80,20 @@ def regression(
     allow_vfs,
 ):
     """Disk Object Storage VFS regression."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     if not allow_vfs:
         skip("VFS is not enabled")
 
-    with Given("docker-compose cluster"):
-        cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
-            nodes=nodes,
-            configs_dir=current_dir(),
-        )
-        self.context.cluster = cluster
+    self.context.clickhouse_version = clickhouse_version
 
-    with Given("I enable allow_object_storage_vfs"):
-        enable_vfs()
-
-    Feature(run=load("object_storage_vfs.tests.outline", "feature"))
+    Module(test=minio_regression)(
+        local=local,
+        clickhouse_binary_path=clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
+        uri=minio_uri,
+        root_user=minio_root_user,
+        root_password=minio_root_password,
+    )
 
 
 if main():
