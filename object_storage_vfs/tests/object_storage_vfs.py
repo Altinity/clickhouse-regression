@@ -9,6 +9,9 @@ from object_storage_vfs.requirements import *
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings("1.0"))
 def incompatible_settings(self):
+    """
+    Check that using zero copy replication when vfs is enabled is not allowed.
+    """
     cluster = self.context.cluster
 
     try:
@@ -46,6 +49,10 @@ def incompatible_settings(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_PreservesData("1.0"))
 def data_preservation(self):
+    """
+    Check that toggling allow_object_storage_vfs does not cause data to be deleted.
+    """
+
     node = current().context.node
 
     try:
@@ -76,6 +83,7 @@ def data_preservation(self):
             )
 
         with When("VFS is no longer enabled"):
+            node.restart()
             node.query(
                 "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
                 message='"allow_object_storage_vfs","0"',
