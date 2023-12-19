@@ -55,93 +55,97 @@ def data_preservation(self):
 
     node = current().context.node
 
-    try:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
+    with Check("Create table with VFS and disable VFS"):
+        try:
+            with Given("I enable allow_object_storage_vfs"):
+                enable_vfs()
 
-        with And("I have a table with vfs"):
-            node.restart()
-            node.query(
-                f"""
-                CREATE TABLE my_vfs_table (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external', allow_object_storage_vfs=1
-                """,
-            )
+            with And("I have a table with vfs"):
+                node.restart()
+                node.query(
+                    f"""
+                    CREATE TABLE my_vfs_table (
+                        d UInt64
+                    ) ENGINE = MergeTree()
+                    ORDER BY d
+                    SETTINGS storage_policy='external', allow_object_storage_vfs=1
+                    """,
+                )
 
-        with And("I insert some data"):
-            node.query(
-                f"INSERT INTO my_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
-            )
+            with And("I insert some data"):
+                node.query(
+                    f"INSERT INTO my_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
+                )
 
-        with Then("The data is accesssible"):
-            node.query(
-                f"SELECT count(*) FROM my_vfs_table",
-                message="1000000",
-            )
+            with Then("The data is accesssible"):
+                node.query(
+                    f"SELECT count(*) FROM my_vfs_table",
+                    message="1000000",
+                )
 
-        with When("VFS is no longer enabled"):
-            node.restart()
-            node.query(
-                "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
-                message='"allow_object_storage_vfs","0"',
-            )
+            with When("VFS is no longer enabled"):
+                node.restart()
+                node.query(
+                    "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
+                    message='"allow_object_storage_vfs","0"',
+                )
 
-        with Then("The data becomes inaccessible"):
-            r = node.query(f"SELECT count(*) FROM my_vfs_table")
-            pause(r.output)
+            with Then("The data becomes inaccessible"):
+                r = node.query(f"SELECT count(*) FROM my_vfs_table")
+                pause(r.output)
 
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
+            with Given("I enable allow_object_storage_vfs"):
+                enable_vfs()
 
-        with Then("The data becomes accessible again"):
-            r = node.query(f"SELECT count(*) FROM my_vfs_table")
-            pause(r.output)
+            with Then("The data becomes accessible again"):
+                r = node.query(f"SELECT count(*) FROM my_vfs_table")
+                pause(r.output)
 
-    finally:
-        with Finally("I drop the tables on each node"):
-            node.query("DROP TABLE IF EXISTS my_vfs_table SYNC")
+        finally:
+            with Finally("I drop the tables on each node"):
+                node.query("DROP TABLE IF EXISTS my_vfs_table SYNC")
 
-    try:
-        with Given("VFS is not enabled"):
-            r = node.query(
-                "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
-                message='"allow_object_storage_vfs","0"',
-            )
+    with Check("Create table without VFS and enable VFS"):
+        try:
+            with Given("VFS is not enabled"):
+                r = node.query(
+                    "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
+                    message='"allow_object_storage_vfs","0"',
+                )
 
-        with Given("I have a table without vfs"):
-            node.restart()
-            node.query(
-                f"""
-                CREATE TABLE my_non_vfs_table (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external', allow_object_storage_vfs=0
-                """,
-            )
+            with Given("I have a table without vfs"):
+                node.restart()
+                node.query(
+                    f"""
+                    CREATE TABLE my_non_vfs_table (
+                        d UInt64
+                    ) ENGINE = MergeTree()
+                    ORDER BY d
+                    SETTINGS storage_policy='external', allow_object_storage_vfs=0
+                    """,
+                )
 
-        with And("I insert some data"):
-            node.query(
-                f"INSERT INTO my_non_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
-            )
-            node.query(
-                f"SELECT count(*) FROM my_non_vfs_table",
-                message="1000000",
-            )
+            with And("I insert some data"):
+                node.query(
+                    f"INSERT INTO my_non_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
+                )
+                node.query(
+                    f"SELECT count(*) FROM my_non_vfs_table",
+                    message="1000000",
+                )
 
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
+            with Given("I enable allow_object_storage_vfs"):
+                enable_vfs()
 
-        with Then("The data remains accessible"):
-            r = node.query(f"SELECT count(*) FROM my_non_vfs_table")
-            pause(r.output)
+            with Then("The data remains accessible"):
+                r = node.query(
+                    f"SELECT count(*) FROM my_non_vfs_table",
+                    message="1000000",
+                )
 
-    finally:
-        with Finally("I drop the tables on each node"):
-            node.query("DROP TABLE IF EXISTS my_non_vfs_table SYNC")
+        finally:
+            with Finally("I drop the tables on each node"):
+                node.query("DROP TABLE IF EXISTS my_non_vfs_table SYNC")
 
 
 # @TestScenario
