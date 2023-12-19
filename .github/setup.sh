@@ -29,7 +29,7 @@ if [[ $clickhouse_binary_path == "docker"* ]]; then
     echo "clickhouse_binary_path=$clickhouse_binary_path" >> $GITHUB_ENV
     echo "Get specific ClickHouse package $clickhouse_binary_path..."
     docker pull $clickhouse_binary_path
-    if [[ $version == 'latest' ]]; then
+    if [[ $version == 'latest' || $version == '' ]]; then
         pid=$(docker run -d $clickhouse_binary_path)
         echo $pid
         ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
