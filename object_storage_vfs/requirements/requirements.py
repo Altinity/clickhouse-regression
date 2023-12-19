@@ -120,11 +120,56 @@ RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
     description=(
         "[Clickhouse] DiskObjectStorageVFS shares performance requirements with [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
     num="4.1.7",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_AWS = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.AWS",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support VFS on external storage using [AWS S3].\n" "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.1.8",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_MinIO = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.MinIO",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support VFS on external storage using MinIO.\n" "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.1.9",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_GCS = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.GCS",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support VFS on external storage using Google Cloud Storage.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.1.10",
 )
 
 SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
@@ -170,6 +215,9 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Performance", level=3, num="4.1.7"
         ),
+        Heading(name="RQ.SRS-038.DiskObjectStorageVFS.AWS", level=3, num="4.1.8"),
+        Heading(name="RQ.SRS-038.DiskObjectStorageVFS.MinIO", level=3, num="4.1.9"),
+        Heading(name="RQ.SRS-038.DiskObjectStorageVFS.GCS", level=3, num="4.1.10"),
         Heading(name="References", level=1, num="5"),
     ),
     requirements=(
@@ -180,6 +228,9 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_DeleteInParallel,
         RQ_SRS_038_DiskObjectStorageVFS_SharedSettings,
         RQ_SRS_038_DiskObjectStorageVFS_Performance,
+        RQ_SRS_038_DiskObjectStorageVFS_AWS,
+        RQ_SRS_038_DiskObjectStorageVFS_MinIO,
+        RQ_SRS_038_DiskObjectStorageVFS_GCS,
     ),
     content="""
 # SRS-038 ClickHouse Disk Object Storage VFS
@@ -242,6 +293,20 @@ version: 0.0
 
 [Clickhouse] DiskObjectStorageVFS shares performance requirements with [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
 
+#### RQ.SRS-038.DiskObjectStorageVFS.AWS
+version: 1.0
+
+[ClickHouse] SHALL support VFS on external storage using [AWS S3].
+
+#### RQ.SRS-038.DiskObjectStorageVFS.MinIO
+version: 1.0
+
+[ClickHouse] SHALL support VFS on external storage using MinIO.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.GCS
+version: 1.0
+
+[ClickHouse] SHALL support VFS on external storage using Google Cloud Storage.
 
 ## References
 
