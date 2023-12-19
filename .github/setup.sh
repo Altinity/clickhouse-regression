@@ -26,12 +26,11 @@ echo "Login to docker..."
 ./retry.sh 60 2 "docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD"
 
 if [[ $clickhouse_binary_path == "docker"* ]]; then
-    echo "clickhouse_binary_path=$clickhouse_binary_path:$version" >> $GITHUB_ENV
-    echo "Get specific ClickHouse version $version..."
-    docker_image=$(echo $clickhouse_binary_path | cut -c10- | cut -d: -f1):$version
-    docker pull $docker_image
+    echo "clickhouse_binary_path=$clickhouse_binary_path" >> $GITHUB_ENV
+    echo "Get specific ClickHouse package $clickhouse_binary_path..."
+    docker pull $clickhouse_binary_path
     if [[ $version == 'latest' ]]; then
-        pid=$(docker run -d $docker_image)
+        pid=$(docker run -d $clickhouse_binary_path)
         echo $pid
         ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
         echo "version=$(docker exec $pid clickhouse-client -q 'SELECT version()')" >> $GITHUB_ENV
