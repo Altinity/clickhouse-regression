@@ -10,7 +10,7 @@ on:
         default: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
       version:
         description: "Expected version. Example: 23.3.1.64"
-        required: true
+        required: false
         type: string
         default: 23.8.5.17.altinitytest
       suite:
