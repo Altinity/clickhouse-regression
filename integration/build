@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+import os, json, time, subprocess
+
+from testflows.core import *
+
+
+def argparser(parser):
+    parser.add_argument(
+        "--root-dir",
+        help="ClickHouse source root directory",
+        required=True,
+    )
+    parser.add_argument(
+        "--image-tag",
+        help="tag to be used for all the images, default: latest",
+        default="latest",
+    )
+    parser.add_argument(
+        "--image-timeout",
+        help="timeout to build a single image or wait for one of its dependencies",
+    )
+
+
+@TestStep(Given)
+def sysprocess(self, command):
+    """Start command."""
+
+    proc = subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        encoding="utf-8",
+        shell=True,
+    )
+    try:
+        yield proc
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+
+        while proc.poll() is None:
+            debug(f"waiting for {proc} to exit")
+            time.sleep(1)
+
+
+@TestStep(Given)
+def syscommand(self, command, timeout=None):
+    """Execute command."""
+    proc = sysprocess(command=command)
+
+    while proc.poll() is None:
+        with timer(timeout, f"command '{command}' took too long"):
+            if self.terminating:
+                break
+            message(f"{proc.stdout.readline()}", stream=name)
+
+    assert proc.returncode == 0, f"command {command} failed with non-zero exitcode {proc.returncode}"
+
+
+
+@TestScenario
+def build_image(self, path, name, dependent, tag="latest", timeout=None):
+    """Build single image in specified path and with the specified name
+    and tag taking account any dependent images that must be build first.
+    """
+    with By(f"waiting for dependent images to be ready"):
+        for d in dependent:
+            with By(f"waiting for {d} to be ready"):
+                while d not in self.context.ready:
+                    with timer(timeout, f"waiting for depended {d} image to be ready"):
+                        time.sleep(1)
+
+    command = (
+        f"cd {path}; docker build -t {name}:{tag} ."
+    )
+
+    with And("launching build command"):
+        proc = sysprocess(command=command)
+
+    while proc.poll() is None:
+        with timer(timeout, f"building image took too long"):
+            if self.terminating:
+                break
+            message(f"{proc.stdout.readline()}", stream=name)
+
+    assert proc.returncode == 0, f"failed to build {name} at {path}"
+
+    self.context.ready.append(path)
+
+
+@TestFeature
+def build_images(self, root_dir, image_tag="latest", timeout=None):
+    """Build all images."""
+    self.context.ready = []
+
+    with Given("I load images.json definitions"):
+        with open(os.path.join(root_dir, "docker", "images.json")) as images_json:
+            images_json = json.load(images_json)
+
+
+    with And("I create images dictionary"):
+        images = {}
+        for path in images_json:
+            image = images_json[path]
+            image["tag"] = image_tag
+
+            dependents = []
+            for dependent in image["dependent"]:
+                dependents.append(os.path.join(root_dir, dependent))
+
+            # use the original runner image as the base
+            if image["name"] == "clickhouse/integration-tests-runner":
+                image["tag"] = f"{image['tag']}.base"
+                dependents.append(os.path.join(current_dir(), "runner"))
+
+            images[os.path.join(root_dir, path)] = {
+                "name": image["name"],
+                "dependent": dependents,
+                "tag": image["tag"]
+            }
+
+        # add customized testflows wrapper compatible runner image
+        images[os.path.join(current_dir(), "runner")] = {
+            "name": "clickhouse/integration-tests-runner",
+            "tag": image_tag,
+            "dependent": [],
+        }
+
+        debug(json.dumps(images, indent=2))
+
+
+    with And("I build a dictionary of image dependencies"):
+        dependents = {}
+
+        for path in images:
+            if path not in dependents:
+                dependents[path] = []
+            for _path, _image in images.items():
+                dependent = _image["dependent"]
+                if path in dependent:
+                    dependents[path].append(_path)
+
+        debug(json.dumps(dependents, indent=2))
+
+    with Pool() as executor:
+        for path, image in images.items():
+            name = image["name"]
+            tag = image["tag"]
+            dependent = dependents[path]
+            Scenario(
+                name=f"build {name}:{tag}",
+                description=f"depends on {dependent}",
+                test=build_image,
+                executor=executor,
+                parallel=True,
+            )(path=path, name=name, dependent=dependent, tag=tag, timeout=timeout)
+
+        join()
+
+    return images
+
+
+@TestScenario
+def save_images(self, images):
+    """Save images to tar file."""
+    command = "docker save -o images.tar " + " ".join([f"{image['name']}:{image['tag']}" for image in images.values])
+    syscommand(command=command)
+
+
+@TestFeature
+@ArgumentParser(argparser)
+def build(self, root_dir, image_tag, image_timeout=None):
+    """Test program to manually build all docker images."""
+
+    images = build_images(root_dir=root_dir, image_tag=image_tag, timeout=image_timeout)
+    save_images(images=images)
+
+
+if main():
+    build()
