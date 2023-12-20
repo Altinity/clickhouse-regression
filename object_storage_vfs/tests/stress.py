@@ -18,13 +18,14 @@ def stress_inserts(self):
     max_inserts = 50_000_000
     n_cols = 200
 
-    columns = ", ".join([f"d{i} UInt64" for i in range(n_cols)])
+    columns = ", ".join([f"d{i} UInt8" for i in range(n_cols)])
 
     def insert_sequence():
-        n = 5
-        yield n
+        n = 1000
         while n < max_inserts:
             n = min(n * 10, max_inserts)
+            yield n//4
+            yield n//2
             yield n
 
     try:
@@ -47,14 +48,15 @@ def stress_inserts(self):
                     SETTINGS storage_policy='external', allow_object_storage_vfs=1
                     """
                 )
-        pause()
+
         for n_inserts in insert_sequence():
             with When(f"I perform {n_inserts:,} individual inserts"):
                 node.query(
                     f"""
                     INSERT INTO vfs_stress_test SELECT * FROM generateRandom('{columns}') 
                     LIMIT {n_inserts} SETTINGS max_insert_block_size=1,  max_insert_threads=32
-                    """
+                    """,
+                    timeout=600,
                 )
 
     finally:
