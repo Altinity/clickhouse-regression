@@ -12,16 +12,20 @@ from object_storage_vfs.requirements import *
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("0.0"))
 def stress_inserts(self):
     """
-    Check that performing tens of millions of individual inserts does not lose data
+    Check that performing tens of millions of individual inserts does not cause data to be lost
     """
     cluster = self.context.cluster
 
-    max_inserts = 50_000_0#00
-    n_cols = 200
+    max_inserts = 50_000_000
+    n_cols = 40
 
     columns = ", ".join([f"d{i} UInt8" for i in range(n_cols)])
 
     def insert_sequence():
+        """
+        Produce a sequence of increasing numbers.
+        It is desireable to know how close ClickHouse gets to max_inserts before failing.
+        """
         n = 1000
         while n < max_inserts:
             n = min(n * 10, max_inserts)
@@ -49,7 +53,8 @@ def stress_inserts(self):
                     SETTINGS storage_policy='external', allow_object_storage_vfs=1
                     """
                 )
-        pause()
+
+        total_rows = 0
         for n_inserts in insert_sequence():
             with When(f"I perform {n_inserts:,} individual inserts"):
                 nodes[0].query(
@@ -57,23 +62,25 @@ def stress_inserts(self):
                     INSERT INTO vfs_stress_test SELECT * FROM generateRandom('{columns}') 
                     LIMIT {n_inserts} SETTINGS max_insert_block_size=1, max_insert_threads=32
                     """,
+                    exitcode=0,
                     timeout=600,
                 )
+                total_rows += n_inserts
 
-        with When("I drop a column on each node"):
-            nodes[0].query("ALTER TABLE vfs_stress_test DROP COLUMN d1")
-            nodes[1].query("ALTER TABLE vfs_stress_test DROP COLUMN d2")
+            with Then(f"there should be {total_rows} rows"):
+                r = nodes[0].query("SELECT count() FROM vfs_stress_test")
+                assert r.output == str(total_rows), error()
 
-        with When("I describe table"):
-            r0 = nodes[0].query("DESCRIBE TABLE vfs_stress_test")
-            r1 = nodes[1].query("DESCRIBE TABLE vfs_stress_test")
+        with When("I perform optimize on each node"):
+            for node in nodes:
+                node.query("OPTIMIZE TABLE vfs_stress_test")
 
-        with Then("The descriptions should match"):
-            assert r0.output == r1.output, error()
+        with Then(f"there should still be {total_rows} rows"):
+            r0 = nodes[0].query("SELECT count() FROM vfs_stress_test")
+            r1 = nodes[1].query("SELECT count() FROM vfs_stress_test")
 
-        with Then("The dropped columns should be absent"):
-            assert "d2" not in r0.output, error()
-            assert "d1" not in r1.output, error()
+            assert r0.output == r1.output == str(total_rows), error()
+
 
     finally:
         with Finally("I drop the table on each node"):
