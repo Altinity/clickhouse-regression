@@ -7,7 +7,7 @@ from object_storage_vfs.requirements import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings("1.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible("1.0"))
 def incompatible_with_zero_copy(self):
     """
     Check that using zero copy replication when vfs is enabled is not allowed.
@@ -24,7 +24,9 @@ def incompatible_with_zero_copy(self):
         with Given("I enable allow_object_storage_vfs"):
             enable_vfs()
 
-        with When("I create a replicated table on each node"):
+        with When(
+            "I create a replicated table on each node with both vfs and 0-copy enabled"
+        ):
             for i, node in enumerate(nodes):
                 r = node.query(
                     f"""
@@ -36,7 +38,7 @@ def incompatible_with_zero_copy(self):
                 """
                 )
 
-        with Then("Exitcode should not be zero"):
+        with Then("I expect it to fail"):
             assert r.exitcode != 0
 
     finally:
@@ -46,15 +48,15 @@ def incompatible_with_zero_copy(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings("1.0"))
-def error_when_disabled(self):
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"))
+def local_setting(self):
     """
-    Check that using allow_object_storage_vfs when vfs is not enabled is not allowed.
+    Check that using allow_object_storage_vfs can be enabled per-table
     """
     node = current().context.node
 
     try:
-        with When("VFS is not enabled"):
+        with Given("VFS is not enabled"):
             node.query(
                 "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
                 message='"allow_object_storage_vfs","0"',
@@ -69,10 +71,8 @@ def error_when_disabled(self):
                 ORDER BY d
                 SETTINGS storage_policy='external', allow_object_storage_vfs=1
                 """,
+                exitcode=0,
             )
-
-        with Then("Exitcode should not be zero"):
-            assert r.exitcode != 0
 
     finally:
         with Finally("I drop the table"):
@@ -80,10 +80,10 @@ def error_when_disabled(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_PreservesData("1.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Integrity_VFSToggled("1.0"))
 def disable_vfs_with_vfs_table(self):
     """
-    Check that toggling allow_object_storage_vfs does not cause data to be deleted.
+    Check that removing global allow_object_storage_vfs=1 when a vfs table exists does not cause data to become inaccessible.
     """
     node = current().context.node
 
@@ -123,7 +123,8 @@ def disable_vfs_with_vfs_table(self):
 
             with Then("The data becomes inaccessible"):
                 r = node.query(
-                    f"SELECT count(*) FROM my_vfs_table FORMAT JSON", message='"count()": "0"'
+                    f"SELECT count(*) FROM my_vfs_table FORMAT JSON",
+                    message='"count()": "0"',
                 )
 
         with Check("Enable vfs and access the table"):
@@ -142,10 +143,10 @@ def disable_vfs_with_vfs_table(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_PreservesData("1.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Integrity_VFSToggled("1.0"))
 def enable_vfs_with_non_vfs_table(self):
     """
-    Check that toggling allow_object_storage_vfs does not cause data to be deleted.
+    Check that globally enabling allow_object_storage_vfs when a non-vfs table exists does not cause data to become inaccessible.
     """
 
     node = current().context.node
@@ -191,27 +192,12 @@ def enable_vfs_with_non_vfs_table(self):
             node.query("DROP TABLE IF EXISTS my_non_vfs_table SYNC")
 
 
-# @TestScenario
-# @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Migration("1.0"))
-# def migration(self):
-#     pass
-
-
-# @TestScenario
-# @Requirements(RQ_SRS_038_DiskObjectStorageVFS_DeleteInParallel("1.0"))
-# def parallel_delete(self):
-#     pass
-
-
-# @TestScenario
-# @Requirements(RQ_SRS_038_DiskObjectStorageVFS_SharedSettings("1.0"))
-# def shared_settings(self):
-#     pass
-
-
-# RQ_SRS_038_DiskObjectStorageVFS_AWS
-# RQ_SRS_038_DiskObjectStorageVFS_MinIO
-# RQ_SRS_038_DiskObjectStorageVFS_GCS
+# RQ_SRS_038_DiskObjectStorageVFS_Core_Delete,
+# RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel,
+# RQ_SRS_038_DiskObjectStorageVFS_Settings_Global,
+# RQ_SRS_038_DiskObjectStorageVFS_Settings_Local,
+# RQ_SRS_038_DiskObjectStorageVFS_Settings_SharedSettings,
+# RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration,
 
 
 @TestOutline(Feature)
