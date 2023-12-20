@@ -9,15 +9,17 @@ from helpers.cluster import create_cluster
 from s3.regression import argparser
 from s3.tests.common import enable_vfs, start_minio
 
-from object_storage_vfs.requirements import SRS_038_ClickHouse_Disk_Object_Storage_VFS
+from object_storage_vfs.requirements import *
 
 xfails = {}
 
 ffails = {}
 
+# RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS,
+# RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS,
 
 @TestModule
-@Name("minio")
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
 def minio_regression(
     self,
     uri,
