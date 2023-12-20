@@ -149,7 +149,6 @@ version: 1.0
 | Partition with only [compact] parts               |
 | Partition with only [wide] parts                  |
 | Partition with [compact] and [wide] parts (mixed) |
-| Partition with no parts                           |
 | Partition with empty parts                        |
 
 The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.
@@ -305,9 +304,9 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same indices and projections.
 
-#### Tables With The Same Partition Key
+#### Partition Key Condtitions
 
-##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey
 version: 1.0
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [desctination table]. 

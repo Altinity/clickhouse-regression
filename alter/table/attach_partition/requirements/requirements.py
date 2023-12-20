@@ -76,13 +76,12 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartitionTypes = Requirement(
     type=None,
     uid=None,
     description=(
-        "| Partition Types                               |\n"
-        "|-----------------------------------------------|\n"
-        "| Partition with only compact parts             |\n"
-        "| Partition with only wide parts                |\n"
-        "| Partition with compact and wide parts (mixed) |\n"
-        "| Partition with no parts                       |\n"
-        "| Partition with empty parts                    |\n"
+        "| Partition Types                                   |\n"
+        "|---------------------------------------------------|\n"
+        "| Partition with only [compact] parts               |\n"
+        "| Partition with only [wide] parts                  |\n"
+        "| Partition with [compact] and [wide] parts (mixed) |\n"
+        "| Partition with empty parts                        |\n"
         "\n"
         "The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.\n"
         "\n"
@@ -348,8 +347,8 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_IndicesAnd
     num="11.7.5.1",
 )
 
-RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_Key_PartitionKey = Requirement(
-    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey",
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey",
     version="1.0",
     priority=None,
     group=None,
@@ -409,6 +408,8 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         Heading(name="Definitions", level=1, num="3"),
         Heading(name="Source Table", level=2, num="3.1"),
         Heading(name="Destination Table", level=2, num="3.2"),
+        Heading(name="Compact part_type", level=2, num="3.3"),
+        Heading(name="Wide part_type", level=2, num="3.4"),
         Heading(name="Attaching Partitions or Parts", level=1, num="4"),
         Heading(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition", level=2, num="4.1"
@@ -545,9 +546,9 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
             level=4,
             num="11.7.5.1",
         ),
-        Heading(name="Tables With The Same Partition Key", level=3, num="11.7.6"),
+        Heading(name="Partition Key Condtitions", level=3, num="11.7.6"),
         Heading(
-            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey",
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey",
             level=4,
             num="11.7.6.1",
         ),
@@ -582,7 +583,7 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_Key_PrimaryKey,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_StoragePolicy,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_IndicesAndProjections,
-        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_Key_PartitionKey,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_RBAC,
     ),
     content="""
@@ -670,6 +671,16 @@ The table from which a partition or part is taken.
 
 The table to which a partition or part is going to be attached.
 
+### Compact part_type
+
+All columns are stored in one file in a filesystem.
+
+### Wide part_type
+
+Each column is stored in a separate file in a filesystem.
+
+Data storing format is controlled by the min_bytes_for_wide_part and min_rows_for_wide_part settings of the MergeTree table.
+
 ## Attaching Partitions or Parts
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition
@@ -722,13 +733,12 @@ version: 1.0
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes
 version: 1.0
 
-| Partition Types                               |
-|-----------------------------------------------|
-| Partition with only compact parts             |
-| Partition with only wide parts                |
-| Partition with compact and wide parts (mixed) |
-| Partition with no parts                       |
-| Partition with empty parts                    |
+| Partition Types                                   |
+|---------------------------------------------------|
+| Partition with only [compact] parts               |
+| Partition with only [wide] parts                  |
+| Partition with [compact] and [wide] parts (mixed) |
+| Partition with empty parts                        |
 
 The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.
 
@@ -883,9 +893,9 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same indices and projections.
 
-#### Tables With The Same Partition Key
+#### Partition Key Condtitions
 
-##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey
 version: 1.0
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [desctination table]. 
@@ -910,6 +920,8 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 [Git]: https://git-scm.com/
 [source table]: #source-table
 [destination table]: #destination-table
+[compact]: #compact-part_type
+[wide]: #wide-part_type
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
 [Revision History]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
