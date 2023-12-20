@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, json, time, subprocess
+import os, json, time, subprocess, shlex
 
 from testflows.core import *
 
@@ -161,10 +161,14 @@ def build_images(self, root_dir, image_tag="latest", timeout=None):
 
 
 @TestScenario
-def save_images(self, images):
+def save_images(self, images, path=None):
     """Save images to tar file."""
-    command = "docker save -o images.tar " + " ".join([f"{image['name']}:{image['tag']}" for image in images.values])
-    syscommand(command=command)
+    if path is None:
+        path = os.path.join(current_dir(), "images.tar")
+
+    with By("saving all images to file"):
+        command = define("command", f"docker save -o {shlex.quote(path)} " + " ".join([shlex.quote(f"{image['name']}:{image['tag']}") for image in images.values()]))
+        syscommand(command=command)
 
 
 @TestFeature
