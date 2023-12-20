@@ -170,11 +170,14 @@ def attach_partition_from_monotonical_increase(
 
     with And("I attach partition from source table into destination table"):
         partition = "20231221"
-        node.query(f"select partition_id from system.parts where table='{destination_table_name}'")
+        node.query(
+            f"select partition_id from system.parts where table='{destination_table_name}'"
+        )
         query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition}' FROM {source_table_name}"
         node.query(query)
-        node.query(f"select partition_id from system.parts where table='{destination_table_name}'")
-
+        node.query(
+            f"select partition_id from system.parts where table='{destination_table_name}'"
+        )
 
     with Then("I check that specidied partition was attached"):
         source_partition_data = node.query(
