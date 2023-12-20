@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Integration tests high-level runner using TestFlows framework.
 """
 import os
@@ -22,6 +23,12 @@ from steps import *
 
 
 def argparser(parser):
+    parser.add_argument(
+        "--root-dir",
+        help="ClickHouse source root directory",
+        required=True,
+    )
+
     parser.add_argument(
         "--binary",
         type=str,
@@ -173,7 +180,7 @@ def collect_tests(self, timeout=300):
     """Collect a list of all tests using pytest --setup-plan command."""
     tests = []
     command = (
-        f"set -o pipefail && {os.path.join(current_dir(), 'runner')} {runner_opts()} -- --setup-plan "
+        f"set -o pipefail && {self.context.runner} {runner_opts()} -- --setup-plan "
         "| grep -F '::' | sed -r 's/ \(fixtures used:.*//g; s/^ *//g; s/ *$//g' "
         f"| grep -v -F 'SKIPPED' | sort --unique"
     )
@@ -198,11 +205,13 @@ def launch_runner(self, run_id, tests, in_parallel=None):
     """Launch integration tests runner script."""
 
     with By("creating temporary file for the report"):
-        log = temporary_file(mode="r", suffix=".pytest.jsonl", dir=current_dir())
+        log = temporary_file(
+            mode="r", suffix=".pytest.jsonl", dir=os.path.dirname(self.context.runner)
+        )
 
     command = define(
         "command",
-        f"{os.path.join(current_dir(), 'runner')}"
+        f"{self.context.runner}"
         + runner_opts()
         + f" -t {' '.join([shlex.quote(test) for test in sorted(tests)])}"
         + f" --docker-image-version {self.context.docker_image_version}"
@@ -368,6 +377,7 @@ def execute(
 @ArgumentParser(argparser)
 def regression(
     self,
+    root_dir,
     binary,
     tests=None,
     tests_slice=None,
@@ -388,7 +398,9 @@ def regression(
     dockerd_volume_dir=None,
 ):
     """Execute ClickHouse pytest integration tests."""
+    self.context.root_dir = root_dir
     # propagate runner options
+    self.context.runner = os.path.join(root_dir, "tests", "integration", "runner")
     self.context.docker_image_version = images_tag
     self.context.analyzer = analyzer
     self.context.tmpfs = tmpfs
@@ -438,9 +450,9 @@ def regression(
         with Feature("build images"):
             build_images = load_module(
                 "buildimages",
-                path=os.path.join(current_dir(), "..", "..", "docker", "build"),
+                path=os.path.join(current_dir(), "build"),
             ).build_images
-            build_images(tag=images_tag, timeout=300)
+            build_images(root_dir=root_dir, image_tag=images_tag)
 
     Feature("group", description="execute tests in groups", test=execute)(
         tests=tests,
