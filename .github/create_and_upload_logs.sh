@@ -17,10 +17,10 @@ then
     confidential=""
     if [[ $event_name == "pull_request" ]];
     then
-        artifact_s3_dir="PRs/$pr_number/$GITHUB_SHA/regression"
+        artifact_s3_dir="PRs/$pr_number/$build_sha/regression"
     elif [[ $event_name == "release" ]];
     then
-        artifact_s3_dir="0/$GITHUB_SHA/regression"
+        artifact_s3_dir="0/$build_sha/regression"
     fi
     
 fi
