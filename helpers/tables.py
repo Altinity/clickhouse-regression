@@ -546,6 +546,37 @@ def create_table_partitioned_by_column(
 
 
 @TestStep(Given)
+def create_table_partitioned_by_columns(
+    self,
+    table_name,
+    engine="MergeTree",
+    partition_by="a",
+    columns=None,
+    query_settings=None,
+    order_by="tuple()",
+):
+    """Create a table that is partitioned by a specific column."""
+
+    if columns is None:
+        columns = [
+            Column(name="a", datatype=UInt16()),
+            Column(name="b", datatype=UInt16()),
+            Column(name="i", datatype=UInt64()),
+        ]
+
+    with By(f"creating a table that is partitioned by a '{partition_by}' column "):
+        create_table(
+            name=table_name,
+            engine=engine,
+            partition_by=partition_by,
+            order_by=order_by,
+            columns=columns,
+            query_settings=query_settings,
+            if_not_exists=True,
+        )
+
+
+@TestStep(Given)
 def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
     """Attach a table with specified name and engine."""
     if name is None:

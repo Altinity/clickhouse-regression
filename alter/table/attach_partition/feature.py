@@ -12,7 +12,12 @@ def feature(self):
     """Run features from the attach partition suite."""
     with Pool(2) as pool:
         Feature(
-            run=load("alter.table.attch_partition.partition_types", "feature"),
+            run=load("alter.table.attach_partition.partition_types", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load("alter.table.attach_partition.partition_key", "feature"),
             parallel=True,
             executor=pool,
         )
