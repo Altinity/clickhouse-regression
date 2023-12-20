@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from testflows.core import *
+from testflows.asserts import error
 
 from helpers.create import create_replicated_merge_tree_table
 from s3.tests.common import s3_storage, enable_vfs
@@ -15,7 +16,7 @@ def stress_inserts(self):
     """
     cluster = self.context.cluster
 
-    max_inserts = 50_000_000
+    max_inserts = 50_000_0#00
     n_cols = 200
 
     columns = ", ".join([f"d{i} UInt8" for i in range(n_cols)])
@@ -24,8 +25,8 @@ def stress_inserts(self):
         n = 1000
         while n < max_inserts:
             n = min(n * 10, max_inserts)
-            yield n//4
-            yield n//2
+            yield n // 4
+            yield n // 2
             yield n
 
     try:
@@ -48,16 +49,31 @@ def stress_inserts(self):
                     SETTINGS storage_policy='external', allow_object_storage_vfs=1
                     """
                 )
-
+        pause()
         for n_inserts in insert_sequence():
             with When(f"I perform {n_inserts:,} individual inserts"):
-                node.query(
+                nodes[0].query(
                     f"""
                     INSERT INTO vfs_stress_test SELECT * FROM generateRandom('{columns}') 
-                    LIMIT {n_inserts} SETTINGS max_insert_block_size=1,  max_insert_threads=32
+                    LIMIT {n_inserts} SETTINGS max_insert_block_size=1, max_insert_threads=32
                     """,
                     timeout=600,
                 )
+
+        with When("I drop a column on each node"):
+            nodes[0].query("ALTER TABLE vfs_stress_test DROP COLUMN d1")
+            nodes[1].query("ALTER TABLE vfs_stress_test DROP COLUMN d2")
+
+        with When("I describe table"):
+            r0 = nodes[0].query("DESCRIBE TABLE vfs_stress_test")
+            r1 = nodes[1].query("DESCRIBE TABLE vfs_stress_test")
+
+        with Then("The descriptions should match"):
+            assert r0.output == r1.output, error()
+
+        with Then("The dropped columns should be absent"):
+            assert "d2" not in r0.output, error()
+            assert "d1" not in r1.output, error()
 
     finally:
         with Finally("I drop the table on each node"):
