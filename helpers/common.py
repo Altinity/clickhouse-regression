@@ -632,7 +632,7 @@ def replace_partition(
 @TestStep(When)
 def attach_partition(
     self,
-    destination_table,
+    table,
     partition=1,
     exitcode=None,
     user_name=None,
@@ -640,12 +640,12 @@ def attach_partition(
     node=None,
     additional_parameters=None,
 ):
-    """Adds a partition or part from the detached directory to the table."""
+    """Attaches a partition from the detached directory to the table."""
     if node is None:
         node = self.context.node
 
     params = {}
-    query = f"ALTER TABLE {destination_table} ATTACH PARTITION {partition}"
+    query = f"ALTER TABLE {table} ATTACH PARTITION {partition}"
 
     if additional_parameters is not None:
         query += f" {additional_parameters}"
@@ -662,9 +662,42 @@ def attach_partition(
 
 
 @TestStep(When)
-def detach_partition(
+def attach_partition_from(
     self,
     destination_table,
+    source_table,
+    partition=1,
+    exitcode=None,
+    user_name=None,
+    message=None,
+    node=None,
+    additional_parameters=None,
+):
+    """Attach partition to the destination table from the source table."""
+    if node is None:
+        node = self.context.node
+
+    params = {}
+    query = f"ALTER TABLE {destination_table} ATTACH PARTITION {partition} FROM {source_table}"
+
+    if additional_parameters is not None:
+        query += f" {additional_parameters}"
+
+    with By("Executing the ATTACH PARTITION FROM command"):
+        if user_name is not None:
+            params["settings"] = [("user", user_name)]
+        if message is not None:
+            params["message"] = message
+        if exitcode is not None:
+            params["exitcode"] = exitcode
+
+        node.query(query, **params)
+
+
+@TestStep(When)
+def detach_partition(
+    self,
+    table,
     partition=1,
     exitcode=None,
     user_name=None,
@@ -677,7 +710,7 @@ def detach_partition(
         node = self.context.node
 
     params = {}
-    query = f"ALTER TABLE {destination_table} DETACH PARTITION {partition}"
+    query = f"ALTER TABLE {table} DETACH PARTITION {partition}"
 
     if additional_parameters is not None:
         query += f" {additional_parameters}"
