@@ -209,11 +209,6 @@ def enable_vfs_with_non_vfs_table(self):
 #     pass
 
 
-# @TestScenario
-# @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
-# def performance(self):
-#     pass
-
 # RQ_SRS_038_DiskObjectStorageVFS_AWS
 # RQ_SRS_038_DiskObjectStorageVFS_MinIO
 # RQ_SRS_038_DiskObjectStorageVFS_GCS

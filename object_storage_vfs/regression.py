@@ -52,6 +52,11 @@ def minio_regression(
         uri=uri_bucket_file, key=root_user, secret=root_password
     )
 
+    if self.context.stress:
+        Feature(test=load("object_storage_vfs.tests.stress", "outline"))(
+            uri=uri_bucket_file, key=root_user, secret=root_password
+        )
+
 
 @TestModule
 @Name("vfs")
@@ -85,6 +90,7 @@ def regression(
         skip("VFS is not enabled")
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.stress = stress
 
     Module(test=minio_regression)(
         local=local,
