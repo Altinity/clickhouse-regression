@@ -147,7 +147,6 @@ def argparser(parser):
     )
 
 
-@TestStep
 def runner_opts(self):
     """Return runner script options."""
     return (
