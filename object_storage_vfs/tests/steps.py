@@ -3,7 +3,7 @@ from testflows.core import *
 from testflows.asserts import error
 
 from helpers.common import getuid
-from s3.tests.common import s3_storage, enable_vfs
+from s3.tests.common import s3_storage, enable_vfs, check_bucket_size, get_bucket_size
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 

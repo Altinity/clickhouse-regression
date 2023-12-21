@@ -39,9 +39,24 @@ def local_setting(self):
         assert r.exitcode == 0, error()
 
 
-# RQ_SRS_038_DiskObjectStorageVFS_Settings_Global,
-# RQ_SRS_038_DiskObjectStorageVFS_Settings_Local,
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Global("1.0"))
+def global_setting(self):
+    """
+    Check that allow_object_storage_vfs can be enabled globally
+    """
+    with Given("VFS is globally enabled"):
+        enable_vfs()
+
+    with Then("creating a table is successful"):
+        r = replicated_table(
+            table_name="my_vfs_table",
+        )
+        assert r.exitcode == 0, error()
+
+
 # RQ_SRS_038_DiskObjectStorageVFS_Settings_SharedSettings,
+
 
 @TestFeature
 @Name("settings")
