@@ -147,8 +147,9 @@ def argparser(parser):
     )
 
 
-def runner_opts(self):
+def runner_opts():
     """Return runner script options."""
+    self = current()
     return (
         f" --binary {self.context.binary}"
         + f" --odbc-bridge-binary {self.context.odbc_bridge_binary}"
@@ -427,16 +428,16 @@ def regression(
         load_saved_images()
 
     if not tests:
-        with And("automatically collect all tests"):
+        with Given("automatically collect all tests"):
             all_tests = collect_tests()
     else:
         all_tests = tests
 
     if deselect:
-        with And(f"deselect {len(deselect)} tests"):
+        with Given(f"deselect {len(deselect)} tests"):
             all_tests = [test for test in all_tests if test not in deselect]
 
-    with And("select slice of tests"):
+    with Given("select slice of tests"):
         all_tests = all_tests[slice(*tests_slice)]
 
     with And("select tests for the choose part"):
