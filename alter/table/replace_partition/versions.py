@@ -1,40 +1,26 @@
 import random
-from time import sleep
 
 from testflows.core import *
-from alter.table.replace_partition.requirements.requirements import (
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Versions,
-)
-from helpers.common import getuid
+
 from alter.table.replace_partition.common import (
-    create_partitions_with_random_uint64,
     replace_partition_and_validate_data,
     create_two_tables_partitioned_by_column_with_data,
     create_table_partitioned_by_column_with_data,
 )
+from alter.table.replace_partition.requirements.requirements import (
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Versions,
+)
+from helpers.common import getuid
 
 
 @TestStep(Given)
 def copy_23_3_version(self):
+    """Copy the existing binary file to the separate directory in order to save it."""
     node_23_3 = self.context.node_23_3
 
     node_23_3.command("mkdir /usr/bin/clickhouse_23_3")
     node_23_3.command("cp /usr/bin/clickhouse /usr/bin/clickhouse_23_3")
     node_23_3.command("cp /usr/bin/clickhouse-odbc-bridge /usr/bin/clickhouse_23_3")
-
-
-@TestStep(Given)
-def create_table_on_cluster(self, table_name):
-    """Create table on a cluster"""
-
-    node = self.context.node_23_3
-
-    with By("creating a MergeTree table on a replicated_different_versions cluster"):
-        node.query(
-            f"CREATE TABLE {table_name} ON CLUSTER replicated_different_versions (p Int16, i UInt64) "
-            f"ENGINE=ReplicatedMergeTree('/clickhouse/tables/{{shard}}/default/{table_name}', '{{replica}}') ORDER BY "
-            f"tuple() PARTITION BY p"
-        )
 
 
 @TestStep(When)
@@ -45,7 +31,6 @@ def change_version_to_23_3(self):
     with By("moving the ClickHouse 23.3 binary to /usr/bin and restarting it"):
         node_23_3.stop_clickhouse(safe=False)
 
-        # remove_clickhouse_binaries()
         node_23_3.command("cp /usr/bin/clickhouse_23_3/* /usr/bin")
         node_23_3.start_clickhouse(check_version=False)
 
@@ -60,7 +45,6 @@ def change_version_to_selected(self):
     ):
         node_23_3.stop_clickhouse(safe=False)
 
-        # remove_clickhouse_binaries()
         node_23_3.command("cp /usr/bin/clickhouse_selected_version/* /usr/bin")
         node_23_3.start_clickhouse(check_version=False)
 
