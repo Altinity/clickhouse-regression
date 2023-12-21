@@ -7,6 +7,16 @@ from helpers.common import (
     getuid,
 )
 from helpers.tables import *
+from alter.table.replace_partition.engines import partitioned_replicated_merge_tree_table
+
+
+def columns():
+    columns = [
+            Column(name="a", datatype=UInt16()),
+            Column(name="b", datatype=UInt16()),
+            Column(name="i", datatype=UInt64()),
+        ]
+    return columns
 
 
 @TestScenario
@@ -28,24 +38,24 @@ def attach_partition_from_partitioned_to_unpartitioned(
                source table: {source_table_engine}
                """,
     ):
-        columns = [
-            Column(name="a", datatype=UInt16()),
-            Column(name="b", datatype=UInt16()),
-            Column(name="i", datatype=UInt64()),
-        ]
+        create_table(
+            name=source_table_name,
+            engine=source_table_engine,
+            order_by="tuple()",
+            partition_by="a",
+            columns=columns(),
+            if_not_exists=True,
+        )
         create_table(
             name=destination_table_name,
             engine=destination_table_engine,
             order_by="tuple()",
-            columns=columns,
+            columns=columns(),
             if_not_exists=True,
-        )
-        create_table_partitioned_by_columns(
-            table_name=source_table_name, partition_by="a", engine=source_table_engine
         )
 
     with And(
-        f"I insert data into tables that will create different partitions for tables"
+        f"I insert data into tables that will create partitions for partitioned table"
     ):
         insert_data(node=node, table_name=source_table_name, number_of_values=10)
         insert_data(
@@ -53,8 +63,8 @@ def attach_partition_from_partitioned_to_unpartitioned(
         )
 
     with And("I attach partition from source table into destination table"):
-        partition = "1"
-        query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition}' FROM {source_table_name}"
+        partition_id = "1"
+        query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
         node.query(query)
 
     with Then("I check that specidied partition was attached"):
@@ -64,6 +74,7 @@ def attach_partition_from_partitioned_to_unpartitioned(
         destination_partition_data = node.query(
             f"SELECT * from {destination_table_name} where a = 1 order by a,b"
         ).output
+
         assert source_partition_data == destination_partition_data
 
 
@@ -86,15 +97,21 @@ def attach_partition_from_subset(
                source table: {source_table_engine}
                """,
     ):
-        create_table_partitioned_by_columns(
-            table_name=source_table_name,
-            partition_by="(a,b)",
+        create_table(
+            name=source_table_name,
             engine=source_table_engine,
+            order_by="tuple()",
+            partition_by="(a,b)",
+            columns=columns(),
+            if_not_exists=True,
         )
-        create_table_partitioned_by_columns(
-            table_name=destination_table_name,
-            partition_by="a",
+        create_table(
+            name=destination_table_name,
             engine=destination_table_engine,
+            order_by="tuple()",
+            partition_by="a",
+            columns=columns(),
+            if_not_exists=True,
         )
 
     with And(
@@ -117,12 +134,13 @@ def attach_partition_from_subset(
         destination_partition_data = node.query(
             f"SELECT * from {destination_table_name} where a = 1 order by a,b"
         ).output
+
         assert source_partition_data == destination_partition_data
 
 
 @TestScenario
 @Flags(TE)
-def attach_partition_from_monotonical_increase(
+def attach_partition_from_subset_date(
     self, source_table_engine="MergeTree", destination_table_engine="MergeTree"
 ):
     """Check `attach partition from` when destination partition expression monotonically increase in the source partition min max range."""
@@ -175,9 +193,6 @@ def attach_partition_from_monotonical_increase(
         )
         query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition}' FROM {source_table_name}"
         node.query(query)
-        node.query(
-            f"select partition_id from system.parts where table='{destination_table_name}'"
-        )
 
     with Then("I check that specidied partition was attached"):
         source_partition_data = node.query(
@@ -186,8 +201,132 @@ def attach_partition_from_monotonical_increase(
         destination_partition_data = node.query(
             f"SELECT * from {destination_table_name} where timestamp = '2023-12-21'"
         ).output
+
         assert source_partition_data == destination_partition_data
 
+
+@TestScenario
+@Flags(TE)
+def attach_partition_from_monotonical_increase(
+    self, source_table_engine="MergeTree", destination_table_engine="MergeTree"
+):
+    """Check `attach partition from` when destination partition expression monotonically increase in the source partition min max range."""
+    node = self.context.node
+
+    source_table_name = "source_" + getuid()
+    destination_table_name = "destination_" + getuid()
+
+    with Given(
+        "I create two tables that have different partition keys",
+        description=f"""
+               engines:
+               destination table: {destination_table_engine}
+               source table: {source_table_engine}
+               """,
+    ):
+        create_table(
+            name=source_table_name,
+            engine=source_table_engine,
+            order_by="tuple()",
+            partition_by="(a,b)",
+            columns=columns(),
+            if_not_exists=True,
+        )
+        create_table(
+            name=destination_table_name,
+            engine=destination_table_engine,
+            order_by="tuple()",
+            partition_by="(intDiv(a, 2), intDiv(b, 2))",
+            columns=columns(),
+            if_not_exists=True,
+        )
+
+    with And(
+        f"I insert data into tables that will create different partitions for tables"
+    ):
+        insert_data(node=node, table_name=source_table_name, number_of_values=10)
+        insert_data(
+            node=node, table_name=destination_table_name, number_of_values=10, bias=4
+        )
+
+    with And("I attach partition from source table into destination table"):
+        partition = "1-1"
+        query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition}' FROM {source_table_name}"
+        node.query(query)
+
+    with Then("I check that specidied partition was attached"):
+        source_partition_data = node.query(
+            f"SELECT * from {source_table_name} where a = 1 and b = 1 order by a,b"
+        ).output
+        destination_partition_data = node.query(
+            f"SELECT * from {destination_table_name} where a = 1 order by a,b"
+        ).output
+
+        assert source_partition_data == destination_partition_data
+
+
+@TestScenario
+@Flags(TE)
+def attach_partition_from_non_monotonical(
+    self, source_table_engine="MergeTree", destination_table_engine="MergeTree"
+):
+    """Check `attach partition from` when destination partition expression monotonically increase in the source partition min max range."""
+    node = self.context.node
+
+    source_table_name = "source_" + getuid()
+    destination_table_name = "destination_" + getuid()
+
+    with Given(
+        "I create two tables that have different partition keys",
+        description=f"""
+               engines:
+               destination table: {destination_table_engine}
+               source table: {source_table_engine}
+               """,
+    ):
+        create_table(
+            name=source_table_name,
+            engine=source_table_engine,
+            order_by="tuple()",
+            partition_by="(a,b)",
+            columns=columns(),
+            if_not_exists=True,
+        )
+        create_table(
+            name=destination_table_name,
+            engine=destination_table_engine,
+            order_by="tuple()",
+            partition_by="(a%2, b%2)",
+            columns=columns(),
+            if_not_exists=True,
+        )
+
+    with And(
+        f"I insert data into tables that will create different partitions for tables"
+    ):
+        insert_data(node=node, table_name=source_table_name, number_of_values=10)
+        insert_data(
+            node=node, table_name=destination_table_name, number_of_values=10, bias=4
+        )
+
+    with And("I attach partition from source table into destination table"):
+        partition = "1-1"
+        query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition}' FROM {source_table_name}"
+        node.query(query, exitcode=36, message="DB::Exception: Destination table partition expression is not monotonically increasing.")
+
+
+
+@TestScenario
+@Flags(TE)
+def attach_partition_from_replicated_tables(
+    self, source_table_engine="MergeTree", destination_table_engine="MergeTree"
+):
+    """Check `attach partition from` with replicated tables."""
+    source_table_name = "source_" + getuid()
+    partitioned_replicated_merge_tree_table(table_name=source_table_name, partition="p")
+    self.context.node.query(f"SELECT table from system.tables")
+    pause()
+    
 
 @TestSketch(Scenario)
 @Flags(TE)
@@ -203,14 +342,27 @@ def engines_permutation(self):
         "SummingMergeTree",
     }
 
-    attach_partition_from_subset(
+
+    Scenario(test=attach_partition_from_subset)(
         source_table_engine=either(*values, i="source_table_engine"),
         destination_table_engine=either(*values, i="destination_table_engine"),
     )
-    attach_partition_from_partitioned_to_unpartitioned(
+    Scenario(test=attach_partition_from_partitioned_to_unpartitioned)(
+         source_table_engine=either(*values, i="source_table_engine"),
+         destination_table_engine=either(*values, i="destination_table_engine"),
+    )
+    Scenario(test=attach_partition_from_subset_date)(
         source_table_engine=either(*values, i="source_table_engine"),
         destination_table_engine=either(*values, i="destination_table_engine"),
     )
+    # Scenario(tets=attach_partition_from_monotonical_increase)(
+    #     source_table_engine=either(*values, i="source_table_engine"),
+    #     destination_table_engine=either(*values, i="destination_table_engine"),
+    # )
+    # Scenario(test=attach_partition_from_non_monotonical)(
+    #     source_table_engine=either(*values, i="source_table_engine"),
+    #     destination_table_engine=either(*values, i="destination_table_engine"),
+    # )
 
 
 @TestFeature
@@ -226,4 +378,4 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=engines_permutation)
-    Scenario(run=attach_partition_from_monotonical_increase)
+    
