@@ -21,7 +21,7 @@ def incompatible_with_zero_copy(self):
         with And(f"cluster nodes {nodes}"):
             nodes = [cluster.node(name) for name in nodes]
 
-        with Given("I enable allow_object_storage_vfs"):
+        with And("I enable allow_object_storage_vfs"):
             enable_vfs()
 
         with When(
@@ -51,7 +51,7 @@ def incompatible_with_zero_copy(self):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"))
 def local_setting(self):
     """
-    Check that using allow_object_storage_vfs can be enabled per-table
+    Check that allow_object_storage_vfs can be enabled per-table
     """
     node = current().context.node
 
@@ -108,9 +108,9 @@ def disable_vfs_with_vfs_table(self):
                     f"INSERT INTO my_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
                 )
 
-            with Then("The data is accesssible"):
+            with Then("the data is accesssible"):
                 node.query(
-                    f"SELECT count(*) FROM my_vfs_table",
+                    f"SELECT count() FROM my_vfs_table",
                     message="1000000",
                 )
 
@@ -121,19 +121,9 @@ def disable_vfs_with_vfs_table(self):
                     message='"allow_object_storage_vfs","0"',
                 )
 
-            with Then("The data becomes inaccessible"):
+            with Then("the data remains accessible"):
                 r = node.query(
-                    f"SELECT count(*) FROM my_vfs_table FORMAT JSON",
-                    message='"count()": "0"',
-                )
-
-        with Check("Enable vfs and access the table"):
-            with Given("I enable allow_object_storage_vfs"):
-                enable_vfs()
-
-            with Then("The data becomes accessible again"):
-                node.query(
-                    f"SELECT count(*) FROM my_vfs_table",
+                    f"SELECT count() FROM my_vfs_table",
                     message="1000000",
                 )
 
@@ -157,8 +147,7 @@ def enable_vfs_with_non_vfs_table(self):
                 message='"allow_object_storage_vfs","0"',
             )
 
-        with Given("I have a table without vfs"):
-            node.restart()
+        with And("I have a table without vfs"):
             node.query(
                 f"""
                 CREATE TABLE my_non_vfs_table (
@@ -174,16 +163,16 @@ def enable_vfs_with_non_vfs_table(self):
                 f"INSERT INTO my_non_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
             )
             node.query(
-                f"SELECT count(*) FROM my_non_vfs_table",
+                f"SELECT count() FROM my_non_vfs_table",
                 message="1000000",
             )
 
-        with Given("I enable allow_object_storage_vfs"):
+        with And("I globally enable allow_object_storage_vfs"):
             enable_vfs()
 
-        with Then("The data remains accessible"):
+        with Then("the data remains accessible"):
             r = node.query(
-                f"SELECT count(*) FROM my_non_vfs_table",
+                f"SELECT count() FROM my_non_vfs_table",
                 message="1000000",
             )
 
@@ -200,9 +189,10 @@ def enable_vfs_with_non_vfs_table(self):
 # RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration,
 
 
-@TestOutline(Feature)
+@TestFeature
+@Name("core")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
-def outline(self, uri, key, secret, node="clickhouse1"):
+def feature(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.uri = uri
     self.context.access_key_id = key

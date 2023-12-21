@@ -9,7 +9,7 @@ from object_storage_vfs.requirements import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("0.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
 def stress_inserts(self):
     """
     Check that performing tens of millions of individual inserts does not cause data to be lost
@@ -40,10 +40,10 @@ def stress_inserts(self):
         with And(f"cluster nodes {nodes}"):
             nodes = [cluster.node(name) for name in nodes]
 
-        with Given("I enable allow_object_storage_vfs"):
+        with And("I enable allow_object_storage_vfs"):
             enable_vfs()
 
-        with Given(f"I create a replicated table with {n_cols} cols on each node"):
+        with And(f"I create a replicated table with {n_cols} cols on each node"):
             for i, node in enumerate(nodes):
                 node.query(
                     f"""
@@ -93,10 +93,10 @@ def stress_inserts(self):
 # RQ_SRS_038_DiskObjectStorageVFS_GCS
 
 
-@TestOutline(Feature)
+@TestFeature
 @Name("stress")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
-def outline(self, uri, key, secret, node="clickhouse1"):
+def feature(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.uri = uri
     self.context.access_key_id = key
