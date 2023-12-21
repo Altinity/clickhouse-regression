@@ -1,24 +1,23 @@
-# ClickHouse Integration Tests Runner
+# ClickHouse PyTest Integration Tests
 
-TestFlows runner to execute ClickHouse PyTest integration tests.
+[TestFlows](https://testflows.com) program to execute [ClickHouse PyTest integration tests](https://github.com/ClickHouse/ClickHouse/tree/master/tests/integration).
 
-> For example,
-> 
-> Execute all regression tests against ClickHouse source code at `~/ClickHouse`
-> and its locally build binaries at `~/ClickHouse/build/programs/`.
-> 
-> ```bash
-> ./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
-> ```
+For example,
 
-By default, all images needed for running integration tests are build locally and
-saved as a tar file into `docker/dockerd_volume_dir/images.tar` file that
-then is used to preload images into the `/var/lib/docker` mounted inside the
-runner's container which mounts `docker/docker_volume_dir` as its `/var/lib/docker`.
+Execute all regression tests against ClickHouse source code at `~/ClickHouse` and locally build binaries at `~/ClickHouse/build/programs/`.
+ 
+```bash
+./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
+```
 
-The test program uses custom `clickhouse/integration-tests-runner` image
-that uses the original `clickhouse/integration-tests-runner` image as the base
-but adds extra packages. This custom image is defined in `docker/runner` folder.
+By default, all images needed for running integration tests are built locally and
+saved as a tar file into the `docker/dockerd_volume_dir/images.tar` file.
+This tar file is then used to preload images into the `/var/lib/docker` mounted inside the
+runner's container.  The `/var/lib/docker` folder inside the container is mounted as `docker/docker_volume_dir` and is re-used between different runs.
+
+The test program uses a custom `clickhouse/integration-tests-runner` image.
+that uses the original `clickhouse/integration-tests-runner` image as the base (tagged as `latest.base`)
+but adds extra packages. This custom image is defined in the `docker/runner` folder.
 
 ## Program options
 
