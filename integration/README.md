@@ -78,7 +78,7 @@ loaded into the `/docker/dockerd_volume_dir` you can specify `--skip-build-image
 
 ## 🌤 Program options
 
-```bash
+```
 options:
   -h, --help                                      show this help message and exit
 
