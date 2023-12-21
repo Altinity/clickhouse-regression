@@ -10,6 +10,46 @@ Execute all regression tests against ClickHouse source code at `~/ClickHouse` an
 ./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
 ```
 
+## 🍊 Integration tests
+
+ClickHouse PyTest integration tests are distributed as part of ClickHouse source code, therefore you need to checkout ClickHouse repository first.
+
+```bash
+git clone https://github.com/ClickHouse/ClickHouse.git
+```
+
+You can find the integration tests at
+
+```bash
+ls ClickHouse/tests/integration
+```
+
+## 🌀 ClickHouse binaries
+
+Once you have the source code for the tests, you must either build ClickHouse binaries locally or specify the binary that you want to use for testing
+using the `--binary` option. If you specify a path, it is assumed that the following files are present in the same directory:
+
+* `clickhouse`
+* `clickhouse-odbc-bridge`
+* `clickhouse-library-bridge`
+
+By default, `--binary` is set to `/usr/bin/clickhouse`.
+
+However, you can also specify:
+
+* either relative or absolute file path, for example:
+  ```bash
+  --binary ~/ClickHouse/build/programs/clickhouse
+  ```
+* http[s]://<url_to_binary_or_deb_package>, for example:
+  ```bash
+  --binary https://s3.amazonaws.com/altinity-build-artifacts/PRs/338/6ab51af598079c670627dd84f70bb90c63446ee0/package_aarch64/clickhouse-common-static_23.8.8.21.altinitystable_arm64.deb
+  ```
+* docker://<clickhouse/docker_image:tag>, for example:
+  ```bash
+  --binary docker://altinity/clickhouse-server:23.3.13.7.altinitystable
+  ```
+
 ## 🏃 Running Tests
 
 Tests list is dynamically collected unless `--tests` option is specified. All tests are executed
