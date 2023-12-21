@@ -12,14 +12,12 @@ from testflows.connect import Shell
 
 from steps import *
 
-# FIXME: only clickhouse/integration-test-runner:latest is used
-#        but inside the runner image, locally build images are not being used
 # FIXME: add support for --network which should be "" by default (instead of host by default)
 #        in general we need to support all ./runner options, --disable-net-host
 # FIXME: docker-compose-images-tags?
 # FIXME: handler analyzer and analyzer broken tests
 # FIXME: clear ip tables and restart docker between each interation of runner?
-# FIXME: add pre-pull
+# FIXME: add pre-pull?
 
 
 def argparser(parser):
@@ -125,17 +123,18 @@ def argparser(parser):
     parser.add_argument(
         "--dockerd-volume-dir",
         type=str,
-        action="store",
         dest="dockerd_volume_dir",
-        help="bind volume to this dir to use for runner's dockerd files",
+        help="bind volume to this dir to use for runner's dockerd files, default: ./docker/dockerd_volume_dir",
+        default="./docker/dockerd_volume_dir",
     )
 
     parser.add_argument(
         "--build-images",
+        dest="rebuild_images",
         action="store_true",
         help=(
-            "build all docker images inside the ClickHouse/docker folder including the ones used\n"
-            "by integration tests. Use --build-images-tag to specify custom tag, default: latest."
+            "build all docker images inside the ClickHouse/docker/test/integration folder, default: True\n"
+            "Use --images-tag to specify custom tag, default: latest."
         ),
     )
 
@@ -173,6 +172,12 @@ def runner_opts(self):
         f" --binary {self.context.binary}"
         + f" --odbc-bridge-binary {self.context.odbc_bridge_binary}"
         + f" --library-bridge-binary {self.context.library_bridge_binary}"
+        + (" --tmpfs" if self.context.tmpfs else "")
+        + (
+            f" --dockerd-volume-dir {os.path.abspath(self.context.dockerd_volume_dir)}"
+            if self.context.dockerd_volume_dir
+            else ""
+        )
     )
 
 
@@ -202,6 +207,19 @@ def collect_tests(self, timeout=300):
 
 
 @TestStep(Given)
+def preload_saved_images(self):
+    """Load images from a tar file into dockerd_volume_dir."""
+    command = define(
+        "command",
+        f"{self.context.runner}"
+        + runner_opts()
+        + " --command 'docker load -i /var/lib/docker/images.tar'",
+    )
+
+    syscommand(command=command)
+
+
+@TestStep(Given)
 def launch_runner(self, run_id, tests, in_parallel=None):
     """Launch integration tests runner script."""
 
@@ -218,9 +236,7 @@ def launch_runner(self, run_id, tests, in_parallel=None):
         + f" --docker-image-version {self.context.docker_image_version}"
         + (f" --parallel {in_parallel}" if in_parallel is not None else "")
         + (" --analyzer" if self.context.analyzer else "")
-        + (" --tmpfs" if self.context.tmpfs else "")
         + (" --cleanup-containers" if self.context.cleanup_containers else "")
-        + (f" --dockerd-volume-dir {os.path.abspath(self.context.dockerd_volume_dir)}" if self.context.dockerd_volume_dir else "")
         + " --"
         + " -rfEps"
         + f" --run-id={run_id} --color=no --durations=0"
@@ -386,7 +402,7 @@ def regression(
     subset=None,
     deselect=None,
     in_parallel=5,
-    build_images=False,
+    rebuild_images=True,
     images_tag="latest",
     max_failed_tests_to_retry=100,
     retry_attempts=2,
@@ -422,6 +438,14 @@ def regression(
             self.context.library_bridge_binary,
         ) = clickhouse_binaries(path=binary)
 
+    if rebuild_images:
+        with Feature("build images", flags=MANDATORY):
+            images = build_images(root_dir=root_dir, image_tag=images_tag)
+            save_images(images=images, path="docker/dockerd_volume_dir/images.tar")
+
+        with Given("preload images"):
+            preload_saved_images()
+
     if not tests:
         with And("automatically collect all tests"):
             all_tests = collect_tests()
@@ -446,14 +470,6 @@ def regression(
 
     if not tests:
         fail("no tests")
-
-    if build_images:
-        with Feature("build images"):
-            build_images = load_module(
-                "buildimages",
-                path=os.path.join(current_dir(), "build"),
-            ).build_images
-            build_images(root_dir=root_dir, image_tag=images_tag)
 
     Feature("group", description="execute tests in groups", test=execute)(
         tests=tests,
