@@ -10,16 +10,25 @@ Execute all regression tests against ClickHouse source code at `~/ClickHouse` an
 ./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
 ```
 
+## 🖼 Integration tests images
+
 By default, all images needed for running integration tests are built locally and
 saved as a tar file into the `docker/dockerd_volume_dir/images.tar` file.
 This tar file is then used to preload images into the `/var/lib/docker` mounted inside the
-runner's container.  The `/var/lib/docker` folder inside the container is mounted as `docker/docker_volume_dir` and is re-used between different runs.
+runner's container.  The `/var/lib/docker` folder inside the container is mounted as `docker/dockerd_volume_dir` and is re-used between different runs.
+
+## ☔ Custom `clickhouse/integration-tests-runner` image
 
 The test program uses a custom `clickhouse/integration-tests-runner` image.
 that uses the original `clickhouse/integration-tests-runner` image as the base (tagged as `latest.base`)
 but adds extra packages. This custom image is defined in the `docker/runner` folder.
 
-## Program options
+## ⌚ Skip building images
+
+All images are build, save and loaded by default for each test program run. However, after the images are build and
+loaded into the `/docker/dockerd_volume_dir` you can specify `--skip-build-images` to skip these steps.
+
+## 🌤 Program options
 
 ```bash
 options:
