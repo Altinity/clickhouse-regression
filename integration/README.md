@@ -2,9 +2,7 @@
 
 [TestFlows](https://testflows.com) program to execute [ClickHouse PyTest integration tests](https://github.com/ClickHouse/ClickHouse/tree/master/tests/integration).
 
-For example,
-
-Execute all regression tests against ClickHouse source code at `~/ClickHouse` and locally build binaries at `~/ClickHouse/build/programs/`.
+For example, you can execute all tests for ClickHouse source code at `~/ClickHouse` and locally build binaries at `~/ClickHouse/build/programs/` as follows:
  
 ```bash
 ./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
