@@ -10,6 +10,16 @@ Execute all regression tests against ClickHouse source code at `~/ClickHouse` an
 ./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
 ```
 
+## 🏃 Running Tests
+
+Tests list is dynamically collected unless `--tests` option is specified. All tests are executed
+unless the `--slice`, which selects specific slice of tests from the tests list, or the `--part`, which breaks tests into parts and runs only the specified part,
+options are specified. The `--slice` is applied first and then `--part` if any.
+
+Tests are run in groups (`--group-size`, default: 100). Each group executes tests in parallel (`--in-parallel`, default: 10).
+Any failed tests are retried (`retry-attempts`, default: 2), where each retry attempt runs remaining failed tests without any parallelism.
+To prevent retrying massive test fails the `--max-failed-tests-to-retry` (default: 100) option limits the maximum number of failed tests to retry.
+
 ## 🖼 Integration tests images
 
 By default, all images needed for running integration tests are built locally and
@@ -25,7 +35,7 @@ but adds extra packages. This custom image is defined in the `docker/runner` fol
 
 ## ⌚ Skip building images
 
-All images are build, save and loaded by default for each test program run. However, after the images are build and
+All images are build, saved and loaded by default for each test program run. However, after the images are build and
 loaded into the `/docker/dockerd_volume_dir` you can specify `--skip-build-images` to skip these steps.
 
 ## 🌤 Program options
