@@ -4,3 +4,4 @@ __pycache__/
 _instances/
 .vscode/
 .idea
+integration/docker/dockerd_volume_dir/*
