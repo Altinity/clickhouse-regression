@@ -96,7 +96,6 @@ def regression(
             "clickhouse2",
             "clickhouse3",
             "clickhouse-23-3",
-            "clickhouse-23-8",
         )
     }
 
@@ -113,6 +112,7 @@ def regression(
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             configs_dir=current_dir(),
+            use_specific_version=True
         )
         self.context.cluster = cluster
 

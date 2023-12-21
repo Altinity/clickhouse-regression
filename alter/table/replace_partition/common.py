@@ -41,7 +41,11 @@ def create_table_partitioned_by_column_with_data(
     columns=None,
     partition_by="p",
     order_by="tuple()",
+    node=None,
 ):
+    if node is None:
+        node = self.context.node
+
     with By(f"creating a {table_name} table partitioned by a column"):
         create_table_partitioned_by_column(
             table_name=table_name,
@@ -49,6 +53,7 @@ def create_table_partitioned_by_column_with_data(
             partition_by=partition_by,
             columns=columns,
             order_by=order_by,
+            node=node,
         )
 
     with And(f"inserting data into {table_name} table to create partitions"):
@@ -57,6 +62,7 @@ def create_table_partitioned_by_column_with_data(
             number_of_values=number_of_values,
             number_of_partitions=number_of_partitions,
             number_of_parts=number_of_parts,
+            node=node,
         )
 
 
@@ -70,9 +76,11 @@ def create_two_tables_partitioned_by_column_with_data(
     number_of_parts=1,
     columns=None,
     query_settings=None,
+    node=None,
 ):
     """Creating two tables that are partitioned by the same column and are filled with random data."""
-
+    if node is None:
+        node = self.context.node
     with By("creating two tables with the same structure"):
         create_table_partitioned_by_column_with_data(
             table_name=source_table,
@@ -81,6 +89,7 @@ def create_two_tables_partitioned_by_column_with_data(
             number_of_partitions=number_of_partitions,
             number_of_values=number_of_values,
             number_of_parts=number_of_parts,
+            node=node,
         )
         create_table_partitioned_by_column_with_data(
             table_name=destination_table,
@@ -88,6 +97,7 @@ def create_two_tables_partitioned_by_column_with_data(
             query_settings=query_settings,
             number_of_partitions=number_of_partitions,
             number_of_parts=number_of_parts,
+            node=node,
         )
 
 

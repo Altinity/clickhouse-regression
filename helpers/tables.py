@@ -93,9 +93,11 @@ def is_map(datatype):
     """Return True if data type is Map."""
     return isinstance(unwrap(datatype), Map)
 
+
 def is_array(datatype):
     """Return True if data type is Array."""
     return isinstance(unwrap(datatype), Array)
+
 
 def is_nullable(datatype):
     """Return True if data type is Nullable."""
@@ -380,6 +382,7 @@ def create_table(
     query_settings=None,
     empty=None,
     if_not_exists=False,
+    node=None,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -388,7 +391,8 @@ def create_table(
     if name is None:
         name = f"table_{getuid()}"
 
-    node = current().context.node
+    if node is None:
+        node = current().context.node
 
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
@@ -523,8 +527,12 @@ def create_table_partitioned_by_column(
     columns=None,
     query_settings=None,
     order_by="tuple()",
+    node=None,
 ):
     """Create a table that is partitioned by a specific column."""
+
+    if node is None:
+        node = self.context.node
 
     if columns is None:
         columns = [
@@ -542,6 +550,7 @@ def create_table_partitioned_by_column(
             columns=columns,
             query_settings=query_settings,
             if_not_exists=True,
+            node=node,
         )
 
 

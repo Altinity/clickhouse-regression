@@ -822,6 +822,7 @@ class Cluster(object):
         collect_service_logs=False,
         use_zookeeper_nodes=False,
         frame=None,
+        use_specific_version=False,
     ):
         self._bash = {}
         self._control_shell = None
@@ -836,6 +837,7 @@ class Cluster(object):
         self.running = False
         self.collect_service_logs = collect_service_logs
         self.use_zookeeper_nodes = use_zookeeper_nodes
+        self.use_specific_version = use_specific_version
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
@@ -878,6 +880,10 @@ class Cluster(object):
             )
 
         if self.clickhouse_binary_path:
+            if self.use_specific_version:
+                self.get_clickhouse_binary_from_docker_container(
+                    "altinity/clickhouse-server:23.3.13.7.altinitytest"
+                )
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
                     "I download ClickHouse server binary using wget",
@@ -1475,6 +1481,7 @@ def create_cluster(
     environ=None,
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
+    use_specific_version=False,
 ):
     """Create docker compose cluster."""
     with Cluster(
@@ -1490,5 +1497,6 @@ def create_cluster(
         environ=environ,
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
+        use_specific_version=use_specific_version,
     ) as cluster:
         yield cluster
