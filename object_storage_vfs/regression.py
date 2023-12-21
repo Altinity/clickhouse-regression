@@ -46,16 +46,16 @@ def minio_regression(
         )
         self.context.cluster = cluster
 
-    with Given("I have a minio client"):
+    with And("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
-    Feature(test=load("object_storage_vfs.tests.object_storage_vfs", "outline"))(
+    Feature(test=load("object_storage_vfs.tests.object_storage_vfs", "feature"))(
         uri=uri_bucket_file, key=root_user, secret=root_password
     )
 
     if self.context.stress:
-        Feature(test=load("object_storage_vfs.tests.stress", "outline"))(
+        Feature(test=load("object_storage_vfs.tests.stress", "feature"))(
             uri=uri_bucket_file, key=root_user, secret=root_password
         )
 
