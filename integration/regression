@@ -105,14 +105,6 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--tmpfs",
-        action="store_true",
-        default=False,
-        dest="tmpfs",
-        help="use tmpfs for /var/lib/docker that is used inside the runner",
-    )
-
-    parser.add_argument(
         "--cleanup-containers",
         action="store_true",
         default=False,
@@ -121,20 +113,10 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--dockerd-volume-dir",
-        type=str,
-        dest="dockerd_volume_dir",
-        help="bind volume to this dir to use for runner's dockerd files, default: ./docker/dockerd_volume_dir",
-        default="./docker/dockerd_volume_dir",
-    )
-
-    parser.add_argument(
-        "--build-images",
-        dest="rebuild_images",
+        "--skip-build-images",
         action="store_true",
         help=(
-            "build all docker images inside the ClickHouse/docker/test/integration folder, default: True\n"
-            "Use --images-tag to specify custom tag, default: latest."
+            "skip building all docker images inside the ClickHouse/docker/test/integration folder\n"
         ),
     )
 
@@ -172,7 +154,6 @@ def runner_opts(self):
         f" --binary {self.context.binary}"
         + f" --odbc-bridge-binary {self.context.odbc_bridge_binary}"
         + f" --library-bridge-binary {self.context.library_bridge_binary}"
-        + (" --tmpfs" if self.context.tmpfs else "")
         + (
             f" --dockerd-volume-dir {os.path.abspath(self.context.dockerd_volume_dir)}"
             if self.context.dockerd_volume_dir
@@ -206,14 +187,14 @@ def collect_tests(self, timeout=300):
     return sorted(tests)
 
 
-@TestStep(Given)
-def preload_saved_images(self):
+@TestScenario
+def load_saved_images(self):
     """Load images from a tar file into dockerd_volume_dir."""
     command = define(
         "command",
         f"{self.context.runner}"
         + runner_opts()
-        + " --command 'docker load -i /var/lib/docker/images.tar'",
+        + f" --command 'docker load -i /var/lib/docker/{self.context.images_tar}'",
     )
 
     syscommand(command=command)
@@ -402,7 +383,7 @@ def regression(
     subset=None,
     deselect=None,
     in_parallel=5,
-    rebuild_images=True,
+    skip_build_images=False,
     images_tag="latest",
     max_failed_tests_to_retry=100,
     retry_attempts=2,
@@ -410,9 +391,8 @@ def regression(
     timeout=None,
     group_timeout=None,
     analyzer=False,
-    tmpfs=False,
     cleanup_containers=False,
-    dockerd_volume_dir=None,
+    dockerd_volume_dir="docker/dockerd_volume_dir",
 ):
     """Execute ClickHouse pytest integration tests."""
     self.context.root_dir = root_dir
@@ -420,9 +400,12 @@ def regression(
     self.context.runner = os.path.join(root_dir, "tests", "integration", "runner")
     self.context.docker_image_version = images_tag
     self.context.analyzer = analyzer
-    self.context.tmpfs = tmpfs
     self.context.cleanup_containers = cleanup_containers
     self.context.dockerd_volume_dir = dockerd_volume_dir
+    self.context.images_tar = "images.tar"
+    save_images_path = os.path.join(
+        self.context.dockerd_volume_dir, self.context.images_tar
+    )
 
     retry_tests = None
     part_num, max_parts = part
@@ -438,13 +421,11 @@ def regression(
             self.context.library_bridge_binary,
         ) = clickhouse_binaries(path=binary)
 
-    if rebuild_images:
+    if not skip_build_images:
         with Feature("build images", flags=MANDATORY):
             images = build_images(root_dir=root_dir, image_tag=images_tag)
-            save_images(images=images, path="docker/dockerd_volume_dir/images.tar")
-
-        with Given("preload images"):
-            preload_saved_images()
+        save_images(images=images, path=save_images_path)
+        load_saved_images()
 
     if not tests:
         with And("automatically collect all tests"):

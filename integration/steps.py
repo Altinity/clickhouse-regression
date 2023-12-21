@@ -81,7 +81,7 @@ def sysprocess(self, command, name=None):
     """Run system command."""
 
     log = temporary_file(
-        mode="r+", dir=current_dir(), prefix="sysprocess-", suffix=".log"
+        mode="w", dir=current_dir(), prefix="sysprocess-", suffix=".log"
     )
 
     proc = subprocess.Popen(
@@ -91,7 +91,7 @@ def sysprocess(self, command, name=None):
         encoding="utf-8",
         shell=True,
     )
-    proc.stdout = log
+    proc.stdout = open(log.name, "r")
     try:
         yield proc
 
@@ -285,6 +285,8 @@ def build_image(self, path, name, dependent, tag="latest", timeout=None):
         for d in dependent:
             with By(f"waiting for {d} to be ready"):
                 while d not in self.context.ready:
+                    if self.terminating:
+                        return
                     with timer(timeout, f"waiting for depended {d} image to be ready"):
                         time.sleep(1)
 
@@ -296,13 +298,15 @@ def build_image(self, path, name, dependent, tag="latest", timeout=None):
     while proc.poll() is None:
         with timer(timeout, f"building image took too long"):
             if self.terminating:
-                break
+                return
             line = proc.stdout.readline()
             if line:
                 message(f"{line}", stream=name)
             time.sleep(1)
 
-    assert proc.returncode == 0, f"failed to build {name} at {path}"
+    assert (
+        proc.returncode == 0
+    ), f"failed to build {name} at {path}; exitcode {proc.returncode}"
 
     self.context.ready.append(path)
 
@@ -337,7 +341,7 @@ def build_images(self, root_dir, image_tag="latest", timeout=None):
             # use the original runner image as the base
             if image["name"] == "clickhouse/integration-tests-runner":
                 image["tag"] = f"{image['tag']}.base"
-                dependents.append(os.path.join(current_dir(), "runner"))
+                dependents.append(os.path.join(current_dir(), "docker", "runner"))
 
             images[os.path.join(root_dir, path)] = {
                 "name": image["name"],
