@@ -26,7 +26,7 @@ def stress_inserts(self):
         Produce a sequence of increasing numbers.
         It is desireable to know how close ClickHouse gets to max_inserts before failing.
         """
-        n = 1000
+        n = 10000
         while n < max_inserts:
             n = min(n * 10, max_inserts)
             yield n // 4
@@ -34,7 +34,7 @@ def stress_inserts(self):
             yield n
 
     with Given("I get some cluster nodes"):
-        nodes = cluster.nodes["clickhouse"][:2]
+        nodes = cluster.nodes["clickhouse"]
 
     with And(f"cluster nodes {nodes}"):
         nodes = [cluster.node(name) for name in nodes]
