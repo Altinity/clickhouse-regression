@@ -11,13 +11,17 @@ using the [Revision History].
 
 ## Introduction
 
+[ClickHouse] supports using a virtual file system on [AWS S3] and S3-compatible object storage.
+
+The virtual file system allows replicas to store table data and metadata on a single shared filesystem.
+
 ## Terminology
 
 - **Replicated Table** - A table whose metadata and data exists in multiple locations
 - **Zero Copy Replication** - A replication mode where each server keeps a copy of the metadata, but shares the data on external storage
 - **0-copy** - Shorthand for Zero Copy Replication
 - **VFS** - Virtual File System
-- **S3** - Object Storage provided by [AWS]. Also used to refer to object storage in general.
+- **S3** - Object Storage provided by [AWS]. Also used to refer to any S3-compatible object storage.
 - **VFDiskObjectStorageVFS** - The specific VFS implementation used by [ClickHouse] for object storage
 
 ## Requirements
