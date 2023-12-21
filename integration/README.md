@@ -2,14 +2,14 @@
 
 TestFlows runner to execute ClickHouse PyTest integration tests.
 
-For example,
-
-Execute all regression tests against ClickHouse source code at `~/ClickHouse`
-and its locally build binaries at `~/ClickHouse/build/programs/`.
-
-```bash
-./regression --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
-```
+> For example,
+> 
+> Execute all regression tests against ClickHouse source code at `~/ClickHouse`
+> and its locally build binaries at `~/ClickHouse/build/programs/`.
+> 
+> ```bash
+> ./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --log test.log
+> ```
 
 By default, all images needed for running integration tests are build locally and
 saved as a tar file into `docker/dockerd_volume_dir/images.tar` file that
@@ -23,8 +23,6 @@ but adds extra packages. This custom image is defined in `docker/runner` folder.
 ## Program options
 
 ```bash
-Execute ClickHouse pytest integration tests.
-
 options:
   -h, --help                                      show this help message and exit
 
