@@ -124,6 +124,7 @@ def argparser(parser):
 
     parser.add_argument(
         "--dockerd-volume-dir",
+        type=str,
         action="store",
         dest="dockerd_volume_dir",
         help="bind volume to this dir to use for runner's dockerd files",
@@ -219,7 +220,7 @@ def launch_runner(self, run_id, tests, in_parallel=None):
         + (" --analyzer" if self.context.analyzer else "")
         + (" --tmpfs" if self.context.tmpfs else "")
         + (" --cleanup-containers" if self.context.cleanup_containers else "")
-        + (" --dockerd-volume-dir" if self.context.dockerd_volume_dir else "")
+        + (f" --dockerd-volume-dir {os.path.abspath(self.context.dockerd_volume_dir)}" if self.context.dockerd_volume_dir else "")
         + " --"
         + " -rfEps"
         + f" --run-id={run_id} --color=no --durations=0"

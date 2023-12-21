@@ -319,7 +319,7 @@ def create_graphite_merge_tree_table(
 def create_replicated_merge_tree_table(
     self,
     table_name: str,
-    columns: list[dict],
+    columns: list[dict] = None,
     if_not_exists: bool = False,
     db: str = None,
     comment: str = None,
