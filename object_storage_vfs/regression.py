@@ -7,7 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from s3.regression import argparser
-from s3.tests.common import enable_vfs, start_minio
+from s3.tests.common import start_minio
 
 from object_storage_vfs.requirements import *
 
@@ -50,7 +50,13 @@ def minio_regression(
         start_minio(access_key=root_user, secret_key=root_password)
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
-    Feature(test=load("object_storage_vfs.tests.object_storage_vfs", "feature"))(
+    Feature(test=load("object_storage_vfs.tests.core", "feature"))(
+        uri=uri_bucket_file, key=root_user, secret=root_password
+    )
+    Feature(test=load("object_storage_vfs.tests.settings", "feature"))(
+        uri=uri_bucket_file, key=root_user, secret=root_password
+    )
+    Feature(test=load("object_storage_vfs.tests.integrity", "feature"))(
         uri=uri_bucket_file, key=root_user, secret=root_password
     )
 
