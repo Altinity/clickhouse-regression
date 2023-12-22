@@ -123,15 +123,6 @@ def drop_replica(self):
     with And(f"cluster nodes {nodes}"):
         nodes = [cluster.node(name) for name in nodes]
 
-    with And("I get the size of the s3 bucket before adding data"):
-        size_empty = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            minio_enabled=self.context.minio_enabled,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-        )
-
     with And(f"I create a replicated table on each node"):
         replicated_table(
             table_name=table_name,
@@ -139,7 +130,7 @@ def drop_replica(self):
             allow_vfs=True,
         )
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         insert_random(
             node=nodes[0], table_name=table_name, columns="d UInt64", rows=500000
         )
@@ -152,7 +143,7 @@ def drop_replica(self):
             node=nodes[0], table_name=table_name, columns="d UInt64", rows=500000
         )
 
-    with And("I restart the other node"):
+    with Then("I restart the other node"):
         nodes[1].start()
 
     with And("I check the row count on the first node"):
