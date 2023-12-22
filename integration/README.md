@@ -58,6 +58,53 @@ Tests are run in groups (`--group-size`, default: 100). Each group executes test
 Any failed tests are retried (`retry-attempts`, default: 2), where each retry attempt runs remaining failed tests without any parallelism.
 To prevent retrying massive test fails the `--max-failed-tests-to-retry` (default: 100) option limits the maximum number of failed tests to retry.
 
+For example, let's run the first 10 tests (`--slice 0 10`) without skipping build, save and load images steps: 
+```
+./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --slice 0 10 -l test.log
+```
+
+| Test program flow will consist of the following main parts |
+| -- |
+| build images |
+| save images to `docker/dockerd_volume_dir/images.tar` |
+| start runner container and load images to `/var/lib/docker` where `docker/dockerd_volume_dir` is mounted |
+| run the first 10 dynamically collect integration tests (the default group size is `100` so all tests are executed as part of the first group) |
+
+```bash
+✔ [ OK ] /regression/build images/build clickhouse∕s3-proxy:latest (2s 13ms)
+✔ [ OK ] /regression/build images/build clickhouse∕integration-tests-runner:latest.base (2s 23ms)
+✔ [ OK ] /regression/build images/build clickhouse∕python-bottle:latest (2s 20ms)
+✔ [ OK ] /regression/build images/build clickhouse∕integration-helper:latest (2s 50ms)
+✔ [ OK ] /regression/build images/build clickhouse∕mysql-golang-client:latest (2s 43ms)
+✔ [ OK ] /regression/build images/build clickhouse∕dotnet-client:latest (2s 39ms)
+✔ [ OK ] /regression/build images/build clickhouse∕postgresql-java-client:latest (2s 24ms)
+✔ [ OK ] /regression/build images/build clickhouse∕test-base:latest (2s 27ms)
+✔ [ OK ] /regression/build images/build clickhouse∕kerberos-kdc:latest (2s 36ms)
+✔ [ OK ] /regression/build images/build clickhouse∕mysql-js-client:latest (2s 52ms)
+✔ [ OK ] /regression/build images/build clickhouse∕mysql-java-client:latest (2s 60ms)
+✔ [ OK ] /regression/build images/build clickhouse∕mysql-php-client:latest (2s 47ms)
+✔ [ OK ] /regression/build images/build clickhouse∕nginx-dav:latest (2s 27ms)
+✔ [ OK ] /regression/build images/build clickhouse∕kerberized-hadoop:latest (3s 13ms)
+✔ [ OK ] /regression/build images/build clickhouse∕integration-tests-runner:latest (3s 28ms)
+✔ [ OK ] /regression/build images/build clickhouse∕integration-test:latest (4s 14ms)
+✔ [ OK ] /regression/build images (4s 22ms)
+✔ [ OK ] /regression/save images (3m 15s)
+✔ [ OK ] /regression/load saved images (24s 36ms)
+✔ [ OK ] /regression/group/0/test_access_for_functions∕test.py::test_access_rights_for_function (1s 366ms)
+✔ [ OK ] /regression/group/0/test_aggregation_memory_efficient∕test.py::test_remote (2s 941ms)
+✔ [ OK ] /regression/group/0/test_access_for_functions∕test.py::test_ignore_obsolete_grant_on_database (5s 60ms)
+✔ [ OK ] /regression/group/0/test_allowed_client_hosts∕test.py::test_allowed_host (2s 398ms)
+✔ [ OK ] /regression/group/0/test_allowed_client_hosts∕test.py::test_denied_host (800ms)
+✔ [ OK ] /regression/group/0/test_access_control_on_cluster∕test.py::test_access_control_on_cluster (2s 649ms)
+✔ [ OK ] /regression/group/0/test_access_control_on_cluster∕test.py::test_grant_all_on_cluster (1s 493ms)
+✔ [ OK ] /regression/group/0/test_MemoryTracking∕test.py::test_http (10s 389ms)
+✔ [ OK ] /regression/group/0/test_MemoryTracking∕test.py::test_tcp_multiple_sessions (20s 951ms)
+✔ [ OK ] /regression/group/0/test_MemoryTracking∕test.py::test_tcp_single_session (8s 835ms)
+✔ [ OK ] /regression/group/0 (1m 21s)
+✔ [ OK ] /regression/group (1m 21s)
+✔ [ OK ] /regression (5m 17s)
+```
+
 ## 🖼 Integration tests images
 
 By default, all images needed for running integration tests are built locally and
