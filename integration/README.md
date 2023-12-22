@@ -58,7 +58,10 @@ Tests are run in groups (`--group-size`, default: 100). Each group executes test
 Any failed tests are retried (`retry-attempts`, default: 2), where each retry attempt runs remaining failed tests without any parallelism.
 To prevent retrying massive test fails the `--max-failed-tests-to-retry` (default: 100) option limits the maximum number of failed tests to retry.
 
-For example, let's run the first 10 tests (`--slice 0 10`) without skipping build, save and load images steps: 
+## ☕ Examples
+
+### 🌴 Run the first 10 tests (`--slice 0 10`) without skipping build, save and load images steps
+
 ```
 ./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --slice 0 10 -l test.log
 ```
@@ -103,6 +106,35 @@ For example, let's run the first 10 tests (`--slice 0 10`) without skipping buil
 ✔ [ OK ] /regression/group/0 (1m 21s)
 ✔ [ OK ] /regression/group (1m 21s)
 ✔ [ OK ] /regression (5m 17s)
+```
+
+### 🌴 Run the first 10 tests (`--slice 0 10`) but skipping build, save and load images steps (`--skip-build-images`)
+
+```
+./regression.py --root-dir ~/ClickHouse/ --binary ~/ClickHouse/build/programs/clickhouse --slice 0 10 -l test.log --skip-build-images
+```
+
+Given that the integration runner container will mount `docker/dockerd_volume_dir` as `/var/lib/docker`,
+all previously loaded images will be reused.
+
+| Test program flow will consist of the following main parts |
+| -- |
+| run the first 10 dynamically collect integration tests |
+
+```
+✔ [ OK ] /regression/group/0/test_access_for_functions∕test.py::test_access_rights_for_function (1s 872ms)
+✔ [ OK ] /regression/group/0/test_aggregation_memory_efficient∕test.py::test_remote (2s 697ms)
+✔ [ OK ] /regression/group/0/test_access_for_functions∕test.py::test_ignore_obsolete_grant_on_database (4s 364ms)
+✔ [ OK ] /regression/group/0/test_allowed_client_hosts∕test.py::test_allowed_host (2s 135ms)
+✔ [ OK ] /regression/group/0/test_allowed_client_hosts∕test.py::test_denied_host (1s 668ms)
+✔ [ OK ] /regression/group/0/test_MemoryTracking∕test.py::test_http (9s 985ms)
+✔ [ OK ] /regression/group/0/test_access_control_on_cluster∕test.py::test_access_control_on_cluster (2s 246ms)
+✔ [ OK ] /regression/group/0/test_access_control_on_cluster∕test.py::test_grant_all_on_cluster (1s 247ms)
+✔ [ OK ] /regression/group/0/test_MemoryTracking∕test.py::test_tcp_multiple_sessions (21s 83ms)
+✔ [ OK ] /regression/group/0/test_MemoryTracking∕test.py::test_tcp_single_session (9s 965ms)
+✔ [ OK ] /regression/group/0 (50s 100ms)
+✔ [ OK ] /regression/group (50s 101ms)
+✔ [ OK ] /regression (1m 0s)
 ```
 
 ## 🖼 Integration tests images
