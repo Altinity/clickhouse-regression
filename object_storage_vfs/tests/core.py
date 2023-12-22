@@ -4,8 +4,12 @@ from testflows.core import *
 from object_storage_vfs.tests.steps import *
 from object_storage_vfs.requirements import *
 
-# RQ_SRS_038_DiskObjectStorageVFS_Core_Delete,
-# RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel,
+# RQ_SRS_038_DiskObjectStorageVFS_Core_Delete
+# RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel
+# RQ_SRS_038_DiskObjectStorageVFS_Core_AddReplica
+# RQ_SRS_038_DiskObjectStorageVFS_Core_DropReplica
+# RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication
+
 
 @TestFeature
 @Name("core")

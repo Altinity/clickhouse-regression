@@ -4,6 +4,7 @@ from testflows.core import *
 from object_storage_vfs.tests.steps import *
 from object_storage_vfs.requirements import *
 
+
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Integrity_VFSToggled("1.0"))
 def disable_vfs_with_vfs_table(self):
@@ -79,7 +80,11 @@ def enable_vfs_with_non_vfs_table(self):
     with Then("the data remains accessible"):
         assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
 
-# RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration,
+
+# RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration
+# RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLMove
+# RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete
+
 
 @TestFeature
 @Name("integrity")
