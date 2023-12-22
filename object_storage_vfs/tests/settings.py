@@ -55,12 +55,15 @@ def global_setting(self):
         assert r.exitcode == 0, error()
 
 
-# RQ_SRS_038_DiskObjectStorageVFS_Settings_SharedSettings,
+# RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
 
 
 @TestFeature
 @Name("settings")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration("1.0"),
+)
 def feature(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.uri = uri

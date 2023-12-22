@@ -2263,7 +2263,7 @@ def outline(self):
         }
 
     with s3_storage(disks, policies, restart=True):
-        with Check("Bucket should be empty before test begins"):
+        with Check("bucket should be empty before test begins"):
             check_bucket_size(
                 name=self.context.bucket_name,
                 prefix=self.context.bucket_path,

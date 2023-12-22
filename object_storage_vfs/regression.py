@@ -6,6 +6,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
+from helpers.common import check_clickhouse_version
 from s3.regression import argparser
 from s3.tests.common import start_minio
 
@@ -15,8 +16,10 @@ xfails = {}
 
 ffails = {}
 
+# RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS,
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS,
+
 
 @TestModule
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
@@ -99,6 +102,9 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
+
+    if check_clickhouse_version("<23.11")(self):
+        skip("vfs not supported on < 23.11")
 
     Module(test=minio_regression)(
         local=local,
