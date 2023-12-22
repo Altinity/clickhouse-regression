@@ -47,7 +47,7 @@ def s3_config(self):
 
 
 @TestStep(Given)
-def check_global_vfs_state(self, node=None, enabled: bool = False):
+def check_global_vfs_state(self, node=None, enabled: bool = True):
     if node is None:
         node = current().context.node
 
