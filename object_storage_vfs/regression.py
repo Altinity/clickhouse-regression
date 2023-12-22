@@ -23,7 +23,7 @@ ffails = {}
 
 @TestModule
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
-def minio_regression(
+def minio(
     self,
     uri,
     root_user,
@@ -106,7 +106,7 @@ def regression(
     if check_clickhouse_version("<23.11")(self):
         skip("vfs not supported on < 23.11")
 
-    Module(test=minio_regression)(
+    Module(test=minio)(
         local=local,
         clickhouse_binary_path=clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
