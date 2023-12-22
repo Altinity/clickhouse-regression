@@ -215,3 +215,5 @@ version: 1.0
 [Git]: https://git-scm.com/
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs
 [Revision History]: https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md
+[Google Cloud Storage]: https://en.wikipedia.org/wiki/Google_Cloud_Storage
+[MinIO]: https://en.wikipedia.org/wiki/MinIO
