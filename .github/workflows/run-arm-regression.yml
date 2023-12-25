@@ -152,7 +152,7 @@ jobs:
 
   aggregate_functions:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
