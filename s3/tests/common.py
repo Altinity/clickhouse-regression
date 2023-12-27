@@ -5,6 +5,7 @@ import tempfile
 
 from contextlib import contextmanager
 from minio import Minio
+from platform import processor
 
 from testflows.connect import Shell
 from helpers.common import *
