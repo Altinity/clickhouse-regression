@@ -57,8 +57,17 @@ Standalone `docker-compose` binary.
 
 For example,
 
+#### x86_64
+
 ```bash
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+#### Aarch64 (ARM64)
+
+```bash
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-aarch64 -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
