@@ -95,7 +95,6 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   PYTHONIOENCODING: utf-8
-  artifact_s3_dir: clickhouse/${{ inputs.version }}/${{ env.GITHUB_RUN_ID }}/testflows
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
   artifacts: ${{ inputs.artifacts }}
