@@ -43,14 +43,14 @@ def automatic_reconnection(self, policy_name, disk_name="external", node=None):
 
     with And("I stop the connection to the node with the table"):
         self.context.cluster.command(
-            None, f"docker network disconnect --force {DOCKER_NETWORK} {container_id}"
+            None, f"docker network disconnect --force {network_id} {container_id}"
         )
 
     time.sleep(5)
 
     with And("I enable the connection to the node with the table"):
         self.context.cluster.command(
-            None, f"docker network connect {DOCKER_NETWORK} {container_id}"
+            None, f"docker network connect {network_id} {container_id}"
         )
 
     with Then("I check the table"):
