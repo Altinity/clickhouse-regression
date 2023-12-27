@@ -6,10 +6,12 @@ sudo chown -R $(whoami):$(whoami) $SUITE/
 if [[ $artifacts == 'internal' ]];
 then
     artifact_s3_bucket_path="altinity-internal-test-reports"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
     confidential="--confidential"
 elif [[ $artifacts == 'public' ]];
 then
     artifact_s3_bucket_path="altinity-test-reports"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
     confidential=""
 elif [[ $artifacts == 'builds' ]];
 then
