@@ -2,6 +2,7 @@ from s3.tests.common import *
 from s3.requirements import *
 from lightweight_delete.tests.steps import *
 
+DOCKER_NETWORK = "s3_env_default" if processor() == 'x86_64' else "s3_env_arm64"
 
 @TestStep(When)
 def disconnect_reconnect(self, node=None):
@@ -11,12 +12,12 @@ def disconnect_reconnect(self, node=None):
 
     with When("I disconnect the docker node"):
         self.context.cluster.command(
-            None, "docker network disconnect s3_env_default s3_env_clickhouse1_1"
+            None, f"docker network disconnect {DOCKER_NETWORK} s3_env_clickhouse1_1"
         )
 
     with And("I reconnect the docker node"):
         self.context.cluster.command(
-            None, "docker network connect s3_env_default s3_env_clickhouse1_1"
+            None, f"docker network connect {DOCKER_NETWORK} s3_env_clickhouse1_1"
         )
 
 
@@ -37,19 +38,19 @@ def automatic_reconnection(self, policy_name, disk_name="external", node=None):
     with And("I get container id and network id"):
         container_id = self.context.cluster.node_container_id(node="clickhouse1")
         network_id = self.context.cluster.command(
-            None, "docker network ls --filter 'name=s3_env_default' -q"
+            None, f"docker network ls --filter 'name={DOCKER_NETWORK}' -q"
         )
 
     with And("I stop the connection to the node with the table"):
         self.context.cluster.command(
-            None, f"docker network disconnect --force s3_env_default {container_id}"
+            None, f"docker network disconnect --force {DOCKER_NETWORK} {container_id}"
         )
 
     time.sleep(5)
 
     with And("I enable the connection to the node with the table"):
         self.context.cluster.command(
-            None, f"docker network connect s3_env_default {container_id}"
+            None, f"docker network connect {DOCKER_NETWORK} {container_id}"
         )
 
     with Then("I check the table"):
