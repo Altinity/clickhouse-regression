@@ -47,7 +47,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 ### Docker
 
-[Docker](https://docs.docker.com/engine/install/)
+[Docker](https://docs.docker.com/engine/install/ubuntu/)
 
 ### Standalone `docker-compose`
 
