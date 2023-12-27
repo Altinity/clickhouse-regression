@@ -39,7 +39,7 @@ def automatic_reconnection(self, policy_name, disk_name="external", node=None):
         container_id = self.context.cluster.node_container_id(node="clickhouse1")
         network_id = self.context.cluster.command(
             None, f"docker network ls --filter 'name={DOCKER_NETWORK}' -q"
-        )
+        ).output
 
     with And("I stop the connection to the node with the table"):
         self.context.cluster.command(
