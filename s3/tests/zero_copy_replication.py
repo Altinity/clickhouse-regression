@@ -2132,7 +2132,7 @@ def consistency_during_double_mutation(self):
             with And(f"I materialize the new column on the first node"):
                 nodes[0].query(f"ALTER TABLE {table_name} MATERIALIZE COLUMN valueX")
 
-            with Given("I run DESCRIBE TABLE"):
+            with When("I run DESCRIBE TABLE"):
                 r = node.query(f"DESCRIBE TABLE {table_name}")
 
             with Then("The output should contain my new column"):
@@ -2147,6 +2147,75 @@ def consistency_during_double_mutation(self):
                     f"DROP TABLE IF EXISTS {table_name} ON CLUSTER 'sharded_cluster' "
                 )
 
+
+@TestScenario
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation(
+        "1.0"
+    ),
+)
+def consistency_during_conflicting_mutation(self):
+    """Check that clickhouse correctly handles simultaneous metadata updates on different replicas."""
+    cluster = self.context.cluster
+    node = current().context.node
+    table_name = "table_" + getuid()
+
+    with Given("I set the nodes to replicate the table"):
+        nodes = cluster.nodes["clickhouse"][:2]
+
+    with And(f"cluster nodes {nodes}"):
+        nodes = [cluster.node(name) for name in nodes]
+
+    with And("I have merge tree configuration set to use zero copy replication"):
+        settings = {self.context.zero_copy_replication_setting: "1"}
+
+    with And("I set the minio_enabled parameter before checking bucket sizes"):
+        if self.context.storage == "minio":
+            minio_enabled = True
+
+    with mergetree_config(settings):
+        try:
+            with Given("I have a table"):
+                node.query(
+                    f"""
+                CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+                ORDER BY key
+                PARTITION BY (key % 4)
+                SETTINGS storage_policy='external'
+                """,
+                    settings=[("distributed_ddl_task_timeout ", 360)],
+                )
+
+            with And("I insert some data"):
+                node.query(
+                    f"INSERT INTO {table_name} SELECT * FROM generateRandom('key UInt32, value1 String, value2 String, value3 String') LIMIT 1000000"
+                )
+
+            with And("I delete a column on the second node"):
+                nodes[1].query(f"ALTER TABLE {table_name} DROP COLUMN value3")
+
+            with When("I add the same column on the first node"):
+                nodes[0].query(
+                    f"ALTER TABLE {table_name} ADD COLUMN value3 String materialized value1"
+                )
+                
+            with And(f"I materialize the new column on the first node"):
+                nodes[0].query(f"ALTER TABLE {table_name} MATERIALIZE COLUMN value3")
+
+            with When("I run DESCRIBE TABLE"):
+                r = node.query(f"DESCRIBE TABLE {table_name}")
+
+            with Then("The output should contain all columns"):
+                assert "value1" in r.output, error(r)
+                assert "value2" in r.output, error(r)
+                assert "value3" in r.output, error(r)
+
+        finally:
+            with Finally(f"I drop the table"):
+                node.query(
+                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER 'sharded_cluster' "
+                )
 
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
