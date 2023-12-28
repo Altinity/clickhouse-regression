@@ -362,7 +362,7 @@ def regression(
     if with_minio or with_s3amazon or with_s3gcs:
         if not self.skip:
             self.skip = []
-        self.skip.append(The("/tiered storage/:/manual move with downtime"))
+        self.skip.append(The("/tiered storage/:/:/manual move with downtime"))
 
     with Shell() as bash:
         if with_s3amazon:
