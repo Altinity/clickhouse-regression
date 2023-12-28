@@ -24,7 +24,7 @@ This is only available in versions 23.12 and later.
 - **0-copy** - Shorthand for Zero Copy Replication
 - **VFS** - Virtual File System
 - **S3** - Object Storage provided by [AWS]. Also used to refer to any S3-compatible object storage.
-- **VFDiskObjectStorageVFS** - The specific VFS implementation used by [ClickHouse] for object storage
+- **DiskObjectStorageVFS** - The specific VFS implementation used by [ClickHouse] for object storage
 
 ## Requirements
 
