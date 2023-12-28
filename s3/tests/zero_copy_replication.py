@@ -18,7 +18,6 @@ def global_setting(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     with Given("I set the nodes to replicate the table"):
         nodes = cluster.nodes["clickhouse"][:2]
@@ -29,17 +28,13 @@ def global_setting(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -121,7 +116,7 @@ def global_setting(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -138,7 +133,6 @@ def drop_replica(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     with Given("I set the nodes to replicate the table"):
         nodes = cluster.nodes["clickhouse"][:2]
@@ -149,17 +143,13 @@ def drop_replica(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -285,7 +275,7 @@ def drop_replica(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 @TestScenario
@@ -299,7 +289,6 @@ def add_replica(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     with Given("I set the nodes to replicate the table"):
         nodes = cluster.nodes["clickhouse"][:2]
@@ -310,17 +299,13 @@ def add_replica(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -353,9 +338,9 @@ def add_replica(self):
                 size_after = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
-                    minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
+                    minio_enabled=self.context.minio_enabled,
                 )
 
             with And("I create a replicated table on the second node"):
@@ -377,9 +362,9 @@ def add_replica(self):
                 size = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
-                    minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
+                    minio_enabled=self.context.minio_enabled,
                 )
                 assert size_after + 1 == size, error()
 
@@ -473,7 +458,7 @@ def add_replica(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -491,7 +476,6 @@ def drop_alter_replica(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     with Given("I set the nodes to replicate the table"):
         nodes = cluster.nodes["clickhouse"][:2]
@@ -502,17 +486,13 @@ def drop_alter_replica(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -597,7 +577,7 @@ def drop_alter_replica(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -729,7 +709,6 @@ def alter(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
@@ -758,17 +737,13 @@ def alter(self):
             "old_parts_lifetime": "5",
         }
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -795,9 +770,9 @@ def alter(self):
                 size_after = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
-                    minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
+                    minio_enabled=self.context.minio_enabled,
                 )
 
             with Then("I check that the sign is 1 for the second table"):
@@ -846,9 +821,9 @@ def alter(self):
                     current_size = get_bucket_size(
                         name=bucket_name,
                         prefix=bucket_path,
-                        minio_enabled=minio_enabled,
                         access_key=self.context.secret_access_key,
                         key_id=self.context.access_key_id,
+                        minio_enabled=self.context.minio_enabled,
                     )
                     if current_size < size_after * 1.5:
                         break
@@ -871,7 +846,7 @@ def alter(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -886,7 +861,6 @@ def alter_repeat(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
@@ -945,17 +919,13 @@ def alter_repeat(self):
             "old_parts_lifetime": "5",
         }
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -982,9 +952,9 @@ def alter_repeat(self):
                 size_after = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
-                    minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
+                    minio_enabled=self.context.minio_enabled,
                 )
 
             with Then("I check that the sign is 1 for the second table"):
@@ -1009,9 +979,9 @@ def alter_repeat(self):
                             current_size = get_bucket_size(
                                 name=bucket_name,
                                 prefix=bucket_path,
-                                minio_enabled=minio_enabled,
                                 access_key=self.context.secret_access_key,
                                 key_id=self.context.access_key_id,
+                                minio_enabled=self.context.minio_enabled,
                             )
                             if current_size < size_after * 1.5:
                                 break
@@ -1036,7 +1006,7 @@ def alter_repeat(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -1053,7 +1023,6 @@ def insert_multiple_replicas(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
     expected = 6306510
 
     with Given("I set the nodes to replicate the table"):
@@ -1065,17 +1034,13 @@ def insert_multiple_replicas(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -1180,9 +1145,9 @@ def insert_multiple_replicas(self):
                 current_size = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
-                    minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
+                    minio_enabled=self.context.minio_enabled,
                 )
                 added_size = current_size - size_before
 
@@ -1203,7 +1168,7 @@ def insert_multiple_replicas(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -1217,7 +1182,6 @@ def delete(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     with Given("I set the nodes to replicate the table"):
         nodes = cluster.nodes["clickhouse"][:2]
@@ -1228,17 +1192,13 @@ def delete(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -1272,9 +1232,9 @@ def delete(self):
                 size_after = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
-                    minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
+                    minio_enabled=self.context.minio_enabled,
                 )
 
             with And("I drop the table on one node"):
@@ -1286,7 +1246,7 @@ def delete(self):
                     prefix=bucket_path,
                     expected_size=size_after,
                     tolerance=None,
-                    minio_enabled=minio_enabled,
+                    minio_enabled=self.context.minio_enabled,
                 )
 
             with When("I drop the table on the other node"):
@@ -1301,7 +1261,7 @@ def delete(self):
                     prefix=bucket_path,
                     expected_size=size_before,
                     tolerance=5,
-                    minio_enabled=minio_enabled,
+                    minio_enabled=self.context.minio_enabled,
                 )
 
         finally:
@@ -1320,7 +1280,6 @@ def delete_all(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     with Given("I set the nodes to replicate the table"):
         nodes = cluster.nodes["clickhouse"][:2]
@@ -1331,17 +1290,13 @@ def delete_all(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -1376,9 +1331,9 @@ def delete_all(self):
                     get_bucket_size(
                         name=bucket_name,
                         prefix=bucket_path,
-                        minio_enabled=minio_enabled,
                         access_key=self.context.secret_access_key,
                         key_id=self.context.access_key_id,
+                        minio_enabled=self.context.minio_enabled,
                     )
                     > size_before
                 ), error()
@@ -1394,7 +1349,7 @@ def delete_all(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=None,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -1408,7 +1363,6 @@ def ttl_move(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
@@ -1429,26 +1383,22 @@ def ttl_move(self):
             "old_parts_lifetime": "5",
         }
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before_base = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with And("I get the size of the other s3 bucket before adding data"):
         size_before_tier = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path + "/tiered",
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -1549,7 +1499,7 @@ def ttl_move(self):
                 prefix=bucket_path,
                 expected_size=size_before_base,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
         with And(
             """The size of the other s3 bucket should be very close to the size
@@ -1560,7 +1510,7 @@ def ttl_move(self):
                 prefix=bucket_path + "/tiered",
                 expected_size=size_before_tier,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -1574,7 +1524,6 @@ def ttl_delete(self):
     node = current().context.node
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
-    minio_enabled = False
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
@@ -1592,17 +1541,13 @@ def ttl_delete(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with And("I get the size of the s3 bucket before adding data"):
         size_before = get_bucket_size(
             name=bucket_name,
             prefix=bucket_path,
-            minio_enabled=minio_enabled,
             access_key=self.context.secret_access_key,
             key_id=self.context.access_key_id,
+            minio_enabled=self.context.minio_enabled,
         )
 
     with mergetree_config(settings):
@@ -1703,7 +1648,7 @@ def ttl_delete(self):
                 prefix=bucket_path,
                 expected_size=size_before,
                 tolerance=5,
-                minio_enabled=minio_enabled,
+                minio_enabled=self.context.minio_enabled,
             )
 
 
@@ -2099,10 +2044,6 @@ def consistency_during_double_mutation(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with mergetree_config(settings):
         try:
             with Given("I have a table"):
@@ -2170,10 +2111,6 @@ def consistency_during_conflicting_mutation(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
 
-    with And("I set the minio_enabled parameter before checking bucket sizes"):
-        if self.context.storage == "minio":
-            minio_enabled = True
-
     with mergetree_config(settings):
         try:
             with Given("I have a table"):
@@ -2221,6 +2158,8 @@ def consistency_during_conflicting_mutation(self):
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
+    self.context.minio_enabled = (self.context.storage == "minio")
+
     if check_clickhouse_version(">=21.8")(self):
         self.context.zero_copy_replication_setting = (
             "allow_remote_fs_zero_copy_replication"
@@ -2261,13 +2200,13 @@ def outline(self):
         }
 
     with s3_storage(disks, policies, restart=True):
-        with Check("Bucket should be empty before test begins"):
+        with Check("bucket should be empty before test begins"):
             check_bucket_size(
                 name=self.context.bucket_name,
                 prefix=self.context.bucket_path,
                 expected_size=0,
                 tolerance=0,
-                minio_enabled=(self.context.storage == "minio"),
+                minio_enabled=self.context.minio_enabled,
             )
         for scenario in loads(current_module(), Scenario):
             scenario()
