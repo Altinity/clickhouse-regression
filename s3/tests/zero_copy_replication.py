@@ -19,11 +19,8 @@ def global_setting(self):
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -134,11 +131,8 @@ def drop_replica(self):
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -278,6 +272,7 @@ def drop_replica(self):
                 minio_enabled=self.context.minio_enabled,
             )
 
+
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
 def add_replica(self):
@@ -290,11 +285,8 @@ def add_replica(self):
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -477,11 +469,8 @@ def drop_alter_replica(self):
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -619,11 +608,8 @@ def metadata(self):
     node = current().context.node
     expected = 6306515
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -725,11 +711,8 @@ def alter(self):
             with Then(f"result should match the expected", description=expected):
                 assert r == expected, error()
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {
@@ -907,11 +890,8 @@ def alter_repeat(self):
                 expected=f"{sign}",
             )
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {
@@ -1025,11 +1005,8 @@ def insert_multiple_replicas(self):
     bucket_path = self.context.bucket_path
     expected = 6306510
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -1183,11 +1160,8 @@ def delete(self):
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -1281,11 +1255,8 @@ def delete_all(self):
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -1371,11 +1342,8 @@ def ttl_move(self):
         )
         node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {
@@ -1532,11 +1500,8 @@ def ttl_delete(self):
         )
         node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -1671,11 +1636,8 @@ def performance_insert(self):
         end_time = time.time()
         return end_time - start_time
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -1748,11 +1710,8 @@ def performance_select(self):
     cluster = self.context.cluster
     node = current().context.node
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -1867,11 +1826,8 @@ def performance_alter(self):
         )
         node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -2035,11 +1991,8 @@ def consistency_during_double_mutation(self):
     node = current().context.node
     table_name = "table_" + getuid()
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -2102,11 +2055,8 @@ def consistency_during_conflicting_mutation(self):
     node = current().context.node
     table_name = "table_" + getuid()
 
-    with Given("I set the nodes to replicate the table"):
-        nodes = cluster.nodes["clickhouse"][:2]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = {self.context.zero_copy_replication_setting: "1"}
@@ -2136,7 +2086,7 @@ def consistency_during_conflicting_mutation(self):
                 nodes[0].query(
                     f"ALTER TABLE {table_name} ADD COLUMN value3 String materialized value1"
                 )
-                
+
             with And(f"I materialize the new column on the first node"):
                 nodes[0].query(f"ALTER TABLE {table_name} MATERIALIZE COLUMN value3")
 
@@ -2154,11 +2104,12 @@ def consistency_during_conflicting_mutation(self):
                     f"DROP TABLE IF EXISTS {table_name} ON CLUSTER 'sharded_cluster' "
                 )
 
+
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
-    self.context.minio_enabled = (self.context.storage == "minio")
+    self.context.minio_enabled = self.context.storage == "minio"
 
     if check_clickhouse_version(">=21.8")(self):
         self.context.zero_copy_replication_setting = (
@@ -2198,6 +2149,12 @@ def outline(self):
                 }
             },
         }
+
+    with And("I have clickhouse nodes"):
+        self.context.ch_nodes = [
+            self.context.cluster.cluster.node(name)
+            for name in self.context.cluster.nodes["clickhouse"]
+        ]
 
     with s3_storage(disks, policies, restart=True):
         with Check("bucket should be empty before test begins"):
