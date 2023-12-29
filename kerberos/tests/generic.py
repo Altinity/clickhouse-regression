@@ -10,12 +10,13 @@ import time
 def ping(self):
     """Containers should be reachable"""
     ch_nodes = self.context.ch_nodes
+    cmd = "timeout 0.1 curl -v telnet://kerberos:88"
 
     for i in range(3):
-        with When(f"curl ch_{i} kerberos"):
-            r = ch_nodes[i].command(f"curl kerberos -c 1", no_checks=True)
-        with Then(f"return code should be 0"):
-            assert r.exitcode == 7, error()
+        with When(f"ch_{i} {cmd}"):
+            r = ch_nodes[i].command(cmd, no_checks=True)
+        with Then(f"Connection should succeed"):
+            assert "Connected to kerberos" in r.output, error()
 
 
 @TestScenario
