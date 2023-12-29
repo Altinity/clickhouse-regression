@@ -139,7 +139,6 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
         "intDiv(b,2)": ["b%2"],
         "(a,b)": ["(a%2,b%2)"],
         "(b,a)": ["(b%2,a%2)"],
-
     }
 
     if destination_partition_key in not_monotonic.get(source_partition_key, ""):
