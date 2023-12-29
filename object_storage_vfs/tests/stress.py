@@ -15,6 +15,7 @@ def stress_inserts(self):
     Check that performing tens of millions of individual inserts does not cause data to be lost
     """
     cluster = self.context.cluster
+    nodes = self.context.ch_nodes[:2]
 
     max_inserts = 50_000_000
     n_cols = 40
@@ -33,13 +34,7 @@ def stress_inserts(self):
             yield n // 2
             yield n
 
-    with Given("I get some cluster nodes"):
-        nodes = cluster.nodes["clickhouse"]
-
-    with And(f"cluster nodes {nodes}"):
-        nodes = [cluster.node(name) for name in nodes]
-
-    with And(f"I create a replicated table with {n_cols} cols on each node"):
+    with Given(f"I create a replicated table with {n_cols} cols on each node"):
         replicated_table(
             table_name="vfs_stress_test",
             columns=columns,
@@ -76,12 +71,7 @@ def stress_inserts(self):
 @TestFeature
 @Name("stress")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
-def feature(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
-
+def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 

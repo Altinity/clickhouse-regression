@@ -33,7 +33,7 @@ def local_setting(self):
 
     with Then("creating a table with allow_object_storage_vfs=1 is successful"):
         r = replicated_table(
-            table_name="my_vfs_table",
+            table_name="my_global_vfs_table",
             allow_vfs=True,
         )
         assert r.exitcode == 0, error()
@@ -50,7 +50,7 @@ def global_setting(self):
 
     with Then("creating a table is successful"):
         r = replicated_table(
-            table_name="my_vfs_table",
+            table_name="my_local_vfs_table",
         )
         assert r.exitcode == 0, error()
 
@@ -64,11 +64,7 @@ def global_setting(self):
     RQ_SRS_038_DiskObjectStorageVFS("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration("1.0"),
 )
-def feature(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
+def feature(self):
 
     with Given("I have S3 disks configured"):
         s3_config()

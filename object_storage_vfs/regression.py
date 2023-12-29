@@ -12,7 +12,9 @@ from s3.tests.common import start_minio
 
 from object_storage_vfs.requirements import *
 
-xfails = {}
+xfails = {
+    ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
+}
 
 ffails = {}
 
@@ -48,25 +50,26 @@ def minio(
             },
         )
         self.context.cluster = cluster
+        self.context.node = self.context.cluster.node("clickhouse1")
+        self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.access_key_id = root_user
+        self.context.secret_access_key = root_password
+        self.context.bucket_name = "root"
+        self.context.bucket_path = "data/object-storage-vfs"
+
+        self.context.minio_enabled = True
 
     with And("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
+        self.context.uri = uri_bucket_file
 
-    Feature(test=load("object_storage_vfs.tests.core", "feature"))(
-        uri=uri_bucket_file, key=root_user, secret=root_password
-    )
-    Feature(test=load("object_storage_vfs.tests.settings", "feature"))(
-        uri=uri_bucket_file, key=root_user, secret=root_password
-    )
-    Feature(test=load("object_storage_vfs.tests.integrity", "feature"))(
-        uri=uri_bucket_file, key=root_user, secret=root_password
-    )
+    Feature(test=load("object_storage_vfs.tests.core", "feature"))()
+    Feature(test=load("object_storage_vfs.tests.settings", "feature"))()
+    Feature(test=load("object_storage_vfs.tests.integrity", "feature"))()
 
     if self.context.stress:
-        Feature(test=load("object_storage_vfs.tests.stress", "feature"))(
-            uri=uri_bucket_file, key=root_user, secret=root_password
-        )
+        Feature(test=load("object_storage_vfs.tests.stress", "feature"))()
 
 
 @TestModule

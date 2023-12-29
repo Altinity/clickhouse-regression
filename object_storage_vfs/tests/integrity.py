@@ -14,7 +14,7 @@ def disable_vfs_with_vfs_table(self):
     node = current().context.node
 
     try:
-        with Check("I create a table with VFS globally enabled"):
+        with Check("create a table with VFS globally enabled"):
             with Given("I enable allow_object_storage_vfs"):
                 enable_vfs()
 
@@ -37,7 +37,7 @@ def disable_vfs_with_vfs_table(self):
             with Then("the data is accesssible"):
                 assert_row_count(node=node, table_name="my_vfs_table", rows=1000000)
 
-        with Check("Access the table without VFS"):
+        with Check("access the table without VFS"):
             with When("VFS is no longer enabled"):
                 check_global_vfs_state(node=node, enabled=False)
 
@@ -89,11 +89,7 @@ def enable_vfs_with_non_vfs_table(self):
 @TestFeature
 @Name("integrity")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
-def feature(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
+def feature(self):
 
     with Given("I have S3 disks configured"):
         s3_config()
