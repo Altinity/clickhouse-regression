@@ -47,7 +47,7 @@ def stress_inserts(self):
             nodes[0].query(
                 f"""
                 INSERT INTO vfs_stress_test SELECT * FROM generateRandom('{columns}') 
-                LIMIT {n_inserts} SETTINGS max_insert_block_size=1, max_insert_threads=32
+                LIMIT {n_inserts} SETTINGS max_insert_block_size=1, max_insert_threads=32, max_memory_usage=0
                 """,
                 exitcode=0,
                 timeout=600,
