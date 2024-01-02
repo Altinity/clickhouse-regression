@@ -2152,7 +2152,7 @@ def outline(self):
 
     with And("I have clickhouse nodes"):
         self.context.ch_nodes = [
-            self.context.cluster.cluster.node(name)
+            self.context.cluster.node(name)
             for name in self.context.cluster.nodes["clickhouse"]
         ]
 
