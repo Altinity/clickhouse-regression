@@ -44,10 +44,10 @@ xfails = {
     "concurrent alter and delete/:/concurrent delete attach detach partition/": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50922")
     ],
-    "/lightweight delete/concurrent alter and delete/:/concurrent delete drop partition with data addition/:":[
+    ":/concurrent alter and delete/:/concurrent delete drop partition with data addition/:":[
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
     ],
-    "/lightweight delete/concurrent alter and delete/:/concurrent delete drop partition/:":[
+    ":/concurrent alter and delete/:/concurrent delete drop partition/:":[
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
     ]
 }
