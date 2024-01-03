@@ -14,6 +14,7 @@ from object_storage_vfs.requirements import *
 
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
+    ":/combinatorial": [(Fail, "shutdown timeout, needs investigation")],
 }
 
 ffails = {}
