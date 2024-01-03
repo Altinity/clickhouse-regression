@@ -157,6 +157,33 @@ version: 1.0
 [ClickHouse] SHALL support TTL object deletion when VFS is used with the MergeTree engine.
 When objects are removed, all other objects SHALL be accessible with no errors.
 
+### Combinatorial
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Combinatorial
+version: 0.0
+
+[Clickhouse]  SHALL support any sequence of supported operations on a table configured with any combination of  supported table combinations.
+
+##### Supported Table Configurations
+
+| Engine | Replicated | # Columns | Storage Policy |
+| ---- | :--- | ---- | ---- |
+| MergeTree | Yes | 10 | S3 |
+| ReplacingMergeTree | No | 100 | Tiered |
+| CollapsingMergeTree |  | 1000 |  |
+| VersionedCollapsingMergeTree |  | 10000 |  |
+| AggregatingMergeTree |  |  |  |
+| SummingMergeTree |  |  |  |
+
+##### Supported Operations
+
+| Simple | TABLE          |     |
+| ------ | -------------- | --- |
+| INSERT | DROP TABLE     |     |
+| DELETE | UNDROP TABLE   |     |
+| UPDATE | TRUNCATE TABLE |     |
+| SELECT |                |     |
+
 ### Performance
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Performance

@@ -285,6 +285,22 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete = Requirement(
     num="4.3.4",
 )
 
+RQ_SRS_038_DiskObjectStorageVFS_Combinatorial = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Combinatorial",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[Clickhouse]  SHALL support any sequence of supported operations on a table configured with any combination of  supported table combinations.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.1",
+)
+
 RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
     name="RQ.SRS-038.DiskObjectStorageVFS.Performance",
     version="1.0",
@@ -298,7 +314,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.1",
+    num="4.5.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration = Requirement(
@@ -330,7 +346,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.1",
+    num="4.6.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS = Requirement(
@@ -345,7 +361,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.2",
+    num="4.6.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO = Requirement(
@@ -360,7 +376,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.3",
+    num="4.6.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS = Requirement(
@@ -376,7 +392,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.4",
+    num="4.6.4",
 )
 
 SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
@@ -459,24 +475,30 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             level=3,
             num="4.3.4",
         ),
-        Heading(name="Performance", level=2, num="4.4"),
+        Heading(name="Combinatorial", level=2, num="4.4"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Performance", level=3, num="4.4.1"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatorial", level=3, num="4.4.1"
         ),
-        Heading(name="Object Storage Providers", level=2, num="4.5"),
+        Heading(name="Supported Table Configurations", level=4, num="4.4.1.1"),
+        Heading(name="Supported Operations", level=4, num="4.4.1.2"),
+        Heading(name="Performance", level=2, num="4.5"),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Performance", level=3, num="4.5.1"
+        ),
+        Heading(name="Object Storage Providers", level=2, num="4.6"),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration",
             level=3,
-            num="4.5.1",
+            num="4.6.1",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS", level=3, num="4.5.2"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS", level=3, num="4.6.2"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO", level=3, num="4.5.3"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO", level=3, num="4.6.3"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS", level=3, num="4.5.4"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS", level=3, num="4.6.4"
         ),
         Heading(name="References", level=1, num="5"),
     ),
@@ -495,6 +517,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLMove,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete,
+        RQ_SRS_038_DiskObjectStorageVFS_Combinatorial,
         RQ_SRS_038_DiskObjectStorageVFS_Performance,
         RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration,
         RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS,
@@ -528,7 +551,7 @@ This is only available in versions 23.12 and later.
 - **0-copy** - Shorthand for Zero Copy Replication
 - **VFS** - Virtual File System
 - **S3** - Object Storage provided by [AWS]. Also used to refer to any S3-compatible object storage.
-- **VFDiskObjectStorageVFS** - The specific VFS implementation used by [ClickHouse] for object storage
+- **DiskObjectStorageVFS** - The specific VFS implementation used by [ClickHouse] for object storage
 
 ## Requirements
 
@@ -661,6 +684,33 @@ version: 1.0
 [ClickHouse] SHALL support TTL object deletion when VFS is used with the MergeTree engine.
 When objects are removed, all other objects SHALL be accessible with no errors.
 
+### Combinatorial
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Combinatorial
+version: 0.0
+
+[Clickhouse]  SHALL support any sequence of supported operations on a table configured with any combination of  supported table combinations.
+
+##### Supported Table Configurations
+
+| Engine | Replicated | # Columns | Storage Policy |
+| ---- | :--- | ---- | ---- |
+| MergeTree | Yes | 10 | S3 |
+| ReplacingMergeTree | No | 100 | Tiered |
+| CollapsingMergeTree |  | 1000 |  |
+| VersionedCollapsingMergeTree |  | 10000 |  |
+| AggregatingMergeTree |  |  |  |
+| SummingMergeTree |  |  |  |
+
+##### Supported Operations
+
+| Simple | TABLE          |     |
+| ------ | -------------- | --- |
+| INSERT | DROP TABLE     |     |
+| DELETE | UNDROP TABLE   |     |
+| UPDATE | TRUNCATE TABLE |     |
+| SELECT |                |     |
+
 ### Performance
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Performance
@@ -719,5 +769,7 @@ version: 1.0
 [Git]: https://git-scm.com/
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs
 [Revision History]: https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md
+[Google Cloud Storage]: https://en.wikipedia.org/wiki/Google_Cloud_Storage
+[MinIO]: https://en.wikipedia.org/wiki/MinIO
 """,
 )
