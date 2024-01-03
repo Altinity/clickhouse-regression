@@ -11,18 +11,16 @@ DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 @TestStep(Given)
 def s3_config(self):
     with Given("I have two S3 disks configured"):
-        uri_tiered = self.context.uri + "tiered/"
-
         disks = {
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}object-storage-vfs/",
+                "endpoint": f"{self.context.uri}-vfs/",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
             "external_tiered": {
                 "type": "s3",
-                "endpoint": f"{uri_tiered}",
+                "endpoint": f"{self.context.uri}-vfs-tiered",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
