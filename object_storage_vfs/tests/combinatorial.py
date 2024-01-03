@@ -73,9 +73,7 @@ def create_test_table(
         query_settings=settings,
     )
 
-
 @TestOutline(Combination)
-@Name("create table")
 def check_table_combination(
     self,
     engine: str,
@@ -93,8 +91,25 @@ def check_table_combination(
             storage_policy=storage_policy,
         )
 
+    with Given("data is inserted into the table"):
+        n_rows = 10000
+
+        node.query(f"""
+                    INSERT INTO {table.name} ({','.join([c.name for c in table.columns])})
+                    SELECT
+                        1 AS sign,
+                        1 AS ver,
+                        * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
+                    LIMIT {n_rows}
+                   """
+                   )
+
+    with Then("the data can be queried"):
+        assert_row_count(node=node, table_name=table.name, rows=n_rows)
+
 
 @TestScenario
+@Name("create table")
 def table_combinations(self):
     for table_config in CoveringArray(table_configurations, strength=2):
         title = ",".join([f"{k}={v}" for k, v in table_config.items()])
