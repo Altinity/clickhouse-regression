@@ -110,6 +110,7 @@ def check_table_combination(
 
 @TestScenario
 @Name("create table")
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatorial("0.0"))
 def table_combinations(self):
     for table_config in CoveringArray(table_configurations, strength=2):
         title = ",".join([f"{k}={v}" for k, v in table_config.items()])
