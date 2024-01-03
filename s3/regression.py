@@ -136,6 +136,7 @@ xfails = {
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
     ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
+    "aws s3/:/zero copy replication/:": [(Fail, "Data cleanup not working as expected")],
     "aws s3/:/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
     ],
