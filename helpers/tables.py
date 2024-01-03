@@ -383,6 +383,7 @@ def create_table(
     empty=None,
     if_not_exists=False,
     node=None,
+    cluster=None,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -401,10 +402,15 @@ def create_table(
     else:
         if_not_exists = ""
 
+    if cluster:
+        cluster = f"ON CLUSTER '{cluster}' "
+    else:
+        cluster = ""
+
     try:
         with By(f"creating table {name}"):
             query = (
-                f"CREATE TABLE {if_not_exists}{name} {columns_def}\n"
+                f"CREATE TABLE {if_not_exists}{name} {cluster}{columns_def}\n"
                 f"ENGINE = {engine}"
             )
 

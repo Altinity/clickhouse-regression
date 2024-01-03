@@ -14,13 +14,13 @@ def s3_config(self):
         disks = {
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}-vfs/",
+                "endpoint": f"{self.context.uri}object-storage-vfs/",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
             "external_tiered": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}-vfs-tiered",
+                "endpoint": f"{self.context.uri}object-storage-vfs-tiered",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
