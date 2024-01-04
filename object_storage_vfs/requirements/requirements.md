@@ -3,6 +3,42 @@
 
 ## Table of Contents
 
+* [Table of Contents](#table-of-contents)
+* [Revision History](#revision-history)
+* [Introduction](#introduction)
+* [Terminology](#terminology)
+* [Requirements](#requirements)
+  * [Core](#core)
+    * [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.AddReplica](#rqsrs-038diskobjectstoragevfscoreaddreplica)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel](#rqsrs-038diskobjectstoragevfscoredeleteinparallel)
+  * [Settings](#settings)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Global](#rqsrs-038diskobjectstoragevfssettingsglobal)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Local](#rqsrs-038diskobjectstoragevfssettingslocal)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
+  * [Data Integrity](#data-integrity)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
+  * [Combinatorial](#combinatorial)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Combinatorial](#rqsrs-038diskobjectstoragevfscombinatorial)
+      * [Supported Table Configurations](#supported-table-configurations)
+      * [Supported Operations](#supported-operations)
+  * [Performance](#performance)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
+  * [Object Storage Providers](#object-storage-providers)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
+* [References](#references)
+
+
 ## Revision History
 
 This document is stored in an electronic form using [Git] source control
@@ -166,14 +202,14 @@ version: 0.0
 
 ##### Supported Table Configurations
 
-| Engine | Replicated | # Columns | Storage Policy |
-| ---- | :--- | ---- | ---- |
-| MergeTree | Yes | 10 | S3 |
-| ReplacingMergeTree | No | 100 | Tiered |
-| CollapsingMergeTree |  | 1000 |  |
-| VersionedCollapsingMergeTree |  | 10000 |  |
-| AggregatingMergeTree |  |  |  |
-| SummingMergeTree |  |  |  |
+| Engine                       | Replicated | # Columns | Storage Policy |
+| ---------------------------- | :--------- | --------- | -------------- |
+| MergeTree                    | Yes        | 10        | S3             |
+| ReplacingMergeTree           | No         | 100       | Tiered         |
+| CollapsingMergeTree          |            | 1000      |                |
+| VersionedCollapsingMergeTree |            | 10000     |                |
+| AggregatingMergeTree         |            |           |                |
+| SummingMergeTree             |            |           |                |
 
 ##### Supported Operations
 
