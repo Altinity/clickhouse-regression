@@ -7,36 +7,11 @@ from helpers.common import (
     getuid,
 )
 from helpers.tables import *
-from alter.table.replace_partition.engines import (
-    partitioned_replicated_merge_tree_table,
-)
 
 
 def valid_partition_key_pair(source_partition_key, destination_partition_key):
 
     """Validates if pair source partition key - destination partition key is valid for `attach partition from` statement."""
-    different = {
-        "(intDiv(a,2),intDiv(b,2))": [
-            "(a%2,b%2)",
-            "(b%2,a%2)",
-            "(a,b,c)",
-            "(a,c,b)",
-            "(b,a,c)",
-            "(b,c,a)",
-            "(c,a,b)",
-            "(c,b,a)",
-        ],
-        "(intDiv(b,2),intDiv(a,2))": [
-            "(a%2,b%2)",
-            "(b%2,a%2)",
-            "(a,b,c)",
-            "(a,c,b)",
-            "(b,a,c)",
-            "(b,c,a)",
-            "(c,a,b)",
-            "(c,b,a)",
-        ],
-    }
     not_subset = {
         "tuple()": [
             "a",
@@ -49,7 +24,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(b,2)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -59,6 +34,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -71,7 +48,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(b,2)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -81,6 +58,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -93,7 +72,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(b,2)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -103,6 +82,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -115,7 +96,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(b,2)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -125,6 +106,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -137,7 +120,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(b,2)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -147,6 +130,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -159,7 +144,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(b,2)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -169,6 +154,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -183,7 +170,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(a,3)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -193,6 +180,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -207,7 +196,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(a,3)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -217,6 +206,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -231,7 +222,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(a,3)",
             "(a,b)",
             "(a,b%2)",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
             "(a%2,b%2)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
@@ -241,6 +232,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -251,6 +244,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -261,16 +256,20 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
             "(c,a,b)",
             "(c,b,a)",
         ],
-        "(intDiv(a,2), b)": [
+        "(intDiv(a,2),b)": [
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -281,6 +280,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -291,6 +292,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -301,6 +304,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -311,6 +316,56 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+            "(a,c,b)",
+            "(b,a,c)",
+            "(b,c,a)",
+            "(c,a,b)",
+            "(c,b,a)",
+        ],
+        "(b,c)": [
+            "a",
+            "a%2",
+            "a%3",
+            "intDiv(a,2)",
+            "intDiv(a,3)",
+            "(a,b)",
+            "(a,b%2)",
+            "(intDiv(a,2),b)",
+            "(a%2,b%2)",
+            "(intDiv(a,2),intDiv(b,2))",
+            "(a,intDiv(b,2))",
+            "(b,a)",
+            "(b%2,a%2)",
+            "(intDiv(b,2),intDiv(a,2))",
+            "(a,c)",
+            "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+            "(a,c,b)",
+            "(b,a,c)",
+            "(b,c,a)",
+            "(c,a,b)",
+            "(c,b,a)",
+        ],
+        "(a,c)": [
+            "b",
+            "b%2",
+            "intDiv(b,2)",
+            "(a,b)",
+            "(a,b%2)",
+            "(intDiv(a,2),b)",
+            "(a%2,b%2)",
+            "(intDiv(a,2),intDiv(b,2))",
+            "(a,intDiv(b,2))",
+            "(b,a)",
+            "(b%2,a%2)",
+            "(intDiv(b,2),intDiv(a,2))",
+            "(b,c)",
+            "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -321,6 +376,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -331,6 +388,8 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,c)",
             "(a,c)",
             "(a,b,c)",
+            "(a%2,b%2,c%2)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
             "(a,c,b)",
             "(b,a,c)",
             "(b,c,a)",
@@ -354,7 +413,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(a%2,b%2)",
             "(b%2,a%2)",
         ],
-        "(intDiv(a,2), b)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
+        "(intDiv(a,2),b)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
         "(a%2,b%2)": ["a%3", "(a,b%2)"],
         "(intDiv(a,2),intDiv(b,2))": [
             "a%2",
@@ -368,7 +427,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
         "(b,a)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
         "(b%2,a%2)": ["a%3", "(a,b%2)"],
         "(b,c)": ["b%2"],
-        "(a,c)": ["b%2"],
+        "(a,c)": ["a%2", "a%3"],
         "(intDiv(b,2),intDiv(a,2))": [
             "a%2",
             "a%3",
@@ -377,12 +436,70 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(a%2,b%2)",
             "(b%2,a%2)",
         ],
-        "(a,b,c)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
-        "(a,c,b)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
-        "(b,a,c)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
-        "(b,c,a)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
-        "(c,a,b)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
-        "(c,b,a)": ["a%2", "a%3", "b%2", "(a,b%2)", "(a%2,b%2)", "(b%2,a%2)"],
+        "(a,b,c)": [
+            "a%2",
+            "a%3",
+            "b%2",
+            "(a,b%2)",
+            "(a%2,b%2)",
+            "(b%2,a%2)",
+            "(a%2,b%2,c%2)",
+        ],
+        "(a%2,b%2,c%2)": ["a%3", "(a,b%2)"],
+        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))": [
+            "a%2",
+            "a%3",
+            "b%2",
+            "(a,b%2)",
+            "(a%2,b%2)",
+            "(b%2,a%2)",
+            "(a%2,b%2,c%2)",
+        ],
+        "(a,c,b)": [
+            "a%2",
+            "a%3",
+            "b%2",
+            "(a,b%2)",
+            "(a%2,b%2)",
+            "(b%2,a%2)",
+            "(a%2,b%2,c%2)",
+        ],
+        "(b,a,c)": [
+            "a%2",
+            "a%3",
+            "b%2",
+            "(a,b%2)",
+            "(a%2,b%2)",
+            "(b%2,a%2)",
+            "(a%2,b%2,c%2)",
+        ],
+        "(b,c,a)": [
+            "a%2",
+            "a%3",
+            "b%2",
+            "(a,b%2)",
+            "(a%2,b%2)",
+            "(b%2,a%2)",
+            "(a%2,b%2,c%2)",
+        ],
+        "(c,a,b)": [
+            "a%2",
+            "a%3",
+            "b%2",
+            "(a,b%2)",
+            "(a%2,b%2)",
+            "(b%2,a%2)",
+            "(a%2,b%2,c%2)",
+        ],
+        "(c,b,a)": [
+            "a%2",
+            "a%3",
+            "b%2",
+            "(a,b%2)",
+            "(a%2,b%2)",
+            "(b%2,a%2)",
+            "(a%2,b%2,c%2)",
+        ],
     }
 
     partially_different = {
@@ -399,7 +516,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,a)",
             "intDiv(a,3)",
             "(a,intDiv(b,2))",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
         ],
         "(a%2,b%2)": [
             "a",
@@ -412,7 +529,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(intDiv(a,2),intDiv(b,2))",
             "(intDiv(b,2),intDiv(a,2))",
             "(a,intDiv(b,2))",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
         ],
         "(intDiv(b,2),intDiv(a,2))": [
             "a",
@@ -421,7 +538,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(b,a)",
             "intDiv(a,3)",
             "(a,intDiv(b,2))",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
         ],
         "(b%2,a%2)": [
             "a",
@@ -434,23 +551,95 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(intDiv(a,2),intDiv(b,2))",
             "(intDiv(b,2),intDiv(a,2))",
             "(a,intDiv(b,2))",
-            "(intDiv(a,2), b)",
+            "(intDiv(a,2),b)",
+        ],
+        "(a%2,b%2,c%2)": [
+            "a",
+            "intDiv(a,2)",
+            "intDiv(a,3)",
+            "b",
+            "(a,b)",
+            "(a,intDiv(b,2))",
+            "(intDiv(a,2),b)",
+            "(intDiv(a,2),intDiv(b,2))",
+            "(b,a)",
+            "(intDiv(b,2),intDiv(a,2))",
+            "(b,c)",
+            "(a,c)",
+            "intDiv(b,2)",
+            "(a,b,c)",
+            "(a,c,b)",
+            "(b,a,c)",
+            "(b,c,a)",
+            "(c,a,b)",
+            "(c,b,a)",
+            "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+        ],
+        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))": [
+            "a",
+            "intDiv(a,3)",
+            "b",
+            "(a,b)",
+            "(a,intDiv(b,2))",
+            "(intDiv(a,2),b)",
+            "(b,a)",
+            "(b,c)",
+            "(a,c)",
+            "(a,c,b)",
+            "(a,b,c)",
+            "(b,a,c)",
+            "(b,c,a)",
+            "(c,a,b)",
+            "(c,b,a)",
         ],
     }
 
-    if destination_partition_key in not_monotonic.get(source_partition_key, ""):
+    if (
+        destination_partition_key in not_monotonic.get(source_partition_key, "")
+        and destination_partition_key not in not_subset.get(source_partition_key, "")
+        and destination_partition_key
+        not in partially_different.get(source_partition_key, "")
+    ):
         return False, "not monotonic"
 
-    if destination_partition_key in not_subset.get(source_partition_key, ""):
+    if (
+        destination_partition_key in not_subset.get(source_partition_key, "")
+        and destination_partition_key not in not_monotonic.get(source_partition_key, "")
+        and destination_partition_key
+        not in partially_different.get(source_partition_key, "")
+    ):
         return False, "not subset"
 
-    if destination_partition_key in different.get(source_partition_key, ""):
-        return False, "different"
-
-    if destination_partition_key in partially_different.get(source_partition_key, ""):
+    if (
+        destination_partition_key in partially_different.get(source_partition_key, "")
+        and destination_partition_key not in not_monotonic.get(source_partition_key, "")
+        and destination_partition_key not in not_subset.get(source_partition_key, "")
+    ):
         return False, "partially different"
 
     return True, ""
+
+
+def check(
+    partition_ids,
+    source_table_name,
+    destination_table_name,
+    node,
+    exitcode=None,
+    message=None,
+    with_id=False,
+):
+    for partition_id in partition_ids:
+        if with_id:
+            query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
+        else:
+            query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
+
+        node.query(
+            query,
+            exitcode=exitcode,
+            message=message,
+        )
 
 
 @TestScenario
@@ -463,6 +652,7 @@ def check_attach_partition_from(
     destination_partition_key,
     source_table_engine="MergeTree",
     destination_table_engine="MergeTree",
+    with_id=False,
 ):
     """Check `attach partition from` statement with different types of source and destination tables."""
     node = self.context.node
@@ -493,56 +683,96 @@ def check_attach_partition_from(
         )
 
     with And("I attach partition from source table into destination table"):
-        partition_ids = set(
-            node.query(
-                f"SELECT partition_id FROM system.parts WHERE table='{source_table_name}'"
-            ).output.split()
+        if with_id:
+            partition_list_query = f"SELECT partition_id FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id"
+        else:
+            partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id"
+
+        partition_ids = sorted(
+            list(set(node.query(partition_list_query).output.split()))
         )
         valid, reason = valid_partition_key_pair(
             source_partition_key, destination_partition_key
         )
+
         if valid:
             for partition_id in partition_ids:
-                query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
+                if with_id:
+                    query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
+                else:
+                    query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
                 node.query(query)
-
-            with Then("I check that specidied partition was attached"):
-                source_partition_data = node.query(
-                    f"SELECT * FROM {source_table_name} ORDER BY a,b,c"
-                ).output
-                destination_partition_data = node.query(
-                    f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
-                ).output
-
-                assert source_partition_data == destination_partition_data
         else:
-            exitcode = None
-            message = None
-
             if reason == "not monotonic":
                 exitcode = 36
                 message = "DB::Exception: Destination table partition expression is not monotonically increasing."
+                check(
+                    partition_ids=partition_ids,
+                    source_table_name=source_table_name,
+                    destination_table_name=destination_table_name,
+                    node=node,
+                    exitcode=exitcode,
+                    message=message,
+                    with_id=with_id,
+                )
             elif reason == "not subset":
                 exitcode = 36
                 message = "DB::Exception: Destination table partition expression columns must be a subset of source table partition expression columns."
-            elif reason == "different":
-                exitcode = 248
-                message = "DB::Exception: Can not create the partition. A partition can not contain values that have different partition ids."
-            elif reason == "partially different":
-                skip("to do")
-
-            for partition_id in partition_ids:
-                query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
-                node.query(
-                    query,
+                check(
+                    partition_ids=partition_ids,
+                    source_table_name=source_table_name,
+                    destination_table_name=destination_table_name,
+                    node=node,
                     exitcode=exitcode,
                     message=message,
+                    with_id=with_id,
                 )
+            elif reason == "partially different":
+                exitcode = 248
+                message = "DB::Exception: Can not create the partition. A partition can not contain values that have different partition ids."
+                for partition_id in partition_ids:
+                    if with_id:
+                        query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
+                    else:
+                        query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
+
+                    try:
+                        node.query(
+                            query,
+                            exitcode=exitcode,
+                            message=message,
+                        )
+                    except:
+                        try:
+                            node.query(query)
+
+                        except Exception as e:
+                            fail(f"An unexpected exception occurred: {e}")
+
+    with Then(
+        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_table_engine}, destination table engine - {destination_table_engine}:"
+    ):
+        if valid:
+            source_partition_data = node.query(
+                f"SELECT * FROM {source_table_name} ORDER BY a,b,c"
+            ).output
+            destination_partition_data = node.query(
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
+            ).output
+
+            assert source_partition_data == destination_partition_data
+
+        elif reason == "partially different":
+            execute_query(
+                f"SELECT a,b,c,extra FROM {destination_table_name} ORDER BY a,b,c,extra",
+                snapshot_name="/alter/table/attach_partition/partition_key/attach_partition_from/"
+                + current().name.split("/")[-1],
+            )
 
 
 @TestSketch(Scenario)
 @Flags(TE)
-def attach_partition_from(self):
+def attach_partition_from(self, with_id=False):
     """Run test check with different partition keys for both source and destination tables to see if `attach partition from` is possible."""
 
     partition_keys = {
@@ -556,17 +786,19 @@ def attach_partition_from(self):
         "b%2",
         "intDiv(b,2)",
         "(a,b)",
-        "(b,c)",
-        "(a,c)",
         "(a%2,b%2)",
         "(a,intDiv(b,2))",
         "(a,b%2)",
-        "(intDiv(a,2), b)",
+        "(intDiv(a,2),b)",
         "(intDiv(a,2),intDiv(b,2))",
         "(b,a)",
         "(b%2,a%2)",
         "(intDiv(b,2),intDiv(a,2))",
+        "(b,c)",
+        "(a,c)",
         "(a,b,c)",
+        "(a%2,b%2,c%2)",
+        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
         "(a,c,b)",
         "(b,a,c)",
         "(b,c,a)",
@@ -576,12 +808,12 @@ def attach_partition_from(self):
 
     engines = {
         "MergeTree",
-        # "ReplacingMergeTree",
-        # "AggregatingMergeTree",
-        # "SummingMergeTree",
-        #     # "CollapsingMergeTree",
-        #     # "VersionedCollapsingMergeTree",
-        #     # "GraphiteMergeTree",
+        "ReplacingMergeTree",
+        "AggregatingMergeTree",
+        "SummingMergeTree",
+        "CollapsingMergeTree",
+        "VersionedCollapsingMergeTree",
+        "GraphiteMergeTree",
     }
 
     check_attach_partition_from(
@@ -591,6 +823,7 @@ def attach_partition_from(self):
         destination_table_engine=either(*engines),
         source_partition_key=either(*partition_keys),
         destination_partition_key=either(*partition_keys),
+        with_id=with_id,
     )
 
 
@@ -607,3 +840,4 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=attach_partition_from)
+    Scenario(test=attach_partition_from)(with_id=True)

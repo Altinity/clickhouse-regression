@@ -87,7 +87,7 @@ def regression(
     clickhouse_version,
     clickhouse_binary_path,
     collect_service_logs,
-    stress
+    stress,
 ):
     """Alter regression."""
     nodes = {
@@ -112,11 +112,12 @@ def regression(
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             configs_dir=current_dir(),
-            use_specific_version=True
+            use_specific_version=True,
         )
         self.context.cluster = cluster
 
     Feature(run=load("alter.table.replace_partition.feature", "feature"))
+    Feature(run=load("alter.table.attach_partition.feature", "feature"))
 
 
 if main():
