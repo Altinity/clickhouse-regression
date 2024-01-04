@@ -5,9 +5,6 @@ from testflows.core import *
 
 from helpers.tables import *
 
-sep = "/"
-
-
 def current_cpu():
     """Return current cpu architecture."""
     arch = platform.processor()
@@ -141,12 +138,44 @@ def check_partition_was_attached(
     if node is None:
         node = self.context.node
 
-    with By("selecting data from the table"):
+    with By("I check that there is no partition in detached folder"):
         partition_values = node.query(
             f"SELECT partition_id FROM system.detached_parts WHERE table = '{table}' and partition_id = '{partition}' ORDER BY tuple(*)"
         ).output
 
         assert len(partition_values) == 0
+
+    with And("I check that data from the partition is on the table"):
+        data = node.query(
+            f"SELECT partition FROM system.parts WHERE partition = '{partition}' and table = '{table}'"
+        ).output
+
+        assert len(data) > 0
+
+
+@TestStep(Then)
+def check_partition_was_attached_from(
+    self,
+    source_table,
+    destination_table,
+    node=None,
+    partition=1,
+):
+    """Check that the partition was attached on the table."""
+    if node is None:
+        node = self.context.node
+
+    with By(
+        "I check that data in attached partition is the same in both the source and destination tables"
+    ):
+        source_data = node.query(
+            f"SELECT * FROM {source_table} WHERE p = {partition} ORDER BY p"
+        ).output
+        destination_data = node.query(
+            f"SELECT * FROM {destination_table} WHERE p = {partition} ORDER BY p"
+        ).output
+
+        assert source_data == destination_data
 
 
 @TestStep(Then)
@@ -187,7 +216,7 @@ def insert_data(
 
     with By("Inserting random values into a column with uint64 datatype"):
         for i in range(1, number_of_partitions + 1):
-            for parts in range(1, number_of_parts + 1):
+            for _ in range(1, number_of_parts + 1):
                 node.query(
                     f"INSERT INTO {table_name} (a, b, i) SELECT {i%4+bias}, {i}, rand64() FROM numbers({number_of_values})"
                 )
@@ -210,6 +239,28 @@ def insert_date_data(
             node.query(
                 f"INSERT INTO {table_name} (timestamp) VALUES (toDate('2023-12-20')+{i}+{bias})"
             )
+
+
+@TestStep(Given)
+def create_partitions_with_random_uint64(
+    self,
+    table_name,
+    number_of_values=3,
+    number_of_partitions=5,
+    number_of_parts=1,
+    node=None,
+    bias=0,
+):
+    """Insert random UInt64 values into a column and create multiple partitions based on the value of number_of_partitions."""
+    if node is None:
+        node = self.context.node
+
+    with By("Inserting random values into a column with uint64 datatype"):
+        for i in range(1, number_of_partitions + 1):
+            for _ in range(1, number_of_parts + 1):
+                node.query(
+                    f"INSERT INTO {table_name} (p, i) SELECT {i+bias}, rand64() FROM numbers({number_of_values})"
+                )
 
 
 def execute_query(
