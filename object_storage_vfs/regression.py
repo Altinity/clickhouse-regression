@@ -102,23 +102,27 @@ def regression(
 ):
     """Disk Object Storage VFS regression."""
 
+    if check_clickhouse_version("<23.11")(self):
+        skip("vfs not supported on < 23.11")
+
     if not allow_vfs:
         skip("VFS is not enabled")
 
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
 
-    if check_clickhouse_version("<23.11")(self):
-        skip("vfs not supported on < 23.11")
+    if storages is None:
+        storages = ["minio"]
 
-    Module(test=minio)(
-        local=local,
-        clickhouse_binary_path=clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        uri=minio_uri,
-        root_user=minio_root_user,
-        root_password=minio_root_password,
-    )
+    if "minio" in storages:
+        Module(test=minio)(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            uri=minio_uri,
+            root_user=minio_root_user,
+            root_password=minio_root_password,
+        )
 
 
 if main():
