@@ -933,7 +933,7 @@ jobs:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
-      SUITE: s3
+      SUITE: object_storage_vfs
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'object_storage_vfs_all' || inputs.suite == 'object_storage_vfs_minio' }}
     steps:
