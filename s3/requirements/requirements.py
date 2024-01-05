@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231001.1175523.
+# document by TestFlows v2.0.231130.1212236.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -1372,8 +1372,9 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support modifying replicated tables. If a replicated table\n"
-        "is modified, the changes SHALL be reproduced without data loss on all existing \n"
+        "[ClickHouse] SHALL support operations on replicated tables (ALTER,\n"
+        "SELECT, INSERT, etc...). If a replicated table is modified,\n"
+        "the changes SHALL be synchronized without data loss on all existing\n"
         "replicas, and in [S3] storage.\n"
         "\n"
     ),
@@ -3741,8 +3742,9 @@ keys in S3.
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter
 version: 1.1
 
-[ClickHouse] SHALL support modifying replicated tables. If a replicated table
-is modified, the changes SHALL be reproduced without data loss on all existing 
+[ClickHouse] SHALL support operations on replicated tables (ALTER,
+SELECT, INSERT, etc...). If a replicated table is modified,
+the changes SHALL be synchronized without data loss on all existing
 replicas, and in [S3] storage.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete
