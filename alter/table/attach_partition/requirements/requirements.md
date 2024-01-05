@@ -8,6 +8,8 @@
 * 3 [Definitions](#definitions)
     * 3.1 [Source Table](#source-table)
     * 3.2 [Destination Table](#destination-table)
+    * 3.3 [Compact part_type](#compact-part_type)
+    * 3.4 [Wide part_type](#wide-part_type)
 * 4 [Attaching Partitions or Parts](#attaching-partitions-or-parts)
     * 4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition](#rqsrs-034clickhousealtertableattachpartition)
 * 5 [Supported Table Engines](#supported-table-engines)
@@ -27,7 +29,7 @@
     * 10.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart](#rqsrs-034clickhousealtertableattachpartitionorpart)
     * 10.2 [Conditions for Attaching Partition or Part from the Detached Folder](#conditions-for-attaching-partition-or-part-from-the-detached-folder)
     * 10.3 [Role-Based Access Control When Attach Partition or Part From the Detached Folder](#role-based-access-control-when-attach-partition-or-part-from-the-detached-folder)
-        * 10.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC  ](#rqsrs-034clickhousealtertableattachpartitionorpartrbac-)
+        * 10.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC](#rqsrs-034clickhousealtertableattachpartitionorpartrbac)
 * 11 [Attach Partition From Another Table](#attach-partition-from-another-table)
     * 11.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom](#rqsrs-034clickhousealtertableattachpartitionfrom)
     * 11.2 [Validation of Partition Expression](#validation-of-partition-expression)
@@ -50,8 +52,8 @@
             * 11.7.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestoragepolicy)
         * 11.7.5 [Tables With The Same Indices and Projections](#tables-with-the-same-indices-and-projections)
             * 11.7.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
-        * 11.7.6 [Tables With The Same Partition Key](#tables-with-the-same-partition-key)
-            * 11.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeypartitionkey)
+        * 11.7.6 [Partition Key Condtitions](#partition-key-condtitions)
+            * 11.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkey)
     * 11.8 [Role-Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
         * 11.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC](#rqsrs-034clickhousealtertableattachpartitionfromrbac)
 * 12 [References](#references)
@@ -200,7 +202,7 @@ After the query is executed the data SHALL be immediately available for querying
 
 ### Role-Based Access Control When Attach Partition or Part From the Detached Folder
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC  
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC
 version: 1.0
 
 The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for the table:
