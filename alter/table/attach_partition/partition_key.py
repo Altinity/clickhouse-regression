@@ -663,13 +663,13 @@ def check_attach_partition_from(
     with Given(
         "I create two tables with specified engines and partition keys",
         description=f"""
-               partition keys:
-               source table partition key: {source_partition_key}
-               destination table partition key: {destination_partition_key}
-               engines:
-               source table engine: {destination_table_engine}
-               destination table: {source_table_engine}
-               """,
+            partition keys:
+            source table partition key: {source_partition_key}
+            destination table partition key: {destination_partition_key}
+            engines:
+            source table engine: {destination_table_engine}
+            destination table: {source_table_engine}
+            """,
     ):
         source_table(
             table_name=source_table_name,
