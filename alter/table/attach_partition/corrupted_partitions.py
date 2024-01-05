@@ -62,8 +62,6 @@ def check_attach_partition_from_with_corrupted_parts(
     destination_table = "destination_" + getuid()
     partition = 1
 
-    self.context.parts = []
-
     with Given(
         "I have two tables with the same structure",
         description=f"""
@@ -134,12 +132,9 @@ def check_attach_partition_from_with_corrupted_parts(
         description="this allows us to validate that the partitions were attached by validating that the inside the "
         "system.parts table the data for destination table was updated.",
     ):
-        for retry in retries(timeout=10):
-            with retry:
-                assert (
-                    parts_before_attach.output.strip()
-                    != parts_after_attach.output.strip()
-                ), error()
+
+        assert parts_before_attach.output.strip() != parts_after_attach.output.strip()
+
     with And(
         "I detach all the corrupted parts and check that it is possible to read data from the destination table without any errors",
     ):
@@ -241,12 +236,9 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
         description="this allows us to validate that the partitions were attached by validating that the inside the "
         "system.parts table the data for destination table was updated.",
     ):
-        for retry in retries(timeout=1):
-            with retry:
-                assert (
-                    parts_before_attach.output.strip()
-                    != parts_after_attach.output.strip()
-                ), error()
+
+        assert parts_before_attach.output.strip() != parts_after_attach.output.strip()
+
     with And(
         "I detach all the corrupted parts and check that it is possible to read data from the table without any errors",
     ):
