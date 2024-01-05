@@ -25,7 +25,7 @@ def feature(self):
             run=load(
                 "alter.table.attach_partition.corrupted_partitions",
                 "feature",
-            )
+            ),
             parallel=True,
             executor=pool,
         )
