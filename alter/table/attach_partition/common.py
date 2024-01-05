@@ -5,6 +5,7 @@ from testflows.core import *
 
 from helpers.tables import *
 
+
 def current_cpu():
     """Return current cpu architecture."""
     arch = platform.processor()
