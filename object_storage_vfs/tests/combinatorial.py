@@ -19,6 +19,7 @@ table_configurations = {
     ],
     "replicated": [True, False],
     "n_cols": [10, 100, 1000],
+    "n_tables": [1, 3],
     "storage_policy": ["external", "tiered"],
 }
 
@@ -73,39 +74,46 @@ def create_test_table(
         query_settings=settings,
     )
 
+
 @TestOutline(Combination)
 def check_table_combination(
     self,
     engine: str,
     replicated: bool,
     n_cols: int,
+    n_tables: int,
     storage_policy: str,
 ):
     node = self.context.node
+    tables = []
 
-    with Given("a table created with the parameter combination"):
-        table = create_test_table(
-            engine=engine,
-            replicated=replicated,
-            n_cols=n_cols,
-            storage_policy=storage_policy,
-        )
+    for i in range(n_tables):
+        with Given(f"table#{i} created with the parameter combination"):
+            table = create_test_table(
+                engine=engine,
+                replicated=replicated,
+                n_cols=n_cols,
+                storage_policy=storage_policy,
+            )
+            tables.append(table)
 
-    with Given("data is inserted into the table"):
-        n_rows = 10000
+    for i, table in enumerate(tables):
+        with Given(f"data is inserted into table#{i}"):
+            n_rows = 10000
 
-        node.query(f"""
-                    INSERT INTO {table.name} ({','.join([c.name for c in table.columns])})
-                    SELECT
-                        1 AS sign,
-                        1 AS ver,
-                        * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
-                    LIMIT {n_rows}
-                   """
-                   )
+            node.query(
+                f"""
+                INSERT INTO {table.name} ({','.join([c.name for c in table.columns])})
+                SELECT
+                    1 AS sign,
+                    1 AS ver,
+                    * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
+                LIMIT {n_rows}
+                """
+            )
 
-    with Then("the data can be queried"):
-        assert_row_count(node=node, table_name=table.name, rows=n_rows)
+        with Then(f"the data in table#{i} can be queried"):
+            assert_row_count(node=node, table_name=table.name, rows=n_rows)
 
 
 @TestScenario
