@@ -65,15 +65,15 @@ def minio(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
         self.context.uri = uri_bucket_file
 
-    Feature(test=load("object_storage_vfs.tests.core", "feature"))()
-    Feature(test=load("object_storage_vfs.tests.settings", "feature"))()
-    Feature(test=load("object_storage_vfs.tests.integrity", "feature"))()
-    Feature(test=load("object_storage_vfs.tests.combinatorial", "feature"))()
+    Feature(run=load("object_storage_vfs.tests.core", "feature"))
+    Feature(run=load("object_storage_vfs.tests.settings", "feature"))
+    Feature(run=load("object_storage_vfs.tests.integrity", "feature"))
+    Feature(run=load("object_storage_vfs.tests.combinatorial", "feature"))
     Feature(run=load("object_storage_vfs.tests.performance", "feature"))
 
 
     if self.context.stress:
-        Feature(test=load("object_storage_vfs.tests.stress", "feature"))()
+        Feature(run=load("object_storage_vfs.tests.stress", "feature"))
 
 
 @TestModule
