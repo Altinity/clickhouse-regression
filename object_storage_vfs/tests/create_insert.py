@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from random import choice
+
 from testflows.core import *
 from testflows.combinatorics import CoveringArray
 
@@ -18,7 +20,7 @@ table_configurations = {
         "SummingMergeTree",
     ],
     "replicated": [True, False],
-    "n_cols": [10, 100, 1000, 2000],
+    "n_cols": [10, 500, 2000],
     "n_tables": [1, 3],
     "storage_policy": ["external", "tiered"],
 }
@@ -85,8 +87,9 @@ def check_table_combination(
     n_tables: int,
     storage_policy: str,
 ):
-    node = self.context.node
+    nodes = self.context.ch_nodes
     tables = []
+    n_rows = 10000
 
     for i in range(n_tables):
         with Given(f"table#{i} created with the parameter combination"):
@@ -98,11 +101,15 @@ def check_table_combination(
             )
             tables.append(table)
 
-    for i, table in enumerate(tables):
-        with Given(f"data is inserted into table#{i}"):
-            n_rows = 10000
+    insert_node = self.context.node
+    query_nodes = nodes if replicated else [self.context.node]
 
-            node.query(
+    for i, table in enumerate(tables):
+        if replicated:
+            insert_node = choice(nodes)          
+            
+        with Given(f"data is inserted into table#{i} on {insert_node.name}"):
+            insert_node.query(
                 f"""
                 INSERT INTO {table.name} ({','.join([c.name for c in table.columns])})
                 SELECT
@@ -113,25 +120,24 @@ def check_table_combination(
                 """
             )
 
-        with Then(f"the data in table#{i} can be queried"):
-            assert_row_count(node=node, table_name=table.name, rows=n_rows)
-
-
-@TestScenario
-@Name("create table")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"))
-def table_combinations(self):
-    for table_config in CoveringArray(table_configurations, strength=2):
-        title = ",".join([f"{k}={v}" for k, v in table_config.items()])
-        Combination(title, test=check_table_combination)(**table_config)
+        for node in query_nodes:
+            with Then(f"the data in table#{i} on {node.name} can be queried"):
+                retry(assert_row_count, timeout=30, delay=0.2)(
+                    node=node, table_name=table.name, rows=n_rows
+                )
 
 
 @TestFeature
-@Name("combinatoric")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
+@Name("create insert")
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
 def feature(self):
+    covering_array_strength = len(table_configurations)
+
     with Given("I have S3 disks configured"):
         s3_config()
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    for table_config in CoveringArray(
+        table_configurations, strength=covering_array_strength
+    ):
+        title = ",".join([f"{k}={v}" for k, v in table_config.items()])
+        Combination(title, test=check_table_combination)(**table_config)

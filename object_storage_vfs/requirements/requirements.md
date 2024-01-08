@@ -195,11 +195,6 @@ When objects are removed, all other objects SHALL be accessible with no errors.
 
 ### Combinatoric
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric
-version: 0.0
-
-[Clickhouse]  SHALL support any sequence of supported operations on a table configured with any combination of  supported table combinations.
-
 ##### Supported Table Configurations
 
 | Engine                       | Replicated | # Columns | Storage Policy |
@@ -220,12 +215,26 @@ version: 0.0
 | UPDATE | TRUNCATE TABLE |     |
 | SELECT |                |     |
 
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric
+version: 0.0
+[Clickhouse]  SHALL support any sequence of [supported operations](#supported-operations)
+on a table configured with any combination of
+ [supported table combinations](#supported-table-configurations).
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert
+version: 1.0
+
+[Clickhouse]  SHALL support insert operations on a table configured with 
+any combination of  [supported table combinations](#supported-table-configurations).
+
 ### Performance
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Performance
 version: 1.0
 
-[Clickhouse] DiskObjectStorageVFS shares performance requirements with [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
+[Clickhouse] DiskObjectStorageVFS shares performance requirements with 
+[RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
 
 ### Object Storage Providers
 
