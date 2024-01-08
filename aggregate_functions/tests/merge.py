@@ -143,18 +143,13 @@ def feature(self):
         "sumMap",
         "maxMap",
         "minMap",
-        "first_value_respect_nulls",
-        "last_value_respect_nulls",
         "sumMapFiltered",  # parameters of different type
         "sumMapFilteredWithOverflow",  # parameters of different type
         "quantileTDigestWeighted",
         "uniq",
         "uniqHLL12",  # problem on 22.8 and 23.8
         "singleValueOrNull",  # problem on 22.8
-        "topKWeighted",  # fails on 23.3
         "uniqExact",  # problem on 23.8 aarch
-        "welchTTest",  # problem on 22.8 aarch
-        "studentTTest",
         "sequenceCount",
         "sequenceMatch",
     ]
