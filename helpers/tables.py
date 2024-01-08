@@ -439,7 +439,7 @@ def create_table(
 
     finally:
         with Finally(f"drop the table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name}{' SYNC' if drop_sync else ''}")
+            node.query(f"DROP TABLE IF EXISTS {name} {cluster}{' SYNC' if drop_sync else ''}")
 
 
 @TestStep(Given)
