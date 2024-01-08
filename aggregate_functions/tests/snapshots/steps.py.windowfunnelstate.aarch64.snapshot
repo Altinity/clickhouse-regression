@@ -731,7 +731,7 @@ _aggregate_functions_state_windowFunnelState_doc_example = r"""
 """
 
 _aggregate_functions_state_windowFunnelState_example1 = r"""
-{"hex(windowFunnelState(6048000000000000)(time, equals(number, 1), equals(number, 2)))":"010200000000000000010001030002","any(toTypeName(number))":"UInt32","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+{"hex(windowFunnelState(6048000000000000)(time, equals(number, 1), equals(number, 2)))":"010200000000000000010001030002","any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_state_windowFunnelState_example2 = r"""

@@ -22,7 +22,8 @@ def scenario(
     )
 
     if "Merge" in self.name:
-        return self.context.snapshot_id, func.replace("({params})", "")
+        func_ = func.replace("({params})", f"('greater')({{params}})")
+        return self.context.snapshot_id, func_.replace("({params})", "")
 
     if table is None:
         table = self.context.table

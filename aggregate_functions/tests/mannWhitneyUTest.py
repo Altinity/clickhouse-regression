@@ -23,7 +23,7 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
         ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
     )
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id, clickhouse_version=clickhouse_version
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if table is None:
@@ -34,36 +34,43 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
-    exitcode = 36 if "State" not in func else 0
-    message = "Exception:" if "State" not in func else None
+    if "State" not in self.name:
+        exitcode = 36
+        message = "Exception:"
+        with Check("constant"):
+            execute_query(
+                f"SELECT {func.format(params='1,2')}, any(toTypeName(1)), any(toTypeName(2))",
+                exitcode=exitcode,
+                message=message,
+            )
 
-    with Check("constant"):
-        execute_query(
-            f"SELECT {func.format(params='1,2')}, any(toTypeName(1)), any(toTypeName(2))",
-            exitcode=exitcode,
-            message=message,
-        )
+        with Check("zero rows"):
+            execute_query(
+                f"SELECT {func.format(params='number, toUInt64(number+1)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)",
+                exitcode=exitcode,
+                message=message,
+            )
 
-    with Check("zero rows"):
-        execute_query(
-            f"SELECT {func.format(params='number, toUInt64(number+1)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)",
-            exitcode=exitcode,
-            message=message,
-        )
+        with Check("single row"):
+            execute_query(
+                f"SELECT {func.format(params='number,toUInt64(number)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)",
+                exitcode=exitcode,
+                message=message,
+            )
 
-    with Check("single row"):
-        execute_query(
-            f"SELECT {func.format(params='number,toUInt64(number)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)",
-            exitcode=exitcode,
-            message=message,
-        )
+        with Check("single row with zero weight"):
+            execute_query(
+                f"SELECT {func.format(params='number,toUInt64(number-1)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)",
+                exitcode=exitcode,
+                message=message,
+            )
 
-    with Check("single row with zero weight"):
-        execute_query(
-            f"SELECT {func.format(params='number,toUInt64(number-1)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)",
-            exitcode=exitcode,
-            message=message,
-        )
+        with Check("single NULL value"):
+            execute_query(
+                f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
+                exitcode=exitcode,
+                message=message,
+            )
 
     with Check("with group by"):
         execute_query(
@@ -89,13 +96,6 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
             execute_query(
                 f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w)) FROM values('x Int8, w Nullable(UInt8)', (10,0), (11,0), (12,NULL), (1,1), (2,1), (3,1))"
             )
-
-    with Check("single NULL value"):
-        execute_query(
-            f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
-            exitcode=exitcode,
-            message=message,
-        )
 
     with Check("return type"):
         execute_query(
