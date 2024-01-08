@@ -72,6 +72,7 @@ def create_test_table(
         order_by=order_by,
         partition_by=partition_by,
         query_settings=settings,
+        drop_sync=True,
     )
 
 
