@@ -9,385 +9,385 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_SupportedTableEngines = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the following table engines for the `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements:\n'
-        '\n'
-        '|       Supported Engines        |\n'
-        '|:------------------------------:|\n'
-        '|          `MergeTree`           | \n'
-        '|      `ReplacingMergeTree`      |\n'
-        '|     `AggregatingMergeTree`     |\n'
-        '|     `CollapsingMergeTree`      |\n'
-        '| `VersionedCollapsingMergeTree` |\n'
-        '|      `GraphiteMergeTree`       |\n'
-        '|      `SummingMergeTree`        |\n'
-        '\n'
-        'and their `Replicated` versions.\n'
-        '\n'
+        "[ClickHouse] SHALL support the following table engines for the `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements:\n"
+        "\n"
+        "|       Supported Engines        |\n"
+        "|:------------------------------:|\n"
+        "|          `MergeTree`           | \n"
+        "|      `ReplacingMergeTree`      |\n"
+        "|     `AggregatingMergeTree`     |\n"
+        "|     `CollapsingMergeTree`      |\n"
+        "| `VersionedCollapsingMergeTree` |\n"
+        "|      `GraphiteMergeTree`       |\n"
+        "|      `SummingMergeTree`        |\n"
+        "\n"
+        "and their `Replicated` versions.\n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='5.1'
+    num="5.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_S3_ = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  ',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  ",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements with tables that are stored inside the S3 storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements with tables that are stored inside the S3 storage.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='6.1.1'
+    num="6.1.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_TieredStorage = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements with tables that are stored inside the tiered storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements with tables that are stored inside the tiered storage.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='6.2.1'
+    num="6.2.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartitionTypes = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '| Partition Types                                   |\n'
-        '|---------------------------------------------------|\n'
-        '| Partition with only [compact] parts               |\n'
-        '| Partition with only [wide] parts                  |\n'
-        '| Partition with [compact] and [wide] parts (mixed) |\n'
-        '| Partition with empty parts                        |\n'
-        '\n'
-        'The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.\n'
-        '\n'
+        "| Partition Types                                   |\n"
+        "|---------------------------------------------------|\n"
+        "| Partition with only [compact] parts               |\n"
+        "| Partition with only [wide] parts                  |\n"
+        "| Partition with [compact] and [wide] parts (mixed) |\n"
+        "| Partition with empty parts                        |\n"
+        "\n"
+        "The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.\n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='7.1'
+    num="7.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_CorruptedParts = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.\n'
-        '\n'
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` when parts have correct checksums.\n'
-        '\n'
-        'Possible partition types that can be corrupted are,\n'
-        '\n'
-        '| Partition Types                               |\n'
-        '|-----------------------------------------------|\n'
-        '| Partition with compact parts                  |\n'
-        '| Partition with wide parts                     |\n'
-        '| Partition with compact and wide parts (mixed) |\n'
-        '\n'
+        "[ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.\n"
+        "\n"
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` when parts have correct checksums.\n"
+        "\n"
+        "Possible partition types that can be corrupted are,\n"
+        "\n"
+        "| Partition Types                               |\n"
+        "|-----------------------------------------------|\n"
+        "| Partition with compact parts                  |\n"
+        "| Partition with wide parts                     |\n"
+        "| Partition with compact and wide parts (mixed) |\n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='8.1'
+    num="8.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_TableName = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL only work when the table names are valid.\n'
-        '\n'
+        "The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL only work when the table names are valid.\n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='9.1'
+    num="9.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionOrPart = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `ALTER TABLE ATTACH PARTITION|PART` statement.\n'
-        '\n'
-        'This statement SHALL allow the user to add data, either a full `PARTITITION` or a single `PART` to the table from the `detached` directory. \n'
-        '\n'
-        '```sql\n'
-        'ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART [partition_expr]\n'
-        '```\n'
-        '\n'
-        'After the query is executed the data SHALL be immediately available for querying on the specified table.\n'
-        '\n'
-        '[ClickHouse] SHALL reflect the changes in the `system.parts` table, when the `ALTER TABLE ATTACH PARTITION|PART` is executed. \n'
-        '\n'
+        "[ClickHouse] SHALL support the `ALTER TABLE ATTACH PARTITION|PART` statement.\n"
+        "\n"
+        "This statement SHALL allow the user to add data, either a full `PARTITITION` or a single `PART` to the table from the `detached` directory. \n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART [partition_expr]\n"
+        "```\n"
+        "\n"
+        "After the query is executed the data SHALL be immediately available for querying on the specified table.\n"
+        "\n"
+        "[ClickHouse] SHALL reflect the changes in the `system.parts` table, when the `ALTER TABLE ATTACH PARTITION|PART` is executed. \n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='10.1'
+    num="10.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionOrPart_RBAC = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for the table:\n'
-        '\n'
-        '| Table priviliges     |\n'
-        '|----------------------|\n'
-        '| CREATE               |\n'
-        '\n'
+        "The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for the table:\n"
+        "\n"
+        "| Table priviliges     |\n"
+        "|----------------------|\n"
+        "| CREATE               |\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='10.3.1'
+    num="10.3.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the`ALTER TABLE ATTACH PARTITION FROM` statement. This feature SHALL allow the user to copy data partition from [source table] to [destination table].\n'
-        '\n'
-        '```sql\n'
-        'ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM src_table\n'
-        '```\n'
-        '\n'
-        '[ClickHouse] SHALL reflect the changes in the `system.parts` table, when the `ALTER TABLE ATTACH PARTITION FROM` is executed on the [destination table]. \n'
-        '\n'
+        "[ClickHouse] SHALL support the`ALTER TABLE ATTACH PARTITION FROM` statement. This feature SHALL allow the user to copy data partition from [source table] to [destination table].\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM src_table\n"
+        "```\n"
+        "\n"
+        "[ClickHouse] SHALL reflect the changes in the `system.parts` table, when the `ALTER TABLE ATTACH PARTITION FROM` is executed on the [destination table]. \n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='11.1'
+    num="11.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_KeepData = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL keep the data of the [source table] from which the partition is copied.\n'
-        '\n'
+        "[ClickHouse] SHALL keep the data of the [source table] from which the partition is copied.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='11.3.1'
+    num="11.3.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_FromTemporaryTable = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.FromTemporaryTable',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.FromTemporaryTable",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support copying the data partition from the temporary table.\n'
-        '\n'
-        '\n'
+        "[ClickHouse] SHALL support copying the data partition from the temporary table.\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='11.4.1'
+    num="11.4.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Replicas = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on a [destination table] that is on a different replica than the [source table].\n'
-        '\n'
+        "[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on a [destination table] that is on a different replica than the [source table].\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='11.5.1'
+    num="11.5.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Shards = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on tables that are on different shards.\n'
-        '\n'
+        "[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on tables that are on different shards.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='11.6.1'
+    num="11.6.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_Structure = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same structure.\n'
-        '\n'
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same structure.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='11.7.1.1'
+    num="11.7.1.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_Key_OrderByKey = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same `ORDER BY` key.\n'
-        '\n'
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same `ORDER BY` key.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='11.7.2.1'
+    num="11.7.2.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_Key_PrimaryKey = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same primary key.\n'
-        '\n'
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same primary key.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='11.7.3.1'
+    num="11.7.3.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_StoragePolicy = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same storage\n'
-        'policy.\n'
-        '\n'
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same storage\n"
+        "policy.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='11.7.4.1'
+    num="11.7.4.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_IndicesAndProjections = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same indices and projections.\n'
-        '\n'
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same indices and projections.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='11.7.5.1'
+    num="11.7.5.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [desctination table]. \n'
-        'It is allowed to attach a partition from the table with different partition expression when the destination partition expression does not re-partition.\n'
-        '[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  \n'
-        '\n'
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [desctination table]. \n"
+        "It is allowed to attach a partition from the table with different partition expression when the destination partition expression does not re-partition.\n"
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  \n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='11.7.6.1'
+    num="11.7.6.1",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_RBAC = Requirement(
-    name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC',
-    version='1.0',
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The `ATTACH PARTITION` SHALL only work when the user has the following privileges for the table:\n'
-        '\n'
-        '| Table priviliges     |\n'
-        '|----------------------|\n'
-        '| CREATE               |\n'
-        '\n'
-        '\n'
+        "The `ATTACH PARTITION` SHALL only work when the user has the following privileges for the table:\n"
+        "\n"
+        "| Table priviliges     |\n"
+        "|----------------------|\n"
+        "| CREATE               |\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='11.8.1'
+    num="11.8.1",
 )
 
 SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
-    name='SRS034 ClickHouse Alter Table Attach Partition',
+    name="SRS034 ClickHouse Alter Table Attach Partition",
     description=None,
     author=None,
     date=None,
@@ -403,61 +403,167 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Revision History', level=1, num='1'),
-        Heading(name='Introduction', level=1, num='2'),
-        Heading(name='Definitions', level=1, num='3'),
-        Heading(name='Source Table', level=2, num='3.1'),
-        Heading(name='Destination Table', level=2, num='3.2'),
-        Heading(name='Compact part_type', level=2, num='3.3'),
-        Heading(name='Wide part_type', level=2, num='3.4'),
-        Heading(name='Attaching Partitions or Parts', level=1, num='4'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition', level=2, num='4.1'),
-        Heading(name='Supported Table Engines', level=1, num='5'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines', level=2, num='5.1'),
-        Heading(name='Storage Policies', level=1, num='6'),
-        Heading(name='Table That Is Stored on S3  ', level=2, num='6.1'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  ', level=3, num='6.1.1'),
-        Heading(name='Table That Is Stored on Tiered Storage  ', level=2, num='6.2'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage', level=3, num='6.2.1'),
-        Heading(name='Partition Types', level=1, num='7'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes', level=2, num='7.1'),
-        Heading(name='Corrupted Parts ', level=1, num='8'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts', level=2, num='8.1'),
-        Heading(name='Table names', level=1, num='9'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName', level=2, num='9.1'),
-        Heading(name='Attach Partition or Part From the Detached Folder', level=1, num='10'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart', level=2, num='10.1'),
-        Heading(name='Conditions for Attaching Partition or Part from the Detached Folder', level=2, num='10.2'),
-        Heading(name='Role-Based Access Control When Attach Partition or Part From the Detached Folder', level=2, num='10.3'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC', level=3, num='10.3.1'),
-        Heading(name='Attach Partition From Another Table', level=1, num='11'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom', level=2, num='11.1'),
-        Heading(name='Validation of Partition Expression', level=2, num='11.2'),
-        Heading(name='Keeping Data on the Source Table ', level=2, num='11.3'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData', level=3, num='11.3.1'),
-        Heading(name='Temporary Tables', level=2, num='11.4'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.FromTemporaryTable', level=3, num='11.4.1'),
-        Heading(name='Destination Table That Is on a Different Replica', level=2, num='11.5'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas', level=3, num='11.5.1'),
-        Heading(name='Destination Table That Is on a Different Shard', level=2, num='11.6'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards', level=3, num='11.6.1'),
-        Heading(name='Conditions when Attach Partition From Another Table', level=2, num='11.7'),
-        Heading(name='Tables With The Same Structure', level=3, num='11.7.1'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure', level=4, num='11.7.1.1'),
-        Heading(name='Tables With The Same `ORDER BY` Key', level=3, num='11.7.2'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey', level=4, num='11.7.2.1'),
-        Heading(name='Tables With The Same Primary Key', level=3, num='11.7.3'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey', level=4, num='11.7.3.1'),
-        Heading(name='Tables With The Same Storage Policy', level=3, num='11.7.4'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy', level=4, num='11.7.4.1'),
-        Heading(name='Tables With The Same Indices and Projections', level=3, num='11.7.5'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections', level=4, num='11.7.5.1'),
-        Heading(name='Partition Key Condtitions', level=3, num='11.7.6'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey', level=4, num='11.7.6.1'),
-        Heading(name='Role-Based Access Control when Attach Partition From Another Table', level=2, num='11.8'),
-        Heading(name='RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC', level=3, num='11.8.1'),
-        Heading(name='References', level=1, num='12'),
+        Heading(name="Revision History", level=1, num="1"),
+        Heading(name="Introduction", level=1, num="2"),
+        Heading(name="Definitions", level=1, num="3"),
+        Heading(name="Source Table", level=2, num="3.1"),
+        Heading(name="Destination Table", level=2, num="3.2"),
+        Heading(name="Compact part_type", level=2, num="3.3"),
+        Heading(name="Wide part_type", level=2, num="3.4"),
+        Heading(name="Attaching Partitions or Parts", level=1, num="4"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition", level=2, num="4.1"
         ),
+        Heading(name="Supported Table Engines", level=1, num="5"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines",
+            level=2,
+            num="5.1",
+        ),
+        Heading(name="Storage Policies", level=1, num="6"),
+        Heading(name="Table That Is Stored on S3  ", level=2, num="6.1"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  ",
+            level=3,
+            num="6.1.1",
+        ),
+        Heading(name="Table That Is Stored on Tiered Storage  ", level=2, num="6.2"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage",
+            level=3,
+            num="6.2.1",
+        ),
+        Heading(name="Partition Types", level=1, num="7"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes",
+            level=2,
+            num="7.1",
+        ),
+        Heading(name="Corrupted Parts ", level=1, num="8"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts",
+            level=2,
+            num="8.1",
+        ),
+        Heading(name="Table names", level=1, num="9"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName",
+            level=2,
+            num="9.1",
+        ),
+        Heading(
+            name="Attach Partition or Part From the Detached Folder", level=1, num="10"
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart",
+            level=2,
+            num="10.1",
+        ),
+        Heading(
+            name="Conditions for Attaching Partition or Part from the Detached Folder",
+            level=2,
+            num="10.2",
+        ),
+        Heading(
+            name="Role-Based Access Control When Attach Partition or Part From the Detached Folder",
+            level=2,
+            num="10.3",
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC",
+            level=3,
+            num="10.3.1",
+        ),
+        Heading(name="Attach Partition From Another Table", level=1, num="11"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom",
+            level=2,
+            num="11.1",
+        ),
+        Heading(name="Validation of Partition Expression", level=2, num="11.2"),
+        Heading(name="Keeping Data on the Source Table ", level=2, num="11.3"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData",
+            level=3,
+            num="11.3.1",
+        ),
+        Heading(name="Temporary Tables", level=2, num="11.4"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.FromTemporaryTable",
+            level=3,
+            num="11.4.1",
+        ),
+        Heading(
+            name="Destination Table That Is on a Different Replica", level=2, num="11.5"
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas",
+            level=3,
+            num="11.5.1",
+        ),
+        Heading(
+            name="Destination Table That Is on a Different Shard", level=2, num="11.6"
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards",
+            level=3,
+            num="11.6.1",
+        ),
+        Heading(
+            name="Conditions when Attach Partition From Another Table",
+            level=2,
+            num="11.7",
+        ),
+        Heading(name="Tables With The Same Structure", level=3, num="11.7.1"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure",
+            level=4,
+            num="11.7.1.1",
+        ),
+        Heading(name="Tables With The Same `ORDER BY` Key", level=3, num="11.7.2"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey",
+            level=4,
+            num="11.7.2.1",
+        ),
+        Heading(name="Tables With The Same Primary Key", level=3, num="11.7.3"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey",
+            level=4,
+            num="11.7.3.1",
+        ),
+        Heading(name="Tables With The Same Storage Policy", level=3, num="11.7.4"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy",
+            level=4,
+            num="11.7.4.1",
+        ),
+        Heading(
+            name="Tables With The Same Indices and Projections", level=3, num="11.7.5"
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections",
+            level=4,
+            num="11.7.5.1",
+        ),
+        Heading(name="Partition Key Condtitions", level=3, num="11.7.6"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey",
+            level=4,
+            num="11.7.6.1",
+        ),
+        Heading(
+            name="Role-Based Access Control when Attach Partition From Another Table",
+            level=2,
+            num="11.8",
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC",
+            level=3,
+            num="11.8.1",
+        ),
+        Heading(name="References", level=1, num="12"),
+    ),
     requirements=(
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_SupportedTableEngines,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_S3_,
@@ -479,8 +585,8 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_IndicesAndProjections,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_RBAC,
-        ),
-    content='''
+    ),
+    content="""
 # SRS034 ClickHouse Alter Table Attach Partition
 # Software Requirements Specification
 
@@ -823,5 +929,5 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 [Revision History]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
 [GitHub]: https://github.com
 [partition_expr]: https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#how-to-set-partition-expression
-'''
+""",
 )
