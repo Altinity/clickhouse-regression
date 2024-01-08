@@ -18,7 +18,7 @@ table_configurations = {
         "SummingMergeTree",
     ],
     "replicated": [True, False],
-    "n_cols": [10, 100, 1000],
+    "n_cols": [10, 100, 1000, 2000],
     "n_tables": [1, 3],
     "storage_policy": ["external", "tiered"],
 }
@@ -118,7 +118,7 @@ def check_table_combination(
 
 @TestScenario
 @Name("create table")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatorial("0.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"))
 def table_combinations(self):
     for table_config in CoveringArray(table_configurations, strength=2):
         title = ",".join([f"{k}={v}" for k, v in table_config.items()])
@@ -126,7 +126,7 @@ def table_combinations(self):
 
 
 @TestFeature
-@Name("combinatorial")
+@Name("combinatoric")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
 def feature(self):
     with Given("I have S3 disks configured"):

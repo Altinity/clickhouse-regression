@@ -285,8 +285,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete = Requirement(
     num="4.3.4",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Combinatorial = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Combinatorial",
+RQ_SRS_038_DiskObjectStorageVFS_Combinatoric = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric",
     version="0.0",
     priority=None,
     group=None,
@@ -475,9 +475,9 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             level=3,
             num="4.3.4",
         ),
-        Heading(name="Combinatorial", level=2, num="4.4"),
+        Heading(name="Combinatoric", level=2, num="4.4"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatorial", level=3, num="4.4.1"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric", level=3, num="4.4.1"
         ),
         Heading(name="Supported Table Configurations", level=4, num="4.4.1.1"),
         Heading(name="Supported Operations", level=4, num="4.4.1.2"),
@@ -517,7 +517,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLMove,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete,
-        RQ_SRS_038_DiskObjectStorageVFS_Combinatorial,
+        RQ_SRS_038_DiskObjectStorageVFS_Combinatoric,
         RQ_SRS_038_DiskObjectStorageVFS_Performance,
         RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration,
         RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS,
@@ -529,6 +529,42 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
 # Software Requirements Specification
 
 ## Table of Contents
+
+* [Table of Contents](#table-of-contents)
+* [Revision History](#revision-history)
+* [Introduction](#introduction)
+* [Terminology](#terminology)
+* [Requirements](#requirements)
+  * [Core](#core)
+    * [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.AddReplica](#rqsrs-038diskobjectstoragevfscoreaddreplica)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel](#rqsrs-038diskobjectstoragevfscoredeleteinparallel)
+  * [Settings](#settings)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Global](#rqsrs-038diskobjectstoragevfssettingsglobal)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Local](#rqsrs-038diskobjectstoragevfssettingslocal)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
+  * [Data Integrity](#data-integrity)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
+  * [Combinatorial](#combinatorial)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Combinatorial](#rqsrs-038diskobjectstoragevfscombinatorial)
+      * [Supported Table Configurations](#supported-table-configurations)
+      * [Supported Operations](#supported-operations)
+  * [Performance](#performance)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
+  * [Object Storage Providers](#object-storage-providers)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
+    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
+* [References](#references)
+
 
 ## Revision History
 
@@ -684,23 +720,23 @@ version: 1.0
 [ClickHouse] SHALL support TTL object deletion when VFS is used with the MergeTree engine.
 When objects are removed, all other objects SHALL be accessible with no errors.
 
-### Combinatorial
+### Combinatoric
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Combinatorial
+#### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric
 version: 0.0
 
 [Clickhouse]  SHALL support any sequence of supported operations on a table configured with any combination of  supported table combinations.
 
 ##### Supported Table Configurations
 
-| Engine | Replicated | # Columns | Storage Policy |
-| ---- | :--- | ---- | ---- |
-| MergeTree | Yes | 10 | S3 |
-| ReplacingMergeTree | No | 100 | Tiered |
-| CollapsingMergeTree |  | 1000 |  |
-| VersionedCollapsingMergeTree |  | 10000 |  |
-| AggregatingMergeTree |  |  |  |
-| SummingMergeTree |  |  |  |
+| Engine                       | Replicated | # Columns | Storage Policy |
+| ---------------------------- | :--------- | --------- | -------------- |
+| MergeTree                    | Yes        | 10        | S3             |
+| ReplacingMergeTree           | No         | 100       | Tiered         |
+| CollapsingMergeTree          |            | 1000      |                |
+| VersionedCollapsingMergeTree |            | 2000      |                |
+| AggregatingMergeTree         |            |           |                |
+| SummingMergeTree             |            |           |                |
 
 ##### Supported Operations
 
