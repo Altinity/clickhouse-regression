@@ -205,11 +205,20 @@ After the query is executed the data SHALL be immediately available for querying
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC
 version: 1.0
 
-The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for the table:
+| Privileges     |
+|----------------|
+| No privileges  |
+| SELECT         |
+| INSERT         |
+| ALTER          |
+| ALTER TABLE    |
 
-| Table priviliges     |
-|----------------------|
-| CREATE               |
+The `ATTACH PARTITION FROM` SHALL only work when the user has the following privileges for the source and destination tables:
+
+| Source | Destination          |
+|--------|----------------------|
+| SELECT | ALTER TABLE, INSERT  |
+| SELECT | ALTER, INSERT        |
 
 ## Attach Partition From Another Table
 
@@ -320,11 +329,20 @@ It is allowed to attach a partition from the table with different partition expr
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC
 version: 1.0
 
+| Privileges     |
+|----------------|
+| No privileges  |
+| SELECT         |
+| INSERT         |
+| ALTER          |
+| ALTER TABLE    |
+
 The `ATTACH PARTITION` SHALL only work when the user has the following privileges for the table:
 
-| Table priviliges     |
-|----------------------|
-| CREATE               |
+| Table Privilege |
+|-----------------|
+| INSERT          |
+
 
 
 ## References
