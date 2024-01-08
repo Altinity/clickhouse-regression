@@ -67,7 +67,7 @@ def minio(
     Feature(run=load("object_storage_vfs.tests.core", "feature"))
     Feature(run=load("object_storage_vfs.tests.settings", "feature"))
     Feature(run=load("object_storage_vfs.tests.integrity", "feature"))
-    Feature(run=load("object_storage_vfs.tests.combinatoric", "feature"))
+    Feature(run=load("object_storage_vfs.tests.create_insert", "feature"))
     Feature(run=load("object_storage_vfs.tests.performance", "feature"))
 
 

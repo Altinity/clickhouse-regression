@@ -293,12 +293,31 @@ RQ_SRS_038_DiskObjectStorageVFS_Combinatoric = Requirement(
     type=None,
     uid=None,
     description=(
-        "[Clickhouse]  SHALL support any sequence of supported operations on a table configured with any combination of  supported table combinations.\n"
+        "[Clickhouse]  SHALL support any sequence of [supported operations](#supported-operations)\n"
+        "on a table configured with any combination of\n"
+        " [supported table combinations](#supported-table-configurations).\n"
         "\n"
     ),
     link=None,
     level=3,
-    num="4.4.1",
+    num="4.4.5",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[Clickhouse]  SHALL support insert operations on a table configured with \n"
+        "any combination of  [supported table combinations](#supported-table-configurations).\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.6",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
@@ -309,7 +328,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
     type=None,
     uid=None,
     description=(
-        "[Clickhouse] DiskObjectStorageVFS shares performance requirements with [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)\n"
+        "[Clickhouse] DiskObjectStorageVFS shares performance requirements with \n"
+        "[RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)\n"
         "\n"
     ),
     link=None,
@@ -476,11 +496,16 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             num="4.3.4",
         ),
         Heading(name="Combinatoric", level=2, num="4.4"),
+        Heading(name="Supported Table Configurations", level=4, num="4.4.4.1"),
+        Heading(name="Supported Operations", level=4, num="4.4.4.2"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric", level=3, num="4.4.1"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric", level=3, num="4.4.5"
         ),
-        Heading(name="Supported Table Configurations", level=4, num="4.4.1.1"),
-        Heading(name="Supported Operations", level=4, num="4.4.1.2"),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert",
+            level=3,
+            num="4.4.6",
+        ),
         Heading(name="Performance", level=2, num="4.5"),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Performance", level=3, num="4.5.1"
@@ -518,6 +543,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLMove,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete,
         RQ_SRS_038_DiskObjectStorageVFS_Combinatoric,
+        RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert,
         RQ_SRS_038_DiskObjectStorageVFS_Performance,
         RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration,
         RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS,
@@ -722,11 +748,6 @@ When objects are removed, all other objects SHALL be accessible with no errors.
 
 ### Combinatoric
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric
-version: 0.0
-
-[Clickhouse]  SHALL support any sequence of supported operations on a table configured with any combination of  supported table combinations.
-
 ##### Supported Table Configurations
 
 | Engine                       | Replicated | # Columns | Storage Policy |
@@ -747,12 +768,26 @@ version: 0.0
 | UPDATE | TRUNCATE TABLE |     |
 | SELECT |                |     |
 
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric
+version: 0.0
+[Clickhouse]  SHALL support any sequence of [supported operations](#supported-operations)
+on a table configured with any combination of
+ [supported table combinations](#supported-table-configurations).
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert
+version: 1.0
+
+[Clickhouse]  SHALL support insert operations on a table configured with 
+any combination of  [supported table combinations](#supported-table-configurations).
+
 ### Performance
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Performance
 version: 1.0
 
-[Clickhouse] DiskObjectStorageVFS shares performance requirements with [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
+[Clickhouse] DiskObjectStorageVFS shares performance requirements with 
+[RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
 
 ### Object Storage Providers
 
