@@ -14,6 +14,7 @@ from helpers.common import check_clickhouse_version
 from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
+issue_41176 = "https://github.com/ClickHouse/ClickHouse/issues/41176"
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
 issue_44511 = (
     "https://github.com/ClickHouse/ClickHouse/issues/44511",
@@ -60,6 +61,12 @@ xfails = {
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
     "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/:_date_:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
+    "/aggregate functions/state/quantileTDigestWeightedState/datatypes/permutations/date:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
+    "/aggregate functions/state/quantileTDigestWeightedState/datatypes/permutations/:_date_:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
     "/aggregate functions/state/topKWeightedState/datatypes/permutations/*": [
@@ -206,6 +213,26 @@ ffails = {
         Skip,
         "largestTriangleThreeBuckets does not work with Merge, need to fix",
     ),
+    "/aggregate functions/first_value_respect_nulls/*": (
+        Skip,
+        "largestTriangleThreeBuckets works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/first_value_respect_nulls*/*": (
+        Skip,
+        "largestTriangleThreeBuckets works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/last_value_respect_nulls/*": (
+        Skip,
+        "largestTriangleThreeBuckets works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/last_value_respect_nulls*/*": (
+        Skip,
+        "largestTriangleThreeBuckets works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
     "/aggregate functions/flameGraph/*": (
         Skip,
         "flameGraph works from 23.8",
@@ -236,6 +263,31 @@ ffails = {
         XFail,
         issue_57801,
         check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/finalizeAggregation/studentTTest_finalizeAggregation_Merge/*": (
+        XFail,
+        issue_41176,
+        check_clickhouse_version("<23.3"),
+    ),
+    "/aggregate functions/merge/studentTTestMerge/*": (
+        XFail,
+        issue_41176,
+        check_clickhouse_version("<23.3"),
+    ),
+    "/aggregate functions/finalizeAggregation/welchTTest_finalizeAggregation_Merge/*": (
+        XFail,
+        "need to invesigate",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/aggregate functions/merge/welchTTestMerge/*": (
+        XFail,
+        "need to invesigate",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/aggregate functions/merge/topKWeightedMerge/*": (
+        XFail,
+        "need to invesigate fail on 23.3",
+        check_clickhouse_version("<=23") and check_clickhouse_version(">=23"),
     ),
     "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
         XFail,
