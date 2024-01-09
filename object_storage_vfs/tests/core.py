@@ -256,7 +256,7 @@ def no_duplication(self):
         enable_vfs()
 
     with And("I create a replicated table"):
-        r = replicated_table(
+        replicated_table(
             table_name=table_name,
             columns="d UInt64, m UInt64",
         )

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import json
+
 from testflows.core import *
 from testflows.asserts import error
 
@@ -60,11 +62,13 @@ def check_global_vfs_state(self, node=None, enabled: bool = True):
 def assert_row_count(self, node, table_name: str, rows: int = 1000000):
     if node is None:
         node = current().context.node
-    node.query(
+    r = node.query(
         f"SELECT count() FROM {table_name} FORMAT JSON",
-        message=f'"count()": "{rows}"',
+        # message=f'"count()": "{rows}"',
         exitcode=0,
     )
+    actual_count = json.loads(r.output)["data"][0]["count()"]
+    assert f"{rows}" == actual_count, error()
 
 
 @TestStep(Given)
@@ -77,6 +81,7 @@ def replicated_table(
     order_by: str = None,
     allow_vfs: bool = None,
     allow_zero_copy: bool = None,
+    exitcode: int = 0,
 ):
     node = current().context.node
 
@@ -108,10 +113,10 @@ def replicated_table(
                 SETTINGS {', '.join(settings)}
                 """,
                 settings=[("distributed_ddl_task_timeout ", 360)],
-                exitcode=0,
+                exitcode=exitcode,
             )
 
-        yield r
+        yield r, table_name
 
     finally:
         with Finally(f"I drop the table"):

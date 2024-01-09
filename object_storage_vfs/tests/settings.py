@@ -12,10 +12,11 @@ def incompatible_with_zero_copy(self):
     Check that using zero copy replication when vfs is enabled is not allowed.
     """
     with When("I create a replicated table with both vfs and 0-copy enabled"):
-        r = replicated_table(
+        r, _ = replicated_table(
             table_name="vfs_zero_copy_replication",
             allow_vfs=True,
             allow_zero_copy=True,
+            exitcode=None,
         )
 
     with Then("I expect it to fail"):
@@ -40,11 +41,9 @@ def vfs_setting(self):
             enable_vfs()
 
         with Then("creating a table is successful"):
-            r = replicated_table(
-                table_name="my_local_vfs_table",
-                columns="d UInt64",
+            r, _ = replicated_table(
+                table_name="my_local_vfs_table", columns="d UInt64", exitcode=0
             )
-            assert r.exitcode == 0, error()
 
         with And("I add data to the table"):
             insert_random(
@@ -68,12 +67,13 @@ def vfs_setting(self):
             check_global_vfs_state(enabled=False)
 
         with Then("creating a table with allow_object_storage_vfs=1 is successful"):
-            r = replicated_table(
+            replicated_table(
                 table_name="my_global_vfs_table",
                 columns="d UInt64",
                 allow_vfs=True,
+                exitcode=0
             )
-            assert r.exitcode == 0, error()
+
 
         with And("I add data to the table"):
             insert_random(
