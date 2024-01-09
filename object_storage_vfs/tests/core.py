@@ -29,7 +29,7 @@ def add_replica(self):
         enable_vfs()
 
     try:
-        with Given("I have a table"):
+        with Given("I have a replicated table on one node"):
             nodes[0].query(
                 f"""
                 CREATE TABLE IF NOT EXISTS {table_name} (
@@ -175,9 +175,7 @@ def delete(self):
             insert_random(
                 node=nodes[0], table_name=table_name, columns="d UInt64", rows=1000000
             )
-        import time
 
-        time.sleep(60)
         with And("I get the new size of the s3 bucket"):
             size_after_insert = get_bucket_size(
                 name=bucket_name,
@@ -221,8 +219,7 @@ def delete(self):
             nodes[0].query(f"DROP TABLE {table_name} SYNC")
 
         with Then(
-            """The size of the s3 bucket should be very close to the size
-                    before adding any data"""
+            "The size of the s3 bucket should be very close to the size before adding any data"
         ):
             retry(check_bucket_size, timeout=600, delay=1)(
                 name=bucket_name,
@@ -238,7 +235,86 @@ def delete(self):
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
-# RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication("1.0"))
+def no_duplication(self):
+    bucket_name = self.context.bucket_name
+    bucket_path = self.context.bucket_path
+    table_name = "vfs_test_replicas_duplication"
+    nodes = self.context.ch_nodes[:2]
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        size_empty = get_bucket_size(
+            name=bucket_name,
+            prefix=bucket_path,
+            minio_enabled=self.context.minio_enabled,
+            access_key=self.context.secret_access_key,
+            key_id=self.context.access_key_id,
+        )
+
+    with And("I enable vfs"):
+        enable_vfs()
+
+    with And("I create a replicated table"):
+        r = replicated_table(
+            table_name=table_name,
+            columns="d UInt64, m UInt64",
+        )
+
+    with Check("insert"):
+        with When("I add data to the table on the first node"):
+            insert_random(
+                node=nodes[0],
+                table_name=table_name,
+                columns="d UInt64, m UInt64",
+                rows=1000000,
+            )
+
+        with And("I get the new size of the s3 bucket"):
+            size_after_insert = get_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                minio_enabled=self.context.minio_enabled,
+                access_key=self.context.secret_access_key,
+                key_id=self.context.access_key_id,
+            )
+            size_added = size_after_insert - size_empty
+
+        with And("I add more data to the table on the second node"):
+            insert_random(
+                node=nodes[0],
+                table_name=table_name,
+                columns="d UInt64, m UInt64",
+                rows=1000000,
+            )
+
+        with Then("the size of the s3 bucket should be doubled and no more"):
+            expected_size = size_empty + size_added * 2
+            check_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                expected_size=expected_size,
+                tolerance=5,
+                minio_enabled=self.context.minio_enabled,
+            )
+
+    with Check("alter"):
+        with When("I rename a column"):
+            nodes[1].query(f"ALTER TABLE {table_name} RENAME COLUMN m TO u")
+
+        with Then("the other node should reflect the change"):
+            r = nodes[0].query(f"DESCRIBE TABLE {table_name}")
+            assert "m\tUInt64" not in r.output, error(r)
+            assert "u\tUInt64" in r.output, error(r)
+
+        with And("there should be no change in storage usage"):
+            check_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                expected_size=expected_size,
+                tolerance=1500,
+                minio_enabled=self.context.minio_enabled,
+            )
 
 
 @TestFeature
