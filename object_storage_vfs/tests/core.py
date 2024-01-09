@@ -25,6 +25,9 @@ def add_replica(self):
             key_id=self.context.access_key_id,
         )
 
+    with And("I enable vfs"):
+        enable_vfs()
+
     try:
         with Given("I have a table"):
             nodes[0].query(
@@ -34,7 +37,7 @@ def add_replica(self):
                 ) 
                 ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '1')
                 ORDER BY d
-                SETTINGS storage_policy='external', allow_object_storage_vfs=1
+                SETTINGS storage_policy='external'
                 """,
             )
 
@@ -60,7 +63,7 @@ def add_replica(self):
                 ) 
                 ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '2')
                 ORDER BY d
-                SETTINGS storage_policy='external', allow_object_storage_vfs=1
+                SETTINGS storage_policy='external'
                 """,
             )
 
@@ -90,18 +93,6 @@ def add_replica(self):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_empty,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
-
 
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Core_DropReplica("1.0"))
@@ -109,11 +100,13 @@ def drop_replica(self):
     table_name = "vfs_dropping_replicas"
     nodes = self.context.ch_nodes
 
-    with Given(f"I create a replicated table on each node"):
+    with Given("I enable vfs"):
+        enable_vfs()
+
+    with And(f"I create a replicated table on each node"):
         replicated_table(
             table_name=table_name,
             columns="d UInt64",
-            allow_vfs=True,
         )
 
     with When("I add data to the table"):
@@ -142,8 +135,109 @@ def drop_replica(self):
         assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
 
 
-# RQ_SRS_038_DiskObjectStorageVFS_Core_Delete
-# RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel
+@TestScenario
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Core_Delete("0.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel("0.0"),
+)
+def delete(self):
+    bucket_name = self.context.bucket_name
+    bucket_path = self.context.bucket_path
+    table_name = "vfs_deleting_replicas"
+    nodes = self.context.ch_nodes[:2]
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        size_empty = get_bucket_size(
+            name=bucket_name,
+            prefix=bucket_path,
+            minio_enabled=self.context.minio_enabled,
+            access_key=self.context.secret_access_key,
+            key_id=self.context.access_key_id,
+        )
+
+    with And("I enable vfs"):
+        enable_vfs()
+
+    try:
+        with Given("I have a replicated table"):
+            for i, node in enumerate(nodes):
+                node.query(
+                    f"""
+                    CREATE TABLE {table_name}  (
+                        d UInt64
+                    ) ENGINE = ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{i + 1}')
+                    ORDER BY d
+                    SETTINGS storage_policy='external'
+                    """
+                )
+
+        with And("I add data to the table on the first node"):
+            insert_random(
+                node=nodes[0], table_name=table_name, columns="d UInt64", rows=1000000
+            )
+        import time
+
+        time.sleep(60)
+        with And("I get the new size of the s3 bucket"):
+            size_after_insert = get_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                minio_enabled=self.context.minio_enabled,
+                access_key=self.context.secret_access_key,
+                key_id=self.context.access_key_id,
+            )
+
+        with And("I wait for the second node to sync"):
+            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=10)
+
+        with And("I check the row count on the second node"):
+            assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
+
+        with And("The size of the s3 bucket should be the same"):
+            check_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                expected_size=size_after_insert,
+                tolerance=0,
+                minio_enabled=self.context.minio_enabled,
+            )
+
+        with And("I drop the table on the second node"):
+            nodes[1].query(f"DROP TABLE {table_name} SYNC")
+
+        with Then("The size of the s3 bucket should be the same"):
+            retry(check_bucket_size, timeout=60, delay=1)(
+                name=bucket_name,
+                prefix=bucket_path,
+                expected_size=size_after_insert,
+                tolerance=0,
+                minio_enabled=self.context.minio_enabled,
+            )
+
+        with And("I check the row count on the first node"):
+            assert_row_count(node=nodes[0], table_name=table_name, rows=1000000)
+
+        with And("I drop the table on the first node"):
+            nodes[0].query(f"DROP TABLE {table_name} SYNC")
+
+        with Then(
+            """The size of the s3 bucket should be very close to the size
+                    before adding any data"""
+        ):
+            retry(check_bucket_size, timeout=600, delay=1)(
+                name=bucket_name,
+                prefix=bucket_path,
+                expected_size=size_empty,
+                tolerance=5,
+                minio_enabled=self.context.minio_enabled,
+            )
+
+    finally:
+        with Finally("I drop the table on each node"):
+            for node in nodes:
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
 # RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication
 
 
@@ -151,7 +245,6 @@ def drop_replica(self):
 @Name("core")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
 def feature(self):
-
     with Given("I have S3 disks configured"):
         s3_config()
 
