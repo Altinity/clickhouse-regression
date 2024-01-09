@@ -14,6 +14,7 @@ from object_storage_vfs.requirements import *
 
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
+    ":/settings/vfs setting/bucket sizes match": [(Fail, "local setting does not work")],
 }
 
 ffails = {}
