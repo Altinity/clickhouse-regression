@@ -29,4 +29,14 @@ def feature(self):
             parallel=True,
             executor=pool,
         )
+        Feature(
+            run=load("alter.table.attach_partition.rbac", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        # Feature(
+        #     run=load("alter.table.attach_partition.conditions", "feature"),
+        #     parallel=True,
+        #     executor=pool,
+        # )
         join()

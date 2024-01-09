@@ -16,7 +16,7 @@
     * 5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines](#rqsrs-034clickhousealtertableattachpartitionsupportedtableengines)
 * 6 [Storage Policies](#storage-policies)
     * 6.1 [Table That Is Stored on S3  ](#table-that-is-stored-on-s3-)
-        * 6.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  ](#rqsrs-034clickhousealtertableattachpartitions3-)
+        * 6.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3](#rqsrs-034clickhousealtertableattachpartitions3)
     * 6.2 [Table That Is Stored on Tiered Storage  ](#table-that-is-stored-on-tiered-storage-)
         * 6.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage](#rqsrs-034clickhousealtertableattachpartitiontieredstorage)
 * 7 [Partition Types](#partition-types)
@@ -42,18 +42,19 @@
     * 11.6 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
         * 11.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards](#rqsrs-034clickhousealtertableattachpartitionfromshards)
     * 11.7 [Conditions when Attach Partition From Another Table](#conditions-when-attach-partition-from-another-table)
-        * 11.7.1 [Tables With The Same Structure](#tables-with-the-same-structure)
-            * 11.7.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestructure)
-        * 11.7.2 [Tables With The Same `ORDER BY` Key](#tables-with-the-same-order-by-key)
-            * 11.7.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyorderbykey)
-        * 11.7.3 [Tables With The Same Primary Key](#tables-with-the-same-primary-key)
-            * 11.7.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyprimarykey)
-        * 11.7.4 [Tables With The Same Storage Policy](#tables-with-the-same-storage-policy)
-            * 11.7.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestoragepolicy)
-        * 11.7.5 [Tables With The Same Indices and Projections](#tables-with-the-same-indices-and-projections)
-            * 11.7.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
-        * 11.7.6 [Partition Key Condtitions](#partition-key-condtitions)
-            * 11.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkey)
+        * 11.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions](#rqsrs-034clickhousealtertableattachpartitionfromconditions)
+        * 11.7.2 [Tables With The Same Structure](#tables-with-the-same-structure)
+            * 11.7.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestructure)
+        * 11.7.3 [Tables With The Same `ORDER BY` Key](#tables-with-the-same-order-by-key)
+            * 11.7.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyorderbykey)
+        * 11.7.4 [Tables With The Same Primary Key](#tables-with-the-same-primary-key)
+            * 11.7.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyprimarykey)
+        * 11.7.5 [Tables With The Same Storage Policy](#tables-with-the-same-storage-policy)
+            * 11.7.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestoragepolicy)
+        * 11.7.6 [Tables With The Same Indices and Projections](#tables-with-the-same-indices-and-projections)
+            * 11.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
+        * 11.7.7 [Partition Key Condtitions](#partition-key-condtitions)
+            * 11.7.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkey)
     * 11.8 [Role-Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
         * 11.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC](#rqsrs-034clickhousealtertableattachpartitionfromrbac)
 * 12 [References](#references)
@@ -129,7 +130,7 @@ and their `Replicated` versions.
 
 ### Table That Is Stored on S3  
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3
 version: 1.0
 
 [ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements with tables that are stored inside the S3 storage.
@@ -270,6 +271,9 @@ version: 1.0
 
 ### Conditions when Attach Partition From Another Table
 
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions
+version: 1.0
+
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` only when,
 
 * Both tables have the same structure.
@@ -348,7 +352,7 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 ## References
 * [ClickHouse]
 
-[Git]: https://git-scm.com/
+[Git]: https://git-scm.com
 [source table]: #source-table
 [destination table]: #destination-table
 [compact]: #compact-part_type
