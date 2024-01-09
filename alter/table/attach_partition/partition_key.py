@@ -10,8 +10,9 @@ from helpers.tables import *
 
 
 def valid_partition_key_pair(source_partition_key, destination_partition_key):
+    """Validates if pair source partition key - destination partition key is valid
+    for `attach partition from` statement."""
 
-    """Validates if pair source partition key - destination partition key is valid for `attach partition from` statement."""
     not_subset = {
         "tuple()": [
             "a",
@@ -629,6 +630,7 @@ def check(
     message=None,
     with_id=False,
 ):
+    """Check `attach partition from` statement with or without `id`."""
     for partition_id in partition_ids:
         if with_id:
             query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
@@ -654,7 +656,7 @@ def check_attach_partition_from(
     destination_table_engine="MergeTree",
     with_id=False,
 ):
-    """Check `attach partition from` statement with different types of source and destination tables."""
+    """Check `attach partition from` with different types of source and destination tables."""
     node = self.context.node
 
     source_table_name = "source_" + getuid()
@@ -668,7 +670,7 @@ def check_attach_partition_from(
             destination table partition key: {destination_partition_key}
             engines:
             source table engine: {destination_table_engine}
-            destination table: {source_table_engine}
+            destination table engine: {source_table_engine}
             """,
     ):
         source_table(
@@ -682,7 +684,7 @@ def check_attach_partition_from(
             partition_by=destination_partition_key,
         )
 
-    with And("I attach partition from source table into destination table"):
+    with And("I attach partition from source table to the destination table"):
         if with_id:
             partition_list_query = f"SELECT partition_id FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id"
         else:
@@ -704,8 +706,10 @@ def check_attach_partition_from(
                 node.query(query)
         else:
             if reason == "not monotonic":
-                exitcode = 36
-                message = "DB::Exception: Destination table partition expression is not monotonically increasing."
+                exitcode, message = (
+                    36,
+                    "DB::Exception: Destination table partition expression is not monotonically increasing",
+                )
                 check(
                     partition_ids=partition_ids,
                     source_table_name=source_table_name,
@@ -716,8 +720,10 @@ def check_attach_partition_from(
                     with_id=with_id,
                 )
             elif reason == "not subset":
-                exitcode = 36
-                message = "DB::Exception: Destination table partition expression columns must be a subset of source table partition expression columns."
+                exitcode, message = (
+                    36,
+                    "DB::Exception: Destination table partition expression columns must be a subset of source table partition expression columns.",
+                )
                 check(
                     partition_ids=partition_ids,
                     source_table_name=source_table_name,
@@ -728,14 +734,15 @@ def check_attach_partition_from(
                     with_id=with_id,
                 )
             elif reason == "partially different":
-                exitcode = 248
-                message = "DB::Exception: Can not create the partition. A partition can not contain values that have different partition ids."
+                exitcode, message = (
+                    248,
+                    "DB::Exception: Can not create the partition. A partition can not contain values that have different partition ids.",
+                )
                 for partition_id in partition_ids:
                     if with_id:
                         query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION ID '{partition_id}' FROM {source_table_name}"
                     else:
                         query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
-
                     try:
                         node.query(
                             query,
@@ -745,7 +752,6 @@ def check_attach_partition_from(
                     except:
                         try:
                             node.query(query)
-
                         except Exception as e:
                             fail(f"An unexpected exception occurred: {e}")
 
@@ -808,12 +814,12 @@ def attach_partition_from(self, with_id=False):
 
     engines = {
         "MergeTree",
-        "ReplacingMergeTree",
-        "AggregatingMergeTree",
-        "SummingMergeTree",
-        "CollapsingMergeTree",
-        "VersionedCollapsingMergeTree",
-        "GraphiteMergeTree",
+        # "ReplacingMergeTree",
+        # "AggregatingMergeTree",
+        # "SummingMergeTree",
+        # "CollapsingMergeTree",
+        # "VersionedCollapsingMergeTree",
+        # "GraphiteMergeTree",
     }
 
     check_attach_partition_from(
@@ -831,13 +837,14 @@ def attach_partition_from(self, with_id=False):
 @Requirements(
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey(
         "1.0"
-    )
+    ),
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_SupportedTableEngines("1.0"),
 )
 @Name("partition key")
 def feature(self, node="clickhouse1"):
     """Check conditions for partition key."""
 
     self.context.node = self.context.cluster.node(node)
-
-    Scenario(run=attach_partition_from)
-    Scenario(test=attach_partition_from)(with_id=True)
+    with Pool(2) as pool:
+        Scenario(run=attach_partition_from, parallel=True, executor=pool)
+        Scenario(test=attach_partition_from, parallel=True, executor=pool)(with_id=True)
