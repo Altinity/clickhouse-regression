@@ -814,12 +814,12 @@ def attach_partition_from(self, with_id=False):
 
     engines = {
         "MergeTree",
-        # "ReplacingMergeTree",
-        # "AggregatingMergeTree",
-        # "SummingMergeTree",
-        # "CollapsingMergeTree",
-        # "VersionedCollapsingMergeTree",
-        # "GraphiteMergeTree",
+        "ReplacingMergeTree",
+        "AggregatingMergeTree",
+        "SummingMergeTree",
+        "CollapsingMergeTree",
+        "VersionedCollapsingMergeTree",
+        "GraphiteMergeTree",
     }
 
     check_attach_partition_from(
