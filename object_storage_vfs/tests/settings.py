@@ -23,36 +23,78 @@ def incompatible_with_zero_copy(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"))
-def local_setting(self):
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Global("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"),
+)
+def vfs_setting(self):
     """
-    Check that allow_object_storage_vfs can be enabled per-table
+    Check that allow_object_storage_vfs global and local behave the same
     """
-    with Given("VFS is not globally enabled"):
-        check_global_vfs_state(enabled=False)
+    bucket_name = self.context.bucket_name
+    bucket_path = self.context.bucket_path
+    nodes = self.context.ch_nodes
 
-    with Then("creating a table with allow_object_storage_vfs=1 is successful"):
-        r = replicated_table(
-            table_name="my_global_vfs_table",
-            allow_vfs=True,
-        )
-        assert r.exitcode == 0, error()
+    with Check("global"):
+        with Given("VFS is globally enabled"):
+            enable_vfs()
 
+        with Then("creating a table is successful"):
+            r = replicated_table(
+                table_name="my_local_vfs_table",
+                columns="d UInt64",
+            )
+            assert r.exitcode == 0, error()
 
-@TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Global("1.0"))
-def global_setting(self):
-    """
-    Check that allow_object_storage_vfs can be enabled globally
-    """
-    with Given("VFS is globally enabled"):
-        enable_vfs()
+        with And("I add data to the table"):
+            insert_random(
+                node=nodes[0],
+                table_name="my_local_vfs_table",
+                columns="d UInt64",
+                rows=1000000,
+            )
 
-    with Then("creating a table is successful"):
-        r = replicated_table(
-            table_name="my_local_vfs_table",
-        )
-        assert r.exitcode == 0, error()
+        with And("I get the size of the s3 bucket"):
+            size_global = get_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                minio_enabled=self.context.minio_enabled,
+                access_key=self.context.secret_access_key,
+                key_id=self.context.access_key_id,
+            )
+
+    with Check("local"):
+        with Given("VFS is not globally enabled"):
+            check_global_vfs_state(enabled=False)
+
+        with Then("creating a table with allow_object_storage_vfs=1 is successful"):
+            r = replicated_table(
+                table_name="my_global_vfs_table",
+                columns="d UInt64",
+                allow_vfs=True,
+            )
+            assert r.exitcode == 0, error()
+
+        with And("I add data to the table"):
+            insert_random(
+                node=nodes[0],
+                table_name="my_global_vfs_table",
+                columns="d UInt64",
+                rows=1000000,
+            )
+
+        with And("I get the size of the s3 bucket"):
+            size_local = get_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                minio_enabled=self.context.minio_enabled,
+                access_key=self.context.secret_access_key,
+                key_id=self.context.access_key_id,
+            )
+
+    with Check("bucket sizes match"):
+        with Then("bucket sizes should match"):
+            assert size_global == size_local, error()
 
 
 # RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
@@ -65,7 +107,6 @@ def global_setting(self):
     RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration("1.0"),
 )
 def feature(self):
-
     with Given("I have S3 disks configured"):
         s3_config()
 
