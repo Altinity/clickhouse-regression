@@ -10,7 +10,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from s3.regression import argparser
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *

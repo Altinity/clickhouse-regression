@@ -2,7 +2,6 @@
 from testflows.core import *
 
 from helpers.create import create_replicated_merge_tree_table
-from s3.tests.common import s3_storage, enable_vfs
 
 from object_storage_vfs.tests.steps import *
 from object_storage_vfs.requirements import *

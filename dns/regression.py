@@ -10,7 +10,7 @@ append_path(sys.path, "..", pos=0)
 from helpers.cluster import create_cluster
 from helpers.common import *
 from helpers.argparser import argparser
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {
     "lookup": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/17202")],

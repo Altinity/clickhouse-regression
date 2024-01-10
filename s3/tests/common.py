@@ -469,47 +469,6 @@ def mergetree_config(
     return add_config(config, restart=restart, nodes=nodes)
 
 
-@TestStep(Given)
-def add_vfs_config(
-    self,
-    config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="enable_vfs.xml",
-    restart=True,
-    nodes=None,
-    timeout=30,
-):
-    entries = {"merge_tree": {"allow_object_storage_vfs": "1"}}
-    config = create_xml_config_content(
-        entries, config_d_dir=config_d_dir, config_file=config_file
-    )
-    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
-
-
-@TestStep(Then)
-def check_vfs_enabled(self, nodes=None):
-    cluster = self.context.cluster
-    if nodes is None:
-        nodes = [cluster.node(node) for node in cluster.nodes["clickhouse"]]
-
-    for node in nodes:
-        node.query(
-            "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
-            message='"allow_object_storage_vfs","1"',
-        )
-
-
-@TestStep(Given)
-def enable_vfs(self, nodes=None, timeout=30):
-    if check_clickhouse_version("<23.11")(self):
-        skip("vfs not supported on < 23.11")
-
-    with Given("I create and load enable_vfs.xml"):
-        add_vfs_config(nodes=nodes, timeout=timeout)
-
-    with Then("I check that VFS is enabled"):
-        check_vfs_enabled(nodes=nodes)
-
-
 @contextmanager
 def subshell(bash, command, name, prompt=None):
     def spawn(command):

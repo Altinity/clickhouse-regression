@@ -4,8 +4,14 @@ import json
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
-from s3.tests.common import s3_storage, enable_vfs, check_bucket_size, get_bucket_size
+from helpers.common import (
+    getuid,
+    create_xml_config_content,
+    check_clickhouse_version,
+    add_config,
+)
+from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
+
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 
@@ -42,7 +48,7 @@ def s3_config(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage(disks, policies, restart=True, timeout=60):
         yield
 
 
@@ -132,3 +138,44 @@ def insert_random(self, node, table_name, columns: str = None, rows: int = 10000
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows}",
         exitcode=0,
     )
+
+
+@TestStep(Given)
+def add_vfs_config(
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    config_file="enable_vfs.xml",
+    restart=True,
+    nodes=None,
+    timeout=30,
+):
+    entries = {"merge_tree": {"allow_object_storage_vfs": "1"}}
+    config = create_xml_config_content(
+        entries, config_d_dir=config_d_dir, config_file=config_file
+    )
+    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
+
+
+@TestStep(Then)
+def check_vfs_enabled(self, nodes=None):
+    cluster = self.context.cluster
+    if nodes is None:
+        nodes = [cluster.node(node) for node in cluster.nodes["clickhouse"]]
+
+    for node in nodes:
+        node.query(
+            "SELECT name, value, changed FROM system.merge_tree_settings WHERE name = 'allow_object_storage_vfs' FORMAT CSV",
+            message='"allow_object_storage_vfs","1"',
+        )
+
+
+@TestStep(Given)
+def enable_vfs(self, nodes=None, timeout=30):
+    if check_clickhouse_version("<23.11")(self):
+        skip("vfs not supported on < 23.11")
+
+    with Given("I create and load enable_vfs.xml"):
+        add_vfs_config(nodes=nodes, timeout=timeout)
+
+    with Then("I check that VFS is enabled"):
+        check_vfs_enabled(nodes=nodes)

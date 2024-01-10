@@ -13,7 +13,7 @@ from window_functions.requirements import (
     RQ_SRS_019_ClickHouse_WindowFunctions,
 )
 from helpers.common import check_clickhouse_version
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {
     "tests/:/frame clause/range frame/between expr following and expr following without order by error": [

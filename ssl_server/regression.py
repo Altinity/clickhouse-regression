@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version, check_current_cpu, current_cpu
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 
 from ssl_server.requirements import SRS017_ClickHouse_SSL
 

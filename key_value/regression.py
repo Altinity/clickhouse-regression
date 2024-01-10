@@ -10,7 +10,7 @@ from helpers.cluster import create_cluster
 from key_value.requirements.requirements import *
 from helpers.argparser import argparser as argparser
 from helpers.common import check_clickhouse_version
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 from key_value.tests.constant import *
 
 xfails = {}

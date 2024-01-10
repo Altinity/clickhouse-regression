@@ -11,7 +11,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from alter.requirements.requirements import *
 from helpers.datatypes import *
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {
     "/alter/replace partition/concurrent merges and mutations/mutations on unrelated partition": [
