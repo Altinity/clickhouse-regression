@@ -8,46 +8,60 @@ from object_storage_vfs.tests.steps import *
 from object_storage_vfs.requirements import *
 
 
-@TestScenario
+@TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
-def stress_inserts(self):
+@Examples(
+    "n_cols max_inserts allow_vfs",
+    [
+        (1, 2_000_000_000, False),
+        (1, 2_000_000_000, True),
+        (40, 50_000_000, False),
+        (40, 50_000_000, True),
+        (1000, 1_250_000, False),
+        (1000, 1_250_000, True),
+    ],
+)
+def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
     """
     Check that performing tens of millions of individual inserts does not cause data to be lost
     """
-    cluster = self.context.cluster
     nodes = self.context.ch_nodes[:2]
-
-    max_inserts = 50_000_000
-    n_cols = 40
+    max_inserts = int(max_inserts)
 
     columns = ", ".join([f"d{i} UInt8" for i in range(n_cols)])
+
+    table_settings = ", ".join([
+        "max_insert_block_size=1", # Stress (zoo)keeper by inflating transaction counts
+        "max_insert_threads=16", 
+        "max_memory_usage=0", # Ignore per-query memory limits
+    ])
 
     def insert_sequence():
         """
         Produce a sequence of increasing numbers.
         It is desireable to know how close ClickHouse gets to max_inserts before failing.
         """
-        n = 10000
+        n = 100_000
         while n < max_inserts:
             n = min(n * 10, max_inserts)
             yield n // 4
             yield n // 2
             yield n
 
+    if allow_vfs:
+        with Given("vfs is enabled"):
+            enable_vfs()
+
     with Given(f"I create a replicated table with {n_cols} cols on each node"):
-        replicated_table(
-            table_name="vfs_stress_test",
-            columns=columns,
-            allow_vfs=True,
-        )
+        _, table_name = replicated_table(columns=columns)
 
     total_rows = 0
     for n_inserts in insert_sequence():
         with When(f"I perform {n_inserts:,} individual inserts"):
             nodes[0].query(
                 f"""
-                INSERT INTO vfs_stress_test SELECT * FROM generateRandom('{columns}') 
-                LIMIT {n_inserts} SETTINGS max_insert_block_size=1, max_insert_threads=32, max_memory_usage=0
+                INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') 
+                LIMIT {n_inserts} SETTINGS {table_settings}
                 """,
                 exitcode=0,
                 timeout=600,
@@ -55,17 +69,17 @@ def stress_inserts(self):
             total_rows += n_inserts
 
         with Then(f"there should be {total_rows} rows"):
-            assert_row_count(
-                node=nodes[0], table_name="vfs_stress_test", rows=total_rows
-            )
+            assert_row_count(node=nodes[0], table_name=table_name, rows=total_rows)
 
     with When("I perform optimize on each node"):
         for node in nodes:
-            node.query("OPTIMIZE TABLE vfs_stress_test")
+            node.query(f"OPTIMIZE TABLE {table_name}")
 
     with Then(f"there should still be {total_rows} rows"):
-        assert_row_count(node=nodes[0], table_name="vfs_stress_test", rows=total_rows)
-        assert_row_count(node=nodes[1], table_name="vfs_stress_test", rows=total_rows)
+        assert_row_count(node=nodes[0], table_name=table_name, rows=total_rows)
+        retry(assert_row_count, timeout=120, delay=1)(
+            node=nodes[1], table_name=table_name, rows=total_rows
+        )
 
 
 @TestFeature
