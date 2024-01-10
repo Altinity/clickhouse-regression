@@ -215,23 +215,33 @@ ffails = {
     ),
     "/aggregate functions/first_value_respect_nulls/*": (
         Skip,
-        "largestTriangleThreeBuckets works from 23.5",
+        "first_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
     "/aggregate functions/:/first_value_respect_nulls*/*": (
         Skip,
-        "largestTriangleThreeBuckets works from 23.5",
+        "first_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/first_value_respect_nulls*/*": (
+        Skip,
+        "need to investigate",
+        check_clickhouse_version(">23.8"),
     ),
     "/aggregate functions/last_value_respect_nulls/*": (
         Skip,
-        "largestTriangleThreeBuckets works from 23.5",
+        "last_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
     "/aggregate functions/:/last_value_respect_nulls*/*": (
         Skip,
-        "largestTriangleThreeBuckets works from 23.5",
+        "last_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/last_value_respect_nulls*/*": (
+        Skip,
+        "need to investigate",
+        check_clickhouse_version(">23.8"),
     ),
     "/aggregate functions/flameGraph/*": (
         Skip,
@@ -264,30 +274,10 @@ ffails = {
         issue_57801,
         check_clickhouse_version("<23"),
     ),
-    "/aggregate functions/finalizeAggregation/studentTTest_finalizeAggregation_Merge/*": (
+    "/aggregate functions/*/studentTTest*Merge/*": (
         XFail,
         issue_41176,
         check_clickhouse_version("<23.3"),
-    ),
-    "/aggregate functions/merge/studentTTestMerge/*": (
-        XFail,
-        issue_41176,
-        check_clickhouse_version("<23.3"),
-    ),
-    "/aggregate functions/finalizeAggregation/welchTTest_finalizeAggregation_Merge/*": (
-        XFail,
-        "need to invesigate",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/aggregate functions/merge/welchTTestMerge/*": (
-        XFail,
-        "need to invesigate",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/aggregate functions/merge/topKWeightedMerge/*": (
-        XFail,
-        "need to invesigate fail on 23.3",
-        check_clickhouse_version("<=23") and check_clickhouse_version(">=23"),
     ),
     "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
         XFail,
@@ -303,6 +293,22 @@ ffails = {
         XFail,
         issue_57801,
         check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/float64:/*": (
+        Skip,
+        *issue_44511,
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/nullable_float64_:/*": (
+        Skip,
+        *issue_44511,
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_nullable_float64__:/*": (
+        Skip,
+        *issue_44511,
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_float64_:/*": (
+        Skip,
+        *issue_44511,
     ),
 }
 
