@@ -15,6 +15,8 @@ aggregate_functions = [
     "aggThrow",
     "analysisOfVariance",
     "any",
+    "anyLast_respect_nulls", 
+    "any_respect_nulls",
     "anyHeavy",
     "anyLast",
     "argMax",
