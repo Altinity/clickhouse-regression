@@ -14,7 +14,9 @@ from object_storage_vfs.requirements import *
 
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
-    ":/settings/vfs setting/bucket sizes match": [(Fail, "local setting does not work")],
+    ":/settings/vfs setting/bucket sizes match": [
+        (Fail, "local setting does not work")
+    ],
 }
 
 ffails = {}
@@ -70,7 +72,6 @@ def minio(
     Feature(run=load("object_storage_vfs.tests.integrity", "feature"))
     Feature(run=load("object_storage_vfs.tests.create_insert", "feature"))
     Feature(run=load("object_storage_vfs.tests.performance", "feature"))
-
 
     if self.context.stress:
         Feature(run=load("object_storage_vfs.tests.stress", "feature"))

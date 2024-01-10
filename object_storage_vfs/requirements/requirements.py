@@ -81,7 +81,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication = Requirement(
 
 RQ_SRS_038_DiskObjectStorageVFS_Core_Delete = Requirement(
     name="RQ.SRS-038.DiskObjectStorageVFS.Core.Delete",
-    version="0.0",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
@@ -93,22 +93,6 @@ RQ_SRS_038_DiskObjectStorageVFS_Core_Delete = Requirement(
     link=None,
     level=3,
     num="4.1.5",
-)
-
-RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel",
-    version="0.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL be able to remove s3 objects in parallel when `<allow_object_storage_vfs>` is enabled\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.1.6",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_Global = Requirement(
@@ -454,11 +438,6 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Core.Delete", level=3, num="4.1.5"
         ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel",
-            level=3,
-            num="4.1.6",
-        ),
         Heading(name="Settings", level=2, num="4.2"),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Global", level=3, num="4.2.1"
@@ -533,7 +512,6 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Core_DropReplica,
         RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication,
         RQ_SRS_038_DiskObjectStorageVFS_Core_Delete,
-        RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Global,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Local,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible,
@@ -556,41 +534,40 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
 
 ## Table of Contents
 
-* [Table of Contents](#table-of-contents)
-* [Revision History](#revision-history)
-* [Introduction](#introduction)
-* [Terminology](#terminology)
-* [Requirements](#requirements)
-  * [Core](#core)
-    * [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Core.AddReplica](#rqsrs-038diskobjectstoragevfscoreaddreplica)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel](#rqsrs-038diskobjectstoragevfscoredeleteinparallel)
-  * [Settings](#settings)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Global](#rqsrs-038diskobjectstoragevfssettingsglobal)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Local](#rqsrs-038diskobjectstoragevfssettingslocal)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
-  * [Data Integrity](#data-integrity)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
-  * [Combinatorial](#combinatorial)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Combinatorial](#rqsrs-038diskobjectstoragevfscombinatorial)
-      * [Supported Table Configurations](#supported-table-configurations)
-      * [Supported Operations](#supported-operations)
-  * [Performance](#performance)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
-  * [Object Storage Providers](#object-storage-providers)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
-    * [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
-* [References](#references)
-
+* 1 [Revision History](#revision-history)
+* 2 [Introduction](#introduction)
+* 3 [Terminology](#terminology)
+* 4 [Requirements](#requirements)
+  * 4.1 [Core](#core)
+    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
+    * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Core.AddReplica](#rqsrs-038diskobjectstoragevfscoreaddreplica)
+    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
+    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
+    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
+    * 4.1.6 [RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel](#rqsrs-038diskobjectstoragevfscoredeleteinparallel)
+  * 4.2 [Settings](#settings)
+    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Global](#rqsrs-038diskobjectstoragevfssettingsglobal)
+    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Local](#rqsrs-038diskobjectstoragevfssettingslocal)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
+  * 4.3 [Data Integrity](#data-integrity)
+    * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
+    * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
+    * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
+    * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
+  * 4.4 [Combinatoric](#combinatoric)
+    * 4.4.4.1 [Supported Table Configurations](#supported-table-configurations)
+    * 4.4.4.2 [Supported Operations](#supported-operations)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
+    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
+  * 4.5 [Performance](#performance)
+    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
+  * 4.6 [Object Storage Providers](#object-storage-providers)
+    * 4.6.1 [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
+    * 4.6.2 [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
+    * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
+    * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
+* 5 [References](#references)
 
 ## Revision History
 
@@ -647,14 +624,9 @@ duplicated in [S3] storage during any operations on replicated tables (ALTER,
 SELECT, INSERT, etc...).
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Core.Delete
-version: 0.0
+version: 1.0
 
 [ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_object_storage_vfs>` is enabled
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel
-version: 0.0
-
-[ClickHouse] SHALL be able to remove s3 objects in parallel when `<allow_object_storage_vfs>` is enabled
 
 ### Settings
 

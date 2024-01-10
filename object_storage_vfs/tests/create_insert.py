@@ -106,8 +106,8 @@ def check_table_combination(
 
     for i, table in enumerate(tables):
         if replicated:
-            insert_node = choice(nodes)          
-            
+            insert_node = choice(nodes)
+
         with Given(f"data is inserted into table#{i} on {insert_node.name}"):
             insert_node.query(
                 f"""
