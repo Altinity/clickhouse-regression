@@ -376,6 +376,7 @@ def create_table(
     drop_sync=False,
     order_by=None,
     partition_by=None,
+    primary_key = None,
     comment=None,
     as_select=None,
     settings=None,
@@ -407,6 +408,8 @@ def create_table(
                 f"CREATE TABLE {if_not_exists}{name} {columns_def}\n"
                 f"ENGINE = {engine}"
             )
+            if primary_key is not None:
+                query += f"\nPRIMARY KEY {primary_key}"
 
             if partition_by is not None:
                 query += f"\nPARTITION BY {partition_by}"

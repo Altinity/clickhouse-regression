@@ -20,6 +20,7 @@ def create_partitioned_table_with_data(
     table_name,
     engine="MergeTree",
     partition_by="tuple()",
+    primary_key=None,
     columns=None,
     query_settings=None,
     order_by="tuple()",
@@ -28,6 +29,7 @@ def create_partitioned_table_with_data(
     config="graphite_rollup_example",
     sign="sign",
     version="a",
+    bias=0,
 ):
     """Create a table that is partitioned by specified columns."""
 
@@ -59,6 +61,7 @@ def create_partitioned_table_with_data(
             name=table_name,
             engine=engine,
             partition_by=partition_by,
+            primary_key=primary_key,
             order_by=order_by,
             columns=columns,
             query_settings=query_settings,
@@ -69,7 +72,7 @@ def create_partitioned_table_with_data(
     with And(f"inserting data that will create multiple partitions"):
         for i in range(1, number_of_partitions + 1):
             node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i}, {i+4}, {i+8}, number+1000, 1 FROM numbers({10})"
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({10})"
             )
 
 
@@ -79,6 +82,7 @@ def create_empty_partitioned_table(
     table_name,
     engine="MergeTree",
     partition_by="tuple()",
+    primary_key=None,
     columns=None,
     query_settings=None,
     order_by="tuple()",
@@ -117,6 +121,7 @@ def create_empty_partitioned_table(
             name=table_name,
             engine=engine,
             partition_by=partition_by,
+            primary_key=primary_key,
             order_by=order_by,
             columns=columns,
             query_settings=query_settings,
@@ -300,6 +305,6 @@ def execute_query(
                             "tests." + current_cpu(),
                             name=snapshot_name,
                             encoder=str,
-                            mode=snapshot.CHECK,  # | snapshot.UPDATE,
+                            mode=snapshot.CHECK,
                         )
                     ), error()
