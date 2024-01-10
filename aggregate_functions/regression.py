@@ -274,11 +274,6 @@ ffails = {
         issue_41176,
         check_clickhouse_version("<23.3"),
     ),
-    "/aggregate functions/merge/topKWeightedMerge/*": (
-        XFail,
-        "need to invesigate fail on 23.3",
-        check_clickhouse_version("<=23") and check_clickhouse_version(">=23"),
-    ),
     "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
         XFail,
         issue_57801,
