@@ -8,7 +8,7 @@ append_path(sys.path, "..", "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 from ldap.authentication.requirements import *
 
 issue_51323 = "https://github.com/ClickHouse/ClickHouse/issues/51323"

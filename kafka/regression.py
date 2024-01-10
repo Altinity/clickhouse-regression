@@ -7,7 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {}
 

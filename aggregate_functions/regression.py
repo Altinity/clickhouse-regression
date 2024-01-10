@@ -10,7 +10,7 @@ from helpers.tables import *
 from helpers.argparser import argparser
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 
 from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions

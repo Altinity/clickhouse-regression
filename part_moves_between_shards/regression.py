@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 from part_moves_between_shards.requirements import *
 
 

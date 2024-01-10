@@ -44,12 +44,12 @@ xfails = {
     "concurrent alter and delete/:/concurrent delete attach detach partition/": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50922")
     ],
-    ":/concurrent alter and delete/:/concurrent delete drop partition with data addition/:":[
+    ":/concurrent alter and delete/:/concurrent delete drop partition with data addition/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
     ],
-    ":/concurrent alter and delete/:/concurrent delete drop partition/:":[
+    ":/concurrent alter and delete/:/concurrent delete drop partition/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
-    ]
+    ],
 }
 
 xflags = {}
@@ -123,7 +123,6 @@ def regression(
         if not use_alter_delete:
             with Given("I enable lightweight delete"):
                 allow_experimental_lightweight_delete()
-
 
         Feature(
             run=load(

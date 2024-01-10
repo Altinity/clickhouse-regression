@@ -9,7 +9,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from ldap.role_mapping.requirements import *
 from helpers.common import check_clickhouse_version
-from s3.tests.common import enable_vfs
+from object_storage_vfs.tests.steps import enable_vfs
 
 # Cross-outs of known fails
 xfails = {
