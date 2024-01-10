@@ -264,12 +264,7 @@ ffails = {
         issue_57801,
         check_clickhouse_version("<23"),
     ),
-    "/aggregate functions/finalizeAggregation/studentTTest_finalizeAggregation_Merge/*": (
-        XFail,
-        issue_41176,
-        check_clickhouse_version("<23.3"),
-    ),
-    "/aggregate functions/merge/studentTTestMerge/*": (
+    "/aggregate functions/*/studentTTest*Merge/*": (
         XFail,
         issue_41176,
         check_clickhouse_version("<23.3"),
