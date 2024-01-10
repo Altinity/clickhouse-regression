@@ -93,14 +93,9 @@ duplicated in [S3] storage during any operations on replicated tables (ALTER,
 SELECT, INSERT, etc...).
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Core.Delete
-version: 0.0
+version: 1.0
 
 [ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_object_storage_vfs>` is enabled
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel
-version: 0.0
-
-[ClickHouse] SHALL be able to remove s3 objects in parallel when `<allow_object_storage_vfs>` is enabled
 
 ### Settings
 

@@ -71,9 +71,8 @@ def vfs_setting(self):
                 table_name="my_global_vfs_table",
                 columns="d UInt64",
                 allow_vfs=True,
-                exitcode=0
+                exitcode=0,
             )
-
 
         with And("I add data to the table"):
             insert_random(
@@ -102,10 +101,7 @@ def vfs_setting(self):
 
 @TestFeature
 @Name("settings")
-@Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration("1.0"),
-)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration("1.0"))
 def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()

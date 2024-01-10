@@ -136,10 +136,7 @@ def drop_replica(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Core_Delete("0.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Core_DeleteInParallel("0.0"),
-)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Core_Delete("1.0"))
 def delete(self):
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
@@ -319,7 +316,6 @@ def no_duplication(self):
 
 @TestFeature
 @Name("core")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
 def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()

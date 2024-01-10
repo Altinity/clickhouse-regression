@@ -30,11 +30,13 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
 
     columns = ", ".join([f"d{i} UInt8" for i in range(n_cols)])
 
-    table_settings = ", ".join([
-        "max_insert_block_size=1", # Stress (zoo)keeper by inflating transaction counts
-        "max_insert_threads=16", 
-        "max_memory_usage=0", # Ignore per-query memory limits
-    ])
+    table_settings = ", ".join(
+        [
+            "max_insert_block_size=1",  # Stress (zoo)keeper by inflating transaction counts
+            "max_insert_threads=16",
+            "max_memory_usage=0",  # Ignore per-query memory limits
+        ]
+    )
 
     def insert_sequence():
         """
@@ -84,7 +86,6 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
 
 @TestFeature
 @Name("stress")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
 def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()

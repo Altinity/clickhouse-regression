@@ -88,7 +88,6 @@ def enable_vfs_with_non_vfs_table(self):
 
 @TestFeature
 @Name("integrity")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
 def feature(self):
 
     with Given("I have S3 disks configured"):
