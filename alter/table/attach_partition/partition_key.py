@@ -812,15 +812,20 @@ def attach_partition_from(self, with_id=False):
         "(c,b,a)",
     }
 
-    engines = {
-        "MergeTree",
-        "ReplacingMergeTree",
-        "AggregatingMergeTree",
-        "SummingMergeTree",
-        "CollapsingMergeTree",
-        "VersionedCollapsingMergeTree",
-        "GraphiteMergeTree",
-    }
+    if self.context.stress:
+        engines = {
+            "MergeTree",
+            "ReplacingMergeTree",
+            "AggregatingMergeTree",
+            "SummingMergeTree",
+            "CollapsingMergeTree",
+            "VersionedCollapsingMergeTree",
+            "GraphiteMergeTree",
+        }
+    else:
+        engines = {
+            "MergeTree",
+        }
 
     check_attach_partition_from(
         source_table=create_partitioned_table_with_data,

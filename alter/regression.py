@@ -87,7 +87,7 @@ def regression(
     clickhouse_version,
     clickhouse_binary_path,
     collect_service_logs,
-    stress,
+    stress=None,
 ):
     """Alter regression."""
     nodes = {
@@ -104,6 +104,9 @@ def regression(
     self.context.uri = "http://minio:9001/root/data/alter"
     self.context.access_key_id = "minio"
     self.context.secret_access_key = "minio123"
+
+    if stress is not None:
+        self.context.stress = stress
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
