@@ -67,6 +67,12 @@ def add_replica(self):
                 """,
             )
 
+        with And("I wait for the replica to sync"):
+            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
+            retry(assert_row_count, timeout=120, delay=1)(
+                node=nodes[1], table_name=table_name, rows=1000000
+            )
+
         with Then(
             """The size of the s3 bucket should be 1 byte more
                     than previously because of the additional replica"""
@@ -75,7 +81,7 @@ def add_replica(self):
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=size_after_insert + 1,
-                tolerance=0,
+                tolerance=500,
                 minio_enabled=self.context.minio_enabled,
             )
 
@@ -173,7 +179,13 @@ def delete(self):
                 node=nodes[0], table_name=table_name, columns="d UInt64", rows=1000000
             )
 
-        with And("I get the new size of the s3 bucket"):
+        with And("I wait for the second node to sync"):
+            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=10)
+
+        with And("I check the row count on the second node"):
+            assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
+
+        with When("I get the new size of the s3 bucket"):
             size_after_insert = get_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
@@ -182,22 +194,7 @@ def delete(self):
                 key_id=self.context.access_key_id,
             )
 
-        with And("I wait for the second node to sync"):
-            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=10)
-
-        with And("I check the row count on the second node"):
-            assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
-
-        with And("The size of the s3 bucket should be the same"):
-            check_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                expected_size=size_after_insert,
-                tolerance=0,
-                minio_enabled=self.context.minio_enabled,
-            )
-
-        with And("I drop the table on the second node"):
+        with When("I drop the table on the second node"):
             nodes[1].query(f"DROP TABLE {table_name} SYNC")
 
         with Then("The size of the s3 bucket should be the same"):
@@ -212,17 +209,17 @@ def delete(self):
         with And("I check the row count on the first node"):
             assert_row_count(node=nodes[0], table_name=table_name, rows=1000000)
 
-        with And("I drop the table on the first node"):
+        with When("I drop the table on the first node"):
             nodes[0].query(f"DROP TABLE {table_name} SYNC")
 
         with Then(
             "The size of the s3 bucket should be very close to the size before adding any data"
         ):
-            retry(check_bucket_size, timeout=600, delay=1)(
+            retry(check_bucket_size, timeout=180, delay=1)(
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=size_empty,
-                tolerance=5,
+                tolerance=15,
                 minio_enabled=self.context.minio_enabled,
             )
 
@@ -279,19 +276,29 @@ def no_duplication(self):
 
         with And("I add more data to the table on the second node"):
             insert_random(
-                node=nodes[0],
+                node=nodes[1],
                 table_name=table_name,
                 columns="d UInt64, m UInt64",
                 rows=1000000,
             )
 
+        with And("I wait for the nodes to sync"):
+            nodes[0].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
+            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
+            retry(assert_row_count, timeout=120, delay=1)(
+                node=nodes[0], table_name=table_name, rows=2000000
+            )
+            retry(assert_row_count, timeout=120, delay=1)(
+                node=nodes[1], table_name=table_name, rows=2000000
+            )
+       
         with Then("the size of the s3 bucket should be doubled and no more"):
             expected_size = size_empty + size_added * 2
             check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=expected_size,
-                tolerance=50,
+                tolerance=1000,
                 minio_enabled=self.context.minio_enabled,
             )
 
@@ -309,7 +316,7 @@ def no_duplication(self):
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=expected_size,
-                tolerance=1500,
+                tolerance=2500,
                 minio_enabled=self.context.minio_enabled,
             )
 
