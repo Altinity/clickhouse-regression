@@ -166,6 +166,13 @@ xfails = {
             check_clickhouse_version(">=23.11"),
         )
     ],
+    "/window functions/tests/distributed/misc/subquery multiple window functions/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/58714",
+            check_clickhouse_version(">=23.11"),
+        )
+    ],
 }
 
 xflags = {}
