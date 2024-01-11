@@ -11,10 +11,12 @@ def incompatible_with_zero_copy(self):
     """
     Check that using zero copy replication when vfs is enabled is not allowed.
     """
+    with Given("VFS is globally enabled"):
+        enable_vfs()
+
     with When("I create a replicated table with both vfs and 0-copy enabled"):
         r, _ = replicated_table(
             table_name="vfs_zero_copy_replication",
-            allow_vfs=True,
             allow_zero_copy=True,
             exitcode=None,
         )
@@ -24,7 +26,7 @@ def incompatible_with_zero_copy(self):
 
 
 @TestStep(When)
-def create_insert_measure_replicated_table(self, local_vfs=False):
+def create_insert_measure_replicated_table(self):
     nodes = self.context.ch_nodes
     n_rows = 100_000
     columns = "d UInt64, m UInt64"
@@ -39,9 +41,7 @@ def create_insert_measure_replicated_table(self, local_vfs=False):
         )
 
     with When("a replicated table is created successfully"):
-        _, table_name = replicated_table(
-            columns=columns, allow_vfs=local_vfs, exitcode=0
-        )
+        _, table_name = replicated_table(columns=columns, exitcode=0)
 
     with And("I add data to the table"):
         insert_random(
@@ -78,29 +78,10 @@ def create_insert_measure_replicated_table(self, local_vfs=False):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"))
-def local_setting(self):
-    """
-    Check that allow_object_storage_vfs local reduces storage requirements
-    """
-    with Given("VFS is not globally enabled"):
-        check_global_vfs_state(enabled=False)
-
-    with When("I measure the disk usage after create and insert without vfs"):
-        size_no_vfs = create_insert_measure_replicated_table()
-
-    with And("I measure the disk usage after create and insert with local vfs"):
-        size_local = create_insert_measure_replicated_table(local_vfs=True)
-
-    with Then("Data usage should be less than half compared to no vfs"):
-        assert size_local <= size_no_vfs // 2, error()
-
-
-@TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Global("1.0"))
-def global_setting(self):
+def disk_setting(self):
     """
-    Check that allow_object_storage_vfs global and local behave the same
+    Check that allow_vfs can be globally enabled
     """
     with Given("VFS is not globally enabled"):
         check_global_vfs_state(enabled=False)
@@ -118,32 +99,7 @@ def global_setting(self):
         assert size_global <= size_no_vfs // 2, error()
 
 
-@TestScenario
-@Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Global("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"),
-)
-def settings_equivalent(self):
-    """
-    Check that allow_object_storage_vfs global and local behave the same
-    """
-    with Given("VFS is not globally enabled"):
-        check_global_vfs_state(enabled=False)
-
-    with When("I measure the disk usage after create and insert with local vfs"):
-        size_local = create_insert_measure_replicated_table(local_vfs=True)
-
-    with Given("I enable VFS globally"):
-        enable_vfs()
-
-    with When("I measure the disk usage after create and insert with global vfs"):
-        size_global = create_insert_measure_replicated_table()
-
-    with Then("bucket sizes should match"):
-        assert size_global == size_local, error()
-
-
-# RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
+# RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared
 
 
 @TestFeature

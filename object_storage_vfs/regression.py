@@ -14,16 +14,6 @@ from object_storage_vfs.requirements import *
 
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
-    ":/settings/global setting": [
-        (Fail, "under investigation")
-    ],
-    ":/settings/local setting": [
-        (Fail, "local setting cannot work like this, vfs requires a restart")
-    ],
-    ":/settings/settings equivalent": [
-        (Fail, "local setting cannot work like this, vfs requires a restart")
-    ],
-    # ":/settings/*": [(Fail, "under investigation")],
 }
 
 ffails = {}
