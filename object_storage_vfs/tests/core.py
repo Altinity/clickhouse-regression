@@ -313,6 +313,7 @@ def no_duplication(self):
                 minio_enabled=self.context.minio_enabled,
             )
 
+#RQ_SRS_038_DiskObjectStorageVFS_Core_RemoveReplica
 
 @TestFeature
 @Name("core")
