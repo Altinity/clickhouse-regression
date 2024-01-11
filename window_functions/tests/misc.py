@@ -2,7 +2,6 @@ from testflows.core import *
 
 from window_functions.requirements import *
 from window_functions.tests.common import *
-import time
 
 
 @TestScenario
@@ -280,14 +279,6 @@ def subquery_multiple_window_functions(self):
     sales   |    14600    |  4800
     """
     )
-
-    # if "distributed" in self.name:
-    #     #self.context.node.query("SYSTEM SYNC REPLICA ON CLUSTER sharded_cluster empsalary PULL")
-    #     self.context.node.query("Select * from empsalary")
-    #     self.context.node.query("select * from system.clusters")
-    #     pause()
-    #     self.context.node.query("Select * from empsalary_source")
-    #     pause()
 
     execute_query(
         """
