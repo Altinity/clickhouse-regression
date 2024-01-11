@@ -15,10 +15,13 @@ from object_storage_vfs.requirements import *
 @Name("performance")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
 def feature(self):
-    self.context.zero_copy_replication_settings = {"allow_object_storage_vfs": "1"}
+    self.context.zero_copy_replication_settings = {}
 
     with Given("I have S3 disks configured"):
         s3_config()
+
+    with And("VFS is enabled"):
+        enable_vfs()
 
     Scenario(run=performance_insert)
     Scenario(run=performance_select)
