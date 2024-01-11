@@ -4,13 +4,9 @@ import json
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import (
-    getuid,
-    create_xml_config_content,
-    check_clickhouse_version,
-    add_config,
-)
-from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
+from helpers.common import getuid, create_xml_config_content, check_clickhouse_version
+
+from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size, add_config
 
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
