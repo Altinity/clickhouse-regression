@@ -851,6 +851,16 @@ def feature(self, node="clickhouse1"):
 
     self.context.node = self.context.cluster.node(node)
     with Pool(2) as pool:
-        Scenario(run=attach_partition_from, parallel=True, executor=pool)
-        Scenario(test=attach_partition_from, parallel=True, executor=pool)(with_id=True)
+        Scenario(
+            "attach partition from without id",
+            test=attach_partition_from,
+            parallel=True,
+            executor=pool,
+        )(with_id=False)
+        Scenario(
+            "attach partition from with id",
+            test=attach_partition_from,
+            parallel=True,
+            executor=pool,
+        )(with_id=True)
         join()
