@@ -2,6 +2,7 @@ from testflows.core import *
 
 from window_functions.requirements import *
 from window_functions.tests.common import *
+import time
 
 
 @TestScenario
@@ -214,7 +215,8 @@ def from_subquery(self):
     )
 
     execute_query(
-        "SELECT count(*) OVER (PARTITION BY four) AS count, four FROM (SELECT * FROM tenk1 WHERE two = 1) WHERE unique2 < 10",
+        "SELECT count(*) OVER (PARTITION BY four) AS count, four FROM (SELECT * FROM tenk1 WHERE two = 1) WHERE unique2 < 10 "
+        "ORDER BY four, count",
         expected=expected,
     )
 
@@ -279,6 +281,14 @@ def subquery_multiple_window_functions(self):
     """
     )
 
+    # if "distributed" in self.name:
+    #     #self.context.node.query("SYSTEM SYNC REPLICA ON CLUSTER sharded_cluster empsalary PULL")
+    #     self.context.node.query("Select * from empsalary")
+    #     self.context.node.query("select * from system.clusters")
+    #     pause()
+    #     self.context.node.query("Select * from empsalary_source")
+    #     pause()
+
     execute_query(
         """
         SELECT * FROM
@@ -320,7 +330,7 @@ def windows_with_same_partitioning_but_different_ordering(self):
         SELECT
           any(empno) OVER (PARTITION BY depname ORDER BY salary, enroll_date) AS first,
           anyLast(empno) OVER (PARTITION BY depname ORDER BY salary,enroll_date,empno) AS last
-        FROM empsalary
+        FROM empsalary ORDER BY first desc
         """,
         expected=expected,
     )
@@ -353,6 +363,7 @@ def subquery_with_multiple_windows_filtering(self):
                   row_number() OVER (PARTITION BY depname ORDER BY enroll_date DESC, empno) AS last_emp
            FROM empsalary) emp
         WHERE first_emp = 1 OR last_emp = 1
+        ORDER BY depname, enroll_date
         """,
         expected=expected,
     )

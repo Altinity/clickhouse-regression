@@ -75,7 +75,7 @@ def frame_clause(self):
     """
     )
 
-    execute_query(  
+    execute_query(
         "SELECT sum(salary) OVER w AS sum FROM empsalary WINDOW w AS (ORDER BY empno ROWS CURRENT ROW) ORDER BY sum",
         expected=expected,
     )
