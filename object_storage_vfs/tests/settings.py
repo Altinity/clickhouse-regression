@@ -23,77 +23,124 @@ def incompatible_with_zero_copy(self):
         assert r.exitcode != 0, error()
 
 
+@TestStep(When)
+def create_insert_measure_replicated_table(self, local_vfs=False):
+    nodes = self.context.ch_nodes
+    n_rows = 100_000
+    columns = "d UInt64, m UInt64"
+
+    with Given("an s3 bucket with a known amount of data"):
+        size_before = get_bucket_size(
+            name=self.context.bucket_name,
+            prefix=self.context.bucket_path,
+            minio_enabled=self.context.minio_enabled,
+            access_key=self.context.secret_access_key,
+            key_id=self.context.access_key_id,
+        )
+
+    with When("a replicated table is created successfully"):
+        _, table_name = replicated_table(
+            columns=columns, allow_vfs=local_vfs, exitcode=0
+        )
+
+    with And("I add data to the table"):
+        insert_random(
+            node=nodes[0],
+            table_name=table_name,
+            columns=columns,
+            rows=n_rows,
+        )
+
+    with And("I wait for the replicas to sync", flags=TE):
+        # nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
+        # nodes[2].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
+        retry(assert_row_count, timeout=120, delay=1)(
+            node=nodes[0], table_name=table_name, rows=n_rows
+        )
+        retry(assert_row_count, timeout=120, delay=1)(
+            node=nodes[1], table_name=table_name, rows=n_rows
+        )
+        retry(assert_row_count, timeout=120, delay=1)(
+            node=nodes[2], table_name=table_name, rows=n_rows
+        )
+
+    with And("I get the size of the data added to s3"):
+        size_after = get_bucket_size(
+            name=self.context.bucket_name,
+            prefix=self.context.bucket_path,
+            minio_enabled=self.context.minio_enabled,
+            access_key=self.context.secret_access_key,
+            key_id=self.context.access_key_id,
+        )
+        size = size_after - size_before
+
+    return size
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"))
+def local_setting(self):
+    """
+    Check that allow_object_storage_vfs local reduces storage requirements
+    """
+    with Given("VFS is not globally enabled"):
+        check_global_vfs_state(enabled=False)
+
+    with When("I measure the disk usage after create and insert without vfs"):
+        size_no_vfs = create_insert_measure_replicated_table()
+
+    with And("I measure the disk usage after create and insert with local vfs"):
+        size_local = create_insert_measure_replicated_table(local_vfs=True)
+
+    with Then("Data usage should be less than half compared to no vfs"):
+        assert size_local <= size_no_vfs // 2, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Global("1.0"))
+def global_setting(self):
+    """
+    Check that allow_object_storage_vfs global and local behave the same
+    """
+    with Given("VFS is not globally enabled"):
+        check_global_vfs_state(enabled=False)
+
+    with When("I measure the disk usage after create and insert without vfs"):
+        size_no_vfs = create_insert_measure_replicated_table()
+
+    with Given("VFS is globally enabled"):
+        enable_vfs()
+
+    with When("I measure the disk usage after create and insert with global vfs"):
+        size_global = create_insert_measure_replicated_table()
+
+    with Then("Data usage should be less than half compared to no vfs"):
+        assert size_global <= size_no_vfs // 2, error()
+
+
 @TestScenario
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Settings_Global("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_Settings_Local("1.0"),
 )
-def vfs_setting(self):
+def settings_equivalent(self):
     """
     Check that allow_object_storage_vfs global and local behave the same
     """
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
-    nodes = self.context.ch_nodes
+    with Given("VFS is not globally enabled"):
+        check_global_vfs_state(enabled=False)
 
-    with Check("global"):
-        with Given("VFS is globally enabled"):
-            enable_vfs()
+    with When("I measure the disk usage after create and insert with local vfs"):
+        size_local = create_insert_measure_replicated_table(local_vfs=True)
 
-        with Then("creating a table is successful"):
-            r, _ = replicated_table(
-                table_name="my_local_vfs_table", columns="d UInt64", exitcode=0
-            )
+    with Given("I enable VFS globally"):
+        enable_vfs()
 
-        with And("I add data to the table"):
-            insert_random(
-                node=nodes[0],
-                table_name="my_local_vfs_table",
-                columns="d UInt64",
-                rows=1000000,
-            )
+    with When("I measure the disk usage after create and insert with global vfs"):
+        size_global = create_insert_measure_replicated_table()
 
-        with And("I get the size of the s3 bucket"):
-            size_global = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                minio_enabled=self.context.minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-            )
-
-    with Check("local"):
-        with Given("VFS is not globally enabled"):
-            check_global_vfs_state(enabled=False)
-
-        with Then("creating a table with allow_object_storage_vfs=1 is successful"):
-            replicated_table(
-                table_name="my_global_vfs_table",
-                columns="d UInt64",
-                allow_vfs=True,
-                exitcode=0,
-            )
-
-        with And("I add data to the table"):
-            insert_random(
-                node=nodes[0],
-                table_name="my_global_vfs_table",
-                columns="d UInt64",
-                rows=1000000,
-            )
-
-        with And("I get the size of the s3 bucket"):
-            size_local = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                minio_enabled=self.context.minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-            )
-
-    with Check("bucket sizes match"):
-        with Then("bucket sizes should match"):
-            assert size_global == size_local, error()
+    with Then("bucket sizes should match"):
+        assert size_global == size_local, error()
 
 
 # RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,

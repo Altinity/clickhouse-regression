@@ -122,7 +122,7 @@ def replicated_table(
 
     finally:
         with Finally(f"I drop the table"):
-            node.query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}'")
+            node.query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC")
 
 
 @TestStep(Given)
