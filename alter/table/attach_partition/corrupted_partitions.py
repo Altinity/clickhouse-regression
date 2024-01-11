@@ -242,6 +242,8 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
     with And(
         "I detach all the corrupted parts and check that it is possible to read data from the table without any errors",
     ):
+        note("Corrupted parts:")
+        note(self.context.destination_parts)
         if corrupt_type != "corrupt_no_parts":
             for part in self.context.destination_parts:
                 node.query(
