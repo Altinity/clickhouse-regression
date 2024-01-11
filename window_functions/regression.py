@@ -152,6 +152,20 @@ xfails = {
     "/window functions/tests/:/time decayed funcs/exponentialTimeDecayed:/:/:": [
         (Fail, "not working correctly on 22.3", check_clickhouse_version("<22.8"))
     ],
+    "/window functions/tests/:/aggregate funcs/avgWeighted/decimal value and weight/*": [
+        (
+            Fail,
+            "can not use the aggregate function avgWeighted with arguments of type Decimal from 23.11",
+            check_clickhouse_version(">=23.11"),
+        )
+    ],
+    "/window functions/tests/:/aggregate funcs/avgWeighted/decimal weight/*": [
+        (
+            Fail,
+            "can not use the aggregate function avgWeighted with arguments of type Decimal from 23.11",
+            check_clickhouse_version(">=23.11"),
+        )
+    ],
 }
 
 xflags = {}

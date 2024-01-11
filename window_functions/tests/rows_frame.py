@@ -317,7 +317,8 @@ def between_unbounded_preceding_and_current_row(self):
         "SELECT four, toInt8(ten/4) as two,"
         "sum(toInt8(ten/4)) over (partition by four order by toInt8(ten/4) rows between unbounded preceding and current row) AS sum,"
         "last_value(toInt8(ten/4)) over (partition by four order by toInt8(ten/4) rows between unbounded preceding and current row) AS last_value "
-        "FROM (select distinct ten, four from tenk1)",
+        "FROM (select distinct ten, four from tenk1) "
+        "ORDER BY four, two, sum, last_value",
         expected=expected,
     )
 
