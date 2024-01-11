@@ -10,10 +10,10 @@
   * 4.1 [Core](#core)
     * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
     * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Core.AddReplica](#rqsrs-038diskobjectstoragevfscoreaddreplica)
-    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
-    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
-    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
-    * 4.1.6 [RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel](#rqsrs-038diskobjectstoragevfscoredeleteinparallel)
+    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Core.RemoveReplica](#rqsrs-038diskobjectstoragevfscoreremovereplica)
+    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
+    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
+    * 4.1.6 [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
   * 4.2 [Settings](#settings)
     * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Global](#rqsrs-038diskobjectstoragevfssettingsglobal)
     * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Local](#rqsrs-038diskobjectstoragevfssettingslocal)
@@ -25,10 +25,10 @@
     * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
     * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
   * 4.4 [Combinatoric](#combinatoric)
-    * 4.4.4.1 [Supported Table Configurations](#supported-table-configurations)
-    * 4.4.4.2 [Supported Operations](#supported-operations)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
-    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
+    * 4.4.1 [Supported Table Configurations](#supported-table-configurations)
+    * 4.4.2 [Supported Operations](#supported-operations)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
   * 4.5 [Performance](#performance)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
   * 4.6 [Object Storage Providers](#object-storage-providers)
@@ -77,13 +77,19 @@ version: 1.0
 [ClickHouse] SHALL support adding a replica of an existing replicated table
 with no changes to the data in the table.
 
+#### RQ.SRS-038.DiskObjectStorageVFS.Core.RemoveReplica
+version: 1.0
+
+[ClickHouse] SHALL support removing a replicated table on a [ClickHouse] instance
+with no changes to the data in any of the tables on the other replicating instances.
+
 #### RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica
 version: 1.0
 
 [ClickHouse] SHALL support stopping and starting an instance of [ClickHouse]
 with no changes to data in replicated tables. If the table is altered while
-the instance restarts, [ClickHouse] SHALL update the table from [S3] when
-the instance restarts.
+an instance is offline, [ClickHouse] SHALL update the table from [S3] when
+that instance restarts.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication
 version: 1.0
@@ -189,7 +195,7 @@ When objects are removed, all other objects SHALL be accessible with no errors.
 
 ### Combinatoric
 
-##### Supported Table Configurations
+#### Supported Table Configurations
 
 | Engine                       | Replicated | # Columns | Storage Policy |
 | ---------------------------- | :--------- | --------- | -------------- |
@@ -200,7 +206,7 @@ When objects are removed, all other objects SHALL be accessible with no errors.
 | AggregatingMergeTree         |            |           |                |
 | SummingMergeTree             |            |           |                |
 
-##### Supported Operations
+#### Supported Operations
 
 | Simple | TABLE          |     |
 | ------ | -------------- | --- |
