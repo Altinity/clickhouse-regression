@@ -38,7 +38,7 @@ def create_test_table(
 
     table_name = "table_" + getuid()
 
-    settings = f"storage_policy='{storage_policy}', allow_object_storage_vfs=1"
+    settings = f"storage_policy='{storage_policy}'"
 
     columns = [
         Column(name="sign", datatype=Int8()),
@@ -135,6 +135,9 @@ def feature(self):
 
     with Given("I have S3 disks configured"):
         s3_config()
+
+    with And("VFS is enabled"):
+        enable_vfs()
 
     for table_config in CoveringArray(
         table_configurations, strength=covering_array_strength

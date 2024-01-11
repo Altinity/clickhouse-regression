@@ -65,7 +65,6 @@ def enable_vfs_with_non_vfs_table(self):
         replicated_table(
             table_name="my_non_vfs_table",
             columns="d UInt64",
-            allow_vfs=False,
         )
 
     with And("I insert some data"):
