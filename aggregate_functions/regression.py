@@ -28,6 +28,7 @@ issue_48917 = (
 issue_55997 = "https://github.com/ClickHouse/ClickHouse/issues/55997"
 issue_57683 = "https://github.com/ClickHouse/ClickHouse/issues/57683"
 issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
+issue_58727 = "https://github.com/ClickHouse/ClickHouse/issues/58727"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -310,6 +311,11 @@ ffails = {
         Skip,
         *issue_44511,
     ),
+    "/aggregate functions/aggThrow/with group by/*": (
+        Skip,
+        issue_58727,
+        check_clickhouse_version(">=23.11"),
+    ),
 }
 
 
@@ -375,7 +381,6 @@ def regression(
         join()
 
     Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
-    Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
