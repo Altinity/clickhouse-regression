@@ -65,6 +65,7 @@ def minio(
         self.context.uri = uri_bucket_file
 
     Feature(run=load("object_storage_vfs.tests.core", "feature"))
+    Feature(run=load("object_storage_vfs.tests.replica", "feature"))
     Feature(run=load("object_storage_vfs.tests.settings", "feature"))
     Feature(run=load("object_storage_vfs.tests.integrity", "feature"))
     Feature(run=load("object_storage_vfs.tests.create_insert", "feature"))
