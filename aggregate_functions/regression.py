@@ -29,6 +29,7 @@ issue_55997 = "https://github.com/ClickHouse/ClickHouse/issues/55997"
 issue_57683 = "https://github.com/ClickHouse/ClickHouse/issues/57683"
 issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
 issue_58727 = "https://github.com/ClickHouse/ClickHouse/issues/58727"
+issue_58741 = "https://github.com/ClickHouse/ClickHouse/issues/58741"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -107,6 +108,12 @@ xfails = {
             Fail,
             "Need to investigate",
         )
+    ],
+    "/aggregate functions/sumMapFiltered/inf, -inf, nan/*": [
+        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+    ],
+    "/aggregate functions/sumMapFilteredWithOverflow/inf, -inf, nan/*": [
+        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
     ],
 }
 
@@ -316,6 +323,12 @@ ffails = {
         issue_58727,
         check_clickhouse_version(">=23.11"),
     ),
+    "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": 
+        (Skip, issue_58741, check_clickhouse_version(">=23.11"))
+    ,
+    "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": 
+        (Skip, issue_58741, check_clickhouse_version(">=23.11"))
+    ,
 }
 
 

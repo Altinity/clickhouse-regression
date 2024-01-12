@@ -1,0 +1,21 @@
+_aggregate_functions_minMappedArrays_constant = r"""
+{"minMappedArrays([1], [1])":[[1],[1]],"any(toTypeName([1]))":"Array(UInt8)","any(toTypeName([1]))":"Array(UInt8)"}
+"""
+
+_aggregate_functions_minMappedArrays_single_row = r"""
+{"minMappedArrays(array(number), array(plus(number, 1)))":[["0"],["1"]],"any(toTypeName(array(number)))":"Array(UInt64)","any(toTypeName(array(number)))":"Array(UInt64)"}
+"""
+
+_aggregate_functions_minMappedArrays_some_negative_values = r"""
+{"minMappedArrays(array(minus(number, 5)), array(plus(number, 10)))":[["-4","-3","-2","-1","0","1","2","3","4","5"],["11","12","13","14","15","16","17","18","19","20"]],"any(toTypeName(array(number)))":"Array(UInt64)","any(toTypeName(array(number)))":"Array(UInt64)"}
+"""
+
+_aggregate_functions_minMappedArrays_with_group_by = r"""
+{"even":0,"minMappedArrays(array(number), array(modulo(number, 2)))":[["0","2","4","6","8"],[0,0,0,0,0]],"any(toTypeName(array(number)))":"Array(UInt64)","toTypeName(array(modulo(number, 2)))":"Array(UInt8)"}
+{"even":1,"minMappedArrays(array(number), array(modulo(number, 2)))":[["1","3","5","7","9"],[1,1,1,1,1]],"any(toTypeName(array(number)))":"Array(UInt64)","toTypeName(array(modulo(number, 2)))":"Array(UInt8)"}
+"""
+
+_aggregate_functions_minMappedArrays_zero_rows = r"""
+{"minMappedArrays(array(number), array(number))":[[],[]],"any(toTypeName(array(number)))":"","any(toTypeName(array(number)))":""}
+"""
+
