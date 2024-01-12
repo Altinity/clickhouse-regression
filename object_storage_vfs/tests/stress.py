@@ -54,7 +54,7 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
             enable_vfs()
 
     with Given(f"I create a replicated table with {n_cols} cols on each node"):
-        _, table_name = replicated_table(columns=columns)
+        _, table_name = replicated_table_cluster(columns=columns)
 
     total_rows = 0
     for n_inserts in insert_sequence():

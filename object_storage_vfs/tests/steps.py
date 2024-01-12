@@ -72,7 +72,7 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
 
 
 @TestStep(Given)
-def replicated_table(
+def replicated_table_cluster(
     self,
     table_name: str = None,
     storage_policy: str = "external",
