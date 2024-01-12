@@ -15,10 +15,9 @@
     * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
     * 4.1.6 [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
   * 4.2 [Settings](#settings)
-    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Global](#rqsrs-038diskobjectstoragevfssettingsglobal)
-    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Local](#rqsrs-038diskobjectstoragevfssettingslocal)
-    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
-    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
+    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
+    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
   * 4.3 [Data Integrity](#data-integrity)
     * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
     * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
@@ -37,6 +36,7 @@
     * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
     * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
 * 5 [References](#references)
+
 
 ## Revision History
 
@@ -105,38 +105,26 @@ version: 1.0
 
 ### Settings
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Global
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk
 version: 1.0
 
-[ClickHouse] SHALL support the `<allow_object_storage_vfs>` setting to the
-`<merge_tree>` section of the config.xml file or the merge_tree.xml file in
-the config.d directory to configure the ReplicatedMergeTree engine globally. This
-setting SHALL be applied to all new ReplicatedMergeTree tables.
+[ClickHouse] SHALL support the `<allow_vfs>` setting in the
+`<disks>` section of the config.xml file or an xml file in
+the config.d directory to configure the ReplicatedMergeTree engine globally.
 
 Example:
 
 ```xml
 <yandex>
-  <merge_tree>
-    <allow_object_storage_vfs>1</allow_object_storage_vfs>
-  </merge_tree>
+  <storage_configuration>
+    <disks>
+      <external>
+        <allow_vfs>1</allow_vfs>
+      </external>
+  </storage_configuration>
 </yandex>
 ```
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Local
-version: 1.0
-
-[ClickHouse] SHALL use DiskObjectStorageVFS for a table when the allow_object_storage_vfs parameter is set to 1.
-
-Example:
-
-```sql
-CREATE TABLE zero_copy_replication (
-    d UInt64
-) ENGINE = MergeTree()
-ORDER BY d
-SETTINGS allow_object_storage_vfs=1
-```
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible
 version: 1.0

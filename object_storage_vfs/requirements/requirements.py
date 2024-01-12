@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231130.1212236.
+# document by TestFlows v2.0.240109.1181209.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -42,6 +42,23 @@ RQ_SRS_038_DiskObjectStorageVFS_Core_AddReplica = Requirement(
     num="4.1.2",
 )
 
+RQ_SRS_038_DiskObjectStorageVFS_Core_RemoveReplica = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Core.RemoveReplica",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support removing a replicated table on a [ClickHouse] instance\n"
+        "with no changes to the data in any of the tables on the other replicating instances.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.1.3",
+)
+
 RQ_SRS_038_DiskObjectStorageVFS_Core_DropReplica = Requirement(
     name="RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica",
     version="1.0",
@@ -52,13 +69,13 @@ RQ_SRS_038_DiskObjectStorageVFS_Core_DropReplica = Requirement(
     description=(
         "[ClickHouse] SHALL support stopping and starting an instance of [ClickHouse]\n"
         "with no changes to data in replicated tables. If the table is altered while\n"
-        "the instance restarts, [ClickHouse] SHALL update the table from [S3] when\n"
-        "the instance restarts.\n"
+        "an instance is offline, [ClickHouse] SHALL update the table from [S3] when\n"
+        "that instance restarts.\n"
         "\n"
     ),
     link=None,
     level=3,
-    num="4.1.3",
+    num="4.1.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication = Requirement(
@@ -76,7 +93,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.4",
+    num="4.1.5",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Core_Delete = Requirement(
@@ -92,62 +109,39 @@ RQ_SRS_038_DiskObjectStorageVFS_Core_Delete = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.5",
+    num="4.1.6",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Global = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Global",
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the `<allow_object_storage_vfs>` setting to the\n"
-        "`<merge_tree>` section of the config.xml file or the merge_tree.xml file in\n"
-        "the config.d directory to configure the ReplicatedMergeTree engine globally. This\n"
-        "setting SHALL be applied to all new ReplicatedMergeTree tables.\n"
+        "[ClickHouse] SHALL support the `<allow_vfs>` setting in the\n"
+        "`<disks>` section of the config.xml file or an xml file in\n"
+        "the config.d directory to configure the ReplicatedMergeTree engine globally.\n"
         "\n"
         "Example:\n"
         "\n"
         "```xml\n"
         "<yandex>\n"
-        "  <merge_tree>\n"
-        "    <allow_object_storage_vfs>1</allow_object_storage_vfs>\n"
-        "  </merge_tree>\n"
+        "  <storage_configuration>\n"
+        "    <disks>\n"
+        "      <external>\n"
+        "        <allow_vfs>1</allow_vfs>\n"
+        "      </external>\n"
+        "  </storage_configuration>\n"
         "</yandex>\n"
         "```\n"
+        "\n"
         "\n"
     ),
     link=None,
     level=3,
     num="4.2.1",
-)
-
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Local = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Local",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL use DiskObjectStorageVFS for a table when the allow_object_storage_vfs parameter is set to 1.\n"
-        "\n"
-        "Example:\n"
-        "\n"
-        "```sql\n"
-        "CREATE TABLE zero_copy_replication (\n"
-        "    d UInt64\n"
-        ") ENGINE = MergeTree()\n"
-        "ORDER BY d\n"
-        "SETTINGS allow_object_storage_vfs=1\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.2.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible = Requirement(
@@ -164,7 +158,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.3",
+    num="4.2.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared = Requirement(
@@ -189,7 +183,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.4",
+    num="4.2.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Integrity_VFSToggled = Requirement(
@@ -284,7 +278,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Combinatoric = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.5",
+    num="4.4.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert = Requirement(
@@ -301,7 +295,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.6",
+    num="4.4.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
@@ -426,32 +420,34 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             name="RQ.SRS-038.DiskObjectStorageVFS.Core.AddReplica", level=3, num="4.1.2"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica",
+            name="RQ.SRS-038.DiskObjectStorageVFS.Core.RemoveReplica",
             level=3,
             num="4.1.3",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication",
+            name="RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica",
             level=3,
             num="4.1.4",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Core.Delete", level=3, num="4.1.5"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication",
+            level=3,
+            num="4.1.5",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Core.Delete", level=3, num="4.1.6"
         ),
         Heading(name="Settings", level=2, num="4.2"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Global", level=3, num="4.2.1"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Local", level=3, num="4.2.2"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk", level=3, num="4.2.1"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible",
             level=3,
-            num="4.2.3",
+            num="4.2.2",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared", level=3, num="4.2.4"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared", level=3, num="4.2.3"
         ),
         Heading(name="Data Integrity", level=2, num="4.3"),
         Heading(
@@ -475,15 +471,15 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             num="4.3.4",
         ),
         Heading(name="Combinatoric", level=2, num="4.4"),
-        Heading(name="Supported Table Configurations", level=4, num="4.4.4.1"),
-        Heading(name="Supported Operations", level=4, num="4.4.4.2"),
+        Heading(name="Supported Table Configurations", level=3, num="4.4.1"),
+        Heading(name="Supported Operations", level=3, num="4.4.2"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric", level=3, num="4.4.5"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric", level=3, num="4.4.3"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert",
             level=3,
-            num="4.4.6",
+            num="4.4.4",
         ),
         Heading(name="Performance", level=2, num="4.5"),
         Heading(
@@ -509,11 +505,11 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     requirements=(
         RQ_SRS_038_DiskObjectStorageVFS,
         RQ_SRS_038_DiskObjectStorageVFS_Core_AddReplica,
+        RQ_SRS_038_DiskObjectStorageVFS_Core_RemoveReplica,
         RQ_SRS_038_DiskObjectStorageVFS_Core_DropReplica,
         RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication,
         RQ_SRS_038_DiskObjectStorageVFS_Core_Delete,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Global,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Local,
+        RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_VFSToggled,
@@ -541,25 +537,24 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
   * 4.1 [Core](#core)
     * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
     * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Core.AddReplica](#rqsrs-038diskobjectstoragevfscoreaddreplica)
-    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
-    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
-    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
-    * 4.1.6 [RQ.SRS-038.DiskObjectStorageVFS.Core.DeleteInParallel](#rqsrs-038diskobjectstoragevfscoredeleteinparallel)
+    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Core.RemoveReplica](#rqsrs-038diskobjectstoragevfscoreremovereplica)
+    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica](#rqsrs-038diskobjectstoragevfscoredropreplica)
+    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
+    * 4.1.6 [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
   * 4.2 [Settings](#settings)
-    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Global](#rqsrs-038diskobjectstoragevfssettingsglobal)
-    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Local](#rqsrs-038diskobjectstoragevfssettingslocal)
-    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
-    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
+    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
+    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
   * 4.3 [Data Integrity](#data-integrity)
     * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
     * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
     * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
     * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
   * 4.4 [Combinatoric](#combinatoric)
-    * 4.4.4.1 [Supported Table Configurations](#supported-table-configurations)
-    * 4.4.4.2 [Supported Operations](#supported-operations)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
-    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
+    * 4.4.1 [Supported Table Configurations](#supported-table-configurations)
+    * 4.4.2 [Supported Operations](#supported-operations)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
   * 4.5 [Performance](#performance)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
   * 4.6 [Object Storage Providers](#object-storage-providers)
@@ -568,6 +563,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
     * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
 * 5 [References](#references)
+
 
 ## Revision History
 
@@ -608,13 +604,19 @@ version: 1.0
 [ClickHouse] SHALL support adding a replica of an existing replicated table
 with no changes to the data in the table.
 
+#### RQ.SRS-038.DiskObjectStorageVFS.Core.RemoveReplica
+version: 1.0
+
+[ClickHouse] SHALL support removing a replicated table on a [ClickHouse] instance
+with no changes to the data in any of the tables on the other replicating instances.
+
 #### RQ.SRS-038.DiskObjectStorageVFS.Core.DropReplica
 version: 1.0
 
 [ClickHouse] SHALL support stopping and starting an instance of [ClickHouse]
 with no changes to data in replicated tables. If the table is altered while
-the instance restarts, [ClickHouse] SHALL update the table from [S3] when
-the instance restarts.
+an instance is offline, [ClickHouse] SHALL update the table from [S3] when
+that instance restarts.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication
 version: 1.0
@@ -630,38 +632,26 @@ version: 1.0
 
 ### Settings
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Global
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk
 version: 1.0
 
-[ClickHouse] SHALL support the `<allow_object_storage_vfs>` setting to the
-`<merge_tree>` section of the config.xml file or the merge_tree.xml file in
-the config.d directory to configure the ReplicatedMergeTree engine globally. This
-setting SHALL be applied to all new ReplicatedMergeTree tables.
+[ClickHouse] SHALL support the `<allow_vfs>` setting in the
+`<disks>` section of the config.xml file or an xml file in
+the config.d directory to configure the ReplicatedMergeTree engine globally.
 
 Example:
 
 ```xml
 <yandex>
-  <merge_tree>
-    <allow_object_storage_vfs>1</allow_object_storage_vfs>
-  </merge_tree>
+  <storage_configuration>
+    <disks>
+      <external>
+        <allow_vfs>1</allow_vfs>
+      </external>
+  </storage_configuration>
 </yandex>
 ```
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Local
-version: 1.0
-
-[ClickHouse] SHALL use DiskObjectStorageVFS for a table when the allow_object_storage_vfs parameter is set to 1.
-
-Example:
-
-```sql
-CREATE TABLE zero_copy_replication (
-    d UInt64
-) ENGINE = MergeTree()
-ORDER BY d
-SETTINGS allow_object_storage_vfs=1
-```
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible
 version: 1.0
@@ -720,7 +710,7 @@ When objects are removed, all other objects SHALL be accessible with no errors.
 
 ### Combinatoric
 
-##### Supported Table Configurations
+#### Supported Table Configurations
 
 | Engine                       | Replicated | # Columns | Storage Policy |
 | ---------------------------- | :--------- | --------- | -------------- |
@@ -731,7 +721,7 @@ When objects are removed, all other objects SHALL be accessible with no errors.
 | AggregatingMergeTree         |            |           |                |
 | SummingMergeTree             |            |           |                |
 
-##### Supported Operations
+#### Supported Operations
 
 | Simple | TABLE          |     |
 | ------ | -------------- | --- |
