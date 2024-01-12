@@ -110,7 +110,7 @@ def drop_replica(self):
         enable_vfs()
 
     with And(f"I create a replicated table on each node"):
-        replicated_table(
+        replicated_table_cluster(
             table_name=table_name,
             columns="d UInt64",
         )
@@ -140,7 +140,6 @@ def drop_replica(self):
     with And("I check the row count on the second node"):
         assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
 
-#RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove
 
 @TestFeature
 @Name("replica")

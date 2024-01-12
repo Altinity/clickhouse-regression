@@ -15,7 +15,7 @@ def incompatible_with_zero_copy(self):
         enable_vfs()
 
     with When("I create a replicated table with both vfs and 0-copy enabled"):
-        r, _ = replicated_table(
+        r, _ = replicated_table_cluster(
             table_name="vfs_zero_copy_replication",
             allow_zero_copy=True,
             exitcode=None,
@@ -41,7 +41,7 @@ def create_insert_measure_replicated_table(self):
         )
 
     with When("a replicated table is created successfully"):
-        _, table_name = replicated_table(columns=columns, exitcode=0)
+        _, table_name = replicated_table_cluster(columns=columns, exitcode=0)
 
     with And("I add data to the table"):
         insert_random(

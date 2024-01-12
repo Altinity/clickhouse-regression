@@ -62,7 +62,7 @@ def enable_vfs_with_non_vfs_table(self):
         check_global_vfs_state(enabled=False)
 
     with And("I have a table without vfs"):
-        replicated_table(
+        replicated_table_cluster(
             table_name="my_non_vfs_table",
             columns="d UInt64",
         )
