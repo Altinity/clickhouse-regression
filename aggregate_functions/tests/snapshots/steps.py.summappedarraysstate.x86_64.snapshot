@@ -1,3 +1,7 @@
+_aggregate_functions_state_sumMappedArraysState_NULL_value_handling = r"""
+{"hex(sumMappedArraysState(array(x), array(y)))":"0501000300000000000000000000010000000000000000010100040004000000000000000005000100000000000000","any(toTypeName(array(x)))":"Array(Nullable(Int8))","any(toTypeName(array(y)))":"Array(Nullable(Int8))"}
+"""
+
 _aggregate_functions_state_sumMappedArraysState_constant = r"""
 {"hex(sumMappedArraysState([1], [1]))":"01010100000000000000","any(toTypeName([1]))":"Array(UInt8)","any(toTypeName([1]))":"Array(UInt8)"}
 """
@@ -304,6 +308,10 @@ _aggregate_functions_state_sumMappedArraysState_inf___inf__nan_nan_nan = r"""
 
 _aggregate_functions_state_sumMappedArraysState_return_type = r"""
 {"toTypeName(hex(sumMappedArraysState(array(number), array(plus(number, 1)))))":"String","any(toTypeName(array(number)))":"Array(UInt64)","any(toTypeName(array(number)))":"Array(UInt64)"}
+"""
+
+_aggregate_functions_state_sumMappedArraysState_single_NULL_value = r"""
+{"hex(sumMappedArraysState(array(x), array(y)))":"010101","any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(y))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_state_sumMappedArraysState_single_row = r"""
