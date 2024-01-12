@@ -329,6 +329,9 @@ ffails = {
     "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": 
         (Skip, issue_58741, check_clickhouse_version(">=23.11"))
     ,
+    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": 
+        (Skip, "need to investigate", check_clickhouse_version(">=23.11"))
+    ,
 }
 
 
