@@ -67,8 +67,8 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
         # message=f'"count()": "{rows}"',
         exitcode=0,
     )
-    actual_count = json.loads(r.output)["data"][0]["count()"]
-    assert f"{rows}" == actual_count, error()
+    actual_count = int(json.loads(r.output)["data"][0]["count()"])
+    assert rows == actual_count, error()
 
 
 @TestStep(Given)
@@ -130,6 +130,32 @@ def insert_random(self, node, table_name, columns: str = None, rows: int = 10000
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows}",
         exitcode=0,
     )
+
+@TestStep(Given)
+def create_one_replica(self, node, table_name):
+    """
+    Create a simple replicated table on the given node.
+    Call multiple times with the same table name and different nodes
+    to create multiple replicas.
+    """
+    r = node.query(
+        f"""
+        CREATE TABLE IF NOT EXISTS {table_name} (
+            d UInt64
+        ) 
+        ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
+        ORDER BY d
+        SETTINGS storage_policy='external'
+        """,
+        exitcode=0,
+    )
+    return r
+
+
+@TestStep(Given)
+def delete_one_replica(self, node, table_name):
+    r = node.query(f"DROP TABLE {table_name} SYNC", exitcode=0)
+    return r
 
 
 @TestStep(Given)
