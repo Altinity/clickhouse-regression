@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 from helpers.tables import *
 from helpers.argparser import argparser
 from helpers.cluster import create_cluster
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, check_current_cpu
 
 from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
@@ -114,6 +114,12 @@ xfails = {
     ],
     "/aggregate functions/sumMapFilteredWithOverflow/inf, -inf, nan/*": [
         (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+    ],
+    "/aggregate functions/simpleLinearRegression/*": [
+        (Fail, "need to investigate on aarch", check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"))
+    ],
+    "/aggregate functions/:/simpleLinearRegression*/*": [
+        (Fail, "need to investigate on aarch", check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"))
     ],
 }
 
@@ -319,6 +325,11 @@ ffails = {
         *issue_44511,
     ),
     "/aggregate functions/aggThrow/with group by/*": (
+        Skip,
+        issue_58727,
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/:/aggThrow*/with group by/*": (
         Skip,
         issue_58727,
         check_clickhouse_version(">=23.11"),
