@@ -30,16 +30,7 @@ def add_replica(self):
 
     try:
         with Given("I have a replicated table on one node"):
-            nodes[0].query(
-                f"""
-                CREATE TABLE IF NOT EXISTS {table_name} (
-                    d UInt64
-                ) 
-                ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '1')
-                ORDER BY d
-                SETTINGS storage_policy='external'
-                """,
-            )
+            create_one_replica(node=nodes[0], table_name=table_name)
 
         with And("I add data to the table"):
             insert_random(
@@ -56,16 +47,7 @@ def add_replica(self):
             )
 
         with And("I create a replicated table on the second node"):
-            nodes[1].query(
-                f"""
-                CREATE TABLE IF NOT EXISTS {table_name} (
-                    d UInt64
-                ) 
-                ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '2')
-                ORDER BY d
-                SETTINGS storage_policy='external'
-                """,
-            )
+            create_one_replica(node=nodes[1], table_name=table_name)
 
         with And("I wait for the replica to sync"):
             nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
