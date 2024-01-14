@@ -15,7 +15,7 @@ aggregate_functions = [
     "aggThrow",
     "analysisOfVariance",
     "any",
-    "anyLast_respect_nulls", 
+    "anyLast_respect_nulls",
     "any_respect_nulls",
     "anyHeavy",
     "anyLast",
@@ -78,9 +78,13 @@ aggregate_functions = [
     "max",
     "maxIntersections",
     "maxIntersectionsPosition",
+    "maxMap",
+    "maxMap_alias",
     "maxMappedArrays",
     "meanZTest",
+    "minMap",
     "min",
+    "minMap_alias",
     "minMappedArrays",
     "nonNegativeDerivative",
     "nothing",
@@ -144,6 +148,8 @@ aggregate_functions = [
     "sumMapFilteredWithOverflow",
     "sumMapWithOverflow",
     "sumMappedArrays",
+    "sumMap_alias",
+    "sumMap",
     "sumWithOverflow",
     "theilsU",
     "topK",
@@ -161,12 +167,6 @@ aggregate_functions = [
     "varSampStable",
     "welchTTest",
     "windowFunnel",
-    "sumMap",
-    "sumMap_alias",
-    "minMap",
-    "minMap_alias",
-    "maxMap",
-    "maxMap_alias",
 ]
 
 
@@ -218,6 +218,7 @@ def execute_query(
         ), "test must set self.context.snapshot_id"
 
     with When("I execute query", description=sql):
+        note(sql)
         if format and not "FORMAT" in sql:
             sql += " FORMAT " + format
 

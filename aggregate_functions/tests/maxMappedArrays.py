@@ -79,18 +79,18 @@ def scenario(
             )
         with Check("single NULL value"):
             execute_query(
-                f"SELECT {func.format(params='[x],[y]')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))",
+                f"SELECT {func.format(params='[x],[y]')}, any(toTypeName([x])), any(toTypeName([y])) FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))",
             )
     else:
         with Check("NULL value handling"):
             execute_query(
-                f"SELECT {func.format(params='[x],[y]')}, any(toTypeName([x])), any(toTypeName([y])) FROM values('x Nullable(Int8), y Nullable(Int8)', (0, 1), (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))",
+                f"SELECT {func.format(params='[x],[y]')} FROM values('x Nullable(Int8), y Nullable(Int8)', (0, 1), (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))",
                 exitcode=43,
                 message=f"DB::Exception: Illegal type of argument for aggregate function",
             )
         with Check("single NULL value"):
             execute_query(
-                f"SELECT {func.format(params='[x],[y]')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))",
+                f"SELECT {func.format(params='[x],[y]')} FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))",
                 exitcode=43,
                 message=f"DB::Exception: Illegal type of argument for aggregate function",
             )
