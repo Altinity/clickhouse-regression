@@ -631,7 +631,7 @@ _aggregate_functions_maxMap_alias_return_type = r"""
 """
 
 _aggregate_functions_maxMap_alias_single_NULL_value = r"""
-{"maxMap(array(x), array(y))":[[null],[0]],"any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(y))":"Nullable(Int8)"}
+{"maxMap(array(x), array(y))":[[null],[0]],"any(toTypeName(array(x)))":"Array(Nullable(Int8))","any(toTypeName(array(y)))":"Array(Nullable(Int8))"}
 """
 
 _aggregate_functions_maxMap_alias_single_row = r"""

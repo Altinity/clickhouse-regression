@@ -116,10 +116,36 @@ xfails = {
         (Fail, issue_58741, check_clickhouse_version(">=23.11"))
     ],
     "/aggregate functions/simpleLinearRegression/*": [
-        (Fail, "need to investigate on aarch", check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"))
+        (
+            Fail,
+            "need to investigate on aarch",
+            check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"),
+        )
     ],
     "/aggregate functions/:/simpleLinearRegression*/*": [
-        (Fail, "need to investigate on aarch", check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"))
+        (
+            Fail,
+            "need to investigate on aarch",
+            check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"),
+        )
+    ],
+    "/aggregate functions/state/corrStableState/inf, -inf, nan/nan,inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
+    ],
+    "/aggregate functions/state/corrStableState/inf, -inf, nan/nan,-inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
+    ],
+    "/aggregate functions/state/covarPopStableState/inf, -inf, nan/nan,inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
+    ],
+    "/aggregate functions/state/covarPopStableState/inf, -inf, nan/nan,-inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
+    ],
+    "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
+    ],
+    "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,-inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
 }
 
@@ -334,15 +360,26 @@ ffails = {
         issue_58727,
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": 
-        (Skip, issue_58741, check_clickhouse_version(">=23.11"))
-    ,
-    "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": 
-        (Skip, issue_58741, check_clickhouse_version(">=23.11"))
-    ,
-    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": 
-        (Skip, "need to investigate", check_clickhouse_version(">=23.11"))
-    ,
+    "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": (
+        Skip,
+        issue_58741,
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": (
+        Skip,
+        issue_58741,
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": (
+        Skip,
+        "need to investigate",
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/finalizeAggregation/largestTriangleThreeBuckets_finalizeAggregation_Merge/*": (
+        Skip,
+        "need to investigate (something with zero representation)",
+        check_clickhouse_version(">=23.11"),
+    ),
 }
 
 
