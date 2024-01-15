@@ -1404,7 +1404,7 @@ class Cluster(object):
 
             for name in self.nodes["clickhouse"]:
                 self.node(name).wait_healthy()
-                if name.startswith("clickhouse-2"):
+                if name == "clickhouse-different-versions":
                     self.node(name).start_clickhouse(
                         thread_fuzzer=self.thread_fuzzer, check_version=False
                     )

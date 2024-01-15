@@ -35,7 +35,9 @@ def change_clickhouse_version(self):
     with By("moving the ClickHouse binary to /usr/bin and restarting it"):
         node_with_different_version.stop_clickhouse(safe=False)
 
-        node_with_different_version.command("cp /usr/bin/clickhouse_different_version/* /usr/bin")
+        node_with_different_version.command(
+            "cp /usr/bin/clickhouse_different_version/* /usr/bin"
+        )
         node_with_different_version.start_clickhouse(check_version=False)
 
 
@@ -217,7 +219,7 @@ def feature(self, partitions=15):
     """
     self.context.current_node = self.context.cluster.node("clickhouse1")
     self.context.node_with_different_version = self.context.cluster.node(
-        "clickhouse-different-version"
+        "clickhouse-different-versions"
     )
     self.context.partitions = partitions
 
