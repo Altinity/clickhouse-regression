@@ -245,7 +245,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-replace-partition-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_attach_partition:
@@ -278,7 +278,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-attach-partition-artifacts
           path: ${{ env.artifact_paths}}
 
   base_58:
