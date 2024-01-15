@@ -163,6 +163,7 @@ def delete_one_replica(self, node, table_name):
 @TestStep(Given)
 def enable_vfs(
     self,
+    nodes=None,
     config_file="enable_vfs.xml",
     timeout=30,
     disk_names: list = None,
@@ -190,6 +191,11 @@ def enable_vfs(
     policies = {}
 
     with s3_storage(
-        disks, policies, restart=True, timeout=timeout, config_file=config_file
+        disks,
+        policies,
+        nodes=nodes,
+        restart=True,
+        timeout=timeout,
+        config_file=config_file,
     ):
         yield
