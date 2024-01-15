@@ -15,7 +15,6 @@ def argparser(parser):
     """Custom argperser that adds a --use-specific-clickhouse-version option."""
     base_argparser(parser)
 
-
     parser.add_argument(
         "--use-specific-clickhouse-version",
         type=str,
@@ -25,7 +24,6 @@ def argparser(parser):
         "binary and stores it inside a container along the main version",
         metavar="path",
         default="altinity/clickhouse-server:23.3.13.7.altinitytest",
-
     )
 
 
