@@ -1,7 +1,7 @@
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import *
 from s3.tests.common import start_minio
-
+from object_storage_vfs.tests.steps import enable_vfs
 
 entries = {
     "storage_configuration": {
@@ -21,7 +21,7 @@ entries = {
 
 
 @TestScenario
-def s3(self, node=None):
+def s3(self, node=None, allow_vfs=False):
     """Check that clickhouse support using DELETE on S3 disks."""
 
     if node is None:
@@ -31,6 +31,10 @@ def s3(self, node=None):
 
     with Given("I add configuration file"):
         add_disk_configuration(entries=entries, restart=True)
+
+    if allow_vfs:
+        with Given("I enable VFS"):
+            enable_vfs(nodes=[node], disk_names=["disk_s3"])
 
     with When("I create a table that uses s3 disk"):
         create_table(table_name=table_name, settings=f"SETTINGS storage_policy = 's3'")
@@ -60,6 +64,11 @@ def s3(self, node=None):
         assert r.output == "250", error()
         r = node.query(f"SELECT count(*) FROM {table_name} WHERE x < 50")
         assert r.output == "0", error()
+
+
+@TestScenario
+def s3_vfs(self, node=None):
+    s3(node=node, allow_vfs=True)
 
 
 @TestFeature

@@ -55,7 +55,7 @@ xfails = {
 xflags = {}
 
 ffails = {
-    ":/vfs": (Skip, "vfs not supported on < 23.11", check_clickhouse_version("<23.11")),
+    ":/vfs": (Skip, "vfs not supported on < 24", check_clickhouse_version("<24")),
 }
 
 
