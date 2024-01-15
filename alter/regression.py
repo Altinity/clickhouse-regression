@@ -1,16 +1,33 @@
 #!/usr/bin/env python3
-import os
 import sys
-import boto3
 
 from testflows.core import *
 
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser
 from alter.requirements.requirements import *
+from helpers.argparser import argparser as base_argparser
 from helpers.datatypes import *
+
+
+def argparser(parser):
+    """Custom argperser that adds a --use-specific-clickhouse-version option."""
+    base_argparser(parser)
+
+
+    parser.add_argument(
+        "--use-specific-clickhouse-version",
+        type=str,
+        dest="use_specific_version",
+        help="used for the tests that use different versions of clickhouse, there is a main version used for all "
+        "tests which is set by --clickhouse-binary-path variable, this argument fetches additional clickhouse "
+        "binary and stores it inside a container along the main version",
+        metavar="path",
+        default="altinity/clickhouse-server:23.3.13.7.altinitytest",
+
+    )
+
 
 xfails = {
     "/alter/replace partition/concurrent merges and mutations/mutations on unrelated partition": [
@@ -91,7 +108,8 @@ def regression(
     clickhouse_version,
     clickhouse_binary_path,
     collect_service_logs,
-    stress=None,
+    use_specific_version,
+    stress,
 ):
     """Alter regression."""
     nodes = {
@@ -99,7 +117,7 @@ def regression(
             "clickhouse1",
             "clickhouse2",
             "clickhouse3",
-            "clickhouse-23-3",
+            "clickhouse-different-versions",
         )
     }
 
@@ -109,7 +127,7 @@ def regression(
     self.context.access_key_id = "minio"
     self.context.secret_access_key = "minio123"
 
-    if stress is not None:
+    if stress:
         self.context.stress = stress
 
     with Given("docker-compose cluster"):
@@ -119,7 +137,7 @@ def regression(
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             configs_dir=current_dir(),
-            use_specific_version=True,
+            use_specific_version=use_specific_version,
         )
         self.context.cluster = cluster
 
