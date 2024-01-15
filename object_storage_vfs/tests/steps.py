@@ -58,6 +58,7 @@ def check_global_vfs_state(self, node=None, enabled: bool = True):
         'grep "<allow_vfs>1" /etc/clickhouse-server/config.d/*', exitcode=grepcode
     )
 
+
 @TestStep(Then)
 def assert_row_count(self, node, table_name: str, rows: int = 1000000):
     if node is None:
@@ -131,6 +132,7 @@ def insert_random(self, node, table_name, columns: str = None, rows: int = 10000
         exitcode=0,
     )
 
+
 @TestStep(Given)
 def create_one_replica(self, node, table_name):
     """
@@ -159,35 +161,35 @@ def delete_one_replica(self, node, table_name):
 
 
 @TestStep(Given)
-def add_vfs_config(
+def enable_vfs(
     self,
-    config_d_dir="/etc/clickhouse-server/config.d",
     config_file="enable_vfs.xml",
-    restart=True,
-    nodes=None,
     timeout=30,
+    disk_names: list = None,
+    vfs_gc_sleep_ms=2000,
 ):
+    """
+    Add the config file for object storage vfs for the disks in `disk_names`.
+    Default disk names are ["external", "external_tiered"].
+    """
+
+    if check_clickhouse_version("<24.1")(self):
+        skip("vfs not supported on ClickHouse < 24.1")
+
+    if disk_names is None:
+        disk_names = ["external", "external_tiered"]
+
     disks = {
-        "external": {
+        n: {
             "allow_vfs": "1",
-            "vfs_gc_sleep_ms": "2000",
-        },
-        "external_tiered": {
-            "allow_vfs": "1",
-            "vfs_gc_sleep_ms": "2000",
-        },
+            "vfs_gc_sleep_ms": f"{vfs_gc_sleep_ms}",
+        }
+        for n in disk_names
     }
 
     policies = {}
 
-    with s3_storage(disks, policies, restart=True, timeout=60, config_file=config_file):
+    with s3_storage(
+        disks, policies, restart=True, timeout=timeout, config_file=config_file
+    ):
         yield
-
-
-@TestStep(Given)
-def enable_vfs(self, nodes=None, timeout=30):
-    if check_clickhouse_version("<24.1")(self):
-        skip("vfs not supported on ClickHouse < 24.1")
-
-    with Given("I create and load enable_vfs.xml"):
-        add_vfs_config(nodes=nodes, timeout=timeout)
