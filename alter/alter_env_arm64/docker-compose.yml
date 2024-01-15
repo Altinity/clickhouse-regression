@@ -18,6 +18,20 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  clickhouse-different-versions:
+    extends:
+      file: clickhouse-service-different-versions.yml
+      service: clickhouse-different-versions
+    hostname: clickhouse-different-versions
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-different-versions/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-different-versions/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-different-versions/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -115,6 +129,8 @@ services:
       clickhouse2:
         condition: service_healthy
       clickhouse3:
+        condition: service_healthy
+      clickhouse-different-versions:
         condition: service_healthy
       zookeeper:
         condition: service_healthy
