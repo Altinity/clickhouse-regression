@@ -7,7 +7,6 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from object_storage_vfs.tests.steps import enable_vfs
 from session_timezone.requirements import *
 from session_timezone.common import *
 
@@ -55,10 +54,6 @@ def regression(
 
     if check_clickhouse_version("<23.5")(self):
         skip(reason="only supported on ClickHouse version >= 23.5")
-
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     Feature(run=load("session_timezone.tests.sanity", "feature"))
     Feature(run=load("session_timezone.tests.basic", "feature"))

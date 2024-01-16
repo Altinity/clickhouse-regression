@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version
-from object_storage_vfs.tests.steps import enable_vfs
 from data_types.requirements import SRS018_ClickHouse_Map_Data_Type
 
 xfails = {
@@ -193,10 +192,6 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-    
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     Feature(run=load("data_types.tests.map", "feature"))
 

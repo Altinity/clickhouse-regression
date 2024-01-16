@@ -9,7 +9,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from ldap.role_mapping.requirements import *
 from helpers.common import check_clickhouse_version
-from object_storage_vfs.tests.steps import enable_vfs
+
 
 # Cross-outs of known fails
 xfails = {
@@ -103,10 +103,6 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     Scenario(
         run=load("ldap.authentication.tests.sanity", "scenario"), name="ldap sanity"

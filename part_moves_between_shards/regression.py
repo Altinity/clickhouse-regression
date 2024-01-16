@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from object_storage_vfs.tests.steps import enable_vfs
 from part_moves_between_shards.requirements import *
 
 
@@ -72,10 +71,6 @@ def regression(
 
     if check_clickhouse_version("<21.4")(self):
         skip(reason="only supported on ClickHouse version >= 21.4")
-
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     Feature(run=load("part_moves_between_shards.tests.sanity", "feature"))
     Feature(run=load("part_moves_between_shards.tests.part_moves", "feature"))
