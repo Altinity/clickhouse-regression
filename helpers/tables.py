@@ -384,6 +384,7 @@ def create_table(
     empty=None,
     if_not_exists=False,
     node=None,
+    cluster=None,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -402,10 +403,15 @@ def create_table(
     else:
         if_not_exists = ""
 
+    if cluster is not None:
+        on_cluster = f" ON CLUSTER {cluster}"
+    else:
+        on_cluster = ""
+
     try:
         with By(f"creating table {name}"):
             query = (
-                f"CREATE TABLE {if_not_exists}{name} {columns_def}\n"
+                f"CREATE TABLE {if_not_exists}{name}{on_cluster} {columns_def}\n"
                 f"ENGINE = {engine}"
             )
             if primary_key is not None:
@@ -427,6 +433,7 @@ def create_table(
                 query += f"\nAS SELECT {as_select}"
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
+
             node.query(
                 query,
                 settings=settings,
