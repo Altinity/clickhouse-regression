@@ -10,6 +10,7 @@ from helpers.cluster import Cluster
 from s3.regression import argparser as argparser_base
 
 from s3.tests.common import *
+from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {}
 
@@ -164,11 +165,11 @@ def regression(
                     }
 
                 with Feature(self.context.object_storage_mode):
-                    if self.context.object_storage_mode == "vfs":
-                        with Given("I enable allow_object_storage_vfs"):
-                            enable_vfs()
-
                     with s3_storage(disks, policies, timeout=360):
+                        if self.context.object_storage_mode == "vfs":
+                            with Given("I enable allow_object_storage_vfs"):
+                                enable_vfs(disk_names=['external'])
+
                         Feature(
                             test=load("ontime_benchmark.tests.benchmark", "feature")
                         )(format=format)
