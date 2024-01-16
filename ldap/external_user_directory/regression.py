@@ -9,7 +9,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from ldap.external_user_directory.requirements import *
 from helpers.common import check_clickhouse_version
-from object_storage_vfs.tests.steps import enable_vfs
+
 
 issue_51323 = "https://github.com/ClickHouse/ClickHouse/issues/51323"
 
@@ -104,10 +104,6 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     Scenario(run=load("ldap.authentication.tests.sanity", "scenario"))
     Scenario(run=load("ldap.external_user_directory.tests.simple", "scenario"))

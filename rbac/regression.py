@@ -10,7 +10,6 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version
-from object_storage_vfs.tests.steps import enable_vfs
 from rbac.requirements import SRS_006_ClickHouse_Role_Based_Access_Control
 from rbac.helper.common import add_rbac_config_file
 
@@ -323,10 +322,6 @@ def regression(
         for node in nodes["clickhouse"]:
             add_rbac_config_file(node=cluster.node(node))
     
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
-
     Feature(run=load("rbac.tests.syntax.feature", "feature"))
     Feature(run=load("rbac.tests.privileges.feature", "feature"))
     Feature(run=load("rbac.tests.views.feature", "feature"))

@@ -7,7 +7,6 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {}
 
@@ -46,19 +45,11 @@ def regression(
         )
         self.context.cluster = cluster
 
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
-
     Scenario(run=load("kafka.tests.distributed", "scenario"), flags=TE)
     Scenario(run=load("kafka.tests.non_replicated", "scenario"), flags=TE)
+    Scenario(run=load("kafka.tests.non_replicated_4_consumers", "scenario"), flags=TE)
     Scenario(
-        run=load("kafka.tests.non_replicated_4_consumers", "scenario"), flags=TE
-    )
-    Scenario(
-        run=load(
-            "kafka.tests.non_replicated_target_table_not_writable", "scenario"
-        ),
+        run=load("kafka.tests.non_replicated_target_table_not_writable", "scenario"),
         flags=TE,
     )
     Scenario(
@@ -69,9 +60,7 @@ def regression(
         run=load("kafka.tests.non_replicated_4_consumers_restart", "scenario"),
         flags=TE,
     )
-    Scenario(
-        run=load("kafka.tests.replicated_stop_and_restart", "scenario"), flags=TE
-    )
+    Scenario(run=load("kafka.tests.replicated_stop_and_restart", "scenario"), flags=TE)
 
 
 if main():

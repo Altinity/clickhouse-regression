@@ -8,7 +8,6 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from object_storage_vfs.tests.steps import enable_vfs
 from aes_encryption.requirements import *
 
 issue_18249 = "https://github.com/ClickHouse/ClickHouse/issues/18249"
@@ -119,10 +118,6 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     with Pool(5) as pool:
         try:

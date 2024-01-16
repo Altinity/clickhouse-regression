@@ -10,7 +10,6 @@ append_path(sys.path, "..", pos=0)
 from helpers.cluster import create_cluster
 from helpers.common import *
 from helpers.argparser import argparser
-from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {
     "lookup": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/17202")],
@@ -51,10 +50,6 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     Scenario(run=load("dns.tests.lookup.scenario", "scenario"))
     Feature(run=load("dns.tests.ipv6", "feature"))

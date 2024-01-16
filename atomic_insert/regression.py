@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from object_storage_vfs.tests.steps import enable_vfs
 from atomic_insert.requirements import *
 
 from atomic_insert.tests.steps import *
@@ -74,10 +73,6 @@ def regression(
 
     if check_clickhouse_version("<22.4")(self):
         skip(reason="only supported on ClickHouse version >= 22.4")
-
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
 
     create_transactions_configuration()
 

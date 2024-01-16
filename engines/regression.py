@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from object_storage_vfs.tests.steps import enable_vfs
 
 from engines.requirements import *
 
@@ -66,14 +65,8 @@ def regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-    if allow_vfs:
-        with Given("I enable allow_object_storage_vfs"):
-            enable_vfs()
-
     Feature(
-        run=load(
-            "engines.tests.replacing_merge_tree.replacing_merge_tree", "feature"
-        )
+        run=load("engines.tests.replacing_merge_tree.replacing_merge_tree", "feature")
     )
     Feature(
         run=load(
