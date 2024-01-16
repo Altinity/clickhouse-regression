@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+import time
+import random
+import json
+
 from testflows.core import *
 
 from object_storage_vfs.tests.steps import *
@@ -252,6 +256,93 @@ def parallel_add_remove(self):
         with Finally("I drop the table on each node"):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
+def random_add_remove(self, allow_vfs=True):
+    table_name = "vfs_random_add_remove_replicas"
+    nodes = self.context.ch_nodes
+    rows_per_insert = 1_000_000
+    random.seed(table_name)
+
+    loop_sleep = 10
+    n_loops = 10
+
+    actions = {
+        "CREATE": lambda _, node: create_one_replica(
+            node=node, table_name=table_name, replica_name=getuid(), no_checks=True
+        ),
+        "DELETE": lambda _, node: delete_one_replica(node=node, table_name=table_name),
+        "INSERT": lambda _, node: insert_random(
+            node=node,
+            table_name=table_name,
+            columns="d UInt64",
+            rows=rows_per_insert,
+            no_checks=True,
+        ),
+        "OPTIMIZE": lambda _, node: node.query(
+            f"OPTIMIZE TABLE {table_name}", no_checks=True
+        ),
+    }
+    for a, f in actions.items():
+        actions[a] = TestStep(When)(f)
+
+    action_items = list(actions.items())
+
+    try:
+        if allow_vfs:
+            with Given("I enable vfs"):
+                enable_vfs()
+
+        for _ in range(n_loops):
+            for node in nodes:
+                action_name, action_func = random.choice(action_items)
+
+                When(
+                    f"I {action_name} on {node.name}",
+                    test=action_func,
+                    parallel=True,
+                )(node=node)
+            time.sleep(loop_sleep)
+
+        with When("I wait for all tasks to finish"):
+            join()
+
+        with And("I make sure all nodes are replicating"):
+            for node in nodes:
+                actions["CREATE"](node=node)
+
+        with When("I make sure all nodes are synced"):
+            for node in nodes:
+                node.query(
+                    f"SYSTEM SYNC REPLICA {table_name}", timeout=60, no_checks=True
+                )
+
+        with And("I query all nodes for their row counts"):
+            row_counts = []
+            for node in nodes:
+                r = node.query(
+                    f"SELECT count() FROM {table_name} FORMAT JSON",
+                    exitcode=0,
+                )
+                row_counts.append(int(json.loads(r.output)["data"][0]["count()"]))
+
+        with Then("All replicas should have the same state"):
+            assert row_counts[0] == row_counts[1] == row_counts[2], error()
+
+        with Then("There should be more than zero rows"):
+            assert row_counts[0] > 0, error()
+
+    finally:
+        with Finally("I drop the table on each node"):
+            for node in nodes:
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
+@TestScenario
+def random_add_remove_no_vfs(self):
+    random_add_remove(allow_vfs=False)
 
 
 @TestFeature

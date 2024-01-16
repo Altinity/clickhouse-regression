@@ -123,18 +123,23 @@ def replicated_table_cluster(
 
 
 @TestStep(Given)
-def insert_random(self, node, table_name, columns: str = None, rows: int = 1000000):
+def insert_random(
+    self, node, table_name, columns: str = None, rows: int = 1000000, no_checks=False
+):
     if columns is None:
         columns = DEFAULT_COLUMNS
 
     node.query(
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows}",
+        no_checks=no_checks,
         exitcode=0,
     )
 
 
 @TestStep(Given)
-def create_one_replica(self, node, table_name):
+def create_one_replica(
+    self, node, table_name, replica_name="{replica}", no_checks=False
+):
     """
     Create a simple replicated table on the given node.
     Call multiple times with the same table name and different nodes
@@ -145,10 +150,11 @@ def create_one_replica(self, node, table_name):
         CREATE TABLE IF NOT EXISTS {table_name} (
             d UInt64
         ) 
-        ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
+        ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{replica_name}')
         ORDER BY d
         SETTINGS storage_policy='external'
         """,
+        no_checks=no_checks,
         exitcode=0,
     )
     return r
@@ -156,7 +162,7 @@ def create_one_replica(self, node, table_name):
 
 @TestStep(Given)
 def delete_one_replica(self, node, table_name):
-    r = node.query(f"DROP TABLE {table_name} SYNC", exitcode=0)
+    r = node.query(f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0)
     return r
 
 
