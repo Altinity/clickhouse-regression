@@ -208,6 +208,11 @@ ffails = {
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
+    ": disk/restart": (
+        XFail,
+        "https://github.com/ClickHouse/ClickHouse/issues/58924",
+        check_clickhouse_version(">=23.12"),
+    ),
 }
 
 
