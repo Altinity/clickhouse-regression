@@ -69,10 +69,13 @@ def table_name(self, with_id=False):
 
     table_names = {
         "source_" + getuid(),
-        "destination" + getuid(),
+        "destination_" + getuid(),
         "1",
         "!@DL",
         ".",
+        # utf8 chars
+        # very long string
+        # all ascii chars
     }
 
     check_table_name(
