@@ -143,6 +143,20 @@ xfails = {
             "Needs Investigation. The issue seems to be from the tests side, not a bug.",
         )
     ],
+    "/parquet/postgresql/compression type/*/postgresql engine to parquet file to postgresql engine": [
+        (
+            Fail,
+            "This fails because of the difference in snapshot values. We used to capture the datetime value `0` be "
+            "converted as 2106-02-07 06:28:16 instead of the correct 1970-01-01 01:00:00. But when steps are "
+            "repeated manually, we can not reproduce it",
+        )
+    ],
+    "/parquet/*/s3/compression type/*/outline/engine/*": [
+        (
+            Fail,
+            "Fails with the error `could not be decoded`, we will attach the ticket to the xfail",
+        )
+    ],
 }
 xflags = {}
 
