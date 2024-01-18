@@ -1,5 +1,5 @@
 name: Run CI/CD regression tests
-run-name: ${{ github.actor }} is running regression tests
+run-name: ${{ inputs.custom_run_name || format('{0} is running regression tests', github.actor) }}
 on:
   workflow_dispatch:
     inputs:
@@ -89,6 +89,9 @@ on:
         description: "Extra test program arguments. Default: none (empty string)."
         type: string
         default: ""
+      custom_run_name:
+        description: 'Custom run name (optional)'
+        required: false
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
