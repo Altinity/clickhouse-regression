@@ -180,6 +180,9 @@ xfails = {
     ": disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
+    ": zero copy replication/bad detached part": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/pull/58333", check_clickhouse_version("<23.11"))
+    ],
 }
 
 ffails = {
@@ -207,6 +210,11 @@ ffails = {
         XFail,
         "Under development for 22.8 and newer.",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
+    ),
+    ": disk/no restart": (
+        XFail,
+        "https://github.com/ClickHouse/ClickHouse/issues/58924",
+        check_clickhouse_version(">=23.12"),
     ),
 }
 
