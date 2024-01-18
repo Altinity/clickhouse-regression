@@ -281,9 +281,8 @@ def add_remove_replicas(self, allow_vfs=True):
     nodes = self.context.ch_nodes
     rows_per_insert = 1_000_000
 
-    loop_sleep = 10
-    n_loops = 10
-    n_parallel = 5
+    combination_count = 100
+    combination_size = 5
 
     @TestStep(When)
     def add_table_replica(self, node):
@@ -327,7 +326,8 @@ def add_remove_replicas(self, allow_vfs=True):
             active_nodes = [
                 n for n in nodes if table_name in n.query("SHOW TABLES").output
             ]
-            if not active_nodes: return
+            if not active_nodes:
+                return
 
         with When("I make sure all nodes are synced"):
             for node in active_nodes:
@@ -359,10 +359,10 @@ def add_remove_replicas(self, allow_vfs=True):
             with Given("I enable vfs"):
                 enable_vfs()
 
-        for _ in range(n_loops):
+        for _ in range(combination_count):
             action_node, action_func = random.choice(action_pairs)
 
-            for _ in range(n_parallel):
+            for _ in range(combination_size):
                 When(
                     f"I {action_func.name} on {action_node.name}",
                     test=action_func,
@@ -373,24 +373,6 @@ def add_remove_replicas(self, allow_vfs=True):
 
             with Then("I check that the replicas are consistent"):
                 check_consistency()
-
-        with When("I wait for all tasks to finish"):
-            join()
-
-        with And("I make sure all nodes are replicating"):
-            for node in nodes:
-                add_table_replica(node=node)
-
-        with When("I make sure all nodes are synced"):
-            for node in nodes:
-                node.query(
-                    f"SYSTEM SYNC REPLICA {table_name}", timeout=60, no_checks=True
-                )
-
-        with And("I query all nodes for their row counts"):
-            row_counts = []
-            for node in nodes:
-                row_counts.append(get_row_count(node=node))
 
     finally:
         with Finally("I drop the table on each node"):
@@ -417,7 +399,7 @@ def random_add_remove_no_vfs(self):
 @TestFeature
 @Name("replica")
 def feature(self):
-    # Use the same seed for all tests, but a different seed each run
+    # Use the same seed for all scenarios, but a different seed each run
     random_seed = random.random()
     note(f"Using seed {random_seed}")
 
