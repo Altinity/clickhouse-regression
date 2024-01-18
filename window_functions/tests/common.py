@@ -585,6 +585,44 @@ def empsalary_table(self, name="empsalary", distributed=False):
 
 
 @TestStep(Given)
+def big_empsalary_table(self, name="big_empsalary", distributed=False):
+    """Create big employee salary reference table."""
+    table = None
+
+    data = [
+        "('develop', 10, 5200, '2007-08-01')",
+        "('sales', 1, 5000, '2006-10-01')",
+        "('personnel', 5, 3500, '2007-12-10')",
+        "('sales', 4, 4800, '2007-08-08')",
+        "('personnel', 2, 3900, '2006-12-23')",
+        "('develop', 7, 4200, '2008-01-01')",
+        "('develop', 9, 4500, '2008-01-01')",
+        "('sales', 3, 4800, '2007-08-01')",
+        "('develop', 8, 6000, '2006-10-01')",
+        "('develop', 11, 5200, '2007-08-15')",
+    ]
+
+    if not distributed:
+        with By("creating a table"):
+            sql = """
+            CREATE TABLE {name} (
+                depname LowCardinality(String),
+                empno  UInt64,
+                salary Int32,
+                enroll_date Date
+                )
+            ENGINE = MergeTree() ORDER BY enroll_date
+            """
+            table = create_table(name=name, statement=sql)
+
+        with And("populating table with data"):
+            sql = f"INSERT INTO {name} VALUES {','.join(data)}"
+            for _ in range(3):
+                self.context.node.query(sql)
+    return table
+
+
+@TestStep(Given)
 def create_table(self, name, statement, on_cluster=False):
     """Create table."""
     node = current().context.node

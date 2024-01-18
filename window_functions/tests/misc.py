@@ -14,7 +14,7 @@ def subquery_expr_preceding(self):
        0 |   0
        1 |   1
        3 |   2
-       5 |   3
+       5 |   3Fmu
        7 |   4
        9 |   5
       11 |   6
@@ -292,6 +292,41 @@ def subquery_multiple_window_functions(self):
         """,
         expected=expected,
     )
+
+
+@TestScenario
+def subquery_multiple_window_functions_with_bigger_table(self):
+    """Check using multiple window functions is a subquery."""
+    expected = convert_output(
+        """
+    depname |   depsalary |  depminsalary
+    --------+-------------+--------------
+    sales   |    15000   |  5000
+    sales   |    15000   |  5000
+    sales   |    15000   |  5000
+    sales   |    29400   |  4800
+    sales   |    29400   |  4800 
+    sales   |    29400   |  4800 
+    sales   |    43800   |  4800 
+    sales   |    43800   |  4800 
+    sales   |    43800   |  4800 
+    """
+    )
+    if "non distributed" in self.name:
+        execute_query(
+            """
+            SELECT * FROM
+            (SELECT depname,
+                    sum(salary) OVER (PARTITION BY depname order by empno) AS depsalary,
+                    min(salary) OVER (PARTITION BY depname, empno order by enroll_date) AS depminsalary
+            FROM  big_empsalary)
+            WHERE depname = 'sales'
+            ORDER BY depname, depsalary
+            """,
+            expected=expected,
+        )
+    else:
+        skip()
 
 
 @TestScenario
