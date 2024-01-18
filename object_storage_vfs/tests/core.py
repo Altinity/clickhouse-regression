@@ -7,6 +7,9 @@ from object_storage_vfs.requirements import *
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Core_Delete("1.0"))
 def delete(self):
+    """
+    Check that when a table is dropped, data in S3 is cleaned up.
+    """
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
     table_name = "vfs_deleting_replicas"
@@ -95,6 +98,10 @@ def delete(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication("1.0"))
 def no_duplication(self):
+    """
+    CHeck that data on replicated tables only exists once in S3.    
+    """
+
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
     table_name = "vfs_test_replicas_duplication"
