@@ -14,7 +14,7 @@
   * 4.2 [Replicas](#replicas)
     * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
     * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
-    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Drop](#rqsrs-038diskobjectstoragevfsreplicadrop)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
   * 4.3 [Settings](#settings)
     * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
     * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
@@ -37,7 +37,6 @@
     * 4.7.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
     * 4.7.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
 * 5 [References](#references)
-
 
 ## Revision History
 
@@ -98,7 +97,7 @@ version: 1.0
 [ClickHouse] SHALL support removing a replicated table on a [ClickHouse] instance
 with no changes to data in any tables on the other replicating instances.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Replica.Drop
+#### RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline
 version: 1.0
 
 [ClickHouse] SHALL support stopping and starting an instance of [ClickHouse]

@@ -87,6 +87,9 @@ def check_table_combination(
     n_tables: int,
     storage_policy: str,
 ):
+    """
+    Test that the given table parameters create a functional table.
+    """
     nodes = self.context.ch_nodes
     tables = []
     n_rows = 10000

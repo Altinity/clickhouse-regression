@@ -93,8 +93,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove = Requirement(
     num="4.2.2",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Replica_Drop = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Drop",
+RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline",
     version="1.0",
     priority=None,
     group=None,
@@ -432,7 +432,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove", level=3, num="4.2.2"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Drop", level=3, num="4.2.3"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline", level=3, num="4.2.3"
         ),
         Heading(name="Settings", level=2, num="4.3"),
         Heading(
@@ -505,7 +505,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Core_Delete,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Add,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove,
-        RQ_SRS_038_DiskObjectStorageVFS_Replica_Drop,
+        RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
@@ -538,7 +538,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
   * 4.2 [Replicas](#replicas)
     * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
     * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
-    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Drop](#rqsrs-038diskobjectstoragevfsreplicadrop)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
   * 4.3 [Settings](#settings)
     * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
     * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
@@ -561,7 +561,6 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.7.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
     * 4.7.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
 * 5 [References](#references)
-
 
 ## Revision History
 
@@ -622,7 +621,7 @@ version: 1.0
 [ClickHouse] SHALL support removing a replicated table on a [ClickHouse] instance
 with no changes to data in any tables on the other replicating instances.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Replica.Drop
+#### RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline
 version: 1.0
 
 [ClickHouse] SHALL support stopping and starting an instance of [ClickHouse]

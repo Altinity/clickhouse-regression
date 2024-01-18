@@ -15,6 +15,12 @@ from object_storage_vfs.requirements import *
     RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication("1.0"),
 )
 def add_replica(self):
+    """
+    Test that replicas can be added to an existing table:
+     - with the full data being accessible.
+     - without significantly increasing disk usage.
+    """
+
     bucket_name = self.context.bucket_name
     bucket_path = self.context.bucket_path
     table_name = "vfs_adding_replicas"
@@ -87,8 +93,12 @@ def add_replica(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Drop("1.0"))
-def drop_replica(self):
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline("1.0"))
+def offline_replica(self):
+    """
+    Test that an offline replica can recover data that was inserted on another replica.
+    """
+
     table_name = "vfs_dropping_replicas"
     nodes = self.context.ch_nodes
 
@@ -130,6 +140,11 @@ def drop_replica(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def parallel_add_remove(self):
+    """
+    Test that no data is lost when replicas are added and removed
+    during inserts on other replicas.
+    """
+
     table_name = "vfs_add_remove_replicas"
     nodes = self.context.ch_nodes
     rows_per_insert = 100_000_000
@@ -261,6 +276,10 @@ def parallel_add_remove(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def random_add_remove(self, allow_vfs=True):
+    """
+    Randomly perform actions on replicas and check that they all agree.
+    """
+
     table_name = "vfs_random_add_remove_replicas"
     nodes = self.context.ch_nodes
     rows_per_insert = 1_000_000
@@ -342,6 +361,9 @@ def random_add_remove(self, allow_vfs=True):
 
 @TestScenario
 def random_add_remove_no_vfs(self):
+    """
+    To isolate issues, run the same test without vfs
+    """
     random_add_remove(allow_vfs=False)
 
 

@@ -81,7 +81,7 @@ def create_insert_measure_replicated_table(self):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"))
 def disk_setting(self):
     """
-    Check that allow_vfs can be globally enabled
+    Check that allow_vfs can be globally enabled.
     """
     with Given("VFS is not globally enabled"):
         check_global_vfs_state(enabled=False)
