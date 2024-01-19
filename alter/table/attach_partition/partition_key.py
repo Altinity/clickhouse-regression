@@ -906,14 +906,25 @@ def attach_partition_from(self, with_id=False):
 
     source_partition_key = either(*partition_keys)
     destination_partition_key = either(*partition_keys)
-
-    check_attach_partition_from(
-        source_table_engine=either(*engines),
-        destination_table_engine=either(*engines),
-        source_partition_key=source_partition_key,
-        destination_partition_key=destination_partition_key,
-        with_id=with_id,
-    )
+    if check_clickhouse_version(">=24.1"):
+        check_attach_partition_from(
+            source_table_engine=either(*engines),
+            destination_table_engine=either(*engines),
+            source_partition_key=source_partition_key,
+            destination_partition_key=destination_partition_key,
+            with_id=with_id,
+        )
+    else:
+        if source_partition_key == destination_partition_key:
+            check_attach_partition_from(
+            source_table_engine=either(*engines),
+            destination_table_engine=either(*engines),
+            source_partition_key=source_partition_key,
+            destination_partition_key=destination_partition_key,
+            with_id=with_id,
+        )
+        else:
+            skip("Different partition keys are not supported before 24.1")
 
 
 @TestFeature
