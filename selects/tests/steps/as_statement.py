@@ -1,6 +1,7 @@
 from selects.tests.steps.main_steps import *
 from testflows.asserts import error
 
+
 @TestStep
 @Name("SELECT column as new_column")
 def as_statement(self, table, node=None):
@@ -74,17 +75,13 @@ def as_result_check(self, table, node=None):
         node = self.context.cluster.node("clickhouse1")
 
     with Then("I check that compare results are the same"):
-        assert (
-            node.query(
-                f"SELECT id as new_id FROM {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id) FORMAT"
-                f" JSONEachRow;",
-                settings=[("final", 0)],
-            ).output.strip()
-            == node.query(
-                f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
-                settings=[("final", 1)],
-            ).output.strip(), error()
-        )
+        assert node.query(
+            f"SELECT id as new_id FROM {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id) FORMAT JSONEachRow;",
+            settings=[("final", 0)],
+        ).output.strip() == node.query(
+            f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
+            settings=[("final", 1)],
+        ).output.strip(), error()
 
 
 @TestStep
