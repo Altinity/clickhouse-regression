@@ -69,7 +69,7 @@ xfails = {
     "final/force/general/with experimental analyzer/select subquery/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "selects/final/force/alias/as with alias/*": [
+    "final/force/alias/as with alias/*": [
         (Fail, "fails for ARM")
     ],
 }
