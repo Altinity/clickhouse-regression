@@ -1,5 +1,5 @@
 from selects.tests.steps.main_steps import *
-
+from testflows.asserts import error
 
 @TestStep
 @Name("SELECT column as new_column")
@@ -83,7 +83,7 @@ def as_result_check(self, table, node=None):
             == node.query(
                 f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
                 settings=[("final", 1)],
-            ).output.strip()
+            ).output.strip(), error()
         )
 
 
