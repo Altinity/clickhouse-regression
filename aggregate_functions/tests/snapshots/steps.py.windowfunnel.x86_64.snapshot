@@ -731,7 +731,7 @@ _aggregate_functions_windowFunnel_doc_example = r"""
 """
 
 _aggregate_functions_windowFunnel_example1 = r"""
-{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(number))":"UInt32","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+{"windowFunnel(6048000000000000)(time, equals(number, 1), equals(number, 2))":2,"any(toTypeName(time))":"Date","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_windowFunnel_example2 = r"""

@@ -211,7 +211,12 @@ ffails = {
         "Under development for 22.8 and newer.",
         check_clickhouse_version(">=22.8"),
     ),
-    ":/vfs": (Skip, "vfs not supported on < 23.11", check_clickhouse_version("<23.11")),
+    ":/vfs": (Skip, "vfs not supported on < 24", check_clickhouse_version("<24")),
+    ":/: disk/restart": (
+        XFail,
+        "https://github.com/ClickHouse/ClickHouse/issues/58924",
+        check_clickhouse_version(">=23.12"),
+    ),
 }
 
 

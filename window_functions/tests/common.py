@@ -159,7 +159,7 @@ def execute_query(
                             "tests." + current_cpu(),
                             name=snapshot_name,
                             encoder=str,
-                            mode=snapshot.CHECK
+                            mode=snapshot.CHECK,
                         )
                     ), error()
 

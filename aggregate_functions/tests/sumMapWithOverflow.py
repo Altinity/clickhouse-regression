@@ -17,7 +17,9 @@ from aggregate_functions.tests.maxMappedArrays import scenario as checks
 )
 def scenario(self, func="sumMapWithOverflow({params})", table=None, snapshot_id=None):
     """Check sumMapWithOverflow aggregate function by using the same tests as for maxMap(maxMappedArrays)."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.11"
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

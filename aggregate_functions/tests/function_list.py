@@ -4,6 +4,7 @@ from aggregate_functions.tests.steps import aggregate_functions
 
 @TestFeature
 @Name("function_list")
+@Flags(TE)
 def feature(self):
     """Check if new aggregate functions was not added in system.functions table."""
 

@@ -116,6 +116,12 @@ def scenario(
                     col1_name, col1_type = col1.name, col1.datatype.name
                     col2_name, col2_type = col2.name, col2.datatype.name
 
+                    if col1_type == "Date" and col2_type == "(Nullable(UInt16))":
+                        self.context.node.query(
+                            f"select {col1_name}, {col2_name} from {table.name}"
+                        )
+                        pause()
+
                     if not is_unsigned_integer(col2.datatype):
                         continue
 

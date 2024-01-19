@@ -78,12 +78,14 @@ def scenario(self, cluster, node="clickhouse1"):
                 def alter_update(num):
                     with When(f"I update {num} values"):
                         for i in range(num):
-                            node.query(
-                                f"ALTER TABLE {name} UPDATE number = number + 1 WHERE 1",
-                                steps=False,
-                                timeout=60,
-                                raise_on_exception=True,
-                            )
+                            for attempt in retries(timeout=30, delay=5):
+                                with attempt:
+                                    node.query(
+                                        f"ALTER TABLE {name} UPDATE number = number + 1 WHERE 1",
+                                        steps=False,
+                                        timeout=60,
+                                        raise_on_exception=True,
+                                    )
 
                 def optimize_table(num):
                     with When(f"I optimize table {num} times"):
