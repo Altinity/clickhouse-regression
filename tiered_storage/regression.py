@@ -115,7 +115,9 @@ xfails = {
     ":/:/ttl moves/defaults to delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
-    ":/:/alter move/concurrent/concurrent alter move and drop": [(Fail, "unstable test")],
+    ":/:/alter move/concurrent/concurrent alter move and drop": [
+        (Fail, "unstable test")
+    ],
     ":/:/alter move/concurrent/concurrent alter move insert and select": [
         (Fail, "unstable test")
     ],
@@ -171,12 +173,12 @@ def feature(
 
         object_storage_mode = "vfs" if allow_vfs else "normal"
 
-        with Feature(object_storage_mode):
-            if object_storage_mode == "vfs":
-                with Given("I enable allow_object_storage_vfs"):
-                    enable_vfs()
+        with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
+            with Feature(object_storage_mode):
+                if object_storage_mode == "vfs":
+                    with Given("I enable allow_object_storage_vfs"):
+                        enable_vfs(disk_names=["external"])
 
-            with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
                 Scenario(
                     run=load("tiered_storage.tests.startup_and_queries", "scenario"),
                     **common_args,
