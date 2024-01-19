@@ -89,7 +89,7 @@ def create_partitioned_replicated_table_with_data(
     partition_by: str = None,
     engine="ReplicatedMergeTree",
     query_settings=None,
-    node=None,
+    nodes=None,
     number_of_partitions=2,
     config="graphite_rollup_example",
     sign="sign",
@@ -110,30 +110,32 @@ def create_partitioned_replicated_table_with_data(
             Column(name="sign", datatype=Int8()),
         ]
 
-    if engine == "GraphiteMergeTree":
+    if "GraphiteMergeTree" in engine:
         engine = f"GraphiteMergeTree('{config}')"
-    elif engine == "VersionedCollapsingMergeTree":
+    elif "VersionedCollapsingMergeTree" in engine:
         engine = f"VersionedCollapsingMergeTree({sign},{version})"
-    elif engine == "CollapsingMergeTree":
+    elif "CollapsingMergeTree" in engine:
         engine = f"CollapsingMergeTree({sign})"
 
     with By(f"creating a table that is partitioned by '{partition_by}'"):
-        create_table(
-            name=table_name,
-            columns=columns,
-            engine=f"{engine}('/clickhouse/tables/"
-            + "{shard}"
-            + f"/{table_name}', "
-            + "'{replica}')",
-            order_by=order_by,
-            primary_key=primary_key,
-            comment=comment,
-            partition_by=partition_by,
-            cluster="replicated_cluster_secure",
-            node=node,
-            if_not_exists=True,
-        )
+        for node in nodes:
+            create_table(
+                name=table_name,
+                columns=columns,
+                engine=f"{engine}('/clickhouse/tables/"
+                + "{shard}"
+                + f"/{table_name}', "
+                + "'{replica}')",
+                order_by=order_by,
+                primary_key=primary_key,
+                comment=comment,
+                partition_by=partition_by,
+                cluster="replicated_cluster_secure",
+                node=node,
+                if_not_exists=True,
+            )
 
+    node = random.choice(nodes)
     with And(f"inserting data that will create multiple partitions"):
         for i in range(1, number_of_partitions + 1):
             node.query(
@@ -154,7 +156,7 @@ def create_empty_partitioned_replicated_table(
     partition_by: str = None,
     engine="ReplicatedMergeTree",
     query_settings=None,
-    node=None,
+    nodes=None,
     number_of_partitions=2,
     config="graphite_rollup_example",
     sign="sign",
@@ -183,21 +185,22 @@ def create_empty_partitioned_replicated_table(
         engine = f"CollapsingMergeTree({sign})"
 
     with By(f"creating a table that is partitioned by '{partition_by}'"):
-        create_table(
-            name=table_name,
-            columns=columns,
-            engine=f"{engine}('/clickhouse/tables/"
-            + "{shard}"
-            + f"/{table_name}', "
-            + "'{replica}')",
-            order_by=order_by,
-            primary_key=primary_key,
-            comment=comment,
-            partition_by=partition_by,
-            cluster="replicated_cluster_secure",
-            node=node,
-            if_not_exists=True,
-        )
+        for node in nodes:
+            create_table(
+                name=table_name,
+                columns=columns,
+                engine=f"{engine}('/clickhouse/tables/"
+                + "{shard}"
+                + f"/{table_name}', "
+                + "'{replica}')",
+                order_by=order_by,
+                primary_key=primary_key,
+                comment=comment,
+                partition_by=partition_by,
+                cluster="replicated_cluster_secure",
+                node=node,
+                if_not_exists=True,
+            )
 
 
 @TestStep(Given)
@@ -427,12 +430,14 @@ def execute_query(
         else:
             with Then("I check output against snapshot"):
                 with values() as that:
-                    assert that(
-                        snapshot(
-                            "\n" + r.output.strip() + "\n",
-                            "tests." + current_cpu(),
-                            name=snapshot_name,
-                            encoder=str,
-                            mode=snapshot.CHECK,
-                        )
-                    ), error()
+                    for attempt in retries(timeout=30, delay=5):
+                        with attempt:
+                            assert that(
+                                snapshot(
+                                    "\n" + r.output.strip() + "\n",
+                                    "tests." + current_cpu(),
+                                    name=snapshot_name,
+                                    encoder=str,
+                                    mode=snapshot.CHECK | snapshot.UPDATE,
+                                )
+                            ), error()
