@@ -18,30 +18,30 @@ def s3_config(self):
         disks = {
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}object-storage-vfs/",
+                "endpoint": f"{self.context.uri}object-storage/storage/",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
-            "external_tiered": {
+            "external_vfs": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}object-storage-vfs-tiered",
+                "endpoint": f"{self.context.uri}object-storage/vfs/",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+                "allow_vfs": "1",
+            },
+            "external_no_vfs": {
+                "type": "s3",
+                "endpoint": f"{self.context.uri}object-storage/no-vfs/",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
         }
 
-    with And(
-        """I have a storage policy configured to use the S3 disk and a tiered
-             storage policy using both S3 disks"""
-    ):
+    with And("""I have a storage policy configured to use the S3 disk"""):
         policies = {
             "external": {"volumes": {"external": {"disk": "external"}}},
-            "tiered": {
-                "volumes": {
-                    "default": {"disk": "external"},
-                    "external": {"disk": "external_tiered"},
-                }
-            },
+            "external_vfs": {"volumes": {"external": {"disk": "external_vfs"}}},
+            "external_no_vfs": {"volumes": {"external": {"disk": "external_no_vfs"}}},
         }
 
     with s3_storage(disks, policies, restart=True, timeout=60):
@@ -138,7 +138,12 @@ def insert_random(
 
 @TestStep(Given)
 def create_one_replica(
-    self, node, table_name, replica_name="{replica}", no_checks=False
+    self,
+    node,
+    table_name,
+    replica_name="{replica}",
+    no_checks=False,
+    storage_policy="external",
 ):
     """
     Create a simple replicated table on the given node.
@@ -152,7 +157,7 @@ def create_one_replica(
         ) 
         ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{replica_name}')
         ORDER BY d
-        SETTINGS storage_policy='external'
+        SETTINGS storage_policy='{storage_policy}'
         """,
         no_checks=no_checks,
         exitcode=0,
@@ -177,14 +182,14 @@ def enable_vfs(
 ):
     """
     Add the config file for object storage vfs for the disks in `disk_names`.
-    Default disk names are ["external", "external_tiered"].
+    Default disk names are ["external"].
     """
 
     if check_clickhouse_version("<24.1")(self):
         skip("vfs not supported on ClickHouse < 24.1")
 
     if disk_names is None:
-        disk_names = ["external", "external_tiered"]
+        disk_names = ["external"]
 
     disks = {
         n: {

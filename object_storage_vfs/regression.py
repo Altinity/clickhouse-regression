@@ -55,7 +55,7 @@ def minio(
         self.context.access_key_id = root_user
         self.context.secret_access_key = root_password
         self.context.bucket_name = "root"
-        self.context.bucket_path = "data/object-storage-vfs"
+        self.context.bucket_path = "data/object-storage"
 
         self.context.minio_enabled = True
 
