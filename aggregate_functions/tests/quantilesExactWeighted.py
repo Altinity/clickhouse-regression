@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantilesExactWeighted,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id
+from aggregate_functions.tests.steps import get_snapshot_id, check_clickhouse_version
 from aggregate_functions.tests.quantileExactWeighted import scenario as checks
 
 
@@ -17,9 +17,17 @@ def scenario(
     self, func="quantilesExactWeighted({params})", table=None, snapshot_id=None
 ):
     """Check quantilesExactWeighted aggregate function by using the same tests as for quantileExactWeighted."""
-    self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
-    )
+    if "State" in self.name:
+        clickhouse_version = (
+            ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
+        )
+        self.context.snapshot_id = get_snapshot_id(
+            snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+        )
+    else:
+        self.context.snapshot_id = get_snapshot_id(
+            snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        )
 
     if table is None:
         table = self.context.table

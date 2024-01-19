@@ -19,7 +19,9 @@ def scenario(
     self, func="largestTriangleThreeBuckets({params})", table=None, snapshot_id=None
 ):
     """Check largestTriangleThreeBuckets aggregate function by using the same checks as for covarPop."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     func_ = func.replace("({params})", f"(4)({{params}})")
 

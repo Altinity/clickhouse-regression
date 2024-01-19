@@ -15,7 +15,9 @@ from aggregate_functions.tests.quantileExactLow import scenario as checks
 )
 def scenario(self, func="quantilesExactLow({params})", table=None, snapshot_id=None):
     """Check quantilesExactLow aggregate function by using the same tests as for quantileExactLow."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     if table is None:
         table = self.context.table

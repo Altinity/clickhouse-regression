@@ -19,7 +19,7 @@ def feature(self):
     """Check aggregate functions `-State` combinator
     that serializes the state of the function."""
 
-    with Pool(5) as executor:
+    with Pool(15) as executor:
         for name in aggregate_functions:
             if "alias" in name:
                 name_ = name.replace("_alias", "")
