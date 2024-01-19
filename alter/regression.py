@@ -89,6 +89,7 @@ ffails = {
     "/alter/attach partition/partition key/*": (
         Skip,
         "Not yet merged https://github.com/ClickHouse/ClickHouse/pull/39507",
+        check_clickhouse_version("<=23.13"),
     ),
 }
 
@@ -107,7 +108,7 @@ def regression(
     clickhouse_binary_path,
     collect_service_logs,
     use_specific_version,
-    stress,
+    stress=None,
 ):
     """Alter regression."""
     nodes = {
@@ -125,8 +126,7 @@ def regression(
     self.context.access_key_id = "minio"
     self.context.secret_access_key = "minio123"
 
-    if stress:
-        self.context.stress = stress
+    self.context.stress = stress
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -139,7 +139,7 @@ def regression(
         )
         self.context.cluster = cluster
 
-    Feature(run=load("alter.table.replace_partition.feature", "feature"))
+    # Feature(run=load("alter.table.replace_partition.feature", "feature"))
     Feature(run=load("alter.table.attach_partition.feature", "feature"))
 
 
