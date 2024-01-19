@@ -17,7 +17,9 @@ def scenario(
     self, func="quantileExactExclusive({params})", table=None, snapshot_id=None
 ):
     """Check quantileExactExclusive aggregate function by using the same tests as for quantile."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
