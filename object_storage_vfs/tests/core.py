@@ -4,6 +4,7 @@ from testflows.core import *
 from object_storage_vfs.tests.steps import *
 from object_storage_vfs.requirements import *
 
+
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Core_Delete("1.0"))
 def delete(self):
@@ -51,7 +52,7 @@ def delete(self):
         with And("I check the row count on the second node"):
             assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
 
-        with When("I get the new size of the s3 bucket"):
+        with When("I check how much data was added to the s3 bucket"):
             size_after_insert = get_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
@@ -59,6 +60,7 @@ def delete(self):
                 access_key=self.context.secret_access_key,
                 key_id=self.context.access_key_id,
             )
+            assert size_after_insert > size_empty, error()
 
         with When("I drop the table on the second node"):
             nodes[1].query(f"DROP TABLE {table_name} SYNC")
@@ -99,7 +101,7 @@ def delete(self):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication("1.0"))
 def no_duplication(self):
     """
-    CHeck that data on replicated tables only exists once in S3.    
+    Check that data on replicated tables only exists once in S3.
     """
 
     bucket_name = self.context.bucket_name
@@ -161,7 +163,7 @@ def no_duplication(self):
             retry(assert_row_count, timeout=120, delay=1)(
                 node=nodes[1], table_name=table_name, rows=2000000
             )
-       
+
         with Then("the size of the s3 bucket should be doubled and no more"):
             expected_size = size_empty + size_added * 2
             check_bucket_size(
@@ -190,7 +192,9 @@ def no_duplication(self):
                 minio_enabled=self.context.minio_enabled,
             )
 
-#RQ_SRS_038_DiskObjectStorageVFS_Core_RemoveReplica
+
+# RQ_SRS_038_DiskObjectStorageVFS_Core_RemoveReplica
+
 
 @TestFeature
 @Name("core")
