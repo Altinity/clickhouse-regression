@@ -318,16 +318,16 @@ _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Bool_0 = r
 {"finalizeAggregation(CAST(unhex('2002030300001ACC930200000000000000649F00331E40E8035443E83313D70104'), 'AggregateFunction(uniqTheta, Bool)'))":"2"}
 """
 
-_aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Date_0 = r"""
-{"finalizeAggregation(CAST(unhex('5802030300001ACC930900000000000000CB1684B0F567A50763F89D27255BCC157BC159A7C28EFE18A9741F76ADFFE31B20EF77C743696F2D42D1E3C470BC2A31D04A797DF194CA445EAD5C8BC5E5CF54A7BFC1134CF3E760'), 'AggregateFunction(uniqTheta, Date)'))":"9"}
+_aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_DateTime64_3___22_8_0__22_8 = r"""
+{"finalizeAggregation(CAST(unhex('5802030300001ACC930900000000000000A8380C7A462A9401DECB40692255341207E47DE67737641252E6C742BE31B4212FB055AFB822B7293337F36A01831B43DBD77572D51DC86C359682C5D834F174097BF7D1DB6B9775'), 'AggregateFunction(uniqTheta, DateTime64(3))'))":"9"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_DateTime_0 = r"""
 {"finalizeAggregation(CAST(unhex('5802030300001ACC9309000000000000000D0E60C68F59E10321CAD8A4796791286290DB11ACF0232E17817CE504C4BE31808F76EA2243024D8BBC217A2E49565E515AF77A42CC1760D9BECACF1E9D1979427FB852A8D54B7B'), 'AggregateFunction(uniqTheta, DateTime)'))":"9"}
 """
 
-_aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_DateTime64_3___22_8_0__22_8 = r"""
-{"finalizeAggregation(CAST(unhex('5802030300001ACC930900000000000000A8380C7A462A9401DECB40692255341207E47DE67737641252E6C742BE31B4212FB055AFB822B7293337F36A01831B43DBD77572D51DC86C359682C5D834F174097BF7D1DB6B9775'), 'AggregateFunction(uniqTheta, DateTime64(3))'))":"9"}
+_aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Date_0 = r"""
+{"finalizeAggregation(CAST(unhex('5802030300001ACC930900000000000000CB1684B0F567A50763F89D27255BCC157BC159A7C28EFE18A9741F76ADFFE31B20EF77C743696F2D42D1E3C470BC2A31D04A797DF194CA445EAD5C8BC5E5CF54A7BFC1134CF3E760'), 'AggregateFunction(uniqTheta, Date)'))":"9"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Decimal128_38__0 = r"""
@@ -6198,6 +6198,10 @@ _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Map_UUID_U
 {"finalizeAggregation(CAST(unhex('5802030300001ACC93090000000000000088754228E31CD104C60C3129FF62200CF1F5DEEDF12E5E1BC04E97A7E3D0A732C8C2532B7E1B2646849B2ABF7C8D4A566A91DE181EB3D056388F92C0B6EF085C4DDDDD2FA9C6D869'), 'AggregateFunction(uniqTheta, Map(UUID, UUID))'))":"9"}
 """
 
+_aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_NULL_for_all_rows_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(uniqTheta, Nullable(Nothing))'))":"0"}
+"""
+
 _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Nullable_Bool__0 = r"""
 {"finalizeAggregation(CAST(unhex('012002030300001ACC930200000000000000649F00331E40E8035443E83313D70104'), 'AggregateFunction(uniqTheta, Nullable(Bool))'))":"2"}
 """
@@ -6360,9 +6364,5 @@ _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_with_group
 
 _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_with_group_by_1 = r"""
 {"finalizeAggregation(CAST(unhex('1001030300001ACC931AD1300B998C2F22'), 'AggregateFunction(uniqTheta, UInt64)'))":"1"}
-"""
-
-_aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_NULL_for_all_rows_0 = r"""
-{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(uniqTheta, Nullable(Nothing))'))":"0"}
 """
 

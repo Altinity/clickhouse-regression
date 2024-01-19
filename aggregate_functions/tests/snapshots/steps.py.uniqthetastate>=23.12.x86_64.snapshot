@@ -6198,6 +6198,10 @@ _aggregate_functions_state_uniqThetaState_Map_UUID_UUID_ = r"""
 {"hex(uniqThetaState(map_uuid_uuid_))":"5802030300001ACC93090000000000000088754228E31CD104C60C3129FF62200CF1F5DEEDF12E5E1BC04E97A7E3D0A732C8C2532B7E1B2646849B2ABF7C8D4A566A91DE181EB3D056388F92C0B6EF085C4DDDDD2FA9C6D869","any(toTypeName(map_uuid_uuid_))":"Map(UUID, UUID)"}
 """
 
+_aggregate_functions_state_uniqThetaState_NULL_for_all_rows = r"""
+{"hex(uniqThetaStateDistinct(if(modulo(number, 2), NULL, NULL)))":"00","any(toTypeName(NULL))":"Nullable(Nothing)"}
+"""
+
 _aggregate_functions_state_uniqThetaState_Nullable_Bool_ = r"""
 {"hex(uniqThetaState(nullable_bool_))":"012002030300001ACC930200000000000000649F00331E40E8035443E83313D70104","any(toTypeName(nullable_bool_))":"Nullable(Bool)"}
 """
@@ -6359,9 +6363,5 @@ _aggregate_functions_state_uniqThetaState_with_group_by = r"""
 
 _aggregate_functions_state_uniqThetaState_zero_rows = r"""
 {"hex(uniqThetaState(number))":"00","any(toTypeName(number))":""}
-"""
-
-_aggregate_functions_state_uniqThetaState_NULL_for_all_rows = r"""
-{"hex(uniqThetaStateDistinct(if(modulo(number, 2), NULL, NULL)))":"00","any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
