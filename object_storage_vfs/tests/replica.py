@@ -276,26 +276,40 @@ def parallel_add_remove(self):
 
 @TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
-def add_remove_replicas(self, allow_vfs=True):
-    table_name = "vfs_random_add_remove_replicas"
-    nodes = self.context.ch_nodes
-    rows_per_insert = 1_000_000
+def do_command_combinations(self, table_name, allow_vfs=True):
+    """
+    Perform combinations of actions on replicas, including adding and removing,
+    checking that the replicas agree.
+    """
 
-    combination_count = 100
+    nodes = self.context.ch_nodes
+    rows_per_insert = 500
+
     combination_size = 5
+    shuffle_combinations = True
+    combinations_limit = 100
+
+    if self.context.stress:
+        combinations_limit = 10000
+
+    storage_policy = "external_vfs" if allow_vfs else "external_no_vfs"
 
     @TestStep(When)
-    def add_table_replica(self, node):
+    def add_replica(self, node):
         create_one_replica(
-            node=node, table_name=table_name, replica_name=getuid(), no_checks=True
+            node=node,
+            table_name=table_name,
+            replica_name=getuid(),
+            no_checks=True,
+            storage_policy=storage_policy,
         )
 
     @TestStep(When)
-    def remove_replica(self, node):
+    def rm_replica(self, node):
         delete_one_replica(node=node, table_name=table_name)
 
     @TestStep(When)
-    def insert_data(self, node):
+    def insert(self, node):
         insert_random(
             node=node,
             table_name=table_name,
@@ -305,11 +319,11 @@ def add_remove_replicas(self, allow_vfs=True):
         )
 
     @TestStep(When)
-    def optimize_table(self, node):
+    def optimize(self, node):
         node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
 
     @TestStep(When)
-    def select_count(self, node):
+    def select(self, node):
         r = node.query(f"SELECT count() FROM {table_name}", no_checks=True)
 
     @TestStep(When)
@@ -332,7 +346,7 @@ def add_remove_replicas(self, allow_vfs=True):
         with When("I make sure all nodes are synced"):
             for node in active_nodes:
                 node.query(
-                    f"SYSTEM SYNC REPLICA {table_name}", timeout=60, no_checks=True
+                    f"SYSTEM SYNC REPLICA {table_name}", timeout=10, no_checks=True
                 )
 
         with And("I query all nodes for their row counts"):
@@ -345,34 +359,47 @@ def add_remove_replicas(self, allow_vfs=True):
                 assert row_counts[n1.name] == row_counts[n2.name], error()
 
     actions = [
-        add_table_replica,
-        insert_data,
-        optimize_table,
-        select_count,
-        remove_replica,
+        add_replica,
+        insert,
+        optimize,
+        select,
+        rm_replica,
     ]
 
     action_pairs = list(product(nodes, actions))
 
+    action_combos = list(combinations(action_pairs, combination_size))
+    if shuffle_combinations:
+        random.shuffle(action_combos)
+
     try:
-        if allow_vfs:
-            with Given("I enable vfs"):
-                enable_vfs()
+        t = time.time()
+        for i, combo in enumerate(action_combos):
+            if i >= combinations_limit:
+                break
 
-        for _ in range(combination_count):
-            action_node, action_func = random.choice(action_pairs)
+            with Check(
+                f"{i} " + ",".join([f"{n.name[-1]}:{f.name}" for n, f in combo])
+            ):
+                for action_node, action_func in combo:
+                    When(
+                        f"I {action_func.name} on {action_node.name}",
+                        test=action_func,
+                        parallel=True,
+                        flags=TE,
+                    )(node=action_node)
 
-            for _ in range(combination_size):
-                When(
-                    f"I {action_func.name} on {action_node.name}",
-                    test=action_func,
-                    parallel=True,
-                )(node=action_node)
+                join()
 
-            join()
+                with Then("I check that the replicas are consistent", flags=TE):
+                    check_consistency()
 
-            with Then("I check that the replicas are consistent"):
-                check_consistency()
+                a = (time.time() - t) / (i + 1)
+                with And(f"I note the average time taken: {a:.2f}s"):
+                    note(f"Average time per combo {a:.2f}s")
+
+        with And(f"I record the average time taken: {a:.2f}s"):
+            metric("Average time per combo", a, "s")
 
     finally:
         with Finally("I drop the table on each node"):
@@ -381,31 +408,23 @@ def add_remove_replicas(self, allow_vfs=True):
 
 
 @TestScenario
-def random_add_remove(self):
+def command_combinations(self, parallel=True):
     """
-    Randomly perform actions on replicas and check that they all agree.
+    Perform parallel actions on replicas and check that they all agree.
     """
-    add_remove_replicas(allow_vfs=True)
-
-
-@TestScenario
-def random_add_remove_no_vfs(self):
-    """
-    To isolate issues, run the same test without vfs
-    """
-    add_remove_replicas(allow_vfs=False)
+    Example(name="vfs", test=do_command_combinations, parallel=parallel)(
+        table_name="add_remove_vfs", allow_vfs=True
+    )
+    Example(name="no vfs", test=do_command_combinations, parallel=parallel)(
+        table_name="add_remove_no_vfs", allow_vfs=False
+    )
 
 
 @TestFeature
 @Name("replica")
 def feature(self):
-    # Use the same seed for all scenarios, but a different seed each run
-    random_seed = random.random()
-    note(f"Using seed {random_seed}")
-
     with Given("I have S3 disks configured"):
         s3_config()
 
     for scenario in loads(current_module(), Scenario):
-        random.seed(random_seed)
         scenario()

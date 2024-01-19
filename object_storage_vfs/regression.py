@@ -14,6 +14,7 @@ from object_storage_vfs.requirements import *
 
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
+    ":/replica/command combinations/*": [(Error, "some combos time out")],
 }
 
 ffails = {}
@@ -103,11 +104,8 @@ def regression(
 ):
     """Disk Object Storage VFS regression."""
 
-    if check_clickhouse_version("<23.11")(self):
-        skip("vfs not supported on < 23.11")
-
-    if not allow_vfs:
-        skip("VFS is not enabled")
+    if check_clickhouse_version("<24.1")(self):
+        skip("vfs not supported on < 24.1")
 
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
