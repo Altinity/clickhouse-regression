@@ -26,7 +26,7 @@ def incompatible_with_zero_copy(self):
 
 
 @TestStep(When)
-def create_insert_measure_replicated_table(self):
+def create_insert_measure_replicated_table(self, storage_policy="external"):
     nodes = self.context.ch_nodes
     n_rows = 100_000
     columns = "d UInt64, m UInt64"
@@ -41,7 +41,9 @@ def create_insert_measure_replicated_table(self):
         )
 
     with When("a replicated table is created successfully"):
-        _, table_name = replicated_table_cluster(columns=columns, exitcode=0)
+        _, table_name = replicated_table_cluster(
+            columns=columns, exitcode=0, storage_policy=storage_policy
+        )
 
     with And("I add data to the table"):
         insert_random(
@@ -81,22 +83,32 @@ def create_insert_measure_replicated_table(self):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"))
 def disk_setting(self):
     """
-    Check that allow_vfs can be globally enabled.
+    Check that allow_vfs can be enabled per disk.
     """
-    with Given("VFS is not globally enabled"):
-        check_global_vfs_state(enabled=False)
-
     with When("I measure the disk usage after create and insert without vfs"):
-        size_no_vfs = create_insert_measure_replicated_table()
+        size_no_vfs = create_insert_measure_replicated_table(
+            storage_policy="external_no_vfs"
+        )
+        assert size_no_vfs > 0, error()
 
-    with Given("VFS is globally enabled"):
-        enable_vfs()
-
-    with When("I measure the disk usage after create and insert with global vfs"):
-        size_global = create_insert_measure_replicated_table()
+    with When(
+        "I measure the disk usage after create and insert with vfs config in one file"
+    ):
+        size_vfs = create_insert_measure_replicated_table(storage_policy="external_vfs")
 
     with Then("Data usage should be less than half compared to no vfs"):
-        assert size_global <= size_no_vfs // 2, error()
+        assert size_vfs <= size_no_vfs // 2, error()
+
+    with Given("VFS is enabled for 'external' disk"):
+        enable_vfs(disk_names=["external"])
+
+    with When(
+        "I measure the disk usage after create and insert with vfs config in a seperate file"
+    ):
+        size_vfs = create_insert_measure_replicated_table(storage_policy="external")
+
+    with Then("Data usage should be less than half compared to no vfs"):
+        assert size_vfs <= size_no_vfs // 2, error()
 
 
 # RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared
