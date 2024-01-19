@@ -139,7 +139,7 @@ def regression(
         )
         self.context.cluster = cluster
 
-    # Feature(run=load("alter.table.replace_partition.feature", "feature"))
+    Feature(run=load("alter.table.replace_partition.feature", "feature"))
     Feature(run=load("alter.table.attach_partition.feature", "feature"))
 
 
