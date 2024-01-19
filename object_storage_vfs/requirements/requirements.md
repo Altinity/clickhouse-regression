@@ -24,6 +24,7 @@
     * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
     * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
     * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach](#rqsrs-038diskobjectstoragevfsintegritydetach)
   * 4.5 [Combinatoric](#combinatoric)
     * 4.5.1 [Supported Table Configurations](#supported-table-configurations)
     * 4.5.2 [Supported Operations](#supported-operations)
@@ -153,12 +154,15 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled
 version: 1.0
 
-When the value of the `<allow_object_storage_vfs>` parameter is changed from 0 to 1 or 1 to 0 and [ClickHouse] is restarted, [ClickHouse] SHALL ensure that data is still accessible.
+When the value of the `<allow_object_storage_vfs>` parameter is changed
+from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,
+[ClickHouse] SHALL ensure that data is still accessible.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration
 version: 1.0
 
-[ClickHouse] SHALL provide commands to migrate table data between any pair of "replicated", "0-copy" and "vfs" table configurations.
+[ClickHouse] SHALL provide commands to migrate table data between any pair of "replicated",
+"0-copy" and "vfs" table configurations.
 
 | From       | To         | Command |
 | ---------- | ---------- | ------- |
@@ -182,6 +186,13 @@ version: 1.0
 
 [ClickHouse] SHALL support TTL object deletion when VFS is used with the MergeTree engine.
 When objects are removed, all other objects SHALL be accessible with no errors.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach
+version: 1.0
+
+[ClickHouse] SHALL support detaching and attaching tables on VFS disks.
+Should the detached table on a replica become corrupted,
+[ClickHouse] SHALL ensure that other replicas are not affected.
 
 ### Combinatoric
 

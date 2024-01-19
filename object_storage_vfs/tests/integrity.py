@@ -81,6 +81,7 @@ def enable_vfs_with_non_vfs_table(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Integrity_Detach("1.0"))
 def bad_detached_part(self):
     """
     Test that a bad detached part on one replica does not affect the other replica.

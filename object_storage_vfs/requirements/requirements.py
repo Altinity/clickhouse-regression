@@ -194,7 +194,9 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_VFSToggled = Requirement(
     type=None,
     uid=None,
     description=(
-        "When the value of the `<allow_object_storage_vfs>` parameter is changed from 0 to 1 or 1 to 0 and [ClickHouse] is restarted, [ClickHouse] SHALL ensure that data is still accessible.\n"
+        "When the value of the `<allow_object_storage_vfs>` parameter is changed\n"
+        "from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,\n"
+        "[ClickHouse] SHALL ensure that data is still accessible.\n"
         "\n"
     ),
     link=None,
@@ -210,7 +212,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL provide commands to migrate table data between any pair of "replicated", "0-copy" and "vfs" table configurations.\n'
+        '[ClickHouse] SHALL provide commands to migrate table data between any pair of "replicated",\n'
+        '"0-copy" and "vfs" table configurations.\n'
         "\n"
         "| From       | To         | Command |\n"
         "| ---------- | ---------- | ------- |\n"
@@ -261,6 +264,24 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete = Requirement(
     link=None,
     level=3,
     num="4.4.4",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Integrity_Detach = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support detaching and attaching tables on VFS disks.\n"
+        "Should the detached table on a replica become corrupted,\n"
+        "[ClickHouse] SHALL ensure that other replicas are not affected.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.5",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Combinatoric = Requirement(
@@ -467,6 +488,11 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             level=3,
             num="4.4.4",
         ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach",
+            level=3,
+            num="4.4.5",
+        ),
         Heading(name="Combinatoric", level=2, num="4.5"),
         Heading(name="Supported Table Configurations", level=3, num="4.5.1"),
         Heading(name="Supported Operations", level=3, num="4.5.2"),
@@ -513,6 +539,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLMove,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete,
+        RQ_SRS_038_DiskObjectStorageVFS_Integrity_Detach,
         RQ_SRS_038_DiskObjectStorageVFS_Combinatoric,
         RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert,
         RQ_SRS_038_DiskObjectStorageVFS_Performance,
@@ -548,6 +575,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
     * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
     * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach](#rqsrs-038diskobjectstoragevfsintegritydetach)
   * 4.5 [Combinatoric](#combinatoric)
     * 4.5.1 [Supported Table Configurations](#supported-table-configurations)
     * 4.5.2 [Supported Operations](#supported-operations)
@@ -677,12 +705,15 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled
 version: 1.0
 
-When the value of the `<allow_object_storage_vfs>` parameter is changed from 0 to 1 or 1 to 0 and [ClickHouse] is restarted, [ClickHouse] SHALL ensure that data is still accessible.
+When the value of the `<allow_object_storage_vfs>` parameter is changed
+from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,
+[ClickHouse] SHALL ensure that data is still accessible.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration
 version: 1.0
 
-[ClickHouse] SHALL provide commands to migrate table data between any pair of "replicated", "0-copy" and "vfs" table configurations.
+[ClickHouse] SHALL provide commands to migrate table data between any pair of "replicated",
+"0-copy" and "vfs" table configurations.
 
 | From       | To         | Command |
 | ---------- | ---------- | ------- |
@@ -706,6 +737,13 @@ version: 1.0
 
 [ClickHouse] SHALL support TTL object deletion when VFS is used with the MergeTree engine.
 When objects are removed, all other objects SHALL be accessible with no errors.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach
+version: 1.0
+
+[ClickHouse] SHALL support detaching and attaching tables on VFS disks.
+Should the detached table on a replica become corrupted,
+[ClickHouse] SHALL ensure that other replicas are not affected.
 
 ### Combinatoric
 
