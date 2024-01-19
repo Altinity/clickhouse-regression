@@ -429,7 +429,7 @@ def regression(
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 
-    with Pool(5) as executor:
+    with Pool(10) as executor:
         for name in [
             name for name in aggregate_functions if name not in window_functions
         ]:
