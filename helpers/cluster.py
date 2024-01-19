@@ -881,9 +881,21 @@ class Cluster(object):
 
         if self.clickhouse_binary_path:
             if self.use_specific_version:
-                self.get_clickhouse_binary_from_docker_container(
-                    "altinity/clickhouse-server:23.3.13.7.altinitytest"
+                (
+                    self.specific_clickhouse_binary_path,
+                    self.clickhouse_specific_odbc_binary,
+                ) = self.get_clickhouse_binary_from_docker_container(
+                    self.use_specific_version
                 )
+
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_BINARY"
+                ] = self.specific_clickhouse_binary_path
+
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
+                ] = self.clickhouse_specific_odbc_binary
+
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
                     "I download ClickHouse server binary using wget",
@@ -1392,7 +1404,7 @@ class Cluster(object):
 
             for name in self.nodes["clickhouse"]:
                 self.node(name).wait_healthy()
-                if name.startswith("clickhouse-2"):
+                if name == "clickhouse-different-versions":
                     self.node(name).start_clickhouse(
                         thread_fuzzer=self.thread_fuzzer, check_version=False
                     )

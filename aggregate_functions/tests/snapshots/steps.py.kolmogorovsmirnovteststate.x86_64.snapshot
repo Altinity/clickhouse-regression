@@ -6,10 +6,6 @@ _aggregate_functions_state_kolmogorovSmirnovTestState__inf = r"""
 {"hex(kolmogorovSmirnovTestState('greater')(x, y))":"04020000000000000000000000000000F0FF000000000000104000000000000014406666666666660240CDCCCCCCCCCC1A40","any(toTypeName(x))":"Float64","any(toTypeName(y))":"Int8"}
 """
 
-_aggregate_functions_state_kolmogorovSmirnovTestState_constant = r"""
-{"hex(kolmogorovSmirnovTestState('greater')(1, 2))":"0001000000000000F03F","any(toTypeName(1))":"UInt8","any(toTypeName(2))":"UInt8"}
-"""
-
 _aggregate_functions_state_kolmogorovSmirnovTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint128__ = r"""
 {"hex(kolmogorovSmirnovTestState('greater')(decimal128_38_, lowcardinality_nullable_uint128__))":"010405000000000000F0BFE887CBAD73E6D63FEC17D5A38AF3D1BF84B8559B592CE63F000000000000F03F0AE6390EC920E0BFDA974DB56AE0E23FA22948F8AF1DE3BFB0209FFBDA4CDEBF","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_nullable_uint128__))":"LowCardinality(Nullable(UInt128))"}
 """
@@ -4030,18 +4026,6 @@ _aggregate_functions_state_kolmogorovSmirnovTestState_return_type = r"""
 {"toTypeName(hex(kolmogorovSmirnovTestState('greater')(number, modulo(toUInt64(number), 2))))":"String","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
-_aggregate_functions_state_kolmogorovSmirnovTestState_single_NULL_value = r"""
-{"hex(kolmogorovSmirnovTestState('greater')(x, w))":"010000","any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(w))":"Nullable(UInt8)"}
-"""
-
-_aggregate_functions_state_kolmogorovSmirnovTestState_single_row = r"""
-{"hex(kolmogorovSmirnovTestState('greater')(number, toUInt64(number)))":"01000000000000000000","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
-"""
-
-_aggregate_functions_state_kolmogorovSmirnovTestState_single_row_with_zero_weight = r"""
-{"hex(kolmogorovSmirnovTestState('greater')(number, toUInt64(minus(number, 1))))":"00010000000000000000","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
-"""
-
 _aggregate_functions_state_kolmogorovSmirnovTestState_single_value_in_0_population = r"""
 {"hex(kolmogorovSmirnovTestState('greater')(sample_data, sample_index))":"0105000000000000244000000000000026400000000000002840000000000000F03F00000000000000400000000000000840","any(toTypeName(sample_data))":"Int8","any(toTypeName(sample_index))":"Int8"}
 """
@@ -4064,9 +4048,5 @@ _aggregate_functions_state_kolmogorovSmirnovTestState_with_group_by = r"""
 {"hex(kolmogorovSmirnovTestState('greater')(number, modulo(number, 2)))":"0A0A000000000000004000000000000028400000000000003640000000000000404000000000000045400000000000004A400000000000004F400000000000005240000000000080544000000000000057400000000000001C4000000000000031400000000000003B40000000000080424000000000008047400000000000804C400000000000C0504000000000004053400000000000C055400000000000405840","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 {"hex(kolmogorovSmirnovTestState('greater')(number, modulo(number, 2)))":"0A0A000000000000204000000000000032400000000000003C40000000000000434000000000000048400000000000004D40000000000000514000000000008053400000000000005640000000000080584000000000000008400000000000002A400000000000003740000000000080404000000000008045400000000000804A400000000000804F4000000000004052400000000000C054400000000000405740","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 {"hex(kolmogorovSmirnovTestState('greater')(number, modulo(number, 2)))":"0A0A00000000000010400000000000002C400000000000003840000000000000414000000000000046400000000000004B400000000000005040000000000080524000000000000055400000000000805740000000000000224000000000000033400000000000003D40000000000080434000000000008048400000000000804D4000000000004051400000000000C0534000000000004056400000000000C05840","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
-"""
-
-_aggregate_functions_state_kolmogorovSmirnovTestState_zero_rows = r"""
-{"hex(kolmogorovSmirnovTestState('greater')(number, toUInt64(plus(number, 1))))":"0000","any(toTypeName(number))":"","any(toTypeName(number))":""}
 """
 

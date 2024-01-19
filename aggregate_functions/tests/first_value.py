@@ -1,3 +1,5 @@
+from testflows.core import *
+
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue,
@@ -9,8 +11,12 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue("1.0"))
 def scenario(self, func="first_value({params})", table=None, snapshot_id=None):
     """Check first_value aggregate function."""
+
+    clickhouse_version = (
+        ">=23.2" if check_clickhouse_version("<23.11")(self) else ">=23.11"
+    )
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if "Merge" in self.name:

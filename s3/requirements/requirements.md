@@ -812,8 +812,9 @@ keys in S3.
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter
 version: 1.1
 
-[ClickHouse] SHALL support modifying replicated tables. If a replicated table
-is modified, the changes SHALL be reproduced without data loss on all existing 
+[ClickHouse] SHALL support operations on replicated tables (ALTER,
+SELECT, INSERT, etc...). If a replicated table is modified,
+the changes SHALL be synchronized without data loss on all existing
 replicas, and in [S3] storage.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete

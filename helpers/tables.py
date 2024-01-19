@@ -376,6 +376,7 @@ def create_table(
     drop_sync=False,
     order_by=None,
     partition_by=None,
+    primary_key = None,
     comment=None,
     as_select=None,
     settings=None,
@@ -402,17 +403,19 @@ def create_table(
     else:
         if_not_exists = ""
 
-    if cluster:
-        cluster = f"ON CLUSTER '{cluster}' "
+    if cluster is not None:
+        on_cluster = f" ON CLUSTER {cluster}"
     else:
-        cluster = ""
+        on_cluster = ""
 
     try:
         with By(f"creating table {name}"):
             query = (
-                f"CREATE TABLE {if_not_exists}{name} {cluster}{columns_def}\n"
+                f"CREATE TABLE {if_not_exists}{name}{on_cluster} {columns_def}\n"
                 f"ENGINE = {engine}"
             )
+            if primary_key is not None:
+                query += f"\nPRIMARY KEY {primary_key}"
 
             if partition_by is not None:
                 query += f"\nPARTITION BY {partition_by}"
@@ -430,6 +433,7 @@ def create_table(
                 query += f"\nAS SELECT {as_select}"
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
+
             node.query(
                 query,
                 settings=settings,
@@ -439,7 +443,7 @@ def create_table(
 
     finally:
         with Finally(f"drop the table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name} {cluster}{' SYNC' if drop_sync else ''}")
+            node.query(f"DROP TABLE IF EXISTS {name}{on_cluster} {' SYNC' if drop_sync else ''}")
 
 
 @TestStep(Given)

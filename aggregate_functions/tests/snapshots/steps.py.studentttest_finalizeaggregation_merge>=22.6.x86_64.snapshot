@@ -1,0 +1,140 @@
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('010000000000000000000000000000184000000000000000000000000000002A4000000000000000000000000000804940'), 'AggregateFunction(studentTTest, Nullable(Int8) ,UInt8)'))":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000000000000000000000018400000000000000000000000000000F0FF0000000000000000000000000000F07F'), 'AggregateFunction(studentTTest, Float64 ,UInt8)'))":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_constant_0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000000000000000000000F03F0000000000000000000000000000F03F0000000000000000000000000000F03F'), 'AggregateFunction(studentTTest, UInt8 ,UInt8)'))":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(Nullable(UInt16)))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(Nullable(UInt32)))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(Nullable(UInt64)))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(Nullable(UInt8)))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_uint16__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(UInt16))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_uint32__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(UInt32))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_uint64__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(UInt64))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__lowcardinality_uint8__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,LowCardinality(UInt8))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__nullable_uint16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,Nullable(UInt16))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__nullable_uint32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,Nullable(UInt32))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__nullable_uint64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,Nullable(UInt64))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__nullable_uint8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,Nullable(UInt8))'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__uint16_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,UInt16)'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__uint32_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,UInt32)'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__uint64_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,UInt64)'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_decimal128_38__uint8_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640'), 'AggregateFunction(studentTTest, Decimal(38, 38) ,UInt8)'))":{"t_statistic":-1.1793615316871027,"p_value":0.27213591887754285}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_nullable_uint16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(Nullable(UInt16)))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_nullable_uint32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(Nullable(UInt32)))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_nullable_uint64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(Nullable(UInt64)))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_nullable_uint8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(Nullable(UInt8)))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_uint16__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(UInt16))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_uint32__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(UInt32))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_uint64__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(UInt64))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_lowcardinality_uint8__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,LowCardinality(UInt8))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_nullable_uint16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,Nullable(UInt16))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_nullable_uint32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,Nullable(UInt32))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_nullable_uint64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,Nullable(UInt64))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_nullable_uint8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,Nullable(UInt8))'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_uint16_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,UInt16)'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_uint32_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,UInt32)'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_uint64_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,UInt64)'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+
+_aggregate_functions_finalizeAggregation_studentTTestfinalizeAggregation_datatypes_permutations_float32_uint8_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150'), 'AggregateFunction(studentTTest, Float32 ,UInt8)'))":{"t_statistic":-0.227623977596273,"p_value":0.8256482117422729}}
+"""
+

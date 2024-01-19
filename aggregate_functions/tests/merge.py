@@ -36,23 +36,13 @@ def check(
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
-    with Given("I create temporary table"):
-        datatype_name = f"AggregateFunction({func}, {datatypes})"
-        self.context.table = create_table(
-            engine="MergeTree",
-            columns=[Column(name="state", datatype=DataType(name=datatype_name))],
-            order_by="tuple()",
-        )
-
-    with When("I insert data in temporary table"):
-        if is_low_cardinality:
-            values = (
-                f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
-            )
+    with When("I cast the data"):
+        if "'" in func:
+            func_ = func.replace("'", "\\'")
         else:
-            values = f"(unhex('{hex_repr}'))"
-        self.context.node.query(
-            f"INSERT INTO {self.context.table.name} VALUES {values}"
+            func_ = func
+        values = (
+            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func_}, {datatypes})'))"
         )
 
     with Then("I check the result"):
@@ -63,7 +53,7 @@ def check(
         else:
             correct_form = func + "Merge"
         execute_query(
-            f"SELECT {correct_form}(state) FROM {self.context.table.name}",
+            f"SELECT {correct_form}{values}",
             snapshot_name=snapshot_name,
         )
 
@@ -145,7 +135,7 @@ def merge(self, scenario, short_name, is_parametric):
 def feature(self):
     """Check aggregate functions `-Merge` combinator."""
     not_implemented = [
-        "mannWhitneyUTest",
+        "windowFunnel",
         "quantileDeterministic",
         "quantilesDeterministic",
         "stochasticLinearRegression",
@@ -153,52 +143,47 @@ def feature(self):
         "sumMap",
         "maxMap",
         "minMap",
-        "first_value_respect_nulls",
-        "last_value_respect_nulls",
         "sumMapFiltered",  # parameters of different type
         "sumMapFilteredWithOverflow",  # parameters of different type
         "quantileTDigestWeighted",
         "uniq",
         "uniqHLL12",  # problem on 22.8 and 23.8
         "singleValueOrNull",  # problem on 22.8
-        "topKWeighted",  # fails on 23.3
         "uniqExact",  # problem on 23.8 aarch
-        "welchTTest",  # problem on 22.8 aarch
-        "studentTTest",
         "sequenceCount",
         "sequenceMatch",
-        "kolmogorovSmirnovTest",
-        "windowFunnel",
     ]
     parametric = [
-        "histogram",
-        "windowFunnel",
-        "uniqUpTo",
-        "sumMapFiltered",
         "exponentialMovingAverage",
+        "groupArrayLast",
         "groupArraySample",
+        "histogram",
+        "kolmogorovSmirnovTest",
+        "mannWhitneyUTest",
         "meanZTest",
+        "quantileGK",
+        "quantiles",
         "quantilesBFloat16",
         "quantilesBFloat16Weighted",
         "quantilesDeterministic",
         "quantilesExact",
-        "quantilesGK",
-        "quantileGK",
-        "quantilesInterpolatedWeighted",
         "quantilesExactExclusive",
-        "quantilesExactLow",
         "quantilesExactHigh",
         "quantilesExactInclusive",
+        "quantilesExactLow",
         "quantilesExactWeighted",
+        "quantilesGK",
+        "quantilesInterpolatedWeighted",
         "quantilesTDigest",
         "quantilesTDigestWeighted",
         "quantilesTiming",
         "quantilesTimingWeighted",
         "sparkbar",
+        "sumMapFiltered",
         "topK",
         "topKWeighted",
-        "quantiles",
-        "groupArrayLast",
+        "uniqUpTo",
+        "windowFunnel",
     ]
 
     test_funcs = [i for i in aggregate_functions]

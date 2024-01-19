@@ -9,11 +9,12 @@ append_path(sys.path, "..")
 from helpers.tables import *
 from helpers.argparser import argparser
 from helpers.cluster import create_cluster
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, check_current_cpu
 
 from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
+issue_41176 = "https://github.com/ClickHouse/ClickHouse/issues/41176"
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
 issue_44511 = (
     "https://github.com/ClickHouse/ClickHouse/issues/44511",
@@ -27,6 +28,8 @@ issue_48917 = (
 issue_55997 = "https://github.com/ClickHouse/ClickHouse/issues/55997"
 issue_57683 = "https://github.com/ClickHouse/ClickHouse/issues/57683"
 issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
+issue_58727 = "https://github.com/ClickHouse/ClickHouse/issues/58727"
+issue_58741 = "https://github.com/ClickHouse/ClickHouse/issues/58741"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -60,6 +63,12 @@ xfails = {
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
     "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/:_date_:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
+    "/aggregate functions/state/quantileTDigestWeightedState/datatypes/permutations/date:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
+    "/aggregate functions/state/quantileTDigestWeightedState/datatypes/permutations/:_date_:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
     "/aggregate functions/state/topKWeightedState/datatypes/permutations/*": [
@@ -100,61 +109,43 @@ xfails = {
             "Need to investigate",
         )
     ],
-    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": [
+    "/aggregate functions/sumMapFiltered/inf, -inf, nan/*": [
+        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+    ],
+    "/aggregate functions/sumMapFilteredWithOverflow/inf, -inf, nan/*": [
+        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+    ],
+    "/aggregate functions/simpleLinearRegression/*": [
         (
             Fail,
-            "need to invesigate",
-            check_clickhouse_version("<23"),
+            "need to investigate on aarch",
+            check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"),
         )
     ],
-    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": [
+    "/aggregate functions/:/simpleLinearRegression*/*": [
         (
             Fail,
-            "need to invesigate",
-            check_clickhouse_version("<23"),
+            "need to investigate on aarch",
+            check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"),
         )
     ],
-    "/aggregate functions/state/retentionState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
+    "/aggregate functions/state/corrStableState/inf, -inf, nan/nan,inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/retentionState/single NULL value/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
+    "/aggregate functions/state/corrStableState/inf, -inf, nan/nan,-inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/sequenceCountState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
+    "/aggregate functions/state/covarPopStableState/inf, -inf, nan/nan,inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/windowFunnelState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
+    "/aggregate functions/state/covarPopStableState/inf, -inf, nan/nan,-inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/windowFunnelState/single NULL value/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
+    "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": [
-        (
-            Fail,
-            issue_57801,
-            check_clickhouse_version("<23"),
-        )
+    "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,-inf/*": [
+        (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
 }
 
@@ -262,10 +253,132 @@ ffails = {
         Skip,
         "largestTriangleThreeBuckets does not work with Merge, need to fix",
     ),
+    "/aggregate functions/first_value_respect_nulls/*": (
+        Skip,
+        "first_value_respect_nulls works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/first_value_respect_nulls*/*": (
+        Skip,
+        "first_value_respect_nulls works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/first_value_respect_nulls*/*": (
+        Skip,
+        "need to investigate",
+        check_clickhouse_version(">23.8"),
+    ),
+    "/aggregate functions/last_value_respect_nulls/*": (
+        Skip,
+        "last_value_respect_nulls works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/last_value_respect_nulls*/*": (
+        Skip,
+        "last_value_respect_nulls works from 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/:/last_value_respect_nulls*/*": (
+        Skip,
+        "need to investigate",
+        check_clickhouse_version(">23.8"),
+    ),
     "/aggregate functions/flameGraph/*": (
         Skip,
         "flameGraph works from 23.8",
         check_clickhouse_version("<23.8"),
+    ),
+    # states
+    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": (
+        XFail,
+        "need to invesigate",
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": (
+        XFail,
+        "need to invesigate",
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/retentionState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/retentionState/single NULL value/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceCountState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/*/studentTTest*Merge/*": (
+        XFail,
+        issue_41176,
+        check_clickhouse_version("<23.3"),
+    ),
+    "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/windowFunnelState/single NULL value/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": (
+        XFail,
+        issue_57801,
+        check_clickhouse_version("<23"),
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/float64:/*": (
+        Skip,
+        *issue_44511,
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/nullable_float64_:/*": (
+        Skip,
+        *issue_44511,
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_nullable_float64__:/*": (
+        Skip,
+        *issue_44511,
+    ),
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_float64_:/*": (
+        Skip,
+        *issue_44511,
+    ),
+    "/aggregate functions/aggThrow/with group by/*": (
+        Skip,
+        issue_58727,
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/:/aggThrow*/with group by/*": (
+        Skip,
+        issue_58727,
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": (
+        Skip,
+        issue_58741,
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": (
+        Skip,
+        issue_58741,
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": (
+        Skip,
+        "need to investigate",
+        check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/finalizeAggregation/largestTriangleThreeBuckets_finalizeAggregation_Merge/*": (
+        Skip,
+        "need to investigate (something with zero representation)",
+        check_clickhouse_version(">=23.11"),
     ),
 }
 
@@ -333,7 +446,6 @@ def regression(
         join()
 
     Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
-    Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))

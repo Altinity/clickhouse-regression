@@ -214,7 +214,8 @@ def from_subquery(self):
     )
 
     execute_query(
-        "SELECT count(*) OVER (PARTITION BY four) AS count, four FROM (SELECT * FROM tenk1 WHERE two = 1) WHERE unique2 < 10",
+        "SELECT count(*) OVER (PARTITION BY four) AS count, four FROM (SELECT * FROM tenk1 WHERE two = 1) WHERE unique2 < 10 "
+        "ORDER BY four, count",
         expected=expected,
     )
 
@@ -320,7 +321,7 @@ def windows_with_same_partitioning_but_different_ordering(self):
         SELECT
           any(empno) OVER (PARTITION BY depname ORDER BY salary, enroll_date) AS first,
           anyLast(empno) OVER (PARTITION BY depname ORDER BY salary,enroll_date,empno) AS last
-        FROM empsalary
+        FROM empsalary ORDER BY first desc
         """,
         expected=expected,
     )
@@ -353,6 +354,7 @@ def subquery_with_multiple_windows_filtering(self):
                   row_number() OVER (PARTITION BY depname ORDER BY enroll_date DESC, empno) AS last_emp
            FROM empsalary) emp
         WHERE first_emp = 1 OR last_emp = 1
+        ORDER BY depname, enroll_date
         """,
         expected=expected,
     )

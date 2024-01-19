@@ -27,13 +27,15 @@ def first_value(self):
 
     with Example("using first_value"):
         execute_query(
-            "SELECT first_value(ten) OVER (PARTITION BY four ORDER BY ten) AS first_value, ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT first_value(ten) OVER (PARTITION BY four ORDER BY ten) AS first_value, ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, first_value",
             expected=expected,
         )
 
     with Example("using any equivalent"):
         execute_query(
-            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten) AS first_value, ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten) AS first_value, ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, first_value",
             expected=expected,
         )
 
@@ -126,11 +128,11 @@ def lag(self):
             """
          lag | ten | four
         -----+-----+------
-         \\N |   0 |    0
            0 |   0 |    0
+         \\N |   0 |    0
            0 |   4 |    0
-         \\N |   1 |    1
            1 |   1 |    1
+         \\N |   1 |    1
            1 |   7 |    1
            7 |   9 |    1
          \\N |   0 |    2
@@ -140,7 +142,8 @@ def lag(self):
         )
 
         execute_query(
-            "SELECT anyOrNull(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) AS lag , ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT anyOrNull(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) AS lag , ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, lag",
             expected=expected,
         )
 
@@ -163,7 +166,8 @@ def lag(self):
         )
 
         execute_query(
-            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) AS lag , ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) AS lag , ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, lag",
             expected=expected,
         )
 
@@ -186,7 +190,8 @@ def lag(self):
         )
 
         execute_query(
-            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN four PRECEDING AND four PRECEDING) AS lag , ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN four PRECEDING AND four PRECEDING) AS lag , ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, lag",
             expected=expected,
         )
 
@@ -214,7 +219,8 @@ def lead(self):
         )
 
         execute_query(
-            "SELECT anyOrNull(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING) AS lead, ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT anyOrNull(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING) AS lead, ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, lead",
             expected=expected,
         )
 
@@ -237,7 +243,8 @@ def lead(self):
         )
 
         execute_query(
-            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING) AS lead, ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT any(ten) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING) AS lead, ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, lead",
             expected=expected,
         )
 
@@ -260,7 +267,8 @@ def lead(self):
         )
 
         execute_query(
-            "SELECT any(ten * 2) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING) AS lead, ten, four FROM tenk1 WHERE unique2 < 10",
+            "SELECT any(ten * 2) OVER (PARTITION BY four ORDER BY ten ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING) AS lead, ten, four FROM tenk1 WHERE unique2 < 10 "
+            "ORDER BY four, ten, lead",
             expected=expected,
         )
 
@@ -311,7 +319,7 @@ def row_number(self):
     )
 
     execute_query(
-        "SELECT row_number() OVER (ORDER BY unique2) AS row_number FROM tenk1 WHERE unique2 < 10",
+        "SELECT row_number() OVER (ORDER BY unique2) AS row_number FROM tenk1 WHERE unique2 < 10 ",
         expected=expected,
     )
 
@@ -338,7 +346,8 @@ def rank(self):
     )
 
     execute_query(
-        "SELECT rank() OVER (PARTITION BY four ORDER BY ten) AS rank_1, ten, four FROM tenk1 WHERE unique2 < 10",
+        "SELECT rank() OVER (PARTITION BY four ORDER BY ten) AS rank_1, ten, four FROM tenk1 WHERE unique2 < 10 "
+        "ORDER BY four, ten, rank_1",
         expected=expected,
     )
 
@@ -365,7 +374,8 @@ def dense_rank(self):
     )
 
     execute_query(
-        "SELECT dense_rank() OVER (PARTITION BY four ORDER BY ten) AS dense_rank, ten, four FROM tenk1 WHERE unique2 < 10",
+        "SELECT dense_rank() OVER (PARTITION BY four ORDER BY ten) AS dense_rank, ten, four FROM tenk1 WHERE unique2 < 10 "
+        "ORDER BY four, ten",
         expected=expected,
     )
 
