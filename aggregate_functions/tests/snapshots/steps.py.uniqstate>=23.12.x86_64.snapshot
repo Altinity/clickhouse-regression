@@ -6198,6 +6198,10 @@ _aggregate_functions_state_uniqState_Map_UUID_UUID_ = r"""
 {"hex(uniqState(map_uuid_uuid_))":"000927DA7030259852E349B8D56063A597DA841078F15B80992893043D11F377BDB8B3A2DEE3","any(toTypeName(map_uuid_uuid_))":"Map(UUID, UUID)"}
 """
 
+_aggregate_functions_state_uniqState_NULL_for_all_rows = r"""
+{"hex(uniqStateDistinct(if(modulo(number, 2), NULL, NULL)))":"00","any(toTypeName(NULL))":"Nullable(Nothing)"}
+"""
+
 _aggregate_functions_state_uniqState_Nullable_Bool_ = r"""
 {"hex(uniqState(nullable_bool_))":"010002000000002CCBC234","any(toTypeName(nullable_bool_))":"Nullable(Bool)"}
 """
@@ -6359,9 +6363,5 @@ _aggregate_functions_state_uniqState_with_group_by = r"""
 
 _aggregate_functions_state_uniqState_zero_rows = r"""
 {"hex(uniqState(number))":"0000","any(toTypeName(number))":""}
-"""
-
-_aggregate_functions_state_uniqState_NULL_for_all_rows = r"""
-{"hex(uniqStateDistinct(if(modulo(number, 2), NULL, NULL)))":"00","any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 

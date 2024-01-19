@@ -6198,6 +6198,10 @@ _aggregate_functions_uniqTheta_Map_UUID_UUID_ = r"""
 {"uniqTheta(map_uuid_uuid_)":"9","any(toTypeName(map_uuid_uuid_))":"Map(UUID, UUID)"}
 """
 
+_aggregate_functions_uniqTheta_NULL_for_all_rows = r"""
+{"uniqThetaDistinct(if(modulo(number, 2), NULL, NULL))":"0","any(toTypeName(NULL))":"Nullable(Nothing)"}
+"""
+
 _aggregate_functions_uniqTheta_Nullable_Bool_ = r"""
 {"uniqTheta(nullable_bool_)":"2","any(toTypeName(nullable_bool_))":"Nullable(Bool)"}
 """
@@ -6359,9 +6363,5 @@ _aggregate_functions_uniqTheta_with_group_by = r"""
 
 _aggregate_functions_uniqTheta_zero_rows = r"""
 {"uniqTheta(number)":"0","any(toTypeName(number))":""}
-"""
-
-_aggregate_functions_uniqTheta_NULL_for_all_rows = r"""
-{"uniqThetaDistinct(if(modulo(number, 2), NULL, NULL))":"0","any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
