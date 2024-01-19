@@ -10,7 +10,6 @@ from helpers.cluster import Cluster
 from s3.regression import argparser as argparser_base
 
 from s3.tests.common import *
-from object_storage_vfs.tests.steps import enable_vfs
 
 xfails = {}
 
@@ -67,11 +66,6 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
 
     self.context.object_storage_mode = "normal"
-
-    if allow_vfs:
-        self.context.object_storage_mode = "vfs"
-        if check_clickhouse_version("<23.11")(self):
-            skip("vfs not supported on < 23.11")
 
     if storages is None:
         storages = ["minio"]
@@ -164,15 +158,10 @@ def regression(
                         },
                     }
 
-                with Feature(self.context.object_storage_mode):
-                    with s3_storage(disks, policies, timeout=360):
-                        if self.context.object_storage_mode == "vfs":
-                            with Given("I enable allow_object_storage_vfs"):
-                                enable_vfs(disk_names=['external'])
-
-                        Feature(
-                            test=load("ontime_benchmark.tests.benchmark", "feature")
-                        )(format=format)
+                with s3_storage(disks, policies, timeout=360):
+                    Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
+                        format=format
+                    )
 
 
 if main():

@@ -1,6 +1,7 @@
 from testflows.core import *
 
 from s3.tests.common import *
+from object_storage_vfs.tests.steps import enable_vfs
 
 import time
 import textwrap
@@ -292,9 +293,7 @@ def zero_copy_replication(self, format=None):
         """
 
     with Given("I have merge tree configuration set to use zero copy replication"):
-        if self.context.object_storage_mode == "vfs":
-            settings = {}
-        elif check_clickhouse_version(">=21.8")(self):
+        if check_clickhouse_version(">=21.8")(self):
             settings = {"allow_remote_fs_zero_copy_replication": "1"}
         else:
             settings = {"allow_s3_zero_copy_replication": "1"}
@@ -306,6 +305,29 @@ def zero_copy_replication(self, format=None):
             nodes=nodes,
             format=format,
         )
+
+
+@TestScenario
+def object_storage_vfs(self, format=None):
+    """Simple benchmark queries for object storage vfs with the ontime dataset."""
+    nodes = self.context.nodes
+
+    table_settings = """
+        ENGINE = ReplicatedMergeTree('/clickhouse/object_storage_vfs_ontime', '{shard2}')
+        PARTITION BY Year
+        ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline)
+        SETTINGS index_granularity = 8192, storage_policy='external';
+        """
+
+    with Given("I enable vfs on the external disk"):
+        enable_vfs(disk_names=["external"])
+
+    benchmark(
+        table_name="object_storage_vfs",
+        table_settings=table_settings,
+        nodes=nodes,
+        format=format,
+    )
 
 
 @TestFeature
