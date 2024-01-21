@@ -25,6 +25,7 @@ def scenario(
     if table is None:
         table = self.context.table
 
-    # if check_clickhouse_version("<23.12"):
-    #     skip("anyLast_respect_nulls works from 23.12")
-    checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
+    if check_clickhouse_version("<23.11")(self):
+        skip("any_respect_nulls works from 23.11")
+    else:
+        checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
