@@ -1,0 +1,1653 @@
+_aggregate_functions_largestTriangleThreeBuckets_NULL_value_handling = r"""
+{"largestTriangleThreeBuckets(4)(x, y)":[[0,1],[4,4],[5,1]],"any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(y))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_constant = r"""
+{"largestTriangleThreeBuckets(4)(1, 1)":[[1,1]],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_DateTime_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(datetime, float64)":[["1970-01-01 01:00:00",-1.7976909999999999e308],["1970-01-01 01:00:00",0],["2015-06-29 09:43:07",-1.46719343084824e307],["2106-02-07 06:28:15",1.7976909999999999e308]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Date_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(date, float64)":[["1970-01-01",-1.7976909999999999e308],["1970-01-01",0],["2006-11-06",-1.46719343084824e307],["2149-06-06",1.7976909999999999e308]],"any(toTypeName(date))":"Date","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Decimal128_38__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, float64)":[[-1,-1.7976909999999999e308],[-0.5973739480262348,-1.022441982597651e98],[0.35781566593334313,-1.46719343084824e307],[1,1.7976909999999999e308]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float32_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(float32, float64)":[[-3.4028234663852886e38,-1.7976909999999999e308],[-3.2560412906764298e38,1.382719697660965e84],[-1.9952108535015243e38,-1.022441982597651e98],[3.4028234663852886e38,1.7976909999999999e308]],"any(toTypeName(float32))":"Float32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Date = r"""
+{"largestTriangleThreeBuckets(4)(float64, date)":[[-1.7976909999999999e308,"1970-01-01"],[-1.46719343084824e307,"2006-11-06"],[-1.57788503681046e49,"2004-01-27"],[1.7976909999999999e308,"2149-06-06"]],"any(toTypeName(float64))":"Float64","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_DateTime = r"""
+{"largestTriangleThreeBuckets(4)(float64, datetime)":[[-1.7976909999999999e308,"1970-01-01 01:00:00"],[-1.46719343084824e307,"2015-06-29 09:43:07"],[-1.57788503681046e49,"2006-11-27 02:50:49"],[1.7976909999999999e308,"2106-02-07 06:28:15"]],"any(toTypeName(float64))":"Float64","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, decimal128_38_)":[[-1.7976909999999999e308,-1],[-1.022441982597651e98,-0.5973739480262348],[1.16845612310205e66,0.5898946324421062],[1.7976909999999999e308,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Float32 = r"""
+{"largestTriangleThreeBuckets(4)(float64, float32)":[[-1.7976909999999999e308,-3.4028234663852886e38],[-1.46719343084824e307,-2.2393901742475986e38],[-1.57788503681046e49,-2.9177846496970656e38],[1.7976909999999999e308,3.4028234663852886e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(float64, float64)":[[-1.7976909999999999e308,-1.7976909999999999e308],[-1.46719343084824e307,-1.46719343084824e307],[-1.57788503681046e49,-1.57788503681046e49],[1.7976909999999999e308,1.7976909999999999e308]],"any(toTypeName(float64))":"Float64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Int128 = r"""
+{"largestTriangleThreeBuckets(4)(float64, int128)":[[-1.7976909999999999e308,1.7014118346046923e38],[-1.46719343084824e307,1.410993213158113e38],[-1.57788503681046e49,-6.301975647085525e37],[1.7976909999999999e308,-1.7014118346046923e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(int128))":"Int128"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Int16 = r"""
+{"largestTriangleThreeBuckets(4)(float64, int16)":[[-1.7976909999999999e308,-32768],[-1.46719343084824e307,395],[-1.57788503681046e49,1519],[1.7976909999999999e308,32767]],"any(toTypeName(float64))":"Float64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Int32 = r"""
+{"largestTriangleThreeBuckets(4)(float64, int32)":[[-1.7976909999999999e308,-2147483648],[-1.46719343084824e307,1873792717],[-1.57788503681046e49,-484753348],[1.7976909999999999e308,2147483647]],"any(toTypeName(float64))":"Float64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Int64 = r"""
+{"largestTriangleThreeBuckets(4)(float64, int64)":[[-1.7976909999999999e308,-9223372036854776000],[-1.46719343084824e307,-4270391745320102000],[-1.57788503681046e49,4356085765667181600],[1.7976909999999999e308,9223372036854776000]],"any(toTypeName(float64))":"Float64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Int8 = r"""
+{"largestTriangleThreeBuckets(4)(float64, int8)":[[-1.7976909999999999e308,-128],[-1.46719343084824e307,-44],[-1.57788503681046e49,115],[1.7976909999999999e308,127]],"any(toTypeName(float64))":"Float64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_datetime_)":[[-1.7976909999999999e308,"1970-01-01 01:00:00"],[-1.46719343084824e307,"2012-01-02 09:35:45"],[-1.57788503681046e49,"2021-09-18 08:15:28"],[1.7976909999999999e308,"2106-02-07 06:28:15"]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_date_)":[[-1.7976909999999999e308,"1970-01-01"],[-1.46719343084824e307,"2022-06-02"],[-1.57788503681046e49,"2020-01-11"],[1.7976909999999999e308,"2149-06-06"]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_float32_)":[[-1.7976909999999999e308,-3.4028234663852886e38],[-1.46719343084824e307,-2.2284573469989423e38],[-1.57788503681046e49,-1.3459335010429156e38],[1.7976909999999999e308,3.4028234663852886e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Float64_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_float64_)":[[-1.7976909999999999e308,-1.7976909999999999e308],[-1.46719343084824e307,1.6626711733296566e135],[-1.57788503681046e49,1.5130733709481816e217],[1.7976909999999999e308,1.7976909999999999e308]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Int128_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_int128_)":[[-1.7976909999999999e308,1.7014118346046923e38],[-1.46719343084824e307,5.10475544005463e37],[-1.57788503681046e49,-7.469729710835291e37],[1.7976909999999999e308,-1.7014118346046923e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int128_))":"LowCardinality(Int128)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Int16_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_int16_)":[[-1.7976909999999999e308,-32768],[-1.46719343084824e307,22678],[-1.57788503681046e49,-22428],[1.7976909999999999e308,32767]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Int32_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_int32_)":[[-1.7976909999999999e308,-2147483648],[-1.46719343084824e307,-1457453285],[-1.57788503681046e49,-1311807159],[1.7976909999999999e308,2147483647]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_int64_)":[[-1.7976909999999999e308,-9223372036854776000],[-1.46719343084824e307,7565178287628705000],[-1.57788503681046e49,-9041695014854556000],[1.7976909999999999e308,9223372036854776000]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Int8_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_int8_)":[[-1.7976909999999999e308,-128],[-1.46719343084824e307,-18],[-1.57788503681046e49,71],[1.7976909999999999e308,127]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_DateTime__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_datetime__)":[[-1.7976909999999999e308,"1970-01-01 01:00:00"],[-1.46719343084824e307,"2004-12-22 04:59:39"],[-1.022441982597651e98,"2007-01-21 16:49:21"],[1.7976909999999999e308,"2106-02-07 06:28:15"]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_datetime__))":"LowCardinality(Nullable(DateTime))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Date__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_date__)":[[-1.7976909999999999e308,"1970-01-01"],[-1.46719343084824e307,"2005-05-11"],[-1.022441982597651e98,"2015-12-28"],[1.7976909999999999e308,"2149-06-06"]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_date__))":"LowCardinality(Nullable(Date))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Float32__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_float32__)":[[-1.7976909999999999e308,-3.4028234663852886e38],[-1.46719343084824e307,-6.857267186392591e37],[-1.022441982597651e98,2.3627449499196636e38],[1.7976909999999999e308,3.4028234663852886e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Float64__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_float64__)":[[-1.7976909999999999e308,-1.7976909999999999e308],[-1.46719343084824e307,15435.87739922314],[-1.022441982597651e98,1.7674632094597634e89],[1.7976909999999999e308,1.7976909999999999e308]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Int128__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_int128__)":[[-1.7976909999999999e308,1.7014118346046923e38],[-1.46719343084824e307,-8.386612520469443e37],[-1.022441982597651e98,-1.7704034304563497e37],[1.7976909999999999e308,-1.7014118346046923e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int128__))":"LowCardinality(Nullable(Int128))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Int16__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_int16__)":[[-1.7976909999999999e308,-32768],[-1.46719343084824e307,-6866],[-1.022441982597651e98,-6294],[1.7976909999999999e308,32767]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Int32__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_int32__)":[[-1.7976909999999999e308,-2147483648],[-1.46719343084824e307,-1046076186],[-1.022441982597651e98,622291634],[1.7976909999999999e308,2147483647]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Int64__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_int64__)":[[-1.7976909999999999e308,-9223372036854776000],[-1.46719343084824e307,8165432114459565000],[-1.022441982597651e98,-8428177059815814000],[1.7976909999999999e308,9223372036854776000]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_Int8__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_int8__)":[[-1.7976909999999999e308,-128],[-1.46719343084824e307,67],[-1.022441982597651e98,-101],[1.7976909999999999e308,127]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_UInt128__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_uint128__)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,4.2233431388164924e37],[-1.022441982597651e98,2.5119294499893045e38],[1.7976909999999999e308,3.402823669209385e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint128__))":"LowCardinality(Nullable(UInt128))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_UInt16__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_uint16__)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,61084],[-1.022441982597651e98,15607],[1.7976909999999999e308,65535]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_UInt32__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_uint32__)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,3928936517],[-1.022441982597651e98,1540186887],[1.7976909999999999e308,4294967295]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_UInt64__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_uint64__)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,3692207754388915000],[-1.022441982597651e98,7718272410435570000],[1.7976909999999999e308,18446744073709552000]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_Nullable_UInt8__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_nullable_uint8__)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,192],[-1.022441982597651e98,204],[1.7976909999999999e308,255]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_UInt128_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_uint128_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,2.519500033262349e38],[-1.57788503681046e49,3.531858484221386e37],[1.7976909999999999e308,3.402823669209385e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint128_))":"LowCardinality(UInt128)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_UInt16_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_uint16_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,65284],[-1.57788503681046e49,37110],[1.7976909999999999e308,65535]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_UInt32_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_uint32_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,3366755579],[-1.57788503681046e49,1663571700],[1.7976909999999999e308,4294967295]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_uint64_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,9823307913730986000],[-1.57788503681046e49,15859874243171168000],[1.7976909999999999e308,18446744073709552000]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_LowCardinality_UInt8_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, lowcardinality_uint8_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,228],[-1.57788503681046e49,166],[1.7976909999999999e308,255]],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_datetime_)":[[-1.7976909999999999e308,"1970-01-01 01:00:00"],[-1.46719343084824e307,"2004-04-05 13:18:38"],[-1.022441982597651e98,"2015-12-28 10:07:33"],[1.7976909999999999e308,"2106-02-07 06:28:15"]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_date_)":[[-1.7976909999999999e308,"1970-01-01"],[-1.46719343084824e307,"2005-10-25"],[-1.022441982597651e98,"2018-10-13"],[1.7976909999999999e308,"2149-06-06"]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_decimal128_38__)":[[-1.7976909999999999e308,-1],[-1.7543896230671985e271,0.6569771233261541],[1.382719697660965e84,-0.9128559335239734],[1.7976909999999999e308,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_float32_)":[[-1.7976909999999999e308,-3.4028234663852886e38],[-1.46719343084824e307,-1.2780301233428981e38],[-1.022441982597651e98,-2.5993861103124447e38],[1.7976909999999999e308,3.4028234663852886e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Float64_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_float64_)":[[-1.7976909999999999e308,-1.7976909999999999e308],[-1.46719343084824e307,1.3878943266143262e119],[-1.022441982597651e98,1.811436225548946e259],[1.7976909999999999e308,1.7976909999999999e308]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Int128_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_int128_)":[[-1.7976909999999999e308,1.7014118346046923e38],[-1.46719343084824e307,-1.2688918994203388e38],[-1.022441982597651e98,5.507812103170327e37],[1.7976909999999999e308,-1.7014118346046923e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int128_))":"Nullable(Int128)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Int16_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_int16_)":[[-1.7976909999999999e308,-32768],[-1.46719343084824e307,-22327],[-1.022441982597651e98,-11110],[1.7976909999999999e308,32767]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Int32_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_int32_)":[[-1.7976909999999999e308,-2147483648],[-1.46719343084824e307,194268523],[-1.022441982597651e98,1525374543],[1.7976909999999999e308,2147483647]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_int64_)":[[-1.7976909999999999e308,-9223372036854776000],[-1.46719343084824e307,-2785088034149882000],[-1.022441982597651e98,1193865884214575900],[1.7976909999999999e308,9223372036854776000]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_Int8_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_int8_)":[[-1.7976909999999999e308,-128],[-1.46719343084824e307,57],[-1.022441982597651e98,-77],[1.7976909999999999e308,127]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_UInt128_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_uint128_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,2.1982353912719714e38],[-1.022441982597651e98,9.523904008579657e37],[1.7976909999999999e308,3.402823669209385e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint128_))":"Nullable(UInt128)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_UInt16_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_uint16_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,43578],[-1.022441982597651e98,49792],[1.7976909999999999e308,65535]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_UInt32_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_uint32_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,1575536824],[-1.022441982597651e98,1305931491],[1.7976909999999999e308,4294967295]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_uint64_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,7107144574783571000],[-1.022441982597651e98,7831420257094001000],[1.7976909999999999e308,18446744073709552000]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_Nullable_UInt8_ = r"""
+{"largestTriangleThreeBuckets(4)(float64, nullable_uint8_)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,63],[-1.022441982597651e98,195],[1.7976909999999999e308,255]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_UInt128 = r"""
+{"largestTriangleThreeBuckets(4)(float64, uint128)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,1.4027375994561813e38],[-1.57788503681046e49,2.9673350595824512e38],[1.7976909999999999e308,3.402823669209385e38]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint128))":"UInt128"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_UInt16 = r"""
+{"largestTriangleThreeBuckets(4)(float64, uint16)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,26244],[-1.57788503681046e49,37073],[1.7976909999999999e308,65535]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_UInt32 = r"""
+{"largestTriangleThreeBuckets(4)(float64, uint32)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,2770515842],[-1.57788503681046e49,906420991],[1.7976909999999999e308,4294967295]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(float64, uint64)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,8959741089313180000],[-1.57788503681046e49,4036797895307271700],[1.7976909999999999e308,18446744073709552000]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Float64_UInt8 = r"""
+{"largestTriangleThreeBuckets(4)(float64, uint8)":[[-1.7976909999999999e308,0],[-1.46719343084824e307,201],[-1.57788503681046e49,163],[1.7976909999999999e308,255]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Int128_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(int128, float64)":[[-1.7014118346046923e38,1.7976909999999999e308],[-1.6860792121149681e38,1.382719697660965e84],[-1.251213243854574e37,-1.022441982597651e98],[1.7014118346046923e38,-1.7976909999999999e308]],"any(toTypeName(int128))":"Int128","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Int16_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(int16, float64)":[[-32768,-1.7976909999999999e308],[-27564,-1.022441982597651e98],[395,-1.46719343084824e307],[32767,1.7976909999999999e308]],"any(toTypeName(int16))":"Int16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Int32_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(int32, float64)":[[-2147483648,-1.7976909999999999e308],[-1251263486,-1.022441982597651e98],[0,0],[2147483647,1.7976909999999999e308]],"any(toTypeName(int32))":"Int32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Int64_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(int64, float64)":[[-9223372036854776000,-1.7976909999999999e308],[-4270391745320102000,-1.46719343084824e307],[2716835793949406700,1.382719697660965e84],[9223372036854776000,1.7976909999999999e308]],"any(toTypeName(int64))":"Int64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Int8_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(int8, float64)":[[-128,-1.7976909999999999e308],[-100,-1.7543896230671985e271],[0,0],[127,1.7976909999999999e308]],"any(toTypeName(int8))":"Int8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_DateTime__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, float64)":[["1970-01-01 01:00:00",-1.7976909999999999e308],["1970-01-01 01:00:00",0],["2013-09-04 14:10:20",-1.6042622652400174e182],["2106-02-07 06:28:15",1.7976909999999999e308]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Date__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, float64)":[["1970-01-01",-1.7976909999999999e308],["1970-01-01",0],["2009-11-18",1.16845612310205e66],["2149-06-06",1.7976909999999999e308]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Float32__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, float64)":[[-3.4028234663852886e38,-1.7976909999999999e308],[-2.2284573469989423e38,-1.46719343084824e307],[9.91327919566384e37,-1.7543896230671985e271],[3.4028234663852886e38,1.7976909999999999e308]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Float64__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float64_, float64)":[[-1.7976909999999999e308,-1.7976909999999999e308],[-3.710854446651637e95,1.16845612310205e66],[1.6626711733296566e135,-1.46719343084824e307],[1.7976909999999999e308,1.7976909999999999e308]],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Int128__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int128_, float64)":[[-1.7014118346046923e38,1.7976909999999999e308],[-9.417476111474733e37,-1.022441982597651e98],[-5.057740089054755e37,1.382719697660965e84],[1.7014118346046923e38,-1.7976909999999999e308]],"any(toTypeName(lowcardinality_int128_))":"LowCardinality(Int128)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Int16__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int16_, float64)":[[-32768,-1.7976909999999999e308],[-27727,1.382719697660965e84],[20641,-1.022441982597651e98],[32767,1.7976909999999999e308]],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Int32__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int32_, float64)":[[-2147483648,-1.7976909999999999e308],[-1490319919,1.382719697660965e84],[0,0],[2147483647,1.7976909999999999e308]],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Int64__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, float64)":[[-9223372036854776000,-1.7976909999999999e308],[-9041695014854556000,-1.57788503681046e49],[2784931345460438500,1.16845612310205e66],[9223372036854776000,1.7976909999999999e308]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Int8__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int8_, float64)":[[-128,-1.7976909999999999e308],[-119,-1.7543896230671985e271],[45,-1.022441982597651e98],[127,1.7976909999999999e308]],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_DateTime___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_datetime__, float64)":[["1970-01-01 01:00:00",-1.7976909999999999e308],["2004-12-22 04:59:39",-1.46719343084824e307],["2013-05-05 03:17:45",-1.7543896230671985e271],["2106-02-07 06:28:15",1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_datetime__))":"LowCardinality(Nullable(DateTime))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Date___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_date__, float64)":[["1970-01-01",-1.7976909999999999e308],["2005-05-11",-1.46719343084824e307],["2013-09-28",-1.6042622652400174e182],["2149-06-06",1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_date__))":"LowCardinality(Nullable(Date))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Float32___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_float32__, float64)":[[-3.4028234663852886e38,-1.7976909999999999e308],[-2.6999878760670372e38,1.16845612310205e66],[-4.483521463152099e37,-1.7543896230671985e271],[3.4028234663852886e38,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Float64___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_float64__, float64)":[[-1.7976909999999999e308,-1.7976909999999999e308],[-1.764861977972332e277,-1.6042622652400174e182],[1.7674632094597634e89,-1.022441982597651e98],[1.7976909999999999e308,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Int128___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_int128__, float64)":[[-1.7014118346046923e38,1.7976909999999999e308],[-1.4031068295753794e38,-1.57788503681046e49],[-2.2320297850058077e37,-1.7543896230671985e271],[1.7014118346046923e38,-1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_int128__))":"LowCardinality(Nullable(Int128))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Int16___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_int16__, float64)":[[-32768,-1.7976909999999999e308],[-32156,1.16845612310205e66],[-6294,-1.022441982597651e98],[32767,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Int32___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_int32__, float64)":[[-2147483648,-1.7976909999999999e308],[-1597251134,-1.7543896230671985e271],[-242357356,-1.57788503681046e49],[2147483647,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Int64___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_int64__, float64)":[[-9223372036854776000,-1.7976909999999999e308],[-8428177059815814000,-1.022441982597651e98],[1732198740987194000,-1.57788503681046e49],[9223372036854776000,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_Int8___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_int8__, float64)":[[-128,-1.7976909999999999e308],[-101,-1.022441982597651e98],[9,-1.7543896230671985e271],[127,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_UInt128___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_uint128__, float64)":[[0,-1.7976909999999999e308],[4.2233431388164924e37,-1.46719343084824e307],[1.837050750836452e38,-1.6042622652400174e182],[3.402823669209385e38,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_uint128__))":"LowCardinality(Nullable(UInt128))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_UInt16___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_uint16__, float64)":[[0,-1.7976909999999999e308],[6732,-1.7543896230671985e271],[15607,-1.022441982597651e98],[65535,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_UInt32___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_uint32__, float64)":[[0,-1.7976909999999999e308],[1427777761,-1.57788503681046e49],[2488434006,-1.6042622652400174e182],[4294967295,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_UInt64___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_uint64__, float64)":[[0,-1.7976909999999999e308],[769403725873938300,-1.6042622652400174e182],[7718272410435570000,-1.022441982597651e98],[18446744073709552000,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_Nullable_UInt8___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_nullable_uint8__, float64)":[[0,-1.7976909999999999e308],[75,1.382719697660965e84],[165,-1.7543896230671985e271],[255,1.7976909999999999e308]],"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_UInt128__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint128_, float64)":[[0,-1.7976909999999999e308],[0,0],[2.519500033262349e38,-1.46719343084824e307],[3.402823669209385e38,1.7976909999999999e308]],"any(toTypeName(lowcardinality_uint128_))":"LowCardinality(UInt128)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_UInt16__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint16_, float64)":[[0,-1.7976909999999999e308],[0,0],[37110,-1.57788503681046e49],[65535,1.7976909999999999e308]],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_UInt32__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint32_, float64)":[[0,-1.7976909999999999e308],[0,0],[1663571700,-1.57788503681046e49],[4294967295,1.7976909999999999e308]],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_UInt64__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, float64)":[[0,-1.7976909999999999e308],[0,0],[9823307913730986000,-1.46719343084824e307],[18446744073709552000,1.7976909999999999e308]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_LowCardinality_UInt8__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint8_, float64)":[[0,-1.7976909999999999e308],[0,0],[216,-1.7543896230671985e271],[255,1.7976909999999999e308]],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_DateTime__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, float64)":[["1970-01-01 01:00:00",-1.7976909999999999e308],["2004-04-05 13:18:38",-1.46719343084824e307],["2009-05-30 23:43:18",1.382719697660965e84],["2106-02-07 06:28:15",1.7976909999999999e308]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Date__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, float64)":[["1970-01-01",-1.7976909999999999e308],["2005-05-10",-1.57788503681046e49],["2012-02-07",1.382719697660965e84],["2149-06-06",1.7976909999999999e308]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Decimal128_38___Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, float64)":[[-1,-1.7976909999999999e308],[-0.9128559335239734,1.382719697660965e84],[0.36692398073045673,-1.022441982597651e98],[1,1.7976909999999999e308]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Float32__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, float64)":[[-3.4028234663852886e38,-1.7976909999999999e308],[-2.7438033570615178e38,1.16845612310205e66],[-1.994648219459119e38,-1.57788503681046e49],[3.4028234663852886e38,1.7976909999999999e308]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Float64__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float64_, float64)":[[-1.7976909999999999e308,-1.7976909999999999e308],[-6.111330139222657e300,1.16845612310205e66],[-1.361161047663063e43,-1.7543896230671985e271],[1.7976909999999999e308,1.7976909999999999e308]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Int128__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int128_, float64)":[[-1.7014118346046923e38,1.7976909999999999e308],[-1.5784353663829842e38,1.16845612310205e66],[5.507812103170327e37,-1.022441982597651e98],[1.7014118346046923e38,-1.7976909999999999e308]],"any(toTypeName(nullable_int128_))":"Nullable(Int128)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Int16__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int16_, float64)":[[-32768,-1.7976909999999999e308],[-28561,-1.57788503681046e49],[3728,1.16845612310205e66],[32767,1.7976909999999999e308]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Int32__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int32_, float64)":[[-2147483648,-1.7976909999999999e308],[-802622233,-1.7543896230671985e271],[194268523,-1.46719343084824e307],[2147483647,1.7976909999999999e308]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Int64__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, float64)":[[-9223372036854776000,-1.7976909999999999e308],[-6021389797587690000,1.16845612310205e66],[1193865884214575900,-1.022441982597651e98],[9223372036854776000,1.7976909999999999e308]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_Int8__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int8_, float64)":[[-128,-1.7976909999999999e308],[-77,-1.022441982597651e98],[4,-1.7543896230671985e271],[127,1.7976909999999999e308]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_UInt128__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint128_, float64)":[[0,-1.7976909999999999e308],[6.973531889638197e37,-1.7543896230671985e271],[1.2935793344869826e38,1.382719697660965e84],[3.402823669209385e38,1.7976909999999999e308]],"any(toTypeName(nullable_uint128_))":"Nullable(UInt128)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_UInt16__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint16_, float64)":[[0,-1.7976909999999999e308],[4462,1.382719697660965e84],[31453,1.16845612310205e66],[65535,1.7976909999999999e308]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_UInt32__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint32_, float64)":[[0,-1.7976909999999999e308],[66293882,-1.7543896230671985e271],[1575536824,-1.46719343084824e307],[4294967295,1.7976909999999999e308]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_UInt64__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, float64)":[[0,-1.7976909999999999e308],[1511082089773577500,1.16845612310205e66],[15756926212117228000,1.382719697660965e84],[18446744073709552000,1.7976909999999999e308]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_Nullable_UInt8__Float64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint8_, float64)":[[0,-1.7976909999999999e308],[15,-1.6042622652400174e182],[65,-1.7543896230671985e271],[255,1.7976909999999999e308]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_UInt128_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(uint128, float64)":[[0,-1.7976909999999999e308],[0,0],[2.2216687528737633e38,-1.7543896230671985e271],[3.402823669209385e38,1.7976909999999999e308]],"any(toTypeName(uint128))":"UInt128","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_UInt16_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(uint16, float64)":[[0,-1.7976909999999999e308],[0,0],[26244,-1.46719343084824e307],[65535,1.7976909999999999e308]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_UInt32_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(uint32, float64)":[[0,-1.7976909999999999e308],[0,0],[2770515842,-1.46719343084824e307],[4294967295,1.7976909999999999e308]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_UInt64_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(uint64, float64)":[[0,-1.7976909999999999e308],[0,0],[8959741089313180000,-1.46719343084824e307],[18446744073709552000,1.7976909999999999e308]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_UInt8_Float64 = r"""
+{"largestTriangleThreeBuckets(4)(uint8, float64)":[[0,-1.7976909999999999e308],[0,0],[163,-1.57788503681046e49],[255,1.7976909999999999e308]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Date = r"""
+{"largestTriangleThreeBuckets(4)(datetime, date)":[["1970-01-01 01:00:00","1970-01-01"],["2009-06-14 11:12:39","2021-09-25"],["2020-01-24 15:10:50","2004-01-05"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_DateTime = r"""
+{"largestTriangleThreeBuckets(4)(datetime, datetime)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2011-09-30 02:34:30","2011-09-30 02:34:30"],["2019-04-27 02:01:34","2019-04-27 02:01:34"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, decimal128_38_)":[["1970-01-01 01:00:00",-1],["1970-01-01 01:00:00",0],["2020-01-24 15:10:50",-0.4734408814661135],["2106-02-07 06:28:15",1]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Float32 = r"""
+{"largestTriangleThreeBuckets(4)(datetime, float32)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["1970-01-01 01:00:00",0],["2017-02-11 09:09:25",-3.2560412906764298e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Int64 = r"""
+{"largestTriangleThreeBuckets(4)(datetime, int64)":[["1970-01-01 01:00:00",-9223372036854776000],["1970-01-01 01:00:00",0],["2015-06-29 09:43:07",-4270391745320102000],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, lowcardinality_datetime_)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2006-11-27 02:50:49","2021-09-18 08:15:28"],["2020-01-24 15:10:50","2013-09-04 14:10:20"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, lowcardinality_date_)":[["1970-01-01 01:00:00","1970-01-01"],["2006-11-27 02:50:49","2020-01-11"],["2020-01-24 15:10:50","2005-02-18"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, lowcardinality_float32_)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["1970-01-01 01:00:00",0],["2015-06-29 09:43:07",-2.2284573469989423e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, lowcardinality_int64_)":[["1970-01-01 01:00:00",-9223372036854776000],["2006-11-27 02:50:49",-9041695014854556000],["2015-06-29 09:43:07",7565178287628705000],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, lowcardinality_uint64_)":[["1970-01-01 01:00:00",0],["2011-09-30 02:34:30",18182701099500320000],["2017-02-11 09:09:25",1755801173378645800],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, nullable_datetime_)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2006-11-27 02:50:49","2014-04-10 09:39:46"],["2019-04-27 02:01:34","2006-01-25 20:44:12"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, nullable_date_)":[["1970-01-01 01:00:00","1970-01-01"],["2009-06-14 11:12:39","2018-10-13"],["2019-04-27 02:01:34","2007-12-06"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, nullable_decimal128_38__)":[["1970-01-01 01:00:00",-1],["2011-09-30 02:34:30",0.6569771233261541],["2017-02-11 09:09:25",-0.9128559335239734],["2106-02-07 06:28:15",1]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, nullable_float32_)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["2011-09-30 02:34:30",-4.477358652994029e37],["2019-04-27 02:01:34",-2.7438033570615178e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, nullable_int64_)":[["1970-01-01 01:00:00",-9223372036854776000],["2006-11-27 02:50:49",6993614660524502000],["2019-04-27 02:01:34",-6021389797587690000],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(datetime, nullable_uint64_)":[["1970-01-01 01:00:00",0],["2011-09-30 02:34:30",18404978432406714000],["2019-04-27 02:01:34",1511082089773577500],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_DateTime_UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(datetime, uint64)":[["1970-01-01 01:00:00",0],["2009-06-14 11:12:39",16708105131877517000],["2017-02-11 09:09:25",3066499079937164000],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(datetime))":"DateTime","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Date = r"""
+{"largestTriangleThreeBuckets(4)(date, date)":[["1970-01-01","1970-01-01"],["1970-01-01","1970-01-01"],["2006-11-06","2006-11-06"],["2149-06-06","2149-06-06"]],"any(toTypeName(date))":"Date","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_DateTime = r"""
+{"largestTriangleThreeBuckets(4)(date, datetime)":[["1970-01-01","1970-01-01 01:00:00"],["2004-01-05","2020-01-24 15:10:50"],["2021-09-25","2009-06-14 11:12:39"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(date))":"Date","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(date, decimal128_38_)":[["1970-01-01",-1],["1970-01-01",0],["2021-09-25",-0.5973739480262348],["2149-06-06",1]],"any(toTypeName(date))":"Date","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Float32 = r"""
+{"largestTriangleThreeBuckets(4)(date, float32)":[["1970-01-01",-3.4028234663852886e38],["1970-01-01",0],["2014-06-03",-3.2560412906764298e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(date))":"Date","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Int64 = r"""
+{"largestTriangleThreeBuckets(4)(date, int64)":[["1970-01-01",-9223372036854776000],["1970-01-01",0],["2006-11-06",-4270391745320102000],["2149-06-06",9223372036854776000]],"any(toTypeName(date))":"Date","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(date, lowcardinality_datetime_)":[["1970-01-01","1970-01-01 01:00:00"],["2004-01-27","2021-09-18 08:15:28"],["2021-09-25","2006-05-30 22:14:05"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(date, lowcardinality_date_)":[["1970-01-01","1970-01-01"],["2004-01-27","2020-01-11"],["2021-09-25","2004-01-29"],["2149-06-06","2149-06-06"]],"any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(date, lowcardinality_float32_)":[["1970-01-01",-3.4028234663852886e38],["1970-01-01",0],["2006-11-06",-2.2284573469989423e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(date, lowcardinality_int64_)":[["1970-01-01",-9223372036854776000],["2004-01-27",-9041695014854556000],["2006-11-06",7565178287628705000],["2149-06-06",9223372036854776000]],"any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(date, lowcardinality_uint64_)":[["1970-01-01",0],["2004-01-05",17588799453259715000],["2014-06-03",1755801173378645800],["2149-06-06",18446744073709552000]],"any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(date, nullable_datetime_)":[["1970-01-01","1970-01-01 01:00:00"],["2004-01-05","2017-06-27 03:09:51"],["2015-01-26","2006-08-10 21:14:26"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(date))":"Date","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(date, nullable_date_)":[["1970-01-01","1970-01-01"],["2004-01-05","2022-01-01"],["2014-06-03","2012-02-07"],["2149-06-06","2149-06-06"]],"any(toTypeName(date))":"Date","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(date, nullable_decimal128_38__)":[["1970-01-01",-1],["2005-06-07",0.8693598915991548],["2014-06-03",-0.9128559335239734],["2149-06-06",1]],"any(toTypeName(date))":"Date","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(date, nullable_float32_)":[["1970-01-01",-3.4028234663852886e38],["2004-01-05",1.6086829903739013e38],["2014-06-03",-2.693681872097166e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(date))":"Date","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(date, nullable_int64_)":[["1970-01-01",-9223372036854776000],["2004-01-27",6993614660524502000],["2006-11-06",-2785088034149882000],["2149-06-06",9223372036854776000]],"any(toTypeName(date))":"Date","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(date, nullable_uint64_)":[["1970-01-01",0],["2005-06-07",1511082089773577500],["2015-01-26",18404978432406714000],["2149-06-06",18446744073709552000]],"any(toTypeName(date))":"Date","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Date_UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(date, uint64)":[["1970-01-01",0],["2004-01-05",17204651265226578000],["2014-06-03",3066499079937164000],["2149-06-06",18446744073709552000]],"any(toTypeName(date))":"Date","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Date = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, date)":[[-1,"1970-01-01"],[-0.5973739480262348,"2021-09-25"],[0.5898946324421062,"2005-06-07"],[1,"2149-06-06"]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, datetime)":[[-1,"1970-01-01 01:00:00"],[-0.4734408814661135,"2020-01-24 15:10:50"],[0,"1970-01-01 01:00:00"],[1,"2106-02-07 06:28:15"]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, decimal128_38_)":[[-1,-1],[-0.5973739480262348,-0.5973739480262348],[0,0],[1,1]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, float32)":[[-1,-3.4028234663852886e38],[-0.4734408814661135,-8.648929557598604e37],[0.6929138215907789,-3.2560412906764298e38],[1,3.4028234663852886e38]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, int64)":[[-1,-9223372036854776000],[-0.5040021207670986,4356085765667181600],[0.35781566593334313,-4270391745320102000],[1,9223372036854776000]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, lowcardinality_datetime_)":[[-1,"1970-01-01 01:00:00"],[-0.5040021207670986,"2021-09-18 08:15:28"],[0,"1970-01-01 01:00:00"],[1,"2106-02-07 06:28:15"]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, lowcardinality_date_)":[[-1,"1970-01-01"],[-0.5040021207670986,"2020-01-11"],[0.6929138215907789,"2013-09-23"],[1,"2149-06-06"]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, lowcardinality_float32_)":[[-1,-3.4028234663852886e38],[-0.4734408814661135,2.1255332453447317e38],[0.35781566593334313,-2.2284573469989423e38],[1,3.4028234663852886e38]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, lowcardinality_int64_)":[[-1,-9223372036854776000],[-0.5973739480262348,4968231829572491000],[0,0],[1,9223372036854776000]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, lowcardinality_uint64_)":[[-1,0],[-0.2804895973134751,18182701099500320000],[0,0],[1,18446744073709552000]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, nullable_datetime_)":[[-1,"1970-01-01 01:00:00"],[-0.5973739480262348,"2015-12-28 10:07:33"],[0.6929138215907789,"2009-05-30 23:43:18"],[1,"2106-02-07 06:28:15"]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, nullable_date_)":[[-1,"1970-01-01"],[-0.5973739480262348,"2018-10-13"],[0.6929138215907789,"2012-02-07"],[1,"2149-06-06"]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, nullable_decimal128_38__)":[[-1,-1],[-0.5040021207670986,0.45865411970120445],[0.6929138215907789,-0.9128559335239734],[1,1]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, nullable_float32_)":[[-1,-3.4028234663852886e38],[-0.4734408814661135,1.6086829903739013e38],[0.6929138215907789,-2.693681872097166e38],[1,3.4028234663852886e38]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, nullable_int64_)":[[-1,-9223372036854776000],[-0.5040021207670986,6993614660524502000],[0.5898946324421062,-6021389797587690000],[1,9223372036854776000]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, nullable_uint64_)":[[-1,0],[-0.4734408814661135,17402344381158021000],[0.5898946324421062,1511082089773577500],[1,18446744073709552000]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Decimal128_38__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(decimal128_38_, uint64)":[[-1,0],[-0.4734408814661135,17204651265226578000],[0,0],[1,18446744073709552000]],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Date = r"""
+{"largestTriangleThreeBuckets(4)(float32, date)":[[-3.4028234663852886e38,"1970-01-01"],[-3.2560412906764298e38,"2014-06-03"],[0,"1970-01-01"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(float32))":"Float32","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_DateTime = r"""
+{"largestTriangleThreeBuckets(4)(float32, datetime)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-3.2560412906764298e38,"2017-02-11 09:09:25"],[0,"1970-01-01 01:00:00"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(float32))":"Float32","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, decimal128_38_)":[[-3.4028234663852886e38,-1],[-3.2560412906764298e38,0.6929138215907789],[-1.9952108535015243e38,-0.5973739480262348],[3.4028234663852886e38,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Float32 = r"""
+{"largestTriangleThreeBuckets(4)(float32, float32)":[[-3.4028234663852886e38,-3.4028234663852886e38],[-3.2560412906764298e38,-3.2560412906764298e38],[-1.9952108535015243e38,-1.9952108535015243e38],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(float32))":"Float32","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Int64 = r"""
+{"largestTriangleThreeBuckets(4)(float32, int64)":[[-3.4028234663852886e38,-9223372036854776000],[-2.9177846496970656e38,4356085765667181600],[6.031524148946083e37,-828225109716003700],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(float32))":"Float32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, lowcardinality_datetime_)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-2.9177846496970656e38,"2021-09-18 08:15:28"],[0,"1970-01-01 01:00:00"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, lowcardinality_date_)":[[-3.4028234663852886e38,"1970-01-01"],[-2.9177846496970656e38,"2020-01-11"],[0,"1970-01-01"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, lowcardinality_float32_)":[[-3.4028234663852886e38,-3.4028234663852886e38],[-3.2560412906764298e38,1.716690370935027e38],[0,0],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, lowcardinality_int64_)":[[-3.4028234663852886e38,-9223372036854776000],[-3.2560412906764298e38,6192383175306748000],[0,0],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, lowcardinality_uint64_)":[[-3.4028234663852886e38,0],[-3.0256692202680413e38,18182701099500320000],[0,0],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, nullable_datetime_)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-3.2560412906764298e38,"2009-05-30 23:43:18"],[6.031524148946083e37,"2006-01-25 20:44:12"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, nullable_date_)":[[-3.4028234663852886e38,"1970-01-01"],[-3.0256692202680413e38,"2017-01-08"],[6.031524148946083e37,"2007-12-06"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(float32, nullable_decimal128_38__)":[[-3.4028234663852886e38,-1],[-3.0256692202680413e38,0.6569771233261541],[-8.648929557598604e37,-0.15082873547126252],[3.4028234663852886e38,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, nullable_float32_)":[[-3.4028234663852886e38,-3.4028234663852886e38],[-3.0256692202680413e38,-4.477358652994029e37],[6.031524148946083e37,-2.7438033570615178e38],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, nullable_int64_)":[[-3.4028234663852886e38,-9223372036854776000],[-3.2560412906764298e38,8675909858204897000],[6.031524148946083e37,-6021389797587690000],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(float32, nullable_uint64_)":[[-3.4028234663852886e38,0],[-3.0256692202680413e38,18404978432406714000],[6.031524148946083e37,1511082089773577500],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Float32_UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(float32, uint64)":[[-3.4028234663852886e38,0],[-3.0256692202680413e38,15974529873370577000],[0,0],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Date = r"""
+{"largestTriangleThreeBuckets(4)(int64, date)":[[-9223372036854776000,"1970-01-01"],[0,"1970-01-01"],[4356085765667181600,"2004-01-27"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(int64))":"Int64","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_DateTime = r"""
+{"largestTriangleThreeBuckets(4)(int64, datetime)":[[-9223372036854776000,"1970-01-01 01:00:00"],[0,"1970-01-01 01:00:00"],[4356085765667181600,"2006-11-27 02:50:49"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(int64))":"Int64","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, decimal128_38_)":[[-9223372036854776000,-1],[-828225109716003700,0.5898946324421062],[4356085765667181600,-0.5040021207670986],[9223372036854776000,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Float32 = r"""
+{"largestTriangleThreeBuckets(4)(int64, float32)":[[-9223372036854776000,-3.4028234663852886e38],[-828225109716003700,6.031524148946083e37],[4356085765667181600,-2.9177846496970656e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(int64))":"Int64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Int64 = r"""
+{"largestTriangleThreeBuckets(4)(int64, int64)":[[-9223372036854776000,-9223372036854776000],[-828225109716003700,-828225109716003700],[2716835793949406700,2716835793949406700],[9223372036854776000,9223372036854776000]],"any(toTypeName(int64))":"Int64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, lowcardinality_datetime_)":[[-9223372036854776000,"1970-01-01 01:00:00"],[0,"1970-01-01 01:00:00"],[4021889571459699000,"2013-09-04 14:10:20"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, lowcardinality_date_)":[[-9223372036854776000,"1970-01-01"],[-4270391745320102000,"2022-06-02"],[4021889571459699000,"2005-02-18"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, lowcardinality_float32_)":[[-9223372036854776000,-3.4028234663852886e38],[9618164129723932,1.6726488424855138e38],[4356085765667181600,-1.3459335010429156e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, lowcardinality_int64_)":[[-9223372036854776000,-9223372036854776000],[-4270391745320102000,7565178287628705000],[4356085765667181600,-9041695014854556000],[9223372036854776000,9223372036854776000]],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, lowcardinality_uint64_)":[[-9223372036854776000,0],[0,0],[3641736262840360400,18182701099500320000],[9223372036854776000,18446744073709552000]],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, nullable_datetime_)":[[-9223372036854776000,"1970-01-01 01:00:00"],[-4270391745320102000,"2004-04-05 13:18:38"],[3641736262840360400,"2006-08-10 21:14:26"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, nullable_date_)":[[-9223372036854776000,"1970-01-01"],[-4270391745320102000,"2005-10-25"],[4356085765667181600,"2005-05-10"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(int64, nullable_decimal128_38__)":[[-9223372036854776000,-1],[-828225109716003700,0.8693598915991548],[2716835793949406700,-0.9128559335239734],[9223372036854776000,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, nullable_float32_)":[[-9223372036854776000,-3.4028234663852886e38],[-4270391745320102000,-1.2780301233428981e38],[2716835793949406700,-2.693681872097166e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, nullable_int64_)":[[-9223372036854776000,-9223372036854776000],[-828225109716003700,-6021389797587690000],[2716835793949406700,8675909858204897000],[9223372036854776000,9223372036854776000]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(int64, nullable_uint64_)":[[-9223372036854776000,0],[-828225109716003700,1511082089773577500],[3641736262840360400,18404978432406714000],[9223372036854776000,18446744073709552000]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Int64_UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(int64, uint64)":[[-9223372036854776000,0],[9618164129723932,16708105131877517000],[2716835793949406700,3066499079937164000],[9223372036854776000,18446744073709552000]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Date = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, date)":[["1970-01-01 01:00:00","1970-01-01"],["2006-05-30 22:14:05","2021-09-25"],["2021-09-18 08:15:28","2004-01-27"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, datetime)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2012-01-02 09:35:45","2015-06-29 09:43:07"],["2021-09-18 08:15:28","2006-11-27 02:50:49"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, decimal128_38_)":[["1970-01-01 01:00:00",-1],["1970-01-01 01:00:00",0],["2021-09-18 08:15:28",-0.5040021207670986],["2106-02-07 06:28:15",1]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, float32)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["1970-01-01 01:00:00",0],["2016-11-27 12:16:37",-3.2560412906764298e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, int64)":[["1970-01-01 01:00:00",-9223372036854776000],["1970-01-01 01:00:00",0],["2019-02-08 23:58:10",-828225109716003700],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, lowcardinality_datetime_)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2012-01-02 09:35:45","2012-01-02 09:35:45"],["2016-11-27 12:16:37","2016-11-27 12:16:37"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, lowcardinality_date_)":[["1970-01-01 01:00:00","1970-01-01"],["2012-01-02 09:35:45","2022-06-02"],["2019-02-08 23:58:10","2009-11-18"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, lowcardinality_float32_)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["1970-01-01 01:00:00",0],["2021-09-18 08:15:28",-1.3459335010429156e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, lowcardinality_int64_)":[["1970-01-01 01:00:00",-9223372036854776000],["1970-01-01 01:00:00",0],["2021-09-18 08:15:28",-9041695014854556000],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, lowcardinality_uint64_)":[["1970-01-01 01:00:00",0],["2011-09-29 03:43:51",18182701099500320000],["2016-11-27 12:16:37",1755801173378645800],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, nullable_datetime_)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2006-05-30 22:14:05","2015-12-28 10:07:33"],["2019-02-08 23:58:10","2006-01-25 20:44:12"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, nullable_date_)":[["1970-01-01 01:00:00","1970-01-01"],["2006-05-30 22:14:05","2018-10-13"],["2021-09-18 08:15:28","2005-05-10"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, nullable_decimal128_38__)":[["1970-01-01 01:00:00",-1],["2011-09-29 03:43:51",0.6569771233261541],["2016-11-27 12:16:37",-0.9128559335239734],["2106-02-07 06:28:15",1]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, nullable_float32_)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["2011-09-29 03:43:51",-4.477358652994029e37],["2019-02-08 23:58:10",-2.7438033570615178e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, nullable_int64_)":[["1970-01-01 01:00:00",-9223372036854776000],["2012-01-02 09:35:45",-2785088034149882000],["2016-11-27 12:16:37",8675909858204897000],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, nullable_uint64_)":[["1970-01-01 01:00:00",0],["2011-09-29 03:43:51",18404978432406714000],["2019-02-08 23:58:10",1511082089773577500],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_datetime_, uint64)":[["1970-01-01 01:00:00",0],["2006-05-30 22:14:05",16708105131877517000],["2016-11-27 12:16:37",3066499079937164000],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Date = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, date)":[["1970-01-01","1970-01-01"],["2004-01-29","2021-09-25"],["2020-01-11","2004-01-27"],["2149-06-06","2149-06-06"]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, datetime)":[["1970-01-01","1970-01-01 01:00:00"],["2005-02-18","2020-01-24 15:10:50"],["2020-01-11","2006-11-27 02:50:49"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, decimal128_38_)":[["1970-01-01",-1],["1970-01-01",0],["2020-01-11",-0.5040021207670986],["2149-06-06",1]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, float32)":[["1970-01-01",-3.4028234663852886e38],["1970-01-01",0],["2013-09-23",-3.2560412906764298e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, int64)":[["1970-01-01",-9223372036854776000],["1970-01-01",0],["2022-06-02",-4270391745320102000],["2149-06-06",9223372036854776000]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, lowcardinality_datetime_)":[["1970-01-01","1970-01-01 01:00:00"],["2005-02-18","2013-09-04 14:10:20"],["2022-06-02","2012-01-02 09:35:45"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, lowcardinality_date_)":[["1970-01-01","1970-01-01"],["1970-01-01","1970-01-01"],["2009-11-18","2009-11-18"],["2149-06-06","2149-06-06"]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, lowcardinality_float32_)":[["1970-01-01",-3.4028234663852886e38],["1970-01-01",0],["2022-06-02",-2.2284573469989423e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, lowcardinality_int64_)":[["1970-01-01",-9223372036854776000],["1970-01-01",0],["2020-01-11",-9041695014854556000],["2149-06-06",9223372036854776000]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, lowcardinality_uint64_)":[["1970-01-01",0],["2008-06-29",18182701099500320000],["2013-09-23",1755801173378645800],["2149-06-06",18446744073709552000]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, nullable_datetime_)":[["1970-01-01","1970-01-01 01:00:00"],["2005-02-18","2017-06-27 03:09:51"],["2022-06-02","2004-04-05 13:18:38"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, nullable_date_)":[["1970-01-01","1970-01-01"],["2005-02-18","2022-01-01"],["2022-06-02","2005-10-25"],["2149-06-06","2149-06-06"]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, nullable_decimal128_38__)":[["1970-01-01",-1],["2008-06-29",0.6569771233261541],["2013-09-23",-0.9128559335239734],["2149-06-06",1]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, nullable_float32_)":[["1970-01-01",-3.4028234663852886e38],["2005-02-18",1.6086829903739013e38],["2009-11-18",-2.7438033570615178e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, nullable_int64_)":[["1970-01-01",-9223372036854776000],["2005-02-18",-5297132944339134000],["2013-09-23",8675909858204897000],["2149-06-06",9223372036854776000]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, nullable_uint64_)":[["1970-01-01",0],["2008-06-29",18404978432406714000],["2009-11-18",1511082089773577500],["2149-06-06",18446744073709552000]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_date_, uint64)":[["1970-01-01",0],["2005-02-18",17204651265226578000],["2013-09-23",3066499079937164000],["2149-06-06",18446744073709552000]],"any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Date = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, date)":[[-3.4028234663852886e38,"1970-01-01"],[0,"1970-01-01"],[2.1255332453447317e38,"2004-01-05"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, datetime)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-2.2284573469989423e38,"2015-06-29 09:43:07"],[1.6726488424855138e38,"2009-06-14 11:12:39"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, decimal128_38_)":[[-3.4028234663852886e38,-1],[-2.2284573469989423e38,0.35781566593334313],[1.6726488424855138e38,-0.5973739480262348],[3.4028234663852886e38,1]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, float32)":[[-3.4028234663852886e38,-3.4028234663852886e38],[2.276717464527943e37,6.031524148946083e37],[1.716690370935027e38,-3.2560412906764298e38],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, int64)":[[-3.4028234663852886e38,-9223372036854776000],[-1.3459335010429156e38,4356085765667181600],[1.6726488424855138e38,9618164129723932],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, lowcardinality_datetime_)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-1.3459335010429156e38,"2021-09-18 08:15:28"],[2.1255332453447317e38,"2013-09-04 14:10:20"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, lowcardinality_date_)":[[-3.4028234663852886e38,"1970-01-01"],[-2.2284573469989423e38,"2022-06-02"],[2.1255332453447317e38,"2005-02-18"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, lowcardinality_float32_)":[[-3.4028234663852886e38,-3.4028234663852886e38],[2.276717464527943e37,2.276717464527943e37],[9.91327919566384e37,9.91327919566384e37],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, lowcardinality_int64_)":[[-3.4028234663852886e38,-9223372036854776000],[-2.2284573469989423e38,7565178287628705000],[2.1255332453447317e38,923254860529414000],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, lowcardinality_uint64_)":[[-3.4028234663852886e38,0],[-1.3459335010429156e38,15859874243171168000],[1.716690370935027e38,1755801173378645800],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, nullable_datetime_)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-1.3459335010429156e38,"2014-04-10 09:39:46"],[1.716690370935027e38,"2009-05-30 23:43:18"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, nullable_date_)":[[-3.4028234663852886e38,"1970-01-01"],[-2.2284573469989423e38,"2005-10-25"],[2.1255332453447317e38,"2022-01-01"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, nullable_decimal128_38__)":[[-3.4028234663852886e38,-1],[2.276717464527943e37,0.8693598915991548],[1.716690370935027e38,-0.9128559335239734],[3.4028234663852886e38,1]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, nullable_float32_)":[[-3.4028234663852886e38,-3.4028234663852886e38],[-2.2284573469989423e38,-1.2780301233428981e38],[1.716690370935027e38,-2.693681872097166e38],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, nullable_int64_)":[[-3.4028234663852886e38,-9223372036854776000],[-1.3459335010429156e38,6993614660524502000],[2.1255332453447317e38,-5297132944339134000],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, nullable_uint64_)":[[-3.4028234663852886e38,0],[-1.3459335010429156e38,16869395978069754000],[1.6726488424855138e38,7831420257094001000],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_float32_, uint64)":[[-3.4028234663852886e38,0],[0,0],[9.91327919566384e37,15974529873370577000],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Date = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, date)":[[-9223372036854776000,"1970-01-01"],[-9041695014854556000,"2004-01-27"],[7565178287628705000,"2006-11-06"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, datetime)":[[-9223372036854776000,"1970-01-01 01:00:00"],[-9041695014854556000,"2006-11-27 02:50:49"],[7565178287628705000,"2015-06-29 09:43:07"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, decimal128_38_)":[[-9223372036854776000,-1],[-9041695014854556000,-0.5040021207670986],[4968231829572491000,-0.5973739480262348],[9223372036854776000,1]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, float32)":[[-9223372036854776000,-3.4028234663852886e38],[0,0],[6192383175306748000,-3.2560412906764298e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, int64)":[[-9223372036854776000,-9223372036854776000],[-9041695014854556000,4356085765667181600],[7565178287628705000,-4270391745320102000],[9223372036854776000,9223372036854776000]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, lowcardinality_datetime_)":[[-9223372036854776000,"1970-01-01 01:00:00"],[-9041695014854556000,"2021-09-18 08:15:28"],[7565178287628705000,"2012-01-02 09:35:45"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, lowcardinality_date_)":[[-9223372036854776000,"1970-01-01"],[-9041695014854556000,"2020-01-11"],[7565178287628705000,"2022-06-02"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, lowcardinality_float32_)":[[-9223372036854776000,-3.4028234663852886e38],[923254860529414000,2.1255332453447317e38],[7565178287628705000,-2.2284573469989423e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, lowcardinality_int64_)":[[-9223372036854776000,-9223372036854776000],[2718870071498905000,2718870071498905000],[4968231829572491000,4968231829572491000],[9223372036854776000,9223372036854776000]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, lowcardinality_uint64_)":[[-9223372036854776000,0],[-9041695014854556000,15859874243171168000],[6192383175306748000,1755801173378645800],[9223372036854776000,18446744073709552000]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, nullable_datetime_)":[[-9223372036854776000,"1970-01-01 01:00:00"],[-9041695014854556000,"2014-04-10 09:39:46"],[7565178287628705000,"2004-04-05 13:18:38"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, nullable_date_)":[[-9223372036854776000,"1970-01-01"],[-9041695014854556000,"2005-05-10"],[7565178287628705000,"2005-10-25"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, nullable_decimal128_38__)":[[-9223372036854776000,-1],[-9041695014854556000,0.45865411970120445],[6192383175306748000,-0.9128559335239734],[9223372036854776000,1]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, nullable_float32_)":[[-9223372036854776000,-3.4028234663852886e38],[923254860529414000,1.6086829903739013e38],[6192383175306748000,-2.693681872097166e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, nullable_int64_)":[[-9223372036854776000,-9223372036854776000],[-9041695014854556000,6993614660524502000],[2784931345460438500,-6021389797587690000],[9223372036854776000,9223372036854776000]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, nullable_uint64_)":[[-9223372036854776000,0],[-9041695014854556000,16869395978069754000],[2784931345460438500,1511082089773577500],[9223372036854776000,18446744073709552000]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_int64_, uint64)":[[-9223372036854776000,0],[923254860529414000,17204651265226578000],[6192383175306748000,3066499079937164000],[9223372036854776000,18446744073709552000]],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Date = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, date)":[[0,"1970-01-01"],[1755801173378645800,"2014-06-03"],[17588799453259715000,"2004-01-05"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, datetime)":[[0,"1970-01-01 01:00:00"],[1755801173378645800,"2017-02-11 09:09:25"],[18182701099500320000,"2011-09-30 02:34:30"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, decimal128_38_)":[[0,-1],[1755801173378645800,0.6929138215907789],[17588799453259715000,-0.4734408814661135],[18446744073709552000,1]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, float32)":[[0,-3.4028234663852886e38],[3965992522492430300,6.031524148946083e37],[18182701099500320000,-3.0256692202680413e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, int64)":[[0,-9223372036854776000],[1755801173378645800,2716835793949406700],[9823307913730986000,-4270391745320102000],[18446744073709552000,9223372036854776000]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, lowcardinality_datetime_)":[[0,"1970-01-01 01:00:00"],[1755801173378645800,"2016-11-27 12:16:37"],[18182701099500320000,"2011-09-29 03:43:51"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, lowcardinality_date_)":[[0,"1970-01-01"],[1755801173378645800,"2013-09-23"],[18182701099500320000,"2008-06-29"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, lowcardinality_float32_)":[[0,-3.4028234663852886e38],[1755801173378645800,1.716690370935027e38],[9823307913730986000,-2.2284573469989423e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, lowcardinality_int64_)":[[0,-9223372036854776000],[1755801173378645800,6192383175306748000],[15859874243171168000,-9041695014854556000],[18446744073709552000,9223372036854776000]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, lowcardinality_uint64_)":[[0,0],[5162688910625067000,5162688910625067000],[17588799453259715000,17588799453259715000],[18446744073709552000,18446744073709552000]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, nullable_datetime_)":[[0,"1970-01-01 01:00:00"],[1755801173378645800,"2009-05-30 23:43:18"],[18182701099500320000,"2006-08-10 21:14:26"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, nullable_date_)":[[0,"1970-01-01"],[1755801173378645800,"2012-02-07"],[18182701099500320000,"2017-01-08"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, nullable_decimal128_38__)":[[0,-1],[3965992522492430300,0.8693598915991548],[17588799453259715000,-0.15082873547126252],[18446744073709552000,1]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, nullable_float32_)":[[0,-3.4028234663852886e38],[1755801173378645800,-2.693681872097166e38],[15859874243171168000,-1.994648219459119e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, nullable_int64_)":[[0,-9223372036854776000],[1755801173378645800,8675909858204897000],[17588799453259715000,-5297132944339134000],[18446744073709552000,9223372036854776000]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, nullable_uint64_)":[[0,0],[1755801173378645800,15756926212117228000],[9823307913730986000,7107144574783571000],[18446744073709552000,18446744073709552000]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(lowcardinality_uint64_, uint64)":[[0,0],[5162688910625067000,16708105131877517000],[15859874243171168000,4036797895307271700],[18446744073709552000,18446744073709552000]],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Date = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, date)":[["1970-01-01 01:00:00","1970-01-01"],["2006-08-10 21:14:26","2015-01-26"],["2017-06-27 03:09:51","2004-01-05"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, datetime)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2006-01-25 20:44:12","2019-04-27 02:01:34"],["2014-04-10 09:39:46","2006-11-27 02:50:49"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, decimal128_38_)":[["1970-01-01 01:00:00",-1],["2006-01-25 20:44:12",0.5898946324421062],["2015-12-28 10:07:33",-0.5973739480262348],["2106-02-07 06:28:15",1]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, float32)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["2006-01-25 20:44:12",6.031524148946083e37],["2009-05-30 23:43:18",-3.2560412906764298e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, int64)":[["1970-01-01 01:00:00",-9223372036854776000],["2004-04-05 13:18:38",-4270391745320102000],["2014-04-10 09:39:46",4356085765667181600],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, lowcardinality_datetime_)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2006-01-25 20:44:12","2019-02-08 23:58:10"],["2015-12-28 10:07:33","2006-05-30 22:14:05"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, lowcardinality_date_)":[["1970-01-01 01:00:00","1970-01-01"],["2004-04-05 13:18:38","2022-06-02"],["2017-06-27 03:09:51","2005-02-18"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, lowcardinality_float32_)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["2004-04-05 13:18:38",-2.2284573469989423e38],["2009-05-30 23:43:18",1.716690370935027e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, lowcardinality_int64_)":[["1970-01-01 01:00:00",-9223372036854776000],["2004-04-05 13:18:38",7565178287628705000],["2014-04-10 09:39:46",-9041695014854556000],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, lowcardinality_uint64_)":[["1970-01-01 01:00:00",0],["2006-08-10 21:14:26",18182701099500320000],["2009-05-30 23:43:18",1755801173378645800],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, nullable_datetime_)":[["1970-01-01 01:00:00","1970-01-01 01:00:00"],["2004-04-05 13:18:38","2004-04-05 13:18:38"],["2015-12-28 10:07:33","2015-12-28 10:07:33"],["2106-02-07 06:28:15","2106-02-07 06:28:15"]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, nullable_date_)":[["1970-01-01 01:00:00","1970-01-01"],["2006-08-10 21:14:26","2017-01-08"],["2014-04-10 09:39:46","2005-05-10"],["2106-02-07 06:28:15","2149-06-06"]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, nullable_decimal128_38__)":[["1970-01-01 01:00:00",-1],["2006-01-25 20:44:12",0.8693598915991548],["2009-05-30 23:43:18",-0.9128559335239734],["2106-02-07 06:28:15",1]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, nullable_float32_)":[["1970-01-01 01:00:00",-3.4028234663852886e38],["2006-08-10 21:14:26",-4.477358652994029e37],["2015-12-28 10:07:33",-2.5993861103124447e38],["2106-02-07 06:28:15",3.4028234663852886e38]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, nullable_int64_)":[["1970-01-01 01:00:00",-9223372036854776000],["2006-01-25 20:44:12",-6021389797587690000],["2009-05-30 23:43:18",8675909858204897000],["2106-02-07 06:28:15",9223372036854776000]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, nullable_uint64_)":[["1970-01-01 01:00:00",0],["2006-01-25 20:44:12",1511082089773577500],["2014-04-10 09:39:46",16869395978069754000],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_DateTime__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_datetime_, uint64)":[["1970-01-01 01:00:00",0],["2006-08-10 21:14:26",15974529873370577000],["2009-05-30 23:43:18",3066499079937164000],["2106-02-07 06:28:15",18446744073709552000]],"any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Date = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, date)":[["1970-01-01","1970-01-01"],["2005-10-25","2006-11-06"],["2022-01-01","2004-01-05"],["2149-06-06","2149-06-06"]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, datetime)":[["1970-01-01","1970-01-01 01:00:00"],["2007-12-06","2019-04-27 02:01:34"],["2018-10-13","2009-06-14 11:12:39"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, decimal128_38_)":[["1970-01-01",-1],["2007-12-06",0.5898946324421062],["2018-10-13",-0.5973739480262348],["2149-06-06",1]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, float32)":[["1970-01-01",-3.4028234663852886e38],["2007-12-06",6.031524148946083e37],["2012-02-07",-3.2560412906764298e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, int64)":[["1970-01-01",-9223372036854776000],["2005-05-10",4356085765667181600],["2018-10-13",9618164129723932],["2149-06-06",9223372036854776000]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, lowcardinality_datetime_)":[["1970-01-01","1970-01-01 01:00:00"],["2005-05-10","2021-09-18 08:15:28"],["2018-10-13","2006-05-30 22:14:05"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, lowcardinality_date_)":[["1970-01-01","1970-01-01"],["2005-10-25","2022-06-02"],["2022-01-01","2005-02-18"],["2149-06-06","2149-06-06"]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, lowcardinality_float32_)":[["1970-01-01",-3.4028234663852886e38],["2005-10-25",-2.2284573469989423e38],["2022-01-01",2.1255332453447317e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, lowcardinality_int64_)":[["1970-01-01",-9223372036854776000],["2005-05-10",-9041695014854556000],["2012-02-07",6192383175306748000],["2149-06-06",9223372036854776000]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, lowcardinality_uint64_)":[["1970-01-01",0],["2005-05-10",15859874243171168000],["2012-02-07",1755801173378645800],["2149-06-06",18446744073709552000]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, nullable_datetime_)":[["1970-01-01","1970-01-01 01:00:00"],["2005-05-10","2014-04-10 09:39:46"],["2017-01-08","2006-08-10 21:14:26"],["2149-06-06","2106-02-07 06:28:15"]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, nullable_date_)":[["1970-01-01","1970-01-01"],["2005-05-10","2005-05-10"],["2012-02-07","2012-02-07"],["2149-06-06","2149-06-06"]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, nullable_decimal128_38__)":[["1970-01-01",-1],["2007-12-06",0.8693598915991548],["2012-02-07",-0.9128559335239734],["2149-06-06",1]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, nullable_float32_)":[["1970-01-01",-3.4028234663852886e38],["2007-12-06",-2.7438033570615178e38],["2022-01-01",1.6086829903739013e38],["2149-06-06",3.4028234663852886e38]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, nullable_int64_)":[["1970-01-01",-9223372036854776000],["2005-05-10",6993614660524502000],["2022-01-01",-5297132944339134000],["2149-06-06",9223372036854776000]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, nullable_uint64_)":[["1970-01-01",0],["2007-12-06",1511082089773577500],["2017-01-08",18404978432406714000],["2149-06-06",18446744073709552000]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Date__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_date_, uint64)":[["1970-01-01",0],["2005-05-10",4036797895307271700],["2022-01-01",17204651265226578000],["2149-06-06",18446744073709552000]],"any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Date = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, date)":[[-1,"1970-01-01"],[-0.9128559335239734,"2014-06-03"],[0.8693598915991548,"2005-06-07"],[1,"2149-06-06"]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___DateTime = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, datetime)":[[-1,"1970-01-01 01:00:00"],[-0.9128559335239734,"2017-02-11 09:09:25"],[0.8693598915991548,"2019-04-27 02:01:34"],[1,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, decimal128_38_)":[[-1,-1],[-0.9128559335239734,0.6929138215907789],[0.36692398073045673,-0.5973739480262348],[1,1]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Float32 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, float32)":[[-1,-3.4028234663852886e38],[-0.15082873547126252,-8.648929557598604e37],[0.6569771233261541,-3.0256692202680413e38],[1,3.4028234663852886e38]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Int64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, int64)":[[-1,-9223372036854776000],[-0.9128559335239734,2716835793949406700],[0.8693598915991548,-828225109716003700],[1,9223372036854776000]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, lowcardinality_datetime_)":[[-1,"1970-01-01 01:00:00"],[-0.9128559335239734,"2016-11-27 12:16:37"],[0.8693598915991548,"2019-02-08 23:58:10"],[1,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, lowcardinality_date_)":[[-1,"1970-01-01"],[-0.9128559335239734,"2013-09-23"],[0.8693598915991548,"2009-11-18"],[1,"2149-06-06"]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, lowcardinality_float32_)":[[-1,-3.4028234663852886e38],[-0.9128559335239734,1.716690370935027e38],[0.45865411970120445,-1.3459335010429156e38],[1,3.4028234663852886e38]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, lowcardinality_int64_)":[[-1,-9223372036854776000],[-0.9128559335239734,6192383175306748000],[0.45865411970120445,-9041695014854556000],[1,9223372036854776000]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, lowcardinality_uint64_)":[[-1,0],[-0.15082873547126252,17588799453259715000],[0.8693598915991548,3965992522492430300],[1,18446744073709552000]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, nullable_datetime_)":[[-1,"1970-01-01 01:00:00"],[-0.9128559335239734,"2009-05-30 23:43:18"],[0.8693598915991548,"2006-01-25 20:44:12"],[1,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, nullable_date_)":[[-1,"1970-01-01"],[-0.9128559335239734,"2012-02-07"],[0.8693598915991548,"2007-12-06"],[1,"2149-06-06"]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, nullable_decimal128_38__)":[[-1,-1],[-0.15082873547126252,-0.15082873547126252],[0.36692398073045673,0.36692398073045673],[1,1]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, nullable_float32_)":[[-1,-3.4028234663852886e38],[-0.15082873547126252,1.6086829903739013e38],[0.8693598915991548,-2.7438033570615178e38],[1,3.4028234663852886e38]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, nullable_int64_)":[[-1,-9223372036854776000],[-0.9128559335239734,8675909858204897000],[0.8693598915991548,-6021389797587690000],[1,9223372036854776000]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, nullable_uint64_)":[[-1,0],[-0.9128559335239734,15756926212117228000],[0.8693598915991548,1511082089773577500],[1,18446744073709552000]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Decimal128_38___UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_decimal128_38__, uint64)":[[-1,0],[-0.15082873547126252,17204651265226578000],[0.45865411970120445,4036797895307271700],[1,18446744073709552000]],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Date = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, date)":[[-3.4028234663852886e38,"1970-01-01"],[-2.5993861103124447e38,"2021-09-25"],[1.6086829903739013e38,"2004-01-05"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, datetime)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-2.7438033570615178e38,"2019-04-27 02:01:34"],[1.6086829903739013e38,"2020-01-24 15:10:50"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, decimal128_38_)":[[-3.4028234663852886e38,-1],[-2.693681872097166e38,0.6929138215907789],[1.6086829903739013e38,-0.4734408814661135],[3.4028234663852886e38,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, float32)":[[-3.4028234663852886e38,-3.4028234663852886e38],[-2.7438033570615178e38,6.031524148946083e37],[-4.477358652994029e37,-3.0256692202680413e38],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, int64)":[[-3.4028234663852886e38,-9223372036854776000],[-2.693681872097166e38,2716835793949406700],[-1.2780301233428981e38,-4270391745320102000],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, lowcardinality_datetime_)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-2.7438033570615178e38,"2019-02-08 23:58:10"],[1.6086829903739013e38,"2013-09-04 14:10:20"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, lowcardinality_date_)":[[-3.4028234663852886e38,"1970-01-01"],[-2.693681872097166e38,"2013-09-23"],[1.6086829903739013e38,"2005-02-18"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, lowcardinality_float32_)":[[-3.4028234663852886e38,-3.4028234663852886e38],[-2.693681872097166e38,1.716690370935027e38],[-1.2780301233428981e38,-2.2284573469989423e38],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, lowcardinality_int64_)":[[-3.4028234663852886e38,-9223372036854776000],[-2.693681872097166e38,6192383175306748000],[-1.994648219459119e38,-9041695014854556000],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, lowcardinality_uint64_)":[[-3.4028234663852886e38,0],[-2.693681872097166e38,1755801173378645800],[-1.994648219459119e38,15859874243171168000],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, nullable_datetime_)":[[-3.4028234663852886e38,"1970-01-01 01:00:00"],[-2.5993861103124447e38,"2015-12-28 10:07:33"],[1.6086829903739013e38,"2017-06-27 03:09:51"],[3.4028234663852886e38,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, nullable_date_)":[[-3.4028234663852886e38,"1970-01-01"],[-2.5993861103124447e38,"2018-10-13"],[1.6086829903739013e38,"2022-01-01"],[3.4028234663852886e38,"2149-06-06"]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, nullable_decimal128_38__)":[[-3.4028234663852886e38,-1],[-2.7438033570615178e38,0.8693598915991548],[1.6086829903739013e38,-0.15082873547126252],[3.4028234663852886e38,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, nullable_float32_)":[[-3.4028234663852886e38,-3.4028234663852886e38],[-2.7438033570615178e38,-2.7438033570615178e38],[-1.994648219459119e38,-1.994648219459119e38],[3.4028234663852886e38,3.4028234663852886e38]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, nullable_int64_)":[[-3.4028234663852886e38,-9223372036854776000],[-2.693681872097166e38,8675909858204897000],[1.6086829903739013e38,-5297132944339134000],[3.4028234663852886e38,9223372036854776000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, nullable_uint64_)":[[-3.4028234663852886e38,0],[-2.693681872097166e38,15756926212117228000],[-1.2780301233428981e38,7107144574783571000],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_float32_, uint64)":[[-3.4028234663852886e38,0],[-2.5993861103124447e38,16708105131877517000],[-1.994648219459119e38,4036797895307271700],[3.4028234663852886e38,18446744073709552000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Date = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, date)":[[-9223372036854776000,"1970-01-01"],[-6021389797587690000,"2005-06-07"],[8675909858204897000,"2014-06-03"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, datetime)":[[-9223372036854776000,"1970-01-01 01:00:00"],[-6021389797587690000,"2019-04-27 02:01:34"],[6993614660524502000,"2006-11-27 02:50:49"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, decimal128_38_)":[[-9223372036854776000,-1],[-6021389797587690000,0.5898946324421062],[6993614660524502000,-0.5040021207670986],[9223372036854776000,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, float32)":[[-9223372036854776000,-3.4028234663852886e38],[-6021389797587690000,6.031524148946083e37],[8675909858204897000,-3.2560412906764298e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, int64)":[[-9223372036854776000,-9223372036854776000],[-5297132944339134000,4021889571459699000],[1193865884214575900,9618164129723932],[9223372036854776000,9223372036854776000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, lowcardinality_datetime_)":[[-9223372036854776000,"1970-01-01 01:00:00"],[-6021389797587690000,"2019-02-08 23:58:10"],[8675909858204897000,"2016-11-27 12:16:37"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, lowcardinality_date_)":[[-9223372036854776000,"1970-01-01"],[-2785088034149882000,"2022-06-02"],[8675909858204897000,"2013-09-23"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, lowcardinality_float32_)":[[-9223372036854776000,-3.4028234663852886e38],[-5297132944339134000,2.1255332453447317e38],[6993614660524502000,-1.3459335010429156e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, lowcardinality_int64_)":[[-9223372036854776000,-9223372036854776000],[-2785088034149882000,7565178287628705000],[6993614660524502000,-9041695014854556000],[9223372036854776000,9223372036854776000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, lowcardinality_uint64_)":[[-9223372036854776000,0],[-5297132944339134000,17588799453259715000],[8675909858204897000,1755801173378645800],[9223372036854776000,18446744073709552000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, nullable_datetime_)":[[-9223372036854776000,"1970-01-01 01:00:00"],[-5297132944339134000,"2017-06-27 03:09:51"],[8675909858204897000,"2009-05-30 23:43:18"],[9223372036854776000,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, nullable_date_)":[[-9223372036854776000,"1970-01-01"],[-5297132944339134000,"2022-01-01"],[8675909858204897000,"2012-02-07"],[9223372036854776000,"2149-06-06"]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, nullable_decimal128_38__)":[[-9223372036854776000,-1],[-6021389797587690000,0.8693598915991548],[8675909858204897000,-0.9128559335239734],[9223372036854776000,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, nullable_float32_)":[[-9223372036854776000,-3.4028234663852886e38],[-5297132944339134000,1.6086829903739013e38],[8675909858204897000,-2.693681872097166e38],[9223372036854776000,3.4028234663852886e38]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, nullable_int64_)":[[-9223372036854776000,-9223372036854776000],[-5297132944339134000,-5297132944339134000],[1193865884214575900,1193865884214575900],[9223372036854776000,9223372036854776000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, nullable_uint64_)":[[-9223372036854776000,0],[-5297132944339134000,17402344381158021000],[1193865884214575900,7831420257094001000],[9223372036854776000,18446744073709552000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_int64_, uint64)":[[-9223372036854776000,0],[-5297132944339134000,17204651265226578000],[8675909858204897000,3066499079937164000],[9223372036854776000,18446744073709552000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Date = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, date)":[[0,"1970-01-01"],[7831420257094001000,"2021-09-25"],[18404978432406714000,"2015-01-26"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__DateTime = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, datetime)":[[0,"1970-01-01 01:00:00"],[1511082089773577500,"2019-04-27 02:01:34"],[18404978432406714000,"2011-09-30 02:34:30"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, decimal128_38_)":[[0,-1],[1511082089773577500,0.5898946324421062],[16869395978069754000,-0.5040021207670986],[18446744073709552000,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Float32 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, float32)":[[0,-3.4028234663852886e38],[1511082089773577500,6.031524148946083e37],[18404978432406714000,-3.0256692202680413e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Int64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, int64)":[[0,-9223372036854776000],[1511082089773577500,-828225109716003700],[18404978432406714000,3641736262840360400],[18446744073709552000,9223372036854776000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, lowcardinality_datetime_)":[[0,"1970-01-01 01:00:00"],[1511082089773577500,"2019-02-08 23:58:10"],[18404978432406714000,"2011-09-29 03:43:51"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, lowcardinality_date_)":[[0,"1970-01-01"],[1511082089773577500,"2009-11-18"],[18404978432406714000,"2008-06-29"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, lowcardinality_float32_)":[[0,-3.4028234663852886e38],[1511082089773577500,2.276717464527943e37],[16869395978069754000,-1.3459335010429156e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, lowcardinality_int64_)":[[0,-9223372036854776000],[7107144574783571000,7565178287628705000],[16869395978069754000,-9041695014854556000],[18446744073709552000,9223372036854776000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, lowcardinality_uint64_)":[[0,0],[7107144574783571000,9823307913730986000],[15756926212117228000,1755801173378645800],[18446744073709552000,18446744073709552000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, nullable_datetime_)":[[0,"1970-01-01 01:00:00"],[1511082089773577500,"2006-01-25 20:44:12"],[18404978432406714000,"2006-08-10 21:14:26"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, nullable_date_)":[[0,"1970-01-01"],[1511082089773577500,"2007-12-06"],[18404978432406714000,"2017-01-08"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, nullable_decimal128_38__)":[[0,-1],[1511082089773577500,0.8693598915991548],[15756926212117228000,-0.9128559335239734],[18446744073709552000,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, nullable_float32_)":[[0,-3.4028234663852886e38],[7107144574783571000,-1.2780301233428981e38],[15756926212117228000,-2.693681872097166e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, nullable_int64_)":[[0,-9223372036854776000],[7831420257094001000,1193865884214575900],[17402344381158021000,-5297132944339134000],[18446744073709552000,9223372036854776000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, nullable_uint64_)":[[0,0],[7107144574783571000,7107144574783571000],[15756926212117228000,15756926212117228000],[18446744073709552000,18446744073709552000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(nullable_uint64_, uint64)":[[0,0],[7831420257094001000,16708105131877517000],[15756926212117228000,3066499079937164000],[18446744073709552000,18446744073709552000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Date = r"""
+{"largestTriangleThreeBuckets(4)(uint64, date)":[[0,"1970-01-01"],[3066499079937164000,"2014-06-03"],[17204651265226578000,"2004-01-05"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_DateTime = r"""
+{"largestTriangleThreeBuckets(4)(uint64, datetime)":[[0,"1970-01-01 01:00:00"],[3066499079937164000,"2017-02-11 09:09:25"],[16708105131877517000,"2009-06-14 11:12:39"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Decimal128_38_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, decimal128_38_)":[[0,-1],[3066499079937164000,0.6929138215907789],[16708105131877517000,-0.5973739480262348],[18446744073709552000,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Float32 = r"""
+{"largestTriangleThreeBuckets(4)(uint64, float32)":[[0,-3.4028234663852886e38],[5140383948038881000,6.031524148946083e37],[15974529873370577000,-3.0256692202680413e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Int64 = r"""
+{"largestTriangleThreeBuckets(4)(uint64, int64)":[[0,-9223372036854776000],[4036797895307271700,4356085765667181600],[8959741089313180000,-4270391745320102000],[18446744073709552000,9223372036854776000]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_LowCardinality_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, lowcardinality_datetime_)":[[0,"1970-01-01 01:00:00"],[4036797895307271700,"2021-09-18 08:15:28"],[16708105131877517000,"2006-05-30 22:14:05"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_LowCardinality_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, lowcardinality_date_)":[[0,"1970-01-01"],[4036797895307271700,"2020-01-11"],[17204651265226578000,"2005-02-18"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_LowCardinality_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, lowcardinality_float32_)":[[0,-3.4028234663852886e38],[3066499079937164000,1.716690370935027e38],[8959741089313180000,-2.2284573469989423e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_LowCardinality_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, lowcardinality_int64_)":[[0,-9223372036854776000],[3066499079937164000,6192383175306748000],[17204651265226578000,923254860529414000],[18446744073709552000,9223372036854776000]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, lowcardinality_uint64_)":[[0,0],[4036797895307271700,15859874243171168000],[16708105131877517000,5162688910625067000],[18446744073709552000,18446744073709552000]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Nullable_DateTime_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, nullable_datetime_)":[[0,"1970-01-01 01:00:00"],[4036797895307271700,"2014-04-10 09:39:46"],[15974529873370577000,"2006-08-10 21:14:26"],[18446744073709552000,"2106-02-07 06:28:15"]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Nullable_Date_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, nullable_date_)":[[0,"1970-01-01"],[3066499079937164000,"2012-02-07"],[17204651265226578000,"2022-01-01"],[18446744073709552000,"2149-06-06"]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Nullable_Decimal128_38__ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, nullable_decimal128_38__)":[[0,-1],[5140383948038881000,0.8693598915991548],[17204651265226578000,-0.15082873547126252],[18446744073709552000,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, nullable_float32_)":[[0,-3.4028234663852886e38],[4036797895307271700,-1.994648219459119e38],[16708105131877517000,-2.5993861103124447e38],[18446744073709552000,3.4028234663852886e38]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, nullable_int64_)":[[0,-9223372036854776000],[3066499079937164000,8675909858204897000],[17204651265226578000,-5297132944339134000],[18446744073709552000,9223372036854776000]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"largestTriangleThreeBuckets(4)(uint64, nullable_uint64_)":[[0,0],[4036797895307271700,16869395978069754000],[16708105131877517000,7831420257094001000],[18446744073709552000,18446744073709552000]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_datatypes_permutations_UInt64_UInt64 = r"""
+{"largestTriangleThreeBuckets(4)(uint64, uint64)":[[0,0],[5140383948038881000,5140383948038881000],[15974529873370577000,15974529873370577000],[18446744073709552000,18446744073709552000]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_example = r"""
+{"largestTriangleThreeBuckets(4)(y, x)":[[-3.3,4],[0.1,0],[0.88,2],[5.4,5]],"any(toTypeName(y))":"Float64","any(toTypeName(x))":"Int8"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_return_type = r"""
+{"toTypeName(largestTriangleThreeBuckets(4)(number, plus(number, 1)))":"Array(Tuple(Float64, Float64))","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_single_NULL_value = r"""
+{"largestTriangleThreeBuckets(4)(x, y)":[],"any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(y))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_single_row = r"""
+{"largestTriangleThreeBuckets(4)(number, plus(number, 1))":[[0,1]],"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_some_negative_values = r"""
+{"largestTriangleThreeBuckets(4)(minus(number, 5), plus(number, 10))":[[-4,11],[-3,12],[1,16],[5,20]],"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_with_group_by = r"""
+{"even":0,"largestTriangleThreeBuckets(4)(number, modulo(number, 2))":[[0,0],[2,0],[4,0],[8,0]],"any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
+{"even":1,"largestTriangleThreeBuckets(4)(number, modulo(number, 2))":[[1,1],[3,1],[5,1],[9,1]],"any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
+"""
+
+_aggregate_functions_largestTriangleThreeBuckets_zero_rows = r"""
+{"largestTriangleThreeBuckets(4)(number, number)":[],"any(toTypeName(number))":"","any(toTypeName(number))":""}
+"""
+
