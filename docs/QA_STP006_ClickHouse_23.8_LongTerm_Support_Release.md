@@ -658,11 +658,15 @@ Compatibility with [Grafana].
 
 Results:
 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/tableau/
+
 Compatibility with [Tableau].
 
 #### Superset
 
 Results:
+
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/superset/
 
 Compatibility with [Superset].
 
