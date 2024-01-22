@@ -72,7 +72,7 @@ def create_partitioned_table_with_data(
     with And(f"inserting data that will create multiple partitions"):
         for i in range(1, number_of_partitions + 1):
             node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({10})"
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
             )
 
 
@@ -90,7 +90,7 @@ def create_partitioned_replicated_table_with_data(
     engine="ReplicatedMergeTree",
     query_settings=None,
     nodes=None,
-    number_of_partitions=2,
+    number_of_partitions=3,
     config="graphite_rollup_example",
     sign="sign",
     version="a",
@@ -139,7 +139,7 @@ def create_partitioned_replicated_table_with_data(
     with And(f"inserting data that will create multiple partitions"):
         for i in range(1, number_of_partitions + 1):
             node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({3})"
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
             )
 
 
@@ -438,6 +438,6 @@ def execute_query(
                                     "tests." + current_cpu(),
                                     name=snapshot_name,
                                     encoder=str,
-                                    mode=snapshot.CHECK | snapshot.UPDATE,
+                                    mode=snapshot.CHECK,
                                 )
                             ), error()
