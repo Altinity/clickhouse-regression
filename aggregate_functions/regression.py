@@ -151,14 +151,14 @@ xfails = {
         (
             Fail,
             "Error in function boost::math::students_t_distribution<double>",
-            check_clickhouse_version("<=22.8"),
+            check_clickhouse_version("<22.9"),
         )
     ],
     "/aggregate functions/finalizeAggregation/welchTTest_finalizeAggregation_Merge/*": [
         (
             Fail,
             "Error in function boost::math::students_t_distribution<double>",
-            check_clickhouse_version("<=22.8"),
+            check_clickhouse_version("<22.9"),
         )
     ],
 }
