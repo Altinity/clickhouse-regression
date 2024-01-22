@@ -672,12 +672,17 @@ Compatibility with [Superset].
 
 Results:
 
-Trivy Docker image vulnerability scanner.
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/report.html#trivy-x86_64-results
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/staging-docker-trivy-ubuntu-server-arm64/results.html
 
+Trivy Docker image vulnerability scanner.
 
 #### Scout
 
 Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/staging-docker-scout-ubuntu-server-amd64/results.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/staging-docker-scout-ubuntu-server-arm64/results.html
 
 Scout Docker image vulnerability scanner.
 
