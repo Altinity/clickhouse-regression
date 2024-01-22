@@ -26,8 +26,9 @@ Started to execute test plan on Nov 1, 2023 and ended on Dec 27, 2024.
 * 3 [Timeline](#timeline)
 * 4 [Human Resources And Assignments](#human-resources-and-assignments)
 * 5 [End User Recommendations](#end-user-recommendations)
-    * 5.1 [Notable Differences in Behavior](#notable-differences-in-behavior)
-    * 5.2 [Summary of Main Regressions](#summary-of-main-regressions)
+    * 5.1 [Release Notes](#release-notes)
+    * 5.2 [Notable Differences in Behavior](#notable-differences-in-behavior)
+    * 5.3 [Summary of Main Regressions](#summary-of-main-regressions)
 * 6 [Known Issues](#known-issues)
     * 6.1 [Reported By Altinity](#reported-by-altinity)
     * 6.2 [Open Issues](#open-issues)
@@ -118,6 +119,10 @@ The following team members SHALL be dedicated to the release:
 * Tatiana Saltykova (production cluster, upgrade and downgrade)
 
 ## End User Recommendations
+
+### Release Notes
+
+https://docs.altinity.com/releasenotes/altinity-stable-release-notes/23.8/altinity-stable-23.8.8/
 
 ### Notable Differences in Behavior
 
