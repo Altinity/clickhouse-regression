@@ -146,10 +146,7 @@ def feature(self):
         "sumMapFiltered",  # parameters of different type
         "sumMapFilteredWithOverflow",  # parameters of different type
         "quantileTDigestWeighted",
-        "uniq",
-        "uniqHLL12",  # problem on 22.8 and 23.8
         "singleValueOrNull",  # problem on 22.8
-        "uniqExact",  # problem on 23.8 aarch
         "sequenceCount",
         "sequenceMatch",
     ]

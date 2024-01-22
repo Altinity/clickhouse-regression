@@ -6355,7 +6355,7 @@ _aggregate_functions_uniqCombined64_Map_UUID_UUID_ = r"""
 """
 
 _aggregate_functions_uniqCombined64_NULL_for_all_rows = r"""
-{"uniqCombined64Distinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(number))":"UInt64"}
+{"uniqCombined64Distinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_uniqCombined64_Nullable_Bool_ = r"""
