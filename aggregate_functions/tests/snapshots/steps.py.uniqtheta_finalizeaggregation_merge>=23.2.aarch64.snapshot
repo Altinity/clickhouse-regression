@@ -6199,7 +6199,7 @@ _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Map_UUID_U
 """
 
 _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_NULL_for_all_rows_0 = r"""
-{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(uniqTheta, UInt64)'))":"0"}
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(uniqTheta, Nullable(Nothing))'))":"0"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqThetafinalizeAggregation_Nullable_Bool__0 = r"""

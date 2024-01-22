@@ -1626,42 +1626,6 @@ _aggregate_functions_largestTriangleThreeBuckets_example = r"""
 {"largestTriangleThreeBuckets(4)(y, x)":[[-3.3,4],[-1.23,3],[0.1,0],[5.4,5]],"any(toTypeName(y))":"Float64","any(toTypeName(x))":"Int8"}
 """
 
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan__inf__inf = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[null,null],[0,1],[1,2.3],[6.7,3]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan__inf_inf = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[null,null],[0,1],[1,2.3],[6.7,3]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan__inf_nan = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[null,3],[0,1],[1,2.3],[6.7,3.88e-321]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan_inf__inf = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[0,1],[1,2.3],[4,4],[null,null]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan_inf_inf = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[0,1],[1,2.3],[4,4],[null,null]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan_inf_nan = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[0,1],[1,2.3],[4,1],[null,4]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan_nan__inf = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[0,1],[1,2.3],[4,3],[6.7,1]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan_nan_inf = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[0,1],[1,2.3],[4,3],[6.7,1]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
-_aggregate_functions_largestTriangleThreeBuckets_inf___inf__nan_nan_nan = r"""
-{"largestTriangleThreeBuckets(4)(x, y)":[[0,1],[1,2.3],[4,4],[6.7,3]],"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
-"""
-
 _aggregate_functions_largestTriangleThreeBuckets_return_type = r"""
 {"toTypeName(largestTriangleThreeBuckets(4)(number, plus(number, 1)))":"Array(Tuple(Float64, Float64))","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """

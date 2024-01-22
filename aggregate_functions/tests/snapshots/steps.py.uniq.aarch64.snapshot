@@ -6199,7 +6199,7 @@ _aggregate_functions_uniq_Map_UUID_UUID_ = r"""
 """
 
 _aggregate_functions_uniq_NULL_for_all_rows = r"""
-{"uniqDistinct(if(modulo(number, 2), NULL, NULL))":"0","any(toTypeName(number))":"UInt64"}
+{"uniqDistinct(if(modulo(number, 2), NULL, NULL))":"0","any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_uniq_Nullable_Bool_ = r"""
