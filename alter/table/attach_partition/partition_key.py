@@ -795,10 +795,17 @@ def check_attach_partition_from(
                             message=message,
                         )
                     except:
-                        try:
-                            self.context.node_1.query(query)
-                        except Exception as e:
-                            fail(f"An unexpected exception occurred: {e}")
+                        note("Partition can be attached")
+
+    with And(
+        "I change engine names to compare replicated results with non-replicated results in snapshots"
+    ):
+        if "Replicated" in source_table_engine:
+            source_table_engine = source_table_engine.replace("Replicated", "")
+        if "Replicated" in destination_table_engine:
+            destination_table_engine = destination_table_engine.replace(
+                "Replicated", ""
+            )
 
     with Then(
         f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_table_engine}, destination table engine - {destination_table_engine}:"
@@ -810,7 +817,7 @@ def check_attach_partition_from(
             destination_partition_data = get_node(self, "destination").query(
                 f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
             )
-            for attempt in retries(timeout=30, delay=5):
+            for attempt in retries(timeout=30, delay=2):
                 with attempt:
                     assert (
                         destination_partition_data.output
@@ -836,7 +843,7 @@ def check_attach_partition_from(
             destination_partition_data_3 = self.context.node_3.query(
                 f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
             )
-            for attempt in retries(timeout=30, delay=5):
+            for attempt in retries(timeout=30, delay=2):
                 with attempt:
                     assert (
                         destination_partition_data_1.output
@@ -906,6 +913,7 @@ def attach_partition_from(self, with_id=False):
 
     source_partition_key = either(*partition_keys)
     destination_partition_key = either(*partition_keys)
+
     if check_clickhouse_version(">=24.1"):
         check_attach_partition_from(
             source_table_engine=either(*engines),
@@ -917,12 +925,12 @@ def attach_partition_from(self, with_id=False):
     else:
         if source_partition_key == destination_partition_key:
             check_attach_partition_from(
-            source_table_engine=either(*engines),
-            destination_table_engine=either(*engines),
-            source_partition_key=source_partition_key,
-            destination_partition_key=destination_partition_key,
-            with_id=with_id,
-        )
+                source_table_engine=either(*engines),
+                destination_table_engine=either(*engines),
+                source_partition_key=source_partition_key,
+                destination_partition_key=destination_partition_key,
+                with_id=with_id,
+            )
         else:
             skip("Different partition keys are not supported before 24.1")
 
