@@ -239,7 +239,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8
 | Ontime Bechmark | [Pass](#ontime-benchmark)                 
 | Part Moves Between Shards | [Pass](#part-moves-between-shards)        |   |
 | Lightweight Delete | [Pass](#lightweight-delete)               |    |
-| Aggregate Functions | [Pass](#aggregate-functions)              | AARCH64 not executed |
+| Aggregate Functions | [Pass](#aggregate-functions)              |   |
 | Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)    |   |
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)         |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                   |    |
@@ -533,7 +533,7 @@ Altinity Atomic Insert integration tests.
 Results:
 
 * https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/aggregate_functions/report.html
-* AARCH64 not executed
+* https://github.com/Altinity/clickhouse-regression/actions/runs/7324808186/job/19948716863
   
 Altinity Aggregate Functions integration tests.
 
