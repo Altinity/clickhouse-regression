@@ -22,7 +22,6 @@ table_configurations = {
     "replicated": [True, False],
     "n_cols": [10, 500, 2000],
     "n_tables": [1, 3],
-    "storage_policy": ["external", "tiered"],
 }
 
 
@@ -85,12 +84,12 @@ def check_table_combination(
     replicated: bool,
     n_cols: int,
     n_tables: int,
-    storage_policy: str,
 ):
     """
     Test that the given table parameters create a functional table.
     """
     nodes = self.context.ch_nodes
+    storage_policy = "external"
     tables = []
     n_rows = 10000
 

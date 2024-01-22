@@ -274,7 +274,7 @@ def parallel_add_remove(self):
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
-@TestOutline(Scenario)
+@TestOutline(Example)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def do_command_combinations(self, table_name, allow_vfs=True):
     """
@@ -398,7 +398,7 @@ def do_command_combinations(self, table_name, allow_vfs=True):
                 with And(f"I note the average time taken: {a:.2f}s"):
                     note(f"Average time per combo {a:.2f}s")
 
-        with And(f"I record the average time taken: {a:.2f}s"):
+        with Then(f"I record the average time taken: {a:.2f}s"):
             metric("Average time per combo", a, "s")
 
     finally:
