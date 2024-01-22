@@ -203,7 +203,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8
 | Stress | not executed                           |   |
 | Integration | [](#integration)                      |   |
 | Key Value | [](#key-value)                        |   |
-| Engines  | [](#engines)                          |   |
+| Engines  | [not executed](#engines)                          |   |
 | Parquet | [](#parquet)                          |   |
 | Tiered Storage (Local) | [](#tiered-storage)                   |   |
 | Tiered Storage (MinIO) | [](#tiered-storage)                   |   |
@@ -216,7 +216,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8
 [ Session Timezone | [](#session-timezone)        |   |
 | AES Encryption | [](#aes-encryption)                   |   |
 | Atomic Insert | [](#atomic-insert)                    |   |
-| Base58 | []](#base58)                          |   |
+| Base58 | [](#base58)                          |   |
 | DNS | [](#dns)                              |   |
 | Kafka | [](#kafka)                            |   |
 | Kerberos | [](#kerberos)                         |   |
@@ -244,10 +244,10 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8
 | Production Cluster Operation | [Pass](#production-cluster-operation) |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)        |   |
 | Grafana | [](#grafana)                          |   |
-| Tableau | [](#tableau)                          |   |
-| Superset | [](#superset)                         |   |
-| Trivy | [](#trivy)                            |   |
-| Scout | [](#scout)                            |   |
+| Tableau | [Pass](#tableau)                          |   |
+| Superset | [Pass](#superset)                         |   |
+| Trivy | [Pass](#trivy)                            |   |
+| Scout | [Pass](#scout)                            |   |
 
 ## Scope
 
