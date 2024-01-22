@@ -196,43 +196,45 @@ The following team members SHALL be dedicated to the release:
 
 Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/report.html
 
+> `Pass*` - Pass with known fails
+
 | Test Suite  | Result                                | Comments |
 | --- |---------------------------------------| --- |
-| Stateless | [](#stateless)                        |   |
-| Stateful | [](#stateful)                         |   |
-| Stress | not executed                           |   |
-| Integration | [](#integration)                      |   |
-| Key Value | [](#key-value)                        |   |
-| Engines  | [not executed](#engines)                          |   |
-| Parquet | [](#parquet)                          |   |
-| Tiered Storage (Local) | [](#tiered-storage)                   |   |
-| Tiered Storage (MinIO) | [](#tiered-storage)                   |   |
-| Tiered Storage (AWS) | [](#tiered-storage)                   |   |
-| Tiered Storage (GCS) | [](#tiered-storage)                   |   |
-| S3 (AWS) | [](#s3)                               |  |
-| S3 (MinIO) | [](#s3)                               |   |
-| S3 (GCS) | [](#s3)                               |   |
-| Selects | [](#selects)                          |   |
-[ Session Timezone | [](#session-timezone)        |   |
-| AES Encryption | [](#aes-encryption)                   |   |
-| Atomic Insert | [](#atomic-insert)                    |   |
-| Base58 | [](#base58)                          |   |
-| DNS | [](#dns)                              |   |
-| Kafka | [](#kafka)                            |   |
-| Kerberos | [](#kerberos)                         |   |
-| DateTime64 Extended Range | [](#datetime64-extended-range)        |   |
-| Extended Precision Data Types | [](#extended-precision-data-types)    |   |
+| Stateless | [Pass*](#stateless)                        |   |
+| Stateful | [Pass](#stateful)                         |   |
+| Stress | [not executed](#stress)                  |  Not executed  |
+| Integration | [Pass*](#integration)                      |   |
+| Key Value | [Pass](#key-value)                        |   |
+| Engines  | [not executed](#engines)                          | Not executed  |
+| Parquet | [Pass](#parquet)                          |   |
+| Tiered Storage (Local) | [Pass](#tiered-storage)                   |   |
+| Tiered Storage (MinIO) | [Pass](#tiered-storage)                   |   |
+| Tiered Storage (AWS) | [Pass](#tiered-storage)                   |   |
+| Tiered Storage (GCS) | [Pass*](#tiered-storage)                   |   |
+| S3 (AWS) | [Pass*](#s3)                               |  |
+| S3 (MinIO) | [Pass](#s3)                               |   |
+| S3 (GCS) | [Pass](#s3)                               |   |
+| Selects | [Pass](#selects)                          |   |
+[ Session Timezone | [Pass](#session-timezone)        |   |
+| AES Encryption | [Pass](#aes-encryption)                   |   |
+| Atomic Insert | [Pass](#atomic-insert)                    |   |
+| Base58 | [Pass](#base58)                          |   |
+| DNS | [Pass](#dns)                              |   |
+| Kafka | [Pass](#kafka)                            |   |
+| Kerberos | [Pass](#kerberos)                         |   |
+| DateTime64 Extended Range | [Pass](#datetime64-extended-range)        |   |
+| Extended Precision Data Types | [Pass](#extended-precision-data-types)    |   |
 | LDAP | [](#ldap)                             |   |
 | RBAC | [](#rbac)                             |   |
-| Window Functions | [](#window-functions)                 |   |
-| SSL Server | [](#ssl-server)                       |   |
-| Disk Level Encryption | [](#disk-level-encryption)            |   |
-| ClickHouse Keeper | [](#clickhouse-keeper)                |   |
-| Data Types | [](#data-types)                         |   |
-| Ontime Bechmark | [](#ontime-benchmark)                 
-| Part Moves Between Shards | [](#part-moves-between-shards)        |   |
-| Lightweight Delete | [](#lightweight-delete)               |    |
-| Aggregate Functions | [](#aggregate-functions)              |  |
+| Window Functions | [Pass*](#window-functions)                 |   |
+| SSL Server | [Pass](#ssl-server)                       |   |
+| Disk Level Encryption | [Pass](#disk-level-encryption)            |   |
+| ClickHouse Keeper | [Pass](#clickhouse-keeper)                |   |
+| Data Types | [Pass](#data-types)                         |   |
+| Ontime Bechmark | [Pass](#ontime-benchmark)                 
+| Part Moves Between Shards | [Pass](#part-moves-between-shards)        |   |
+| Lightweight Delete | [Pass](#lightweight-delete)               |    |
+| Aggregate Functions | [Pass](#aggregate-functions)              | AARCH64 not executed |
 | Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)    |   |
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)         |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                   |    |
@@ -307,7 +309,7 @@ Altinity Key Value function tests.
 
 ##### Engines
 
-Results:
+Results: not executed
 
 Altinity Engines tests.
 
@@ -526,7 +528,8 @@ Altinity Atomic Insert integration tests.
 Results:
 
 * https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/aggregate_functions/report.html
-
+* AARCH64 not executed
+  
 Altinity Aggregate Functions integration tests.
 
 ##### DNS
