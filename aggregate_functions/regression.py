@@ -147,6 +147,20 @@ xfails = {
     "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,-inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
+    "/aggregate functions/merge/welchTTestMerge/*": [
+        (
+            Fail,
+            "Error in function boost::math::students_t_distribution<double>",
+            check_clickhouse_version("<=22.8"),
+        )
+    ],
+    "/aggregate functions/finalizeAggregation/welchTTest_finalizeAggregation_Merge/*": [
+        (
+            Fail,
+            "Error in function boost::math::students_t_distribution<double>",
+            check_clickhouse_version("<=22.8"),
+        )
+    ],
 }
 
 ffails = {
