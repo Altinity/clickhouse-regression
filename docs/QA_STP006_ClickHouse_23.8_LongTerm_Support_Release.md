@@ -9,7 +9,7 @@
 
 ## Execution Summary
 
-**Completed:**
+**Completed:** Dec 27, 2023
 
 **Test Results:**
 
@@ -17,7 +17,7 @@
 
 **Summary:**
 
-Started to execute test plan on Nov 1, 2023.
+Started to execute test plan on Nov 1, 2023 and ended on Dec 27, 2024.
 
 ## Table of Contents
 
@@ -26,8 +26,9 @@ Started to execute test plan on Nov 1, 2023.
 * 3 [Timeline](#timeline)
 * 4 [Human Resources And Assignments](#human-resources-and-assignments)
 * 5 [End User Recommendations](#end-user-recommendations)
-    * 5.1 [Notable Differences in Behavior](#notable-differences-in-behavior)
-    * 5.2 [Summary of Main Regressions](#summary-of-main-regressions)
+    * 5.1 [Release Notes](#release-notes)
+    * 5.2 [Notable Differences in Behavior](#notable-differences-in-behavior)
+    * 5.3 [Summary of Main Regressions](#summary-of-main-regressions)
 * 6 [Known Issues](#known-issues)
     * 6.1 [Reported By Altinity](#reported-by-altinity)
     * 6.2 [Open Issues](#open-issues)
@@ -58,7 +59,7 @@ Started to execute test plan on Nov 1, 2023.
             * 8.1.5.14 [SSL Server](#ssl-server)
             * 8.1.5.15 [Disk Level Encryption](#disk-level-encryption)
             * 8.1.5.16 [ClickHouse Keeper](#clickhouse-keeper)
-            * 8.1.5.17 [Map Type](#map-type)
+            * 8.1.5.17 [Data Types](#Data-types)
             * 8.1.5.18 [Part Moves Between Shards](#part-moves-between-shards)
             * 8.1.5.19 [Lightweight Delete](#lightweight-delete)
             * 8.1.5.20 [Base58](#base58)
@@ -119,6 +120,10 @@ The following team members SHALL be dedicated to the release:
 
 ## End User Recommendations
 
+### Release Notes
+
+https://docs.altinity.com/releasenotes/altinity-stable-release-notes/23.8/altinity-stable-23.8.8/
+
 ### Notable Differences in Behavior
 
 * Insert from s3 requires more memory, so max_insert_thread in tests was lowered.
@@ -143,10 +148,6 @@ The following team members SHALL be dedicated to the release:
 
 ### Summary of Main Regressions
 
-Regressions:
-
-* TBD
-
 ## Known Issues
 
 ### Reported By Altinity
@@ -166,8 +167,6 @@ Regressions:
 * Starting 23.8 MemoryTracker messages will be ignored if the amount is too small
   https://github.com/ClickHouse/ClickHouse/issues/57522
   https://github.com/mymarilyn/clickhouse-driver/issues/403
-
-* TBD
 
 ### Open Issues
 
@@ -198,50 +197,49 @@ Regressions:
 * Segfault after alter table on target of nullable materialized column  
   https://github.com/ClickHouse/ClickHouse/issues/42918
 
-## New Features
-
-### Altinity Stable Backports
-
-### Changelog
-
 ### Summary
+
+Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/report.html
+
+> `Pass*` - Pass with known fails
 
 | Test Suite  | Result                                | Comments |
 | --- |---------------------------------------| --- |
-| Stateless | [](#stateless)                        |   |
-| Stateful | [](#stateful)                         |   |
-| Stress | []                                    |   |
-| Integration | [](#integration)                      |   |
-| Key Value | [](#key-value)                        |   |
-| Engines  | [](#engines)                          |   |
-| Parquet | [](#parquet)                          |   |
-| Tiered Storage (Local) | [](#tiered-storage)                   |   |
-| Tiered Storage (MinIO) | [](#tiered-storage)                   |   |
-| Tiered Storage (AWS) | [](#tiered-storage)                   |   |
-| Tiered Storage (GCS) | [](#tiered-storage)                   |   |
-| S3 (AWS) | [](#s3)                               |  |
-| S3 (MinIO) | [](#s3)                               |   |
-| S3 (GCS) | [](#s3)                               |   |
-| Selects | [](#selects)                          |   |
-| AES Encryption | [](#aes-encryption)                   |   |
-| Atomic Insert | [](#atomic-insert)                    |   |
-| Base58 | []](#base58)                          |   |
-| DNS | [](#dns)                              |   |
-| Kafka | [](#kafka)                            |   |
-| Kerberos | [](#kerberos)                         |   |
-| DateTime64 Extended Range | [](#datetime64-extended-range)        |   |
-| Extended Precision Data Types | [](#extended-precision-data-types)    |   |
-| LDAP | [](#ldap)                             |   |
-| RBAC | [](#rbac)                             |   |
-| Window Functions | [](#window-functions)                 |   |
-| SSL Server | [](#ssl-server)                       |   |
-| Disk Level Encryption | [](#disk-level-encryption)            |   |
-| ClickHouse Keeper | [](#clickhouse-keeper)                |   |
-| Map Type | [](#map-type)                         |   |
-| Ontime Bechmark | [](#ontime-benchmark)                 
-| Part Moves Between Shards | [](#part-moves-between-shards)        |   |
-| Lightweight Delete | [](#lightweight-delete)               |    |
-| Aggregate Functions | [](#aggregate-functions)              |  |
+| Stateless | [Pass*](#stateless)                        |   |
+| Stateful | [Pass](#stateful)                         |   |
+| Stress | [not executed](#stress)                  |  Not executed  |
+| Integration | [Pass*](#integration)                      |   |
+| Key Value | [Pass](#key-value)                        |   |
+| Engines  | [not executed](#engines)                          | Not executed  |
+| Parquet | [Pass](#parquet)                          |   |
+| Tiered Storage (Local) | [Pass](#tiered-storage)                   |   |
+| Tiered Storage (MinIO) | [Pass](#tiered-storage)                   |   |
+| Tiered Storage (AWS) | [Pass](#tiered-storage)                   |   |
+| Tiered Storage (GCS) | [Pass*](#tiered-storage)                   |   |
+| S3 (AWS) | [Pass*](#s3)                               |  |
+| S3 (MinIO) | [Pass](#s3)                               |   |
+| S3 (GCS) | [Pass](#s3)                               |   |
+| Selects | [Pass](#selects)                          |   |
+[ Session Timezone | [Pass](#session-timezone)        |   |
+| AES Encryption | [Pass](#aes-encryption)                   |   |
+| Atomic Insert | [Pass](#atomic-insert)                    |   |
+| Base58 | [Pass](#base58)                          |   |
+| DNS | [Pass](#dns)                              |   |
+| Kafka | [Pass](#kafka)                            |   |
+| Kerberos | [Pass](#kerberos)                         |   |
+| DateTime64 Extended Range | [Pass](#datetime64-extended-range)        |   |
+| Extended Precision Data Types | [Pass](#extended-precision-data-types)    |   |
+| LDAP | [Pass](#ldap)                             |   |
+| RBAC | [Pass](#rbac)                             |   |
+| Window Functions | [Pass*](#window-functions)                 |   |
+| SSL Server | [Pass](#ssl-server)                       |   |
+| Disk Level Encryption | [Pass](#disk-level-encryption)            |   |
+| ClickHouse Keeper | [Pass](#clickhouse-keeper)                |   |
+| Data Types | [Pass](#data-types)                         |   |
+| Ontime Bechmark | [Pass](#ontime-benchmark)                 
+| Part Moves Between Shards | [Pass](#part-moves-between-shards)        |   |
+| Lightweight Delete | [Pass](#lightweight-delete)               |    |
+| Aggregate Functions | [Pass](#aggregate-functions)              | AARCH64 not executed |
 | Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)    |   |
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)         |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                   |    |
@@ -253,10 +251,10 @@ Regressions:
 | Production Cluster Operation | [Pass](#production-cluster-operation) |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)        |   |
 | Grafana | [](#grafana)                          |   |
-| Tableau | [](#tableau)                          |   |
-| Superset | [](#superset)                         |   |
-| Trivy | [](#trivy)                            |   |
-| Scout | [](#scout)                            |   |
+| Tableau | [Pass](#tableau)                          |   |
+| Superset | [Pass](#superset)                         |   |
+| Trivy | [Pass](#trivy)                            |   |
+| Scout | [Pass](#scout)                            |   |
 
 ## Scope
 
@@ -270,24 +268,36 @@ The following automated regression test suites SHALL be executed.
 
 Results:
 
-The standard `stateless` suite that consists of running SQL, python and bash scripts that check various features of the server.
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/stateless/amd64/stateless_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/stateless/aarch64/stateless_results.html
 
+The standard `stateless` suite that consists of running SQL, python and bash scripts that check various features of the server.
 
 #### Stateful
 
 Results:
 
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/stateful/amd64/stateful_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/stateful/aarch64/stateful_results.html
+
 The standard `stateful` suite that consists of running SQL scripts executed against a predefined database schema.
 
 #### Stress
 
-Results:
+Results: not executed
 
 The standard `stress` suite that consists of running tests from the `stateless` suite in parallel to check for server hang-up and crashes.
 
 #### Integration
 
 Results:
+
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/integration/integration_results_1.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/integration/integration_results_2.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/integration/integration_results_3.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/integration/integration_results_4.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/integration/integration_results_5.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/integration/integration_results_6.html
 
 The standard `integration` suite of tests consists of various suites of automated tests that use [PyTest Framework](https://pytest.org) .
 
@@ -297,12 +307,14 @@ The standard `integration` suite of tests consists of various suites of automate
 
 Results:
 
-Altinity Key Value function tests.
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/key_value/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/key_value/report.html
 
+Altinity Key Value function tests.
 
 ##### Engines
 
-Results:
+Results: not executed
 
 Altinity Engines tests.
 
@@ -310,33 +322,54 @@ Altinity Engines tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/selects/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/selects/report.html
+
 Altinity Selects tests.
+
+##### Session Timezone
+
+Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/session_timezone/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/session_timezone/report.html
+
+Altinity Session Timezone tests.
 
 ##### AES Encryption
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/aes_encryption/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/aes_encryption/report.html
+
 Altinity AES Encryption tests.
 
 ##### Tiered-storage
 
-Results: (Local)
+Results:
 
-Results: (MinIO)
-
-Results: (AWS)
-
-Results (GCS)
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/tiered_storage/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/tiered_storage/s3amazon/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/tiered_storage/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/tiered_storage/s3gcs/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/tiered_storage/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/tiered_storage/s3amazon/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/tiered_storage/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/tiered_storage/s3gcs/report.html
 
 Altinity Tiered-Storage tests.
 
 ##### S3
 
-Results: (AWS S3)
+Results:
 
-Results: (MinIO)
-
-Results: (GCS)
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/s3/aws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/s3/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/s3/gcs/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/s3/aws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/s3/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/s3/gcs/report.html
 
 Altinity S3 integration tests.
 
@@ -344,11 +377,17 @@ Altinity S3 integration tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/kafka/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/kafka/report.html
+
 Altinity Kafka integration tests.
 
 ##### Kerberos
 
 Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/kerberos/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/kerberos/report.html
 
 Altinity Kerberos integration tests.
 
@@ -356,11 +395,17 @@ Altinity Kerberos integration tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/datetime64_extended_range/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/datetime64_extended_range/report.html
+
 Altinity DateTime64 extended range integration tests.
 
 ##### Extended Precision Data Types
 
 Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/extended_precision_data_types/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/extended_precision_data_types/report.html
 
 Altinity Extended Precision Data Types integration tests.
 
@@ -368,11 +413,21 @@ Altinity Extended Precision Data Types integration tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/ldap/authentication/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/ldap/external_user_directory/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/ldap/role_mapping/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/ldap/authentication/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/ldap/external_user_directory/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/ldap/role_mapping/report.html
+
 Altinity LDAP integration tests.
 
 ##### RBAC
 
 Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/rbac/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/rbac/report.html
 
 Altinity RBAC integration tests.
 
@@ -380,11 +435,17 @@ Altinity RBAC integration tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/window_functions/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/window_functions/report.html
+
 Altinity Window Functions integration tests.
 
 ##### SSL Server
 
 Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/ssl_server/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/ssl_server/report.html
 
 Altinity basic SSL server integration tests.
 
@@ -392,23 +453,37 @@ Altinity basic SSL server integration tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/disk_level_encryption/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/disk_level_encryption/report.html
+
 Altinity Disk Level Encryption integration tests.
 
 ##### ClickHouse Keeper
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/clickhouse_keeper/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/clickhouse_keeper/ssl/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/clickhouse_keeper/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/clickhouse_keeper/ssl/report.html
+
 Altinity ClickHouse Keeper integration tests.
 
-##### Map Type
+##### Data Types
 
 Results:
 
-Altinity Map data type integration tests.
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/data_types/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/data_types/report.html
+
+Altinity data types integration tests.
 
 ##### Part Moves Between Shards
 
 Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/part_moves_between_shards/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/part_moves_between_shards/report.html
 
 Altinity Part Moves Between Shards integration tests.
 
@@ -416,20 +491,30 @@ Altinity Part Moves Between Shards integration tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/lightweight_delete/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/lightweight_delete/report.html
+
 Altinity Lightweight Delete integration tests.
 
 ##### Base58
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/base_58/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/base_58/report.html
+
 Altinity Base58 encode and decode functions integration tests.
 
 ##### Parquet
 
 Results:
-Results (AWS S3):
-Results (MinIO S3):
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/parquet/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/parquetaws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/parquetminio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/parquet/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/parquetaws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/parquetminio/report.html
 
 Altinity Parquet format integration tests.
 
@@ -438,24 +523,40 @@ Altinity Parquet format integration tests.
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/atomic_insert/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/atomic_insert/report.html
+
 Altinity Atomic Insert integration tests.
 
 ##### Aggregate Functions
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/aggregate_functions/report.html
+* AARCH64 not executed
+  
 Altinity Aggregate Functions integration tests.
 
 ##### DNS
 
 Results:
 
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/dns/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/dns/report.html
+
 Altinity DNS integration tests.
 
 #### Ontime Benchmark
 
 Results:
-Results AWS S3:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/ontime_benchmark/aws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/ontime_benchmark/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/x86_64/ontime_benchmark/gcs/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/ontime_benchmark/aws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/ontime_benchmark/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/regression/aarch64/ontime_benchmark/gcs/report.html
+
 Altinity OnTime Benchmark tests.
 
 ### Compatibility with Client Drivers
@@ -565,11 +666,15 @@ Compatibility with [Grafana].
 
 Results:
 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/tableau/
+
 Compatibility with [Tableau].
 
 #### Superset
 
 Results:
+
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/superset/
 
 Compatibility with [Superset].
 
@@ -579,12 +684,17 @@ Compatibility with [Superset].
 
 Results:
 
-Trivy Docker image vulnerability scanner.
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/report.html#trivy-x86_64-results
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/staging-docker-trivy-ubuntu-server-arm64/results.html
 
+Trivy Docker image vulnerability scanner.
 
 #### Scout
 
 Results:
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/staging-docker-scout-ubuntu-server-amd64/results.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8.8.21.altinitystable/2023-12-26T23-40-44.341/staging-docker-scout-ubuntu-server-arm64/results.html
 
 Scout Docker image vulnerability scanner.
 
