@@ -224,8 +224,8 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8
 | Kerberos | [Pass](#kerberos)                         |   |
 | DateTime64 Extended Range | [Pass](#datetime64-extended-range)        |   |
 | Extended Precision Data Types | [Pass](#extended-precision-data-types)    |   |
-| LDAP | [](#ldap)                             |   |
-| RBAC | [](#rbac)                             |   |
+| LDAP | [Pass](#ldap)                             |   |
+| RBAC | [Pass](#rbac)                             |   |
 | Window Functions | [Pass*](#window-functions)                 |   |
 | SSL Server | [Pass](#ssl-server)                       |   |
 | Disk Level Encryption | [Pass](#disk-level-encryption)            |   |
