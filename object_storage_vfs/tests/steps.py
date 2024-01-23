@@ -49,14 +49,19 @@ def s3_config(self):
 
 
 @TestStep(Given)
-def check_global_vfs_state(self, node=None, enabled: bool = True):
+def check_vfs_state(
+    self, node=None, enabled: bool = True, config_file="enable_vfs.xml"
+):
     if node is None:
         node = current().context.node
 
-    grepcode = 0 if enabled else 1
-    node.command(
-        'grep "<allow_vfs>1" /etc/clickhouse-server/config.d/*', exitcode=grepcode
-    )
+    c = f'grep "<allow_vfs>1" /etc/clickhouse-server/config.d/{config_file}'
+
+    if enabled:
+        node.command(c, exitcode=0)
+    else:
+       r = node.command(c, exitcode=None)
+       assert r.exitcode in [1, 2], error()
 
 
 @TestStep(Then)
