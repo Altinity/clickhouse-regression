@@ -15,11 +15,6 @@ multiple_parts = ["1_1_1_0", "1_2_2_0"]
 all_parts = ["1_1_1_0", "1_2_2_0", "1_3_3_0"]
 
 after_attach = {"1_1_1_0": "1_4_4_0", "1_2_2_0": "1_5_5_0", "1_3_3_0": "1_6_6_0"}
-after_attach_detached = {
-    "1_1_1_0": "1_4_4_0",
-    "1_2_2_0": "1_5_5_0",
-    "1_3_3_0": "1_6_6_0",
-}
 
 
 @TestStep(When)
@@ -57,6 +52,7 @@ def check_attach_partition_from_with_corrupted_parts(
     self, corrupt_source, corrupt_destination=None
 ):
     """Attach partition from when parts on one or both of the tables are corrupted."""
+
     node = self.context.node
     source_table = "source_" + getuid()
     destination_table = "destination_" + getuid()
@@ -84,12 +80,12 @@ def check_attach_partition_from_with_corrupted_parts(
             "1_3_3_0",
         ]""",
     ):
-        for i in range(3):
+        for i in range(1, 4):
             node.query(
-                f"INSERT INTO {destination_table} (p, i) SELECT {partition}, {i} FROM numbers(1);"
+                f"INSERT INTO {destination_table} (p, i) SELECT {partition}, {i} FROM numbers({i});"
             )
             node.query(
-                f"INSERT INTO {source_table} (p, i) SELECT {partition}, {i} FROM numbers(1);"
+                f"INSERT INTO {source_table} (p, i) SELECT {partition}, {i} FROM numbers({i});"
             )
 
     with When("I change some bit values of the part on one of or both tables"):
@@ -160,7 +156,6 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
     """Attach partition from detached folder when parts are corrupted."""
     node = self.context.node
     table = getuid()
-    partition = 1
 
     self.context.parts = []
 
@@ -182,6 +177,7 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
             "1_3_3_0",
         ]""",
     ):
+        partition = 1
         for i in range(3):
             node.query(
                 f"INSERT INTO {table} (p, i) SELECT {partition}, {i} FROM numbers({i+1});"
@@ -196,10 +192,9 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
         node.query(
             f"SELECT * FROM {table}",
         )
-
-    node.query(
-        f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
-    )
+        node.query(
+            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+        )
 
     with When("I change some bit values of the part on one of or both tables"):
         corrupt(table_name=table)
@@ -217,6 +212,16 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
         parts_after_attach = node.query(
             f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
         )
+        parts = [i.split("\t") for i in parts_after_attach.output.split("\n")]
+        after_attach_detached = {}
+        for part in parts:
+            if part[-1].strip() == "1":
+                note("here")
+                after_attach_detached["1_1_1_0"] = part[2].strip()
+            if part[-1].strip() == "2":
+                after_attach_detached["1_2_2_0"] = part[2].strip()
+            if part[-1].strip() == "3":
+                after_attach_detached["1_3_3_0"] = part[2].strip()
 
     with And("I try to read data from the table"):
         corrupt_type = corrupt.__name__
