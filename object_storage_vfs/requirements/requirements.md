@@ -7,36 +7,55 @@
 * 2 [Introduction](#introduction)
 * 3 [Terminology](#terminology)
 * 4 [Requirements](#requirements)
-  * 4.1 [Core](#core)
-    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
-    * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication](#rqsrs-038diskobjectstoragevfscorenodataduplication)
-    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Core.Delete](#rqsrs-038diskobjectstoragevfscoredelete)
-  * 4.2 [Replicas](#replicas)
-    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
-    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
-    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
-  * 4.3 [Settings](#settings)
-    * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
-    * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
-    * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
-  * 4.4 [Data Integrity](#data-integrity)
-    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach](#rqsrs-038diskobjectstoragevfsintegritydetach)
-  * 4.5 [Combinatoric](#combinatoric)
-    * 4.5.1 [Supported Table Configurations](#supported-table-configurations)
-    * 4.5.2 [Supported Operations](#supported-operations)
-    * 4.5.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
-    * 4.5.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
-  * 4.6 [Performance](#performance)
-    * 4.6.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
-  * 4.7 [Object Storage Providers](#object-storage-providers)
-    * 4.7.1 [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
-    * 4.7.2 [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
-    * 4.7.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
-    * 4.7.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
+  * 4.1 [Replicas](#replicas)
+    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication](#rqsrs-038diskobjectstoragevfsreplicanodataduplication)
+    * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
+    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
+    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
+    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale](#rqsrs-038diskobjectstoragevfsreplicastale)
+  * 4.2 [Settings](#settings)
+    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
+    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
+  * 4.3 [Data Integrity](#data-integrity)
+    * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled](#rqsrs-038diskobjectstoragevfsintegrityvfstoggled)
+    * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Migration](#rqsrs-038diskobjectstoragevfsintegritymigration)
+    * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLMove](#rqsrs-038diskobjectstoragevfsintegrityttlmove)
+    * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
+    * 4.3.5 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach](#rqsrs-038diskobjectstoragevfsintegritydetach)
+    * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Delete](#rqsrs-038diskobjectstoragevfsintegritydelete)
+  * 4.4 [System](#system)
+    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide](#rqsrs-038diskobjectstoragevfssystemcompact_wide)
+  * 4.5 [Parts](#parts)
+    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Fetch](#rqsrs-038diskobjectstoragevfspartsfetch)
+    * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Optimize](#rqsrs-038diskobjectstoragevfspartsoptimize)
+    * 4.5.3 [RQ.SRS-038.DiskObjectStorageVFS.Parts.BackgroundCollapse](#rqsrs-038diskobjectstoragevfspartsbackgroundcollapse)
+    * 4.5.4 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Manipulation](#rqsrs-038diskobjectstoragevfspartsmanipulation)
+  * 4.6 [Alter](#alter)
+    * 4.6.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
+    * 4.6.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
+    * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
+    * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
+    * 4.6.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
+    * 4.6.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
+  * 4.7 [Table](#table)
+  * 4.8 [StoragePolicy](#storagepolicy)
+    * 4.8.1 [RQ.SRS-038.DiskObjectStorageVFS.StoragePolicy](#rqsrs-038diskobjectstoragevfsstoragepolicy)
+  * 4.9 [Combinatoric](#combinatoric)
+    * 4.9.1 [Supported Table Configurations](#supported-table-configurations)
+    * 4.9.2 [Supported Operations](#supported-operations)
+    * 4.9.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
+    * 4.9.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
+  * 4.10 [Performance](#performance)
+    * 4.10.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
+  * 4.11 [Object Storage Providers](#object-storage-providers)
+    * 4.11.1 [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
+    * 4.11.2 [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
+    * 4.11.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
+    * 4.11.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
 * 5 [References](#references)
 
 ## Revision History
@@ -64,27 +83,17 @@ This is only available in versions 23.12 and later.
 
 ## Requirements
 
-### Core
-
-#### RQ.SRS-038.DiskObjectStorageVFS
-version: 1.0
-
 [ClickHouse] SHALL use DiskObjectStorageVFS when the `allow_object_storage_vfs`
 parameter is set to 1. This is only available in versions 23.12 and later.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Core.NoDataDuplication
+### Replicas
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication
 version: 1.0
 
 [ClickHouse] SHALL support VFS such that data is not
 duplicated in [S3] storage during any operations on replicated tables (ALTER,
 SELECT, INSERT, etc...).
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Core.Delete
-version: 1.0
-
-[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_object_storage_vfs>` is enabled
-
-### Replicas
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Replica.Add
 version: 1.0
@@ -106,16 +115,10 @@ with no changes to data in replicated tables. If the table is altered while
 an instance is offline, [ClickHouse] SHALL update the table from [S3] when
 that instance restarts.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Replica.Slate
+#### RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale
 version: 0.0
 
 stale replica
-
-### Table
-
-* DROP
-* UNDROP
-* TRUNCATE
 
 ### Settings
 
@@ -204,6 +207,11 @@ version: 1.0
 Should the detached table on a replica become corrupted,
 [ClickHouse] SHALL ensure that other replicas are not affected.
 
+#### RQ.SRS-038.DiskObjectStorageVFS.Integrity.Delete
+version: 1.0
+
+[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_object_storage_vfs>` is enabled
+
 ### System
 
 #### RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption
@@ -231,6 +239,13 @@ version: 0.0
 
 [ClickHouse] Replicated tables SHALL continue to operate without issue when a keeper node is removed from the cluster.
 This does not apply if there is only one keeper node.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide
+version: 1.0
+
+[ClickHouse] SHALL support [S3] external storage of data parts as Wide parts,
+Compact parts, or a combination of both types. The user may view the full storage
+of data parts in the system.parts table.
 
 ### Parts
 
@@ -335,6 +350,14 @@ version: 0.0
 | UPDATE       |
 | ALTER DELETE |
 | ALTER UPDATE |
+
+### Table
+
+| Table Operations |
+| ---------------- |
+| DROP             |
+| UNDROP           |
+| TRUNCATE         |
 
 ### StoragePolicy
 
