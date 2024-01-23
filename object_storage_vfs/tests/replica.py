@@ -11,9 +11,104 @@ from object_storage_vfs.requirements import *
 
 
 @TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_NoDataDuplication("1.0"))
+def no_duplication(self):
+    """
+    Check that data on replicated tables only exists once in S3.
+    """
+
+    bucket_name = self.context.bucket_name
+    bucket_path = self.context.bucket_path
+    table_name = "vfs_test_replicas_duplication"
+    nodes = self.context.ch_nodes[:2]
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        size_empty = get_bucket_size(
+            name=bucket_name,
+            prefix=bucket_path,
+            minio_enabled=self.context.minio_enabled,
+            access_key=self.context.secret_access_key,
+            key_id=self.context.access_key_id,
+        )
+
+    with And("I enable vfs"):
+        enable_vfs()
+
+    with And("I create a replicated table"):
+        replicated_table_cluster(
+            table_name=table_name,
+            columns="d UInt64, m UInt64",
+        )
+
+    with Check("insert"):
+        with When("I add data to the table on the first node"):
+            insert_random(
+                node=nodes[0],
+                table_name=table_name,
+                columns="d UInt64, m UInt64",
+                rows=1000000,
+            )
+
+        with And("I get the new size of the s3 bucket"):
+            size_after_insert = get_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                minio_enabled=self.context.minio_enabled,
+                access_key=self.context.secret_access_key,
+                key_id=self.context.access_key_id,
+            )
+            size_added = size_after_insert - size_empty
+
+        with And("I add more data to the table on the second node"):
+            insert_random(
+                node=nodes[1],
+                table_name=table_name,
+                columns="d UInt64, m UInt64",
+                rows=1000000,
+            )
+
+        with And("I wait for the nodes to sync"):
+            nodes[0].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
+            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
+            retry(assert_row_count, timeout=120, delay=1)(
+                node=nodes[0], table_name=table_name, rows=2000000
+            )
+            retry(assert_row_count, timeout=120, delay=1)(
+                node=nodes[1], table_name=table_name, rows=2000000
+            )
+
+        with Then("the size of the s3 bucket should be doubled and no more"):
+            expected_size = size_empty + size_added * 2
+            check_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                expected_size=expected_size,
+                tolerance=1000,
+                minio_enabled=self.context.minio_enabled,
+            )
+
+    with Check("alter"):
+        with When("I rename a column"):
+            nodes[1].query(f"ALTER TABLE {table_name} RENAME COLUMN m TO u")
+
+        with Then("the other node should reflect the change"):
+            r = nodes[0].query(f"DESCRIBE TABLE {table_name}")
+            assert "m\tUInt64" not in r.output, error(r)
+            assert "u\tUInt64" in r.output, error(r)
+
+        with And("there should be no change in storage usage"):
+            check_bucket_size(
+                name=bucket_name,
+                prefix=bucket_path,
+                expected_size=expected_size,
+                tolerance=2500,
+                minio_enabled=self.context.minio_enabled,
+            )
+
+@TestScenario
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Replica_Add("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Core_NoDataDuplication("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Replica_NoDataDuplication("1.0"),
 )
 def add_replica(self):
     """
