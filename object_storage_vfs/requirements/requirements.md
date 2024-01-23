@@ -83,7 +83,7 @@ This is only available in versions 23.12 and later.
 
 ## Requirements
 
-[ClickHouse] SHALL use DiskObjectStorageVFS when the `allow_object_storage_vfs`
+[ClickHouse] SHALL use DiskObjectStorageVFS when the `allow_vfs`
 parameter is set to 1. This is only available in versions 23.12 and later.
 
 ### Replicas
@@ -146,12 +146,12 @@ Example:
 version: 1.0
 
 [ClickHouse] SHALL return an error if both `<allow_s3_zero_copy_replication>`
-and `<allow_object_storage_vfs>` are enabled at the same time.
+and `<allow_vfs>` are enabled at the same time.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared
 version: 0.0
 
-[ClickHouse] SHALL respect the following settings when`<allow_object_storage_vfs>` is enabled.
+[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
 
 | Setting                                                   | Support |
 | --------------------------------------------------------- | ------- |
@@ -167,7 +167,7 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled
 version: 1.0
 
-When the value of the `<allow_object_storage_vfs>` parameter is changed
+When the value of the `<allow_vfs>` parameter is changed
 from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,
 [ClickHouse] SHALL ensure that data is still accessible.
 
@@ -210,7 +210,7 @@ Should the detached table on a replica become corrupted,
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.Delete
 version: 1.0
 
-[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_object_storage_vfs>` is enabled
+[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_vfs>` is enabled
 
 ### System
 
