@@ -132,7 +132,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL return an error if both `<allow_s3_zero_copy_replication>`\n"
-        "and `<allow_object_storage_vfs>` are enabled at the same time.\n"
+        "and `<allow_vfs>` are enabled at the same time.\n"
         "\n"
     ),
     link=None,
@@ -148,7 +148,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL respect the following settings when`<allow_object_storage_vfs>` is enabled.\n"
+        "[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.\n"
         "\n"
         "| Setting                                                   | Support |\n"
         "| --------------------------------------------------------- | ------- |\n"
@@ -173,7 +173,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_VFSToggled = Requirement(
     type=None,
     uid=None,
     description=(
-        "When the value of the `<allow_object_storage_vfs>` parameter is changed\n"
+        "When the value of the `<allow_vfs>` parameter is changed\n"
         "from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,\n"
         "[ClickHouse] SHALL ensure that data is still accessible.\n"
         "\n"
@@ -271,7 +271,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_Delete = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_object_storage_vfs>` is enabled\n"
+        "[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_vfs>` is enabled\n"
         "\n"
     ),
     link=None,
@@ -305,6 +305,22 @@ RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption = Requirement(
     num="4.4.1",
 )
 
+RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL be robust against faults created by insert_keeper_fault_injection.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.2",
+)
+
 RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper = Requirement(
     name="RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper",
     version="0.0",
@@ -318,7 +334,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.2",
+    num="4.4.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper = Requirement(
@@ -335,7 +351,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.3",
+    num="4.4.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_Compact_Wide = Requirement(
@@ -353,7 +369,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_Compact_Wide = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.4",
+    num="4.4.5",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Parts_Fetch = Requirement(
@@ -796,19 +812,24 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             num="4.4.1",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper",
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection",
             level=3,
             num="4.4.2",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper",
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper",
             level=3,
             num="4.4.3",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide",
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper",
             level=3,
             num="4.4.4",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide",
+            level=3,
+            num="4.4.5",
         ),
         Heading(name="Parts", level=2, num="4.5"),
         Heading(
@@ -903,6 +924,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_Detach,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_Delete,
         RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption,
+        RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection,
         RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper,
         RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper,
         RQ_SRS_038_DiskObjectStorageVFS_System_Compact_Wide,
@@ -954,9 +976,10 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Delete](#rqsrs-038diskobjectstoragevfsintegritydelete)
   * 4.4 [System](#system)
     * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide](#rqsrs-038diskobjectstoragevfssystemcompact_wide)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide](#rqsrs-038diskobjectstoragevfssystemcompact_wide)
   * 4.5 [Parts](#parts)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Fetch](#rqsrs-038diskobjectstoragevfspartsfetch)
     * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Optimize](#rqsrs-038diskobjectstoragevfspartsoptimize)
@@ -1011,7 +1034,7 @@ This is only available in versions 23.12 and later.
 
 ## Requirements
 
-[ClickHouse] SHALL use DiskObjectStorageVFS when the `allow_object_storage_vfs`
+[ClickHouse] SHALL use DiskObjectStorageVFS when the `allow_vfs`
 parameter is set to 1. This is only available in versions 23.12 and later.
 
 ### Replicas
@@ -1074,12 +1097,12 @@ Example:
 version: 1.0
 
 [ClickHouse] SHALL return an error if both `<allow_s3_zero_copy_replication>`
-and `<allow_object_storage_vfs>` are enabled at the same time.
+and `<allow_vfs>` are enabled at the same time.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared
 version: 0.0
 
-[ClickHouse] SHALL respect the following settings when`<allow_object_storage_vfs>` is enabled.
+[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
 
 | Setting                                                   | Support |
 | --------------------------------------------------------- | ------- |
@@ -1095,7 +1118,7 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.VFSToggled
 version: 1.0
 
-When the value of the `<allow_object_storage_vfs>` parameter is changed
+When the value of the `<allow_vfs>` parameter is changed
 from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,
 [ClickHouse] SHALL ensure that data is still accessible.
 
@@ -1138,7 +1161,7 @@ Should the detached table on a replica become corrupted,
 #### RQ.SRS-038.DiskObjectStorageVFS.Integrity.Delete
 version: 1.0
 
-[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_object_storage_vfs>` is enabled
+[ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_vfs>` is enabled
 
 ### System
 
@@ -1156,6 +1179,11 @@ version: 0.0
 | Lost connection to Keeper       |
 | Lost connection to Replica      |
 | insert_keeper_fault_injection   |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection
+version: 0.0
+
+[ClickHouse] SHALL be robust against faults created by insert_keeper_fault_injection.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper
 version: 0.0
