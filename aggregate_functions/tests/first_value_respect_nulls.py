@@ -67,7 +67,7 @@ def scenario(
 
     with Check("NULL for all rows"):
         execute_query(
-            f"SELECT {func.format(params='distinct if(number % 2, NULL, NULL)')}, any(toTypeName(number)) FROM numbers(10)"
+            f"SELECT {func.format(params='distinct if(number % 2, NULL, NULL)')}, any(toTypeName(NULL)) FROM numbers(10)"
         )
 
     with Check("return type"):
