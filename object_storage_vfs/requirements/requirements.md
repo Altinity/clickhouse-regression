@@ -26,9 +26,10 @@
     * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Delete](#rqsrs-038diskobjectstoragevfsintegritydelete)
   * 4.4 [System](#system)
     * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide](#rqsrs-038diskobjectstoragevfssystemcompact_wide)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide](#rqsrs-038diskobjectstoragevfssystemcompact_wide)
   * 4.5 [Parts](#parts)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Fetch](#rqsrs-038diskobjectstoragevfspartsfetch)
     * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Optimize](#rqsrs-038diskobjectstoragevfspartsoptimize)
@@ -228,6 +229,11 @@ version: 0.0
 | Lost connection to Keeper       |
 | Lost connection to Replica      |
 | insert_keeper_fault_injection   |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection
+version: 0.0
+
+[ClickHouse] SHALL be robust against faults created by insert_keeper_fault_injection.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper
 version: 0.0
