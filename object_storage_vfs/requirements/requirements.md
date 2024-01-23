@@ -29,7 +29,7 @@
     * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
     * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
     * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide](#rqsrs-038diskobjectstoragevfssystemcompact_wide)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
   * 4.5 [Parts](#parts)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Fetch](#rqsrs-038diskobjectstoragevfspartsfetch)
     * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Optimize](#rqsrs-038diskobjectstoragevfspartsoptimize)
@@ -246,7 +246,7 @@ version: 0.0
 [ClickHouse] Replicated tables SHALL continue to operate without issue when a keeper node is removed from the cluster.
 This does not apply if there is only one keeper node.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.System.Compact_Wide
+#### RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts
 version: 1.0
 
 [ClickHouse] SHALL support [S3] external storage of data parts as Wide parts,
