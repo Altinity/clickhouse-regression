@@ -55,12 +55,12 @@ This is only available in versions 23.12 and later.
 
 ## Terminology
 
-- **Replicated Table** - A table whose metadata and data exists in multiple locations
-- **Zero Copy Replication** - A replication mode where each server keeps a copy of the metadata, but shares the data on external storage
-- **0-copy** - Shorthand for Zero Copy Replication
-- **VFS** - Virtual File System
-- **S3** - Object Storage provided by [AWS]. Also used to refer to any S3-compatible object storage.
-- **DiskObjectStorageVFS** - The specific VFS implementation used by [ClickHouse] for object storage
+* **Replicated Table** - A table whose metadata and data exists in multiple locations
+* **Zero Copy Replication** - A replication mode where each server keeps a copy of the metadata, but shares the data on external storage
+* **0-copy** - Shorthand for Zero Copy Replication
+* **VFS** - Virtual File System
+* **S3** - Object Storage provided by [AWS]. Also used to refer to any S3-compatible object storage.
+* **DiskObjectStorageVFS** - The specific VFS implementation used by [ClickHouse] for object storage
 
 ## Requirements
 
@@ -106,6 +106,17 @@ with no changes to data in replicated tables. If the table is altered while
 an instance is offline, [ClickHouse] SHALL update the table from [S3] when
 that instance restarts.
 
+#### RQ.SRS-038.DiskObjectStorageVFS.Replica.Slate
+version: 0.0
+
+stale replica
+
+### Table
+
+* DROP
+* UNDROP
+* TRUNCATE
+
 ### Settings
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk
@@ -128,7 +139,6 @@ Example:
 </yandex>
 ```
 
-
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible
 version: 1.0
 
@@ -138,7 +148,7 @@ and `<allow_object_storage_vfs>` are enabled at the same time.
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared
 version: 0.0
 
-[ClickHouse] SHALL respect the following settings when`<allow_object_storage_vfs>` is enabled
+[ClickHouse] SHALL respect the following settings when`<allow_object_storage_vfs>` is enabled.
 
 | Setting                                                   | Support |
 | --------------------------------------------------------- | ------- |
@@ -194,6 +204,151 @@ version: 1.0
 Should the detached table on a replica become corrupted,
 [ClickHouse] SHALL ensure that other replicas are not affected.
 
+### System
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption
+version: 0.0
+
+[ClickHouse] SHALL be robust against the following types of connection interruptions.
+
+| Interruption                    |
+| ------------------------------- |
+| Unstable connection             |
+| Unfinished API requests (stuck) |
+| Interrupted API requests        |
+| Slow connection                 |
+| Lost connection to Keeper       |
+| Lost connection to Replica      |
+| insert_keeper_fault_injection   |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper
+version: 0.0
+
+[ClickHouse] Replicated tables SHALL continue to operate without issue when a keeper node is added to the cluster.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper
+version: 0.0
+
+[ClickHouse] Replicated tables SHALL continue to operate without issue when a keeper node is removed from the cluster.
+This does not apply if there is only one keeper node.
+
+### Parts
+
+[ClickHouse] SHALL support the following operations on parts without data loss.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Parts.Fetch
+version: 0.0
+
+[ClickHouse] SHALL support fetching a new part from another replica.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Parts.Optimize
+version: 0.0
+
+[ClickHouse] SHALL support manually triggering merges with `OPTIMIZE [FINAL]`.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Parts.BackgroundCollapse
+version: 0.0
+
+[ClickHouse] SHALL support collapsing MergeTree engines and their replicated versions.
+
+| Collapsing Engines                   |
+| ------------------------------------ |
+| (Replicated)CollapsingMergeTree      |
+| (Replicated)ReplacingMergeTree       |
+| (Replicated)VersionedCollapsingMerge |
+| (Replicated)SummingMergeTree         |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Parts.Manipulation
+version: 0.0
+
+| Part Manipulations        |
+| ------------------------- |
+| DETACH PARTITION/PART     |
+| DROP PARTITION/PART       |
+| ATTACH PARTITION/PART     |
+| ATTACH PARTITION FROM     |
+| REPLACE PARTITION         |
+| MOVE PARTITION TO TABLE   |
+| CLEAR COLUMN IN PARTITION |
+| CLEAR INDEX IN PARTITION  |
+| FREEZE PARTITION          |
+| UNFREEZE PARTITION        |
+| FETCH PARTITION/PART      |
+| MOVE PARTITION/PART       |
+| UPDATE IN PARTITION       |
+| DELETE IN PARTITION       |
+
+### Alter
+
+[ClickHouse] SHALL support the following operations on parts without data loss.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Index
+version: 0.0
+
+| Index Operations  |
+| ----------------- |
+| ADD INDEX         |
+| DROP INDEX        |
+| MATERIALIZE INDEX |
+| CLEAR INDEX       |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy
+version: 0.0
+
+[ClickHouse] SHALL support MODIFY ORDER BY.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy
+version: 0.0
+
+[ClickHouse] SHALL support MODIFY SAMPLE BY.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections
+version: 0.0
+
+| Projection Operations  |
+| ---------------------- |
+| ADD PROJECTION         |
+| DROP PROJECTION        |
+| MATERIALIZE PROJECTION |
+| CLEAR PROJECTION       |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Column
+version: 0.0
+
+| Column Operation     | Description                                                       |
+| -------------------- | ----------------------------------------------------------------- |
+| ADD COLUMN           | Adds a new column to the table.                                   |
+| DROP COLUMN          | Deletes the column.                                               |
+| RENAME COLUMN        | Renames an existing column.                                       |
+| CLEAR COLUMN         | Resets column values.                                             |
+| COMMENT COLUMN       | Adds a text comment to the column.                                |
+| MODIFY COLUMN        | Changes column's type, default expression and TTL.                |
+| MODIFY COLUMN REMOVE | Removes one of the column properties.                             |
+| MATERIALIZE COLUMN   | Materializes the column in the parts where the column is missing. |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Update
+version: 0.0
+
+| Operation    |
+| ------------ |
+| DELETE       |
+| UPDATE       |
+| ALTER DELETE |
+| ALTER UPDATE |
+
+### StoragePolicy
+
+#### RQ.SRS-038.DiskObjectStorageVFS.StoragePolicy
+version: 0.0
+
+[ClickHouse] SHALL support the following storage policy arrangements with VFS
+
+| Policy                             |
+| ---------------------------------- |
+| Tiered storage                     |
+| Single or multiple S3 buckets      |
+| Single or multiple object storages |
+
 ### Combinatoric
 
 #### Supported Table Configurations
@@ -216,17 +371,17 @@ Should the detached table on a replica become corrupted,
 | UPDATE | TRUNCATE TABLE |     |
 | SELECT |                |     |
 
-
 #### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric
 version: 0.0
+
 [Clickhouse]  SHALL support any sequence of [supported operations](#supported-operations)
 on a table configured with any combination of
- [supported table combinations](#supported-table-configurations).
+[supported table combinations](#supported-table-configurations).
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert
 version: 1.0
 
-[Clickhouse]  SHALL support insert operations on a table configured with 
+[Clickhouse]  SHALL support insert operations on a table configured with
 any combination of  [supported table combinations](#supported-table-configurations).
 
 ### Performance
@@ -234,7 +389,7 @@ any combination of  [supported table combinations](#supported-table-configuratio
 #### RQ.SRS-038.DiskObjectStorageVFS.Performance
 version: 1.0
 
-[Clickhouse] DiskObjectStorageVFS shares performance requirements with 
+[Clickhouse] DiskObjectStorageVFS shares performance requirements with
 [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
 
 ### Object Storage Providers
@@ -277,11 +432,11 @@ version: 1.0
 
 ## References
 
-- **AWS:** <https://en.wikipedia.org/wiki/Amazon_Web_Services>
-- **S3:** <https://en.wikipedia.org/wiki/Amazon_S3>
-- **ClickHouse:** <https://clickhouse.tech>
-- **GitHub Repository:** <https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs>
-- **Revision History:** <https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md>
+* **AWS:** <https://en.wikipedia.org/wiki/Amazon_Web_Services>
+* **S3:** <https://en.wikipedia.org/wiki/Amazon_S3>
+* **ClickHouse:** <https://clickhouse.tech>
+* **GitHub Repository:** <https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs>
+* **Revision History:** <https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md>
 
 [AWS S3]: https://en.wikipedia.org/wiki/Amazon_S3
 [ClickHouse]: https://clickhouse.tech
