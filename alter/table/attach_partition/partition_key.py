@@ -942,6 +942,9 @@ def attach_partition_from(self, with_id=False):
         "1.0"
     ),
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_SupportedTableEngines("1.0"),
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Replicas("1.0"),
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom("1.0"),
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_KeepData("1.0"),
 )
 @Name("partition key")
 def feature(self):
