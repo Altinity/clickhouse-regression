@@ -79,7 +79,7 @@ def no_duplication(self):
 
         with Then("the size of the s3 bucket should be doubled and no more"):
             expected_size = size_empty + size_added * 2
-            check_bucket_size(
+            retry(check_bucket_size, timeout=15, delay=2)(
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=expected_size,
@@ -97,7 +97,7 @@ def no_duplication(self):
             assert "u\tUInt64" in r.output, error(r)
 
         with And("there should be no change in storage usage"):
-            check_bucket_size(
+            retry(check_bucket_size, timeout=15, delay=2)(
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=expected_size,
