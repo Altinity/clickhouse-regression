@@ -336,9 +336,52 @@ def ttl_move(self):
         )
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption_FaultInjection(
+        "0.0"
+    )
+)
+def fault_injection(self):
+    """Test that ClickHouse is robust against injected faults"""
+    nodes = self.context.ch_nodes
+    table_name = "fault_injection"
+    rows_per_insert = 5000
+    insert_rounds = 5
+    fault_probability = 0.3
+
+    with Given("I have a replicated vfs table"):
+        replicated_table_cluster(
+            table_name=table_name,
+            storage_policy="external_vfs",
+            columns="d UInt64",
+        )
+
+    with When(
+        f"I perform inserts with insert_keeper_fault_injection_probability={fault_probability}"
+    ):
+        for _ in range(insert_rounds):
+            for node in nodes:
+                with By(f"Inserting {rows_per_insert} rows on {node.name}"):
+                    node.query(
+                        f"""INSERT INTO {table_name} 
+                        SELECT * FROM generateRandom('d UInt64') 
+                        LIMIT {rows_per_insert} 
+                        SETTINGS insert_keeper_fault_injection_probability={fault_probability}
+                        """,
+                        no_checks=True,
+                    )
+
+    with Then("I check the number of rows in the table"):
+        retry(assert_row_count, timeout=5, delay=1)(
+            node=nodes[0],
+            table_name=table_name,
+            rows=(rows_per_insert * insert_rounds * len(nodes)),
+        )
+
+
 # RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration
 # RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption
-# RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption_FaultInjection
 
 
 @TestFeature
