@@ -337,6 +337,8 @@ def ttl_move(self):
 
 
 # RQ_SRS_038_DiskObjectStorageVFS_Integrity_Migration
+# RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption
+# RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption_FaultInjection
 
 
 @TestFeature
