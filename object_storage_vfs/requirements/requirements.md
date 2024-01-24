@@ -346,6 +346,7 @@ version: 0.0
 | MODIFY COLUMN        | Changes column's type, default expression and TTL.                |
 | MODIFY COLUMN REMOVE | Removes one of the column properties.                             |
 | MATERIALIZE COLUMN   | Materializes the column in the parts where the column is missing. |
+| ADD CONSTRAINT       |                                                                   |
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Update
 version: 0.0
