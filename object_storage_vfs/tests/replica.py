@@ -105,6 +105,7 @@ def no_duplication(self):
                 minio_enabled=self.context.minio_enabled,
             )
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Replica_Add("1.0"),
@@ -371,7 +372,7 @@ def parallel_add_remove(self):
 
 @TestOutline(Example)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
-def do_command_combinations(self, table_name, allow_vfs=True):
+def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=True):
     """
     Perform combinations of actions on replicas, including adding and removing,
     checking that the replicas agree.
@@ -414,12 +415,37 @@ def do_command_combinations(self, table_name, allow_vfs=True):
         )
 
     @TestStep(When)
+    def insert_large(self, node):
+        insert_random(
+            node=node,
+            table_name=table_name,
+            columns="d UInt64",
+            rows=rows_per_insert * 10,
+            no_checks=True,
+        )
+
+    @TestStep(When)
+    def insert_small(self, node):
+        insert_random(
+            node=node,
+            table_name=table_name,
+            columns="d UInt64",
+            rows=rows_per_insert // 10,
+            no_checks=True,
+        )
+
+    @TestStep(When)
     def optimize(self, node):
         node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
 
     @TestStep(When)
     def select(self, node):
-        r = node.query(f"SELECT count() FROM {table_name}", no_checks=True)
+        for _ in range(random.randint(1, 10)):
+            node.query(f"SELECT count() FROM {table_name}", no_checks=True)
+
+    @TestStep(When)
+    def truncate(self, node):
+        node.query(f"TRUNCATE TABLE IF EXISTS {table_name}", no_checks=True)
 
     @TestStep(When)
     def get_row_count(self, node):
@@ -456,16 +482,20 @@ def do_command_combinations(self, table_name, allow_vfs=True):
     actions = [
         add_replica,
         insert,
+        insert_small,
+        insert_large,
         optimize,
         select,
+        truncate,
         rm_replica,
     ]
 
     action_pairs = list(product(nodes, actions))
 
     action_combos = list(combinations(action_pairs, combination_size))
+
     if shuffle_combinations:
-        random.shuffle(action_combos)
+        random.Random(shuffle_seed).shuffle(action_combos)
 
     try:
         t = time.time()
@@ -507,11 +537,13 @@ def command_combinations(self, parallel=True):
     """
     Perform parallel actions on replicas and check that they all agree.
     """
-    Example(name="vfs", test=do_command_combinations, parallel=parallel)(
-        table_name="add_remove_vfs", allow_vfs=True
+    random_seed = random.random()
+    note(f"Command combinations shuffle seed {random_seed}")
+    Example(name="vfs", test=command_combinations_outline, parallel=parallel)(
+        table_name="add_remove_vfs", shuffle_seed=random_seed, allow_vfs=True
     )
-    Example(name="no vfs", test=do_command_combinations, parallel=parallel)(
-        table_name="add_remove_no_vfs", allow_vfs=False
+    Example(name="no vfs", test=command_combinations_outline, parallel=parallel)(
+        table_name="add_remove_no_vfs", shuffle_seed=random_seed, allow_vfs=False
     )
 
 
