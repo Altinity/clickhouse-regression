@@ -5,8 +5,6 @@ from object_storage_vfs.requirements import *
 
 
 """
-RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption
-RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection
 RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper
 RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper
 """

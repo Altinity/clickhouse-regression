@@ -279,8 +279,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Integrity_Delete = Requirement(
     num="4.3.6",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption",
+RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption",
     version="0.0",
     priority=None,
     group=None,
@@ -302,11 +302,11 @@ RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.1",
+    num="4.3.7",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection",
+RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption_FaultInjection = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption.FaultInjection",
     version="0.0",
     priority=None,
     group=None,
@@ -318,7 +318,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection = R
     ),
     link=None,
     level=3,
-    num="4.4.2",
+    num="4.3.8",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper = Requirement(
@@ -334,7 +334,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.3",
+    num="4.4.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper = Requirement(
@@ -351,7 +351,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.4",
+    num="4.4.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts = Requirement(
@@ -369,7 +369,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.5",
+    num="4.4.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Parts_Fetch = Requirement(
@@ -805,31 +805,31 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             level=3,
             num="4.3.6",
         ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption",
+            level=3,
+            num="4.3.7",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption.FaultInjection",
+            level=3,
+            num="4.3.8",
+        ),
         Heading(name="System", level=2, num="4.4"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption",
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper",
             level=3,
             num="4.4.1",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection",
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper",
             level=3,
             num="4.4.2",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper",
-            level=3,
-            num="4.4.3",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper",
-            level=3,
-            num="4.4.4",
-        ),
-        Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts",
             level=3,
-            num="4.4.5",
+            num="4.4.3",
         ),
         Heading(name="Parts", level=2, num="4.5"),
         Heading(
@@ -923,8 +923,8 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_TTLDelete,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_Detach,
         RQ_SRS_038_DiskObjectStorageVFS_Integrity_Delete,
-        RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption,
-        RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection,
+        RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption,
+        RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption_FaultInjection,
         RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper,
         RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper,
         RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts,
@@ -974,12 +974,12 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.TTLDelete](#rqsrs-038diskobjectstoragevfsintegrityttldelete)
     * 4.3.5 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Detach](#rqsrs-038diskobjectstoragevfsintegritydetach)
     * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.Delete](#rqsrs-038diskobjectstoragevfsintegritydelete)
+    * 4.3.7 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption](#rqsrs-038diskobjectstoragevfsintegrityconnectioninterruption)
+    * 4.3.8 [RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfsintegrityconnectioninterruptionfaultinjection)
   * 4.4 [System](#system)
-    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
+    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
   * 4.5 [Parts](#parts)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Fetch](#rqsrs-038diskobjectstoragevfspartsfetch)
     * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Parts.Optimize](#rqsrs-038diskobjectstoragevfspartsoptimize)
@@ -1163,9 +1163,7 @@ version: 1.0
 
 [ClickHouse] SHALL ensure disused files in S3 are eventually removed when `<allow_vfs>` is enabled
 
-### System
-
-#### RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption
+#### RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption
 version: 0.0
 
 [ClickHouse] SHALL be robust against the following types of connection interruptions.
@@ -1180,10 +1178,12 @@ version: 0.0
 | Lost connection to Replica      |
 | insert_keeper_fault_injection   |
 
-#### RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection
+#### RQ.SRS-038.DiskObjectStorageVFS.Integrity.ConnectionInterruption.FaultInjection
 version: 0.0
 
 [ClickHouse] SHALL be robust against faults created by insert_keeper_fault_injection.
+
+### System
 
 #### RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper
 version: 0.0
