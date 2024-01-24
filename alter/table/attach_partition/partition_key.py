@@ -906,7 +906,7 @@ def attach_partition_from(self, with_id=False):
     }
 
     if not self.context.stress:
-        partition_keys = set(random.sample(partition_keys, 10))
+        partition_keys = partition_keys
         engines = {
             "MergeTree",
             "ReplicatedMergeTree",
