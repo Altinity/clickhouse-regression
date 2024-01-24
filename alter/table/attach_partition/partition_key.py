@@ -812,10 +812,10 @@ def check_attach_partition_from(
     ):
         if valid:
             source_partition_data = get_node(self, "source").query(
-                f"SELECT * FROM {source_table_name} ORDER BY a,b,c"
+                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra"
             )
             destination_partition_data = get_node(self, "destination").query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -835,13 +835,13 @@ def check_attach_partition_from(
     with And(f"I check that all replicas of destination table have same data:"):
         if "Replicated" in self.context.destination_engine:
             destination_partition_data_1 = self.context.node_1.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
             )
             destination_partition_data_2 = self.context.node_2.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
             )
             destination_partition_data_3 = self.context.node_3.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
