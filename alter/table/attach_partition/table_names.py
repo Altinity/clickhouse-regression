@@ -168,7 +168,7 @@ def table_names(self, source_table, destination_table, with_id=False):
 
 
 @TestFeature
-@Requirements(RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions("1.0"))
+@Requirements(RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_TableName("1.0"))
 @Name("table names")
 def feature(self, node="clickhouse1"):
     """Run test check with different table names to see if `attach partition from` is possible."""
