@@ -107,7 +107,7 @@ def check_replace_partition_on_different_types_of_disks(
     source_table_name = "source_" + getuid()
 
     with Given(
-        "I create two MergeTree tables and one of both of them are stored on a minio disk"
+        "I create two MergeTree tables and one or both of them are stored on a minio disk"
     ):
         destination_table(table_name=destination_table_name)
         source_table(table_name=source_table_name)
