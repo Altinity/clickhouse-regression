@@ -102,7 +102,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk = Requirement(
     description=(
         "[ClickHouse] SHALL support the `<allow_vfs>` setting in the\n"
         "`<disks>` section of the config.xml file or an xml file in\n"
-        "the config.d directory to configure the ReplicatedMergeTree engine globally.\n"
+        "the config.d directory to configure the vfs for a disk.\n"
         "\n"
         "Example:\n"
         "\n"
@@ -1078,7 +1078,7 @@ version: 1.0
 
 [ClickHouse] SHALL support the `<allow_vfs>` setting in the
 `<disks>` section of the config.xml file or an xml file in
-the config.d directory to configure the ReplicatedMergeTree engine globally.
+the config.d directory to configure the vfs for a disk.
 
 Example:
 
