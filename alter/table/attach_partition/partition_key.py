@@ -888,24 +888,25 @@ def attach_partition_from(self, with_id=False):
         "(c,b,a)",
     }
 
-    if self.context.stress:
-        engines = {
-            "MergeTree",
-            "ReplacingMergeTree",
-            "AggregatingMergeTree",
-            "SummingMergeTree",
-            "CollapsingMergeTree",
-            "VersionedCollapsingMergeTree",
-            "GraphiteMergeTree",
-            "ReplicatedMergeTree",
-            "ReplicatedReplacingMergeTree",
-            "ReplicatedAggregatingMergeTree",
-            "ReplicatedSummingMergeTree",
-            "ReplicatedCollapsingMergeTree",
-            "ReplicatedVersionedCollapsingMergeTree",
-            "ReplicatedGraphiteMergeTree",
-        }
-    else:
+    engines = {
+        "MergeTree",
+        "ReplacingMergeTree",
+        "AggregatingMergeTree",
+        "SummingMergeTree",
+        "CollapsingMergeTree",
+        "VersionedCollapsingMergeTree",
+        "GraphiteMergeTree",
+        "ReplicatedMergeTree",
+        "ReplicatedReplacingMergeTree",
+        "ReplicatedAggregatingMergeTree",
+        "ReplicatedSummingMergeTree",
+        "ReplicatedCollapsingMergeTree",
+        "ReplicatedVersionedCollapsingMergeTree",
+        "ReplicatedGraphiteMergeTree",
+    }
+
+    if not self.context.stress:
+        partition_keys = set(random.sample(partition_keys, 10))
         engines = {
             "MergeTree",
             "ReplicatedMergeTree",
@@ -914,7 +915,7 @@ def attach_partition_from(self, with_id=False):
     source_partition_key = either(*partition_keys)
     destination_partition_key = either(*partition_keys)
 
-    if check_clickhouse_version(">=24.1"):
+    if check_clickhouse_version(">=24.1")(self):
         check_attach_partition_from(
             source_table_engine=either(*engines),
             destination_table_engine=either(*engines),
