@@ -35,6 +35,12 @@ def s3_config(self):
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
+            "external_tiered": {
+                "type": "s3",
+                "endpoint": f"{self.context.uri}object-storage/tiered/",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+            },
         }
 
     with And("""I have a storage policy configured to use the S3 disk"""):
@@ -42,6 +48,12 @@ def s3_config(self):
             "external": {"volumes": {"external": {"disk": "external"}}},
             "external_vfs": {"volumes": {"external": {"disk": "external_vfs"}}},
             "external_no_vfs": {"volumes": {"external": {"disk": "external_no_vfs"}}},
+            "tiered": {
+                "volumes": {
+                    "default": {"disk": "external"},
+                    "external": {"disk": "external_tiered"},
+                }
+            },
         }
 
     with s3_storage(disks, policies, restart=True, timeout=60):
@@ -60,8 +72,8 @@ def check_vfs_state(
     if enabled:
         node.command(c, exitcode=0)
     else:
-       r = node.command(c, exitcode=None)
-       assert r.exitcode in [1, 2], error()
+        r = node.command(c, exitcode=None)
+        assert r.exitcode in [1, 2], error()
 
 
 @TestStep(Then)
@@ -87,6 +99,7 @@ def replicated_table_cluster(
     order_by: str = None,
     allow_zero_copy: bool = None,
     exitcode: int = 0,
+    ttl: str = None,
 ):
     node = current().context.node
 
@@ -104,6 +117,11 @@ def replicated_table_cluster(
     if allow_zero_copy is not None:
         settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
 
+    if ttl is not None:
+        ttl = "TTL " + ttl
+    else:
+        ttl = ""
+
     try:
         with Given("I have a table"):
             r = node.query(
@@ -111,7 +129,7 @@ def replicated_table_cluster(
                 CREATE TABLE IF NOT EXISTS {table_name} 
                 ON CLUSTER '{cluster_name}' ({columns}) 
                 ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
-                ORDER BY {order_by}
+                ORDER BY {order_by} {ttl}
                 SETTINGS {', '.join(settings)}
                 """,
                 settings=[("distributed_ddl_task_timeout ", 360)],
