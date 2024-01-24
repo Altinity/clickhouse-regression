@@ -10,9 +10,6 @@ RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper
 """
 
 
-
-
-
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts("1.0"))
 def wide_parts(self):

@@ -16,9 +16,7 @@ xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
     ":/parallel replica/add remove commands/*": [(Fail, "WIP"), (Error, "WIP")],
-    ":/integrity/disable vfs with vfs table/access:": [
-        (Fail, "not supported")
-    ],
+    ":/integrity/disable vfs with vfs table/access:": [(Fail, "not supported")],
 }
 
 ffails = {}

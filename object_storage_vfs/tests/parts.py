@@ -58,7 +58,9 @@ def optimize(self):
     with Then("There should be fewer active parts"):
         for attempt in retries(timeout=15, delay=1):
             with attempt:
-                final_part_count = get_active_part_count(node=nodes[0], table_name=table_name)
+                final_part_count = get_active_part_count(
+                    node=nodes[0], table_name=table_name
+                )
                 assert final_part_count < optimized_part_count, error()
 
     with Then("There should be only one active part"):
