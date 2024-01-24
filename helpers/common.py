@@ -243,7 +243,7 @@ def create_xml_config_content(
 
 
 def add_invalid_config(
-    config, message, recover_config=None, tail=30, timeout=300, restart=True, user=None
+    config, message, recover_config=None, tail=300, timeout=300, restart=True, user=None
 ):
     """Check that ClickHouse errors when trying to load invalid configuration file."""
     cluster = current().context.cluster

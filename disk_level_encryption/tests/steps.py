@@ -57,7 +57,7 @@ def add_invalid_encrypted_disk_configuration(
     message,
     recover_entries=None,
     xml_symbols=True,
-    tail=30,
+    tail=300,
     timeout=300,
     restart=True,
     format=None,
