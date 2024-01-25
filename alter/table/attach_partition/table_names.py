@@ -12,15 +12,16 @@ from alter.table.attach_partition.requirements.requirements import *
 from helpers.common import getuid
 
 part_of_unicode = []
+ascii_letters = {i for i in string.ascii_letters}
+all_ascii = {i for i in string.printable}
+exclude = {"`", '"', "\\"}
+not_letters = all_ascii.difference(ascii_letters).difference(exclude)
 
 
 def valid_name(source_table_name, destination_table_name):
-    all_ascii = {i for i in string.printable}
-    ascii_letters = {i for i in string.ascii_letters}
-    not_letters = all_ascii.difference(ascii_letters)
-
     invalid = ["."] + [i for i in not_letters] + part_of_unicode
-    invalid.remove("_")
+    if "_" in invalid:
+        invalid.remove("_")
     valid = ["a" * 10000] + [i for i in ascii_letters] + ["_"]
 
     if destination_table_name in invalid:
@@ -88,53 +89,6 @@ def table_names(self, source_table, destination_table, with_id=False):
     """Run test check with different table names to see if `attach partition from` is possible."""
 
     ascii_letters = {i for i in string.ascii_letters}
-    not_letters = {
-        "?",
-        ",",
-        "(",
-        "\t",
-        "0",
-        "<",
-        "'",
-        "%",
-        ">",
-        "@",
-        "#",
-        "6",
-        "1",
-        "$",
-        "\x0c",
-        "+",
-        "{",
-        "|",
-        "8",
-        " ",
-        "]",
-        "\n",
-        "=",
-        "4",
-        ")",
-        "~",
-        "9",
-        ".",
-        "-",
-        "3",
-        "*",
-        "5",
-        "\r",
-        "2",
-        "\x0b",
-        "[",
-        ";",
-        "/",
-        "}",
-        "7",
-        "_",
-        ":",
-        "&",
-        "!",
-        "^",
-    }
 
     if self.context.stress:
         table_names_all = (
@@ -155,8 +109,8 @@ def table_names(self, source_table, destination_table, with_id=False):
                 "a" * 10000,
             }
             | set(random.sample(ascii_letters, 5))
-            | not_letters
-            | set(part_of_unicode)
+            | set(random.sample(not_letters, 10))
+            | set(random.sample(part_of_unicode, 10))
         )
 
     check_table_name(
@@ -188,6 +142,7 @@ def feature(self, node="clickhouse1"):
         table_name=destination_table,
         partition_by="a",
     )
+
     Scenario("check table names with id", test=table_names)(
         with_id=True, source_table=source_table, destination_table=destination_table
     )
