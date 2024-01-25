@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import json
+import time
 
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid, create_xml_config_content, check_clickhouse_version
+from helpers.common import getuid, check_clickhouse_version
 
-from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size, add_config
+from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
 
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
@@ -239,3 +240,53 @@ def enable_vfs(
         config_file=config_file,
     ):
         yield
+
+
+@TestStep
+def get_stable_bucket_size(
+    self,
+    name,
+    prefix,
+    minio_enabled,
+    access_key,
+    key_id,
+    delay=5,
+):
+    with By("Checking the current bucket size"):
+        size_previous = get_bucket_size(
+            name=name,
+            prefix=prefix,
+            minio_enabled=minio_enabled,
+            access_key=access_key,
+            key_id=key_id,
+        )
+    while True:
+        with And(f"Waiting {delay}s"):
+            time.sleep(delay)
+        with And("Checking the current bucket size"):
+            size = get_bucket_size(
+                name=name,
+                prefix=prefix,
+                minio_enabled=minio_enabled,
+                access_key=access_key,
+                key_id=key_id,
+            )
+        with And(f"Checking if current={size} == previous={size_previous}"):
+            if size_previous == size:
+                break
+        size_previous = size
+
+    return size
+
+@TestStep
+def check_stable_bucket_size(
+    self, name, prefix, expected_size, tolerance=0, minio_enabled=False
+):
+    current_size = get_stable_bucket_size(
+        name=name,
+        prefix=prefix,
+        minio_enabled=minio_enabled,
+        access_key=self.context.secret_access_key,
+        key_id=self.context.access_key_id,
+    )
+    assert abs(current_size - expected_size) <= tolerance, error()
