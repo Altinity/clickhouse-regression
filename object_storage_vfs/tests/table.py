@@ -95,7 +95,7 @@ def ttl_delete(self):
     table_name = "ttl_delete"
 
     with Given("I enable vfs"):
-        enable_vfs()
+        enable_vfs(disk_names=["external", "external_tiered"])
 
     with And("I have a replicated table"):
         replicated_table_cluster(
@@ -135,7 +135,7 @@ def ttl_move(self):
     table_name = "ttl_move"
 
     with Given("I enable vfs"):
-        enable_vfs()
+        enable_vfs(disk_names=["external", "external_tiered"])
 
     with And("I have a replicated table"):
         replicated_table_cluster(
