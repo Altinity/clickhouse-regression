@@ -111,6 +111,84 @@ def disk_setting(self):
         assert size_vfs <= size_no_vfs // 2, error()
 
 
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
+def disable_vfs_with_vfs_table(self):
+    """
+    Check that removing global allow_vfs=1 when a vfs table exists does not cause data to become inaccessible.
+    """
+    nodes = current().context.ch_nodes
+    table_name = "my_replicated_vfs_table"
+
+    with Check("create a table with VFS enabled"):
+        with Given("I enable allow_vfs"):
+            enable_vfs()
+
+        with Given("I have a table with vfs"):
+            replicated_table_cluster(
+                table_name=table_name,
+                storage_policy="external",
+                columns="d UInt64",
+            )
+
+        with And("I insert some data"):
+            nodes[1].query(
+                f"INSERT INTO {table_name} VALUES {','.join(f'({x})' for x in range(100))}"
+            )
+
+        with Then("the data is accesssible"):
+            assert_row_count(node=nodes[1], table_name=table_name, rows=100)
+            retry(assert_row_count, timeout=10, delay=1)(
+                node=nodes[0], table_name=table_name, rows=100
+            )
+
+    with Check("access the table without VFS"):
+        with When("VFS is no longer enabled"):
+            check_vfs_state(node=nodes[0], enabled=False)
+
+        with Then("the data remains accessible"):
+            assert_row_count(node=nodes[0], table_name=table_name, rows=100)
+
+        with When("I delete some data"):
+            nodes[2].query(f"DELETE FROM {table_name} WHERE d=40")
+
+        with Then("Not all data is deleted"):
+            retry(assert_row_count, timeout=5, delay=1)(
+                node=nodes[1], table_name=table_name, rows=99
+            )
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
+def enable_vfs_with_non_vfs_table(self):
+    """
+    Check that globally enabling allow_vfs when a non-vfs table exists does not cause data to become inaccessible.
+    """
+
+    node = current().context.node
+
+    with Given("VFS is not enabled"):
+        check_vfs_state(enabled=False)
+
+    with And("I have a table without vfs"):
+        replicated_table_cluster(
+            table_name="my_non_vfs_table",
+            columns="d UInt64",
+        )
+
+    with And("I insert some data"):
+        node.query(
+            f"INSERT INTO my_non_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
+        )
+        assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
+
+    with And("I enable allow_object_storage_vfs"):
+        enable_vfs()
+
+    with Then("the data remains accessible"):
+        assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
+
+
 # RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared
 
 

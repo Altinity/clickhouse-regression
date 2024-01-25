@@ -16,7 +16,7 @@ xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
     ":/parallel replica/add remove commands/*": [(Fail, "WIP"), (Error, "WIP")],
-    ":/integrity/disable vfs with vfs table/access:": [(Fail, "not supported")],
+    ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
 }
 
 ffails = {}
@@ -70,9 +70,9 @@ def minio(
     Feature(run=load("object_storage_vfs.tests.replica", "feature"))
     # Feature(run=load("object_storage_vfs.tests.parallel_replica", "feature"))
     Feature(run=load("object_storage_vfs.tests.settings", "feature"))
-    Feature(run=load("object_storage_vfs.tests.integrity", "feature"))
+    Feature(run=load("object_storage_vfs.tests.table", "feature"))
     Feature(run=load("object_storage_vfs.tests.system", "feature"))
-    Feature(run=load("object_storage_vfs.tests.parts", "feature"))
+    Feature(run=load("object_storage_vfs.tests.alter", "feature"))
     Feature(run=load("object_storage_vfs.tests.create_insert", "feature"))
     Feature(run=load("object_storage_vfs.tests.performance", "feature"))
 

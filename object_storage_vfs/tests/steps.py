@@ -250,7 +250,7 @@ def get_stable_bucket_size(
     minio_enabled,
     access_key,
     key_id,
-    delay=5,
+    delay=10,
 ):
     with By("Checking the current bucket size"):
         size_previous = get_bucket_size(
@@ -278,9 +278,16 @@ def get_stable_bucket_size(
 
     return size
 
+
 @TestStep
 def check_stable_bucket_size(
-    self, name, prefix, expected_size, tolerance=0, minio_enabled=False
+    self,
+    name,
+    prefix,
+    expected_size,
+    tolerance=0,
+    minio_enabled=False,
+    delay=10,
 ):
     current_size = get_stable_bucket_size(
         name=name,
@@ -288,5 +295,6 @@ def check_stable_bucket_size(
         minio_enabled=minio_enabled,
         access_key=self.context.secret_access_key,
         key_id=self.context.access_key_id,
+        delay=10,
     )
     assert abs(current_size - expected_size) <= tolerance, error()
