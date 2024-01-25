@@ -161,6 +161,11 @@ version: 0.0
 | perform_ttl_move_on_insert                                | yes     |
 | ...                                                       | planned |
 
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload
+version: 0.0
+
+[ClickHouse] SHALL reload the vfs configuration when the `SYSTEM RELOAD CONFIG` command is run.
+
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled
 version: 1.0
 
