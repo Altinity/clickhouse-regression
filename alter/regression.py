@@ -86,11 +86,6 @@ ffails = {
         "Not implemented before 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/alter/attach partition/partition key/*": (
-        Skip,
-        "Not yet merged https://github.com/ClickHouse/ClickHouse/pull/39507",
-        check_clickhouse_version("<=23.13"),
-    ),
 }
 
 
