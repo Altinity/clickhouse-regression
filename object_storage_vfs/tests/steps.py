@@ -97,6 +97,7 @@ def replicated_table_cluster(
     cluster_name: str = "replicated_cluster",
     columns: str = None,
     order_by: str = None,
+    partition_by: str = None,
     allow_zero_copy: bool = None,
     exitcode: int = 0,
     ttl: str = None,
@@ -117,6 +118,11 @@ def replicated_table_cluster(
     if allow_zero_copy is not None:
         settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
 
+    if partition_by is not None:
+        partition_by = f"PARTITION BY ({partition_by})"
+    else:
+        partition_by = ""
+
     if ttl is not None:
         ttl = "TTL " + ttl
     else:
@@ -129,7 +135,7 @@ def replicated_table_cluster(
                 CREATE TABLE IF NOT EXISTS {table_name} 
                 ON CLUSTER '{cluster_name}' ({columns}) 
                 ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
-                ORDER BY {order_by} {ttl}
+                ORDER BY {order_by} {partition_by} {ttl}
                 SETTINGS {', '.join(settings)}
                 """,
                 settings=[("distributed_ddl_task_timeout ", 360)],
