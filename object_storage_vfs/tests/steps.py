@@ -99,9 +99,10 @@ def replicated_table_cluster(
     columns: str = None,
     order_by: str = None,
     partition_by: str = None,
+    primary_key: str = None,
+    ttl: str = None,
     allow_zero_copy: bool = None,
     exitcode: int = 0,
-    ttl: str = None,
 ):
     node = current().context.node
 
@@ -124,6 +125,12 @@ def replicated_table_cluster(
     else:
         partition_by = ""
 
+    if primary_key is not None:
+        primary_key = f"PRIMARY KEY {primary_key}"
+    else:
+        primary_key = ""
+         
+
     if ttl is not None:
         ttl = "TTL " + ttl
     else:
@@ -136,7 +143,7 @@ def replicated_table_cluster(
                 CREATE TABLE IF NOT EXISTS {table_name} 
                 ON CLUSTER '{cluster_name}' ({columns}) 
                 ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
-                ORDER BY {order_by} {partition_by} {ttl}
+                ORDER BY {order_by} {partition_by} {primary_key} {ttl}
                 SETTINGS {', '.join(settings)}
                 """,
                 settings=[("distributed_ddl_task_timeout ", 360)],
