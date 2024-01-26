@@ -3,6 +3,7 @@ import random
 
 from testflows.core import *
 
+from helpers.alter import *
 from object_storage_vfs.tests.steps import *
 from object_storage_vfs.requirements import *
 
@@ -13,7 +14,6 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Index,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections,
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Column,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Update,
 """
 
@@ -56,6 +56,105 @@ def fetch(self, fetch_item):
             retry(assert_row_count, timeout=15, delay=1)(
                 node=node, table_name=destination_table_name, rows=row_count
             )
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Column("0.0"))
+def columns(self):
+    """Test that alter column commands execute without errors."""
+    table_name = "columns_table"
+    nodes = self.context.ch_nodes
+
+    with Given("I have a table"):
+        replicated_table_cluster(table_name=table_name)
+
+    with And("I insert some data"):
+        insert_random(node=nodes[0], table_name=table_name)
+
+    with Check("drop"):
+        with When("I delete a column on the second node"):
+            alter_table_drop_column(
+                node=nodes[1], table_name=table_name, column_name="value3"
+            )
+
+    with Check("add"):
+        with When("I add a column on the first node"):
+            nodes[0].query(
+                f"ALTER TABLE {table_name} ADD COLUMN valueX String materialized value1",
+                exitcode=0,
+            )
+
+    with Check("materialize"):
+        with When(f"I materialize the new column on the first node"):
+            nodes[0].query(
+                f"ALTER TABLE {table_name} MATERIALIZE COLUMN valueX", exitcode=0
+            )
+
+    with Check("rename"):
+        with When("I rename a column on the second node"):
+            alter_table_rename_column(
+                node=nodes[1],
+                table_name=table_name,
+                column_name_old="valueX",
+                column_name_new="valueY",
+            )
+
+    with Check("modify"):
+        with When(f"I modify a column type on the first node"):
+            alter_table_modify_column(
+                node=nodes[0],
+                table_name=table_name,
+                column_name="valueY",
+                column_type="FixedString(16)",
+            )
+
+    with Check("comment"):
+        with When("I add a comment to a column on the first node"):
+            nodes[0].query(
+                f"ALTER TABLE {table_name} COMMENT COLUMN value2 'column comment'",
+                exitcode=0,
+            )
+
+        with Then("I check that the comment was added"):
+            r = nodes[0].query(f"DESCRIBE TABLE {table_name}", exitcode=0)
+            assert "column comment" in r.output, error(r)
+
+    with Check("modify remove"):
+        with When(f"I remove a column property on the first node"):
+            nodes[0].query(
+                f"ALTER TABLE {table_name} MODIFY COLUMN value2 REMOVE COMMENT",
+                exitcode=0,
+            )
+
+    with Check("clear"):
+        with When("I clear a column on the first node"):
+            alter_table_clear_column_in_partition(
+                node=nodes[0],
+                table_name=table_name,
+                column_name="value1",
+                partition_name="tuple()",
+            )
+
+    with Check("constraint"):
+        with When("I add a contraint on the second node"):
+            alter_table_add_constraint(
+                node=nodes[1],
+                table_name=table_name,
+                constraint_name="nonnegativekey",
+                expression="(key >= 0)",
+            )
+
+    with When("I run DESCRIBE TABLE"):
+        r = nodes[2].query(f"DESCRIBE TABLE {table_name}", exitcode=0)
+
+    with Then("The output should contain all columns and comments"):
+        assert "value1" in r.output, error(r)
+        assert "value2" in r.output, error(r)
+        assert "valueY" in r.output, error(r)
+        assert "column comment" not in r.output, error(r)
+
+    with And("The table should contain all rows"):
+        assert_row_count(node=nodes[2], table_name=table_name)
 
 
 @TestFeature
