@@ -117,7 +117,7 @@ def columns(self):
     with Check("drop"):
         with When("I delete a column on the second node"):
             alter_table_drop_column(
-                node=nodes[1], table_name=table_name, column_name="value3"
+                node=nodes[1], table_name=table_name, column_name="value3", exitcode=0
             )
 
     with Check("add"):
@@ -140,6 +140,7 @@ def columns(self):
                 table_name=table_name,
                 column_name_old="valueX",
                 column_name_new="valueY",
+                exitcode=0,
             )
 
     with Check("modify"):
@@ -149,6 +150,7 @@ def columns(self):
                 table_name=table_name,
                 column_name="valueY",
                 column_type="FixedString(16)",
+                exitcode=0,
             )
 
     with Check("comment"):
@@ -176,6 +178,7 @@ def columns(self):
                 table_name=table_name,
                 column_name="value1",
                 partition_name="tuple()",
+                exitcode=0,
             )
 
     with Check("constraint"):
@@ -185,6 +188,7 @@ def columns(self):
                 table_name=table_name,
                 constraint_name="nonnegativekey",
                 expression="(key >= 0)",
+                exitcode=0,
             )
 
     with When("I run DESCRIBE TABLE"):
