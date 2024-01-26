@@ -10,7 +10,6 @@ from object_storage_vfs.requirements import *
 
 """
 RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation,
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections,
 """
 
 
@@ -135,6 +134,43 @@ def index(self):
                 exitcode=0,
             )
 
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections("0.0"))
+def projection(self):
+    """Test that adding projections does not error."""
+    table_name = "proj_table"
+    nodes = self.context.ch_nodes
+
+    with Given("I have a table"):
+        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+
+    with When("I add a projection with success"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} ADD PROJECTION value1_projection (SELECT * ORDER BY value1)",
+            exitcode=0,
+        )
+
+    with And("I materialize the projection with success"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} MATERIALIZE PROJECTION value1_projection",
+            exitcode=0,
+        )
+
+    with Then("I insert data with success"):
+        insert_random(node=nodes[0], table_name=table_name)
+
+    with And("I clear the projection with success"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} CLEAR PROJECTION value1_projection",
+            exitcode=0,
+        )
+
+    with And("I drop the projection with success"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} DROP PROJECTION value1_projection",
+            exitcode=0,
+        )
 
 @TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch("0.0"))
