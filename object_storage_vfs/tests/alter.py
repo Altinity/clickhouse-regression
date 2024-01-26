@@ -30,6 +30,9 @@ def update_delete(self):
     with And("I insert some data"):
         insert_random(node=nodes[0], table_name=table_name, columns=columns)
 
+    with Then("I lightweight DELETE with success"):
+        nodes[0].query(f"DELETE FROM {table_name} WHERE (e % 4 = 0)")
+
     with Then("I UPDATE with success"):
         alter_table_update_column(
             table_name=table_name,

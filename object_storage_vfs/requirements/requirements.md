@@ -302,6 +302,7 @@ version: 0.0
 
 | Operation    |
 | ------------ |
+| DELETE FROM  |
 | ALTER DELETE |
 | ALTER UPDATE |
 
