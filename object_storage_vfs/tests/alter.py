@@ -10,7 +10,6 @@ from object_storage_vfs.requirements import *
 
 """
 RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation,
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Index,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections,
 """
 
@@ -90,6 +89,48 @@ def sample_by(self):
             f"ALTER TABLE {table_name} MODIFY SAMPLE BY cityHash64(value1)",
             exitcode=0,
         )
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Index("0.0"))
+def index(self):
+    """Test that MODIFY ORDER BY executes without errors."""
+    table_name = "index_table"
+    nodes = self.context.ch_nodes
+
+    with Given("I have a table"):
+        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+
+    with And("I insert some data"):
+        insert_random(node=nodes[0], table_name=table_name)
+
+    with Check("add"):
+        with When("I add an index"):
+            nodes[0].query(
+                f"ALTER TABLE {table_name} ADD INDEX idxtest value1 TYPE set(100) GRANULARITY 2",
+                exitcode=0,
+            )
+
+    with Check("materialize"):
+        with When("I materialize an index"):
+            nodes[0].query(
+                f"ALTER TABLE {table_name} MATERIALIZE INDEX idxtest",
+                exitcode=0,
+            )
+
+    with Check("clear"):
+        with When("I clear an index"):
+            retry(nodes[0].query, timeout=15, delay=1)(
+                f"ALTER TABLE {table_name} CLEAR INDEX idxtest",
+                exitcode=0,
+            )
+
+    with Check("drop"):
+        with When("I drop an index"):
+            nodes[0].query(
+                f"ALTER TABLE {table_name} DROP INDEX idxtest",
+                exitcode=0,
+            )
 
 
 @TestOutline(Scenario)
