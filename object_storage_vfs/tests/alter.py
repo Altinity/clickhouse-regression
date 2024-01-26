@@ -12,8 +12,39 @@ from object_storage_vfs.requirements import *
 RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Index,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections,
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Update,
 """
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Update("0.0"))
+def update_delete(self):
+    """Test that ALTER UPDATE and DELETE execute without errors."""
+    table_name = "update_table"
+    nodes = self.context.ch_nodes
+    columns = "key UInt64, d Int64, e Int64"
+
+    with Given("I have a table"):
+        replicated_table_cluster(
+            table_name=table_name, storage_policy="external_vfs", columns=columns
+        )
+
+    with And("I insert some data"):
+        insert_random(node=nodes[0], table_name=table_name, columns=columns)
+
+    with Then("I UPDATE with success"):
+        alter_table_update_column(
+            table_name=table_name,
+            column_name="d",
+            expression="(e * 2)",
+            condition="(d > e)",
+            node=nodes[0],
+            exitcode=0,
+        )
+
+    with Then("I DELETE with success"):
+        alter_table_delete_rows(
+            table_name=table_name, condition="(d < e)", node=nodes[0], exitcode=0
+        )
 
 
 @TestScenario
