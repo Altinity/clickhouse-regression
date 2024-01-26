@@ -11,11 +11,30 @@ from object_storage_vfs.requirements import *
 """
 RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Index,
-RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Update,
 """
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy("0.0"))
+def order_by(self):
+    """Test that MODIFY ORDER BY executes without errors."""
+    table_name = "order_table"
+    nodes = self.context.ch_nodes
+
+    with Given("I have a table"):
+        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+
+    with And("I insert some data"):
+        insert_random(node=nodes[0], table_name=table_name)
+
+    with Then("I modify ORDER BY with success"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} ON CLUSTER 'replicated_cluster' ADD COLUMN valueZ Int16, MODIFY ORDER BY (key, valueZ)",
+            exitcode=0,
+        )
 
 
 @TestOutline(Scenario)
@@ -66,7 +85,7 @@ def columns(self):
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name)
+        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
 
     with And("I insert some data"):
         insert_random(node=nodes[0], table_name=table_name)
