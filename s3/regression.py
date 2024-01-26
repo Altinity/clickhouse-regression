@@ -22,8 +22,8 @@ def argparser(parser):
         "--storage",
         action="append",
         help="select which storage types to run tests with",
-        choices=["minio", "aws_s3", "gcs"],
-        default=None,
+        choices=["minio", "aws_s3", "gcs", "vfs"],
+        default=["minio"],
         dest="storages",
     )
 
@@ -137,7 +137,9 @@ xfails = {
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
     ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
-    "aws s3/:/zero copy replication/:": [(Fail, "Data cleanup not working as expected")],
+    "aws s3/:/zero copy replication/:": [
+        (Fail, "Data cleanup not working as expected")
+    ],
     "aws s3/:/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
     ],
@@ -249,9 +251,6 @@ def minio_regression(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
         with Module(self.context.object_storage_mode):
-            if self.context.object_storage_mode == "vfs":
-                with Given("I enable allow_object_storage_vfs"):
-                    enable_vfs()
 
             Feature(test=load("s3.tests.table_function", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
@@ -453,51 +452,45 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
     self.context.object_storage_mode = "normal"
 
-    if allow_vfs:
+    if allow_vfs or "vfs" in storages:
         self.context.object_storage_mode = "vfs"
-        if check_clickhouse_version("<23.11")(self):
-            skip("vfs not supported on < 23.11")
-
-    if storages is None:
-        storages = ["minio"]
+        if check_clickhouse_version("<24.1")(self):
+            skip("vfs not supported on < 24.1")
 
     storage_module = None
 
-    if "minio" in storages:
-        storage_module = minio_regression
-        storage_kwargs = dict(
-            uri=minio_uri,
-            root_user=minio_root_user,
-            root_password=minio_root_password,
-        )
-
     if "aws_s3" in storages:
         storage_module = aws_s3_regression
-        storage_kwargs = dict(
+        storage_module_kwargs = dict(
             bucket=aws_s3_bucket,
             region=aws_s3_region,
             key_id=aws_s3_key_id,
             access_key=aws_s3_access_key,
         )
 
-    if "gcs" in storages:
+    elif "gcs" in storages:
         storage_module = gcs_regression
-        storage_kwargs = dict(
+        storage_module_kwargs = dict(
             uri=gcs_uri,
             key_id=gcs_key_id,
             access_key=gcs_key_secret,
         )
 
-    storage_kwargs.update(
-        dict(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+    else:  # "minio" in storages
+        storage_module = minio_regression
+        storage_module_kwargs = dict(
+            uri=minio_uri,
+            root_user=minio_root_user,
+            root_password=minio_root_password,
         )
-    )
 
     assert storage_module is not None
-    Module(test=storage_module)(**storage_kwargs)
+    Module(test=storage_module)(
+        local=local,
+        clickhouse_binary_path=clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
+        **storage_module_kwargs,
+    )
 
 
 if main():
