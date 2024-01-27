@@ -37,7 +37,7 @@ def argparser(parser):
 
     parser.add_argument(
         "--allow-vfs",
-        help="Instruct the tests to enable allow_object_storage_vfs",
+        help="Instruct the tests to enable allow_vfs for all external disks",
         action="store_true",
     )
 
