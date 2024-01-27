@@ -129,6 +129,9 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
     ":/:/zero copy replication/delete": [(Fail, "Under investigation")],
+    ":/vfs/zero copy replication/*": [
+        (Fail, "VFS requires bigger tolerances than 0-copy")
+    ],
     "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
     "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
@@ -219,6 +222,10 @@ ffails = {
         "https://github.com/ClickHouse/ClickHouse/issues/58924",
         check_clickhouse_version(">=23.12"),
     ),
+    ":/vfs/zero copy replication/performance*": (
+        Skip,
+        "0-copy performance tests do not expect vfs",
+    ),
 }
 
 
@@ -251,7 +258,6 @@ def minio_regression(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
         with Module(self.context.object_storage_mode):
-
             Feature(test=load("s3.tests.table_function", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
