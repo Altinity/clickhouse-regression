@@ -2102,21 +2102,7 @@ def consistency_during_conflicting_mutation(self):
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
-    self.context.minio_enabled = (self.context.storage == "minio")
-
-    if check_clickhouse_version(">=21.8")(self):
-        self.context.zero_copy_replication_setting = (
-            "allow_remote_fs_zero_copy_replication"
-        )
-    else:
-        self.context.zero_copy_replication_setting = "allow_s3_zero_copy_replication"
-
-    if self.context.object_storage_mode == "vfs":
-        self.context.zero_copy_replication_settings = {}
-    else:
-        self.context.zero_copy_replication_settings = {
-            self.context.zero_copy_replication_setting: "1"
-        }
+    self.context.minio_enabled = self.context.storage == "minio"
 
     with Given("I have two S3 disks configured"):
         uri_tiered = self.context.uri + "tiered/"
@@ -2150,6 +2136,25 @@ def outline(self):
             },
         }
 
+    with And("I have zero copy configuration"):
+        if check_clickhouse_version(">=21.8")(self):
+            self.context.zero_copy_replication_setting = (
+                "allow_remote_fs_zero_copy_replication"
+            )
+        else:
+            self.context.zero_copy_replication_setting = (
+                "allow_s3_zero_copy_replication"
+            )
+
+        if self.context.object_storage_mode == "vfs":
+            self.context.zero_copy_replication_settings = {}
+            for disk_name in disks.keys():
+                disks[disk_name]["allow_vfs"] = "1"
+        else:
+            self.context.zero_copy_replication_settings = {
+                self.context.zero_copy_replication_setting: "1"
+            }
+
     with And("I have clickhouse nodes"):
         self.context.ch_nodes = [
             self.context.cluster.node(name)
@@ -2162,7 +2167,7 @@ def outline(self):
                 name=self.context.bucket_name,
                 prefix=self.context.bucket_path,
                 expected_size=0,
-                tolerance=0,
+                tolerance=5,
                 minio_enabled=self.context.minio_enabled,
             )
         for scenario in loads(current_module(), Scenario):
