@@ -37,6 +37,8 @@ def invalid_type(self, invalid_type):
                 "secret_access_key": f"{secret_access_key}",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks[f"{disk_name}"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -69,6 +71,8 @@ def empty_endpoint(self):
             "default": {"keep_free_space_bytes": "1024"},
             "external": {"type": "s3", "endpoint": ""},
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -104,6 +108,8 @@ def invalid_endpoint(self):
                 "secret_access_key": f"{secret_access_key}",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -142,6 +148,8 @@ def access_failed(self):
                 "skip_access_check": "0",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -177,6 +185,8 @@ def access_failed_skip_check(self):
                 "skip_access_check": "1",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -263,6 +273,8 @@ def access_default(self):
                 "endpoint": "https://s3.us-west-2.amazonaws.com/shyiko-playground-1/data/",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -303,6 +315,8 @@ def cache_path_conflict(self):
                 "cache_path": f"/var/lib/clickhouse/disks/{disk_name}/",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks[f"{disk_name}"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {

@@ -230,7 +230,7 @@ ffails = {
     ),
     ":/vfs/zero copy replication/performance*": (
         Skip,
-        "0-copy performance tests do not handle vfs",
+        "0-copy performance tests do not expect vfs",
     ),
     ":/vfs/zero copy replication/global setting": (
         Skip,

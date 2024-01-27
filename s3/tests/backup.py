@@ -944,6 +944,8 @@ def local_and_s3_disk(self):
                 "list_object_keys_size": "1",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -988,6 +990,8 @@ def local_and_s3_volumes(self):
                 "list_object_keys_size": "1",
             },
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -1027,6 +1031,8 @@ def s3_disk(self):
                 "list_object_keys_size": "1",
             }
         }
+        if self.context.object_storage_mode == "vfs":
+            disks["external"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {"external": {"volumes": {"external": {"disk": "external"}}}}
