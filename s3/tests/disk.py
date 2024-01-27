@@ -42,11 +42,14 @@ def define_s3_disk_storage_configuration(
             },
         }
 
+        if self.context.object_storage_mode == "vfs":
+            disks[disk_name]["allow_vfs"] = "1"
+
         if hasattr(self.context, "s3_options"):
-            disks["external"].update(self.context.s3_options)
+            disks[disk_name].update(self.context.s3_options)
 
         if options:
-            disks["external"].update(options)
+            disks[disk_name].update(options)
 
         yield disks
 
