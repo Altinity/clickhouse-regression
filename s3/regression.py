@@ -129,8 +129,14 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
     ":/:/zero copy replication/delete": [(Fail, "Under investigation")],
-    ":/vfs/zero copy replication/*": [
-        (Fail, "VFS requires bigger tolerances than 0-copy")
+    ":/vfs/zero copy replication/:replic:": [
+        (Fail, "TODO: VFS uses more disk per replica than 0-copy")
+    ],
+    ":/vfs/zero copy replication/delete all": [
+        (Fail, "TODO: VFS requires bigger tolerances than 0-copy")
+    ],
+    ":/vfs/zero copy replication/metadata": [
+        (Fail, "TODO: VFS requires bigger tolerances than 0-copy")
     ],
     "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
     "minio/:/disk/environment credentials/:": [
@@ -224,7 +230,11 @@ ffails = {
     ),
     ":/vfs/zero copy replication/performance*": (
         Skip,
-        "0-copy performance tests do not expect vfs",
+        "0-copy performance tests do not handle vfs",
+    ),
+    ":/vfs/zero copy replication/global setting": (
+        Skip,
+        "not relevant with vfs",
     ),
 }
 
