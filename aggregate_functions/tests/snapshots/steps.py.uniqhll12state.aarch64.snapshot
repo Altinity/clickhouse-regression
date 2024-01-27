@@ -6199,7 +6199,7 @@ _aggregate_functions_state_uniqHLL12State_Map_UUID_UUID_ = r"""
 """
 
 _aggregate_functions_state_uniqHLL12State_NULL_for_all_rows = r"""
-{"hex(uniqHLL12StateDistinct(if(modulo(number, 2), NULL, NULL)))":"00","any(toTypeName(number))":"UInt64"}
+{"hex(uniqHLL12StateDistinct(if(modulo(number, 2), NULL, NULL)))":"00","any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_state_uniqHLL12State_Nullable_Bool_ = r"""

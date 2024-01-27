@@ -174,6 +174,13 @@ xfails = {
             check_clickhouse_version(">=23.11"),
         )
     ],
+    "/window functions/tests/non distributed/misc/subquery multiple window functions with bigger table/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/58714",
+            check_clickhouse_version(">=23.11"),
+        )
+    ],
 }
 
 xflags = {}

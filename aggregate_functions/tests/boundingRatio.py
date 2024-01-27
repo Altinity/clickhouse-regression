@@ -11,6 +11,9 @@ from aggregate_functions.requirements import (
 def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
     params = f"{col1_name},{col2_name}"
+    self.context.node.query(
+        f"SELECT {col1_name}, {col2_name} from {table.name} format PrettyCompactMonoBlock"
+    )
     execute_query(
         f"SELECT {func.format(params=params)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name} FORMAT JSONEachRow"
     )
@@ -32,7 +35,10 @@ def scenario(
     snapshot_id=None,
 ):
     """Check BoundingRatio aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    # https://github.com/ClickHouse/ClickHouse/pull/58139
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

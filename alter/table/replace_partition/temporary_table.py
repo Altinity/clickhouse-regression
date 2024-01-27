@@ -3,7 +3,7 @@ from testflows.core import *
 
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 from helpers.tables import create_table_partitioned_by_column
 
 
@@ -93,9 +93,11 @@ def from_temporary_to_temporary_table(self):
             with Then(
                 "I check if it is possible to replace partition on the temporary destination table from the temporary source table"
             ):
+                exitcode = 0 if check_clickhouse_version(">=23.11")(self) else 60
+
                 client.query(
                     f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};",
-                    exitcode=60,
+                    exitcode=exitcode,
                 )
 
 
@@ -118,7 +120,7 @@ def from_regular_to_temporary(self):
                     f"CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
                 )
                 client.query(
-                    f"CREATE TABLE {source_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
+                    f"CREATE TABLE {source_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
                 )
 
             with When("I populate them with the data to create multiple partitions"):
@@ -132,9 +134,11 @@ def from_regular_to_temporary(self):
             with Then(
                 "I check if it is possible to replace partition on the regular table from the temporary table"
             ):
+                exitcode = 0 if check_clickhouse_version(">=23.11")(self) else 60
+
                 client.query(
                     f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};",
-                    exitcode=60,
+                    exitcode=exitcode,
                 )
 
 

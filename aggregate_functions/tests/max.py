@@ -9,8 +9,12 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Max("1.0"))
 def scenario(self, func="max({params})", table=None, snapshot_id=None):
     """Check max aggregate function."""
+
+    clickhouse_version = (
+        ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
+    )
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if "Merge" in self.name:

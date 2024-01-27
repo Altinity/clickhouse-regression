@@ -6199,7 +6199,7 @@ _aggregate_functions_state_anyHeavyState_Map_UUID_UUID_ = r"""
 """
 
 _aggregate_functions_state_anyHeavyState_NULL_for_all_rows = r"""
-{"hex(anyHeavyStateDistinct(if(modulo(number, 2), NULL, NULL)))":null,"any(toTypeName(number))":"UInt64"}
+{"hex(anyHeavyStateDistinct(if(modulo(number, 2), NULL, NULL)))":null,"any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_state_anyHeavyState_Nullable_Bool_ = r"""

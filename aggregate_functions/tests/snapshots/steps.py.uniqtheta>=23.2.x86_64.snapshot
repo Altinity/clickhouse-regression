@@ -6199,7 +6199,7 @@ _aggregate_functions_uniqTheta_Map_UUID_UUID_ = r"""
 """
 
 _aggregate_functions_uniqTheta_NULL_for_all_rows = r"""
-{"uniqThetaDistinct(if(modulo(number, 2), NULL, NULL))":"0","any(toTypeName(number))":"UInt64"}
+{"uniqThetaDistinct(if(modulo(number, 2), NULL, NULL))":"0","any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_uniqTheta_Nullable_Bool_ = r"""

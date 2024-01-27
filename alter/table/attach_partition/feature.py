@@ -22,7 +22,7 @@ def feature(self):
             executor=pool,
         )
         Feature(
-            run=load("alter.table.attach_partition.simple_test", "feature"),
+            run=load("alter.table.attach_partition.storage", "feature"),
             parallel=True,
             executor=pool,
         )
@@ -45,13 +45,16 @@ def feature(self):
             executor=pool,
         )
         Feature(
-            run=load("alter.table.attach_partition.replicated_engines", "feature"),
+            run=load(
+                "alter.table.attach_partition.table_names",
+                "feature",
+            ),
             parallel=True,
             executor=pool,
         )
         Feature(
             run=load(
-                "alter.table.attach_partition.miscellaneous",
+                "alter.table.attach_partition.partition_expression",
                 "feature",
             ),
             parallel=True,

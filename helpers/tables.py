@@ -433,7 +433,7 @@ def create_table(
                 query += f"\nAS SELECT {as_select}"
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
-
+                
             node.query(
                 query,
                 settings=settings,

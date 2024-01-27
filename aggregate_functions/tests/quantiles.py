@@ -13,7 +13,9 @@ from aggregate_functions.tests.quantile import scenario as checks
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Quantiles("1.0"))
 def scenario(self, func="quantiles({params})", table=None, snapshot_id=None):
     """Check quantiles aggregate function by using the same tests as for quantile."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     if table is None:
         table = self.context.table

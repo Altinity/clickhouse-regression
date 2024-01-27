@@ -17,7 +17,9 @@ def scenario(
     self, func="quantilesDeterministic({params})", table=None, snapshot_id=None
 ):
     """Check quantilesDeterministic aggregate function by using the same tests as for quantileDeterministic."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     if table is None:
         table = self.context.table

@@ -23,8 +23,16 @@ def datatype(self, func, table, col1_name, col2_name):
 def scenario(self, func="topKWeighted({params})", table=None, snapshot_id=None):
     """Check topKWeighted aggregate function by using the same checks as for avgWeighted
     as well as functions specific checks."""
+
+    if check_clickhouse_version(">=23.12")(self):
+        clickhouse_version = ">=23.12"
+    elif check_clickhouse_version(">=23.7")(self):
+        clickhouse_version = ">=23.7"
+    else:
+        clickhouse_version = ">=23.2"
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if table is None:

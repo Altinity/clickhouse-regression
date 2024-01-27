@@ -2,7 +2,6 @@ from testflows.core import *
 from aggregate_functions.tests.steps import *
 
 from helpers.tables import common_columns, is_unsigned_integer
-from helpers.cluster import QueryRuntimeException
 
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArrayInsertAt,
@@ -23,9 +22,13 @@ def datatype(self, func, table, col1_name, col2_name):
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArrayInsertAt("1.0")
 )
 def scenario(self, func="groupArrayInsertAt({params})", table=None, snapshot_id=None):
-    """Check topKWeighted aggregate function."""
+    """Check groupArrayInsertAt aggregate function."""
+
+    clickhouse_version = (
+        ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
+    )
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if "Merge" in self.name:

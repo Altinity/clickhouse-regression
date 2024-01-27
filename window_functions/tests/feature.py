@@ -39,6 +39,9 @@ def feature(self, distributed, node="clickhouse1"):
     with Given("employee salary table"):
         empsalary_table(distributed=distributed)
 
+    with Given("bigger employee salary table"):
+        big_empsalary_table(distributed=distributed)
+
     with And("tenk1 table"):
         tenk1_table(distributed=distributed)
 

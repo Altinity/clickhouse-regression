@@ -1,5 +1,5 @@
 _aggregate_functions_state_first_value_respect_nullsState_NULL_for_all_rows = r"""
-{"hex(first_value_respect_nullsStateDistinct(if(modulo(number, 2), NULL, NULL)))":null,"any(toTypeName(number))":"UInt64"}
+{"hex(first_value_respect_nullsStateDistinct(if(modulo(number, 2), NULL, NULL)))":null,"any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_state_first_value_respect_nullsState__inf = r"""

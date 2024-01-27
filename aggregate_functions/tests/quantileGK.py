@@ -22,7 +22,9 @@ def scenario(
     snapshot_id=None,
 ):
     """Check quantileGK aggregate function by using the same tests as for avg."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     _func = func.replace("({params})", f"(100)({{params}})")
 
