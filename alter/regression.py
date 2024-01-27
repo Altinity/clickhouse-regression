@@ -86,10 +86,6 @@ ffails = {
         "Not implemented before 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/alter/attach partition/partition key/*": (
-        Skip,
-        "Not yet merged https://github.com/ClickHouse/ClickHouse/pull/39507",
-    ),
 }
 
 
@@ -107,7 +103,7 @@ def regression(
     clickhouse_binary_path,
     collect_service_logs,   
     use_specific_version,
-    stress,
+    stress=None,
     allow_vfs=False,
 ):
     """Alter regression."""
@@ -126,8 +122,7 @@ def regression(
     self.context.access_key_id = "minio"
     self.context.secret_access_key = "minio123"
 
-    if stress:
-        self.context.stress = stress
+    self.context.stress = stress
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(

@@ -9,10 +9,13 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Min("1.0"))
 def scenario(self, func="min({params})", table=None, snapshot_id=None):
     """Check min aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
-    )
 
+    clickhouse_version = (
+        ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
+    )
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+    )
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 

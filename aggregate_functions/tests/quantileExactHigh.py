@@ -15,7 +15,9 @@ from aggregate_functions.tests.quantile import scenario as checks
 )
 def scenario(self, func="quantileExactHigh({params})", table=None, snapshot_id=None):
     """Check quantileExactHigh aggregate function by using the same tests as for quantile."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

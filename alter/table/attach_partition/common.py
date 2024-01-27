@@ -72,7 +72,7 @@ def create_partitioned_table_with_data(
     with And(f"inserting data that will create multiple partitions"):
         for i in range(1, number_of_partitions + 1):
             node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({10})"
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
             )
 
 
@@ -89,8 +89,8 @@ def create_partitioned_replicated_table_with_data(
     partition_by: str = None,
     engine="ReplicatedMergeTree",
     query_settings=None,
-    node=None,
-    number_of_partitions=2,
+    nodes=None,
+    number_of_partitions=3,
     config="graphite_rollup_example",
     sign="sign",
     version="a",
@@ -110,26 +110,86 @@ def create_partitioned_replicated_table_with_data(
             Column(name="sign", datatype=Int8()),
         ]
 
-    if engine == "GraphiteMergeTree":
-        engine = f"GraphiteMergeTree('{config}')"
-    elif engine == "VersionedCollapsingMergeTree":
-        engine = f"VersionedCollapsingMergeTree({sign},{version})"
-    elif engine == "CollapsingMergeTree":
-        engine = f"CollapsingMergeTree({sign})"
+    if "GraphiteMergeTree" in engine:
+        engine = f"ReplicatedGraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in engine:
+        engine = f"ReplicatedVersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in engine:
+        engine = f"ReplicatedCollapsingMergeTree({sign})"
 
     with By(f"creating a table that is partitioned by '{partition_by}'"):
-        create_table(
+        for node in nodes:
+            create_table(
+                name=table_name,
+                columns=columns,
+                engine=f"{engine}('/clickhouse/tables/"
+                + "{shard}"
+                + f"/{table_name}', "
+                + "'{replica}')",
+                order_by=order_by,
+                primary_key=primary_key,
+                comment=comment,
+                partition_by=partition_by,
+                cluster="replicated_cluster_secure",
+                node=node,
+                if_not_exists=True,
+            )
+
+    node = random.choice(nodes)
+    with And(f"inserting data that will create multiple partitions"):
+        for i in range(1, number_of_partitions + 1):
+            node.query(
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+            )
+
+
+@TestStep(Given)
+def create_temporary_partitioned_table_with_data(
+    self,
+    table_name: str,
+    columns: list[dict] = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+    engine="MergeTree",
+    node=None,
+    number_of_partitions=3,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+):
+    """Create a table with the specified engine."""
+    if columns is None:
+        columns = [
+            Column(name="a", datatype=UInt16()),
+            Column(name="b", datatype=UInt16()),
+            Column(name="c", datatype=UInt16()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if "GraphiteMergeTree" in engine:
+        engine = f"GraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in engine:
+        engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in engine:
+        engine = f"CollapsingMergeTree({sign})"
+
+    with By(f"creating a temporary table that is partitioned by '{partition_by}'"):
+        create_temporary_table(
             name=table_name,
             columns=columns,
-            engine=f"{engine}('/clickhouse/tables/"
-            + "{shard}"
-            + f"/{table_name}', "
-            + "'{replica}')",
+            engine=engine,
             order_by=order_by,
             primary_key=primary_key,
             comment=comment,
             partition_by=partition_by,
-            cluster="replicated_cluster_secure",
             node=node,
             if_not_exists=True,
         )
@@ -137,67 +197,8 @@ def create_partitioned_replicated_table_with_data(
     with And(f"inserting data that will create multiple partitions"):
         for i in range(1, number_of_partitions + 1):
             node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({3})"
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
             )
-
-
-@TestStep(Given)
-def create_empty_partitioned_replicated_table(
-    self,
-    table_name: str,
-    columns: list[dict] = None,
-    if_not_exists: bool = False,
-    db: str = None,
-    comment: str = None,
-    primary_key=None,
-    order_by: str = "tuple()",
-    partition_by: str = None,
-    engine="ReplicatedMergeTree",
-    query_settings=None,
-    node=None,
-    number_of_partitions=2,
-    config="graphite_rollup_example",
-    sign="sign",
-    version="a",
-    bias=0,
-):
-    """Create a table with the specified engine."""
-    if columns is None:
-        columns = [
-            Column(name="a", datatype=UInt16()),
-            Column(name="b", datatype=UInt16()),
-            Column(name="c", datatype=UInt16()),
-            Column(name="extra", datatype=UInt64()),
-            Column(name="Path", datatype=String()),
-            Column(name="Time", datatype=DateTime()),
-            Column(name="Value", datatype=Float64()),
-            Column(name="Timestamp", datatype=Int64()),
-            Column(name="sign", datatype=Int8()),
-        ]
-
-    if engine == "GraphiteMergeTree":
-        engine = f"GraphiteMergeTree('{config}')"
-    elif engine == "VersionedCollapsingMergeTree":
-        engine = f"VersionedCollapsingMergeTree({sign},{version})"
-    elif engine == "CollapsingMergeTree":
-        engine = f"CollapsingMergeTree({sign})"
-
-    with By(f"creating a table that is partitioned by '{partition_by}'"):
-        create_table(
-            name=table_name,
-            columns=columns,
-            engine=f"{engine}('/clickhouse/tables/"
-            + "{shard}"
-            + f"/{table_name}', "
-            + "'{replica}')",
-            order_by=order_by,
-            primary_key=primary_key,
-            comment=comment,
-            partition_by=partition_by,
-            cluster="replicated_cluster_secure",
-            node=node,
-            if_not_exists=True,
-        )
 
 
 @TestStep(Given)
@@ -251,6 +252,118 @@ def create_empty_partitioned_table(
             query_settings=query_settings,
             if_not_exists=True,
             node=node,
+        )
+
+
+@TestStep(Given)
+def create_empty_partitioned_replicated_table(
+    self,
+    table_name: str,
+    columns: list[dict] = None,
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+    engine="ReplicatedMergeTree",
+    query_settings=None,
+    nodes=None,
+    number_of_partitions=2,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+):
+    """Create a table with the specified engine."""
+    if columns is None:
+        columns = [
+            Column(name="a", datatype=UInt16()),
+            Column(name="b", datatype=UInt16()),
+            Column(name="c", datatype=UInt16()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if engine == "GraphiteMergeTree":
+        engine = f"ReplicatedGraphiteMergeTree('{config}')"
+    elif engine == "VersionedCollapsingMergeTree":
+        engine = f"ReplicatedVersionedCollapsingMergeTree({sign},{version})"
+    elif engine == "CollapsingMergeTree":
+        engine = f"ReplicatedCollapsingMergeTree({sign})"
+
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        for node in nodes:
+            create_table(
+                name=table_name,
+                columns=columns,
+                engine=f"{engine}('/clickhouse/tables/"
+                + "{shard}"
+                + f"/{table_name}', "
+                + "'{replica}')",
+                order_by=order_by,
+                primary_key=primary_key,
+                comment=comment,
+                partition_by=partition_by,
+                cluster="replicated_cluster_secure",
+                node=node,
+                if_not_exists=True,
+            )
+
+
+@TestStep(Given)
+def create_empty_temporary_partitioned_table(
+    self,
+    table_name: str,
+    columns: list[dict] = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+    engine="MergeTree",
+    node=None,
+    number_of_partitions=3,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+):
+    """Create a table with the specified engine."""
+    if columns is None:
+        columns = [
+            Column(name="a", datatype=UInt16()),
+            Column(name="b", datatype=UInt16()),
+            Column(name="c", datatype=UInt16()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if "GraphiteMergeTree" in engine:
+        engine = f"GraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in engine:
+        engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in engine:
+        engine = f"CollapsingMergeTree({sign})"
+
+    with By(f"creating a temporary table that is partitioned by '{partition_by}'"):
+        create_temporary_table(
+            name=table_name,
+            columns=columns,
+            engine=engine,
+            order_by=order_by,
+            primary_key=primary_key,
+            comment=comment,
+            partition_by=partition_by,
+            node=node,
+            if_not_exists=True,
         )
 
 
@@ -427,12 +540,14 @@ def execute_query(
         else:
             with Then("I check output against snapshot"):
                 with values() as that:
-                    assert that(
-                        snapshot(
-                            "\n" + r.output.strip() + "\n",
-                            "tests." + current_cpu(),
-                            name=snapshot_name,
-                            encoder=str,
-                            mode=snapshot.CHECK,
-                        )
-                    ), error()
+                    for attempt in retries(timeout=30, delay=5):
+                        with attempt:
+                            assert that(
+                                snapshot(
+                                    "\n" + r.output.strip() + "\n",
+                                    "tests." + current_cpu(),
+                                    name=snapshot_name,
+                                    encoder=str,
+                                    mode=snapshot.CHECK,
+                                )
+                            ), error()

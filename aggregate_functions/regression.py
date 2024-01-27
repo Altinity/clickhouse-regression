@@ -147,6 +147,20 @@ xfails = {
     "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,-inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
+    "/aggregate functions/merge/welchTTestMerge/*": [
+        (
+            Fail,
+            "Error in function boost::math::students_t_distribution<double>",
+            check_clickhouse_version("<22.9"),
+        )
+    ],
+    "/aggregate functions/finalizeAggregation/welchTTest_finalizeAggregation_Merge/*": [
+        (
+            Fail,
+            "Error in function boost::math::students_t_distribution<double>",
+            check_clickhouse_version("<22.9"),
+        )
+    ],
 }
 
 ffails = {
@@ -261,12 +275,7 @@ ffails = {
     "/aggregate functions/:/first_value_respect_nulls*/*": (
         Skip,
         "first_value_respect_nulls works from 23.5",
-        check_clickhouse_version("<23.5"),
-    ),
-    "/aggregate functions/:/first_value_respect_nulls*/*": (
-        Skip,
-        "need to investigate",
-        check_clickhouse_version(">23.8"),
+        check_clickhouse_version("<23.5") or check_clickhouse_version(">23.8"),
     ),
     "/aggregate functions/last_value_respect_nulls/*": (
         Skip,
@@ -276,14 +285,14 @@ ffails = {
     "/aggregate functions/:/last_value_respect_nulls*/*": (
         Skip,
         "last_value_respect_nulls works from 23.5",
-        check_clickhouse_version("<23.5"),
-    ),
-    "/aggregate functions/:/last_value_respect_nulls*/*": (
-        Skip,
-        "need to investigate",
-        check_clickhouse_version(">23.8"),
+        check_clickhouse_version("<23.5") or check_clickhouse_version(">23.8"),
     ),
     "/aggregate functions/flameGraph/*": (
+        Skip,
+        "flameGraph works from 23.8",
+        check_clickhouse_version("<23.8"),
+    ),
+    "/aggregate functions/:/flameGraph*/*": (
         Skip,
         "flameGraph works from 23.8",
         check_clickhouse_version("<23.8"),
@@ -430,7 +439,7 @@ def regression(
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 
-    with Pool(5) as executor:
+    with Pool(10) as executor:
         for name in [
             name for name in aggregate_functions if name not in window_functions
         ]:

@@ -28,11 +28,18 @@ def log_int_inline(self, func, int_type, min, max, node=None):
         node = self.context.node
 
     with When(f"Check {func} with {int_type}"):
-        node.query(
-            f"SELECT {func}(to{int_type}(1), to{int_type}(1)), {func}(to{int_type}('{max}'), to{int_type}(1)), {func}(to{int_type}('{min}'), to{int_type}(1))",
-            exitcode=43,
-            message="Exception: Illegal type ",
-        )
+        if func == "not" and check_clickhouse_version(">=23.12")(self):
+            node.query(
+                f"SELECT {func}(to{int_type}(1)), {func}(to{int_type}('{max}')), {func}(to{int_type}('{min}'))",
+                exitcode=43,
+                message="Exception: Illegal type ",
+            )
+        else:
+            node.query(
+                f"SELECT {func}(to{int_type}(1), to{int_type}(1)), {func}(to{int_type}('{max}'), to{int_type}(1)), {func}(to{int_type}('{min}'), to{int_type}(1))",
+                exitcode=43,
+                message="Exception: Illegal type ",
+            )
 
 
 @TestOutline(Scenario)
@@ -50,11 +57,18 @@ def log_int_table(self, func, int_type, min, max, node=None):
 
     for value in [1, min, max]:
         with When(f"Check {func} with {int_type} and {value}"):
-            node.query(
-                f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'), to{int_type}('{value}'))",
-                exitcode=43,
-                message="Exception: Illegal type",
-            )
+            if func == "not" and check_clickhouse_version(">=23.12")(self):
+                node.query(
+                    f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'))",
+                    exitcode=43,
+                    message="Exception: Illegal type",
+                )
+            else:
+                node.query(
+                    f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'), to{int_type}('{value}'))",
+                    exitcode=43,
+                    message="Exception: Illegal type",
+                )
 
 
 @TestOutline(Scenario)
@@ -68,11 +82,18 @@ def log_dec_inline(self, func, node=None):
         node = self.context.node
 
     with When(f"Check {func} with Decimal256"):
-        node.query(
-            f"SELECT {func}(toDecimal256(1,0), toDecimal256(1,0)), {func}(toDecimal256('{max}',0), toDecimal256(1)), {func}(toDecimal256('{min}',0), toDecimal256(1))",
-            exitcode=43,
-            message="Exception: Illegal type ",
-        )
+        if func == "not" and check_clickhouse_version(">=23.12")(self):
+            node.query(
+                f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0))",
+                exitcode=43,
+                message="Exception: Illegal type ",
+            )
+        else:
+            node.query(
+                f"SELECT {func}(toDecimal256(1,0), toDecimal256(1,0)), {func}(toDecimal256('{max}',0), toDecimal256(1)), {func}(toDecimal256('{min}',0), toDecimal256(1))",
+                exitcode=43,
+                message="Exception: Illegal type ",
+            )
 
 
 @TestOutline(Scenario)
@@ -92,11 +113,18 @@ def log_dec_table(self, func, node=None):
 
     for value in [1, min, max]:
         with When(f"Check {func} with Decimal256 and {value}"):
-            node.query(
-                f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0), toDecimal256('{value}',0))",
-                exitcode=43,
-                message="Exception: Illegal type ",
-            )
+            if func == "not" and check_clickhouse_version(">=23.12")(self):
+                node.query(
+                    f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0))",
+                    exitcode=43,
+                    message="Exception: Illegal type ",
+                )
+            else:
+                node.query(
+                    f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0), toDecimal256('{value}',0))",
+                    exitcode=43,
+                    message="Exception: Illegal type ",
+                )
 
 
 @TestFeature

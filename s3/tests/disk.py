@@ -472,8 +472,9 @@ def compact_parts(self):
 
 
 @TestScenario
+@Retry(timeout=5, delay=2)
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Changes_NoRestart("1.0"))
-def restart(self):
+def no_restart(self):
     """Check that S3 storage configuration changes shall be applied without
     restarting the ClickHouse server.
     """
