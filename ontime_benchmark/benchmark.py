@@ -13,6 +13,14 @@ from s3.tests.common import *
 
 xfails = {}
 
+ffails = {
+    ":/queries/object storage vfs": (
+        Skip,
+        "vfs not supported on < 24",
+        check_clickhouse_version("<24"),
+    ),
+}
+
 
 def argparser(parser):
     """Default argument for regressions."""
@@ -32,6 +40,7 @@ def argparser(parser):
 @ArgumentParser(argparser)
 @Name("benchmark")
 @XFails(xfails)
+@FFails(ffails)
 def regression(
     self,
     local,
