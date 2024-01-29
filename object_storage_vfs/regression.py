@@ -19,7 +19,13 @@ xfails = {
     ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
 }
 
-ffails = {}
+ffails = {
+    "*": (
+        Skip,
+        "vfs not supported on < 24",
+        check_clickhouse_version("<24"),
+    ),
+}
 
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS,
