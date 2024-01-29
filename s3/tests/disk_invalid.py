@@ -117,8 +117,13 @@ def invalid_endpoint(self):
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
 
+    if check_clickhouse_version("<23.8")(self):
+        message = "DB::Exception: No key in S3 uri"
+    else: 
+        message = "Cannot resolve host (unknown-website)"
+
     invalid_s3_storage_config(
-        disks, policies, message="Cannot resolve host (unknown-website)", tail=300
+        disks, policies, message=message, tail=300
     )
 
 
