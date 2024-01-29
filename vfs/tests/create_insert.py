@@ -22,6 +22,7 @@ table_configurations = {
     "replicated": [True, False],
     "n_cols": [10, 500, 2000],
     "n_tables": [1, 3],
+    "part_type": ["unspecified", "wide", "compact"],
 }
 
 
@@ -32,12 +33,18 @@ def create_test_table(
     replicated: bool,
     storage_policy: str,
     n_cols: int,
+    part_type: str,
 ):
     cluster_name = "replicated_cluster" if replicated else None
 
     table_name = "table_" + getuid()
 
     settings = f"storage_policy='{storage_policy}'"
+
+    if part_type == "compact":
+        settings += "," + COMPACT_PART_SETTING
+    elif part_type == "wide":
+        settings += "," + WIDE_PART_SETTING
 
     columns = [
         Column(name="sign", datatype=Int8()),
@@ -84,6 +91,7 @@ def check_table_combination(
     replicated: bool,
     n_cols: int,
     n_tables: int,
+    part_type: str,
 ):
     """
     Test that the given table parameters create a functional table.
@@ -100,6 +108,7 @@ def check_table_combination(
                 replicated=replicated,
                 n_cols=n_cols,
                 storage_policy=storage_policy,
+                part_type=part_type,
             )
             tables.append(table)
 
@@ -144,5 +153,8 @@ def feature(self):
     for table_config in CoveringArray(
         table_configurations, strength=covering_array_strength
     ):
+        if table_config["n_cols"] > 500 and table_config["part_type"] != "unspecified":
+            continue
+
         title = ",".join([f"{k}={v}" for k, v in table_config.items()])
         Combination(title, test=check_table_combination)(**table_config)

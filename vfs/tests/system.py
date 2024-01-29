@@ -195,18 +195,23 @@ def get_active_part_count(self, node, table_name):
     return int(r.output)
 
 
-@TestScenario
+@TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_Optimize("0.0"))
-def optimize(self):
+@Examples("table_settings", [[None], [WIDE_PART_SETTING], [COMPACT_PART_SETTING]])
+def optimize(self, table_settings):
     """Check that OPTIMIZE works as expected on VFS"""
 
-    table_name = "opt_table"
+    table_name = "opt_table_" + getuid()
     nodes = self.context.ch_nodes
     n_inserts = 3000
     insert_size = 1000
 
     with Given("I have a vfs table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+        replicated_table_cluster(
+            table_name=table_name,
+            storage_policy="external_vfs",
+            settings=table_settings,
+        )
 
     with And("I perform many inserts"):
         for _ in range(n_inserts):
