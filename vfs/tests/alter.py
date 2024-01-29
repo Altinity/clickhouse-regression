@@ -30,9 +30,9 @@ def update_delete(self):
         insert_random(node=nodes[0], table_name=table_name, columns=columns)
 
     with Then("I lightweight DELETE with success"):
-        nodes[0].query(f"DELETE FROM {table_name} WHERE (e % 4 = 0)")
+        nodes[0].query(f"DELETE FROM {table_name} WHERE (e % 4 = 0)", exitcode=0)
 
-    with Then("I UPDATE with success"):
+    with And("I UPDATE with success"):
         alter_table_update_column(
             table_name=table_name,
             column_name="d",
@@ -42,7 +42,10 @@ def update_delete(self):
             exitcode=0,
         )
 
-    with Then("I DELETE with success"):
+    with And("I OPTIMIZE FINAL with success"):
+        nodes[0].query(f"OPTIMIZE TABLE {table_name} FINAL", exitcode=0)
+
+    with And("I DELETE with success"):
         alter_table_delete_rows(
             table_name=table_name, condition="(d < e)", node=nodes[0], exitcode=0
         )
@@ -171,6 +174,7 @@ def projection(self):
             f"ALTER TABLE {table_name} DROP PROJECTION value1_projection",
             exitcode=0,
         )
+
 
 @TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch("0.0"))
