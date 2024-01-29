@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from testflows.core import *
 
-from object_storage_vfs.tests.steps import *
-from object_storage_vfs.requirements import *
+from vfs.tests.steps import *
+from vfs.requirements import *
 
 
 @TestScenario

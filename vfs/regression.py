@@ -10,7 +10,7 @@ from helpers.common import check_clickhouse_version
 from s3.regression import argparser
 from s3.tests.common import start_minio
 
-from object_storage_vfs.requirements import *
+from vfs.requirements import *
 
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
