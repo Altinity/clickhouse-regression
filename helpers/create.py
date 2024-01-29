@@ -325,7 +325,7 @@ def create_replicated_merge_tree_table(
     comment: str = None,
     primary_key=None,
     order_by: str = "tuple()",
-    partition_by: str = None,
+    partition_by: str = "p",
 ):
     """Create a table with the MergeTree engine."""
     if columns is None:
@@ -349,11 +349,11 @@ def create_replicated_merge_tree_table(
 
 
 @TestStep(Given)
-def partitioned_merge_tree_table(self, table_name, partition, columns):
+def partitioned_merge_tree_table(self, table_name, partition_by, columns):
     """Create a MergeTree table partitioned by a specific column."""
     with By(f"creating a partitioned {table_name} table with a MergeTree engine"):
         create_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition
+            table_name=table_name, columns=columns, partition_by=partition_by
         )
 
     with And("populating it with the data needed to create multiple partitions"):
@@ -361,13 +361,13 @@ def partitioned_merge_tree_table(self, table_name, partition, columns):
 
 
 @TestStep(Given)
-def partitioned_replicated_merge_tree_table(self, table_name, partition, columns=None):
+def partitioned_replicated_merge_tree_table(self, table_name, partition_by, columns=None):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"
     ):
         create_replicated_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition
+            table_name=table_name, columns=columns, partition_by=partition_by
         )
 
     with And("populating it with the data needed to create multiple partitions"):
@@ -375,13 +375,13 @@ def partitioned_replicated_merge_tree_table(self, table_name, partition, columns
 
 
 @TestStep(Given)
-def partitioned_replacing_merge_tree_table(self, table_name, partition, columns):
+def partitioned_replacing_merge_tree_table(self, table_name, partition_by, columns):
     """Create a ReplacingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a ReplacingMergeTree engine"
     ):
         create_replacing_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition
+            table_name=table_name, columns=columns, partition_by=partition_by
         )
 
     with And("populating it with the data needed to create multiple partitions"):
@@ -389,13 +389,13 @@ def partitioned_replacing_merge_tree_table(self, table_name, partition, columns)
 
 
 @TestStep(Given)
-def partitioned_summing_merge_tree_table(self, table_name, partition, columns):
+def partitioned_summing_merge_tree_table(self, table_name, partition_by, columns):
     """Create a SummingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a SummingMergeTree engine"
     ):
         create_aggregating_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition
+            table_name=table_name, columns=columns, partition_by=partition_by
         )
 
     with And("populating it with the data needed to create multiple partitions"):
@@ -403,13 +403,13 @@ def partitioned_summing_merge_tree_table(self, table_name, partition, columns):
 
 
 @TestStep(Given)
-def partitioned_collapsing_merge_tree_table(self, table_name, partition, columns):
+def partitioned_collapsing_merge_tree_table(self, table_name, partition_by, columns):
     """Create a CollapsingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a CollapsingMergeTree engine"
     ):
         create_collapsing_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition, sign="p"
+            table_name=table_name, columns=columns, partition_by=partition_by, sign="p"
         )
 
     with And("populating it with the data needed to create multiple partitions"):
@@ -420,7 +420,7 @@ def partitioned_collapsing_merge_tree_table(self, table_name, partition, columns
 
 @TestStep(Given)
 def partitioned_versioned_collapsing_merge_tree_table(
-    self, table_name, partition, columns
+    self, table_name, partition_by, columns
 ):
     """Create a VersionedCollapsingMergeTree table partitioned by a specific column."""
     with By(
@@ -429,7 +429,7 @@ def partitioned_versioned_collapsing_merge_tree_table(
         create_versioned_collapsing_merge_tree_table(
             table_name=table_name,
             columns=columns,
-            partition_by=partition,
+            partition_by=partition_by,
             sign="p",
             version="i",
         )
@@ -441,13 +441,13 @@ def partitioned_versioned_collapsing_merge_tree_table(
 
 
 @TestStep(Given)
-def partitioned_aggregating_merge_tree_table(self, table_name, partition, columns):
+def partitioned_aggregating_merge_tree_table(self, table_name, partition_by, columns):
     """Create a AggregatingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a AggregatingMergeTree engine"
     ):
         create_summing_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition
+            table_name=table_name, columns=columns, partition_by=partition_by
         )
 
     with And("populating it with the data needed to create multiple partitions"):
@@ -455,7 +455,7 @@ def partitioned_aggregating_merge_tree_table(self, table_name, partition, column
 
 
 @TestStep(Given)
-def partitioned_graphite_merge_tree_table(self, table_name, partition, columns):
+def partitioned_graphite_merge_tree_table(self, table_name, partition_by, columns):
     """Create a GraphiteMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a GraphiteMergeTree engine"
@@ -463,7 +463,7 @@ def partitioned_graphite_merge_tree_table(self, table_name, partition, columns):
         create_graphite_merge_tree_table(
             table_name=table_name,
             columns=columns,
-            partition_by=partition,
+            partition_by=partition_by,
             config="graphite_rollup_example",
         )
 

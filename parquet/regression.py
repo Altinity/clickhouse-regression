@@ -157,6 +157,12 @@ xfails = {
             "Fails with the error `could not be decoded`, we will attach the ticket to the xfail",
         )
     ],
+    "/parquet/read and write/read and write parquet file/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/59330",
+        )
+    ],
 }
 xflags = {}
 
@@ -533,6 +539,12 @@ def regression(
         )
         Feature(
             run=load("parquet.tests.fastparquet", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.read_and_write", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,
