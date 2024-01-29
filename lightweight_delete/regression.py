@@ -44,19 +44,17 @@ xfails = {
     "concurrent alter and delete/:/concurrent delete attach detach partition/": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50922")
     ],
-    ":/concurrent alter and delete/:/concurrent delete drop partition with data addition/:": [
+    "concurrent alter and delete/:/concurrent delete drop partition with data addition/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
     ],
-    ":/concurrent alter and delete/:/concurrent delete drop partition/:": [
+    "concurrent alter and delete/:/concurrent delete drop partition/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
     ],
 }
 
 xflags = {}
 
-ffails = {
-    ":/vfs": (Skip, "vfs not supported on < 24", check_clickhouse_version("<24")),
-}
+ffails = {}
 
 
 def argparser(parser):
