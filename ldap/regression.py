@@ -17,6 +17,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse LDAP integration regression module."""
     args = {
@@ -24,6 +25,7 @@ def regression(
         "clickhouse_binary_path": clickhouse_binary_path,
         "clickhouse_version": clickhouse_version,
         "collect_service_logs": collect_service_logs,
+        "allow_vfs": allow_vfs,
     }
 
     self.context.clickhouse_version = clickhouse_version

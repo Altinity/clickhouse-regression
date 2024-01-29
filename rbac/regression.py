@@ -298,6 +298,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """RBAC regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -320,7 +321,7 @@ def regression(
     if check_clickhouse_version(">=23.2")(self):
         for node in nodes["clickhouse"]:
             add_rbac_config_file(node=cluster.node(node))
-
+    
     Feature(run=load("rbac.tests.syntax.feature", "feature"))
     Feature(run=load("rbac.tests.privileges.feature", "feature"))
     Feature(run=load("rbac.tests.views.feature", "feature"))

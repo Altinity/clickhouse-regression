@@ -34,6 +34,7 @@ def regression(
     collect_service_logs,
     stress=None,
     parallel=None,
+    allow_vfs=False,
 ):
     """Base58 regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}

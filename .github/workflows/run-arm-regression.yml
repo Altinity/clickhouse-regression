@@ -40,6 +40,8 @@ on:
           - key_value
           - ldap
           - lightweight_delete
+          - object_storage_vfs_all
+          - object_storage_vfs_minio
           - parquet_all
           - parquet
           - parquet_minio
@@ -964,6 +966,41 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  object_storage_vfs_minio:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: object_storage_vfs
+      STORAGE: /minio
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'object_storage_vfs_all' || inputs.suite == 'object_storage_vfs_minio' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage minio
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              --allow-vfs
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
   parquet:
