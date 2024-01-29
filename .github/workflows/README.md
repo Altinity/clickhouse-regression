@@ -89,7 +89,6 @@ Table of which suites rely on what docker images.
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.6.2 |
-| object_storage_vfs | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.6.2 |
@@ -102,6 +101,7 @@ Table of which suites rely on what docker images.
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
 || zookeeper:3.6.2 |
+| vfs | altinityinfra/clickhouse-regression-multiarch:1.0 |
 | window_functions | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 

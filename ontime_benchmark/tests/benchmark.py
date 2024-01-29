@@ -1,7 +1,7 @@
 from testflows.core import *
 
 from s3.tests.common import *
-from object_storage_vfs.tests.steps import enable_vfs
+from vfs.tests.steps import enable_vfs
 
 import time
 import textwrap

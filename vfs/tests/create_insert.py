@@ -7,8 +7,8 @@ from testflows.combinatorics import CoveringArray
 from helpers.tables import create_table, Column
 from helpers.datatypes import *
 
-from object_storage_vfs.tests.steps import *
-from object_storage_vfs.requirements import *
+from vfs.tests.steps import *
+from vfs.requirements import *
 
 table_configurations = {
     "engine": [

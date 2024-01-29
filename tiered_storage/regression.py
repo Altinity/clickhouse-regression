@@ -12,7 +12,7 @@ from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
-from object_storage_vfs.tests.steps import enable_vfs
+from vfs.tests.steps import enable_vfs
 
 
 def argparser(parser):

@@ -1,7 +1,7 @@
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import *
 from s3.tests.common import start_minio
-from object_storage_vfs.tests.steps import enable_vfs
+from vfs.tests.steps import enable_vfs
 
 entries = {
     "storage_configuration": {

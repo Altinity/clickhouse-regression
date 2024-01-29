@@ -6,8 +6,8 @@ import json
 from testflows.core import *
 from testflows.combinatorics import product, combinations
 
-from object_storage_vfs.tests.steps import *
-from object_storage_vfs.requirements import *
+from vfs.tests.steps import *
+from vfs.requirements import *
 
 
 @TestScenario
