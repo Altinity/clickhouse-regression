@@ -14,6 +14,7 @@ from window_functions.requirements import (
 )
 from helpers.common import check_clickhouse_version
 
+
 xfails = {
     "tests/:/frame clause/range frame/between expr following and expr following without order by error": [
         (Fail, "invalid error message")
@@ -229,6 +230,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """Window functions regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}

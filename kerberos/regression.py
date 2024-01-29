@@ -29,6 +29,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse Kerberos authentication test regression module."""
     nodes = {

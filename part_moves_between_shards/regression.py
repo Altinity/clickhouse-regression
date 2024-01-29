@@ -44,6 +44,7 @@ def regression(
     collect_service_logs,
     stress=None,
     thread_fuzzer=None,
+    allow_vfs=False,
 ):
     """ClickHouse regression when using parts moves."""
     nodes = {

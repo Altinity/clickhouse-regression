@@ -10,6 +10,7 @@ from helpers.argparser import argparser
 from ldap.role_mapping.requirements import *
 from helpers.common import check_clickhouse_version
 
+
 # Cross-outs of known fails
 xfails = {
     "mapping/roles removed and added in parallel": [(Fail, "known bug")],
@@ -81,6 +82,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse LDAP role mapping regression module."""
     nodes = {

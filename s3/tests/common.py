@@ -755,7 +755,7 @@ def get_bucket_size(
 
 @TestStep
 def check_bucket_size(
-    self, name, prefix, expected_size, tolerance=None, minio_enabled=False
+    self, name, prefix, expected_size, tolerance=0, minio_enabled=False
 ):
     current_size = get_bucket_size(
         name=name,
@@ -764,14 +764,7 @@ def check_bucket_size(
         access_key=self.context.secret_access_key,
         key_id=self.context.access_key_id,
     )
-    if tolerance is None or tolerance == 0:
-        assert expected_size == current_size, error()
-    else:
-        msg = f"{current_size} is not within {expected_size}±{tolerance}"
-        lower_bound = expected_size - tolerance
-        upper_bound = expected_size + tolerance
-        assert current_size >= lower_bound, error(msg)
-        assert current_size <= upper_bound, error(msg)
+    assert abs(current_size - expected_size) <= tolerance, error()
 
 
 @TestStep(Given)
@@ -1126,11 +1119,14 @@ def default_s3_disk_and_volume(
                 }
             }
 
+        if self.context.object_storage_mode == "vfs":
+            disks[disk_name]["allow_vfs"] = "1"
+
         if hasattr(self.context, "s3_options"):
-            disks["external"].update(self.context.s3_options)
+            disks[disk_name].update(self.context.s3_options)
 
         if settings:
-            disks["external"].update(settings)
+            disks[disk_name].update(settings)
 
     with And("I have a storage policy configured to use the S3 disk"):
         if check_clickhouse_version(">=22.8")(self):
