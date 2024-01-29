@@ -11,7 +11,8 @@ from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
 
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
-
+WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
+COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
 
 @TestStep(Given)
 def s3_config(self):
@@ -101,6 +102,7 @@ def replicated_table_cluster(
     partition_by: str = None,
     primary_key: str = None,
     ttl: str = None,
+    settings: str = None,
     allow_zero_copy: bool = None,
     exitcode: int = 0,
 ):
@@ -115,7 +117,12 @@ def replicated_table_cluster(
     if order_by is None:
         order_by = columns.split()[0]
 
-    settings = [f"storage_policy='{storage_policy}'"]
+    if settings is None:
+        settings = []
+    else:
+        settings = [settings]
+
+    settings.append(f"storage_policy='{storage_policy}'")
 
     if allow_zero_copy is not None:
         settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
