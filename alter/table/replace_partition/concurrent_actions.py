@@ -774,7 +774,7 @@ def fetch_partition(self, table_name, source_table, number_of_partitions=None):
     partition_name = random.randrange(5, number_of_partitions)
 
     partitioned_replicated_merge_tree_table(
-        table_name=source_table + "_replica", partition="p"
+        table_name=source_table + "_replica", partition_by="p"
     )
 
     alter_table_fetch_partition(
