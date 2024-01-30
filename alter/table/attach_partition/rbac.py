@@ -8,6 +8,8 @@ from helpers.common import (
     attach_partition,
     attach_partition_from,
     detach_partition,
+    attach_part,
+    detach_part,
 )
 from helpers.rbac import *
 from helpers.tables import create_table_partitioned_by_column
@@ -190,6 +192,7 @@ def user_attach_partition_with_privileges(
 
     with And("I insert data into the table"):
         create_partitions_with_random_uint64(table_name=table, number_of_values=10)
+        data_before_attach = node.query(f"SELECT * FROM {table} ORDER BY p,i,extra")
 
     with And("I detach a partition from the table"):
         detach_partition(table=table)
@@ -209,6 +212,14 @@ def user_attach_partition_with_privileges(
                 f"I check that attaching partition is possible when the user has enough privileges"
             ):
                 attach_partition(table=table, user_name=user_name)
+
+            with Then("I check that data was attached"):
+                data_after_attach = node.query(
+                    f"SELECT * FROM {table} ORDER BY p,i,extra"
+                )
+                for retry in retries(timeout=10, delay=2):
+                    with retry:
+                        assert data_after_attach.output == data_before_attach.output
         else:
             with Then(
                 f"I check that attaching partition outputs an error when the user does not "
@@ -216,6 +227,72 @@ def user_attach_partition_with_privileges(
             ):
                 attach_partition(
                     table=table,
+                    user_name=user_name,
+                    message=f"Exception: {user_name}: Not enough privileges.",
+                    exitcode=241,
+                )
+
+
+@TestCheck
+def user_attach_part_with_privileges(
+    self,
+    table_privileges,
+):
+    """A test check to grant a user a set of privileges to see if `attach
+    part` is possible with these privileges."""
+
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+    table = f"{getuid()}"
+
+    with Given(
+        "I create a table",
+        description=f"""
+        Privileges: {get_privileges_as_list_of_strings(
+            privileges=table_privileges
+        )}
+        """,
+    ):
+        create_table_partitioned_by_column(table_name=table)
+
+    with And("I insert data into the table"):
+        create_partitions_with_random_uint64(table_name=table, number_of_values=10)
+        data_before_attach = node.query(f"SELECT * FROM {table} ORDER BY p,i,extra")
+
+    with And("I detach a part from the table"):
+        detach_part(table=table, part="1_1_1_0")
+
+    with And("I create a user"):
+        create_user(node=node, name=user_name)
+
+    with When("I grant specific privileges for table to a created user"):
+        for grant_privilege in table_privileges:
+            grant_privilege(node=node, user=user_name, table=table)
+
+    with And("I determine the privileges needed to attach part to the table"):
+        privileges = get_privileges_as_list_of_strings(privileges=table_privileges)
+
+        if "insert_privileges" in privileges:
+            with Then(
+                f"I check that attaching part is possible when the user has enough privileges"
+            ):
+                attach_part(table=table, part="1_1_1_0", user_name=user_name)
+
+            with Then("I check that data was attached"):
+                data_after_attach = node.query(
+                    f"SELECT * FROM {table} ORDER BY p,i,extra"
+                )
+                for retry in retries(timeout=10, delay=2):
+                    with retry:
+                        assert data_after_attach.output == data_before_attach.output
+        else:
+            with Then(
+                f"I check that attaching a part outputs an error when the user does not "
+                f"have enough privileges",
+            ):
+                attach_part(
+                    table=table,
+                    part="1_1_1_0",
                     user_name=user_name,
                     message=f"Exception: {user_name}: Not enough privileges.",
                     exitcode=241,
@@ -234,7 +311,7 @@ def check_attach_partition_from_with_privileges(self):
         insert_privileges,
     }
 
-    values_combinations = list(combinations_with_replacement(values, 3))
+    values_combinations = list(combinations_with_replacement(values, 2))
 
     destination_table_privileges = either(*values_combinations)
     source_table_privileges = either(*values_combinations)
@@ -265,6 +342,26 @@ def check_attach_partition_with_privileges(self):
     )
 
 
+@TestSketch(Scenario)
+@Flags(TE)
+def check_attach_part_with_privileges(self):
+    """Check `attach partition from` with different combination of privileges on a table."""
+    values = {
+        no_privileges,
+        select_privileges,
+        alter_privileges,
+        alter_table_privileges,
+        insert_privileges,
+    }
+
+    values_combinations = list(combinations_with_replacement(values, 2))
+    table_privileges = either(*values_combinations)
+
+    user_attach_part_with_privileges(
+        table_privileges=table_privileges,
+    )
+
+
 @TestFeature
 @Requirements(
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionOrPart_RBAC("1.0"),
@@ -286,3 +383,4 @@ def feature(self, node="clickhouse1"):
 
     Scenario(run=check_attach_partition_from_with_privileges)
     Scenario(run=check_attach_partition_with_privileges)
+    Scenario(run=check_attach_part_with_privileges)
