@@ -180,7 +180,9 @@ def insert_random(
         columns = DEFAULT_COLUMNS
 
     if settings:
-        settings = 'SETTINGS ' + settings
+        settings = "SETTINGS " + settings
+    else:
+        settings = ""
 
     node.query(
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
