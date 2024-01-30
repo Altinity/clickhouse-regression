@@ -297,11 +297,11 @@ def columns(self):
             )
 
     with Check("constraint"):
-        with When("I add a contraint on the second node"):
+        with When("I add a constraint on the second node"):
             alter_table_add_constraint(
                 node=nodes[1],
                 table_name=table_name,
-                constraint_name="nonnegativekey",
+                constraint_name="non_negative_key",
                 expression="(key >= 0)",
                 exitcode=0,
             )
