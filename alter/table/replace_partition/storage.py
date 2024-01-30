@@ -86,7 +86,9 @@ def replicas(self):
         partitioned_replicated_merge_tree_table(
             table_name=destination_table, partition_by="p"
         )
-        partitioned_replicated_merge_tree_table(table_name=source_table, partition_by="p")
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table, partition_by="p"
+        )
 
     with Then(
         "I replace partition on the replicated destination table from the replicated source table"
