@@ -8,6 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
+
 from extended_precision_data_types.requirements import *
 
 xfails = {}
@@ -31,6 +32,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """Extended precision data type regression."""
     nodes = {"clickhouse": ("clickhouse1",)}

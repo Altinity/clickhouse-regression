@@ -53,6 +53,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse disk level encryption regression."""
     nodes = {
@@ -81,30 +82,18 @@ def regression(
     Feature(run=load("disk_level_encryption.tests.memory", "feature"))
     Feature(run=load("disk_level_encryption.tests.column_ttl", "feature"))
     Feature(run=load("disk_level_encryption.tests.encrypted_disk", "feature"))
-    Feature(
-        run=load("disk_level_encryption.tests.application_of_changes", "feature")
-    )
-    Feature(
-        run=load("disk_level_encryption.tests.wide_access_permission", "feature")
-    )
+    Feature(run=load("disk_level_encryption.tests.application_of_changes", "feature"))
+    Feature(run=load("disk_level_encryption.tests.wide_access_permission", "feature"))
     Feature(run=load("disk_level_encryption.tests.no_access_rights", "feature"))
     Feature(run=load("disk_level_encryption.tests.new_directories", "feature"))
     Feature(run=load("disk_level_encryption.tests.invalid_disk", "feature"))
     Feature(run=load("disk_level_encryption.tests.distributed_table", "feature"))
     Feature(run=load("disk_level_encryption.tests.replicated_table", "feature"))
     Feature(run=load("disk_level_encryption.tests.invalid_key_size", "feature"))
-    Feature(
-        run=load("disk_level_encryption.tests.encryption_algorithms", "feature")
-    )
-    Feature(
-        run=load("disk_level_encryption.tests.comparable_performance", "feature")
-    )
-    Feature(
-        run=load("disk_level_encryption.tests.comparable_part_sizes", "feature")
-    )
-    Feature(
-        run=load("disk_level_encryption.tests.wide_and_compact_formats", "feature")
-    )
+    Feature(run=load("disk_level_encryption.tests.encryption_algorithms", "feature"))
+    Feature(run=load("disk_level_encryption.tests.comparable_performance", "feature"))
+    Feature(run=load("disk_level_encryption.tests.comparable_part_sizes", "feature"))
+    Feature(run=load("disk_level_encryption.tests.wide_and_compact_formats", "feature"))
     Feature(run=load("disk_level_encryption.tests.multi_disk_volume", "feature"))
     Feature(run=load("disk_level_encryption.tests.multi_volume_policy", "feature"))
     Feature(run=load("disk_level_encryption.tests.missing_key", "feature"))
@@ -113,9 +102,7 @@ def regression(
             "disk_level_encryption.tests.merge_parts_with_different_keys", "feature"
         )
     )
-    Feature(
-        run=load("disk_level_encryption.tests.invalid_current_key_id", "feature")
-    )
+    Feature(run=load("disk_level_encryption.tests.invalid_current_key_id", "feature"))
     Feature(run=load("disk_level_encryption.tests.multiple_keys", "feature"))
     Feature(run=load("disk_level_encryption.tests.default_path", "feature"))
     Feature(run=load("disk_level_encryption.tests.valid_path", "feature"))

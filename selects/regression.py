@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
 
@@ -91,6 +91,7 @@ def regression(
     collect_service_logs,
     stress=None,
     thread_fuzzer=None,
+    allow_vfs=False,
 ):
     """ClickHouse SELECT query regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -100,17 +101,22 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        thread_fuzzer=thread_fuzzer,
-        nodes=nodes,
-    ) as cluster:
+    with Given("I have a clickhouse cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            thread_fuzzer=thread_fuzzer,
+            nodes=nodes,
+            docker_compose_project_dir=os.path.join(
+                current_dir(), os.path.basename(current_dir()) + "_env"
+            ),
+            configs_dir=current_dir(),
+        )
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-        Feature(run=load("selects.tests.final.feature", "module"))
+    Feature(run=load("selects.tests.final.feature", "module"))
 
 
 if main():

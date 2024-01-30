@@ -13,6 +13,14 @@ from s3.tests.common import *
 
 xfails = {}
 
+ffails = {
+    ":/queries/object storage vfs": (
+        Skip,
+        "vfs not supported on < 24",
+        check_clickhouse_version("<24"),
+    ),
+}
+
 
 def argparser(parser):
     """Default argument for regressions."""
@@ -32,6 +40,7 @@ def argparser(parser):
 @ArgumentParser(argparser)
 @Name("benchmark")
 @XFails(xfails)
+@FFails(ffails)
 def regression(
     self,
     local,
@@ -51,6 +60,7 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     format,
+    allow_vfs,
     node="clickhouse1",
 ):
     """Storage Benchmark."""
@@ -63,6 +73,8 @@ def regression(
     bucket_path = "data/benchmark"
 
     self.context.clickhouse_version = clickhouse_version
+
+    self.context.object_storage_mode = "normal"
 
     if storages is None:
         storages = ["minio"]

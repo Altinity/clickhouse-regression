@@ -43,6 +43,7 @@ def regression(
     collect_service_logs,
     stress=None,
     thread_fuzzer=None,
+    allow_vfs=False,
 ):
     """ClickHouse different ENGINES regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -65,9 +66,7 @@ def regression(
         self.context.node = cluster.node("clickhouse1")
 
     Feature(
-        run=load(
-            "engines.tests.replacing_merge_tree.replacing_merge_tree", "feature"
-        )
+        run=load("engines.tests.replacing_merge_tree.replacing_merge_tree", "feature")
     )
     Feature(
         run=load(

@@ -22,6 +22,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """Kafka regression."""
     nodes = {
@@ -46,13 +47,9 @@ def regression(
 
     Scenario(run=load("kafka.tests.distributed", "scenario"), flags=TE)
     Scenario(run=load("kafka.tests.non_replicated", "scenario"), flags=TE)
+    Scenario(run=load("kafka.tests.non_replicated_4_consumers", "scenario"), flags=TE)
     Scenario(
-        run=load("kafka.tests.non_replicated_4_consumers", "scenario"), flags=TE
-    )
-    Scenario(
-        run=load(
-            "kafka.tests.non_replicated_target_table_not_writable", "scenario"
-        ),
+        run=load("kafka.tests.non_replicated_target_table_not_writable", "scenario"),
         flags=TE,
     )
     Scenario(
@@ -63,9 +60,7 @@ def regression(
         run=load("kafka.tests.non_replicated_4_consumers_restart", "scenario"),
         flags=TE,
     )
-    Scenario(
-        run=load("kafka.tests.replicated_stop_and_restart", "scenario"), flags=TE
-    )
+    Scenario(run=load("kafka.tests.replicated_stop_and_restart", "scenario"), flags=TE)
 
 
 if main():

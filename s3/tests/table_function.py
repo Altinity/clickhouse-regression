@@ -1116,7 +1116,7 @@ def ssec(self):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_TableFunction("1.0"))
-@Name("aws s3 table function")
+@Name("table function")
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
@@ -1132,7 +1132,7 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_TableFunction("1.0"))
-@Name("gcs table function")
+@Name("table function")
 def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "gcs"
@@ -1145,7 +1145,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_TableFunction("1.0"))
-@Name("minio table function")
+@Name("table function")
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"

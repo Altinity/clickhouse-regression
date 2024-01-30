@@ -101,9 +101,10 @@ def regression(
     local,
     clickhouse_version,
     clickhouse_binary_path,
-    collect_service_logs,
+    collect_service_logs,   
     use_specific_version,
     stress=None,
+    allow_vfs=False,
 ):
     """Alter regression."""
     nodes = {
