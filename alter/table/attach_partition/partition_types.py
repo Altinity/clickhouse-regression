@@ -4,8 +4,10 @@ from alter.table.attach_partition.requirements.requirements import *
 
 from alter.table.attach_partition.common import (
     check_partition_was_attached,
+    check_part_was_attached,
     check_partition_was_attached_from,
     check_partition_was_detached,
+    check_part_was_detached,
     create_partitions_with_random_uint64,
 )
 from helpers.common import (
@@ -13,6 +15,8 @@ from helpers.common import (
     attach_partition,
     detach_partition,
     attach_partition_from,
+    attach_part,
+    detach_part,
 )
 from helpers.tables import (
     create_partitioned_table_with_compact_and_wide_parts,
@@ -158,6 +162,56 @@ def check_attach_partition_from(self, destination_table, source_table):
         )
 
 
+@TestCheck
+def check_attach_part(self, table):
+    """Check that it is possible to use the attach part command with different types of parts."""
+    table_name = getuid()
+
+    with Given(
+        "I create two tables that have partitions with specific part types",
+        description=f"""
+               partition type: {table.__name__}
+               """,
+    ):
+        table(table_name=table_name)
+
+    if "empty" in table.__name__:
+        skip("No parts in table")
+
+    parts = self.context.node.query(
+        f"SELECT name from system.parts where table='{table_name}'"
+    ).output.split("\n")
+
+    if len(parts) == 0:
+        skip("No parts")
+
+    part = parts[0]
+
+    with When("I detach part from the table"):
+        detach_part(
+            table=table_name,
+            part=part,
+        )
+
+    with When("I check that the partition was detached from the table"):
+        check_part_was_detached(
+            table=table_name,
+            part=part,
+        )
+
+    with When("I attach partition from the table"):
+        attach_part(
+            table=table_name,
+            part=part,
+        )
+
+    with Then("I check that the partition was attached to the table"):
+        check_part_was_attached(
+            table=table_name,
+            part=part,
+        )
+
+
 @TestSketch(Scenario)
 @Flags(TE)
 def attach_partition_detached_with_different_partition_types(self):
@@ -170,6 +224,22 @@ def attach_partition_detached_with_different_partition_types(self):
     }
 
     check_attach_partition(
+        table=either(*values, i="table"),
+    )
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def attach_part_detached_with_different_partition_types(self):
+    """Run test check with different partition types to see if attach partition is possible."""
+    values = {
+        table_with_compact_parts,
+        table_with_wide_parts,
+        table_with_compact_and_wide_parts,
+        partition_with_empty_parts,
+    }
+
+    check_attach_part(
         table=either(*values, i="table"),
     )
 
@@ -205,5 +275,6 @@ def feature(self, node="clickhouse1"):
     """
     self.context.node = self.context.cluster.node(node)
 
-    Scenario(run=attach_partition_detached_with_different_partition_types)
-    Scenario(run=attach_partition_from_with_different_partition_types)
+    # Scenario(run=attach_partition_detached_with_different_partition_types)
+    # Scenario(run=attach_partition_from_with_different_partition_types)
+    Scenario(run=attach_part_detached_with_different_partition_types)
