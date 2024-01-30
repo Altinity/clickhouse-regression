@@ -377,7 +377,7 @@ def check_partition_was_attached(
     column="i",
     list=False,
 ):
-    """Check that the partition was attached on the table."""
+    """Check that the partition was attached to the table."""
     if node is None:
         node = self.context.node
 
@@ -397,6 +397,28 @@ def check_partition_was_attached(
 
 
 @TestStep(Then)
+def check_part_was_attached(
+    self,
+    table,
+    node=None,
+    sort_column="p",
+    part=None,
+    column="i",
+    list=False,
+):
+    """Check that the part was attached to the table."""
+    if node is None:
+        node = self.context.node
+
+    with By("I check that there is no part in the detached folder"):
+        part_value = node.query(
+            f"SELECT name FROM system.detached_parts WHERE table = '{table}' and name = '{part}' ORDER BY tuple(*)"
+        ).output
+
+        assert len(part_value) == 0
+
+
+@TestStep(Then)
 def check_partition_was_attached_from(
     self,
     source_table,
@@ -404,7 +426,7 @@ def check_partition_was_attached_from(
     node=None,
     partition=1,
 ):
-    """Check that the partition was attached on the table."""
+    """Check that the partition was attached to the table."""
     if node is None:
         node = self.context.node
 
@@ -441,6 +463,35 @@ def check_partition_was_detached(
         ).output
 
         assert len(partition_values) > 0
+
+
+@TestStep(Then)
+def check_part_was_detached(
+    self,
+    table,
+    node=None,
+    sort_column="p",
+    part=None,
+    column="i",
+    list=False,
+):
+    """Check that the part was detached from the table."""
+    if node is None:
+        node = self.context.node
+
+    with By("selecting data from the table"):
+        partition_values = node.query(
+            f"SELECT name FROM system.detached_parts WHERE table = '{table}' and name = '{part}' ORDER BY tuple(*)"
+        ).output
+
+        assert len(partition_values) > 0
+
+    with And("I check that data from the part is not on the table"):
+        data = node.query(
+            f"SELECT name FROM system.parts WHERE name = '{part}' and table = '{table}'"
+        ).output.strip()
+
+        assert len(data) == 0
 
 
 @TestStep(Given)
