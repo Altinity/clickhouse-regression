@@ -385,6 +385,8 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     shuffle_combinations = True
     combinations_limit = 100
 
+    fault_probability = 0.2
+
     if self.context.stress:
         combinations_limit = 10000
 
@@ -412,6 +414,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
             columns="d UInt64",
             rows=rows_per_insert,
             no_checks=True,
+            settings=f"insert_keeper_fault_injection_probability={fault_probability}",
         )
 
     @TestStep(When)
@@ -422,6 +425,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
             columns="d UInt64",
             rows=rows_per_insert * 10,
             no_checks=True,
+            settings=f"insert_keeper_fault_injection_probability={fault_probability}",
         )
 
     @TestStep(When)
@@ -432,6 +436,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
             columns="d UInt64",
             rows=rows_per_insert // 10,
             no_checks=True,
+            settings=f"insert_keeper_fault_injection_probability={fault_probability}",
         )
 
     @TestStep(When)
@@ -493,6 +498,8 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     action_pairs = list(product(nodes, actions))
 
     action_combos = list(combinations(action_pairs, combination_size))
+    n_combinations = len(action_combos)
+    note(f"There are {n_combinations} possible combinations")
 
     if shuffle_combinations:
         random.Random(shuffle_seed).shuffle(action_combos)
@@ -525,6 +532,9 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
 
         with Then(f"I record the average time taken: {a:.2f}s"):
             metric("Average time per combo", a, "s")
+            note(
+                f"It would take {(n_combinations*a)/60/60:.2f}h to test all {n_combinations} combinations"
+            )
 
     finally:
         with Finally("I drop the table on each node"):
