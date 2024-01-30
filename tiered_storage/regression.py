@@ -12,6 +12,7 @@ from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
+from vfs.tests.steps import enable_vfs
 
 
 def argparser(parser):
@@ -91,36 +92,36 @@ def argparser(parser):
 
 
 xfails = {
-    ":/manual move with downtime/*/all paths should start with :": [
+    ":/:/manual move with downtime/*/all paths should start with :": [
         (Fail, "https://altinity.atlassian.net/browse/CH-124")
     ],
-    ":/ttl moves/alter with existing parts": [(Fail, "not yet supported")],
-    ":/ttl moves/alter policy and ttl with existing parts": [
+    ":/:/ttl moves/alter with existing parts": [(Fail, "not yet supported")],
+    ":/:/ttl moves/alter policy and ttl with existing parts": [
         (Fail, "not yet supported")
     ],
-    ":/ttl moves/alter with merge": [(Fail, "not yet supported")],
-    ":/ttl moves/materialize ttl": [(Error, "not yet supported")],
-    ":/ttl moves/mutation update column in ttl": [(Error, "not yet supported")],
-    # ":/ttl moves/alter delete": [(Fail, "known issue")],
-    ":/double move while select": [(Fail, "not yet supported")],
-    ":/background move/concurrent read": [(Fail, "known issue")],
-    ":/disk space bytes": [(Fail, "not yet supported")],
-    ":/attach or replace partition different policies": [(Fail, "known issue")],
-    # ":/ttl moves/multi column ttl": [(Fail, "bug")],
-    ":/ttl moves/alter column in ttl/*": [
+    ":/:/ttl moves/alter with merge": [(Fail, "not yet supported")],
+    ":/:/ttl moves/materialize ttl": [(Error, "not yet supported")],
+    ":/:/ttl moves/mutation update column in ttl": [(Error, "not yet supported")],
+    ":/:/double move while select": [(Fail, "not yet supported")],
+    ":/:/background move/concurrent read": [(Fail, "known issue")],
+    ":/:/disk space bytes": [(Fail, "not yet supported")],
+    ":/:/attach or replace partition different policies": [(Fail, "known issue")],
+    ":/:/ttl moves/alter column in ttl/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39808")
     ],
-    ":/ttl moves/delete": [
+    ":/:/ttl moves/delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
-    ":/ttl moves/defaults to delete": [
+    ":/:/ttl moves/defaults to delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
-    ":/alter move/concurrent/concurrent alter move and drop": [(Fail, "unstable test")],
-    ":/alter move/concurrent/concurrent alter move insert and select": [
+    ":/:/alter move/concurrent/concurrent alter move and drop": [
         (Fail, "unstable test")
     ],
-    ":/query parser": [
+    ":/:/alter move/concurrent/concurrent alter move insert and select": [
+        (Fail, "unstable test")
+    ],
+    ":/:/query parser": [
         (
             Fail,
             "Incorrect message https://github.com/ClickHouse/ClickHouse/pull/51854",
@@ -130,8 +131,9 @@ xfails = {
 }
 
 ffails = {
-    ":/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
-    "/tiered storage/with s3amazon/alter table policy": (XFail, "Investigating"),
+    ":/:/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
+    "/tiered storage/with s3amazon/:/alter table policy": (XFail, "Investigating"),
+    ":/vfs": (Skip, "vfs not supported on < 23.11", check_clickhouse_version("<23.11")),
 }
 
 
@@ -148,6 +150,7 @@ def feature(
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
+    allow_vfs=False,
     environ=None,
 ):
     """Execute tests for tiered storage feature."""
@@ -168,144 +171,164 @@ def feature(
         args = {"cluster": cluster}
         common_args = dict(args=args, flags=TE)
 
+        object_storage_mode = "vfs" if allow_vfs else "normal"
+
         with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
-            Scenario(
-                run=load("tiered_storage.tests.startup_and_queries", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.metadata", "scenario"), **common_args
-            )
-            Scenario(
-                run=load("tiered_storage.tests.no_changes_to_queries", "scenario"),
-                **common_args,
-            )
-            # Scenario(run=load("tiered_storage.tests.disk_config_either_keep_free_space_bytes_or_ratio", "scenario"), **common_args)
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.volume_config_either_max_data_part_size_bytes_or_ratio",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.system_tables", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.system_detached_parts", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.attach_or_replace_partition_different_policies",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.query_parser", "scenario"), **common_args
-            )
-            Scenario(
-                run=load("tiered_storage.tests.keep_free_space", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.no_warning_about_zero_max_data_part_size",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.round_robin", "scenario"), **common_args
-            )
-            Scenario(
-                run=load("tiered_storage.tests.max_data_part_size", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.jbod_overflow", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.start_stop_moves", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.mutate_to_another_disk", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.alter_table_policy", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.simple_replication_and_moves", "scenario"
-                ),
-                **common_args,
-            )
-            # Scenario(run=load("tiered_storage.tests.simple_replication_and_moves_no_space", "scenario"), **common_args)
-            Scenario(
-                run=load("tiered_storage.tests.download_appropriate_disk", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.download_appropriate_disk_advanced",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.download_appropriate_disk_max_data_part_size",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(run=load("tiered_storage.tests.rename", "scenario"), **common_args)
-            Scenario(run=load("tiered_storage.tests.freeze", "scenario"), **common_args)
-            Scenario(
-                run=load("tiered_storage.tests.double_move_while_select", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.background_move.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.alter_move.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.manual_move_with_downtime", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.merge_parts_different_volumes", "scenario"
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.merge_parts_different_volumes_no_space",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.ttl_moves.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.change_config_norestart.feature", "feature"
-                ),
-                **common_args,
-            )
+            with Feature(object_storage_mode):
+                if object_storage_mode == "vfs":
+                    with Given("I enable allow_object_storage_vfs"):
+                        enable_vfs(disk_names=["external"])
+
+                Scenario(
+                    run=load("tiered_storage.tests.startup_and_queries", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.metadata", "scenario"), **common_args
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.no_changes_to_queries", "scenario"),
+                    **common_args,
+                )
+                # Scenario(run=load("tiered_storage.tests.disk_config_either_keep_free_space_bytes_or_ratio", "scenario"), **common_args)
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.volume_config_either_max_data_part_size_bytes_or_ratio",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.system_tables", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.system_detached_parts", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.attach_or_replace_partition_different_policies",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.query_parser", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.keep_free_space", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.no_warning_about_zero_max_data_part_size",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.round_robin", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.max_data_part_size", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.jbod_overflow", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.start_stop_moves", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.mutate_to_another_disk", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.alter_table_policy", "scenario"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.simple_replication_and_moves", "scenario"
+                    ),
+                    **common_args,
+                )
+                # Scenario(run=load("tiered_storage.tests.simple_replication_and_moves_no_space", "scenario"), **common_args)
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.download_appropriate_disk", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.download_appropriate_disk_advanced",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.download_appropriate_disk_max_data_part_size",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.rename", "scenario"), **common_args
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.freeze", "scenario"), **common_args
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.double_move_while_select", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.background_move.feature", "feature"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.alter_move.feature", "feature"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.manual_move_with_downtime", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.merge_parts_different_volumes", "scenario"
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.merge_parts_different_volumes_no_space",
+                        "scenario",
+                    ),
+                    **common_args,
+                )
+                Scenario(
+                    run=load("tiered_storage.tests.ttl_moves.feature", "feature"),
+                    **common_args,
+                )
+                Scenario(
+                    run=load(
+                        "tiered_storage.tests.change_config_norestart.feature",
+                        "feature",
+                    ),
+                    **common_args,
+                )
 
 
 @TestModule
@@ -331,6 +354,7 @@ def regression(
     gcs_key_secret=None,
     gcs_key_id=None,
     gcs_uri=None,
+    allow_vfs=False,
 ):
     """Tiered Storage regression."""
     environ = {}
@@ -340,7 +364,7 @@ def regression(
     if with_minio or with_s3amazon or with_s3gcs:
         if not self.skip:
             self.skip = []
-        self.skip.append(The("/tiered storage/:/manual move with downtime"))
+        self.skip.append(The("/tiered storage/:/:/manual move with downtime"))
 
     with Shell() as bash:
         if with_s3amazon:
@@ -385,6 +409,7 @@ def regression(
         with_s3amazon=with_s3amazon,
         with_s3gcs=with_s3gcs,
         environ=environ,
+        allow_vfs=allow_vfs,
     )
 
 

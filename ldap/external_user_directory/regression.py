@@ -10,6 +10,7 @@ from helpers.argparser import argparser
 from ldap.external_user_directory.requirements import *
 from helpers.common import check_clickhouse_version
 
+
 issue_51323 = "https://github.com/ClickHouse/ClickHouse/issues/51323"
 
 # Cross-outs of known fails
@@ -82,6 +83,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """ClickHouse LDAP external user directory regression module."""
     nodes = {
@@ -114,9 +116,7 @@ def regression(
         )
     )
     Feature(run=load("ldap.external_user_directory.tests.connections", "feature"))
-    Feature(
-        run=load("ldap.external_user_directory.tests.authentications", "feature")
-    )
+    Feature(run=load("ldap.external_user_directory.tests.authentications", "feature"))
     Feature(run=load("ldap.external_user_directory.tests.roles", "feature"))
 
 

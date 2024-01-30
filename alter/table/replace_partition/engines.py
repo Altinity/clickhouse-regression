@@ -61,9 +61,9 @@ def check_replace_partition(self, destination_table, source_table):
                """,
     ):
         destination_table(
-            table_name=destination_table_name, partition="p", columns=columns()
+            table_name=destination_table_name, partition_by="p", columns=columns()
         )
-        source_table(table_name=source_table_name, partition="p", columns=columns())
+        source_table(table_name=source_table_name, partition_by="p", columns=columns())
 
     with When("I replace partition from the source table to the destination table"):
         replace_partition(

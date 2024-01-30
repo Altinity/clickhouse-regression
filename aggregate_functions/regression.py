@@ -405,6 +405,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
+    allow_vfs=False,
 ):
     """Aggregate functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
