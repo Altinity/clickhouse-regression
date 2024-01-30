@@ -20,7 +20,9 @@ from helpers.create import (
 
 @TestStep(Given)
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas("1.0"))
-def partitioned_replicated_merge_tree_table(self, table_name, partition_by, columns=None):
+def partitioned_replicated_merge_tree_table(
+    self, table_name, partition_by, columns=None
+):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"
