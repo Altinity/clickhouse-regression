@@ -65,7 +65,7 @@ using the [Revision History].
 
 ## Introduction
 
-[ClickHouse] supports using a virtual file system on [AWS S3] and S3-compatible object storage.
+[ClickHouse] supports using a virtual file system on AWS [S3] and S3-compatible object storage.
 
 The virtual file system allows replicas to store table data and metadata on a single shared filesystem.
 
@@ -444,7 +444,7 @@ supported provider with syntax similar to the following:
 #### RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS
 version: 1.0
 
-[ClickHouse] SHALL support VFS on object storage using [AWS S3].
+[ClickHouse] SHALL support VFS on object storage using AWS [S3].
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO
 version: 1.0
@@ -464,7 +464,7 @@ version: 1.0
 * **GitHub Repository:** <https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs>
 * **Revision History:** <https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md>
 
-[AWS S3]: https://en.wikipedia.org/wiki/Amazon_S3
+[S3]: https://en.wikipedia.org/wiki/Amazon_S3
 [ClickHouse]: https://clickhouse.tech
 [Git]: https://git-scm.com/
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs
