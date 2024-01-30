@@ -746,7 +746,7 @@ def check_attach_partition_from(
 
                 self.context.node_1.query(query)
                 self.context.node_1.query(
-                    f"SELECT * FROM '{destination_table_name}' format PrettyCompactMonoBlock"
+                    f"SELECT * FROM {destination_table_name} format PrettyCompactMonoBlock"
                 )
 
         else:
