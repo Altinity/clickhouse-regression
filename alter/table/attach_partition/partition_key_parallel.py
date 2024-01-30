@@ -1,4 +1,5 @@
 from testflows.core import *
+from testflows.combinatorics import product
 
 from alter.table.attach_partition.common import *
 from alter.table.attach_partition.requirements.requirements import *
@@ -856,7 +857,7 @@ def check_attach_partition_from(
                     )
 
 
-@TestSketch(Scenario)
+@TestScenario
 @Flags(TE)
 def attach_partition_from(self, with_id=False):
     """Run test check with different partition keys for both source and destination tables to see if `attach partition from` is possible."""
@@ -916,13 +917,30 @@ def attach_partition_from(self, with_id=False):
             "ReplicatedMergeTree",
         }
 
-    check_attach_partition_from(
-        source_table_engine=either(*engines),
-        destination_table_engine=either(*engines),
-        source_partition_key=either(*partition_keys),
-        destination_partition_key=either(*partition_keys),
-        with_id=with_id,
-    )
+    partition_keys_pairs = set(product(partition_keys, partition_keys))
+    engines_pairs = set(product(engines, engines))
+    combinations = list(set(product(partition_keys_pairs, engines_pairs)))
+
+    with Pool(5) as executor:
+        for combination in combinations:
+            source_partition_key = combination[0][0]
+            destination_partition_key = combination[0][1]
+            source_table_engine = combination[1][0]
+            destination_table_engine = combination[1][1]
+
+            Scenario(
+                test=check_attach_partition_from,
+                parallel=True,
+                executor=executor,
+            )(
+                source_table_engine=source_table_engine,
+                destination_table_engine=destination_table_engine,
+                source_partition_key=source_partition_key,
+                destination_partition_key=destination_partition_key,
+                with_id=with_id,
+            )
+
+        join()
 
 
 @TestFeature
