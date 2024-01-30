@@ -319,7 +319,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_aws:
-    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce]
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -357,7 +357,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_gcs:
-    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce]
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -394,7 +394,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_minio:
-    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce]
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark

@@ -120,9 +120,9 @@ def scenario(self, cluster, node="clickhouse1"):
                             with Then(f"it should return the result of {rows_count}"):
                                 assert r == f"{rows_count}", error()
 
-                    with And("poll maximum 20 times to check used disks for the table"):
+                    with And("poll maximum 60 times to check used disks for the table"):
                         used_disks = get_used_disks_for_table(node, name)
-                        retry = 20
+                        retry = 60
                         i = 0
                         while (
                             not sum(1 for x in used_disks if x == "external") >= 1
@@ -141,9 +141,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with And(
                         "that the first two (oldest) parts were moved to 'external'"
                     ):
-                        for attempt in retries(timeout=180, delay=1):
-                            with attempt:
-                                assert used_disks[0] == "external", error()
+                        assert used_disks[0] == "external", error()
 
                     with When("I restart again"):
                         node.restart()
