@@ -23,6 +23,7 @@ table_configurations = {
     "n_cols": [10, 500, 2000],
     "n_tables": [1, 3],
     "part_type": ["unspecified", "wide", "compact"],
+    "fault_probability": [0, 0.2],
 }
 
 
@@ -92,6 +93,7 @@ def check_table_combination(
     n_cols: int,
     n_tables: int,
     part_type: str,
+    fault_probability: float,
 ):
     """
     Test that the given table parameters create a functional table.
@@ -128,6 +130,7 @@ def check_table_combination(
                     1 AS ver,
                     * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
                 LIMIT {n_rows}
+                SETTINGS insert_keeper_fault_injection_probability={fault_probability}
                 """
             )
 

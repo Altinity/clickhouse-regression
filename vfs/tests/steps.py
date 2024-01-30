@@ -14,6 +14,7 @@ DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
 COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
 
+
 @TestStep(Given)
 def s3_config(self):
     with Given("I have two S3 disks configured"):
@@ -136,7 +137,6 @@ def replicated_table_cluster(
         primary_key = f"PRIMARY KEY {primary_key}"
     else:
         primary_key = ""
-         
 
     if ttl is not None:
         ttl = "TTL " + ttl
@@ -168,13 +168,22 @@ def replicated_table_cluster(
 
 @TestStep(Given)
 def insert_random(
-    self, node, table_name, columns: str = None, rows: int = 1000000, no_checks=False
+    self,
+    node,
+    table_name,
+    columns: str = None,
+    rows: int = 1000000,
+    no_checks=False,
+    settings=None,
 ):
     if columns is None:
         columns = DEFAULT_COLUMNS
 
+    if settings:
+        settings = 'SETTINGS ' + settings
+
     node.query(
-        f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows}",
+        f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
         no_checks=no_checks,
         exitcode=0,
     )

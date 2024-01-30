@@ -278,13 +278,13 @@ def fault_injection(self):
         for _ in range(insert_rounds):
             for node in nodes:
                 with By(f"Inserting {rows_per_insert} rows on {node.name}"):
-                    node.query(
-                        f"""INSERT INTO {table_name} 
-                        SELECT * FROM generateRandom('d UInt64') 
-                        LIMIT {rows_per_insert} 
-                        SETTINGS insert_keeper_fault_injection_probability={fault_probability}
-                        """,
+                    insert_random(
+                        node=node,
+                        table_name=table_name,
+                        columns="d UInt64",
+                        rows=rows_per_insert,
                         no_checks=True,
+                        settings=f"insert_keeper_fault_injection_probability={fault_probability}",
                     )
 
     with Then("I check the number of rows in the table"):
