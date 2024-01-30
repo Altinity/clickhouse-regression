@@ -1041,6 +1041,7 @@ def create_crt_and_key(
 
 
 @TestStep(Given)
+@Retry(count=3)
 def flask_server(self, server_path, port, protocol, ciphers):
     """Run specified flask server"""
     node = self.context.node
