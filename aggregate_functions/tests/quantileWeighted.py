@@ -120,7 +120,6 @@ def scenario(
                         self.context.node.query(
                             f"select {col1_name}, {col2_name} from {table.name}"
                         )
-                        pause()
 
                     if not is_unsigned_integer(col2.datatype):
                         continue
