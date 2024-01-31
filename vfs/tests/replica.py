@@ -464,7 +464,9 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     def check_consistency(self):
         with When("I check which nodes have the table"):
             active_nodes = [
-                n for n in nodes if table_name in n.query("SHOW TABLES").output
+                n
+                for n in nodes
+                if table_name in n.query("SHOW TABLES", no_checks=True).output
             ]
             if not active_nodes:
                 return
@@ -505,6 +507,17 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
 
     if shuffle_combinations:
         random.Random(shuffle_seed).shuffle(action_combos)
+
+    # To run a single n-command group, uncomment and adjust as required
+    # action_combos = [
+    #     [
+    #         (nodes[0], insert),
+    #         (nodes[0], optimize),
+    #         (nodes[0], truncate),
+    #         (nodes[2], insert),
+    #         (nodes[2], select),
+    #     ]
+    # ]
 
     try:
         t = time.time()
