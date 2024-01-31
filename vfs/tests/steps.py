@@ -84,11 +84,10 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
     if node is None:
         node = current().context.node
     r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSON",
-        # message=f'"count()": "{rows}"',
+        f"SELECT count() FROM {table_name} FORMAT JSONColumns",
         exitcode=0,
     )
-    actual_count = int(json.loads(r.output)["data"][0]["count()"])
+    actual_count = int(json.loads(r.output)["count()"][0])
     assert rows == actual_count, error()
 
 
