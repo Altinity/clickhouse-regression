@@ -27,14 +27,6 @@ def check(self):
             f"INSERT INTO {self.context.table.name} VALUES ('a', 1), ('b', 2)",
             query_id=2000,
         )
-        self.context.node.query(
-            f"SELECT query_id FROM system.trace_log WHERE query_id = '2000'"
-        )
-        pause()
-        self.context.node.query(
-            f"select query_id from system.query_log where query_id='2000'"
-        )
-        pause()
 
     with Check(f"I check the results"):
         if a is not None:
