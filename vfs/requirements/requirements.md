@@ -152,14 +152,21 @@ version: 0.0
 
 [ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
 
-| Setting                                                   | Support |
-| --------------------------------------------------------- | ------- |
-| remote_fs_execute_merges_on_single_replica_time_threshold | yes     |
-| zero_copy_concurrent_part_removal_max_split_times         | yes     |
-| zero_copy_concurrent_part_removal_max_postpone_ratio      | yes     |
-| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | yes     |
-| perform_ttl_move_on_insert                                | yes     |
-| ...                                                       | planned |
+| Setting                                                        | Component             | Support |
+| -------------------------------------------------------------- | --------------------- | ------- |
+| remote_fs_execute_merges_on_single_replica_time_threshold      | MergeTree             | yes     |
+| zero_copy_concurrent_part_removal_max_split_times              | MergeTree             | yes     |
+| zero_copy_concurrent_part_removal_max_postpone_ratio           | MergeTree             | yes     |
+| zero_copy_merge_mutation_min_parts_size_sleep_before_lock      | MergeTree             | yes     |
+| perform_ttl_move_on_insert                                     | storage_policies      | yes     |
+| s3_truncate_on_insert                                          | Core                  |         |
+| s3_create_new_file_on_insert                                   | Core                  |         |
+| s3_skip_empty_files                                            | Core                  |         |
+| schema_inference_use_cache_for_s3                              | Core                  |         |
+| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core                  |         |
+| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core                  |         |
+| remote_fs_read_backoff_threshold                               | storage_configuration |         |
+| remote_fs_read_backoff_max_tries                               | storage_configuration |         |
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload
 version: 0.0
