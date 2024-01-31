@@ -460,6 +460,7 @@ def create_temporary_table(
     as_select=None,
     settings=None,
     empty=None,
+    node=None,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -468,7 +469,8 @@ def create_temporary_table(
     if name is None:
         name = f"table_{getuid()}"
 
-    node = current().context.node
+    if node is None:
+        node = current().context.node
 
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
