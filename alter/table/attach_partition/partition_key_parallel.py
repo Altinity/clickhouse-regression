@@ -669,8 +669,8 @@ def check_attach_partition_from(
     self,
     source_partition_key,
     destination_partition_key,
-    source_table_engine="MergeTree",
-    destination_table_engine="MergeTree",
+    source_table,
+    destination_table,
     with_id=False,
 ):
     """Check `attach partition from` with different types of source and destination tables."""
@@ -679,8 +679,8 @@ def check_attach_partition_from(
         if source_partition_key != destination_partition_key:
             skip("Different partition keys are not supported before 24.1")
 
-    self.context.source_engine = source_table_engine
-    self.context.destination_engine = destination_table_engine
+    self.context.source_engine = source_table.__name__
+    self.context.destination_engine = destination_table.__name__
 
     source_table_name = "source_" + getuid()
     destination_table_name = "destination_" + getuid()
@@ -692,39 +692,20 @@ def check_attach_partition_from(
             source table partition key: {source_partition_key}
             destination table partition key: {destination_partition_key}
             engines:
-            source table engine: {source_table_engine}
-            destination table engine: {destination_table_engine}
+            source table engine: {source_table.__name__}
+            destination table engine: {destination_table.__name__}
             """,
     ):
-        if "Replicated" in source_table_engine:
-            create_partitioned_replicated_table_with_data(
-                table_name=source_table_name,
-                engine=source_table_engine,
-                partition_by=source_partition_key,
-                nodes=self.context.nodes,
-            )
-        else:
-            create_partitioned_table_with_data(
-                table_name=source_table_name,
-                engine=source_table_engine,
-                partition_by=source_partition_key,
-                node=get_node(self, "source"),
-            )
-
-        if "Replicated" in destination_table_engine:
-            create_empty_partitioned_replicated_table(
-                table_name=destination_table_name,
-                engine=destination_table_engine,
-                partition_by=destination_partition_key,
-                nodes=self.context.nodes,
-            )
-        else:
-            create_empty_partitioned_table(
-                table_name=destination_table_name,
-                engine=destination_table_engine,
-                partition_by=destination_partition_key,
-                node=get_node(self, "destination"),
-            )
+        source_table(
+            table_name=source_table_name,
+            partition_by=source_partition_key,
+            nodes=self.context.nodes,
+        )
+        destination_table(
+            table_name=destination_table_name,
+            partition_by=destination_partition_key,
+            nodes=self.context.nodes,
+        )
 
     with And("I get the list of partitions and validate partition keys pair"):
         if with_id:
@@ -805,15 +786,15 @@ def check_attach_partition_from(
     with And(
         "I change engine names to compare replicated results with non-replicated results in snapshots"
     ):
-        if "Replicated" in source_table_engine:
-            source_table_engine = source_table_engine.replace("Replicated", "")
-        if "Replicated" in destination_table_engine:
-            destination_table_engine = destination_table_engine.replace(
-                "Replicated", ""
-            )
+        if "Replicated" in source_table.__name__:
+            source_table = source_table.__name__.split("_")[-1]
+            source_table = source_table.replace("Replicated", "")
+        if "Replicated" in destination_table.__name__:
+            destination_table = destination_table.__name__.split("_")[-1]
+            destination_table = destination_table.replace("Replicated", "")
 
     with Then(
-        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_table_engine}, destination table engine - {destination_table_engine}:"
+        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_table}, destination table engine - {destination_table}:"
     ):
         if valid:
             source_partition_data = get_node(self, "source").query(
@@ -893,53 +874,74 @@ def attach_partition_from(self, with_id=False):
         "(c,b,a)",
     }
 
-    engines = {
-        "MergeTree",
-        "ReplacingMergeTree",
-        "AggregatingMergeTree",
-        "SummingMergeTree",
-        "CollapsingMergeTree",
-        "VersionedCollapsingMergeTree",
-        "GraphiteMergeTree",
-        "ReplicatedMergeTree",
-        "ReplicatedReplacingMergeTree",
-        "ReplicatedAggregatingMergeTree",
-        "ReplicatedSummingMergeTree",
-        "ReplicatedCollapsingMergeTree",
-        "ReplicatedVersionedCollapsingMergeTree",
-        "ReplicatedGraphiteMergeTree",
+    source_table_types = {
+        partitioned_MergeTree,
+        partitioned_ReplicatedMergeTree,
+        partitioned_ReplacingMergeTree,
+        partitioned_ReplicatedReplacingMergeTree,
+        partitioned_AggregatingMergeTree,
+        partitioned_ReplicatedAggregatingMergeTree,
+        partitioned_SummingMergeTree,
+        partitioned_ReplicatedSummingMergeTree,
+        partitioned_CollapsingMergeTree,
+        partitioned_ReplicatedCollapsingMergeTree,
+        partitioned_VersionedCollapsingMergeTree,
+        partitioned_ReplicatedVersionedCollapsingMergeTree,
+        partitioned_GraphiteMergeTree,
+        partitioned_ReplicatedGraphiteMergeTree,
+    }
+
+    destination_table_types = {
+        empty_partitioned_MergeTree,
+        empty_partitioned_ReplicatedMergeTree,
+        empty_partitioned_ReplacingMergeTree,
+        empty_partitioned_ReplicatedReplacingMergeTree,
+        empty_partitioned_AggregatingMergeTree,
+        empty_partitioned_ReplicatedAggregatingMergeTree,
+        empty_partitioned_SummingMergeTree,
+        empty_partitioned_ReplicatedSummingMergeTree,
+        empty_partitioned_CollapsingMergeTree,
+        empty_partitioned_ReplicatedCollapsingMergeTree,
+        empty_partitioned_VersionedCollapsingMergeTree,
+        empty_partitioned_ReplicatedVersionedCollapsingMergeTree,
+        empty_partitioned_GraphiteMergeTree,
+        empty_partitioned_ReplicatedGraphiteMergeTree,
     }
 
     if not self.context.stress:
         partition_keys = partition_keys
-        engines = {
-            "MergeTree",
-            "ReplicatedMergeTree",
+        source_table_types = {
+            partitioned_MergeTree,
+            partitioned_ReplicatedMergeTree,
+        }
+        destination_table_types = {
+            empty_partitioned_MergeTree,
+            empty_partitioned_ReplicatedMergeTree,
         }
 
-    partition_keys_pairs = set(product(partition_keys, partition_keys))
-    engines_pairs = set(product(engines, engines))
-    combinations = list(set(product(partition_keys_pairs, engines_pairs)))
+    partition_keys_pairs = product(partition_keys, partition_keys)
+    table_pairs = product(source_table_types, destination_table_types)
+    combinations = product(partition_keys_pairs, table_pairs)
 
-    with Pool(5) as executor:
+    with Pool(10) as executor:
         for combination in combinations:
             source_partition_key = combination[0][0]
             destination_partition_key = combination[0][1]
-            source_table_engine = combination[1][0]
-            destination_table_engine = combination[1][1]
+            source_table = combination[1][0]
+            destination_table = combination[1][1]
 
             Scenario(
+                f"combination: partition keys - {source_partition_key}, {destination_partition_key}; tables - {source_table.__name__}, {destination_table.__name__}",
                 test=check_attach_partition_from,
                 parallel=True,
                 executor=executor,
             )(
-                source_table_engine=source_table_engine,
-                destination_table_engine=destination_table_engine,
+                source_table=source_table,
+                destination_table=destination_table,
                 source_partition_key=source_partition_key,
                 destination_partition_key=destination_partition_key,
                 with_id=with_id,
             )
-
         join()
 
 
