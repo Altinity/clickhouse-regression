@@ -9,6 +9,7 @@ def alter_table_add_column(
     column_type,
     column_name_after=None,
     node=None,
+    exitcode=None,
 ):
     """Add column to the existing table using alter."""
     if node is None:
@@ -20,7 +21,7 @@ def alter_table_add_column(
         if column_name_after:
             query += f" AFTER {column_name_after}"
 
-        node.query(query)
+        node.query(query, exitcode=exitcode)
 
 
 @TestStep(Given)
