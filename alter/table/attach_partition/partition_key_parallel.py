@@ -700,11 +700,13 @@ def check_attach_partition_from(
             table_name=source_table_name,
             partition_by=source_partition_key,
             nodes=self.context.nodes,
+            node=self.context.node_1,
         )
         destination_table(
             table_name=destination_table_name,
             partition_by=destination_partition_key,
             nodes=self.context.nodes,
+            node=self.context.node_1,
         )
 
     with And("I get the list of partitions and validate partition keys pair"):
@@ -923,12 +925,10 @@ def attach_partition_from(self, with_id=False):
     table_pairs = product(source_table_types, destination_table_types)
     combinations = product(partition_keys_pairs, table_pairs)
 
-    with Pool(10) as executor:
-        for combination in combinations:
-            source_partition_key = combination[0][0]
-            destination_partition_key = combination[0][1]
-            source_table = combination[1][0]
-            destination_table = combination[1][1]
+    with Pool(2) as executor:
+        for partition_keys, tables in combinations:
+            source_partition_key, destination_partition_key = partition_keys
+            source_table, destination_table = tables
 
             Scenario(
                 f"combination: partition keys - {source_partition_key}, {destination_partition_key}; tables - {source_table.__name__}, {destination_table.__name__}",
