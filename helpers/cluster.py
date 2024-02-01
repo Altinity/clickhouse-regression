@@ -515,7 +515,9 @@ class ClickHouseNode(Node):
 
         client = "clickhouse client -n"
         if secure:
-            client += " -s"
+            client += (
+                " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
+            )
 
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
@@ -591,7 +593,9 @@ class ClickHouseNode(Node):
 
         client = "clickhouse client -n"
         if secure:
-            client += " -s"
+            client += (
+                " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
+            )
 
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
@@ -698,7 +702,11 @@ class ClickHouseNode(Node):
 
         client = "clickhouse client -n"
         if secure:
-            client += " -s"
+            print(f"{current().context.clickhouse_version}")
+            client += (
+                " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
+            )
+
         if progress:
             client += " --progress"
 
