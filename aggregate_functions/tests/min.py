@@ -10,9 +10,13 @@ from aggregate_functions.requirements import (
 def scenario(self, func="min({params})", table=None, snapshot_id=None):
     """Check min aggregate function."""
 
-    clickhouse_version = (
-        ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
-    )
+    if check_clickhouse_version(">=24.1")(self):
+        clickhouse_version = ">=24.1"
+    elif check_clickhouse_version(">=23.12")(self):
+        clickhouse_version = ">=23.12"
+    else:
+        clickhouse_version = ">=23.2"
+
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
@@ -54,6 +58,7 @@ def scenario(self, func="min({params})", table=None, snapshot_id=None):
         column_name, column_type = column.name, column.datatype.name
 
         with Check(f"{column_type}"):
+            self.context.node.query(f"SELECT {column_name} from {table.name}")
             execute_query(
                 f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}"
             )

@@ -161,6 +161,34 @@ xfails = {
             check_clickhouse_version("<22.9"),
         )
     ],
+    "/aggregate functions/analysisOfVariance/return type/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            check_clickhouse_version(">=24.1"),
+        )
+    ],
+    "/aggregate functions/kolmogorovSmirnovTest/return type/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            check_clickhouse_version(">=24.1"),
+        )
+    ],
+    "/aggregate functions/mannWhitneyUTest/return type/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            check_clickhouse_version(">=24.1"),
+        )
+    ],
+    "/aggregate functions/meanZTest/return type/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            check_clickhouse_version(">=24.1"),
+        )
+    ],
 }
 
 ffails = {
