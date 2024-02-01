@@ -60,4 +60,12 @@ def feature(self):
             parallel=True,
             executor=pool,
         )
+        Feature(
+            run=load(
+                "alter.table.attach_partition.temporary_table",
+                "feature",
+            ),
+            parallel=True,
+            executor=pool,
+        )
         join()

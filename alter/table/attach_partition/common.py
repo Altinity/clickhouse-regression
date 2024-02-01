@@ -56,18 +56,22 @@ def create_partitioned_table_with_data(
     elif engine == "CollapsingMergeTree":
         engine = f"CollapsingMergeTree({sign})"
 
+    params = {
+        "name": table_name,
+        "engine": engine,
+        "partition_by": partition_by,
+        "primary_key": primary_key,
+        "order_by": order_by,
+        "columns": columns,
+        "query_settings": query_settings,
+        "if_not_exists": True,
+        "node": node,
+    }
+
+    not_none_params = {k: v for k, v in params.items() if v is not None}
+
     with By(f"creating a table that is partitioned by '{partition_by}'"):
-        create_table(
-            name=table_name,
-            engine=engine,
-            partition_by=partition_by,
-            primary_key=primary_key,
-            order_by=order_by,
-            columns=columns,
-            query_settings=query_settings,
-            if_not_exists=True,
-            node=node,
-        )
+        create_table(**not_none_params)
 
     with And(f"inserting data that will create multiple partitions"):
         for i in range(1, number_of_partitions + 1):
@@ -116,18 +120,22 @@ def create_empty_partitioned_table(
     elif engine == "CollapsingMergeTree":
         engine = f"CollapsingMergeTree({sign})"
 
+    params = {
+        "name": table_name,
+        "engine": engine,
+        "partition_by": partition_by,
+        "primary_key": primary_key,
+        "order_by": order_by,
+        "columns": columns,
+        "query_settings": query_settings,
+        "if_not_exists": True,
+        "node": node,
+    }
+
+    not_none_params = {k: v for k, v in params.items() if v is not None}
+
     with By(f"creating a table that is partitioned by '{partition_by}'"):
-        create_table(
-            name=table_name,
-            engine=engine,
-            partition_by=partition_by,
-            primary_key=primary_key,
-            order_by=order_by,
-            columns=columns,
-            query_settings=query_settings,
-            if_not_exists=True,
-            node=node,
-        )
+        create_table(**not_none_params)
 
 
 @TestStep(Given)
@@ -144,6 +152,7 @@ def create_partitioned_replicated_table_with_data(
     engine="ReplicatedMergeTree",
     query_settings=None,
     nodes=None,
+    node=None,
     number_of_partitions=3,
     config="graphite_rollup_example",
     sign="sign",
@@ -212,6 +221,7 @@ def create_empty_partitioned_replicated_table(
     engine="ReplicatedMergeTree",
     query_settings=None,
     nodes=None,
+    node=None,
     number_of_partitions=2,
     config="graphite_rollup_example",
     sign="sign",
@@ -260,8 +270,6 @@ def create_temporary_partitioned_table_with_data(
     self,
     table_name: str,
     columns: list[dict] = None,
-    comment: str = None,
-    primary_key=None,
     order_by: str = "tuple()",
     partition_by: str = None,
     engine="MergeTree",
@@ -295,17 +303,16 @@ def create_temporary_partitioned_table_with_data(
 
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
-    with node.client() as client:
-        with By(f"creating a temporary table that is partitioned by '{partition_by}'"):
-            client.query(
-                f"CREATE TEMPORARY TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
-            )
+    with By(f"creating a temporary table that is partitioned by '{partition_by}'"):
+        node.query(
+            f"CREATE TEMPORARY TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
+        )
 
-        with And(f"inserting data that will create multiple partitions"):
-            for i in range(1, number_of_partitions + 1):
-                client.query(
-                    f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
-                )
+    with And(f"inserting data that will create multiple partitions"):
+        for i in range(1, number_of_partitions + 1):
+            node.query(
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+            )
 
 
 @TestStep(Given)
@@ -313,8 +320,48 @@ def create_empty_temporary_partitioned_table(
     self,
     table_name: str,
     columns: list[dict] = None,
-    comment: str = None,
-    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+    engine="MergeTree",
+    node=None,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+):
+    """Create a table with the specified engine."""
+    if columns is None:
+        columns = [
+            Column(name="a", datatype=UInt16()),
+            Column(name="b", datatype=UInt16()),
+            Column(name="c", datatype=UInt16()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if "GraphiteMergeTree" in engine:
+        engine = f"GraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in engine:
+        engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in engine:
+        engine = f"CollapsingMergeTree({sign})"
+
+    columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+
+    with By(f"creating a temporary table that is partitioned by '{partition_by}'"):
+        node.query(
+            f"CREATE TEMPORARY TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
+        )
+
+
+@TestStep(Given)
+def create_regular_partitioned_table_with_data(
+    self,
+    table_name: str,
+    columns: list[dict] = None,
     order_by: str = "tuple()",
     partition_by: str = None,
     engine="MergeTree",
@@ -348,11 +395,58 @@ def create_empty_temporary_partitioned_table(
 
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
-    with node.client() as client:
-        with By(f"creating a temporary table that is partitioned by '{partition_by}'"):
-            client.query(
-                f"CREATE TEMPORARY TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        node.query(
+            f"CREATE TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
+        )
+
+    with And(f"inserting data that will create multiple partitions"):
+        for i in range(1, number_of_partitions + 1):
+            node.query(
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
             )
+
+
+@TestStep(Given)
+def create_empty_regular_partitioned_table(
+    self,
+    table_name: str,
+    columns: list[dict] = None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+    engine="MergeTree",
+    node=None,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+):
+    """Create a table with the specified engine."""
+    if columns is None:
+        columns = [
+            Column(name="a", datatype=UInt16()),
+            Column(name="b", datatype=UInt16()),
+            Column(name="c", datatype=UInt16()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if "GraphiteMergeTree" in engine:
+        engine = f"GraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in engine:
+        engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in engine:
+        engine = f"CollapsingMergeTree({sign})"
+
+    columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        node.query(
+            f"CREATE TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
+        )
 
 
 @TestStep(Then)
@@ -596,62 +690,72 @@ def execute_query(
 
 
 @TestStep(Given)
-def partitioned_MergeTree(self, table_name, partition_by, nodes):
+def partitioned_MergeTree(self, table_name, partition_by, nodes=None, node=None):
     create_partitioned_table_with_data(
         table_name=table_name,
         engine="MergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_MergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_MergeTree(self, table_name, partition_by, nodes=None, node=None):
     create_empty_partitioned_table(
         table_name=table_name,
         engine="MergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def partitioned_ReplicatedMergeTree(self, table_name, partition_by, nodes):
+def partitioned_ReplicatedMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_replicated_table_with_data(
         table_name=table_name,
         engine="ReplicatedMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_ReplicatedMergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_ReplicatedMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_partitioned_replicated_table(
         table_name=table_name,
         engine="ReplicatedMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def temporary_partitioned_MergeTree(self, table_name, partition_by, nodes):
+def temporary_partitioned_MergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_temporary_partitioned_table_with_data(
         table_name=table_name,
         engine="MergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_temporary_partitioned_MergeTree(self, table_name, partition_by, nodes):
+def empty_temporary_partitioned_MergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_temporary_partitioned_table(
         table_name=table_name,
         engine="MergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
@@ -659,66 +763,76 @@ def empty_temporary_partitioned_MergeTree(self, table_name, partition_by, nodes)
 
 
 @TestStep(Given)
-def partitioned_ReplacingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_ReplacingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_table_with_data(
         table_name=table_name,
         engine="ReplacingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_ReplacingMergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_ReplacingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_partitioned_table(
         table_name=table_name,
         engine="ReplacingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def partitioned_ReplicatedReplacingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_ReplicatedReplacingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_replicated_table_with_data(
         table_name=table_name,
         engine="ReplicatedReplacingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_partitioned_ReplicatedReplacingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_partitioned_replicated_table(
         table_name=table_name,
         engine="ReplicatedReplacingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def temporary_partitioned_ReplacingMergeTree(self, table_name, partition_by, nodes):
+def temporary_partitioned_ReplacingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_temporary_partitioned_table_with_data(
         table_name=table_name,
         engine="ReplacingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_temporary_partitioned_ReplacingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_temporary_partitioned_table(
         table_name=table_name,
         engine="ReplacingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
@@ -726,66 +840,76 @@ def empty_temporary_partitioned_ReplacingMergeTree(
 
 
 @TestStep(Given)
-def partitioned_AggregatingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_AggregatingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_table_with_data(
         table_name=table_name,
         engine="AggregatingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_AggregatingMergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_AggregatingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_partitioned_table(
         table_name=table_name,
         engine="AggregatingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def partitioned_ReplicatedAggregatingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_ReplicatedAggregatingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_replicated_table_with_data(
         table_name=table_name,
         engine="ReplicatedAggregatingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_partitioned_ReplicatedAggregatingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_partitioned_replicated_table(
         table_name=table_name,
         engine="ReplicatedAggregatingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def temporary_partitioned_AggregatingMergeTree(self, table_name, partition_by, nodes):
+def temporary_partitioned_AggregatingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_temporary_partitioned_table_with_data(
         table_name=table_name,
         engine="AggregatingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_temporary_partitioned_AggregatingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_temporary_partitioned_table(
         table_name=table_name,
         engine="AggregatingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
@@ -793,62 +917,74 @@ def empty_temporary_partitioned_AggregatingMergeTree(
 
 
 @TestStep(Given)
-def partitioned_SummingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_SummingMergeTree(self, table_name, partition_by, nodes=None, node=None):
     create_partitioned_table_with_data(
         table_name=table_name,
         engine="SummingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_SummingMergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_SummingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_partitioned_table(
         table_name=table_name,
         engine="SummingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def partitioned_ReplicatedSummingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_ReplicatedSummingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_replicated_table_with_data(
         table_name=table_name,
         engine="ReplicatedSummingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_ReplicatedSummingMergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_ReplicatedSummingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_partitioned_replicated_table(
         table_name=table_name,
         engine="ReplicatedSummingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def temporary_partitioned_SummingMergeTree(self, table_name, partition_by, nodes):
+def temporary_partitioned_SummingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_temporary_partitioned_table_with_data(
         table_name=table_name,
         engine="SummingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_temporary_partitioned_SummingMergeTree(self, table_name, partition_by, nodes):
+def empty_temporary_partitioned_SummingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_temporary_partitioned_table(
         table_name=table_name,
         engine="SummingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
@@ -856,66 +992,76 @@ def empty_temporary_partitioned_SummingMergeTree(self, table_name, partition_by,
 
 
 @TestStep(Given)
-def partitioned_CollapsingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_CollapsingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_table_with_data(
         table_name=table_name,
         engine="CollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_CollapsingMergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_CollapsingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_partitioned_table(
         table_name=table_name,
         engine="CollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def partitioned_ReplicatedCollapsingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_ReplicatedCollapsingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_replicated_table_with_data(
         table_name=table_name,
         engine="ReplicatedCollapsingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_partitioned_ReplicatedCollapsingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_partitioned_replicated_table(
         table_name=table_name,
         engine="ReplicatedCollapsingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def temporary_partitioned_CollapsingMergeTree(self, table_name, partition_by, nodes):
+def temporary_partitioned_CollapsingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_temporary_partitioned_table_with_data(
         table_name=table_name,
         engine="CollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_temporary_partitioned_CollapsingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_temporary_partitioned_table(
         table_name=table_name,
         engine="CollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
@@ -923,72 +1069,76 @@ def empty_temporary_partitioned_CollapsingMergeTree(
 
 
 @TestStep(Given)
-def partitioned_VersionedCollapsingMergeTree(self, table_name, partition_by, nodes):
+def partitioned_VersionedCollapsingMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_table_with_data(
         table_name=table_name,
         engine="VersionedCollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_partitioned_VersionedCollapsingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_partitioned_table(
         table_name=table_name,
         engine="VersionedCollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
 def partitioned_ReplicatedVersionedCollapsingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_partitioned_replicated_table_with_data(
         table_name=table_name,
         engine="ReplicatedVersionedCollapsingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_partitioned_ReplicatedVersionedCollapsingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_partitioned_replicated_table(
         table_name=table_name,
         engine="ReplicatedVersionedCollapsingMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
 def temporary_partitioned_VersionedCollapsingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_temporary_partitioned_table_with_data(
         table_name=table_name,
         engine="VersionedCollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_temporary_partitioned_VersionedCollapsingMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_temporary_partitioned_table(
         table_name=table_name,
         engine="VersionedCollapsingMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
@@ -996,64 +1146,74 @@ def empty_temporary_partitioned_VersionedCollapsingMergeTree(
 
 
 @TestStep(Given)
-def partitioned_GraphiteMergeTree(self, table_name, partition_by, nodes):
+def partitioned_GraphiteMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_table_with_data(
         table_name=table_name,
         engine="GraphiteMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def empty_partitioned_GraphiteMergeTree(self, table_name, partition_by, nodes):
+def empty_partitioned_GraphiteMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_empty_partitioned_table(
         table_name=table_name,
         engine="GraphiteMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
-def partitioned_ReplicatedGraphiteMergeTree(self, table_name, partition_by, nodes):
+def partitioned_ReplicatedGraphiteMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_partitioned_replicated_table_with_data(
         table_name=table_name,
         engine="ReplicatedGraphiteMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_partitioned_ReplicatedGraphiteMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_partitioned_replicated_table(
         table_name=table_name,
         engine="ReplicatedGraphiteMergeTree",
         partition_by=partition_by,
         nodes=nodes,
+        node=node,
     )
 
 
 @TestStep(Given)
-def temporary_partitioned_GraphiteMergeTree(self, table_name, partition_by, nodes):
+def temporary_partitioned_GraphiteMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
     create_temporary_partitioned_table_with_data(
         table_name=table_name,
         engine="GraphiteMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )
 
 
 @TestStep(Given)
 def empty_temporary_partitioned_GraphiteMergeTree(
-    self, table_name, partition_by, nodes
+    self, table_name, partition_by, nodes=None, node=None
 ):
     create_empty_temporary_partitioned_table(
         table_name=table_name,
         engine="GraphiteMergeTree",
         partition_by=partition_by,
-        node=self.context.node_1,
+        node=node,
     )

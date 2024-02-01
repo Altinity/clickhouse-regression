@@ -67,7 +67,7 @@ def check_attach_partition_on_different_types_of_disks(
     with Given(
         "I create two MergeTree tables and one or both of them are stored on a minio disk",
         description=f"""
-            types of tables:
+            table types:
             source table: {source_table.__name__}
             destination table: {destination_table.__name__}
             """,
@@ -110,13 +110,13 @@ def check_attach_partition_on_different_types_of_disks(
 def check_attach_partition_detached_on_different_types_of_disks(self, table):
     """Check attach partition from detached folder when table stored on
     different types of disks."""
+
     table_name = "destination_" + getuid()
 
     with Given(
         "I create MergeTree table",
         description=f"""
-            table type:
-            source table: {table.__name__}
+            table type: {table.__name__}
             """,
     ):
         table(table_name=table_name)
