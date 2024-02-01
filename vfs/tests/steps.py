@@ -84,11 +84,10 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
     if node is None:
         node = current().context.node
     r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSON",
-        # message=f'"count()": "{rows}"',
+        f"SELECT count() FROM {table_name} FORMAT JSONColumns",
         exitcode=0,
     )
-    actual_count = int(json.loads(r.output)["data"][0]["count()"])
+    actual_count = int(json.loads(r.output)["count()"][0])
     assert rows == actual_count, error()
 
 
@@ -196,6 +195,9 @@ def create_one_replica(
     self,
     node,
     table_name,
+    columns="d UInt64",
+    order_by='d',
+    replica_path_suffix=None,
     replica_name="{replica}",
     no_checks=False,
     storage_policy="external",
@@ -205,13 +207,14 @@ def create_one_replica(
     Call multiple times with the same table name and different nodes
     to create multiple replicas.
     """
+    if replica_path_suffix is None:
+        replica_path_suffix = table_name
+
     r = node.query(
         f"""
-        CREATE TABLE IF NOT EXISTS {table_name} (
-            d UInt64
-        ) 
-        ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{replica_name}')
-        ORDER BY d
+        CREATE TABLE IF NOT EXISTS {table_name} ({columns}) 
+        ENGINE=ReplicatedMergeTree('/clickhouse/tables/{replica_path_suffix}', '{replica_name}')
+        ORDER BY ({order_by})
         SETTINGS storage_policy='{storage_policy}'
         """,
         no_checks=no_checks,

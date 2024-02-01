@@ -464,7 +464,9 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     def check_consistency(self):
         with When("I check which nodes have the table"):
             active_nodes = [
-                n for n in nodes if table_name in n.query("SHOW TABLES").output
+                n
+                for n in nodes
+                if table_name in n.query("SHOW TABLES", no_checks=True).output
             ]
             if not active_nodes:
                 return
@@ -475,14 +477,16 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
                     f"SYSTEM SYNC REPLICA {table_name}", timeout=10, no_checks=True
                 )
 
-        with And("I query all nodes for their row counts"):
-            row_counts = {}
-            for node in active_nodes:
-                row_counts[node.name] = get_row_count(node=node)
+        for attempt in retries(timeout=60, delay=0.5):
+            with attempt:
+                with When("I query all nodes for their row counts"):
+                    row_counts = {}
+                    for node in active_nodes:
+                        row_counts[node.name] = get_row_count(node=node)
 
-        with Then("All replicas should have the same state"):
-            for n1, n2 in combinations(active_nodes, 2):
-                assert row_counts[n1.name] == row_counts[n2.name], error()
+                with Then("All replicas should have the same state"):
+                    for n1, n2 in combinations(active_nodes, 2):
+                        assert row_counts[n1.name] == row_counts[n2.name], error()
 
     actions = [
         add_replica,
@@ -503,6 +507,17 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
 
     if shuffle_combinations:
         random.Random(shuffle_seed).shuffle(action_combos)
+
+    # To run a single n-command group, uncomment and adjust as required
+    # action_combos = [
+    #     [
+    #         (nodes[0], insert),
+    #         (nodes[0], optimize),
+    #         (nodes[0], truncate),
+    #         (nodes[2], insert),
+    #         (nodes[2], select),
+    #     ]
+    # ]
 
     try:
         t = time.time()
