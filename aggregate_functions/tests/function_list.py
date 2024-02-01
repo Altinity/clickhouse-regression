@@ -20,4 +20,8 @@ def feature(self):
         diff = [
             name for name in aggregate_functions_list if name not in aggregate_functions
         ]
-        assert len(diff) == 0, f"{', '.join(i for i in diff)} was added"
+        assert len(diff) == 0, (
+            f"{', '.join(i for i in diff)} were added"
+            if len(diff) > 1
+            else f"{', '.join(i for i in diff)} was added"
+        )
