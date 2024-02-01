@@ -22,8 +22,8 @@ def argparser(parser):
         "--storage",
         action="append",
         help="select which storage types to run tests with",
-        choices=["minio", "aws_s3", "gcs", "vfs"],
-        default=["minio"],
+        choices=["minio", "aws_s3", "gcs"],
+        default=None,
         dest="storages",
     )
 
@@ -471,10 +471,13 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
     self.context.object_storage_mode = "normal"
 
-    if allow_vfs or "vfs" in storages:
+    if allow_vfs:
         self.context.object_storage_mode = "vfs"
         if check_clickhouse_version("<24.1")(self):
             skip("vfs not supported on < 24.1")
+
+    if storages is None:
+        storages = ["minio"]
 
     storage_module = None
 

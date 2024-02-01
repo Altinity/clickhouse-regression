@@ -117,10 +117,11 @@ def regression(
 ):
     """Disk Object Storage VFS regression."""
 
-    if check_clickhouse_version("<24.1")(self):
+    self.context.clickhouse_version = clickhouse_version
+
+    if check_clickhouse_version("<24.1")(self) or not allow_vfs:
         skip("vfs not supported on < 24.1")
 
-    self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
 
     if storages is None:

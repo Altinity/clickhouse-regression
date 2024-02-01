@@ -968,8 +968,10 @@ def clickhouse_client_connection(
     with Given("custom clickhouse-client SSL configuration"):
         add_ssl_clickhouse_client_configuration_file(entries=options)
 
+    secure = "-s" if check_clickhouse_version("<24.1")(self) else "--secure"
+
     output = node.command(
-        f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
+        f'clickhouse client {secure} --verbose --host {hostname} --port {port} -q "SELECT 1"',
         message=message,
         messages=messages,
         exitcode=exitcode,
