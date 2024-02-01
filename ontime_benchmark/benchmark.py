@@ -14,7 +14,7 @@ from s3.tests.common import *
 xfails = {}
 
 ffails = {
-    ":/queries/object storage vfs": (
+    ":/queries/vfs": (
         Skip,
         "vfs not supported on < 24",
         check_clickhouse_version("<24"),
