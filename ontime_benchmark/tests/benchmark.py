@@ -308,7 +308,7 @@ def zero_copy_replication(self, format=None):
 
 
 @TestScenario
-def object_storage_vfs(self, format=None):
+def vfs(self, format=None):
     """Simple benchmark queries for object storage vfs with the ontime dataset."""
     nodes = self.context.nodes
 
