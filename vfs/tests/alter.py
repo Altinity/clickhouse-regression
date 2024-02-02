@@ -9,7 +9,14 @@ from vfs.requirements import *
 
 
 """
-RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart,
 """
 
 

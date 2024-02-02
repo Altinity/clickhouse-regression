@@ -150,19 +150,42 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared = Requirement(
     description=(
         "[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.\n"
         "\n"
-        "| Setting                                                   | Support |\n"
-        "| --------------------------------------------------------- | ------- |\n"
-        "| remote_fs_execute_merges_on_single_replica_time_threshold | yes     |\n"
-        "| zero_copy_concurrent_part_removal_max_split_times         | yes     |\n"
-        "| zero_copy_concurrent_part_removal_max_postpone_ratio      | yes     |\n"
-        "| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | yes     |\n"
-        "| perform_ttl_move_on_insert                                | yes     |\n"
-        "| ...                                                       | planned |\n"
+        "| Setting                                                        | Component             | Support |\n"
+        "| -------------------------------------------------------------- | --------------------- | ------- |\n"
+        "| remote_fs_execute_merges_on_single_replica_time_threshold      | MergeTree             | yes     |\n"
+        "| zero_copy_concurrent_part_removal_max_split_times              | MergeTree             | yes     |\n"
+        "| zero_copy_concurrent_part_removal_max_postpone_ratio           | MergeTree             | yes     |\n"
+        "| zero_copy_merge_mutation_min_parts_size_sleep_before_lock      | MergeTree             | yes     |\n"
+        "| perform_ttl_move_on_insert                                     | storage_policies      | yes     |\n"
+        "| s3_truncate_on_insert                                          | Core                  |         |\n"
+        "| s3_create_new_file_on_insert                                   | Core                  |         |\n"
+        "| s3_skip_empty_files                                            | Core                  |         |\n"
+        "| schema_inference_use_cache_for_s3                              | Core                  |         |\n"
+        "| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core                  |         |\n"
+        "| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core                  |         |\n"
+        "| remote_fs_read_backoff_threshold                               | storage_configuration |         |\n"
+        "| remote_fs_read_backoff_max_tries                               | storage_configuration |         |\n"
         "\n"
     ),
     link=None,
     level=3,
     num="4.2.3",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reload the vfs configuration when the `SYSTEM RELOAD CONFIG` command is run.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled = Requirement(
@@ -180,7 +203,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.4",
+    num="4.2.5",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_Delete = Requirement(
@@ -308,6 +331,22 @@ RQ_SRS_038_DiskObjectStorageVFS_System_Optimize = Requirement(
     num="4.3.7",
 )
 
+RQ_SRS_038_DiskObjectStorageVFS_System_Transactions = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.System.Transactions",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL produce a reasonable number of Zookeeper transactions when tables are updated with VFS enabled.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.3.8",
+)
+
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch = Requirement(
     name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch",
     version="0.0",
@@ -316,42 +355,140 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support fetching a new part from another replica.\n" "\n"
+        "[ClickHouse] SHALL update all replicas when FETCH PARTITION/PART is performed.\n"
+        "\n"
     ),
     link=None,
     level=3,
     num="4.4.1",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.PartManipulation",
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach",
     version="0.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "| Part Manipulations        |\n"
-        "| ------------------------- |\n"
-        "| DETACH PARTITION/PART     |\n"
-        "| DROP PARTITION/PART       |\n"
-        "| ATTACH PARTITION/PART     |\n"
-        "| ATTACH PARTITION FROM     |\n"
-        "| REPLACE PARTITION         |\n"
-        "| MOVE PARTITION TO TABLE   |\n"
-        "| CLEAR COLUMN IN PARTITION |\n"
-        "| CLEAR INDEX IN PARTITION  |\n"
-        "| FREEZE PARTITION          |\n"
-        "| UNFREEZE PARTITION        |\n"
-        "| FETCH PARTITION/PART      |\n"
-        "| MOVE PARTITION/PART       |\n"
-        "| UPDATE IN PARTITION       |\n"
-        "| DELETE IN PARTITION       |\n"
+        "[ClickHouse] SHALL update all replicas when DETACH PARTITION/PART is performed.\n"
         "\n"
     ),
     link=None,
     level=3,
     num="4.4.2",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL update all replicas when DROP PARTITION/PART is performed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.3",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL update all replicas when ATTACH PARTITION/PART is performed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.4",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL update all replicas when ATTACH PARTITION FROM is performed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.5",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL update all replicas when REPLACE PARTITION is performed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.6",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL update all replicas when MOVE PARTITION TO TABLE is performed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.7",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL update all replicas when FREEZE/UNFREEZE PARTITION is performed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.8",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL update all replicas when MOVE PARTITION/PART is performed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.9",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Index = Requirement(
@@ -362,6 +499,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Index = Requirement(
     type=None,
     uid=None,
     description=(
+        "[ClickHouse] SHALL update all replicas when the following index manipulations are performed.\n"
+        "\n"
         "| Index Operations  |\n"
         "| ----------------- |\n"
         "| ADD INDEX         |\n"
@@ -372,7 +511,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Index = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.3",
+    num="4.4.10",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy = Requirement(
@@ -382,10 +521,13 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy = Requirement(
     group=None,
     type=None,
     uid=None,
-    description=("[ClickHouse] SHALL support MODIFY ORDER BY.\n" "\n"),
+    description=(
+        "[ClickHouse] SHALL update all replicas when MODIFY ORDER BY is performed.\n"
+        "\n"
+    ),
     link=None,
     level=3,
-    num="4.4.4",
+    num="4.4.11",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy = Requirement(
@@ -395,10 +537,13 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy = Requirement(
     group=None,
     type=None,
     uid=None,
-    description=("[ClickHouse] SHALL support MODIFY SAMPLE BY.\n" "\n"),
+    description=(
+        "[ClickHouse] SHALL update all replicas when MODIFY SAMPLE BY is performed.\n"
+        "\n"
+    ),
     link=None,
     level=3,
-    num="4.4.5",
+    num="4.4.12",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections = Requirement(
@@ -409,6 +554,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections = Requirement(
     type=None,
     uid=None,
     description=(
+        "[ClickHouse] SHALL update all replicas when the following projection manipulations are performed.\n"
+        "\n"
         "| Projection Operations  |\n"
         "| ---------------------- |\n"
         "| ADD PROJECTION         |\n"
@@ -419,7 +566,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.6",
+    num="4.4.13",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Column = Requirement(
@@ -430,6 +577,8 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Column = Requirement(
     type=None,
     uid=None,
     description=(
+        "[ClickHouse] SHALL update all replicas when the following column manipulations are performed.\n"
+        "\n"
         "| Column Operation     | Description                                                       |\n"
         "| -------------------- | ----------------------------------------------------------------- |\n"
         "| ADD COLUMN           | Adds a new column to the table.                                   |\n"
@@ -445,7 +594,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Column = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.7",
+    num="4.4.14",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Update = Requirement(
@@ -456,17 +605,18 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Update = Requirement(
     type=None,
     uid=None,
     description=(
+        "[ClickHouse] SHALL update all replicas when the following update manipulations are performed.\n"
+        "\n"
         "| Operation    |\n"
         "| ------------ |\n"
-        "| DELETE       |\n"
-        "| UPDATE       |\n"
+        "| DELETE FROM  |\n"
         "| ALTER DELETE |\n"
         "| ALTER UPDATE |\n"
         "\n"
     ),
     link=None,
     level=3,
-    num="4.4.8",
+    num="4.4.15",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Table_BackgroundCollapse = Requirement(
@@ -686,7 +836,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support VFS on object storage using [AWS S3].\n" "\n"
+        "[ClickHouse] SHALL support VFS on object storage using AWS [S3].\n" "\n"
     ),
     link=None,
     level=3,
@@ -776,9 +926,12 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared", level=3, num="4.2.3"
         ),
         Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload", level=3, num="4.2.4"
+        ),
+        Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled",
             level=3,
-            num="4.2.4",
+            num="4.2.5",
         ),
         Heading(name="System", level=2, num="4.3"),
         Heading(
@@ -812,34 +965,62 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.System.Optimize", level=3, num="4.3.7"
         ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.Transactions",
+            level=3,
+            num="4.3.8",
+        ),
         Heading(name="Alter", level=2, num="4.4"),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch", level=3, num="4.4.1"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.PartManipulation",
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach", level=3, num="4.4.2"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop", level=3, num="4.4.3"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach", level=3, num="4.4.4"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom",
             level=3,
-            num="4.4.2",
+            num="4.4.5",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Index", level=3, num="4.4.3"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace", level=3, num="4.4.6"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy", level=3, num="4.4.4"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable",
+            level=3,
+            num="4.4.7",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy", level=3, num="4.4.5"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze", level=3, num="4.4.8"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart", level=3, num="4.4.9"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Index", level=3, num="4.4.10"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy", level=3, num="4.4.11"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy", level=3, num="4.4.12"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections",
             level=3,
-            num="4.4.6",
+            num="4.4.13",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Column", level=3, num="4.4.7"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Column", level=3, num="4.4.14"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Update", level=3, num="4.4.8"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Update", level=3, num="4.4.15"
         ),
         Heading(name="Table", level=2, num="4.5"),
         Heading(
@@ -910,6 +1091,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
+        RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled,
         RQ_SRS_038_DiskObjectStorageVFS_System_Delete,
         RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption,
@@ -918,8 +1100,16 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper,
         RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts,
         RQ_SRS_038_DiskObjectStorageVFS_System_Optimize,
+        RQ_SRS_038_DiskObjectStorageVFS_System_Transactions,
         RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch,
-        RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze,
+        RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart,
         RQ_SRS_038_DiskObjectStorageVFS_Alter_Index,
         RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy,
         RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy,
@@ -960,7 +1150,8 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
     * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
     * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
-    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
+    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
+    * 4.2.5 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
   * 4.3 [System](#system)
     * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
     * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
@@ -969,15 +1160,23 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.3.5 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
     * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
     * 4.3.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
+    * 4.3.8 [RQ.SRS-038.DiskObjectStorageVFS.System.Transactions](#rqsrs-038diskobjectstoragevfssystemtransactions)
   * 4.4 [Alter](#alter)
     * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.PartManipulation](#rqsrs-038diskobjectstoragevfsalterpartmanipulation)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
-    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
-    * 4.4.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
-    * 4.4.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop](#rqsrs-038diskobjectstoragevfsalterdrop)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach](#rqsrs-038diskobjectstoragevfsalterattach)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom](#rqsrs-038diskobjectstoragevfsalterattachfrom)
+    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace](#rqsrs-038diskobjectstoragevfsalterreplace)
+    * 4.4.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable](#rqsrs-038diskobjectstoragevfsaltermovetotable)
+    * 4.4.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze](#rqsrs-038diskobjectstoragevfsalterfreeze)
+    * 4.4.9 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart](#rqsrs-038diskobjectstoragevfsaltermovepart)
+    * 4.4.10 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
+    * 4.4.11 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
+    * 4.4.12 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
+    * 4.4.13 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
+    * 4.4.14 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
+    * 4.4.15 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
   * 4.5 [Table](#table)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations](#rqsrs-038diskobjectstoragevfstabletableoperations)
     * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse](#rqsrs-038diskobjectstoragevfstablebackgroundcollapse)
@@ -1008,7 +1207,7 @@ using the [Revision History].
 
 ## Introduction
 
-[ClickHouse] supports using a virtual file system on [AWS S3] and S3-compatible object storage.
+[ClickHouse] supports using a virtual file system on AWS [S3] and S3-compatible object storage.
 
 The virtual file system allows replicas to store table data and metadata on a single shared filesystem.
 
@@ -1095,14 +1294,26 @@ version: 0.0
 
 [ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
 
-| Setting                                                   | Support |
-| --------------------------------------------------------- | ------- |
-| remote_fs_execute_merges_on_single_replica_time_threshold | yes     |
-| zero_copy_concurrent_part_removal_max_split_times         | yes     |
-| zero_copy_concurrent_part_removal_max_postpone_ratio      | yes     |
-| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | yes     |
-| perform_ttl_move_on_insert                                | yes     |
-| ...                                                       | planned |
+| Setting                                                        | Component             | Support |
+| -------------------------------------------------------------- | --------------------- | ------- |
+| remote_fs_execute_merges_on_single_replica_time_threshold      | MergeTree             | yes     |
+| zero_copy_concurrent_part_removal_max_split_times              | MergeTree             | yes     |
+| zero_copy_concurrent_part_removal_max_postpone_ratio           | MergeTree             | yes     |
+| zero_copy_merge_mutation_min_parts_size_sleep_before_lock      | MergeTree             | yes     |
+| perform_ttl_move_on_insert                                     | storage_policies      | yes     |
+| s3_truncate_on_insert                                          | Core                  |         |
+| s3_create_new_file_on_insert                                   | Core                  |         |
+| s3_skip_empty_files                                            | Core                  |         |
+| schema_inference_use_cache_for_s3                              | Core                  |         |
+| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core                  |         |
+| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core                  |         |
+| remote_fs_read_backoff_threshold                               | storage_configuration |         |
+| remote_fs_read_backoff_max_tries                               | storage_configuration |         |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload
+version: 0.0
+
+[ClickHouse] SHALL reload the vfs configuration when the `SYSTEM RELOAD CONFIG` command is run.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled
 version: 1.0
@@ -1161,37 +1372,64 @@ version: 0.0
 
 [ClickHouse] SHALL support manually triggering merges with `OPTIMIZE [FINAL]`.
 
+#### RQ.SRS-038.DiskObjectStorageVFS.System.Transactions
+version: 0.0
+
+[ClickHouse] SHALL produce a reasonable number of Zookeeper transactions when tables are updated with VFS enabled.
+
 ### Alter
 
-[ClickHouse] SHALL support the following operations on parts without data loss.
+[ClickHouse] SHALL update all replicas when the following operations on parts are performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch
 version: 0.0
 
-[ClickHouse] SHALL support fetching a new part from another replica.
+[ClickHouse] SHALL update all replicas when FETCH PARTITION/PART is performed.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Alter.PartManipulation
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach
 version: 0.0
 
-| Part Manipulations        |
-| ------------------------- |
-| DETACH PARTITION/PART     |
-| DROP PARTITION/PART       |
-| ATTACH PARTITION/PART     |
-| ATTACH PARTITION FROM     |
-| REPLACE PARTITION         |
-| MOVE PARTITION TO TABLE   |
-| CLEAR COLUMN IN PARTITION |
-| CLEAR INDEX IN PARTITION  |
-| FREEZE PARTITION          |
-| UNFREEZE PARTITION        |
-| FETCH PARTITION/PART      |
-| MOVE PARTITION/PART       |
-| UPDATE IN PARTITION       |
-| DELETE IN PARTITION       |
+[ClickHouse] SHALL update all replicas when DETACH PARTITION/PART is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when DROP PARTITION/PART is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when ATTACH PARTITION/PART is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when ATTACH PARTITION FROM is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when REPLACE PARTITION is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when MOVE PARTITION TO TABLE is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when FREEZE/UNFREEZE PARTITION is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when MOVE PARTITION/PART is performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Index
 version: 0.0
+
+[ClickHouse] SHALL update all replicas when the following index manipulations are performed.
 
 | Index Operations  |
 | ----------------- |
@@ -1203,15 +1441,17 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy
 version: 0.0
 
-[ClickHouse] SHALL support MODIFY ORDER BY.
+[ClickHouse] SHALL update all replicas when MODIFY ORDER BY is performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy
 version: 0.0
 
-[ClickHouse] SHALL support MODIFY SAMPLE BY.
+[ClickHouse] SHALL update all replicas when MODIFY SAMPLE BY is performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections
 version: 0.0
+
+[ClickHouse] SHALL update all replicas when the following projection manipulations are performed.
 
 | Projection Operations  |
 | ---------------------- |
@@ -1222,6 +1462,8 @@ version: 0.0
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Column
 version: 0.0
+
+[ClickHouse] SHALL update all replicas when the following column manipulations are performed.
 
 | Column Operation     | Description                                                       |
 | -------------------- | ----------------------------------------------------------------- |
@@ -1238,10 +1480,11 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Update
 version: 0.0
 
+[ClickHouse] SHALL update all replicas when the following update manipulations are performed.
+
 | Operation    |
 | ------------ |
-| DELETE       |
-| UPDATE       |
+| DELETE FROM  |
 | ALTER DELETE |
 | ALTER UPDATE |
 
@@ -1383,7 +1626,7 @@ supported provider with syntax similar to the following:
 #### RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS
 version: 1.0
 
-[ClickHouse] SHALL support VFS on object storage using [AWS S3].
+[ClickHouse] SHALL support VFS on object storage using AWS [S3].
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO
 version: 1.0
@@ -1403,7 +1646,7 @@ version: 1.0
 * **GitHub Repository:** <https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs>
 * **Revision History:** <https://github.com/Altinity/clickhouse-regression/blob/vfs_object_storage_testing/object_storage_vfs/requirements/requirements.md>
 
-[AWS S3]: https://en.wikipedia.org/wiki/Amazon_S3
+[S3]: https://en.wikipedia.org/wiki/Amazon_S3
 [ClickHouse]: https://clickhouse.tech
 [Git]: https://git-scm.com/
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/vfs_object_storage_testing/object_storage_vfs
