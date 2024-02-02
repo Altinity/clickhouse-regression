@@ -10,9 +10,7 @@ from aggregate_functions.requirements import (
 def scenario(self, func="min({params})", table=None, snapshot_id=None):
     """Check min aggregate function."""
 
-    if check_clickhouse_version(">=24.1")(self):
-        clickhouse_version = ">=24.1"
-    elif check_clickhouse_version(">=23.12")(self):
+    if check_clickhouse_version(">=23.12")(self):
         clickhouse_version = ">=23.12"
     else:
         clickhouse_version = ">=23.2"

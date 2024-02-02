@@ -161,31 +161,45 @@ xfails = {
             check_clickhouse_version("<22.9"),
         )
     ],
-    "/aggregate functions/analysisOfVariance/return type/*": [
+    "/aggregate functions/max/Array(*Nullable*/*": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            "https://github.com/ClickHouse/ClickHouse/issues/59492",
             check_clickhouse_version(">=24.1"),
         )
     ],
-    "/aggregate functions/kolmogorovSmirnovTest/return type/*": [
+    "/aggregate functions/:/max*/Array(*Nullable*/*": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            "https://github.com/ClickHouse/ClickHouse/issues/59492",
             check_clickhouse_version(">=24.1"),
         )
     ],
-    "/aggregate functions/mannWhitneyUTest/return type/*": [
+    "/aggregate functions/min/Map(*Nullable*/*": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            "https://github.com/ClickHouse/ClickHouse/issues/59492",
             check_clickhouse_version(">=24.1"),
         )
     ],
-    "/aggregate functions/meanZTest/return type/*": [
+    "/aggregate functions/:/min*/Map(*Nullable*/*": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/59490",
+            "https://github.com/ClickHouse/ClickHouse/issues/59492",
+            check_clickhouse_version(">=24.1"),
+        )
+    ],
+    "/aggregate functions/min/Array(*Nullable*/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/59492",
+            check_clickhouse_version(">=24.1"),
+        )
+    ],
+    "/aggregate functions/:/min*/Array(*Nullable*/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/59492",
             check_clickhouse_version(">=24.1"),
         )
     ],

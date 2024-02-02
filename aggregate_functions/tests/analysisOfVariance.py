@@ -32,7 +32,9 @@ def scenario(
     extended_precision=True,
 ):
     """Check analysisOfVariance(anova) aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=24.1"
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
