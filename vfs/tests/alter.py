@@ -10,9 +10,6 @@ from vfs.requirements import *
 
 
 """
-
-RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom,
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart,
@@ -223,6 +220,99 @@ def fetch(self, fetch_item):
             retry(assert_row_count, timeout=15, delay=1)(
                 node=node, table_name=destination_table_name, rows=row_count
             )
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom("0.0"))
+def attach_from(self):
+    """Test attaching a part from one table to another"""
+
+    nodes = self.context.ch_nodes
+    node = nodes[0]
+    fetch_item = "PARTITION 2"
+    insert_rows = 1000000
+
+    with Given("I have two replicated tables"):
+        _, source_table_name = replicated_table_cluster(
+            storage_policy="external_vfs", partition_by="key % 4"
+        )
+        _, destination_table_name = replicated_table_cluster(
+            storage_policy="external_vfs", partition_by="key % 4"
+        )
+
+    with And("I insert data into the first table"):
+        insert_random(node=node, table_name=source_table_name, rows=insert_rows)
+
+    with And("I count the rows in a partition"):
+        # Can also get this information from system.parts
+        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
+        row_count = int(r.output)
+
+    with When("I attach the partition to the second table"):
+        node.query(
+            f"ALTER TABLE {destination_table_name} ATTACH {fetch_item} FROM {source_table_name}"
+        )
+
+    with Then("I check the number of rows on the first table on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=1)(
+                node=node, table_name=source_table_name, rows=insert_rows
+            )
+
+    with And("I check the number of rows on the second table on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=1)(
+                node=node, table_name=destination_table_name, rows=row_count
+            )
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace("0.0"))
+def replace(self):
+    """Test attaching a part from one table to another"""
+
+    nodes = self.context.ch_nodes
+    node = nodes[0]
+    fetch_item = "PARTITION 2"
+    insert_rows = 1000000
+
+    with Given("I have two replicated tables"):
+        _, source_table_name = replicated_table_cluster(
+            storage_policy="external_vfs", partition_by="key % 4"
+        )
+        _, destination_table_name = replicated_table_cluster(
+            storage_policy="external_vfs", partition_by="key % 4"
+        )
+
+    with And("I insert data into the first table"):
+        insert_random(node=node, table_name=source_table_name, rows=insert_rows)
+
+    with And("I insert a smaller amount of data into the second table"):
+        insert_random(
+            node=node, table_name=destination_table_name, rows=insert_rows // 2
+        )
+
+    with And("I count the rows in a partition on the first table"):
+        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
+        row_count_source = int(r.output)
+
+    with When("I replace a partition on the second table"):
+        node.query(
+            f"ALTER TABLE {destination_table_name} REPLACE {fetch_item} FROM {source_table_name}"
+        )
+
+    with Then("I check the number of rows on the first table on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=1)(
+                node=node, table_name=source_table_name, rows=insert_rows
+            )
+
+    with And("I check the size of the replaced part"):
+        for node in nodes:
+            r = node.query(
+                f"SELECT count() FROM {destination_table_name} where key % 4 = 2;"
+            )
+            assert row_count_source == int(r.output)
 
 
 @TestOutline(Scenario)
