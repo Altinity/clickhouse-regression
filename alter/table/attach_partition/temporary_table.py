@@ -41,24 +41,46 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
             with And(
                 "I detach partition from the table and check that partition was detached"
             ):
-                detach_partition(table=table_name, partition=1, node=client)
-                table_after_detach = client.query(
-                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+                if "temporary" in table.__name__ and check_clickhouse_version(
+                    "<=23.10"
+                )(self):
+                    exitcode = 60
+                else:
+                    exitcode = 0
+                detach_partition(
+                    table=table_name, partition=1, node=client, exitcode=exitcode
                 )
-                for attempt in retries(timeout=timeout, delay=delay):
-                    with attempt:
-                        assert table_before != table_after_detach, error()
+                table_after_detach = client.query(
+                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra",
+                    exitcode=exitcode,
+                )
+
+                if exitcode == 0:
+                    for attempt in retries(timeout=timeout, delay=delay):
+                        with attempt:
+                            assert table_before != table_after_detach, error()
 
             with And("I attach detached partition back"):
-                attach_partition(table=table_name, partition=1, node=client)
-
-            with Then("I check that data is the same as it was before attach detach"):
-                table_after = client.query(
-                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+                if "temporary" in table.__name__ and check_clickhouse_version(
+                    "<=23.10"
+                )(self):
+                    exitcode = 60
+                else:
+                    exitcode = 0
+                attach_partition(
+                    table=table_name, partition=1, node=client, exitcode=exitcode
                 )
-                for attempt in retries(timeout=timeout, delay=delay):
-                    with attempt:
-                        assert table_before == table_after, error()
+
+            if exitcode == 0:
+                with Then(
+                    "I check that data is the same as it was before attach detach"
+                ):
+                    table_after = client.query(
+                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+                    )
+                    for attempt in retries(timeout=timeout, delay=delay):
+                        with attempt:
+                            assert table_before == table_after, error()
 
 
 @TestScenario
@@ -100,27 +122,37 @@ def check_attach_partition_from_with_temporary_tables(
             with And(
                 "I attach all partitions from source table to the destination table"
             ):
+                if (
+                    "temporary" in destination_table.__name__
+                    and check_clickhouse_version("<=23.10")(self)
+                ):
+                    exitcode = 60
+                else:
+                    exitcode = 0
+
                 for partition_id in ["1", "2", "3"]:
                     query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
-                    client.query(query)
+                    client.query(query, exitcode=exitcode)
                     client.query(
-                        f"SELECT * FROM {destination_table_name} format PrettyCompactMonoBlock"
+                        f"SELECT * FROM {destination_table_name} format PrettyCompactMonoBlock",
+                        exitcode=exitcode,
                     )
 
-            with Then(
-                f"I check that partitions were attached to the destination table"
-            ):
-                for attempt in retries(timeout=30, delay=2):
-                    with attempt:
-                        source_partition_data = client.query(
-                            f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra"
-                        )
-                        destination_partition_data = client.query(
-                            f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
-                        )
-                        assert (
-                            source_partition_data == destination_partition_data
-                        ), error()
+            if exitcode == 0:
+                with Then(
+                    f"I check that partitions were attached to the destination table"
+                ):
+                    for attempt in retries(timeout=30, delay=2):
+                        with attempt:
+                            source_partition_data = client.query(
+                                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra"
+                            )
+                            destination_partition_data = client.query(
+                                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                            )
+                            assert (
+                                source_partition_data == destination_partition_data
+                            ), error()
 
 
 @TestSketch(Scenario)
