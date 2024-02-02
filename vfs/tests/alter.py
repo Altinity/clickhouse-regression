@@ -10,8 +10,7 @@ from vfs.requirements import *
 
 
 """
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze,
-RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze
 """
 
 
@@ -301,7 +300,6 @@ def move_to_table(self):
     with And("I count the rows in a partition on the first table"):
         r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
         row_count = int(r.output)
-        note(f"1 {row_count}")
 
     with When("I attach the partition to the second table"):
         node.query(
@@ -417,6 +415,84 @@ def drop(self, drop_item, detach_first):
                 table_name=table_name,
                 rows=(insert_rows - part_row_count),
             )
+
+
+@TestOutline(Scenario)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart("0.0"))
+@Examples(
+    "move_item disk_order to_type",
+    product(
+        ["PARTITION 2", "PART '2_0_0_0'"],
+        [
+            ["external", "external_no_vfs"],
+            ["external", "external_vfs"],
+            ["external_vfs", "external_no_vfs"],
+        ],
+        ["DISK", "VOLUME"],
+    ),
+)
+def move(self, move_item, disk_order, to_type):
+    """
+    Test moving  part between vfs and non-vfs disks.
+
+    Clickhouse fills disks in the order they were defined,
+    therefore need to use 3 disks to test both movement directions.
+    As a sanity check, moves with no vfs at all are performed first.
+    """
+
+    source_disk, destination_disk = disk_order
+
+    node = self.context.ch_nodes[0]
+    insert_rows = 1000000
+
+    with Given("""I have a storage policy with two disks"""):
+        policies = {
+            "test_policy": {
+                "volumes": {
+                    "source": {"disk": source_disk},
+                    "destination": {"disk": destination_disk},
+                }
+            },
+        }
+
+    with s3_storage(
+        {}, policies, restart=False, timeout=60, config_file="test_policy.xml"
+    ):
+        with Given("I have a replicated table"):
+            _, table_name = replicated_table_cluster(
+                storage_policy="test_policy", partition_by="key % 4"
+            )
+
+        with And("I insert data into the first table"):
+            insert_random(node=node, table_name=table_name, rows=insert_rows)
+
+        with And("I check system.parts"):
+            what, name = move_item.split()
+            query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
+            r = node.query(query, exitcode=0)
+            assert r.output == source_disk, error()
+
+        with When(f"I move {move_item} from {source_disk} to {destination_disk}"):
+            query = f"ALTER TABLE {table_name} MOVE {move_item} TO "
+            if to_type == "DISK":
+                query += f"DISK '{destination_disk}'"
+            elif to_type == "VOLUME":
+                query += "VOLUME 'destination'"
+            node.query(query, exitcode=0)
+
+        with Then("I check the number of rows on all nodes"):
+            for node in self.context.ch_nodes:
+                retry(assert_row_count, timeout=15, delay=1)(
+                    node=node,
+                    table_name=table_name,
+                    rows=insert_rows,
+                )
+
+        with And("I check system.parts"):
+            what, name = move_item.split()
+            query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
+            r = node.query(query, exitcode=0)
+            assert r.output == destination_disk, error()
 
 
 @TestOutline(Scenario)
