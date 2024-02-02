@@ -84,10 +84,10 @@ def minio(
     Feature(run=load("vfs.tests.alter", "feature"))
     Feature(run=load("vfs.tests.create_insert", "feature"))
     Feature(run=load("vfs.tests.performance", "feature"))
-    Feature(run=load("vfs.tests.stress_alter", "feature"))
-
+    
     if self.context.stress:
         Feature(run=load("vfs.tests.stress", "feature"))
+        Feature(run=load("vfs.tests.stress_alter", "feature"))
 
 
 @TestModule

@@ -2,6 +2,7 @@
 import random
 
 from testflows.core import *
+from testflows.combinatorics import product
 
 from helpers.alter import *
 from vfs.tests.steps import *
@@ -9,7 +10,12 @@ from vfs.requirements import *
 
 
 """
-RQ_SRS_038_DiskObjectStorageVFS_Alter_PartManipulation,
+
+RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze,
+RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart,
 """
 
 
@@ -177,7 +183,10 @@ def projection(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch("0.0"))
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch("0.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach("0.0"),
+)
 @Examples("fetch_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
 def fetch(self, fetch_item):
     """Test fetching a new part from another replica."""
@@ -213,6 +222,92 @@ def fetch(self, fetch_item):
         for node in nodes:
             retry(assert_row_count, timeout=15, delay=1)(
                 node=node, table_name=destination_table_name, rows=row_count
+            )
+
+
+@TestOutline(Scenario)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop("0.0"))
+@Examples(
+    "drop_item detach_first", product(["PARTITION 2", "PART '2_0_0_0'"], [False, True])
+)
+def drop(self, drop_item, detach_first):
+    """Test detaching a part on one replica and reattaching it on another"""
+
+    nodes = self.context.ch_nodes
+    insert_rows = 1000000
+
+    with Given("I have a replicated tables"):
+        _, table_name = replicated_table_cluster(
+            storage_policy="external_vfs", partition_by="key % 4"
+        )
+
+    with And("I insert data into the first table"):
+        insert_random(node=nodes[1], table_name=table_name, rows=insert_rows)
+
+    with And("I count the rows in a partition"):
+        # Can also get this information from system.parts
+        r = nodes[1].query(f"SELECT count() FROM {table_name} where key % 4 = 2;")
+        part_row_count = int(r.output)
+
+    if detach_first:
+        with When("I detach a partition from the first table"):
+            nodes[1].query(f"ALTER TABLE {table_name} DETACH {drop_item}", exitcode=0)
+
+        with And("I drop the detached partition"):
+            nodes[1].query(
+                f"ALTER TABLE {table_name} DROP DETACHED {drop_item} SETTINGS allow_drop_detached=1",
+                exitcode=0,
+            )
+
+    else:
+        with When("I drop the partition"):
+            nodes[1].query(f"ALTER TABLE {table_name} DROP {drop_item}", exitcode=0)
+
+    with Then("I check the number of rows on the first table on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=1)(
+                node=node,
+                table_name=table_name,
+                rows=(insert_rows - part_row_count),
+            )
+
+
+@TestOutline(Scenario)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach("0.0"))
+@Examples("detach_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
+def detach(self, detach_item):
+    """Test detaching a part"""
+
+    nodes = self.context.ch_nodes
+    insert_rows = 1000000
+    storage_policy = "external_vfs"
+
+    with Given("I have two replicated tables"):
+        _, source_table_name = replicated_table_cluster(
+            storage_policy=storage_policy, partition_by="key % 4"
+        )
+
+    with And("I insert data into the first table"):
+        insert_random(node=nodes[1], table_name=source_table_name, rows=insert_rows)
+
+    with And("I count the rows in a partition"):
+        # Can also get this information from system.parts
+        r = nodes[1].query(
+            f"SELECT count() FROM {source_table_name} where key % 4 = 2;"
+        )
+        part_row_count = int(r.output)
+
+    with When("I detach a partition from the first table"):
+        nodes[1].query(
+            f"ALTER TABLE {source_table_name} DETACH {detach_item}", exitcode=0
+        )
+
+    with Then("I check the number of rows on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=1)(
+                node=node,
+                table_name=source_table_name,
+                rows=(insert_rows - part_row_count),
             )
 
 
