@@ -1,0 +1,708 @@
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('0103000000000000000000000000002240000000000000184000000000008044400000000000003540'), 'AggregateFunction(simpleLinearRegression, Nullable(Int8) ,Nullable(Int8))'))":{"k":0.21428571428571427,"b":1.357142857142857}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_constant_0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000000000000000F03F000000000000F03F000000000000F03F000000000000F03F'), 'AggregateFunction(simpleLinearRegression, UInt8 ,UInt8)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float32_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E2701910C81FD01440BEE4B4FF1D06E80EE4411550000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float32 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF000000E2701910C8000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float32)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF1FD01440BEE4B4FF000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Int16_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF000000000040A3C0000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Int16)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Int32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF000000E68F76A5C1000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Int32)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FFA486C64D5FBCE043000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Int64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Int8_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF0000000000804940000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Int8)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF000000AC2CB6ED47000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Float32))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF69558A29999EFE75000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Float64))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF000000004007D140000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Int16))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF0000808932BBD7C1000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Int32))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF4195A236CAF2EB43000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Int64))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF0000000000E06740000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Int8))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_Float32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF000000008639E647000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(Float32)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_Float64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FFC3A355CA77F1F07D000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(Float64)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_Int16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF00000000A0D1E1C0000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(Int16)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_Int32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF000000037101C1C1000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(Int32)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_Int64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FFE85D0006C7F6E843000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(Int64)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_Int8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF0000000000005840000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(Int8)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_UInt16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF00000000A0D50D41000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(UInt16)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_UInt32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF0000400731781542000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(UInt32)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_UInt64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF6111118E70FB1044000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(UInt64)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_Nullable_UInt8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF0000000000D89440000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(Nullable(UInt8)))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF0000000080F61341000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(UInt16))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF000070D60C820F42000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(UInt32))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF80C7575EA1AF1344000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(UInt64))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_LowCardinality_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF0000000000B49740000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,LowCardinality(UInt8))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF000000CEF7DB07C8000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(Float32))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF0F419A031D3B62FE000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(Float64))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF00000000C001DAC0000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(Int16))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF0000F0147541F041000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(Int32))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FFDC980956B98ECB43000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(Int64))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF0000000000003140000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(Int8))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF00000000909B1241000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(UInt16))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF000038495CF31142000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(UInt32))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FFAFCD1921F8671644000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(UInt64))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_Nullable_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000001FD01440BEE4B4FF0000000000709040000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Nullable(UInt8))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_UInt16_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF00000000D8F30E41000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,UInt16)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_UInt32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF00003CE81CB21542000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,UInt32)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF826D1DBA536A1344000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,UInt64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Float64_UInt8_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000001FD01440BEE4B4FF0000000000349440000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,UInt8)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Int16_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000000040A3C01FD01440BEE4B4FF0000C07ABC3FEF41000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Int16 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Int32_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E68F76A5C11FD01440BEE4B4FF1BE7EE60228CEE43000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Int32 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Int64_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000A486C64D5FBCE0431FD01440BEE4B4FF768485EABD06E747000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Int64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Int8_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000000000000008049401FD01440BEE4B4FF000000007090F540000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Int8 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Float32__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000AC2CB6ED471FD01440BEE4B4FF6DCD6CA4DD7C0C50000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Float64__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000069558A29999EFE751FD01440BEE4B4FF000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float64) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Int16__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000004007D1401FD01440BEE4B4FF000050714A9CF541000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int16) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Int32__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000000000808932BBD7C11FD01440BEE4B4FF36A9F2535C80F243000000000000F07F'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int32) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Int64__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000004195A236CAF2EB431FD01440BEE4B4FF6EE89B493E40F247000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Int8__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000000000000000E067401FD01440BEE4B4FF0000000030DCF240000000000000F07F'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int8) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_Float32___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000008639E6471FD01440BEE4B4FF4F45C8D78C1D1050000000000000F07F'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(Float32)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_Float64___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000C3A355CA77F1F07D1FD01440BEE4B4FF000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(Float64)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_Int16___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000000000A0D1E1C01FD01440BEE4B4FF0000B081571DF041000000000000F07F'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(Int16)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_Int32___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000037101C1C11FD01440BEE4B4FF69762FE4D4A1ED43000000000000F07F'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(Int32)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_Int64___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000E85D0006C7F6E8431FD01440BEE4B4FF3C7045BA586AF347000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(Int64)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_Int8___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000000000000058401FD01440BEE4B4FF0000000020B6F440000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(Int8)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_UInt16___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000000000A0D50D411FD01440BEE4B4FF000000B9423E0642000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(UInt16)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_UInt32___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000004007317815421FD01440BEE4B4FFC2DCDF9169431044000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(UInt32)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_UInt64___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000006111118E70FB10441FD01440BEE4B4FF3F520B79F42F0A48000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(UInt64)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_Nullable_UInt8___Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000000000000000D894401FD01440BEE4B4FF0000000040120E41000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Nullable(UInt8)) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_UInt16__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000000000000080F613411FD01440BEE4B4FF0000C0E62C5F0F42000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt16) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_UInt32__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000070D60C820F421FD01440BEE4B4FFC4A967254E3E0644000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt32) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_UInt64__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000080C7575EA1AF13441FD01440BEE4B4FFB94AE0FFFF251048000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_LowCardinality_UInt8__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000000000000000B497401FD01440BEE4B4FF000000009C111441000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt8) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_Float32__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C81FD01440BEE4B4FFB593A96DDB571250000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_Float64__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000000F419A031D3B62FE1FD01440BEE4B4FF000000000000F07F000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Nullable(Float64) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_Int16__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000000000C001DAC01FD01440BEE4B4FF00002048D875ED41000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Nullable(Int16) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_Int32__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000000000F0147541F0411FD01440BEE4B4FF94F39C6EE9C6EF43000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Nullable(Int32) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_Int64__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB431FD01440BEE4B4FFC805563E2B5DF147000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_Int8__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000000000000031401FD01440BEE4B4FF00000000205DEF40000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Nullable(Int8) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_UInt16__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000000000909B12411FD01440BEE4B4FF000050B96C150B42000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt16) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_UInt32__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000038495CF311421FD01440BEE4B4FFF9D542C0AE810B44000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt32) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_UInt64__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F86716441FD01440BEE4B4FF4E0DD8BDA4251348000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_Nullable_UInt8__Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000000000000007090401FD01440BEE4B4FF00000000D01F0941000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt8) ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_UInt16_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000000000000D8F30E411FD01440BEE4B4FF0000C89A0F100442000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, UInt16 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_UInt32_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000000003CE81CB215421FD01440BEE4B4FF8A200EC85B6F1044000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, UInt32 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_UInt64_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000826D1DBA536A13441FD01440BEE4B4FF5AA1782F51A20E48000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, UInt64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_UInt8_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000000000000003494401FD01440BEE4B4FF00000000A80B0E41000000000000F8FF'), 'AggregateFunction(simpleLinearRegression, UInt8 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E2701910C8000000E2701910C81D06E80EE44115501D06E80EE4411550'), 'AggregateFunction(simpleLinearRegression, Float32 ,Float32)'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E2701910C8A486C64D5FBCE0431D06E80EE4411550076C9A8F253BE24B'), 'AggregateFunction(simpleLinearRegression, Float32 ,Int64)'))":{"k":1.1448560004108381e-20,"b":2532730956314604500}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E2701910C8000000AC2CB6ED471D06E80EE441155022B635B3F37DF94F'), 'AggregateFunction(simpleLinearRegression, Float32 ,LowCardinality(Float32))'))":{"k":0.5324131653579959,"b":1.0451325061992035e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E2701910C84195A236CAF2EB431D06E80EE44115500D5C2FA86ABCE14B'), 'AggregateFunction(simpleLinearRegression, Float32 ,LowCardinality(Int64))'))":{"k":1.3290937138732878e-20,"b":3431420505823106600}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E2701910C880C7575EA1AF13441D06E80EE44115503739830BBBC6F6CB'), 'AggregateFunction(simpleLinearRegression, Float32 ,LowCardinality(UInt64))'))":{"k":8.1777873192622e-21,"b":10198607338298733000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000E2701910C8000000CEF7DB07C81D06E80EE4411550A8785B09F3780E50'), 'AggregateFunction(simpleLinearRegression, Float32 ,Nullable(Float32))'))":{"k":0.7043305108401055,"b":-5.580076414435029e36}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000E2701910C8DC980956B98ECB431D06E80EE44115503F81B0B92D1BCF4B'), 'AggregateFunction(simpleLinearRegression, Float32 ,Nullable(Int64))'))":{"k":5.233680533903572e-21,"b":1237713326481715000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000E2701910C8AFCD1921F86716441D06E80EE44115501A68866A1EBB01CC'), 'AggregateFunction(simpleLinearRegression, Float32 ,Nullable(UInt64))'))":{"k":4.4527009340710984e-21,"b":12158709166537415000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Float32_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000E2701910C8826D1DBA536A13441D06E80EE4411550AAED59123E7BF2CB'), 'AggregateFunction(simpleLinearRegression, Float32 ,UInt64)'))":{"k":1.1716901477519959e-20,"b":10558472931766980000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000A486C64D5FBCE043000000E2701910C8768485EABD06E747076C9A8F253BE24B'), 'AggregateFunction(simpleLinearRegression, Int64 ,Float32)'))":{"k":20791735769629950000,"b":-1.570172956383217e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000A486C64D5FBCE043A486C64D5FBCE043768485EABD06E747768485EABD06E747'), 'AggregateFunction(simpleLinearRegression, Int64 ,Int64)'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000A486C64D5FBCE043000000AC2CB6ED47768485EABD06E7475B2D0796E02CF54B'), 'AggregateFunction(simpleLinearRegression, Int64 ,LowCardinality(Float32))'))":{"k":33974279579063517000,"b":-1.1820389214443144e36}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000A486C64D5FBCE0434195A236CAF2EB43768485EABD06E74758405977EBD0D747'), 'AggregateFunction(simpleLinearRegression, Int64 ,LowCardinality(Int64))'))":{"k":0.47159639084841265,"b":1156140540626822000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000A486C64D5FBCE04380C7575EA1AF1344768485EABD06E747955143F16293EF47'), 'AggregateFunction(simpleLinearRegression, Int64 ,LowCardinality(UInt64))'))":{"k":1.0536365400622962,"b":8062089955434565000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000A486C64D5FBCE043000000CEF7DB07C8768485EABD06E747C3EBEF131D3CEE4B'), 'AggregateFunction(simpleLinearRegression, Int64 ,Nullable(Float32))'))":{"k":29928511676276680000,"b":-1.4484411441392837e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000A486C64D5FBCE043DC980956B98ECB43768485EABD06E747C3D84AEEDD14E547'), 'AggregateFunction(simpleLinearRegression, Int64 ,Nullable(Int64))'))":{"k":0.9377594253784931,"b":-563958133139258050}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000A486C64D5FBCE043AFCD1921F8671644768485EABD06E7477EECBEEB9E6DF247'), 'AggregateFunction(simpleLinearRegression, Int64 ,Nullable(UInt64))'))":{"k":1.1988930990146518,"b":10195961826296183000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Int64_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000A486C64D5FBCE043826D1DBA536A1344768485EABD06E747617CDC047D6EEA47'), 'AggregateFunction(simpleLinearRegression, Int64 ,UInt64)'))":{"k":0.8265202374442235,"b":8156355811201396000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000AC2CB6ED47000000E2701910C86DCD6CA4DD7C0C5022B635B3F37DF94F'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,Float32)'))":{"k":0.566068356246802,"b":-1.5484319102174137e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000AC2CB6ED47A486C64D5FBCE0436DCD6CA4DD7C0C505B2D0796E02CF54B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,Int64)'))":{"k":1.9889802272573086e-20,"b":336340291517957300}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000AC2CB6ED47000000AC2CB6ED476DCD6CA4DD7C0C506DCD6CA4DD7C0C50'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,LowCardinality(Float32))'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000AC2CB6ED474195A236CAF2EB436DCD6CA4DD7C0C506C7780353FFBF44B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,LowCardinality(Int64))'))":{"k":1.9193207523470905e-20,"b":1004709657403800800}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000AC2CB6ED4780C7575EA1AF13446DCD6CA4DD7C0C50508815E7704DF64B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,LowCardinality(UInt64))'))":{"k":1.4617452878931312e-20,"b":8616755252140281000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000AC2CB6ED47000000CEF7DB07C86DCD6CA4DD7C0C506EE068D4EA7EFE4F'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,Nullable(Float32))'))":{"k":0.6388313067796528,"b":-1.3518864566628848e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000AC2CB6ED47DC980956B98ECB436DCD6CA4DD7C0C509DAD8D7C2A93F04B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,Nullable(Int64))'))":{"k":1.5858845947724903e-20,"b":-115457350496176130}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000AC2CB6ED47AFCD1921F86716446DCD6CA4DD7C0C502A52C6D97793FE4B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,Nullable(UInt64))'))":{"k":2.0855622108425987e-20,"b":10748971249163704000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Float32__UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000000000AC2CB6ED47826D1DBA536A13446DCD6CA4DD7C0C50B6AB34D1ABA5FF4B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Float32) ,UInt64)'))":{"k":2.3827167579263356e-20,"b":8200930337233164000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000004195A236CAF2EB43000000E2701910C86EE89B493E40F2470D5C2FA86ABCE14B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,Float32)'))":{"k":15697612269810262000,"b":-1.6224903303511998e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000004195A236CAF2EB43A486C64D5FBCE0436EE89B493E40F24758405977EBD0D747'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,Int64)'))":{"k":0.3066963334348702,"b":470631667354566340}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000004195A236CAF2EB43000000AC2CB6ED476EE89B493E40F2476C7780353FFBF44B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,LowCardinality(Float32))'))":{"k":21320896448969330000,"b":-2.7556130269266936e36}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000004195A236CAF2EB434195A236CAF2EB436EE89B493E40F2476EE89B493E40F247'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,LowCardinality(Int64))'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000004195A236CAF2EB4380C7575EA1AF13446EE89B493E40F247561B51820C27E447'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,LowCardinality(UInt64))'))":{"k":0.18783082883772756,"b":8775973787624279000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000004195A236CAF2EB43000000CEF7DB07C86EE89B493E40F24751099FED506BE14B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,Nullable(Float32))'))":{"k":14565740992349671000,"b":-1.3883679556197553e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000004195A236CAF2EB43DC980956B98ECB436EE89B493E40F24739F4E70CFDE8D747'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,Nullable(Int64))'))":{"k":0.3340215583970214,"b":-156668491365693100}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0109000000000000004195A236CAF2EB43AFCD1921F86716446EE89B493E40F2473D8D17C7DE28EA47'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,Nullable(UInt64))'))":{"k":0.25939192310237175,"b":11016770292850506000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_Int64__UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000004195A236CAF2EB43826D1DBA536A13446EE89B493E40F24764CC6854A2BAF147'), 'AggregateFunction(simpleLinearRegression, LowCardinality(Int64) ,UInt64)'))":{"k":0.6427420559047791,"b":7918213575500901000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000080C7575EA1AF1344000000E2701910C8B94AE0FFFF2510483739830BBBC6F6CB'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,Float32)'))":{"k":6365803994358607000,"b":-1.9475089775510908e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000080C7575EA1AF1344A486C64D5FBCE043B94AE0FFFF251048955143F16293EF47'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,Int64)'))":{"k":0.4516150348068982,"b":-3135273292607081500}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000080C7575EA1AF1344000000AC2CB6ED47B94AE0FFFF251048508815E7704DF64B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,LowCardinality(Float32))'))":{"k":10702101393558577000,"b":-6.556518797225285e37}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000080C7575EA1AF13444195A236CAF2EB43B94AE0FFFF251048561B51820C27E447'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,LowCardinality(Int64))'))":{"k":0.12379592004018494,"b":487222937553858750}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000080C7575EA1AF134480C7575EA1AF1344B94AE0FFFF251048B94AE0FFFF251048'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,LowCardinality(UInt64))'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000080C7575EA1AF1344000000CEF7DB07C8B94AE0FFFF2510488A8C907DC9C9C34B'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,Nullable(Float32))'))":{"k":24472405883267910000,"b":-3.596233198655883e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000080C7575EA1AF1344DC980956B98ECB43B94AE0FFFF251048D740AE9435EFE047'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,Nullable(Int64))'))":{"k":0.30573200482932433,"b":-2642744617580564000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('01090000000000000080C7575EA1AF1344AFCD1921F8671644B94AE0FFFF251048E207CB60525E1048'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,Nullable(UInt64))'))":{"k":0.7645687270009918,"b":3768663203030416400}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_LowCardinality_UInt64__UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0000000000000080C7575EA1AF1344826D1DBA536A1344B94AE0FFFF25104800F93E93B3260C48'), 'AggregateFunction(simpleLinearRegression, LowCardinality(UInt64) ,UInt64)'))":{"k":0.6997460926014402,"b":2601036699795227600}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C8000000E2701910C8B593A96DDB571250A8785B09F3780E50'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,Float32)'))":{"k":0.6880654356435878,"b":-7.458815655070439e37}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C8A486C64D5FBCE043B593A96DDB571250C3EBEF131D3CEE4B'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,Int64)'))":{"k":1.6849202522819482e-20,"b":2971903853777181700}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C8000000AC2CB6ED47B593A96DDB5712506EE068D4EA7EFE4F'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,LowCardinality(Float32))'))":{"k":0.6153359518608508,"b":1.044920143481543e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C84195A236CAF2EB43B593A96DDB57125051099FED506BE14B'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,LowCardinality(Int64))'))":{"k":1.25639906976122e-20,"b":3206872151931430000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C880C7575EA1AF1344B593A96DDB5712508A8C907DC9C9C34B'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,LowCardinality(UInt64))'))":{"k":2.6905135150111123e-20,"b":13121206858720797000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C8000000CEF7DB07C8B593A96DDB571250B593A96DDB571250'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,Nullable(Float32))'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C8DC980956B98ECB43B593A96DDB57125003A0AF404E02E14B'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,Nullable(Int64))'))":{"k":9.084637164420763e-21,"b":1465677080622095000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C8AFCD1921F8671644B593A96DDB5712505C1265DA64AFDBCB'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,Nullable(UInt64))'))":{"k":2.14527359514448e-20,"b":13900173899187380000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Float32__UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000000000CEF7DB07C8826D1DBA536A1344B593A96DDB57125050FAD6F67955A0CB'), 'AggregateFunction(simpleLinearRegression, Nullable(Float32) ,UInt64)'))":{"k":2.3756873231923453e-20,"b":12627484311114996000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB43000000E2701910C8C805563E2B5DF1473F81B0B92D1BCF4B'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,Float32)'))":{"k":5794785813160942000,"b":-1.5473304587577987e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB43A486C64D5FBCE043C805563E2B5DF147C3D84AEEDD14E547'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,Int64)'))":{"k":0.5983600733009324,"b":807909742525788200}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB43000000AC2CB6ED47C805563E2B5DF1479DAD8D7C2A93F04B'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,LowCardinality(Float32))'))":{"k":17313091246121945000,"b":2.746554871043922e37}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB434195A236CAF2EB43C805563E2B5DF14739F4E70CFDE8D747'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,LowCardinality(Int64))'))":{"k":0.3265475724804121,"b":1646031674014098400}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB4380C7575EA1AF1344C805563E2B5DF147D740AE9435EFE047'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,LowCardinality(UInt64))'))":{"k":0.38095734711453555,"b":9919217094010820000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB43000000CEF7DB07C8C805563E2B5DF14703A0AF404E02E14B'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,Nullable(Float32))'))":{"k":10296379116787173000,"b":-1.1730576419960548e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB43DC980956B98ECB43C805563E2B5DF147C805563E2B5DF147'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,Nullable(Int64))'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB43AFCD1921F8671644C805563E2B5DF14737A284AA768AEF47'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,Nullable(UInt64))'))":{"k":0.7884996614199423,"b":11133171541114102000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_Int64__UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000DC980956B98ECB43826D1DBA536A1344C805563E2B5DF1471E7A36E1E10CD647'), 'AggregateFunction(simpleLinearRegression, Nullable(Int64) ,UInt64)'))":{"k":0.2114862396161072,"b":9855282661055115000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F8671644000000E2701910C84E0DD8BDA42513481A68866A1EBB01CC'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,Float32)'))":{"k":4094831346623486000,"b":-1.9918919370916555e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F8671644A486C64D5FBCE0434E0DD8BDA42513487EECBEEB9E6DF247'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,Int64)'))":{"k":0.6353805892044648,"b":-6222927828069372000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F8671644000000AC2CB6ED474E0DD8BDA42513482A52C6D97793FE4B'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,LowCardinality(Float32))'))":{"k":18910738992103444000,"b":-1.8201102368328983e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F86716444195A236CAF2EB434E0DD8BDA42513483D8D17C7DE28EA47'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,LowCardinality(Int64))'))":{"k":0.21062539107341668,"b":-628086076311236900}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F867164480C7575EA1AF13444E0DD8BDA4251348E207CB60525E1048'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,LowCardinality(UInt64))'))":{"k":0.7912874789659664,"b":1002460633629740500}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F8671644000000CEF7DB07C84E0DD8BDA42513485C1265DA64AFDBCB'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,Nullable(Float32))'))":{"k":20194910826990862000,"b":-3.4462234649685505e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F8671644DC980956B98ECB434E0DD8BDA425134837A284AA768AEF47'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,Nullable(Int64))'))":{"k":0.6549133224852868,"b":-7077862295434488000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F8671644AFCD1921F86716444E0DD8BDA42513484E0DD8BDA4251348'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,Nullable(UInt64))'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_Nullable_UInt64__UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000AFCD1921F8671644826D1DBA536A13444E0DD8BDA4251348E1D549FEA3710D48'), 'AggregateFunction(simpleLinearRegression, Nullable(UInt64) ,UInt64)'))":{"k":0.507146474023219,"b":4125998771015397000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000826D1DBA536A1344000000E2701910C85AA1782F51A20E48AAED59123E7BF2CB'), 'AggregateFunction(simpleLinearRegression, UInt64 ,Float32)'))":{"k":9997938145200927000,"b":-2.26477358326756e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000826D1DBA536A1344A486C64D5FBCE0435AA1782F51A20E48617CDC047D6EEA47'), 'AggregateFunction(simpleLinearRegression, UInt64 ,Int64)'))":{"k":0.3883392402108471,"b":-2512335751563688000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000826D1DBA536A1344000000AC2CB6ED475AA1782F51A20E48B6AB34D1ABA5FF4B'), 'AggregateFunction(simpleLinearRegression, UInt64 ,LowCardinality(Float32))'))":{"k":19122734469355370000,"b":-1.3962527988070153e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000826D1DBA536A13444195A236CAF2EB435AA1782F51A20E4864CC6854A2BAF147'), 'AggregateFunction(simpleLinearRegression, UInt64 ,LowCardinality(Int64))'))":{"k":0.4643616985965759,"b":-2546660890926253600}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000826D1DBA536A134480C7575EA1AF13445AA1782F51A20E4800F93E93B3260C48'), 'AggregateFunction(simpleLinearRegression, UInt64 ,LowCardinality(UInt64))'))":{"k":0.7670447445202014,"b":2210667712187129900}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000826D1DBA536A1344000000CEF7DB07C85AA1782F51A20E4850FAD6F67955A0CB'), 'AggregateFunction(simpleLinearRegression, UInt64 ,Nullable(Float32))'))":{"k":24004989446353790000,"b":-3.515784282886434e38}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000826D1DBA536A1344DC980956B98ECB435AA1782F51A20E481E7A36E1E10CD647'), 'AggregateFunction(simpleLinearRegression, UInt64 ,Nullable(Int64))'))":{"k":0.18854604012253726,"b":-1434497283859859200}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010900000000000000826D1DBA536A1344AFCD1921F86716445AA1782F51A20E48E1D549FEA3710D48'), 'AggregateFunction(simpleLinearRegression, UInt64 ,Nullable(UInt64))'))":{"k":0.5443602401051125,"b":6065489659530577000}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_datatypes_permutations_UInt64_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A00000000000000826D1DBA536A1344826D1DBA536A13445AA1782F51A20E485AA1782F51A20E48'), 'AggregateFunction(simpleLinearRegression, UInt64 ,UInt64)'))":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_example_0 = r"""
+{"finalizeAggregation(CAST(unhex('060000000000000086EB51B81E8501400000000000002E40C2A8A44E403B4540EC51B81E856B2840'), 'AggregateFunction(simpleLinearRegression, Float64 ,Int8)'))":{"k":0.16165209157644989,"b":2.440996986574596}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan__inf__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F0FF000000000000F0FF000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan__inf_inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F0FF000000000000F07F000000000000F07F000000000000F0FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan__inf_nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F0FF000000000000F87F000000000000F07F000000000000F87F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan_inf__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F07F000000000000F0FF000000000000F07F000000000000F0FF'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan_inf_inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F07F000000000000F07F000000000000F07F000000000000F07F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan_inf_nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F07F000000000000F87F000000000000F07F000000000000F87F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan_nan__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F87F000000000000F0FF000000000000F87F000000000000F87F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan_nan_inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F87F000000000000F07F000000000000F87F000000000000F87F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_inf___inf__nan_nan_nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('0600000000000000000000000000F87F000000000000F87F000000000000F87F000000000000F87F'), 'AggregateFunction(simpleLinearRegression, Float64 ,Float64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_single_NULL_value_0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000000000000000000000000000000000000000000000000000000000000000000000'), 'AggregateFunction(simpleLinearRegression, Nullable(Int8) ,Nullable(Int8))'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_single_row_0 = r"""
+{"finalizeAggregation(CAST(unhex('01000000000000000000000000000000000000000000F03F00000000000000000000000000000000'), 'AggregateFunction(simpleLinearRegression, UInt64 ,UInt64)'))":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_some_negative_values_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A000000000000000000000000001440000000000060634000000000004055400000000000006440'), 'AggregateFunction(simpleLinearRegression, UInt64 ,UInt64)'))":{"k":1,"b":15}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_with_group_by_0 = r"""
+{"finalizeAggregation(CAST(unhex('0500000000000000000000000000344000000000000000000000000000005E400000000000000000'), 'AggregateFunction(simpleLinearRegression, UInt64 ,UInt8)'))":{"k":0,"b":0}}
+"""
+
+_aggregate_functions_finalizeAggregation_simpleLinearRegressionfinalizeAggregation_with_group_by_1 = r"""
+{"finalizeAggregation(CAST(unhex('0500000000000000000000000000394000000000000014400000000000A064400000000000003940'), 'AggregateFunction(simpleLinearRegression, UInt64 ,UInt8)'))":{"k":0,"b":1}}
+"""
+
