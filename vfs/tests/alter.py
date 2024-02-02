@@ -10,7 +10,6 @@ from vfs.requirements import *
 
 
 """
-RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze,
 RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart,
 """
@@ -263,6 +262,64 @@ def attach_from(self):
         for node in nodes:
             retry(assert_row_count, timeout=15, delay=1)(
                 node=node, table_name=destination_table_name, rows=row_count
+            )
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable("0.0"))
+def move_to_table(self):
+    """Test moving a part from one table to another"""
+
+    nodes = self.context.ch_nodes
+    node = nodes[0]
+    fetch_item = "PARTITION 2"
+    insert_rows = 1000000
+    storage_policy = "external"
+    source_table_name = "table_move_src"
+    destination_table_name = "table_move_dest"
+
+    with Given("I have two replicated tables"):
+        replicated_table_cluster(
+            table_name=source_table_name,
+            storage_policy=storage_policy,
+            partition_by="key % 4",
+        )
+        replicated_table_cluster(
+            table_name=destination_table_name,
+            storage_policy=storage_policy,
+            partition_by="key % 4",
+        )
+
+    with And("I insert data into the first table"):
+        insert_random(node=node, table_name=source_table_name, rows=insert_rows)
+
+    with And("I insert less data into the second table"):
+        insert_random(
+            node=node, table_name=destination_table_name, rows=insert_rows // 2
+        )
+
+    with And("I count the rows in a partition on the first table"):
+        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
+        row_count = int(r.output)
+        note(f"1 {row_count}")
+
+    with When("I attach the partition to the second table"):
+        node.query(
+            f"ALTER TABLE {source_table_name} MOVE {fetch_item} TO TABLE {destination_table_name}"
+        )
+
+    with Then("I check the number of rows in the first table on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=1)(
+                node=node, table_name=source_table_name, rows=(insert_rows - row_count)
+            )
+
+    with And("I check the number of rows in the second table on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=1)(
+                node=node,
+                table_name=destination_table_name,
+                rows=(insert_rows // 2 + row_count),
             )
 
 
