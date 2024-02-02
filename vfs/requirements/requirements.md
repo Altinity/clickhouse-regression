@@ -242,6 +242,8 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.PartManipulation
 version: 0.0
 
+[ClickHouse] SHALL update all replicas when the following part manipulations are performed.
+
 | Part Manipulations        |
 | ------------------------- |
 | DETACH PARTITION/PART     |
@@ -262,6 +264,8 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Index
 version: 0.0
 
+[ClickHouse] SHALL update all replicas when the following index manipulations are performed.
+
 | Index Operations  |
 | ----------------- |
 | ADD INDEX         |
@@ -272,15 +276,17 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy
 version: 0.0
 
-[ClickHouse] SHALL support MODIFY ORDER BY.
+[ClickHouse] SHALL update all replicas when MODIFY ORDER BY is performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy
 version: 0.0
 
-[ClickHouse] SHALL support MODIFY SAMPLE BY.
+[ClickHouse] SHALL update all replicas when MODIFY SAMPLE BY is performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections
 version: 0.0
+
+[ClickHouse] SHALL update all replicas when the following projection manipulations are performed.
 
 | Projection Operations  |
 | ---------------------- |
@@ -291,6 +297,8 @@ version: 0.0
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Column
 version: 0.0
+
+[ClickHouse] SHALL update all replicas when the following column manipulations are performed.
 
 | Column Operation     | Description                                                       |
 | -------------------- | ----------------------------------------------------------------- |
@@ -306,6 +314,8 @@ version: 0.0
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Update
 version: 0.0
+
+[ClickHouse] SHALL update all replicas when the following update manipulations are performed.
 
 | Operation    |
 | ------------ |
