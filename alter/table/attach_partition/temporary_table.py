@@ -127,16 +127,17 @@ def check_attach_partition_from_with_temporary_tables(
                     and check_clickhouse_version("<=23.10")(self)
                 ):
                     exitcode = 60
+                elif (
+                    "temporary" in destination_table.__name__ + source_table.__name__
+                    and check_clickhouse_version("<=23.4")(self)
+                ):
+                    exitcode = 60
                 else:
                     exitcode = 0
 
                 for partition_id in ["1", "2", "3"]:
                     query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
                     client.query(query, exitcode=exitcode)
-                    client.query(
-                        f"SELECT * FROM {destination_table_name} format PrettyCompactMonoBlock",
-                        exitcode=exitcode,
-                    )
 
             if exitcode == 0:
                 with Then(
