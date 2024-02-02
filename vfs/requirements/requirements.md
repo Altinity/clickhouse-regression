@@ -17,7 +17,8 @@
     * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
     * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
     * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
-    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
+    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
+    * 4.2.5 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
   * 4.3 [System](#system)
     * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
     * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
@@ -26,15 +27,23 @@
     * 4.3.5 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
     * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
     * 4.3.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
+    * 4.3.8 [RQ.SRS-038.DiskObjectStorageVFS.System.Transactions](#rqsrs-038diskobjectstoragevfssystemtransactions)
   * 4.4 [Alter](#alter)
     * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.PartManipulation](#rqsrs-038diskobjectstoragevfsalterpartmanipulation)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
-    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
-    * 4.4.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
-    * 4.4.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop](#rqsrs-038diskobjectstoragevfsalterdrop)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach](#rqsrs-038diskobjectstoragevfsalterattach)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom](#rqsrs-038diskobjectstoragevfsalterattachfrom)
+    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace](#rqsrs-038diskobjectstoragevfsalterreplace)
+    * 4.4.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable](#rqsrs-038diskobjectstoragevfsaltermovetotable)
+    * 4.4.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze](#rqsrs-038diskobjectstoragevfsalterfreeze)
+    * 4.4.9 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart](#rqsrs-038diskobjectstoragevfsaltermovepart)
+    * 4.4.10 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
+    * 4.4.11 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
+    * 4.4.12 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
+    * 4.4.13 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
+    * 4.4.14 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
+    * 4.4.15 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
   * 4.5 [Table](#table)
     * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations](#rqsrs-038diskobjectstoragevfstabletableoperations)
     * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse](#rqsrs-038diskobjectstoragevfstablebackgroundcollapse)
@@ -230,36 +239,59 @@ version: 0.0
 
 [ClickHouse] SHALL support manually triggering merges with `OPTIMIZE [FINAL]`.
 
+#### RQ.SRS-038.DiskObjectStorageVFS.System.Transactions
+version: 0.0
+
+[ClickHouse] SHALL produce a reasonable number of Zookeeper transactions when tables are updated with VFS enabled.
+
 ### Alter
 
-[ClickHouse] SHALL support the following operations on parts without data loss.
+[ClickHouse] SHALL update all replicas when the following operations on parts are performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch
 version: 0.0
 
-[ClickHouse] SHALL support fetching a new part from another replica.
+[ClickHouse] SHALL update all replicas when FETCH PARTITION/PART is performed.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Alter.PartManipulation
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach
 version: 0.0
 
-[ClickHouse] SHALL update all replicas when the following part manipulations are performed.
+[ClickHouse] SHALL update all replicas when DETACH PARTITION/PART is performed.
 
-| Part Manipulations        |
-| ------------------------- |
-| DETACH PARTITION/PART     |
-| DROP PARTITION/PART       |
-| ATTACH PARTITION/PART     |
-| ATTACH PARTITION FROM     |
-| REPLACE PARTITION         |
-| MOVE PARTITION TO TABLE   |
-| CLEAR COLUMN IN PARTITION |
-| CLEAR INDEX IN PARTITION  |
-| FREEZE PARTITION          |
-| UNFREEZE PARTITION        |
-| FETCH PARTITION/PART      |
-| MOVE PARTITION/PART       |
-| UPDATE IN PARTITION       |
-| DELETE IN PARTITION       |
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when DROP PARTITION/PART is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when ATTACH PARTITION/PART is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when ATTACH PARTITION FROM is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when REPLACE PARTITION is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when MOVE PARTITION TO TABLE is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when FREEZE/UNFREEZE PARTITION is performed.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart
+version: 0.0
+
+[ClickHouse] SHALL update all replicas when MOVE PARTITION/PART is performed.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Alter.Index
 version: 0.0
