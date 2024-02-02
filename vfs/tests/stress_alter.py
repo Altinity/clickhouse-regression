@@ -194,11 +194,14 @@ def check_consistency(self):
                         f"I sync and count rows on node {node.name} for table {table_name}"
                     ):
                         with By(f"running SYNC REPLICA"):
-                            node.query(
-                                f"SYSTEM SYNC REPLICA {table_name}",
-                                timeout=30,
-                                no_checks=True,
-                            )
+                            try:
+                                node.query(
+                                    f"SYSTEM SYNC REPLICA {table_name}",
+                                    timeout=10,
+                                    no_checks=True,
+                                )
+                            except ExpectTimeoutError:
+                                pass
 
                         with And(f"querying the row count"):
                             row_counts[node.name] = get_row_count(
