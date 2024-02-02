@@ -76,6 +76,13 @@ xfails = {
             "Replacing partition when two tables have different structures is expected to fail",
         )
     ],
+    "/alter/attach partition/temporary table/*": [
+        (
+            Error,
+            "Temporary tables can only be created with ENGINE = Memory, not MergeTree before 23.3.",
+            check_clickhouse_version("<23.3"),
+        )
+    ],
 }
 
 xflags = {}
@@ -101,7 +108,7 @@ def regression(
     local,
     clickhouse_version,
     clickhouse_binary_path,
-    collect_service_logs,   
+    collect_service_logs,
     use_specific_version,
     stress=None,
     allow_vfs=False,
