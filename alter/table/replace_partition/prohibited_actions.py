@@ -6,7 +6,7 @@ from alter.table.replace_partition.common import (
     create_table_partitioned_by_column_with_data,
 )
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid, replace_partition
+from helpers.common import getuid, replace_partition, check_clickhouse_version
 from helpers.datatypes import UInt64, UInt8
 from helpers.tables import create_table_partitioned_by_column, Column
 
@@ -290,9 +290,15 @@ def partition_by(self):
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
-    exitcode, message = io_error_message(
-        exitcode=36, message="Tables have different partition key"
-    )
+    if check_clickhouse_version(">=24.1")(self):
+        exitcode, message = io_error_message(
+            exitcode=36,
+            message="Destination table partition expression columns must be a subset of source table partition expression columns",
+        )
+    else:
+        exitcode, message = io_error_message(
+            exitcode=36, message="Tables have different partition key"
+        )
 
     with Given("I have a partitioned destination table"):
         create_table_partitioned_by_column_with_data(table_name=destination_table)
