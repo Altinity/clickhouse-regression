@@ -8,8 +8,8 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_038_DiskObjectStorageVFS_Replica_NoDataDuplication = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication",
+RQ_SRS_038_DiskObjectStorageVFS_Replica = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Replica",
     version="1.0",
     priority=None,
     group=None,
@@ -896,11 +896,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         Heading(name="Terminology", level=1, num="3"),
         Heading(name="Requirements", level=1, num="4"),
         Heading(name="Replicas", level=2, num="4.1"),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication",
-            level=3,
-            num="4.1.1",
-        ),
+        Heading(name="RQ.SRS-038.DiskObjectStorageVFS.Replica", level=3, num="4.1.1"),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Add", level=3, num="4.1.2"
         ),
@@ -1083,7 +1079,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         Heading(name="References", level=1, num="5"),
     ),
     requirements=(
-        RQ_SRS_038_DiskObjectStorageVFS_Replica_NoDataDuplication,
+        RQ_SRS_038_DiskObjectStorageVFS_Replica,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Add,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline,
@@ -1141,7 +1137,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
 * 3 [Terminology](#terminology)
 * 4 [Requirements](#requirements)
   * 4.1 [Replicas](#replicas)
-    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication](#rqsrs-038diskobjectstoragevfsreplicanodataduplication)
+    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica](#rqsrs-038diskobjectstoragevfsreplica)
     * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
     * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
     * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
@@ -1229,7 +1225,7 @@ parameter is set to 1. This is only available in versions 23.12 and later.
 
 ### Replicas
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication
+#### RQ.SRS-038.DiskObjectStorageVFS.Replica
 version: 1.0
 
 [ClickHouse] SHALL support VFS such that data is not
