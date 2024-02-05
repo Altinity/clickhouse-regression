@@ -791,9 +791,13 @@ def check_attach_partition_from(
         if "Replicated" in source_table.__name__:
             source_table = source_table.__name__.split("_")[-1]
             source_table = source_table.replace("Replicated", "")
+        else:
+            source_table = source_table.__name__.split("_")[-1]
         if "Replicated" in destination_table.__name__:
             destination_table = destination_table.__name__.split("_")[-1]
             destination_table = destination_table.replace("Replicated", "")
+        else:
+            destination_table = destination_table.__name__.split("_")[-1]
 
     with Then(
         f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_table}, destination table engine - {destination_table}:"
@@ -925,7 +929,7 @@ def attach_partition_from(self, with_id=False):
     table_pairs = product(source_table_types, destination_table_types)
     combinations = product(partition_keys_pairs, table_pairs)
 
-    with Pool(2) as executor:
+    with Pool(4) as executor:
         for partition_keys, tables in combinations:
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
