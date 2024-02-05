@@ -8,7 +8,7 @@
 * 3 [Terminology](#terminology)
 * 4 [Requirements](#requirements)
   * 4.1 [Replicas](#replicas)
-    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication](#rqsrs-038diskobjectstoragevfsreplicanodataduplication)
+    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica](#rqsrs-038diskobjectstoragevfsreplica)
     * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
     * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
     * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
@@ -96,7 +96,7 @@ parameter is set to 1. This is only available in versions 23.12 and later.
 
 ### Replicas
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Replica.NoDataDuplication
+#### RQ.SRS-038.DiskObjectStorageVFS.Replica
 version: 1.0
 
 [ClickHouse] SHALL support VFS such that data is not

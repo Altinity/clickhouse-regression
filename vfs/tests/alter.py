@@ -9,11 +9,6 @@ from vfs.tests.steps import *
 from vfs.requirements import *
 
 
-"""
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze
-"""
-
-
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Update("0.0"))
 def update_delete(self):
@@ -178,6 +173,36 @@ def projection(self):
 
 
 @TestOutline(Scenario)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze("0.0"))
+@Examples("partition", [[""],["PARTITION 1"]])
+def freeze(self, partition):
+    """Check tables work with ALTER TABLE FREEZE."""
+    nodes = self.context.ch_nodes
+    table_name = f"table_{getuid()}"
+    backup_name = f"backup_{getuid()}"
+
+    with Given(f"I have a table {table_name}"):
+        replicated_table_cluster(
+            table_name=table_name,
+            storage_policy="external_vfs",
+            partition_by="key % 4",
+        )
+
+    with When("I insert some data into the table"):
+        insert_random(node=nodes[0], table_name=table_name)
+
+    with Then("I freeze the table"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} FREEZE {partition} WITH NAME '{backup_name}'", exitcode=0
+        )
+
+    with Finally("I unfreeze the table"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} UNFREEZE {partition} WITH NAME '{backup_name}'", exitcode=0
+        )
+
+
+@TestOutline(Scenario)
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch("0.0"),
     RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach("0.0"),
@@ -273,7 +298,7 @@ def move_to_table(self):
     node = nodes[0]
     fetch_item = "PARTITION 2"
     insert_rows = 1000000
-    storage_policy = "external"
+    storage_policy = "external_vfs"
     source_table_name = "table_move_src"
     destination_table_name = "table_move_dest"
 

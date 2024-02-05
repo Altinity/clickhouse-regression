@@ -98,6 +98,7 @@ def isro_command(self, four_letter_word_command="isro", output="rw"):
 
 
 @TestScenario
+@Retry(timeout=30, delay=1)
 def wchs_command(
     self, four_letter_word_command="wchs", output="connections watching 1 paths"
 ):

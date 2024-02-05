@@ -11,7 +11,6 @@ from vfs.requirements import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_NoDataDuplication("1.0"))
 def no_duplication(self):
     """
     Check that data on replicated tables only exists once in S3.
@@ -107,10 +106,7 @@ def no_duplication(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Replica_Add("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Replica_NoDataDuplication("1.0"),
-)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Add("1.0"))
 def add_replica(self):
     """
     Test that replicas can be added to an existing table:
@@ -573,6 +569,7 @@ def command_combinations(self, parallel=True):
 
 
 @TestFeature
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica("1.0"))
 @Name("replica")
 def feature(self):
     with Given("I have S3 disks configured"):

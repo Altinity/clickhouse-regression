@@ -17,10 +17,14 @@ def alter_freeze(self, policy_name):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with Then("I freeze the table"):
-        node.query(f"ALTER TABLE {table_name} FREEZE WITH NAME '{backup_name}'")
+        node.query(
+            f"ALTER TABLE {table_name} FREEZE WITH NAME '{backup_name}'", exitcode=0
+        )
 
     with Finally("I unfreeze the table"):
-        node.query(f"ALTER TABLE {table_name} UNFREEZE WITH NAME '{backup_name}'")
+        node.query(
+            f"ALTER TABLE {table_name} UNFREEZE WITH NAME '{backup_name}'", exitcode=0
+        )
 
 
 @TestOutline
@@ -39,12 +43,14 @@ def alter_freeze_partition(self, policy_name):
 
     with Then("I freeze the table"):
         node.query(
-            f"ALTER TABLE {table_name} FREEZE PARTITION 1 WITH NAME '{backup_name}'"
+            f"ALTER TABLE {table_name} FREEZE PARTITION 1 WITH NAME '{backup_name}'",
+            exitcode=0,
         )
 
     with Finally("I unfreeze the table"):
         node.query(
-            f"ALTER TABLE {table_name} UNFREEZE PARTITION 1 WITH NAME '{backup_name}'"
+            f"ALTER TABLE {table_name} UNFREEZE PARTITION 1 WITH NAME '{backup_name}'",
+            exitcode=0,
         )
 
 
