@@ -180,15 +180,17 @@ def create_partitioned_replicated_table_with_data(
     elif "CollapsingMergeTree" in engine:
         engine = f"ReplicatedCollapsingMergeTree({sign})"
 
+    if nodes is None:
+        nodes = self.context.nodes
+
+    if "Replicated" not in engine:
+        engine = "Replicated" + engine
+
     with By(f"creating a table that is partitioned by '{partition_by}'"):
         for node in nodes:
             create_table(
                 name=table_name,
                 columns=columns,
-                # engine=f"{engine}('/clickhouse/tables/"
-                # + "{shard}"
-                # + f"/{table_name}', "
-                # + "'{replica}')",
                 engine=f"{engine}",
                 order_by=order_by,
                 primary_key=primary_key,
@@ -248,6 +250,12 @@ def create_empty_partitioned_replicated_table(
         engine = f"ReplicatedVersionedCollapsingMergeTree({sign},{version})"
     elif "CollapsingMergeTree" in engine:
         engine = f"ReplicatedCollapsingMergeTree({sign})"
+
+    if nodes is None:
+        nodes = self.context.nodes
+
+    if "Replicated" not in engine:
+        engine = "Replicated" + engine
 
     with By(f"creating a table that is partitioned by '{partition_by}'"):
         for node in nodes:
