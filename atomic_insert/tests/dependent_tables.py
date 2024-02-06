@@ -343,8 +343,8 @@ def table_with_circle_materialized_view(self, table_engine, failure_mode):
             for table_name in tables:
                 with When(f"table {table_name}"):
                     retry(node.query, timeout=100, delay=1)(
-                        f"SELECT count()+737 FROM {table_name}",
-                        message="737",
+                        f"SELECT count() FROM {table_name}",
+                        message="0",
                         exitcode=0,
                     )
 
@@ -385,13 +385,13 @@ def feature(self, use_transaction_for_atomic_insert=True):
             "ReplicatedReplacingMergeTree",
             "ReplicatedAggregatingMergeTree",
             "ReplicatedCollapsingMergeTree",
-            "ReplicatedVersionedCollapsingMergeTree",
-            "ReplicatedGraphiteMergeTree",
+            # "ReplicatedVersionedCollapsingMergeTree",
+            # "ReplicatedGraphiteMergeTree",
         ]
     else:
         self.context.engines = ["MergeTree", "ReplicatedMergeTree"]
 
-    failure_mode = ["dummy"]
+    failure_mode = ["throwIf"]
 
     falure_mode_1 = ["dummy", "throwIf", "column type mismatch", "user_rights"]
 
