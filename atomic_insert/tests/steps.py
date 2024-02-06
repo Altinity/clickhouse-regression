@@ -1,8 +1,8 @@
-import time
-
 from testflows.core import *
-from helpers.common import create_xml_config_content, add_config
-from helpers.common import getuid, instrument_clickhouse_server_log
+
+from helpers.common import *
+from helpers.tables import create_table as create_basic_table, Column
+from helpers.datatypes import *
 
 transactions = {
     "allow_experimental_transactions": "42",
@@ -87,19 +87,47 @@ def instrument_cluster_nodes(self, test, cluster_nodes, always_dump=True):
 
 
 @TestStep(Given)
-def create_table(self, table_engine, node, database, core_table):
+def create_table(
+    self,
+    table_engine,
+    node,
+    database,
+    core_table,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="timestamp",
+):
     """Step to create database and basic data table in it."""
     try:
         with Given("I create database"):
             node.query(f"CREATE DATABASE {database}")
 
+        if "GraphiteMergeTree" in table_engine:
+            table_engine = table_engine + f"('{config}')"
+        elif "VersionedCollapsingMergeTree" in table_engine:
+            table_engine = table_engine + f"({sign},{version})"
+        elif "CollapsingMergeTree" in table_engine:
+            table_engine = table_engine + f"({sign})"
+
+        columns = [
+            Column(name="timestamp", datatype=DateTime()),
+            Column(name="host", datatype=String()),
+            Column(name="response_time", datatype=Int32()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
         with And("I create data table"):
-            node.query(
-                f"CREATE TABLE {core_table}"
-                "( timestamp DateTime,"
-                "host      String,"
-                "repsonse_time      Int32"
-                f") ENGINE {table_engine}() ORDER BY (host, timestamp)"
+            create_basic_table(
+                name=core_table,
+                columns=columns,
+                engine=f"{table_engine}",
+                order_by="(host, timestamp)",
+                node=node,
+                if_not_exists=True,
             )
         yield
     finally:
@@ -119,25 +147,52 @@ def materialized_view(
     mv_2=None,
     mv_2_table=None,
     cascading=False,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="timestamp",
 ):
     """Step to create mv and it`s dependent table section for mv tests
     :param cascading: add additional mv section
     :param failure_mode: failure mode type
     """
-    data_type = "String"
+    data_type = String()
 
     if failure_mode == "column type mismatch":
-        data_type = "DateTime"
+        data_type = DateTime()
     elif failure_mode == "dummy":
-        data_type = "String"
+        data_type = String()
+
+    if "GraphiteMergeTree" in table_engine:
+        table_engine = table_engine + f"('{config}')"
+    elif "VersionedCollapsingMergeTree" in table_engine:
+        table_engine = table_engine + f"({sign},{version})"
+    elif "CollapsingMergeTree" in table_engine:
+        table_engine = table_engine + f"({sign})"
+
+    columns = [
+        Column(name="timestamp", datatype=DateTime()),
+        Column(name="host", datatype=data_type),
+        Column(
+            name="quantiles_tdigest",
+            datatype=DataType(
+                name="AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32)"
+            ),
+        ),
+        Column(name="Path", datatype=String()),
+        Column(name="Time", datatype=DateTime()),
+        Column(name="Value", datatype=Float64()),
+        Column(name="Timestamp", datatype=Int64()),
+        Column(name="sign", datatype=Int8()),
+    ]
 
     with Given("I create mv dependent table"):
-        node.query(
-            f"CREATE table {mv_1_table}"
-            "( timestamp           DateTime,"
-            f"  host      {data_type},"
-            " quantiles_tdigest  AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32))"
-            f" ENGINE = {table_engine} ORDER BY (host, timestamp) ;"
+        create_basic_table(
+            name=mv_1_table,
+            columns=columns,
+            engine=f"{table_engine}",
+            order_by="(host, timestamp)",
+            node=node,
+            if_not_exists=True,
         )
 
     with And("I create mv"):
@@ -145,19 +200,34 @@ def materialized_view(
             f"CREATE MATERIALIZED VIEW {mv_1}"
             f" TO {mv_1_table}"
             " AS SELECT toStartOfFiveMinute(timestamp) AS timestamp,   host,"
-            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(repsonse_time) AS quantiles_tdigest "
+            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(response_time) AS quantiles_tdigest "
             f"FROM {core_table} GROUP BY host,timestamp;"
         )
 
     if cascading:
-        with And("I create second table"):
-            node.query(
-                f"CREATE table {mv_2_table} "
-                "(   timestamp           DateTime  ,"
-                "    host      String,"
-                "    quantiles_tdigest   "
-                "AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32) CODEC (ZSTD(2))) "
-                f"ENGINE = {table_engine}() Order by (host, timestamp);"
+        columns = [
+            Column(name="timestamp", datatype=DateTime()),
+            Column(name="host", datatype=data_type),
+            Column(
+                name="quantiles_tdigest",
+                datatype=DataType(
+                    name="AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32) CODEC (ZSTD(2))"
+                ),
+            ),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+        with And("I create another table with wrong data type"):
+            create_basic_table(
+                name=mv_2_table,
+                columns=columns,
+                engine=f"{table_engine}",
+                order_by="(host, timestamp)",
+                node=node,
+                if_not_exists=True,
             )
 
         with And("I create mv from first dependent table to second"):
@@ -180,25 +250,54 @@ def materialized_view_circle(self, node, core_table, mv_1):
             f"CREATE MATERIALIZED VIEW {mv_1}"
             f" TO {core_table}"
             " AS SELECT toStartOfFiveMinute(timestamp) AS timestamp,   host,"
-            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(repsonse_time) AS quantiles_tdigest "
+            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(response_time) AS quantiles_tdigest "
             f"FROM {core_table} GROUP BY host,timestamp;"
         )
 
 
 @TestStep(Given)
-def create_table_on_cluster(self, table_engine, node, database, core_table):
+def create_table_on_cluster(
+    self,
+    table_engine,
+    node,
+    database,
+    core_table,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="timestamp",
+):
     """Step to create database and basic data table in it on cluster."""
     try:
         with Given("I create database"):
             node.query(f"CREATE DATABASE {database} ON CLUSTER 'ShardedAndReplicated';")
 
+        if "GraphiteMergeTree" in table_engine:
+            table_engine = f"GraphiteMergeTree('{config}')"
+        elif "VersionedCollapsingMergeTree" in table_engine:
+            table_engine = f"VersionedCollapsingMergeTree({sign},{version})"
+        elif "CollapsingMergeTree" in table_engine:
+            table_engine = f"CollapsingMergeTree({sign})"
+
+        columns = [
+            Column(name="timestamp", datatype=DateTime()),
+            Column(name="host", datatype=String()),
+            Column(name="response_time", datatype=Int32()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
         with And("I create data table"):
-            node.query(
-                f"CREATE TABLE {core_table} ON CLUSTER 'ShardedAndReplicated'"
-                "( timestamp DateTime,"
-                "host      String,"
-                "repsonse_time      Int32"
-                f") ENGINE {table_engine}() ORDER BY (host, timestamp)"
+            create_basic_table(
+                name=core_table,
+                columns=columns,
+                engine=f"{table_engine}",
+                order_by="(host, timestamp)",
+                cluster="ShardedAndReplicated",
+                node=node,
+                if_not_exists=True,
             )
 
         yield
@@ -219,25 +318,54 @@ def materialized_view_on_cluster(
     mv_2=None,
     mv_2_table=None,
     cascading=False,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="timestamp",
 ):
     """Step to create mv and it`s dependent table on cluster section for mv tests on cluster
     :param cascading: add additional mv section
     :param failure_mode: failure mode type
     """
-    data_type = "String"
+
+    data_type = String()
 
     if failure_mode == "column type mismatch":
-        data_type = "DateTime"
+        data_type = DateTime()
     elif failure_mode == "dummy":
-        data_type = "String"
+        data_type = String()
 
-    with Given("I create mv dependent table on cluster"):
-        node.query(
-            f"CREATE table {mv_1_table} ON CLUSTER 'ShardedAndReplicated'"
-            "( timestamp           DateTime,"
-            "  host      String,"
-            " quantiles_tdigest  AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32))"
-            f" ENGINE = {table_engine} ORDER BY (host, timestamp) ;"
+    if "GraphiteMergeTree" in table_engine:
+        table_engine = table_engine + f"('{config}')"
+    elif "VersionedCollapsingMergeTree" in table_engine:
+        table_engine = table_engine + f"({sign},{version})"
+    elif "CollapsingMergeTree" in table_engine:
+        table_engine = table_engine + f"({sign})"
+
+    columns = [
+        Column(name="timestamp", datatype=DateTime()),
+        Column(name="host", datatype=data_type),
+        Column(
+            name="quantiles_tdigest",
+            datatype=DataType(
+                name="AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32)"
+            ),
+        ),
+        Column(name="Path", datatype=String()),
+        Column(name="Time", datatype=DateTime()),
+        Column(name="Value", datatype=Float64()),
+        Column(name="Timestamp", datatype=Int64()),
+        Column(name="sign", datatype=Int8()),
+    ]
+
+    with Given("I create mv dependent table"):
+        create_basic_table(
+            name=mv_1_table,
+            columns=columns,
+            engine=f"{table_engine}",
+            order_by="(host, timestamp)",
+            cluster="ShardedAndReplicated",
+            node=node,
+            if_not_exists=True,
         )
 
     with And("I create mv on cluster"):
@@ -245,19 +373,35 @@ def materialized_view_on_cluster(
             f"CREATE MATERIALIZED VIEW {mv_1} ON CLUSTER 'ShardedAndReplicated'"
             f" to {mv_1_table}"
             " AS SELECT toStartOfFiveMinute(timestamp) AS timestamp,   host,"
-            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(repsonse_time) AS quantiles_tdigest "
+            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(response_time) AS quantiles_tdigest "
             f"FROM {core_table} GROUP BY host,timestamp;"
         )
 
     if cascading:
+        columns = [
+            Column(name="timestamp", datatype=DateTime()),
+            Column(name="host", datatype=data_type),
+            Column(
+                name="quantiles_tdigest",
+                datatype=DataType(
+                    name="AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32) CODEC (ZSTD(2))"
+                ),
+            ),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
         with And("I create another table with wrong data type"):
-            node.query(
-                f"CREATE table {mv_2_table}  ON CLUSTER 'ShardedAndReplicated' "
-                "(   timestamp           DateTime  ,"
-                f"    host      {data_type},"
-                "    quantiles_tdigest   "
-                "AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32) CODEC (ZSTD(2))) "
-                f"ENGINE = {table_engine}() ORDER BY (host, timestamp);"
+            create_basic_table(
+                name=mv_2_table,
+                columns=columns,
+                engine=f"{table_engine}",
+                order_by="(host, timestamp)",
+                node=node,
+                cluster="ShardedAndReplicated",
+                if_not_exists=True,
             )
 
         with And("I create mv to the second dependent table"):
@@ -283,25 +427,52 @@ def materialized_some_view(
     mv_1_table,
     view_1=None,
     view_type=None,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="timestamp",
 ):
     """Step to create mv and it`s dependent table section for mv tests
     :param view_type: type of mv dependent table
     :param failure_mode: failure mode type
     """
-    data_type = "String"
+    data_type = String()
 
     if failure_mode == "column type mismatch":
-        data_type = "DateTime"
+        data_type = DateTime()
     elif failure_mode == "dummy":
-        data_type = "String"
+        data_type = String()
+
+    if "GraphiteMergeTree" in table_engine:
+        table_engine = table_engine + f"('{config}')"
+    elif "VersionedCollapsingMergeTree" in table_engine:
+        table_engine = table_engine + f"({sign},{version})"
+    elif "CollapsingMergeTree" in table_engine:
+        table_engine = table_engine + f"({sign})"
+
+    columns = [
+        Column(name="timestamp", datatype=DateTime()),
+        Column(name="host", datatype=data_type),
+        Column(
+            name="quantiles_tdigest",
+            datatype=DataType(
+                name="AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32)"
+            ),
+        ),
+        Column(name="Path", datatype=String()),
+        Column(name="Time", datatype=DateTime()),
+        Column(name="Value", datatype=Float64()),
+        Column(name="Timestamp", datatype=Int64()),
+        Column(name="sign", datatype=Int8()),
+    ]
 
     with Given("I create mv dependent table"):
-        node.query(
-            f"CREATE table {mv_1_table}"
-            "( timestamp           DateTime,"
-            f"  host      {data_type},"
-            " quantiles_tdigest  AggregateFunction(quantilesTDigest(0.75, 0.9, 0.95, 0.99), Int32))"
-            f" ENGINE = {table_engine} ORDER BY (host, timestamp) ;"
+        create_basic_table(
+            name=mv_1_table,
+            columns=columns,
+            engine=f"{table_engine}",
+            order_by="(host, timestamp)",
+            node=node,
+            if_not_exists=True,
         )
 
     with And("I create mv"):
@@ -309,7 +480,7 @@ def materialized_some_view(
             f"CREATE MATERIALIZED VIEW {mv_1}"
             f" TO {mv_1_table}"
             " AS SELECT toStartOfFiveMinute(timestamp) AS timestamp,   host,"
-            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(repsonse_time) AS quantiles_tdigest "
+            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(response_time) AS quantiles_tdigest "
             f"FROM {core_table} GROUP BY host,timestamp;"
         )
 
@@ -365,15 +536,16 @@ def simple_insert(
                 else ""
             )
             + (
-                f"INSERT INTO {core_table}"
+                f"INSERT INTO {core_table} (timestamp, host, response_time, sign)"
                 f" SELECT now() + number/10, toString(number), if({fail_block_number}, throwIf(number={fail_block_number},"
-                "'block fail'), number)"
+                "'block fail'), number), 1"
                 f" FROM numbers({number_of_blocks})"
                 " SETTINGS max_block_size=1,"
                 " min_insert_block_size_bytes=1;"
             )
             + (f"COMMIT;" if self.context.use_transaction_for_atomic_insert else ""),
             exitcode=139,
+            message="DB::Exception: block fail:",
             steps=False,
             timeout=3000,
         )
@@ -392,8 +564,8 @@ def simple_insert(
                     else ""
                 )
                 + (
-                    f"INSERT INTO {core_table} SELECT now() + number/10, toString(number%9999),"
-                    " number % 999"
+                    f"INSERT INTO {core_table} (timestamp, host, response_time, sign) SELECT now() + number/10, toString(number%9999),"
+                    " number % 999, 1"
                     " FROM numbers(1000001)"
                 )
                 + (
@@ -410,8 +582,8 @@ def simple_insert(
 
     else:
         self.context.cluster.node(node_name).query(
-            f"INSERT INTO {core_table} SELECT now() + number/10, toString(number%9999),"
-            " number % 999"
+            f"INSERT INTO {core_table} (timestamp, host, response_time. sign) SELECT now() + number/10, toString(number%9999),"
+            " number % 999, 1"
             " FROM numbers(1000000)",
             timeout=3000,
         )

@@ -26,7 +26,14 @@ def argparser(parser):
     )
 
 
-xfails = {}
+xfails = {
+    "/atomic insert/dependent_tables/Replicated*/table with materialized view*/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/19352",
+        )
+    ],
+}
 xflags = {}
 
 
