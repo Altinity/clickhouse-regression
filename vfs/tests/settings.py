@@ -6,7 +6,10 @@ from vfs.requirements import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible("1.0"))
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL("1.0"),
+)
 def incompatible_with_zero_copy(self):
     """
     Check that using zero copy replication when vfs is enabled is not allowed.
@@ -80,7 +83,10 @@ def create_insert_measure_replicated_table(self, storage_policy="external"):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"))
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL("1.0"),
+)
 def disk_setting(self):
     """
     Check that allow_vfs can be enabled per disk.
