@@ -385,8 +385,8 @@ def feature(self, use_transaction_for_atomic_insert=True):
             "ReplicatedReplacingMergeTree",
             "ReplicatedAggregatingMergeTree",
             "ReplicatedCollapsingMergeTree",
-            # "ReplicatedVersionedCollapsingMergeTree",
-            # "ReplicatedGraphiteMergeTree",
+            "ReplicatedVersionedCollapsingMergeTree",
+            "ReplicatedGraphiteMergeTree",
         ]
     else:
         self.context.engines = ["MergeTree", "ReplicatedMergeTree"]
