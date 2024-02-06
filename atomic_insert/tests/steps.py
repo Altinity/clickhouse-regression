@@ -582,7 +582,7 @@ def simple_insert(
 
     else:
         self.context.cluster.node(node_name).query(
-            f"INSERT INTO {core_table} (timestamp, host, response_time. sign) SELECT now() + number/10, toString(number%9999),"
+            f"INSERT INTO {core_table} (timestamp, host, response_time, sign) SELECT now() + number/10, toString(number%9999),"
             " number % 999, 1"
             " FROM numbers(1000000)",
             timeout=3000,
@@ -610,9 +610,9 @@ def simple_transaction_insert(
     with Given(f"I make transaction insert"):
         self.context.cluster.node(node_name).query(
             f"BEGIN TRANSACTION;"
-            f"INSERT INTO {core_table}"
+            f"INSERT INTO {core_table} (timestamp, host, response_time, sign)"
             " SELECT now() + number/10, toString(number),"
-            " number"
+            " number, 1"
             f" FROM numbers({numbers});"
             " COMMIT;",
             exitcode=0,
@@ -628,10 +628,10 @@ def simple_transaction_insert_throwif(self, core_table, node_name="clickhouse1")
     ):
         self.context.cluster.node(node_name).query(
             f"BEGIN TRANSACTION;"
-            f"INSERT INTO {core_table}"
+            f"INSERT INTO {core_table} (timestamp, host, response_time, sign)"
             " SELECT now() + number/10, toString(number),"
             " if(5,"
-            " throwIf(number=5,'block fail'), number)"
+            " throwIf(number=5,'block fail'), number), 1"
             f" FROM numbers(10)"
             " SETTINGS max_block_size=1,"
             f" min_insert_block_size_bytes=1;",
