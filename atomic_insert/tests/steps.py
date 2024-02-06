@@ -272,11 +272,11 @@ def create_table_on_cluster(
             node.query(f"CREATE DATABASE {database} ON CLUSTER 'ShardedAndReplicated';")
 
         if "GraphiteMergeTree" in table_engine:
-            table_engine = f"GraphiteMergeTree('{config}')"
+            table_engine = table_engine + f"('{config}')"
         elif "VersionedCollapsingMergeTree" in table_engine:
-            table_engine = f"VersionedCollapsingMergeTree({sign},{version})"
+            table_engine = table_engine + f"({sign},{version})"
         elif "CollapsingMergeTree" in table_engine:
-            table_engine = f"CollapsingMergeTree({sign})"
+            table_engine = table_engine + f"({sign})"
 
         columns = [
             Column(name="timestamp", datatype=DateTime()),
