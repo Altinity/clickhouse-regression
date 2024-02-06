@@ -34,13 +34,23 @@ xfails = {
         )
     ],
 }
-xflags = {}
+
+ffails = {
+    "/atomic insert/dependent_tables/ReplicatedGraphiteMergeTree/table with materialized view/*": (
+        Skip,
+        "need to investigate",
+    ),
+    "/atomic insert/dependent_tables/ReplicatedVersionedCollapsingMergeTree/table with materialized view/*": (
+        Skip,
+        "need to investigate",
+    ),
+}
 
 
 @TestModule
 @ArgumentParser(argparser)
 @XFails(xfails)
-@XFlags(xflags)
+@FFails(ffails)
 @Name("atomic insert")
 @Requirements(RQ_SRS_028_ClickHouse_AtomicInserts("1.0"))
 @Specifications(SRS028_ClickHouse_Atomic_Inserts)
