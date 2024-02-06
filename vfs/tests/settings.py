@@ -109,7 +109,7 @@ def disk_setting(self):
         enable_vfs(disk_names=["external"])
 
     with When(
-        "I measure the disk usage after create and insert with vfs config in a seperate file"
+        "I measure the disk usage after create and insert with vfs config in a separate file"
     ):
         size_vfs = create_insert_measure_replicated_table(storage_policy="external")
 
@@ -142,7 +142,7 @@ def disable_vfs_with_vfs_table(self):
                 f"INSERT INTO {table_name} VALUES {','.join(f'({x})' for x in range(100))}"
             )
 
-        with Then("the data is accesssible"):
+        with Then("the data is accessible"):
             assert_row_count(node=nodes[1], table_name=table_name, rows=100)
             retry(assert_row_count, timeout=10, delay=1)(
                 node=nodes[0], table_name=table_name, rows=100
