@@ -7,6 +7,20 @@ from vfs.tests.steps import *
 from vfs.requirements import *
 
 
+@TestStep(Given)
+def set_tiered_policy(self, allow_vfs=1, move_on_insert=0):
+    policies = {
+        "tiered": {"perform_ttl_move_on_insert": f"{move_on_insert}"},
+    }
+    disks = {
+        n: {
+            "allow_vfs": f"{allow_vfs}",
+        }
+        for n in ["external", "external_tiered"]
+    }
+    storage_config(disks=disks, policies=policies, restart=True)
+
+
 @TestStep(When)
 def insert_data_time(self, node, table_name, days_ago, rows):
     t = time.mktime(
@@ -16,15 +30,16 @@ def insert_data_time(self, node, table_name, days_ago, rows):
     node.query(f"INSERT INTO {table_name} VALUES {values}")
 
 
-@TestScenario
+@TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Table_TTLDelete("1.0"))
-def ttl_delete(self):
+@Examples("move_on_insert", [[0], [1]])
+def ttl_delete(self, move_on_insert):
     """Check that TTL delete works properly when <allow_vfs> parameter is set to 1."""
     nodes = self.context.ch_nodes
     table_name = "ttl_delete"
 
-    with Given("I enable vfs"):
-        enable_vfs(disk_names=["external", "external_tiered"])
+    with Given("I enable vfs and set ttl move on insert"):
+        set_tiered_policy(move_on_insert=move_on_insert)
 
     with And("I have a replicated table"):
         replicated_table_cluster(
@@ -56,15 +71,16 @@ def ttl_delete(self):
         )
 
 
-@TestScenario
+@TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Table_TTLMove("1.0"))
-def ttl_move(self):
+@Examples("move_on_insert", [[0], [1]])
+def ttl_move(self, move_on_insert):
     """Check that TTL moves work properly when <allow_vfs> parameter is set to 1."""
     nodes = self.context.ch_nodes
     table_name = "ttl_move"
 
-    with Given("I enable vfs"):
-        enable_vfs(disk_names=["external", "external_tiered"])
+    with Given("I enable vfs and set ttl move on insert"):
+        set_tiered_policy(move_on_insert=move_on_insert)
 
     with And("I have a replicated table"):
         replicated_table_cluster(

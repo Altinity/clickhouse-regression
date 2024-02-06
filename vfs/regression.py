@@ -81,6 +81,7 @@ def minio(
     # Feature(run=load("vfs.tests.parallel_replica", "feature"))
     Feature(run=load("vfs.tests.settings", "feature"))
     Feature(run=load("vfs.tests.table", "feature"))
+    Feature(run=load("vfs.tests.ttl", "feature"))
     Feature(run=load("vfs.tests.system", "feature"))
     Feature(run=load("vfs.tests.alter", "feature"))
     Feature(run=load("vfs.tests.create_insert", "feature"))
