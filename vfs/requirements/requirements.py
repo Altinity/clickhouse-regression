@@ -150,26 +150,121 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared = Requirement(
     description=(
         "[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.\n"
         "\n"
-        "| Setting                                                        | Component             | Support |\n"
-        "| -------------------------------------------------------------- | --------------------- | ------- |\n"
-        "| remote_fs_execute_merges_on_single_replica_time_threshold      | MergeTree             | yes     |\n"
-        "| zero_copy_concurrent_part_removal_max_split_times              | MergeTree             | yes     |\n"
-        "| zero_copy_concurrent_part_removal_max_postpone_ratio           | MergeTree             | yes     |\n"
-        "| zero_copy_merge_mutation_min_parts_size_sleep_before_lock      | MergeTree             | yes     |\n"
-        "| perform_ttl_move_on_insert                                     | storage_policies      | yes     |\n"
-        "| s3_truncate_on_insert                                          | Core                  |         |\n"
-        "| s3_create_new_file_on_insert                                   | Core                  |         |\n"
-        "| s3_skip_empty_files                                            | Core                  |         |\n"
-        "| schema_inference_use_cache_for_s3                              | Core                  |         |\n"
-        "| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core                  |         |\n"
-        "| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core                  |         |\n"
-        "| remote_fs_read_backoff_threshold                               | storage_configuration |         |\n"
-        "| remote_fs_read_backoff_max_tries                               | storage_configuration |         |\n"
+        "| Setting                                                   | Component | Description                                                                                         |\n"
+        "| --------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |\n"
+        "| remote_fs_execute_merges_on_single_replica_time_threshold | MergeTree | Start merges on only one replica when >0 and 'merged part on shared storage'                        |\n"
+        "| zero_copy_concurrent_part_removal_max_split_times         | MergeTree | Not recommended to change                                                                           |\n"
+        "| zero_copy_concurrent_part_removal_max_postpone_ratio      | MergeTree | Not recommended to change                                                                           |\n"
+        "| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | MergeTree | Sleep a random amount of time before trying to lock when merging or mutating a part above this size |\n"
         "\n"
     ),
     link=None,
     level=3,
     num="4.2.3",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_SchemaInference = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL respect the following schema inference settings when`<allow_vfs>` is enabled.\n"
+        "\n"
+        "| Setting                           | Component | Description                                         |\n"
+        "| --------------------------------- | --------- | --------------------------------------------------- |\n"
+        "| schema_inference_use_cache_for_s3 | Core      | Use cache for schema inference in s3 table function |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.4",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL respect the following TTL settings when`<allow_vfs>` is enabled.\n"
+        "\n"
+        "| Setting                    | Component        | Description                                |\n"
+        "| -------------------------- | ---------------- | ------------------------------------------ |\n"
+        "| perform_ttl_move_on_insert | storage_policies | Move expired parts immediately upon insert |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.5",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_S3 = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL respect the following S3 settings when`<allow_vfs>` is enabled.\n"
+        "\n"
+        "| Setting                      | Component | Description                                                   |\n"
+        "| ---------------------------- | --------- | ------------------------------------------------------------- |\n"
+        "| s3_truncate_on_insert        | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |\n"
+        "| s3_create_new_file_on_insert | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |\n"
+        "| s3_skip_empty_files          | Core      | If 1, return empty result instead of exception for empty file |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.6",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ReadBackoff = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL respect the following backoff settings when`<allow_vfs>` is enabled.\n"
+        "\n"
+        "| Setting                          | Component             | Description                                        |\n"
+        "| -------------------------------- | --------------------- | -------------------------------------------------- |\n"
+        "| remote_fs_read_backoff_threshold | storage_configuration | Max wait time reading from remote disk             |\n"
+        "| remote_fs_read_backoff_max_tries | storage_configuration | Max attempts with backoff reading from remote disk |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.7",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL respect the following concurrent read settings when`<allow_vfs>` is enabled.\n"
+        "\n"
+        "| Setting                                                        | Component | Description                                       |\n"
+        "| -------------------------------------------------------------- | --------- | ------------------------------------------------- |\n"
+        "| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core      | Read concurrently if reading more rows than this  |\n"
+        "| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core      | Read concurrently if reading more bytes than this |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.8",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload = Requirement(
@@ -185,7 +280,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.4",
+    num="4.2.9",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled = Requirement(
@@ -203,7 +298,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.5",
+    num="4.2.10",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_Delete = Requirement(
@@ -922,12 +1017,37 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared", level=3, num="4.2.3"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload", level=3, num="4.2.4"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference",
+            level=3,
+            num="4.2.4",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL",
+            level=3,
+            num="4.2.5",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3",
+            level=3,
+            num="4.2.6",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff",
+            level=3,
+            num="4.2.7",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead",
+            level=3,
+            num="4.2.8",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload", level=3, num="4.2.9"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled",
             level=3,
-            num="4.2.5",
+            num="4.2.10",
         ),
         Heading(name="System", level=2, num="4.3"),
         Heading(
@@ -1087,6 +1207,11 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
+        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_SchemaInference,
+        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL,
+        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_S3,
+        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ReadBackoff,
+        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled,
         RQ_SRS_038_DiskObjectStorageVFS_System_Delete,
@@ -1146,8 +1271,13 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
     * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
     * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
-    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
-    * 4.2.5 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
+    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference](#rqsrs-038diskobjectstoragevfssettingssharedschemainference)
+    * 4.2.5 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL](#rqsrs-038diskobjectstoragevfssettingssharedttl)
+    * 4.2.6 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3](#rqsrs-038diskobjectstoragevfssettingsshareds3)
+    * 4.2.7 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff](#rqsrs-038diskobjectstoragevfssettingssharedreadbackoff)
+    * 4.2.8 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead](#rqsrs-038diskobjectstoragevfssettingssharedconcurrentread)
+    * 4.2.9 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
+    * 4.2.10 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
   * 4.3 [System](#system)
     * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
     * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
@@ -1290,21 +1420,61 @@ version: 0.0
 
 [ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
 
-| Setting                                                        | Component             | Support |
-| -------------------------------------------------------------- | --------------------- | ------- |
-| remote_fs_execute_merges_on_single_replica_time_threshold      | MergeTree             | yes     |
-| zero_copy_concurrent_part_removal_max_split_times              | MergeTree             | yes     |
-| zero_copy_concurrent_part_removal_max_postpone_ratio           | MergeTree             | yes     |
-| zero_copy_merge_mutation_min_parts_size_sleep_before_lock      | MergeTree             | yes     |
-| perform_ttl_move_on_insert                                     | storage_policies      | yes     |
-| s3_truncate_on_insert                                          | Core                  |         |
-| s3_create_new_file_on_insert                                   | Core                  |         |
-| s3_skip_empty_files                                            | Core                  |         |
-| schema_inference_use_cache_for_s3                              | Core                  |         |
-| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core                  |         |
-| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core                  |         |
-| remote_fs_read_backoff_threshold                               | storage_configuration |         |
-| remote_fs_read_backoff_max_tries                               | storage_configuration |         |
+| Setting                                                   | Component | Description                                                                                         |
+| --------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |
+| remote_fs_execute_merges_on_single_replica_time_threshold | MergeTree | Start merges on only one replica when >0 and 'merged part on shared storage'                        |
+| zero_copy_concurrent_part_removal_max_split_times         | MergeTree | Not recommended to change                                                                           |
+| zero_copy_concurrent_part_removal_max_postpone_ratio      | MergeTree | Not recommended to change                                                                           |
+| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | MergeTree | Sleep a random amount of time before trying to lock when merging or mutating a part above this size |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference
+version: 1.0
+
+[ClickHouse] SHALL respect the following schema inference settings when`<allow_vfs>` is enabled.
+
+| Setting                           | Component | Description                                         |
+| --------------------------------- | --------- | --------------------------------------------------- |
+| schema_inference_use_cache_for_s3 | Core      | Use cache for schema inference in s3 table function |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL
+version: 1.0
+
+[ClickHouse] SHALL respect the following TTL settings when`<allow_vfs>` is enabled.
+
+| Setting                    | Component        | Description                                |
+| -------------------------- | ---------------- | ------------------------------------------ |
+| perform_ttl_move_on_insert | storage_policies | Move expired parts immediately upon insert |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3
+version: 1.0
+
+[ClickHouse] SHALL respect the following S3 settings when`<allow_vfs>` is enabled.
+
+| Setting                      | Component | Description                                                   |
+| ---------------------------- | --------- | ------------------------------------------------------------- |
+| s3_truncate_on_insert        | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |
+| s3_create_new_file_on_insert | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |
+| s3_skip_empty_files          | Core      | If 1, return empty result instead of exception for empty file |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff
+version: 1.0
+
+[ClickHouse] SHALL respect the following backoff settings when`<allow_vfs>` is enabled.
+
+| Setting                          | Component             | Description                                        |
+| -------------------------------- | --------------------- | -------------------------------------------------- |
+| remote_fs_read_backoff_threshold | storage_configuration | Max wait time reading from remote disk             |
+| remote_fs_read_backoff_max_tries | storage_configuration | Max attempts with backoff reading from remote disk |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead
+version: 1.0
+
+[ClickHouse] SHALL respect the following concurrent read settings when`<allow_vfs>` is enabled.
+
+| Setting                                                        | Component | Description                                       |
+| -------------------------------------------------------------- | --------- | ------------------------------------------------- |
+| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core      | Read concurrently if reading more rows than this  |
+| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core      | Read concurrently if reading more bytes than this |
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload
 version: 0.0
