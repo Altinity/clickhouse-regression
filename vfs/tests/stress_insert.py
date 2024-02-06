@@ -26,14 +26,16 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
     """
     nodes = self.context.ch_nodes[:2]
     max_inserts = int(max_inserts)
+    fault_probability = 0.001
 
     columns = ", ".join([f"d{i} UInt8" for i in range(n_cols)])
 
-    table_settings = ", ".join(
+    insert_settings = ", ".join(
         [
             "max_insert_block_size=1",  # Stress (zoo)keeper by inflating transaction counts
             "max_insert_threads=16",
             "max_memory_usage=0",  # Ignore per-query memory limits
+            f"insert_keeper_fault_injection_probability={fault_probability}",  # Stress (zoo)keeper by injecting faults during inserts
         ]
     )
 
@@ -62,7 +64,7 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
             nodes[0].query(
                 f"""
                 INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') 
-                LIMIT {n_inserts} SETTINGS {table_settings}
+                LIMIT {n_inserts} SETTINGS {insert_settings}
                 """,
                 exitcode=0,
                 timeout=600,
@@ -84,7 +86,7 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
 
 
 @TestFeature
-@Name("stress")
+@Name("stress insert")
 def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
