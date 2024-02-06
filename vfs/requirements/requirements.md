@@ -161,21 +161,21 @@ version: 0.0
 
 [ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
 
-| Setting                                                        | Component             | Support |
-| -------------------------------------------------------------- | --------------------- | ------- |
-| remote_fs_execute_merges_on_single_replica_time_threshold      | MergeTree             | yes     |
-| zero_copy_concurrent_part_removal_max_split_times              | MergeTree             | yes     |
-| zero_copy_concurrent_part_removal_max_postpone_ratio           | MergeTree             | yes     |
-| zero_copy_merge_mutation_min_parts_size_sleep_before_lock      | MergeTree             | yes     |
-| perform_ttl_move_on_insert                                     | storage_policies      | yes     |
-| s3_truncate_on_insert                                          | Core                  |         |
-| s3_create_new_file_on_insert                                   | Core                  |         |
-| s3_skip_empty_files                                            | Core                  |         |
-| schema_inference_use_cache_for_s3                              | Core                  |         |
-| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core                  |         |
-| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core                  |         |
-| remote_fs_read_backoff_threshold                               | storage_configuration |         |
-| remote_fs_read_backoff_max_tries                               | storage_configuration |         |
+| Setting                                                        | Component             | Description                                                                                         |
+| -------------------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------- |
+| remote_fs_execute_merges_on_single_replica_time_threshold      | MergeTree             | Start merges on only one replica when >0 and 'merged part on shared storage'                        |
+| zero_copy_concurrent_part_removal_max_split_times              | MergeTree             | Not recommended to change                                                                           |
+| zero_copy_concurrent_part_removal_max_postpone_ratio           | MergeTree             | Not recommended to change                                                                           |
+| zero_copy_merge_mutation_min_parts_size_sleep_before_lock      | MergeTree             | Sleep a random amount of time before trying to lock when merging or mutating a part above this size |
+| perform_ttl_move_on_insert                                     | storage_policies      | Move expired parts immediately upon insert                                                          |
+| s3_truncate_on_insert                                          | Core                  | 0 = append to file, 1 = replace file, when inserting to s3                                          |
+| s3_create_new_file_on_insert                                   | Core                  | 0 = append to file, 1 = create new file, when inserting to s3                                       |
+| s3_skip_empty_files                                            | Core                  | If 1, return empty result instead of exception for empty file                                       |
+| schema_inference_use_cache_for_s3                              | Core                  | Use cache for schema inference in s3 table function                                                 |
+| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core                  | Read concurrently if reading more rows than this                                                    |
+| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core                  | Read concurrently if reading more bytes than this                                                   |
+| remote_fs_read_backoff_threshold                               | storage_configuration | Max wait time reading from remote disk                                                              |
+| remote_fs_read_backoff_max_tries                               | storage_configuration | Max attempts with backoff reading from remote disk                                                  |
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload
 version: 0.0
