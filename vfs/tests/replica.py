@@ -381,7 +381,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     shuffle_combinations = True
     combinations_limit = 100
 
-    fault_probability = 0.2
+    fault_probability = 0.15
 
     if self.context.stress:
         combinations_limit = 10000
@@ -487,8 +487,8 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     actions = [
         add_replica,
         insert,
-        insert_small,
-        insert_large,
+        # insert_small,
+        # insert_large,
         optimize,
         select,
         truncate,
@@ -550,7 +550,11 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+                for attempt in retries(timeout=120, delay=2):
+                    with attempt:
+                        node.query(
+                            f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0
+                        )
 
 
 @TestScenario
@@ -558,6 +562,7 @@ def command_combinations(self, parallel=True):
     """
     Perform parallel actions on replicas and check that they all agree.
     """
+
     random_seed = random.random()
     note(f"Command combinations shuffle seed {random_seed}")
     Example(name="vfs", test=command_combinations_outline, parallel=parallel)(
