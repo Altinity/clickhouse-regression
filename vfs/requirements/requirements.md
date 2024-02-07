@@ -196,11 +196,13 @@ version: 1.0
 
 [ClickHouse] SHALL respect the following S3 settings when`<allow_vfs>` is enabled.
 
-| Setting                      | Component | Description                                                   |
-| ---------------------------- | --------- | ------------------------------------------------------------- |
-| s3_truncate_on_insert        | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |
-| s3_create_new_file_on_insert | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |
-| s3_skip_empty_files          | Core      | If 1, return empty result instead of exception for empty file |
+| Setting                        | Component | Description                                                   |
+| ------------------------------ | --------- | ------------------------------------------------------------- |
+| s3_truncate_on_insert          | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |
+| s3_create_new_file_on_insert   | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |
+| s3_skip_empty_files            | Core      | If 1, return empty result instead of exception for empty file |
+| s3_max_single_part_upload_size | Core      | Max size of singlepart upload                                 |
+
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff
 version: 1.0
