@@ -248,7 +248,7 @@ def fetch(self, fetch_item):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom("0.0"))
 def attach_from(self):
-    """Test attaching a part from one table to another"""
+    """Test attaching a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
@@ -292,7 +292,7 @@ def attach_from(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable("0.0"))
 def move_to_table(self):
-    """Test moving a part from one table to another"""
+    """Test moving a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
@@ -349,7 +349,7 @@ def move_to_table(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace("0.0"))
 def replace(self):
-    """Test attaching a part from one table to another"""
+    """Test attaching a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
@@ -401,7 +401,7 @@ def replace(self):
     "drop_item detach_first", product(["PARTITION 2", "PART '2_0_0_0'"], [False, True])
 )
 def drop(self, drop_item, detach_first):
-    """Test detaching a part on one replica and reattaching it on another"""
+    """Test detaching a part on one replica and reattaching it on another."""
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
@@ -524,7 +524,7 @@ def move(self, move_item, disk_order, to_type):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach("0.0"))
 @Examples("detach_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
 def detach(self, detach_item):
-    """Test detaching a part"""
+    """Test detaching a part."""
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
@@ -665,6 +665,8 @@ def columns(self):
 @TestFeature
 @Name("alter")
 def feature(self):
+    """Test ALTER commands with VFS enabled"""
+
     with Given("I have S3 disks configured"):
         s3_config()
 
