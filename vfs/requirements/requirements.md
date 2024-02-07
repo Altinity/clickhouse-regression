@@ -7,68 +7,70 @@
 * 2 [Introduction](#introduction)
 * 3 [Terminology](#terminology)
 * 4 [Requirements](#requirements)
-  * 4.1 [Replicas](#replicas)
-    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica](#rqsrs-038diskobjectstoragevfsreplica)
-    * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
-    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
-    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
-    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale](#rqsrs-038diskobjectstoragevfsreplicastale)
-  * 4.2 [Settings](#settings)
-    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
-    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
-    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
-    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference](#rqsrs-038diskobjectstoragevfssettingssharedschemainference)
-    * 4.2.5 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL](#rqsrs-038diskobjectstoragevfssettingssharedttl)
-    * 4.2.6 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3](#rqsrs-038diskobjectstoragevfssettingsshareds3)
-    * 4.2.7 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff](#rqsrs-038diskobjectstoragevfssettingssharedreadbackoff)
-    * 4.2.8 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead](#rqsrs-038diskobjectstoragevfssettingssharedconcurrentread)
-    * 4.2.9 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
-    * 4.2.10 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
-  * 4.3 [System](#system)
-    * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
-    * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
-    * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
-    * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
-    * 4.3.5 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
-    * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
-    * 4.3.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
-    * 4.3.8 [RQ.SRS-038.DiskObjectStorageVFS.System.Transactions](#rqsrs-038diskobjectstoragevfssystemtransactions)
-  * 4.4 [Alter](#alter)
-    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop](#rqsrs-038diskobjectstoragevfsalterdrop)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach](#rqsrs-038diskobjectstoragevfsalterattach)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom](#rqsrs-038diskobjectstoragevfsalterattachfrom)
-    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace](#rqsrs-038diskobjectstoragevfsalterreplace)
-    * 4.4.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable](#rqsrs-038diskobjectstoragevfsaltermovetotable)
-    * 4.4.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze](#rqsrs-038diskobjectstoragevfsalterfreeze)
-    * 4.4.9 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart](#rqsrs-038diskobjectstoragevfsaltermovepart)
-    * 4.4.10 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
-    * 4.4.11 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
-    * 4.4.12 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
-    * 4.4.13 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
-    * 4.4.14 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
-    * 4.4.15 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
-  * 4.5 [Table](#table)
-    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations](#rqsrs-038diskobjectstoragevfstabletableoperations)
-    * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse](#rqsrs-038diskobjectstoragevfstablebackgroundcollapse)
-    * 4.5.3 [RQ.SRS-038.DiskObjectStorageVFS.Table.Migration](#rqsrs-038diskobjectstoragevfstablemigration)
-    * 4.5.4 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLMove](#rqsrs-038diskobjectstoragevfstablettlmove)
-    * 4.5.5 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLDelete](#rqsrs-038diskobjectstoragevfstablettldelete)
-    * 4.5.6 [RQ.SRS-038.DiskObjectStorageVFS.Table.Detach](#rqsrs-038diskobjectstoragevfstabledetach)
-    * 4.5.7 [RQ.SRS-038.DiskObjectStorageVFS.Table.StoragePolicy](#rqsrs-038diskobjectstoragevfstablestoragepolicy)
-  * 4.6 [Combinatoric](#combinatoric)
-    * 4.6.1 [Supported Table Configurations](#supported-table-configurations)
-    * 4.6.2 [Supported Operations](#supported-operations)
-    * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
-    * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
-  * 4.7 [Performance](#performance)
-    * 4.7.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
-  * 4.8 [Object Storage Providers](#object-storage-providers)
-    * 4.8.1 [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
-    * 4.8.2 [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
-    * 4.8.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
-    * 4.8.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
+  * 4.1 [Disk Object Storage VFS](#disk-object-storage-vfs)
+    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
+  * 4.2 [Replicas](#replicas)
+    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
+    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
+    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale](#rqsrs-038diskobjectstoragevfsreplicastale)
+  * 4.3 [Settings](#settings)
+    * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
+    * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
+    * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
+  * 4.4 [Shared Settings](#shared-settings)
+    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.Mutation](#rqsrs-038diskobjectstoragevfssharedsettingsmutation)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.SchemaInference](#rqsrs-038diskobjectstoragevfssharedsettingsschemainference)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.TTL](#rqsrs-038diskobjectstoragevfssharedsettingsttl)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.S3](#rqsrs-038diskobjectstoragevfssharedsettingss3)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ReadBackoff](#rqsrs-038diskobjectstoragevfssharedsettingsreadbackoff)
+    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ConcurrentRead](#rqsrs-038diskobjectstoragevfssharedsettingsconcurrentread)
+  * 4.5 [System](#system)
+    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
+    * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
+    * 4.5.3 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
+    * 4.5.4 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
+    * 4.5.5 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
+    * 4.5.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
+    * 4.5.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
+    * 4.5.8 [RQ.SRS-038.DiskObjectStorageVFS.System.Transactions](#rqsrs-038diskobjectstoragevfssystemtransactions)
+  * 4.6 [Alter](#alter)
+    * 4.6.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
+    * 4.6.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
+    * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop](#rqsrs-038diskobjectstoragevfsalterdrop)
+    * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach](#rqsrs-038diskobjectstoragevfsalterattach)
+    * 4.6.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom](#rqsrs-038diskobjectstoragevfsalterattachfrom)
+    * 4.6.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace](#rqsrs-038diskobjectstoragevfsalterreplace)
+    * 4.6.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable](#rqsrs-038diskobjectstoragevfsaltermovetotable)
+    * 4.6.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze](#rqsrs-038diskobjectstoragevfsalterfreeze)
+    * 4.6.9 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart](#rqsrs-038diskobjectstoragevfsaltermovepart)
+    * 4.6.10 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
+    * 4.6.11 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
+    * 4.6.12 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
+    * 4.6.13 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
+    * 4.6.14 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
+    * 4.6.15 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
+  * 4.7 [Table](#table)
+    * 4.7.1 [RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations](#rqsrs-038diskobjectstoragevfstabletableoperations)
+    * 4.7.2 [RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse](#rqsrs-038diskobjectstoragevfstablebackgroundcollapse)
+    * 4.7.3 [RQ.SRS-038.DiskObjectStorageVFS.Table.Migration](#rqsrs-038diskobjectstoragevfstablemigration)
+    * 4.7.4 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLMove](#rqsrs-038diskobjectstoragevfstablettlmove)
+    * 4.7.5 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLDelete](#rqsrs-038diskobjectstoragevfstablettldelete)
+    * 4.7.6 [RQ.SRS-038.DiskObjectStorageVFS.Table.Detach](#rqsrs-038diskobjectstoragevfstabledetach)
+    * 4.7.7 [RQ.SRS-038.DiskObjectStorageVFS.Table.StoragePolicy](#rqsrs-038diskobjectstoragevfstablestoragepolicy)
+  * 4.8 [Combinatoric](#combinatoric)
+    * 4.8.1 [Supported Table Configurations](#supported-table-configurations)
+    * 4.8.2 [Supported Operations](#supported-operations)
+    * 4.8.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
+    * 4.8.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
+  * 4.9 [Performance](#performance)
+    * 4.9.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
+  * 4.10 [Object Storage Providers](#object-storage-providers)
+    * 4.10.1 [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
+    * 4.10.2 [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
+    * 4.10.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
+    * 4.10.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
 * 5 [References](#references)
 
 ## Revision History
@@ -159,68 +161,6 @@ version: 1.0
 [ClickHouse] SHALL return an error if both `<allow_s3_zero_copy_replication>`
 and `<allow_vfs>` are enabled at the same time.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared
-version: 0.0
-
-[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
-
-| Setting                                                   | Component | Description                                                                                         |
-| --------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |
-| remote_fs_execute_merges_on_single_replica_time_threshold | MergeTree | Start merges on only one replica when >0 and 'merged part on shared storage'                        |
-| zero_copy_concurrent_part_removal_max_split_times         | MergeTree | Not recommended to change                                                                           |
-| zero_copy_concurrent_part_removal_max_postpone_ratio      | MergeTree | Not recommended to change                                                                           |
-| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | MergeTree | Sleep a random amount of time before trying to lock when merging or mutating a part above this size |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference
-version: 1.0
-
-[ClickHouse] SHALL respect the following schema inference settings when`<allow_vfs>` is enabled.
-
-| Setting                           | Component | Description                                         |
-| --------------------------------- | --------- | --------------------------------------------------- |
-| schema_inference_use_cache_for_s3 | Core      | Use cache for schema inference in s3 table function |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL
-version: 1.0
-
-[ClickHouse] SHALL respect the following TTL settings when`<allow_vfs>` is enabled.
-
-| Setting                    | Component        | Description                                |
-| -------------------------- | ---------------- | ------------------------------------------ |
-| perform_ttl_move_on_insert | storage_policies | Move expired parts immediately upon insert |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3
-version: 1.0
-
-[ClickHouse] SHALL respect the following S3 settings when`<allow_vfs>` is enabled.
-
-| Setting                        | Component | Description                                                   |
-| ------------------------------ | --------- | ------------------------------------------------------------- |
-| s3_truncate_on_insert          | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |
-| s3_create_new_file_on_insert   | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |
-| s3_skip_empty_files            | Core      | If 1, return empty result instead of exception for empty file |
-| s3_max_single_part_upload_size | Core      | Max size of singlepart upload                                 |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff
-version: 1.0
-
-[ClickHouse] SHALL respect the following backoff settings when`<allow_vfs>` is enabled.
-
-| Setting                          | Component             | Description                                        |
-| -------------------------------- | --------------------- | -------------------------------------------------- |
-| remote_fs_read_backoff_threshold | storage_configuration | Max wait time reading from remote disk             |
-| remote_fs_read_backoff_max_tries | storage_configuration | Max attempts with backoff reading from remote disk |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead
-version: 1.0
-
-[ClickHouse] SHALL respect the following concurrent read settings when`<allow_vfs>` is enabled.
-
-| Setting                                                        | Component | Description                                       |
-| -------------------------------------------------------------- | --------- | ------------------------------------------------- |
-| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core      | Read concurrently if reading more rows than this  |
-| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core      | Read concurrently if reading more bytes than this |
-
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload
 version: 0.0
 
@@ -232,6 +172,72 @@ version: 1.0
 When the value of the `<allow_vfs>` parameter is changed
 from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,
 [ClickHouse] SHALL ensure that data is still accessible.
+
+### Shared Settings
+
+[ClickHouse] `Disk Object Storage VFS` shares some settings with other components.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.Mutation
+version: 0.0
+
+[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
+
+| Setting                                                   | Component | Description                                                                                         |
+| --------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |
+| remote_fs_execute_merges_on_single_replica_time_threshold | MergeTree | Start merges on only one replica when >0 and 'merged part on shared storage'                        |
+| zero_copy_concurrent_part_removal_max_split_times         | MergeTree | Not recommended to change                                                                           |
+| zero_copy_concurrent_part_removal_max_postpone_ratio      | MergeTree | Not recommended to change                                                                           |
+| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | MergeTree | Sleep a random amount of time before trying to lock when merging or mutating a part above this size |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.SchemaInference
+version: 1.0
+
+[ClickHouse] SHALL respect the following schema inference settings when`<allow_vfs>` is enabled.
+
+| Setting                           | Component | Description                                         |
+| --------------------------------- | --------- | --------------------------------------------------- |
+| schema_inference_use_cache_for_s3 | Core      | Use cache for schema inference in s3 table function |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.TTL
+version: 1.0
+
+[ClickHouse] SHALL respect the following TTL settings when`<allow_vfs>` is enabled.
+
+| Setting                    | Component        | Description                                |
+| -------------------------- | ---------------- | ------------------------------------------ |
+| perform_ttl_move_on_insert | storage_policies | Move expired parts immediately upon insert |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.S3
+version: 1.0
+
+[ClickHouse] SHALL respect the following S3 settings when`<allow_vfs>` is enabled.
+
+| Setting                        | Component | Description                                                   |
+| ------------------------------ | --------- | ------------------------------------------------------------- |
+| s3_truncate_on_insert          | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |
+| s3_create_new_file_on_insert   | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |
+| s3_skip_empty_files            | Core      | If 1, return empty result instead of exception for empty file |
+| s3_max_single_part_upload_size | Core      | Max size of singlepart upload                                 |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ReadBackoff
+version: 1.0
+
+[ClickHouse] SHALL respect the following backoff settings when`<allow_vfs>` is enabled.
+
+| Setting                          | Component             | Description                                        |
+| -------------------------------- | --------------------- | -------------------------------------------------- |
+| remote_fs_read_backoff_threshold | storage_configuration | Max wait time reading from remote disk             |
+| remote_fs_read_backoff_max_tries | storage_configuration | Max attempts with backoff reading from remote disk |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ConcurrentRead
+version: 1.0
+
+[ClickHouse] SHALL respect the following concurrent read settings when`<allow_vfs>` is enabled.
+
+| Setting                                                        | Component | Description                                       |
+| -------------------------------------------------------------- | --------- | ------------------------------------------------- |
+| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core      | Read concurrently if reading more rows than this  |
+| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core      | Read concurrently if reading more bytes than this |
 
 ### System
 

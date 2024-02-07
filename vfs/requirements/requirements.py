@@ -8,17 +8,16 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_038_DiskObjectStorageVFS_Replica = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Replica",
+RQ_SRS_038_DiskObjectStorageVFS = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support VFS such that data is not\n"
-        "duplicated in [S3] storage during any operations on replicated tables (ALTER,\n"
-        "SELECT, INSERT, etc...).\n"
+        "[ClickHouse] SHALL support `DiskObjectStorageVFS` storage disk.\n"
+        "The `DiskObjectStorageVFS` SHALL not duplicate data in [S3] storage during any operations on replicated tables.\n"
         "\n"
     ),
     link=None,
@@ -40,7 +39,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Replica_Add = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.2",
+    num="4.2.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove = Requirement(
@@ -57,7 +56,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.3",
+    num="4.2.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline = Requirement(
@@ -76,7 +75,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.4",
+    num="4.2.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Replica_Stale = Requirement(
@@ -89,7 +88,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Replica_Stale = Requirement(
     description=("stale replica\n" "\n"),
     link=None,
     level=3,
-    num="4.1.5",
+    num="4.2.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk = Requirement(
@@ -120,7 +119,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.1",
+    num="4.3.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible = Requirement(
@@ -137,11 +136,45 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.2",
+    num="4.3.2",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared",
+RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload",
+    version="0.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reload the vfs configuration when the `SYSTEM RELOAD CONFIG` command is run.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.3.3",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the value of the `<allow_vfs>` parameter is changed\n"
+        "from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,\n"
+        "[ClickHouse] SHALL ensure that data is still accessible.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.3.4",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_Mutation = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.Mutation",
     version="0.0",
     priority=None,
     group=None,
@@ -160,11 +193,11 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.3",
+    num="4.4.1",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_SchemaInference = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference",
+RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_SchemaInference = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.SchemaInference",
     version="1.0",
     priority=None,
     group=None,
@@ -180,11 +213,11 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_SchemaInference = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.4",
+    num="4.4.2",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL",
+RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_TTL = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.TTL",
     version="1.0",
     priority=None,
     group=None,
@@ -200,11 +233,11 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.5",
+    num="4.4.3",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_S3 = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3",
+RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_S3 = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.S3",
     version="1.0",
     priority=None,
     group=None,
@@ -220,15 +253,14 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_S3 = Requirement(
         "| s3_skip_empty_files            | Core      | If 1, return empty result instead of exception for empty file |\n"
         "| s3_max_single_part_upload_size | Core      | Max size of singlepart upload                                 |\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
-    num="4.2.6",
+    num="4.4.4",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ReadBackoff = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff",
+RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ReadBackoff",
     version="1.0",
     priority=None,
     group=None,
@@ -245,11 +277,11 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ReadBackoff = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.7",
+    num="4.4.5",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead",
+RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ConcurrentRead",
     version="1.0",
     priority=None,
     group=None,
@@ -266,41 +298,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.8",
-)
-
-RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload",
-    version="0.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL reload the vfs configuration when the `SYSTEM RELOAD CONFIG` command is run.\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.2.9",
-)
-
-RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "When the value of the `<allow_vfs>` parameter is changed\n"
-        "from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,\n"
-        "[ClickHouse] SHALL ensure that data is still accessible.\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.2.10",
+    num="4.4.6",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_Delete = Requirement(
@@ -316,7 +314,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_Delete = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.1",
+    num="4.5.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption = Requirement(
@@ -342,7 +340,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.2",
+    num="4.5.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection = Requirement(
@@ -358,7 +356,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection = R
     ),
     link=None,
     level=3,
-    num="4.3.3",
+    num="4.5.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper = Requirement(
@@ -374,7 +372,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.4",
+    num="4.5.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper = Requirement(
@@ -391,7 +389,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.5",
+    num="4.5.5",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts = Requirement(
@@ -409,7 +407,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.6",
+    num="4.5.6",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_Optimize = Requirement(
@@ -425,7 +423,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_Optimize = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.7",
+    num="4.5.7",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_Transactions = Requirement(
@@ -441,7 +439,7 @@ RQ_SRS_038_DiskObjectStorageVFS_System_Transactions = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.8",
+    num="4.5.8",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch = Requirement(
@@ -457,7 +455,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.1",
+    num="4.6.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach = Requirement(
@@ -473,7 +471,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.2",
+    num="4.6.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop = Requirement(
@@ -489,7 +487,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.3",
+    num="4.6.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach = Requirement(
@@ -505,7 +503,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.4",
+    num="4.6.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom = Requirement(
@@ -521,7 +519,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.5",
+    num="4.6.5",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace = Requirement(
@@ -537,7 +535,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.6",
+    num="4.6.6",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable = Requirement(
@@ -553,7 +551,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.7",
+    num="4.6.7",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze = Requirement(
@@ -569,7 +567,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.8",
+    num="4.6.8",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart = Requirement(
@@ -585,7 +583,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.9",
+    num="4.6.9",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Index = Requirement(
@@ -608,7 +606,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Index = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.10",
+    num="4.6.10",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy = Requirement(
@@ -624,7 +622,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.11",
+    num="4.6.11",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy = Requirement(
@@ -640,7 +638,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.12",
+    num="4.6.12",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections = Requirement(
@@ -663,7 +661,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.13",
+    num="4.6.13",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Column = Requirement(
@@ -691,7 +689,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Column = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.14",
+    num="4.6.14",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Update = Requirement(
@@ -713,7 +711,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Alter_Update = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.15",
+    num="4.6.15",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Table_BackgroundCollapse = Requirement(
@@ -736,7 +734,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Table_BackgroundCollapse = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.2",
+    num="4.7.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Table_Migration = Requirement(
@@ -762,7 +760,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Table_Migration = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.3",
+    num="4.7.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Table_TTLMove = Requirement(
@@ -781,7 +779,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Table_TTLMove = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.4",
+    num="4.7.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Table_TTLDelete = Requirement(
@@ -798,7 +796,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Table_TTLDelete = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.5",
+    num="4.7.5",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Table_Detach = Requirement(
@@ -816,7 +814,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Table_Detach = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.6",
+    num="4.7.6",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Table_StoragePolicy = Requirement(
@@ -838,7 +836,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Table_StoragePolicy = Requirement(
     ),
     link=None,
     level=3,
-    num="4.5.7",
+    num="4.7.7",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Combinatoric = Requirement(
@@ -856,7 +854,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Combinatoric = Requirement(
     ),
     link=None,
     level=3,
-    num="4.6.3",
+    num="4.8.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert = Requirement(
@@ -873,7 +871,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert = Requirement(
     ),
     link=None,
     level=3,
-    num="4.6.4",
+    num="4.8.4",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
@@ -890,7 +888,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Performance = Requirement(
     ),
     link=None,
     level=3,
-    num="4.7.1",
+    num="4.9.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration = Requirement(
@@ -922,7 +920,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration = Requirement(
     ),
     link=None,
     level=3,
-    num="4.8.1",
+    num="4.10.1",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS = Requirement(
@@ -937,7 +935,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS = Requirement(
     ),
     link=None,
     level=3,
-    num="4.8.2",
+    num="4.10.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO = Requirement(
@@ -952,7 +950,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO = Requirement(
     ),
     link=None,
     level=3,
-    num="4.8.3",
+    num="4.10.3",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS = Requirement(
@@ -968,7 +966,7 @@ RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS = Requirement(
     ),
     link=None,
     level=3,
-    num="4.8.4",
+    num="4.10.4",
 )
 
 SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
@@ -992,230 +990,236 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         Heading(name="Introduction", level=1, num="2"),
         Heading(name="Terminology", level=1, num="3"),
         Heading(name="Requirements", level=1, num="4"),
-        Heading(name="Replicas", level=2, num="4.1"),
-        Heading(name="RQ.SRS-038.DiskObjectStorageVFS.Replica", level=3, num="4.1.1"),
+        Heading(name="Disk Object Storage VFS", level=2, num="4.1"),
+        Heading(name="RQ.SRS-038.DiskObjectStorageVFS", level=3, num="4.1.1"),
+        Heading(name="Replicas", level=2, num="4.2"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Add", level=3, num="4.1.2"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Add", level=3, num="4.2.1"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove", level=3, num="4.1.3"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove", level=3, num="4.2.2"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline", level=3, num="4.1.4"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline", level=3, num="4.2.3"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale", level=3, num="4.1.5"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale", level=3, num="4.2.4"
         ),
-        Heading(name="Settings", level=2, num="4.2"),
+        Heading(name="Settings", level=2, num="4.3"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk", level=3, num="4.2.1"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk", level=3, num="4.3.1"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible",
             level=3,
-            num="4.2.2",
+            num="4.3.2",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared", level=3, num="4.2.3"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference",
-            level=3,
-            num="4.2.4",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL",
-            level=3,
-            num="4.2.5",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3",
-            level=3,
-            num="4.2.6",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff",
-            level=3,
-            num="4.2.7",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead",
-            level=3,
-            num="4.2.8",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload", level=3, num="4.2.9"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload", level=3, num="4.3.3"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled",
             level=3,
-            num="4.2.10",
-        ),
-        Heading(name="System", level=2, num="4.3"),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.Delete", level=3, num="4.3.1"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption",
-            level=3,
-            num="4.3.2",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection",
-            level=3,
-            num="4.3.3",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper",
-            level=3,
             num="4.3.4",
         ),
+        Heading(name="Shared Settings", level=2, num="4.4"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper",
+            name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.Mutation",
             level=3,
-            num="4.3.5",
+            num="4.4.1",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts",
+            name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.SchemaInference",
             level=3,
-            num="4.3.6",
+            num="4.4.2",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.Optimize", level=3, num="4.3.7"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.System.Transactions",
+            name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.TTL",
             level=3,
-            num="4.3.8",
-        ),
-        Heading(name="Alter", level=2, num="4.4"),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch", level=3, num="4.4.1"
+            num="4.4.3",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach", level=3, num="4.4.2"
+            name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.S3",
+            level=3,
+            num="4.4.4",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop", level=3, num="4.4.3"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach", level=3, num="4.4.4"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom",
+            name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ReadBackoff",
             level=3,
             num="4.4.5",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace", level=3, num="4.4.6"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable",
+            name="RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ConcurrentRead",
             level=3,
-            num="4.4.7",
+            num="4.4.6",
+        ),
+        Heading(name="System", level=2, num="4.5"),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.Delete", level=3, num="4.5.1"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze", level=3, num="4.4.8"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart", level=3, num="4.4.9"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Index", level=3, num="4.4.10"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy", level=3, num="4.4.11"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy", level=3, num="4.4.12"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections",
-            level=3,
-            num="4.4.13",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Column", level=3, num="4.4.14"
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Update", level=3, num="4.4.15"
-        ),
-        Heading(name="Table", level=2, num="4.5"),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations",
-            level=3,
-            num="4.5.1",
-        ),
-        Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse",
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption",
             level=3,
             num="4.5.2",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Table.Migration", level=3, num="4.5.3"
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection",
+            level=3,
+            num="4.5.3",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Table.TTLMove", level=3, num="4.5.4"
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper",
+            level=3,
+            num="4.5.4",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Table.TTLDelete", level=3, num="4.5.5"
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper",
+            level=3,
+            num="4.5.5",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Table.Detach", level=3, num="4.5.6"
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts",
+            level=3,
+            num="4.5.6",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.Optimize", level=3, num="4.5.7"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.Transactions",
+            level=3,
+            num="4.5.8",
+        ),
+        Heading(name="Alter", level=2, num="4.6"),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch", level=3, num="4.6.1"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach", level=3, num="4.6.2"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop", level=3, num="4.6.3"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach", level=3, num="4.6.4"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom",
+            level=3,
+            num="4.6.5",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace", level=3, num="4.6.6"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable",
+            level=3,
+            num="4.6.7",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze", level=3, num="4.6.8"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart", level=3, num="4.6.9"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Index", level=3, num="4.6.10"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy", level=3, num="4.6.11"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy", level=3, num="4.6.12"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections",
+            level=3,
+            num="4.6.13",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Column", level=3, num="4.6.14"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Update", level=3, num="4.6.15"
+        ),
+        Heading(name="Table", level=2, num="4.7"),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations",
+            level=3,
+            num="4.7.1",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse",
+            level=3,
+            num="4.7.2",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Table.Migration", level=3, num="4.7.3"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Table.TTLMove", level=3, num="4.7.4"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Table.TTLDelete", level=3, num="4.7.5"
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.Table.Detach", level=3, num="4.7.6"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Table.StoragePolicy",
             level=3,
-            num="4.5.7",
+            num="4.7.7",
         ),
-        Heading(name="Combinatoric", level=2, num="4.6"),
-        Heading(name="Supported Table Configurations", level=3, num="4.6.1"),
-        Heading(name="Supported Operations", level=3, num="4.6.2"),
+        Heading(name="Combinatoric", level=2, num="4.8"),
+        Heading(name="Supported Table Configurations", level=3, num="4.8.1"),
+        Heading(name="Supported Operations", level=3, num="4.8.2"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric", level=3, num="4.6.3"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric", level=3, num="4.8.3"
         ),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert",
             level=3,
-            num="4.6.4",
+            num="4.8.4",
         ),
-        Heading(name="Performance", level=2, num="4.7"),
+        Heading(name="Performance", level=2, num="4.9"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Performance", level=3, num="4.7.1"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Performance", level=3, num="4.9.1"
         ),
-        Heading(name="Object Storage Providers", level=2, num="4.8"),
+        Heading(name="Object Storage Providers", level=2, num="4.10"),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration",
             level=3,
-            num="4.8.1",
+            num="4.10.1",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS", level=3, num="4.8.2"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS", level=3, num="4.10.2"
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO", level=3, num="4.8.3"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO",
+            level=3,
+            num="4.10.3",
         ),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS", level=3, num="4.8.4"
+            name="RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS", level=3, num="4.10.4"
         ),
         Heading(name="References", level=1, num="5"),
     ),
     requirements=(
-        RQ_SRS_038_DiskObjectStorageVFS_Replica,
+        RQ_SRS_038_DiskObjectStorageVFS,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Add,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline,
         RQ_SRS_038_DiskObjectStorageVFS_Replica_Stale,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_SchemaInference,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_S3,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ReadBackoff,
-        RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_Reload,
         RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled,
+        RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_Mutation,
+        RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_SchemaInference,
+        RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_TTL,
+        RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_S3,
+        RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff,
+        RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead,
         RQ_SRS_038_DiskObjectStorageVFS_System_Delete,
         RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption,
         RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection,
@@ -1263,68 +1267,70 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
 * 2 [Introduction](#introduction)
 * 3 [Terminology](#terminology)
 * 4 [Requirements](#requirements)
-  * 4.1 [Replicas](#replicas)
-    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica](#rqsrs-038diskobjectstoragevfsreplica)
-    * 4.1.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
-    * 4.1.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
-    * 4.1.4 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
-    * 4.1.5 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale](#rqsrs-038diskobjectstoragevfsreplicastale)
-  * 4.2 [Settings](#settings)
-    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
-    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
-    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared](#rqsrs-038diskobjectstoragevfssettingsshared)
-    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference](#rqsrs-038diskobjectstoragevfssettingssharedschemainference)
-    * 4.2.5 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL](#rqsrs-038diskobjectstoragevfssettingssharedttl)
-    * 4.2.6 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3](#rqsrs-038diskobjectstoragevfssettingsshareds3)
-    * 4.2.7 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff](#rqsrs-038diskobjectstoragevfssettingssharedreadbackoff)
-    * 4.2.8 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead](#rqsrs-038diskobjectstoragevfssettingssharedconcurrentread)
-    * 4.2.9 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
-    * 4.2.10 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
-  * 4.3 [System](#system)
-    * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
-    * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
-    * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
-    * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
-    * 4.3.5 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
-    * 4.3.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
-    * 4.3.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
-    * 4.3.8 [RQ.SRS-038.DiskObjectStorageVFS.System.Transactions](#rqsrs-038diskobjectstoragevfssystemtransactions)
-  * 4.4 [Alter](#alter)
-    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
-    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
-    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop](#rqsrs-038diskobjectstoragevfsalterdrop)
-    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach](#rqsrs-038diskobjectstoragevfsalterattach)
-    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom](#rqsrs-038diskobjectstoragevfsalterattachfrom)
-    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace](#rqsrs-038diskobjectstoragevfsalterreplace)
-    * 4.4.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable](#rqsrs-038diskobjectstoragevfsaltermovetotable)
-    * 4.4.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze](#rqsrs-038diskobjectstoragevfsalterfreeze)
-    * 4.4.9 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart](#rqsrs-038diskobjectstoragevfsaltermovepart)
-    * 4.4.10 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
-    * 4.4.11 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
-    * 4.4.12 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
-    * 4.4.13 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
-    * 4.4.14 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
-    * 4.4.15 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
-  * 4.5 [Table](#table)
-    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations](#rqsrs-038diskobjectstoragevfstabletableoperations)
-    * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse](#rqsrs-038diskobjectstoragevfstablebackgroundcollapse)
-    * 4.5.3 [RQ.SRS-038.DiskObjectStorageVFS.Table.Migration](#rqsrs-038diskobjectstoragevfstablemigration)
-    * 4.5.4 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLMove](#rqsrs-038diskobjectstoragevfstablettlmove)
-    * 4.5.5 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLDelete](#rqsrs-038diskobjectstoragevfstablettldelete)
-    * 4.5.6 [RQ.SRS-038.DiskObjectStorageVFS.Table.Detach](#rqsrs-038diskobjectstoragevfstabledetach)
-    * 4.5.7 [RQ.SRS-038.DiskObjectStorageVFS.Table.StoragePolicy](#rqsrs-038diskobjectstoragevfstablestoragepolicy)
-  * 4.6 [Combinatoric](#combinatoric)
-    * 4.6.1 [Supported Table Configurations](#supported-table-configurations)
-    * 4.6.2 [Supported Operations](#supported-operations)
-    * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
-    * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
-  * 4.7 [Performance](#performance)
-    * 4.7.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
-  * 4.8 [Object Storage Providers](#object-storage-providers)
-    * 4.8.1 [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
-    * 4.8.2 [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
-    * 4.8.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
-    * 4.8.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
+  * 4.1 [Disk Object Storage VFS](#disk-object-storage-vfs)
+    * 4.1.1 [RQ.SRS-038.DiskObjectStorageVFS](#rqsrs-038diskobjectstoragevfs)
+  * 4.2 [Replicas](#replicas)
+    * 4.2.1 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Add](#rqsrs-038diskobjectstoragevfsreplicaadd)
+    * 4.2.2 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Remove](#rqsrs-038diskobjectstoragevfsreplicaremove)
+    * 4.2.3 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Offline](#rqsrs-038diskobjectstoragevfsreplicaoffline)
+    * 4.2.4 [RQ.SRS-038.DiskObjectStorageVFS.Replica.Stale](#rqsrs-038diskobjectstoragevfsreplicastale)
+  * 4.3 [Settings](#settings)
+    * 4.3.1 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Disk](#rqsrs-038diskobjectstoragevfssettingsdisk)
+    * 4.3.2 [RQ.SRS-038.DiskObjectStorageVFS.Settings.ZeroCopyIncompatible](#rqsrs-038diskobjectstoragevfssettingszerocopyincompatible)
+    * 4.3.3 [RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload](#rqsrs-038diskobjectstoragevfssettingsreload)
+    * 4.3.4 [RQ.SRS-038.DiskObjectStorageVFS.Settings.VFSToggled](#rqsrs-038diskobjectstoragevfssettingsvfstoggled)
+  * 4.4 [Shared Settings](#shared-settings)
+    * 4.4.1 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.Mutation](#rqsrs-038diskobjectstoragevfssharedsettingsmutation)
+    * 4.4.2 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.SchemaInference](#rqsrs-038diskobjectstoragevfssharedsettingsschemainference)
+    * 4.4.3 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.TTL](#rqsrs-038diskobjectstoragevfssharedsettingsttl)
+    * 4.4.4 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.S3](#rqsrs-038diskobjectstoragevfssharedsettingss3)
+    * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ReadBackoff](#rqsrs-038diskobjectstoragevfssharedsettingsreadbackoff)
+    * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ConcurrentRead](#rqsrs-038diskobjectstoragevfssharedsettingsconcurrentread)
+  * 4.5 [System](#system)
+    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
+    * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
+    * 4.5.3 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption.FaultInjection](#rqsrs-038diskobjectstoragevfssystemconnectioninterruptionfaultinjection)
+    * 4.5.4 [RQ.SRS-038.DiskObjectStorageVFS.System.AddKeeper](#rqsrs-038diskobjectstoragevfssystemaddkeeper)
+    * 4.5.5 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
+    * 4.5.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
+    * 4.5.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
+    * 4.5.8 [RQ.SRS-038.DiskObjectStorageVFS.System.Transactions](#rqsrs-038diskobjectstoragevfssystemtransactions)
+  * 4.6 [Alter](#alter)
+    * 4.6.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
+    * 4.6.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
+    * 4.6.3 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Drop](#rqsrs-038diskobjectstoragevfsalterdrop)
+    * 4.6.4 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Attach](#rqsrs-038diskobjectstoragevfsalterattach)
+    * 4.6.5 [RQ.SRS-038.DiskObjectStorageVFS.Alter.AttachFrom](#rqsrs-038diskobjectstoragevfsalterattachfrom)
+    * 4.6.6 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Replace](#rqsrs-038diskobjectstoragevfsalterreplace)
+    * 4.6.7 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MoveToTable](#rqsrs-038diskobjectstoragevfsaltermovetotable)
+    * 4.6.8 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Freeze](#rqsrs-038diskobjectstoragevfsalterfreeze)
+    * 4.6.9 [RQ.SRS-038.DiskObjectStorageVFS.Alter.MovePart](#rqsrs-038diskobjectstoragevfsaltermovepart)
+    * 4.6.10 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Index](#rqsrs-038diskobjectstoragevfsalterindex)
+    * 4.6.11 [RQ.SRS-038.DiskObjectStorageVFS.Alter.OrderBy](#rqsrs-038diskobjectstoragevfsalterorderby)
+    * 4.6.12 [RQ.SRS-038.DiskObjectStorageVFS.Alter.SampleBy](#rqsrs-038diskobjectstoragevfsaltersampleby)
+    * 4.6.13 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Projections](#rqsrs-038diskobjectstoragevfsalterprojections)
+    * 4.6.14 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Column](#rqsrs-038diskobjectstoragevfsaltercolumn)
+    * 4.6.15 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Update](#rqsrs-038diskobjectstoragevfsalterupdate)
+  * 4.7 [Table](#table)
+    * 4.7.1 [RQ.SRS-038.DiskObjectStorageVFS.Table.TableOperations](#rqsrs-038diskobjectstoragevfstabletableoperations)
+    * 4.7.2 [RQ.SRS-038.DiskObjectStorageVFS.Table.BackgroundCollapse](#rqsrs-038diskobjectstoragevfstablebackgroundcollapse)
+    * 4.7.3 [RQ.SRS-038.DiskObjectStorageVFS.Table.Migration](#rqsrs-038diskobjectstoragevfstablemigration)
+    * 4.7.4 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLMove](#rqsrs-038diskobjectstoragevfstablettlmove)
+    * 4.7.5 [RQ.SRS-038.DiskObjectStorageVFS.Table.TTLDelete](#rqsrs-038diskobjectstoragevfstablettldelete)
+    * 4.7.6 [RQ.SRS-038.DiskObjectStorageVFS.Table.Detach](#rqsrs-038diskobjectstoragevfstabledetach)
+    * 4.7.7 [RQ.SRS-038.DiskObjectStorageVFS.Table.StoragePolicy](#rqsrs-038diskobjectstoragevfstablestoragepolicy)
+  * 4.8 [Combinatoric](#combinatoric)
+    * 4.8.1 [Supported Table Configurations](#supported-table-configurations)
+    * 4.8.2 [Supported Operations](#supported-operations)
+    * 4.8.3 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric](#rqsrs-038diskobjectstoragevfscombinatoric)
+    * 4.8.4 [RQ.SRS-038.DiskObjectStorageVFS.Combinatoric.Insert](#rqsrs-038diskobjectstoragevfscombinatoricinsert)
+  * 4.9 [Performance](#performance)
+    * 4.9.1 [RQ.SRS-038.DiskObjectStorageVFS.Performance](#rqsrs-038diskobjectstoragevfsperformance)
+  * 4.10 [Object Storage Providers](#object-storage-providers)
+    * 4.10.1 [RQ.SRS-038.DiskObjectStorageVFS.Providers.Configuration](#rqsrs-038diskobjectstoragevfsprovidersconfiguration)
+    * 4.10.2 [RQ.SRS-038.DiskObjectStorageVFS.Providers.AWS](#rqsrs-038diskobjectstoragevfsprovidersaws)
+    * 4.10.3 [RQ.SRS-038.DiskObjectStorageVFS.Providers.MinIO](#rqsrs-038diskobjectstoragevfsprovidersminio)
+    * 4.10.4 [RQ.SRS-038.DiskObjectStorageVFS.Providers.GCS](#rqsrs-038diskobjectstoragevfsprovidersgcs)
 * 5 [References](#references)
 
 ## Revision History
@@ -1352,17 +1358,15 @@ This is only available in versions 23.12 and later.
 
 ## Requirements
 
-[ClickHouse] SHALL use DiskObjectStorageVFS when the `allow_vfs`
-parameter is set to 1. This is only available in versions 23.12 and later.
+### Disk Object Storage VFS
 
-### Replicas
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Replica
+#### RQ.SRS-038.DiskObjectStorageVFS
 version: 1.0
 
-[ClickHouse] SHALL support VFS such that data is not
-duplicated in [S3] storage during any operations on replicated tables (ALTER,
-SELECT, INSERT, etc...).
+[ClickHouse] SHALL support `DiskObjectStorageVFS` storage disk.
+The `DiskObjectStorageVFS` SHALL not duplicate data in [S3] storage during any operations on replicated tables.
+
+### Replicas
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Replica.Add
 version: 1.0
@@ -1417,69 +1421,6 @@ version: 1.0
 [ClickHouse] SHALL return an error if both `<allow_s3_zero_copy_replication>`
 and `<allow_vfs>` are enabled at the same time.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared
-version: 0.0
-
-[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
-
-| Setting                                                   | Component | Description                                                                                         |
-| --------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |
-| remote_fs_execute_merges_on_single_replica_time_threshold | MergeTree | Start merges on only one replica when >0 and 'merged part on shared storage'                        |
-| zero_copy_concurrent_part_removal_max_split_times         | MergeTree | Not recommended to change                                                                           |
-| zero_copy_concurrent_part_removal_max_postpone_ratio      | MergeTree | Not recommended to change                                                                           |
-| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | MergeTree | Sleep a random amount of time before trying to lock when merging or mutating a part above this size |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.SchemaInference
-version: 1.0
-
-[ClickHouse] SHALL respect the following schema inference settings when`<allow_vfs>` is enabled.
-
-| Setting                           | Component | Description                                         |
-| --------------------------------- | --------- | --------------------------------------------------- |
-| schema_inference_use_cache_for_s3 | Core      | Use cache for schema inference in s3 table function |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.TTL
-version: 1.0
-
-[ClickHouse] SHALL respect the following TTL settings when`<allow_vfs>` is enabled.
-
-| Setting                    | Component        | Description                                |
-| -------------------------- | ---------------- | ------------------------------------------ |
-| perform_ttl_move_on_insert | storage_policies | Move expired parts immediately upon insert |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.S3
-version: 1.0
-
-[ClickHouse] SHALL respect the following S3 settings when`<allow_vfs>` is enabled.
-
-| Setting                        | Component | Description                                                   |
-| ------------------------------ | --------- | ------------------------------------------------------------- |
-| s3_truncate_on_insert          | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |
-| s3_create_new_file_on_insert   | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |
-| s3_skip_empty_files            | Core      | If 1, return empty result instead of exception for empty file |
-| s3_max_single_part_upload_size | Core      | Max size of singlepart upload                                 |
-
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff
-version: 1.0
-
-[ClickHouse] SHALL respect the following backoff settings when`<allow_vfs>` is enabled.
-
-| Setting                          | Component             | Description                                        |
-| -------------------------------- | --------------------- | -------------------------------------------------- |
-| remote_fs_read_backoff_threshold | storage_configuration | Max wait time reading from remote disk             |
-| remote_fs_read_backoff_max_tries | storage_configuration | Max attempts with backoff reading from remote disk |
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ConcurrentRead
-version: 1.0
-
-[ClickHouse] SHALL respect the following concurrent read settings when`<allow_vfs>` is enabled.
-
-| Setting                                                        | Component | Description                                       |
-| -------------------------------------------------------------- | --------- | ------------------------------------------------- |
-| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core      | Read concurrently if reading more rows than this  |
-| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core      | Read concurrently if reading more bytes than this |
-
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Reload
 version: 0.0
 
@@ -1491,6 +1432,72 @@ version: 1.0
 When the value of the `<allow_vfs>` parameter is changed
 from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,
 [ClickHouse] SHALL ensure that data is still accessible.
+
+### Shared Settings
+
+[ClickHouse] `Disk Object Storage VFS` shares some settings with other components.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.Mutation
+version: 0.0
+
+[ClickHouse] SHALL respect the following settings when`<allow_vfs>` is enabled.
+
+| Setting                                                   | Component | Description                                                                                         |
+| --------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |
+| remote_fs_execute_merges_on_single_replica_time_threshold | MergeTree | Start merges on only one replica when >0 and 'merged part on shared storage'                        |
+| zero_copy_concurrent_part_removal_max_split_times         | MergeTree | Not recommended to change                                                                           |
+| zero_copy_concurrent_part_removal_max_postpone_ratio      | MergeTree | Not recommended to change                                                                           |
+| zero_copy_merge_mutation_min_parts_size_sleep_before_lock | MergeTree | Sleep a random amount of time before trying to lock when merging or mutating a part above this size |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.SchemaInference
+version: 1.0
+
+[ClickHouse] SHALL respect the following schema inference settings when`<allow_vfs>` is enabled.
+
+| Setting                           | Component | Description                                         |
+| --------------------------------- | --------- | --------------------------------------------------- |
+| schema_inference_use_cache_for_s3 | Core      | Use cache for schema inference in s3 table function |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.TTL
+version: 1.0
+
+[ClickHouse] SHALL respect the following TTL settings when`<allow_vfs>` is enabled.
+
+| Setting                    | Component        | Description                                |
+| -------------------------- | ---------------- | ------------------------------------------ |
+| perform_ttl_move_on_insert | storage_policies | Move expired parts immediately upon insert |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.S3
+version: 1.0
+
+[ClickHouse] SHALL respect the following S3 settings when`<allow_vfs>` is enabled.
+
+| Setting                        | Component | Description                                                   |
+| ------------------------------ | --------- | ------------------------------------------------------------- |
+| s3_truncate_on_insert          | Core      | 0 = append to file, 1 = replace file, when inserting to s3    |
+| s3_create_new_file_on_insert   | Core      | 0 = append to file, 1 = create new file, when inserting to s3 |
+| s3_skip_empty_files            | Core      | If 1, return empty result instead of exception for empty file |
+| s3_max_single_part_upload_size | Core      | Max size of singlepart upload                                 |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ReadBackoff
+version: 1.0
+
+[ClickHouse] SHALL respect the following backoff settings when`<allow_vfs>` is enabled.
+
+| Setting                          | Component             | Description                                        |
+| -------------------------------- | --------------------- | -------------------------------------------------- |
+| remote_fs_read_backoff_threshold | storage_configuration | Max wait time reading from remote disk             |
+| remote_fs_read_backoff_max_tries | storage_configuration | Max attempts with backoff reading from remote disk |
+
+#### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ConcurrentRead
+version: 1.0
+
+[ClickHouse] SHALL respect the following concurrent read settings when`<allow_vfs>` is enabled.
+
+| Setting                                                        | Component | Description                                       |
+| -------------------------------------------------------------- | --------- | ------------------------------------------------- |
+| merge_tree_min_rows_for_concurrent_read_for_remote_filesystem  | Core      | Read concurrently if reading more rows than this  |
+| merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem | Core      | Read concurrently if reading more bytes than this |
 
 ### System
 
