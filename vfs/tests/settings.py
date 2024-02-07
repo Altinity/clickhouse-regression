@@ -86,7 +86,7 @@ def create_insert_measure_replicated_table(self, storage_policy="external"):
 @TestScenario
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_TTL("1.0"),
 )
 def disk_setting(self):
     """
@@ -197,7 +197,7 @@ def enable_vfs_with_non_vfs_table(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_SchemaInference("1.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_SchemaInference("1.0"))
 @Examples(
     "settings",
     [["schema_inference_use_cache_for_s3=1"], ["schema_inference_use_cache_for_s3=0"]],
@@ -318,10 +318,10 @@ def combinations_all_lengths(items):
 
 @TestSketch(Scenario)
 @Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared("0.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_S3("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ReadBackoff("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_Mutation("0.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_S3("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead("1.0"),
 )
 def combination(self):
     """Perform concurrent inserts and selects with a combination of settings."""
@@ -329,6 +329,8 @@ def combination(self):
     table_setting = either(
         None,
         "remote_fs_execute_merges_on_single_replica_time_threshold=0",
+        "zero_copy_concurrent_part_removal_max_split_times=2"
+        "zero_copy_concurrent_part_removal_max_postpone_ratio=0.1"
         "zero_copy_merge_mutation_min_parts_size_sleep_before_lock=0",
     )
 
