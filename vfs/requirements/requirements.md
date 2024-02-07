@@ -203,7 +203,6 @@ version: 1.0
 | s3_skip_empty_files            | Core      | If 1, return empty result instead of exception for empty file |
 | s3_max_single_part_upload_size | Core      | Max size of singlepart upload                                 |
 
-
 #### RQ.SRS-038.DiskObjectStorageVFS.Settings.Shared.ReadBackoff
 version: 1.0
 
