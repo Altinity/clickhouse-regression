@@ -17,6 +17,7 @@ COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
 
 @TestStep(Given)
 def s3_config(self):
+    """Set up disks and policies for vfs tests."""
     with Given("I have two S3 disks configured"):
         disks = {
             "external": {
@@ -67,6 +68,7 @@ def s3_config(self):
 def check_vfs_state(
     self, node=None, enabled: bool = True, config_file="enable_vfs.xml"
 ):
+    """DEPRECATED assert that vfs is enabled on at least one or on no disks."""
     if node is None:
         node = current().context.node
 
@@ -81,6 +83,7 @@ def check_vfs_state(
 
 @TestStep(Then)
 def assert_row_count(self, node, table_name: str, rows: int = 1000000):
+    """Assert that the number of rows in a table is as expected."""
     if node is None:
         node = current().context.node
     r = node.query(
@@ -106,6 +109,7 @@ def replicated_table_cluster(
     allow_zero_copy: bool = None,
     exitcode: int = 0,
 ):
+    """Create a replicated table with the ON CLUSTER clause."""
     node = current().context.node
 
     if table_name is None:
@@ -175,6 +179,7 @@ def insert_random(
     no_checks=False,
     settings=None,
 ):
+    """Insert random data to a table."""
     if columns is None:
         columns = DEFAULT_COLUMNS
 
@@ -225,6 +230,7 @@ def create_one_replica(
 
 @TestStep(Given)
 def delete_one_replica(self, node, table_name):
+    """Delete the local copy of a replicated table."""
     r = node.query(f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0)
     return r
 
@@ -239,6 +245,7 @@ def storage_config(
     timeout=30,
     config_file="storage_config.xml",
 ):
+    """Create disk and storage policy config."""
     if disks is None:
         disks = {}
     if policies is None:
@@ -306,6 +313,8 @@ def get_stable_bucket_size(
     key_id,
     delay=10,
 ):
+    """Get the size of an s3 bucket, waiting until the size hasn't change for [delay] seconds."""
+
     with By("Checking the current bucket size"):
         size_previous = get_bucket_size(
             name=name,
@@ -343,12 +352,14 @@ def check_stable_bucket_size(
     minio_enabled=False,
     delay=10,
 ):
+    """Assert the size of an s3 bucket, waiting until the size hasn't change for [delay] seconds."""
+
     current_size = get_stable_bucket_size(
         name=name,
         prefix=prefix,
         minio_enabled=minio_enabled,
         access_key=self.context.secret_access_key,
         key_id=self.context.access_key_id,
-        delay=10,
+        delay=delay,
     )
     assert abs(current_size - expected_size) <= tolerance, error()
