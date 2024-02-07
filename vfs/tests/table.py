@@ -78,14 +78,17 @@ def bad_detached_part(self):
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
-# RQ_SRS_038_DiskObjectStorageVFS_Integrity_ConnectionInterruption
-# RQ_SRS_038_DiskObjectStorageVFS_Table_StoragePolicy
-# RQ_SRS_038_DiskObjectStorageVFS_Table_BackgroundCollapse,
+"""
+RQ_SRS_038_DiskObjectStorageVFS_Table_BackgroundCollapse
+RQ_SRS_038_DiskObjectStorageVFS_Table_StoragePolicy
+"""
 
 
 @TestFeature
 @Name("table")
 def feature(self):
+    """Test basic table functionality."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 
