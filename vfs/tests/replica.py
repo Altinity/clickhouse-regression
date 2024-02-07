@@ -556,6 +556,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
                         )
                         node.restart()
 
+
 @TestScenario
 def command_combinations(self, parallel=True):
     """
@@ -576,6 +577,8 @@ def command_combinations(self, parallel=True):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
 @Name("replica")
 def feature(self):
+    """Test that replicas can be added and removed without errors or duplicate data."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 
