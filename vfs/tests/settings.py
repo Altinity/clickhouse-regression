@@ -10,10 +10,7 @@ from vfs.tests.stress_alter import optimize, check_consistency
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_TTL("1.0"),
-)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible("1.0"))
 def incompatible_with_zero_copy(self):
     """
     Check that using zero copy replication when vfs is enabled is not allowed.
@@ -199,6 +196,103 @@ def enable_vfs_with_non_vfs_table(self):
         assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
 
 
+@TestOutline(Scenario)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_SchemaInference("1.0"))
+@Examples(
+    "settings",
+    [["schema_inference_use_cache_for_s3=1"], ["schema_inference_use_cache_for_s3=0"]],
+)
+def table_function(self, settings):
+    """Check that S3 storage works correctly for both imports and exports
+    when accessed using a table function and sharing a uri with a vfs disk.
+    """
+    name_table1 = "table_" + getuid()
+    name_table2 = "table_" + getuid()
+    access_key_id = self.context.access_key_id
+    secret_access_key = self.context.secret_access_key
+    uri = self.context.uri + "vfs/"
+    node = current().context.node
+    expected = "427"
+
+    try:
+        with Given("I create a table"):
+            node.query(
+                f"""
+                CREATE TABLE {name_table1} (
+                    d UInt64
+                ) ENGINE = MergeTree()
+                ORDER BY d"""
+            )
+
+        with And("I create a second table for comparison"):
+            node.query(
+                f"""
+                CREATE TABLE {name_table2} (
+                    d UInt64
+                ) ENGINE = MergeTree()
+                ORDER BY d"""
+            )
+
+        with And(f"I store simple data in the first table {name_table1}"):
+            node.query(f"INSERT INTO {name_table1} VALUES (427)")
+
+        with When(f"I export the data to S3 using the table function"):
+            node.query(
+                f"""
+                INSERT INTO FUNCTION
+                s3('{uri}syntax.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
+                SELECT * FROM {name_table1}  SETTINGS s3_truncate_on_insert=1"""
+            )
+
+        with And(f"I import the data from S3 into the second table {name_table2}"):
+            node.query(
+                f"""
+                INSERT INTO {name_table2} SELECT * FROM
+                s3('{uri}syntax.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64') 
+                SETTINGS {settings}"""
+            )
+
+        with Then(
+            f"""I check that a simple SELECT * query on the second table
+                   {name_table2} returns matching data"""
+        ):
+            r = node.query(
+                f"SELECT * FROM {name_table2} FORMAT CSV"
+            ).output.strip()
+            assert r == expected, error()
+
+    finally:
+        with Finally("I overwrite the S3 data with empty data"):
+            with By(f"I drop the first table {name_table1}"):
+                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+
+            with And(f"I create the table again {name_table1}"):
+                node.query(
+                    f"""
+                    CREATE TABLE {name_table1} (
+                        d UInt64
+                    ) ENGINE = MergeTree()
+                    ORDER BY d"""
+                )
+
+            with And(
+                f"""I export the empty table {name_table1} to S3 at the
+                      location where I want to overwrite data"""
+            ):
+                node.query(
+                    f"""
+                        INSERT INTO FUNCTION
+                        s3('{uri}syntax.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
+                        SELECT * FROM {name_table1} SETTINGS s3_truncate_on_insert=1"""
+                )
+
+        with Finally(f"I drop the first table {name_table1}"):
+            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+
+        with And(f"I drop the second table {name_table2}"):
+            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+
+
 @TestStep
 @Retry(timeout=10, delay=1)
 def insert(self, table_name, settings):
@@ -230,7 +324,7 @@ def combinations_all_lengths(items):
     RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead("1.0"),
 )
 def combination(self):
-    """Perform concurrent inserts and selects with a combination of settings"""
+    """Perform concurrent inserts and selects with a combination of settings."""
 
     table_setting = either(
         None,
@@ -248,7 +342,7 @@ def combination(self):
         "s3_truncate_on_insert=1",
         "s3_create_new_file_on_insert=1",
         "s3_skip_empty_files=1",
-        f"s3_max_single_part_upload_size={int(32*1024)}",
+        f"s3_max_single_part_upload_size={int(64*1024)}",
     ]
 
     insert_setting = either(
