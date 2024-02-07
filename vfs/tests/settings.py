@@ -3,6 +3,7 @@ import random
 from itertools import combinations, chain
 
 from testflows.core import *
+from testflows.combinatorics import CoveringArray
 
 from vfs.tests.steps import *
 from vfs.requirements import *
@@ -31,6 +32,8 @@ def incompatible_with_zero_copy(self):
 
 @TestStep(When)
 def create_insert_measure_replicated_table(self, storage_policy="external"):
+    """Create a table, insert to it, and return the change in s3 size."""
+
     nodes = self.context.ch_nodes
     n_rows = 100_000
     columns = "d UInt64, m UInt64"
@@ -84,10 +87,7 @@ def create_insert_measure_replicated_table(self, storage_policy="external"):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_TTL("1.0"),
-)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"))
 def disk_setting(self):
     """
     Check that allow_vfs can be enabled per disk.
@@ -256,9 +256,7 @@ def table_function(self, settings):
             f"""I check that a simple SELECT * query on the second table
                    {name_table2} returns matching data"""
         ):
-            r = node.query(
-                f"SELECT * FROM {name_table2} FORMAT CSV"
-            ).output.strip()
+            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
             assert r == expected, error()
 
     finally:
@@ -296,6 +294,7 @@ def table_function(self, settings):
 @TestStep
 @Retry(timeout=10, delay=1)
 def insert(self, table_name, settings):
+    """Insert random data to a table."""
     node = random.choice(self.context.ch_nodes)
     with By(f"inserting rows to {table_name} on {node.name} with settings {settings}"):
         insert_random(node=node, table_name=table_name, settings=settings, rows=5000000)
@@ -304,6 +303,7 @@ def insert(self, table_name, settings):
 @TestStep
 @Retry(timeout=10, delay=1)
 def select(self, table_name, settings=None):
+    """Perform select queries on a random node."""
     node = random.choice(self.context.ch_nodes)
     if settings:
         settings = "SETTINGS " + settings
@@ -313,103 +313,115 @@ def select(self, table_name, settings=None):
 
 
 def combinations_all_lengths(items):
+    """Get combinations for all possible combination sizes."""
     return chain(*[combinations(items, i + 1) for i in range(len(items))])
 
 
-@TestSketch(Scenario)
+@TestOutline(Combination)
+def check_setting_combination(
+    self, table_setting, select_setting, insert_setting, storage_setting
+):
+    """Perform concurrent inserts and selects with a combination of settings."""
+
+    if storage_setting is not None:
+        with Given(f"storage with settings {storage_setting}"):
+            storage_setting = storage_setting.split("=")
+            disks = {
+                "external": {
+                    storage_setting[0]: storage_setting[1],
+                }
+            }
+            storage_config(disks=disks, restart=False)
+
+    with Given("a replicated table"):
+        _, table_name = replicated_table_cluster(
+            storage_policy="external_vfs",
+            exitcode=0,
+            settings=table_setting,
+        )
+
+    with And("some inserted data"):
+        insert(table_name=table_name, settings=insert_setting)
+
+    When(
+        f"I INSERT in parallel",
+        test=insert,
+        parallel=True,
+        flags=TE,
+    )(table_name=table_name, settings=insert_setting)
+    When(
+        f"I SELECT in parallel",
+        test=select,
+        parallel=True,
+        flags=TE,
+    )(table_name=table_name, settings=select_setting)
+    When(
+        f"I OPTIMIZE {table_name}",
+        test=optimize,
+        parallel=True,
+        flags=TE,
+    )(table_name=table_name)
+
+    join()
+
+    with Then("I check that the replicas are consistent", flags=TE):
+        check_consistency(tables=[table_name])
+
+
+@TestScenario
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_Mutation("0.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_S3("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead("1.0"),
 )
-def combination(self):
-    """Perform concurrent inserts and selects with a combination of settings."""
+def setting_combos(self):
+    """Perform concurrent inserts and selects with various settings."""
+    settings = {
+        "table_setting": (
+            None,
+            "remote_fs_execute_merges_on_single_replica_time_threshold=0",
+            "zero_copy_concurrent_part_removal_max_split_times=2",
+            "zero_copy_concurrent_part_removal_max_postpone_ratio=0.1",
+            "zero_copy_merge_mutation_min_parts_size_sleep_before_lock=0",
+        ),
+        "select_setting": (
+            None,
+            "merge_tree_min_rows_for_concurrent_read_for_remote_filesystem=0",
+            "merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem=0",
+        ),
+        "insert_setting": (
+            None,
+            *[
+                ",".join(c)
+                for c in combinations_all_lengths(
+                    [
+                        "s3_truncate_on_insert=1",
+                        "s3_create_new_file_on_insert=1",
+                        "s3_skip_empty_files=1",
+                        f"s3_max_single_part_upload_size={int(64*1024)}",
+                    ]
+                )
+            ],
+        ),
+        "storage_setting": (
+            None,
+            "remote_fs_read_backoff_threshold=0",
+            "remote_fs_read_backoff_max_tries=0",
+        ),
+    }
 
-    table_setting = either(
-        None,
-        "remote_fs_execute_merges_on_single_replica_time_threshold=0",
-        "zero_copy_concurrent_part_removal_max_split_times=2"
-        "zero_copy_concurrent_part_removal_max_postpone_ratio=0.1"
-        "zero_copy_merge_mutation_min_parts_size_sleep_before_lock=0",
-    )
-
-    select_setting = either(
-        None,
-        "merge_tree_min_rows_for_concurrent_read_for_remote_filesystem=0",
-        "merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem=0",
-    )
-
-    insert_setting_choices = [
-        "s3_truncate_on_insert=1",
-        "s3_create_new_file_on_insert=1",
-        "s3_skip_empty_files=1",
-        f"s3_max_single_part_upload_size={int(64*1024)}",
-    ]
-
-    insert_setting = either(
-        None,
-        *[",".join(c) for c in combinations_all_lengths(insert_setting_choices)],
-    )
-
-    storage_setting = either(
-        None,
-        "remote_fs_read_backoff_threshold=0",
-        "remote_fs_read_backoff_max_tries=0",
-    )
-
-    with Check(
-        f"Settings: table:{table_setting}, insert:{insert_setting}, select:{select_setting}, disk:{storage_setting}"
-    ):
-        if storage_setting is not None:
-            with Given(f"storage with settings {storage_setting}"):
-                storage_setting = storage_setting.split("=")
-                disks = {
-                    "external": {
-                        storage_setting[0]: storage_setting[1],
-                    }
-                }
-                storage_config(disks=disks, restart=True)
-
-        with Given("a replicated table"):
-            _, table_name = replicated_table_cluster(
-                storage_policy="external_vfs",
-                exitcode=0,
-                settings=table_setting,
-            )
-
-        with And("some inserted data"):
-            insert(table_name=table_name, settings=insert_setting)
-
-        When(
-            f"I INSERT in parallel",
-            test=insert,
-            parallel=True,
-            flags=TE,
-        )(table_name=table_name, settings=insert_setting)
-        When(
-            f"I SELECT in parallel",
-            test=select,
-            parallel=True,
-            flags=TE,
-        )(table_name=table_name, settings=select_setting)
-        When(
-            f"I OPTIMIZE {table_name}",
-            test=optimize,
-            parallel=True,
-            flags=TE,
-        )(table_name=table_name)
-
-        join()
-
-        with Then("I check that the replicas are consistent", flags=TE):
-            check_consistency(tables=[table_name])
+    covering_array_strength = len(settings) if self.context.stress else 2
+    for config in CoveringArray(settings, strength=covering_array_strength):
+        title = ",".join([f"{k}={v}" for k, v in config.items()])
+        Combination(title, test=check_setting_combination)(**config)
 
 
 @TestFeature
 @Name("settings")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration("1.0"))
 def feature(self):
+    """Test interactions between VFS and other settings."""
     with Given("I have S3 disks configured"):
         s3_config()
 
