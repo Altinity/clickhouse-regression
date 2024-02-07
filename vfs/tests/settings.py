@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+import random
+from itertools import combinations, chain
+
 from testflows.core import *
 
 from vfs.tests.steps import *
 from vfs.requirements import *
+from vfs.tests.stress_alter import optimize, check_consistency
 
 
 @TestScenario
@@ -195,7 +199,115 @@ def enable_vfs_with_non_vfs_table(self):
         assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
 
 
-# RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared
+@TestStep
+@Retry(timeout=10, delay=1)
+def insert(self, table_name, settings):
+    node = random.choice(self.context.ch_nodes)
+    with By(f"inserting rows to {table_name} on {node.name} with settings {settings}"):
+        insert_random(node=node, table_name=table_name, settings=settings, rows=5000000)
+
+
+@TestStep
+@Retry(timeout=10, delay=1)
+def select(self, table_name, settings=None):
+    node = random.choice(self.context.ch_nodes)
+    if settings:
+        settings = "SETTINGS " + settings
+    for _ in range(random.randint(3, 10)):
+        with By(f"count rows in {table_name} on {node.name}"):
+            node.query(f"SELECT count() FROM {table_name} {settings}")
+
+
+def combinations_all_lengths(items):
+    return chain(*[combinations(items, i + 1) for i in range(len(items))])
+
+
+@TestSketch(Scenario)
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared("0.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_S3("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ReadBackoff("1.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Settings_Shared_ConcurrentRead("1.0"),
+)
+def combination(self):
+    """Perform concurrent inserts and selects with a combination of settings"""
+
+    table_setting = either(
+        None,
+        "remote_fs_execute_merges_on_single_replica_time_threshold=0",
+        "zero_copy_merge_mutation_min_parts_size_sleep_before_lock=0",
+    )
+
+    select_setting = either(
+        None,
+        "merge_tree_min_rows_for_concurrent_read_for_remote_filesystem=0",
+        "merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem=0",
+    )
+
+    insert_setting_choices = [
+        "s3_truncate_on_insert=1",
+        "s3_create_new_file_on_insert=1",
+        "s3_skip_empty_files=1",
+        f"s3_max_single_part_upload_size={int(32*1024)}",
+    ]
+
+    insert_setting = either(
+        None,
+        *[",".join(c) for c in combinations_all_lengths(insert_setting_choices)],
+    )
+
+    storage_setting = either(
+        None,
+        "remote_fs_read_backoff_threshold=0",
+        "remote_fs_read_backoff_max_tries=0",
+    )
+
+    with Check(
+        f"Settings: table:{table_setting}, insert:{insert_setting}, select:{select_setting}, disk:{storage_setting}"
+    ):
+        if storage_setting is not None:
+            with Given(f"storage with settings {storage_setting}"):
+                storage_setting = storage_setting.split("=")
+                disks = {
+                    "external": {
+                        storage_setting[0]: storage_setting[1],
+                    }
+                }
+                storage_config(disks=disks, restart=True)
+
+        with Given("a replicated table"):
+            _, table_name = replicated_table_cluster(
+                storage_policy="external_vfs",
+                exitcode=0,
+                settings=table_setting,
+            )
+
+        with And("some inserted data"):
+            insert(table_name=table_name, settings=insert_setting)
+
+        When(
+            f"I INSERT in parallel",
+            test=insert,
+            parallel=True,
+            flags=TE,
+        )(table_name=table_name, settings=insert_setting)
+        When(
+            f"I SELECT in parallel",
+            test=select,
+            parallel=True,
+            flags=TE,
+        )(table_name=table_name, settings=select_setting)
+        When(
+            f"I OPTIMIZE {table_name}",
+            test=optimize,
+            parallel=True,
+            flags=TE,
+        )(table_name=table_name)
+
+        join()
+
+        with Then("I check that the replicas are consistent", flags=TE):
+            check_consistency(tables=[table_name])
 
 
 @TestFeature
