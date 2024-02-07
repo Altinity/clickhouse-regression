@@ -15,6 +15,7 @@ from vfs.requirements import *
 @TestStep
 @Retry(timeout=10, delay=1)
 def optimize(self, node=None, table_name=None):
+    """Apply OPTIMIZE on the given table and node, choosing at random if not specified."""
     if node is None:
         node = random.choice(self.context.ch_nodes)
     if table_name is None:
@@ -27,6 +28,7 @@ def optimize(self, node=None, table_name=None):
 @TestStep
 @Retry(timeout=10, delay=1)
 def insert(self):
+    """Insert random data to a random table."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     columns = get_column_string(node=node, table_name=table_name)
@@ -37,6 +39,7 @@ def insert(self):
 @TestStep
 @Retry(timeout=10, delay=1)
 def select(self):
+    """Perform select queries on a random node."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     for _ in range(random.randint(1, 10)):
@@ -46,18 +49,21 @@ def select(self):
 
 @TestStep
 def get_column_string(self, node, table_name) -> str:
+    """Get a string with column names and types."""
     r = node.query(f"DESCRIBE TABLE {table_name}")
     return ",".join([l.strip() for l in r.output.splitlines()])
 
 
 @TestStep
 def get_column_names(self, node, table_name) -> list:
+    """Get a list of a table's column names."""
     r = node.query(f"DESCRIBE TABLE {table_name} FORMAT JSONColumns")
     return json.loads(r.output)["name"]
 
 
 @TestStep
 def get_random_column_name(self, node, table_name):
+    """Choose a column name at random."""
     columns_no_primary_key = get_column_names(node=node, table_name=table_name)[1:]
     return random.choice(columns_no_primary_key)
 
@@ -66,6 +72,7 @@ def get_random_column_name(self, node, table_name):
 @Retry(timeout=10, delay=1)
 @Name("add column")
 def add_random_column(self):
+    """Add a column with a random name."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     By(
@@ -84,21 +91,21 @@ def add_random_column(self):
 @Retry(timeout=10, delay=1)
 @Name("delete column")
 def delete_random_column(self):
+    """Delete a random column."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     column_name = get_random_column_name(node=node, table_name=table_name)
     By(
         name=f"delete column from {table_name} with {node.name}",
         test=alter_table_drop_column,
-    )(
-        node=node, table_name=table_name, column_name=column_name, no_checks=True
-    )
+    )(node=node, table_name=table_name, column_name=column_name, no_checks=True)
 
 
 @TestStep
 @Retry(timeout=10, delay=1)
 @Name("rename column")
 def rename_random_column(self):
+    """Rename a random column to a random value."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     column_name = get_random_column_name(node=node, table_name=table_name)
@@ -119,6 +126,7 @@ def rename_random_column(self):
 @Retry(timeout=10, delay=1)
 @Name("update column")
 def update_random_column(self):
+    """Replace some values on a random column."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     column_name = get_random_column_name(node=node, table_name=table_name)
@@ -139,6 +147,7 @@ def update_random_column(self):
 @Retry(timeout=10, delay=1)
 @Name("clear column")
 def clear_random_column(self):
+    """Clear a random column on a random partition."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     column_name = get_random_column_name(node=node, table_name=table_name)
@@ -158,6 +167,7 @@ def clear_random_column(self):
 @Retry(timeout=10, delay=1)
 @Name("delete row")
 def delete_random_rows(self):
+    """Delete rows a few rows at random."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     column_name = get_random_column_name(node=node, table_name=table_name)
@@ -175,6 +185,7 @@ def delete_random_rows(self):
 @TestStep(When)
 @Retry(timeout=30, delay=1)
 def get_row_count(self, node, table_name):
+    """Get the number of rows in the given table."""
     r = node.query(
         f"SELECT count() FROM {table_name} FORMAT JSON",
         exitcode=0,
@@ -184,6 +195,7 @@ def get_row_count(self, node, table_name):
 
 @TestStep(Then)
 def check_consistency(self, tables=None):
+    """Check that the given tables hold the same amount of data on all nodes where they exist."""
     nodes = self.context.ch_nodes
     if tables is None:
         tables = self.context.table_names
@@ -257,7 +269,7 @@ def parallel_alters(self, storage_policy="external_vfs"):
                     f"I {action.name}",
                     run=action,
                     parallel=True,
-                    flags=TE|ERROR_NOT_COUNTED,#|FAIL_NOT_COUNTED,
+                    flags=TE | ERROR_NOT_COUNTED,  # |FAIL_NOT_COUNTED,
                 )
 
             for table in self.context.table_names:
@@ -280,6 +292,8 @@ def parallel_alters(self, storage_policy="external_vfs"):
 @TestFeature
 @Name("stress alter")
 def feature(self):
+    """Stress test with many alters."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 

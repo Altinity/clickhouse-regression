@@ -22,7 +22,7 @@ from vfs.requirements import *
 )
 def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
     """
-    Check that performing tens of millions of individual inserts does not cause data to be lost
+    Check that performing tens of millions of individual inserts does not cause data to be lost.
     """
     nodes = self.context.ch_nodes[:2]
     max_inserts = int(max_inserts)
@@ -88,6 +88,7 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
 @TestFeature
 @Name("stress insert")
 def feature(self):
+    """Stress test with many inserts."""
     with Given("I have S3 disks configured"):
         s3_config()
 
