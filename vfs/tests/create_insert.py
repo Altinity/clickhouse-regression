@@ -145,7 +145,7 @@ def check_table_combination(
 @Name("create insert")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
 def feature(self):
-    covering_array_strength = len(table_configurations)
+    covering_array_strength = len(table_configurations) if self.context.stress else 2
 
     with Given("I have S3 disks configured"):
         s3_config()
