@@ -31,6 +31,7 @@ def parallel_operations(self, table_name, operations):
 
 @TestStep(When)
 def get_row_count(self, node, table_name):
+    """Get the number of rows in a given table."""
     r = node.query(
         f"SELECT count() FROM {table_name} FORMAT JSON",
         exitcode=0,
@@ -40,6 +41,8 @@ def get_row_count(self, node, table_name):
 
 @TestStep(Then)
 def check_consistency(self, nodes, table_name):
+    """Check that tables that exist on multiple nodes are consistent."""
+
     with When("I check which nodes have the table"):
         active_nodes = [n for n in nodes if table_name in n.query("SHOW TABLES").output]
         if not active_nodes:
@@ -141,16 +144,19 @@ def operate_multiple_parallel(
 
 @TestStep(When)
 def rm_replica(self, node, table_name):
+    """Remove the replica of a table on the given node."""
     delete_one_replica(node=node, table_name=table_name)
 
 
 @TestStep(When)
 def optimize(self, node, table_name):
+    """OPTIMIZE TABLE with no checks."""
     node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
 
 
 @TestStep(When)
 def select(self, node, table_name):
+    """SELECT count() with no checks."""
     r = node.query(f"SELECT count() FROM {table_name}", no_checks=True)
 
 
@@ -235,6 +241,8 @@ def add_remove_commands(self, parallel=True):
 @TestFeature
 @Name("parallel replica")
 def feature(self):
+    """Test operating on multiple replicated tables in parallel."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 

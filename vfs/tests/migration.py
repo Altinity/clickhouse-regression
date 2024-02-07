@@ -10,6 +10,8 @@ from vfs.requirements import *
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Table_Migration("1.0"))
 @Examples("source destination", permutations(["replicated", "zero-copy", "vfs"], 2))
 def migration(self, source, destination):
+    """Test migrating tables between disks with and without vfs."""
+
     node = self.context.node
 
     with Given("I have a replicated table"):
@@ -53,6 +55,8 @@ def migration(self, source, destination):
 @TestFeature
 @Name("migration")
 def feature(self):
+    """Test migrating tables between disks with and without vfs."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 
