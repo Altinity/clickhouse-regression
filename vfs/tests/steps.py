@@ -196,7 +196,7 @@ def create_one_replica(
     node,
     table_name,
     columns="d UInt64",
-    order_by='d',
+    order_by="d",
     replica_path_suffix=None,
     replica_name="{replica}",
     no_checks=False,
@@ -230,7 +230,20 @@ def delete_one_replica(self, node, table_name):
 
 
 @TestStep(Given)
-def storage_config(self, disks, policies, nodes=None, restart=False, timeout=30, config_file="storage_config.xml"):
+def storage_config(
+    self,
+    disks=None,
+    policies=None,
+    nodes=None,
+    restart=False,
+    timeout=30,
+    config_file="storage_config.xml",
+):
+    if disks is None:
+        disks = {}
+    if policies is None:
+        policies = {}
+
     with s3_storage(
         disks,
         policies,
@@ -240,6 +253,7 @@ def storage_config(self, disks, policies, nodes=None, restart=False, timeout=30,
         config_file=config_file,
     ):
         yield
+
 
 @TestStep(Given)
 def enable_vfs(

@@ -183,9 +183,11 @@ def get_row_count(self, node, table_name):
 
 
 @TestStep(Then)
-def check_consistency(self):
+def check_consistency(self, tables=None):
     nodes = self.context.ch_nodes
-    for table_name in self.context.table_names:
+    if tables is None:
+        tables = self.context.table_names
+    for table_name in tables:
         for attempt in retries(timeout=180, delay=2):
             with attempt:
                 row_counts = {}
