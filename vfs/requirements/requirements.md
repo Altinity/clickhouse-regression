@@ -34,7 +34,7 @@
     * 4.5.5 [RQ.SRS-038.DiskObjectStorageVFS.System.RemoveKeeper](#rqsrs-038diskobjectstoragevfssystemremovekeeper)
     * 4.5.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
     * 4.5.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
-    * 4.5.8 [RQ.SRS-038.DiskObjectStorageVFS.System.Transactions](#rqsrs-038diskobjectstoragevfssystemtransactions)
+    * 4.5.8 [RQ.SRS-038.DiskObjectStorageVFS.System.ZookeeperTransactions](#rqsrs-038diskobjectstoragevfssystemzookeepertransactions)
   * 4.6 [Alter](#alter)
     * 4.6.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
     * 4.6.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
@@ -289,7 +289,7 @@ version: 0.0
 
 [ClickHouse] SHALL support manually triggering merges with `OPTIMIZE [FINAL]`.
 
-#### RQ.SRS-038.DiskObjectStorageVFS.System.Transactions
+#### RQ.SRS-038.DiskObjectStorageVFS.System.ZookeeperTransactions
 version: 0.0
 
 [ClickHouse] SHALL produce a reasonable number of Zookeeper transactions when tables are updated with VFS enabled.
