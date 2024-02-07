@@ -9,6 +9,7 @@ from vfs.requirements import *
 
 @TestStep(Given)
 def set_tiered_policy(self, allow_vfs=1, move_on_insert=0):
+    """Enable vfs and set move_on_insert for the tiered policy."""
     policies = {
         "tiered": {"perform_ttl_move_on_insert": f"{move_on_insert}"},
     }
@@ -23,6 +24,7 @@ def set_tiered_policy(self, allow_vfs=1, move_on_insert=0):
 
 @TestStep(When)
 def insert_data_time(self, node, table_name, days_ago, rows):
+    """Insert data with an offset timestamp."""
     t = time.mktime(
         (datetime.date.today() - datetime.timedelta(days=days_ago)).timetuple()
     )
@@ -115,6 +117,8 @@ def ttl_move(self, move_on_insert):
 @TestFeature
 @Name("ttl")
 def feature(self):
+    """Test TTL directives."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 

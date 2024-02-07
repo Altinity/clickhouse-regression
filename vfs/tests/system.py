@@ -191,6 +191,7 @@ def compact_parts(self):
 
 @TestStep
 def get_active_part_count(self, node, table_name):
+    """Get the number of active parts for a table."""
     r = node.query(f"SELECT sum(active) FROM system.parts where table='{table_name}'")
     return int(r.output)
 
@@ -199,7 +200,7 @@ def get_active_part_count(self, node, table_name):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_Optimize("0.0"))
 @Examples("table_settings", [[None], [WIDE_PART_SETTING], [COMPACT_PART_SETTING]])
 def optimize(self, table_settings):
-    """Check that OPTIMIZE works as expected on VFS"""
+    """Check that OPTIMIZE works as expected on VFS."""
 
     table_name = "opt_table_" + getuid()
     nodes = self.context.ch_nodes
@@ -258,7 +259,7 @@ def optimize(self, table_settings):
     RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection("0.0")
 )
 def fault_injection(self):
-    """Test that ClickHouse is robust against injected faults"""
+    """Test that ClickHouse is robust against injected faults."""
     nodes = self.context.ch_nodes
     table_name = "fault_injection"
     rows_per_insert = 5000
@@ -298,6 +299,8 @@ def fault_injection(self):
 @TestFeature
 @Name("system")
 def feature(self):
+    """Test cluster functionality."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 
