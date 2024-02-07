@@ -96,17 +96,15 @@ This is only available in versions 23.12 and later.
 
 ## Requirements
 
-[ClickHouse] SHALL use DiskObjectStorageVFS when the `allow_vfs`
-parameter is set to 1. This is only available in versions 23.12 and later.
+### Disk Object Storage VFS
 
-### Replicas
-
-#### RQ.SRS-038.DiskObjectStorageVFS.Replica
+#### RQ.SRS-038.DiskObjectStorageVFS
 version: 1.0
 
-[ClickHouse] SHALL support VFS such that data is not
-duplicated in [S3] storage during any operations on replicated tables (ALTER,
-SELECT, INSERT, etc...).
+[ClickHouse] SHALL support `DiskObjectStorageVFS` storage disk.
+The `DiskObjectStorageVFS` SHALL not duplicate data in [S3] storage during any operations on replicated tables.
+
+### Replicas
 
 #### RQ.SRS-038.DiskObjectStorageVFS.Replica.Add
 version: 1.0
