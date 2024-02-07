@@ -170,12 +170,12 @@ version: 0.0
 version: 1.0
 
 When the value of the `<allow_vfs>` parameter is changed
-from 0 to 1 or 1 to 0 and [ClickHouse] is restarted,
+from `0` to `1` or `1` to `0` and [ClickHouse] is restarted,
 [ClickHouse] SHALL ensure that data is still accessible.
 
 ### Shared Settings
 
-[ClickHouse] `Disk Object Storage VFS` shares some settings with other components.
+[ClickHouse] `DiskObjectStorageVFS` shares some settings with other components.
 
 #### RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.Mutation
 version: 0.0
@@ -514,7 +514,7 @@ any combination of  [supported table combinations](#supported-table-configuratio
 #### RQ.SRS-038.DiskObjectStorageVFS.Performance
 version: 1.0
 
-[Clickhouse] DiskObjectStorageVFS shares performance requirements with
+[Clickhouse] `DiskObjectStorageVFS` shares performance requirements with
 [RQ.SRS-015.S3.Performance](https://github.com/Altinity/clickhouse-regression/blob/main/s3/requirements/requirements.md#performance)
 
 ### Object Storage Providers
