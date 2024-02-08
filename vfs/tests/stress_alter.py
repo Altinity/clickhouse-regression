@@ -476,10 +476,7 @@ def parallel_alters(self, storage_policy="external_vfs"):
                     flags=TE,
                 )(table_name=table_name)
 
-            try:
-                join()
-            except ExpectTimeoutError:
-                pass
+            join()
 
             with Then("I check that the replicas are consistent", flags=TE):
                 check_consistency()
