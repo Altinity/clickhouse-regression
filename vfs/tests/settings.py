@@ -316,7 +316,7 @@ def combinations_all_lengths(items, min_size=1, max_size=None):
     """Get combinations for all possible combination sizes, up to a given limit."""
     if max_size is None:
         max_size = len(items)
-    return chain(*[combinations(items, i) for i in range(min_size, max_size+1)])
+    return chain(*[combinations(items, i) for i in range(min_size, max_size + 1)])
 
 
 @TestOutline(Combination)
