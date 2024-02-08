@@ -403,7 +403,7 @@ def replace(self):
     "drop_item detach_first", product(["PARTITION 2", "PART '2_0_0_0'"], [False, True])
 )
 def drop(self, drop_item, detach_first):
-    """Test detaching a part on one replica and reattaching it on another."""
+    """Test detaching a part and dropping it."""
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
