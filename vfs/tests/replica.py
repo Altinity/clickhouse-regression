@@ -558,6 +558,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
 
 
 @TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"))
 def command_combinations(self, parallel=True):
     """
     Perform parallel actions on replicas and check that they all agree.

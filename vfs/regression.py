@@ -77,13 +77,17 @@ def minio(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
         self.context.uri = uri_bucket_file
 
-    Feature(run=load("vfs.tests.replica", "feature"))
-    # Feature(run=load("vfs.tests.parallel_replica", "feature"))
+    
+    
     Feature(run=load("vfs.tests.settings", "feature"))
     Feature(run=load("vfs.tests.table", "feature"))
     Feature(run=load("vfs.tests.ttl", "feature"))
     Feature(run=load("vfs.tests.system", "feature"))
+    Feature(run=load("vfs.tests.migration", "feature"))
+    
     Feature(run=load("vfs.tests.alter", "feature"))
+    Feature(run=load("vfs.tests.replica", "feature"))
+    Feature(run=load("vfs.tests.parallel_replica", "feature"))
     Feature(run=load("vfs.tests.create_insert", "feature"))
     Feature(run=load("vfs.tests.performance", "feature"))
 
