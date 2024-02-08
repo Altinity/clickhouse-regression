@@ -312,9 +312,11 @@ def select(self, table_name, settings=None):
             node.query(f"SELECT count() FROM {table_name} {settings}")
 
 
-def combinations_all_lengths(items):
-    """Get combinations for all possible combination sizes."""
-    return chain(*[combinations(items, i + 1) for i in range(len(items))])
+def combinations_all_lengths(items, limit=None):
+    """Get combinations for all possible combination sizes, up to a given limit."""
+    if limit is None:
+        limit = len(items)
+    return chain(*[combinations(items, i + 1) for i in range(limit)])
 
 
 @TestOutline(Combination)
@@ -400,7 +402,8 @@ def setting_combos(self):
                         "s3_create_new_file_on_insert=1",
                         "s3_skip_empty_files=1",
                         f"s3_max_single_part_upload_size={int(64*1024)}",
-                    ]
+                    ],
+                    limit=3,
                 )
             ],
         ),

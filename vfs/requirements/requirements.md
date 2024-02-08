@@ -499,7 +499,7 @@ version: 0.0
 #### RQ.SRS-038.DiskObjectStorageVFS.Combinatoric
 version: 0.0
 
-[Clickhouse]  SHALL support any sequence of [supported operations](#supported-operations)
+[Clickhouse] SHALL support any sequence of [supported operations](#supported-operations)
 on a table configured with any combination of
 [supported table combinations](#supported-table-configurations).
 

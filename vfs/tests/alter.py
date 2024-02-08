@@ -174,7 +174,7 @@ def projection(self):
 
 @TestOutline(Scenario)
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze("0.0"))
-@Examples("partition", [[""],["PARTITION 1"]])
+@Examples("partition", [[""], ["PARTITION 1"]])
 def freeze(self, partition):
     """Check tables work with ALTER TABLE FREEZE."""
     nodes = self.context.ch_nodes
@@ -193,12 +193,14 @@ def freeze(self, partition):
 
     with Then("I freeze the table"):
         nodes[0].query(
-            f"ALTER TABLE {table_name} FREEZE {partition} WITH NAME '{backup_name}'", exitcode=0
+            f"ALTER TABLE {table_name} FREEZE {partition} WITH NAME '{backup_name}'",
+            exitcode=0,
         )
 
     with Finally("I unfreeze the table"):
         nodes[0].query(
-            f"ALTER TABLE {table_name} UNFREEZE {partition} WITH NAME '{backup_name}'", exitcode=0
+            f"ALTER TABLE {table_name} UNFREEZE {partition} WITH NAME '{backup_name}'",
+            exitcode=0,
         )
 
 
@@ -560,7 +562,10 @@ def detach(self, detach_item):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Column("0.0"))
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Alter_Column("0.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"),
+)
 def columns(self):
     """Test that alter column commands execute without errors."""
     table_name = "columns_table"
