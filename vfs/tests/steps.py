@@ -33,6 +33,13 @@ def s3_config(self):
                 "secret_access_key": f"{self.context.secret_access_key}",
                 "allow_vfs": "1",
             },
+            "external_vfs_2": {
+                "type": "s3",
+                "endpoint": f"{self.context.uri}object-storage/vfs-2/",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+                "allow_vfs": "1",
+            },
             "external_no_vfs": {
                 "type": "s3",
                 "endpoint": f"{self.context.uri}object-storage/no-vfs/",

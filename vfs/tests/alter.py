@@ -454,6 +454,7 @@ def drop(self, drop_item, detach_first):
             ["external", "external_no_vfs"],
             ["external", "external_vfs"],
             ["external_vfs", "external_no_vfs"],
+            ["external_vfs", "external_vfs_2"],
         ],
         ["DISK", "VOLUME"],
     ),
@@ -471,10 +472,11 @@ def move(self, move_item, disk_order, to_type):
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
+    policy_name = "policy_"  + getuid()
 
     with Given("""I have a storage policy with two disks"""):
         policies = {
-            "test_policy": {
+            policy_name: {
                 "volumes": {
                     "source": {"disk": source_disk},
                     "destination": {"disk": destination_disk},
@@ -482,45 +484,50 @@ def move(self, move_item, disk_order, to_type):
             },
         }
 
-    with s3_storage(
-        {}, policies, restart=False, timeout=60, config_file="test_policy.xml"
-    ):
-        with Given("I have a replicated table"):
-            _, table_name = replicated_table_cluster(
-                storage_policy="test_policy", partition_by="key % 4"
+    with Given("I have a policy with two disks"):
+        storage_config(
+            policies=policies,
+            restart=True,
+            timeout=60,
+            config_file=f"{policy_name}.xml",
+        )
+
+    with And("I have a replicated table"):
+        _, table_name = replicated_table_cluster(
+            storage_policy=policy_name, partition_by="key % 4"
+        )
+
+    with When("I insert data into the first table"):
+        insert_random(node=nodes[0], table_name=table_name, rows=insert_rows)
+
+    with Then("I check system.parts"):
+        what, name = move_item.split()
+        name = name.strip("'")
+        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
+        r = nodes[0].query(query, exitcode=0)
+        assert r.output == source_disk, error()
+
+    with When(f"I move {move_item} from {source_disk} to {destination_disk}"):
+        query = f"ALTER TABLE {table_name} MOVE {move_item} TO "
+        if to_type == "DISK":
+            query += f"DISK '{destination_disk}'"
+        elif to_type == "VOLUME":
+            query += "VOLUME 'destination'"
+        nodes[0].query(query, exitcode=0)
+
+    with Then("I check the number of rows on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, timeout=15, delay=2)(
+                node=node,
+                table_name=table_name,
+                rows=insert_rows,
             )
 
-        with And("I insert data into the first table"):
-            insert_random(node=nodes[0], table_name=table_name, rows=insert_rows)
-
-        with And("I check system.parts"):
-            what, name = move_item.split()
-            name = name.strip("'")
-            query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
-            r = nodes[0].query(query, exitcode=0)
-            assert r.output == source_disk, error()
-
-        with When(f"I move {move_item} from {source_disk} to {destination_disk}"):
-            query = f"ALTER TABLE {table_name} MOVE {move_item} TO "
-            if to_type == "DISK":
-                query += f"DISK '{destination_disk}'"
-            elif to_type == "VOLUME":
-                query += "VOLUME 'destination'"
-            nodes[0].query(query, exitcode=0)
-
-        with Then("I check the number of rows on all nodes"):
-            for n in nodes:
-                retry(assert_row_count, timeout=15, delay=2)(
-                    node=n,
-                    table_name=table_name,
-                    rows=insert_rows,
-                )
-
-        with And("I check system.parts"):
-            what, name = move_item.split()
-            query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
-            r = nodes[0].query(query, exitcode=0)
-            assert r.output == destination_disk, error()
+    with And("I check system.parts again"):
+        what, name = move_item.split()
+        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
+        r = nodes[0].query(query, exitcode=0)
+        assert r.output == destination_disk, error()
 
 
 @TestOutline(Scenario)
