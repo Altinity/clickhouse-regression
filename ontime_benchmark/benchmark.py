@@ -73,7 +73,6 @@ def regression(
     bucket_path = "data/benchmark"
 
     self.context.clickhouse_version = clickhouse_version
-
     self.context.allow_vfs = allow_vfs
 
     if storages is None:
