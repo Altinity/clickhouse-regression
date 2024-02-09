@@ -2,11 +2,11 @@ from helpers.common import *
 
 
 @TestStep(Given)
-def create_and_drop_table(self):
+def create_and_drop_table(self, number_of_tables=100):
     node = self.context.node
     uid = getuid()
     table_name = f"test_table{uid}"
-    for _ in range(100):
+    for _ in range(number_of_tables):
         node.query(f"DROP TABLE IF EXISTS {table_name}")
         node.query(
             f"CREATE TABLE {table_name} (x UInt8) ENGINE = MergeTree ORDER BY ();"
