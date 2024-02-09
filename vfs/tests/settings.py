@@ -8,26 +8,54 @@ from testflows.combinatorics import CoveringArray
 from vfs.tests.steps import *
 from vfs.requirements import *
 from vfs.tests.stress_alter import optimize, check_consistency
+from s3.tests.common import invalid_s3_storage_config
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings("1.0"))
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_ZeroCopyReplication("1.0")
+)
 def incompatible_with_zero_copy(self):
     """
     Check that using zero copy replication when vfs is enabled is not allowed.
     """
-    with Given("VFS is globally enabled"):
-        enable_vfs()
-
     with When("I create a replicated table with both vfs and 0-copy enabled"):
         r, _ = replicated_table_cluster(
             table_name="vfs_zero_copy_replication",
+            storage_policy="external_vfs",
             allow_zero_copy=True,
             exitcode=None,
         )
 
     with Then("I expect it to fail"):
         assert r.exitcode != 0, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_SendMetadata("1.0"))
+def incompatible_with_send_metadata(self):
+    """
+    Check that using send_metadata when vfs is enabled is not allowed.
+    """
+    with Given("a config with both allow_vfs=1 and send_metadata=1"):
+        disks = {
+            "external_bad": {
+                "type": "s3",
+                "endpoint": f"{self.context.uri}",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+                "list_object_keys_size": "1",
+                "allow_vfs": "1",
+                "send_metadata": "1",
+            }
+        }
+
+    with Then("the config file fails to load"):
+        invalid_s3_storage_config(
+            disks=disks,
+            policies={},
+            message="DB::Exception: VFS doesn't support send_metadata",
+        )
 
 
 @TestStep(When)

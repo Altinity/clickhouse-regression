@@ -29,6 +29,7 @@ ffails = {
         check_clickhouse_version("<24"),
     ),
     ":/alter/move": (XFail, "Clickhouse crashes"),
+    ":/settings/incompatible with send metadata": (XFail, "Clickhouse crashes"),
 }
 
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
