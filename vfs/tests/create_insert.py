@@ -36,6 +36,7 @@ def create_test_table(
     n_cols: int,
     part_type: str,
 ):
+    "Create a randomly named table using the provided arguments for testing."
     cluster_name = "replicated_cluster" if replicated else None
 
     table_name = "table_" + getuid()
@@ -86,6 +87,7 @@ def create_test_table(
 
 
 @TestOutline(Combination)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
 def check_table_combination(
     self,
     engine: str,
@@ -143,9 +145,11 @@ def check_table_combination(
 
 @TestFeature
 @Name("create insert")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"))
 def feature(self):
-    covering_array_strength = len(table_configurations)
+    """Test CREATE and INSERT commands with VFS enabled on a variety of table configurations."""
+
+    covering_array_strength = len(table_configurations) if self.context.stress else 2
 
     with Given("I have S3 disks configured"):
         s3_config()

@@ -17,10 +17,14 @@ def alter_freeze(self, policy_name):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with Then("I freeze the table"):
-        node.query(f"ALTER TABLE {table_name} FREEZE WITH NAME '{backup_name}'")
+        node.query(
+            f"ALTER TABLE {table_name} FREEZE WITH NAME '{backup_name}'", exitcode=0
+        )
 
     with Finally("I unfreeze the table"):
-        node.query(f"ALTER TABLE {table_name} UNFREEZE WITH NAME '{backup_name}'")
+        node.query(
+            f"ALTER TABLE {table_name} UNFREEZE WITH NAME '{backup_name}'", exitcode=0
+        )
 
 
 @TestOutline
@@ -39,12 +43,14 @@ def alter_freeze_partition(self, policy_name):
 
     with Then("I freeze the table"):
         node.query(
-            f"ALTER TABLE {table_name} FREEZE PARTITION 1 WITH NAME '{backup_name}'"
+            f"ALTER TABLE {table_name} FREEZE PARTITION 1 WITH NAME '{backup_name}'",
+            exitcode=0,
         )
 
     with Finally("I unfreeze the table"):
         node.query(
-            f"ALTER TABLE {table_name} UNFREEZE PARTITION 1 WITH NAME '{backup_name}'"
+            f"ALTER TABLE {table_name} UNFREEZE PARTITION 1 WITH NAME '{backup_name}'",
+            exitcode=0,
         )
 
 
@@ -940,12 +946,13 @@ def local_and_s3_disk(self):
                 "endpoint": f"{uri}",
                 "access_key_id": f"{access_key_id}",
                 "secret_access_key": f"{secret_access_key}",
-                "send_metadata": "true",
                 "list_object_keys_size": "1",
             },
         }
         if self.context.object_storage_mode == "vfs":
             disks["external"]["allow_vfs"] = "1"
+        else:
+            disks["external"]["send_metadata"] = "true"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -986,12 +993,13 @@ def local_and_s3_volumes(self):
                 "endpoint": f"{uri}",
                 "access_key_id": f"{access_key_id}",
                 "secret_access_key": f"{secret_access_key}",
-                "send_metadata": "true",
                 "list_object_keys_size": "1",
             },
         }
         if self.context.object_storage_mode == "vfs":
             disks["external"]["allow_vfs"] = "1"
+        else:
+            disks["external"]["send_metadata"] = "true"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -1027,12 +1035,13 @@ def s3_disk(self):
                 "endpoint": f"{uri}",
                 "access_key_id": f"{access_key_id}",
                 "secret_access_key": f"{secret_access_key}",
-                "send_metadata": "true",
                 "list_object_keys_size": "1",
             }
         }
         if self.context.object_storage_mode == "vfs":
             disks["external"]["allow_vfs"] = "1"
+        else:
+            disks["external"]["send_metadata"] = "true"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {"external": {"volumes": {"external": {"disk": "external"}}}}

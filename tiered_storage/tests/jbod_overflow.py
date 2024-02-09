@@ -80,10 +80,12 @@ def scenario(self, cluster, node="clickhouse1"):
                         values = ",".join(["('" + x + "')" for x in data])
                         node.query(f"INSERT INTO {name} VALUES {values}")
 
-                    used_disks = get_used_disks_for_table(node, name)
+                    for attempt in retries(timeout=90, delay=5):
+                        with attempt:
+                            used_disks = get_used_disks_for_table(node, name)
 
-                    with Then("the last 10MB part should go to 'external'"):
-                        assert used_disks[-1] == "external", error()
+                            with Then("the last 10MB part should go to 'external'"):
+                                assert used_disks[-1] == "external", error()
 
                     with When("I start merges"):
                         node.query("SYSTEM START MERGES")

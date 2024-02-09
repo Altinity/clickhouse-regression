@@ -93,6 +93,20 @@ def check_attach_partition_from_with_temporary_tables(
     destination_table_name = "destination_" + getuid()
     source_table_name = "source_" + getuid()
 
+    with Given("I create replicated tables if they are in combination"):
+        if "replicated" in source_table.__name__:
+            source_table(
+                table_name=source_table_name,
+                engine=source_table_engine,
+                partition_by="a",
+            )
+        if "replicated" in destination_table.__name__:
+            destination_table(
+                table_name=destination_table_name,
+                engine=destination_table_engine,
+                partition_by="a",
+            )
+
     with Given("I open a single clickhouse instance"):
         with node.client() as client:
             with Given(
@@ -106,18 +120,20 @@ def check_attach_partition_from_with_temporary_tables(
                     destination table engine: {destination_table_engine}
                     """,
             ):
-                source_table(
-                    table_name=source_table_name,
-                    engine=source_table_engine,
-                    partition_by="a",
-                    node=client,
-                )
-                destination_table(
-                    table_name=destination_table_name,
-                    engine=destination_table_engine,
-                    partition_by="a",
-                    node=client,
-                )
+                if "replicated" not in source_table.__name__:
+                    source_table(
+                        table_name=source_table_name,
+                        engine=source_table_engine,
+                        partition_by="a",
+                        node=client,
+                    )
+                if "replicated" not in destination_table.__name__:
+                    destination_table(
+                        table_name=destination_table_name,
+                        engine=destination_table_engine,
+                        partition_by="a",
+                        node=client,
+                    )
 
             with And(
                 "I attach all partitions from source table to the destination table"
@@ -155,6 +171,25 @@ def check_attach_partition_from_with_temporary_tables(
                                 source_partition_data == destination_partition_data
                             ), error()
 
+    with And(f"I check that all replicas of destination table have same data:"):
+        if "replicated" in destination_table.__name__:
+            destination_partition_data_1 = self.context.node_1.query(
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+            )
+            destination_partition_data_2 = self.context.node_2.query(
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+            )
+            destination_partition_data_3 = self.context.node_3.query(
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+            )
+            for attempt in retries(timeout=30, delay=2):
+                with attempt:
+                    assert (
+                        destination_partition_data_1.output
+                        == destination_partition_data_2.output
+                        == destination_partition_data_3.output
+                    )
+
 
 @TestSketch(Scenario)
 @Flags(TE)
@@ -187,10 +222,12 @@ def attach_partition_from_with_temporary_tables(self):
     source_tables = {
         create_regular_partitioned_table_with_data,
         create_temporary_partitioned_table_with_data,
+        create_partitioned_replicated_table_with_data,
     }
     destination_tables = {
         create_empty_regular_partitioned_table,
         create_empty_temporary_partitioned_table,
+        create_empty_partitioned_replicated_table,
     }
     engines = {
         "MergeTree",
@@ -215,9 +252,17 @@ def attach_partition_from_with_temporary_tables(self):
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_FromTemporaryTable("1.0")
 )
 @Name("temporary table")
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check that it is possible to use temporary tables to attach partition from the source table to the destination table."""
-    self.context.node = self.context.cluster.node(node)
+    self.context.node = self.context.cluster.node("clickhouse1")
+    self.context.node_1 = self.context.cluster.node("clickhouse1")
+    self.context.node_2 = self.context.cluster.node("clickhouse2")
+    self.context.node_3 = self.context.cluster.node("clickhouse3")
+    self.context.nodes = [
+        self.context.cluster.node("clickhouse1"),
+        self.context.cluster.node("clickhouse2"),
+        self.context.cluster.node("clickhouse3"),
+    ]
 
     Scenario(run=attach_partition_detached_with_temporary_tables)
     Scenario(run=attach_partition_from_with_temporary_tables)
