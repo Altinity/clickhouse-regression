@@ -645,6 +645,9 @@ def feature(self, node="clickhouse1"):
             for zookeeper_node in self.context.cluster.nodes["zookeeper"]:
                 self.context.cluster.node(zookeeper_node).stop()
 
+        with And("I wait for zookeepers to stop"):
+            time.sleep(10)
+
         with And("I enable SSL"):
             enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
