@@ -444,66 +444,27 @@ def drop(self, drop_item, detach_first):
             )
 
 
-@TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart("0.0"))
-@Examples(
-    "move_item disk_order to_type",
-    product(
-        ["PARTITION 2", "PART '2_0_0_0'"],
-        [
-            ["external", "external_no_vfs"],
-            ["external", "external_vfs"],
-            ["external_vfs", "external_no_vfs"],
-            ["external_vfs", "external_vfs_2"],
-        ],
-        ["DISK", "VOLUME"],
-    ),
-)
-def move(self, move_item, disk_order, to_type):
-    """
-    Test moving  part between vfs and non-vfs disks.
-
-    Clickhouse fills disks in the order they were defined,
-    therefore need to use 3 disks to test both movement directions.
-    As a sanity check, moves with no vfs at all are performed first.
-    """
-
+@TestOutline(Example)
+def check_move(self, move_item, policy, disk_order, to_type):
     source_disk, destination_disk = disk_order
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
-    policy_name = "policy_"  + getuid()
 
-    with Given("""I have a storage policy with two disks"""):
-        policies = {
-            policy_name: {
-                "volumes": {
-                    "source": {"disk": source_disk},
-                    "destination": {"disk": destination_disk},
-                }
-            },
-        }
-
-    with Given("I have a policy with two disks"):
-        storage_config(
-            policies=policies,
-            restart=True,
-            timeout=60,
-            config_file=f"{policy_name}.xml",
-        )
-
-    with And("I have a replicated table"):
+    with Given("I have a replicated table"):
         _, table_name = replicated_table_cluster(
-            storage_policy=policy_name, partition_by="key % 4"
+            storage_policy=policy, partition_by="key % 4"
         )
 
     with When("I insert data into the first table"):
         insert_random(node=nodes[0], table_name=table_name, rows=insert_rows)
 
     with Then("I check system.parts"):
-        what, name = move_item.split()
-        name = name.strip("'")
-        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
+        what, part_name = move_item.split()
+        if what == "PART":
+            what = "part_name"
+        part_name = part_name.strip("'")
+        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{part_name}'"
         r = nodes[0].query(query, exitcode=0)
         assert r.output == source_disk, error()
 
@@ -524,10 +485,62 @@ def move(self, move_item, disk_order, to_type):
             )
 
     with And("I check system.parts again"):
-        what, name = move_item.split()
-        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
+        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{part_name}'"
         r = nodes[0].query(query, exitcode=0)
         assert r.output == destination_disk, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart("0.0"))
+def move(self):
+    """
+    Test moving  part between vfs and non-vfs disks.
+
+    Clickhouse fills disks in the order they were defined,
+    therefore need to use 3 disks to test both movement directions.
+    As a sanity check, moves with no vfs at all are performed first.
+    """
+
+    part_selections = ["PARTITION 2", "PART '2_0_0_0'"]
+    disk_orders = [
+        ["external", "external_no_vfs"],
+        ["external", "external_vfs"],
+        ["external_vfs", "external_no_vfs"],
+        ["external_vfs", "external_vfs_2"],
+    ]
+    destination_types = ["DISK", "VOLUME"]
+    policies= {}
+
+    with Given("I have storage policies for the disk pairs"):
+        policies = {
+            f"move_policy_{i}": {
+                "volumes": {
+                    "source": {"disk": source_disk},
+                    "destination": {"disk": destination_disk},
+                }
+            }
+            for i, (source_disk, destination_disk) in enumerate(disk_orders)
+        }
+
+    with And("I activate the policies"):
+        storage_config(
+            policies=policies,
+            restart=True,
+            timeout=60,
+            config_file="test_move_policies.xml",
+        )
+
+    for policy_name, disk_order in zip(policies.keys(), disk_orders):
+        for part_selected, dest_type in product(part_selections, destination_types):
+            Example(
+                f"Disks={disk_order}, MOVE {part_selected} TO {dest_type}",
+                test=check_move,
+            )(
+                move_item=part_selected,
+                policy=policy_name,
+                disk_order=disk_order,
+                to_type=dest_type,
+            )
 
 
 @TestOutline(Scenario)
