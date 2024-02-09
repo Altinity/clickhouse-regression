@@ -9,11 +9,6 @@ from vfs.tests.steps import *
 from vfs.requirements import *
 
 
-"""
-RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze
-"""
-
-
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Update("0.0"))
 def update_delete(self):
@@ -178,6 +173,38 @@ def projection(self):
 
 
 @TestOutline(Scenario)
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze("0.0"))
+@Examples("partition", [[""], ["PARTITION 1"]])
+def freeze(self, partition):
+    """Check tables work with ALTER TABLE FREEZE."""
+    nodes = self.context.ch_nodes
+    table_name = f"table_{getuid()}"
+    backup_name = f"backup_{getuid()}"
+
+    with Given(f"I have a table {table_name}"):
+        replicated_table_cluster(
+            table_name=table_name,
+            storage_policy="external_vfs",
+            partition_by="key % 4",
+        )
+
+    with When("I insert some data into the table"):
+        insert_random(node=nodes[0], table_name=table_name)
+
+    with Then("I freeze the table"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} FREEZE {partition} WITH NAME '{backup_name}'",
+            exitcode=0,
+        )
+
+    with Finally("I unfreeze the table"):
+        nodes[0].query(
+            f"ALTER TABLE {table_name} UNFREEZE {partition} WITH NAME '{backup_name}'",
+            exitcode=0,
+        )
+
+
+@TestOutline(Scenario)
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch("0.0"),
     RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach("0.0"),
@@ -223,7 +250,7 @@ def fetch(self, fetch_item):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom("0.0"))
 def attach_from(self):
-    """Test attaching a part from one table to another"""
+    """Test attaching a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
@@ -267,13 +294,13 @@ def attach_from(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable("0.0"))
 def move_to_table(self):
-    """Test moving a part from one table to another"""
+    """Test moving a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
     fetch_item = "PARTITION 2"
     insert_rows = 1000000
-    storage_policy = "external"
+    storage_policy = "external_vfs"
     source_table_name = "table_move_src"
     destination_table_name = "table_move_dest"
 
@@ -324,7 +351,7 @@ def move_to_table(self):
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace("0.0"))
 def replace(self):
-    """Test attaching a part from one table to another"""
+    """Test attaching a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
@@ -376,7 +403,7 @@ def replace(self):
     "drop_item detach_first", product(["PARTITION 2", "PART '2_0_0_0'"], [False, True])
 )
 def drop(self, drop_item, detach_first):
-    """Test detaching a part on one replica and reattaching it on another"""
+    """Test detaching a part and dropping it."""
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
@@ -499,7 +526,7 @@ def move(self, move_item, disk_order, to_type):
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach("0.0"))
 @Examples("detach_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
 def detach(self, detach_item):
-    """Test detaching a part"""
+    """Test detaching a part."""
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
@@ -535,7 +562,10 @@ def detach(self, detach_item):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Column("0.0"))
+@Requirements(
+    RQ_SRS_038_DiskObjectStorageVFS_Alter_Column("0.0"),
+    RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"),
+)
 def columns(self):
     """Test that alter column commands execute without errors."""
     table_name = "columns_table"
@@ -640,6 +670,8 @@ def columns(self):
 @TestFeature
 @Name("alter")
 def feature(self):
+    """Test ALTER commands with VFS enabled"""
+
     with Given("I have S3 disks configured"):
         s3_config()
 

@@ -915,7 +915,7 @@ class Cluster(object):
                             bash.timeout = 300
                             try:
                                 cmd = bash(
-                                    f'wget --progress dot "{self.clickhouse_binary_path}" -O {filename}'
+                                    f'wget --progress dot:giga "{self.clickhouse_binary_path}" -O {filename}'
                                 )
                                 assert cmd.exitcode == 0
                             except BaseException:

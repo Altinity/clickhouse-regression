@@ -9,6 +9,7 @@ from vfs.requirements import *
 
 @TestStep(When)
 def insert_data_time(self, node, table_name, number_of_mb, start=0):
+    """Insert and measure the elapsed time."""
     values = ",".join(
         f"({x})"
         for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
@@ -238,6 +239,8 @@ def performance_alter(self):
 @Name("performance")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
 def feature(self):
+    """Compare table performance with and without vfs."""
+
     with Given("I have S3 disks configured"):
         s3_config()
 

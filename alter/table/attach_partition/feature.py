@@ -17,7 +17,7 @@ def feature(self):
             executor=pool,
         )
         Feature(
-            run=load("alter.table.attach_partition.partition_key_parallel", "feature"),
+            run=load("alter.table.attach_partition.partition_key", "feature"),
             parallel=True,
             executor=pool,
         )
