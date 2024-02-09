@@ -17,7 +17,7 @@ ffails = {
     ":/queries/vfs": (
         Skip,
         "vfs not supported on < 24.2",
-        lambda t: check_clickhouse_version("<24.2")(t) and not t.context.allow_vfs,
+        lambda test: check_clickhouse_version("<24.2")(test) and not test.context.allow_vfs,
     ),
 }
 
