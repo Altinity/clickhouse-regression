@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import time, datetime
+import json
 
 from testflows.core import *
 
@@ -118,6 +119,11 @@ def ttl_move(self, move_on_insert):
         retry(assert_row_count, timeout=5, delay=1)(
             node=nodes[0], table_name=table_name, rows=1400000
         )
+
+    with And("I check system.parts"):
+        query = f"SELECT disk_name FROM system.parts WHERE table='{table_name}' FORMAT JSONColumns"
+        disk_names = json.loads(nodes[0].query(query, exitcode=0).output)["disk_name"]
+        assert "external_tiered" in disk_names, error()
 
 
 @TestFeature

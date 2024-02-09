@@ -16,8 +16,8 @@ xfails = {}
 ffails = {
     ":/queries/vfs": (
         Skip,
-        "vfs not supported on < 24",
-        check_clickhouse_version("<24"),
+        "vfs not supported on < 24.2",
+        lambda t: check_clickhouse_version("<24.2")(t) and not t.context.allow_vfs,
     ),
 }
 
@@ -60,7 +60,7 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     format,
-    allow_vfs,
+    allow_vfs=False,
     node="clickhouse1",
 ):
     """Storage Benchmark."""
@@ -74,7 +74,7 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    self.context.object_storage_mode = "normal"
+    self.context.allow_vfs = allow_vfs
 
     if storages is None:
         storages = ["minio"]

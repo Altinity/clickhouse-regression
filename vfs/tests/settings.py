@@ -11,7 +11,7 @@ from vfs.tests.stress_alter import optimize, check_consistency
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_ZeroCopyIncompatible("1.0"))
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings("1.0"))
 def incompatible_with_zero_copy(self):
     """
     Check that using zero copy replication when vfs is enabled is not allowed.
@@ -312,11 +312,11 @@ def select(self, table_name, settings=None):
             node.query(f"SELECT count() FROM {table_name} {settings}")
 
 
-def combinations_all_lengths(items, limit=None):
+def combinations_all_lengths(items, min_size=1, max_size=None):
     """Get combinations for all possible combination sizes, up to a given limit."""
-    if limit is None:
-        limit = len(items)
-    return chain(*[combinations(items, i + 1) for i in range(limit)])
+    if max_size is None:
+        max_size = len(items)
+    return chain(*[combinations(items, i) for i in range(min_size, max_size + 1)])
 
 
 @TestOutline(Combination)
@@ -403,7 +403,8 @@ def setting_combos(self):
                         "s3_skip_empty_files=1",
                         f"s3_max_single_part_upload_size={int(64*1024)}",
                     ],
-                    limit=3,
+                    min_size=2,
+                    max_size=3,
                 )
             ],
         ),
