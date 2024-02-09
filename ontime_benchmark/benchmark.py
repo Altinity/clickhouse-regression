@@ -16,8 +16,8 @@ xfails = {}
 ffails = {
     ":/queries/vfs": (
         Skip,
-        "vfs not supported on < 24",
-        check_clickhouse_version("<24"),
+        "vfs not supported on < 25",
+        check_clickhouse_version("<25"),
     ),
 }
 
