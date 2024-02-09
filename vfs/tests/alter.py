@@ -403,7 +403,7 @@ def replace(self):
     "drop_item detach_first", product(["PARTITION 2", "PART '2_0_0_0'"], [False, True])
 )
 def drop(self, drop_item, detach_first):
-    """Test detaching a part on one replica and reattaching it on another."""
+    """Test detaching a part and dropping it."""
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
@@ -469,7 +469,7 @@ def move(self, move_item, disk_order, to_type):
 
     source_disk, destination_disk = disk_order
 
-    node = self.context.ch_nodes[0]
+    nodes = self.context.ch_nodes
     insert_rows = 1000000
 
     with Given("""I have a storage policy with two disks"""):
@@ -491,12 +491,13 @@ def move(self, move_item, disk_order, to_type):
             )
 
         with And("I insert data into the first table"):
-            insert_random(node=node, table_name=table_name, rows=insert_rows)
+            insert_random(node=nodes[0], table_name=table_name, rows=insert_rows)
 
         with And("I check system.parts"):
             what, name = move_item.split()
+            name = name.strip("'")
             query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
-            r = node.query(query, exitcode=0)
+            r = nodes[0].query(query, exitcode=0)
             assert r.output == source_disk, error()
 
         with When(f"I move {move_item} from {source_disk} to {destination_disk}"):
@@ -505,12 +506,12 @@ def move(self, move_item, disk_order, to_type):
                 query += f"DISK '{destination_disk}'"
             elif to_type == "VOLUME":
                 query += "VOLUME 'destination'"
-            node.query(query, exitcode=0)
+            nodes[0].query(query, exitcode=0)
 
         with Then("I check the number of rows on all nodes"):
-            for node in self.context.ch_nodes:
-                retry(assert_row_count, timeout=15, delay=1)(
-                    node=node,
+            for n in nodes:
+                retry(assert_row_count, timeout=15, delay=2)(
+                    node=n,
                     table_name=table_name,
                     rows=insert_rows,
                 )
@@ -518,7 +519,7 @@ def move(self, move_item, disk_order, to_type):
         with And("I check system.parts"):
             what, name = move_item.split()
             query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{name}'"
-            r = node.query(query, exitcode=0)
+            r = nodes[0].query(query, exitcode=0)
             assert r.output == destination_disk, error()
 
 
