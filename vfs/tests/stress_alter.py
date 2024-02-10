@@ -413,11 +413,39 @@ def parallel_alters(self, storage_policy="external_vfs"):
     Perform combinations of alter actions, checking that all replicas agree.
     """
 
-    self.context.table_names = []
-    columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
     unstressed_limit = 100
+    combination_size = 3
 
-    with Given("I create 3 tables with data"):
+    with Given("I have a list of actions I can perform"):
+        actions = [
+            add_random_column,
+            rename_random_column,
+            clear_random_column,
+            delete_random_column,
+            update_random_column,
+            delete_random_rows,
+            detach_attach_random_part,
+            freeze_unfreeze_random_part,
+            drop_random_part,
+            replace_random_part,
+            move_random_partition_to_random_table,
+            attach_random_part_from_table,
+            fetch_random_part_from_table,
+        ]
+
+    with And(f"I make a list of groups of {combination_size} actions"):
+        action_groups = list(
+            combinations(actions, combination_size, with_replacement=True)
+        )
+
+    if not self.context.stress:
+        with And(f"I shuffle the list and choose {unstressed_limit} groups of actions"):
+            random.shuffle(action_groups)
+            action_groups = action_groups[:unstressed_limit]
+
+    with Given("I create 3 tables with 10 columns and data"):
+        self.context.table_names = []
+        columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
         for i in range(3):
             table_name = f"table{i}_{storage_policy}"
             replicated_table_cluster(
@@ -431,52 +459,30 @@ def parallel_alters(self, storage_policy="external_vfs"):
                 node=self.context.node, table_name=table_name, columns=columns
             )
 
-    combination_size = 3
-    actions = [
-        add_random_column,
-        rename_random_column,
-        clear_random_column,
-        delete_random_column,
-        update_random_column,
-        delete_random_rows,
-        detach_attach_random_part,
-        freeze_unfreeze_random_part,
-        drop_random_part,
-        replace_random_part,
-        move_random_partition_to_random_table,
-        attach_random_part_from_table,
-        fetch_random_part_from_table,
-    ]
-
-    action_groups = list(combinations(actions, combination_size, with_replacement=True))
-
-    if not self.context.stress:
-        random.shuffle(action_groups)
-        action_groups = action_groups[:unstressed_limit]
-
     total_combinations = len(action_groups)
     for i, chosen_actions in enumerate(action_groups):
         with Check(
             f"{i}/{total_combinations} "
             + ",".join([f"{f.name}" for f in chosen_actions])
         ):
-            for action in chain([insert, select], chosen_actions):
-                When(
-                    f"I {action.name}",
-                    run=action,
-                    parallel=True,
-                    flags=TE | ERROR_NOT_COUNTED,  # |FAIL_NOT_COUNTED,
-                )
+            with When("I perform a group of actions alongside insert and select, and optimize all tables"):
+                for action in chain([insert, select], chosen_actions):
+                    By(
+                        f"I {action.name}",
+                        run=action,
+                        parallel=True,
+                        flags=TE | ERROR_NOT_COUNTED,
+                    )
 
-            for table in self.context.table_names:
-                When(
-                    f"I OPTIMIZE {table}",
-                    test=optimize,
-                    parallel=True,
-                    flags=TE,
-                )(table_name=table_name)
+                for table in self.context.table_names:
+                    By(
+                        f"I OPTIMIZE {table}",
+                        test=optimize,
+                        parallel=True,
+                        flags=TE,
+                    )(table_name=table_name)
 
-            join()
+                join()
 
             with Then("I check that the replicas are consistent", flags=TE):
                 check_consistency()
