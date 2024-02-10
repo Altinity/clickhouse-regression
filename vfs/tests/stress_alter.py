@@ -13,21 +13,30 @@ from vfs.requirements import *
 
 
 @TestStep
+def optimize(self, node, table_name):
+    """Apply OPTIMIZE on the given table and node"""
+    with By(f"optimizing {table_name} on {node.name}"):
+        node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
+
+
+@TestStep
+@Name("optimize")
 @Retry(timeout=10, delay=1)
-def optimize(self, node=None, table_name=None):
+def optimize_random(self, node=None, table_name=None, repeat_limit=3):
     """Apply OPTIMIZE on the given table and node, choosing at random if not specified."""
     if node is None:
         node = random.choice(self.context.ch_nodes)
     if table_name is None:
         table_name = random.choice(self.context.table_names)
-    for _ in range(random.randint(1, 5)):
-        with By(f"optimizing {table_name} on {node.name}"):
-            node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
+
+    for _ in range(random.randint(1, repeat_limit)):
+        optimize(node=node, table_name=table_name)
 
 
 @TestStep
 @Retry(timeout=10, delay=1)
-def insert(self):
+@Name("insert")
+def insert_to_random(self):
     """Insert random data to a random table."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
@@ -38,27 +47,13 @@ def insert(self):
 
 @TestStep
 @Retry(timeout=10, delay=1)
-def select(self):
-    """Perform select queries on a random node."""
+def select_count_random(self, repeat_limit=10):
+    """Perform select count() queries on a random node and table."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
-    for _ in range(random.randint(1, 10)):
+    for _ in range(random.randint(1, repeat_limit)):
         with By(f"count rows in {table_name} on {node.name}"):
             node.query(f"SELECT count() FROM {table_name}", no_checks=True)
-
-
-@TestStep
-def get_column_string(self, node, table_name) -> str:
-    """Get a string with column names and types."""
-    r = node.query(f"DESCRIBE TABLE {table_name}")
-    return ",".join([l.strip() for l in r.output.splitlines()])
-
-
-@TestStep
-def get_column_names(self, node, table_name) -> list:
-    """Get a list of a table's column names."""
-    r = node.query(f"DESCRIBE TABLE {table_name} FORMAT JSONColumns")
-    return json.loads(r.output)["name"]
 
 
 @TestStep
@@ -144,59 +139,35 @@ def update_random_column(self):
 
 
 @TestStep
-def get_parts(self, node, table_name):
-    """Get a list of active parts in a table."""
-    r = node.query(
-        f"select name from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
-    )
-    return json.loads(r.output)["name"]
-
-
-@TestStep
 def get_random_part_id(self, node, table_name):
     """Choose a random active part in a table."""
-    return random.choice(get_parts(node, table_name))
-
-
-@TestStep
-def get_partition_ids(self, node, table_name):
-    """Get a list of active partitions in a table."""
-    r = node.query(
-        f"select partition_id from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
-    )
-    return json.loads(r.output)["partition_id"]
+    return random.choice(get_active_parts(node, table_name))
 
 
 @TestStep
 def get_random_partition_id(self, node, table_name):
     """Choose a random active partition in a table."""
-    return random.choice(get_partition_ids(node, table_name))
+    return random.choice(get_active_partition_ids(node, table_name))
 
 
 @TestStep
 @Name("detach part")
-def detach_attach_random_part(self):
-    """Detach a random part, wait a random time, attach part."""
+def detach_attach_random_partition(self):
+    """Detach a random part, wait a random time, attach partition."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     backup_name = f"backup_{getuid()}"
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 5
+    delay = random.random() * 3
 
     with When("I detach a part"):
-        node.query(
-            f"ALTER TABLE {table_name} DETACH PARTITION {partition}",
-            exitcode=0,
-        )
+        alter_table_detach_partition(node=node, partition_name=partition, exitcode=0)
 
     with Then(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I reattach the part"):
-        node.query(
-            f"ALTER TABLE {table_name} ATTACH PARTITION {partition}",
-            exitcode=0,
-        )
+        alter_table_attach_partition(node=node, partition_name=partition, exitcode=0)
 
 
 @TestStep
@@ -210,18 +181,16 @@ def freeze_unfreeze_random_part(self):
     delay = random.random() * 5
 
     with When("I freeze the part"):
-        node.query(
-            f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'",
-            exitcode=0,
+        alter_table_freeze_partition_with_name(
+            node=node, partition_name=partition, backup_name=backup_name, exitcode=0
         )
 
     with Then(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I unfreeze the part"):
-        node.query(
-            f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition} WITH NAME '{backup_name}'",
-            exitcode=0,
+        alter_table_unfreeze_partition_with_name(
+            node=node, partition_name=partition, backup_name=backup_name, exitcode=0
         )
 
 
@@ -260,8 +229,11 @@ def replace_random_part(self):
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
     with When("I replace a partition on the second table"):
-        node.query(
-            f"ALTER TABLE {destination_table_name} REPLACE PARTITION {partition} FROM {source_table_name}",
+        alter_table_replace_partition(
+            node=node,
+            table_name=destination_table_name,
+            partition_name=partition,
+            path_to_backup=source_table_name,
             exitcode=0,
         )
 
@@ -277,8 +249,11 @@ def move_random_partition_to_random_table(self):
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
     with When("I attach the partition to the second table"):
-        node.query(
-            f"ALTER TABLE {source_table_name} MOVE PARTITION {partition} TO TABLE {destination_table_name}",
+        alter_table_move_partition_to_table(
+            node=node,
+            table_name=source_table_name,
+            partition_name=partition,
+            path_to_backup=destination_table_name,
             exitcode=0,
         )
 
@@ -294,8 +269,11 @@ def attach_random_part_from_table(self):
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
     with When("I attach the partition to the second table"):
-        node.query(
-            f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition} FROM {source_table_name}",
+        alter_table_attach_partition_from(
+            node=node,
+            table_name=destination_table_name,
+            partition_name=partition,
+            path_to_backup=source_table_name,
             exitcode=0,
         )
 
@@ -364,17 +342,6 @@ def delete_random_rows(self):
     )
 
 
-@TestStep(When)
-@Retry(timeout=30, delay=1)
-def get_row_count(self, node, table_name):
-    """Get the number of rows in the given table."""
-    r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSON",
-        exitcode=0,
-    )
-    return int(json.loads(r.output)["data"][0]["count()"])
-
-
 @TestStep(Then)
 def check_consistency(self, tables=None):
     """Check that the given tables hold the same amount of data on all nodes where they exist."""
@@ -429,7 +396,7 @@ def parallel_alters(self):
             delete_random_column,
             update_random_column,
             delete_random_rows,
-            detach_attach_random_part,
+            detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
@@ -473,7 +440,9 @@ def parallel_alters(self):
             with When(
                 "I perform a group of actions alongside insert and select, and optimize all tables"
             ):
-                for action in chain([insert, select], chosen_actions):
+                for action in chain(
+                    [insert_to_random, select_count_random], chosen_actions
+                ):
                     By(
                         f"I {action.name}",
                         run=action,
@@ -484,7 +453,7 @@ def parallel_alters(self):
                 for table in self.context.table_names:
                     By(
                         f"I OPTIMIZE {table}",
-                        test=optimize,
+                        test=optimize_random,
                         parallel=True,
                         flags=TE,
                     )(table_name=table_name)
