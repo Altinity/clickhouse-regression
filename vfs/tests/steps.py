@@ -88,16 +88,23 @@ def check_vfs_state(
         assert r.exitcode in [1, 2], error()
 
 
+@TestStep
+def get_row_count(self, node, table_name):
+    """Get the number of rows in the given table."""
+    r = node.query(
+        f"SELECT count() FROM {table_name} FORMAT JSON",
+        exitcode=0,
+    )
+    return int(json.loads(r.output)["data"][0]["count()"])
+
+
 @TestStep(Then)
 def assert_row_count(self, node, table_name: str, rows: int = 1000000):
     """Assert that the number of rows in a table is as expected."""
     if node is None:
         node = current().context.node
-    r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSONColumns",
-        exitcode=0,
-    )
-    actual_count = int(json.loads(r.output)["count()"][0])
+
+    actual_count = get_row_count(node=node, table_name=table_name)
     assert rows == actual_count, error()
 
 
@@ -370,3 +377,35 @@ def check_stable_bucket_size(
         delay=delay,
     )
     assert abs(current_size - expected_size) <= tolerance, error()
+
+
+@TestStep
+def get_column_string(self, node, table_name) -> str:
+    """Get a string with column names and types."""
+    r = node.query(f"DESCRIBE TABLE {table_name}")
+    return ",".join([l.strip() for l in r.output.splitlines()])
+
+
+@TestStep
+def get_column_names(self, node, table_name) -> list:
+    """Get a list of a table's column names."""
+    r = node.query(f"DESCRIBE TABLE {table_name} FORMAT JSONColumns")
+    return json.loads(r.output)["name"]
+
+
+@TestStep
+def get_active_parts(self, node, table_name):
+    """Get a list of active parts in a table."""
+    r = node.query(
+        f"select name from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
+    )
+    return json.loads(r.output)["name"]
+
+
+@TestStep
+def get_active_partition_ids(self, node, table_name):
+    """Get a list of active partitions in a table."""
+    r = node.query(
+        f"select partition_id from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
+    )
+    return json.loads(r.output)["partition_id"]
