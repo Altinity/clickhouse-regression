@@ -411,13 +411,15 @@ def check_consistency(self, tables=None):
 
 
 @TestScenario
-def parallel_alters(self, storage_policy="external_vfs"):
+def parallel_alters(self):
     """
     Perform combinations of alter actions, checking that all replicas agree.
     """
 
     unstressed_limit = 100
     combination_size = 3
+    run_groups_in_parallel = True
+    storage_policy = "external_vfs"
 
     with Given("I have a list of actions I can perform"):
         actions = [
@@ -475,7 +477,7 @@ def parallel_alters(self, storage_policy="external_vfs"):
                     By(
                         f"I {action.name}",
                         run=action,
-                        parallel=True,
+                        parallel=run_groups_in_parallel,
                         flags=TE | ERROR_NOT_COUNTED,
                     )
 
