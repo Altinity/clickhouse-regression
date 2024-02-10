@@ -346,16 +346,19 @@ def clear_random_column(self):
 @Retry(timeout=10, delay=1)
 @Name("delete row")
 def delete_random_rows(self):
-    """Delete rows a few rows at random."""
+    """Delete a few rows at random."""
     node = random.choice(self.context.ch_nodes)
     table_name = random.choice(self.context.table_names)
     column_name = get_random_column_name(node=node, table_name=table_name)
+    divisor = random.choice([47, 53, 59, 61, 67])
+    remainder = random.randint(0, divisor - 1)
+
     By(
         name=f"delete rows from {table_name} with {node.name}",
         test=alter_table_delete_rows,
     )(
         table_name=table_name,
-        condition=f"({column_name} % 17)",
+        condition=f"({column_name} % {divisor} = {remainder})",
         node=node,
         no_checks=True,
     )
@@ -465,7 +468,9 @@ def parallel_alters(self, storage_policy="external_vfs"):
             f"{i}/{total_combinations} "
             + ",".join([f"{f.name}" for f in chosen_actions])
         ):
-            with When("I perform a group of actions alongside insert and select, and optimize all tables"):
+            with When(
+                "I perform a group of actions alongside insert and select, and optimize all tables"
+            ):
                 for action in chain([insert, select], chosen_actions):
                     By(
                         f"I {action.name}",
