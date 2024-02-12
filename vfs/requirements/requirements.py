@@ -284,25 +284,37 @@ RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead = Requirement(
     num="4.4.6",
 )
 
-RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings = Requirement(
-    name="RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings",
+RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_ZeroCopyReplication = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.ZeroCopyReplication",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DiskObjectStorageVFS` is incompatible with the below settings.\n"
-        "\n"
-        "| Setting                        | Incompatible Values |\n"
-        "| ------------------------------ | ------------------- |\n"
-        "| allow_s3_zero_copy_replication | true, 1             |\n"
-        "| send_metadata                  | true, 1             |\n"
+        "[ClickHouse] SHALL return an exception when creating a table with\n"
+        "`allow_s3_zero_copy_replication=1` on a disk with `allow_vfs=1`.\n"
         "\n"
     ),
     link=None,
     level=3,
     num="4.5.1",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_SendMetadata = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.SendMetadata",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL log an exception when a disk in configured with `send_metadata=1` and `allow_vfs=1`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.5.2",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_System_Delete = Requirement(
@@ -1054,9 +1066,14 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         ),
         Heading(name="Incompatible Settings", level=2, num="4.5"),
         Heading(
-            name="RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings",
+            name="RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.ZeroCopyReplication",
             level=3,
             num="4.5.1",
+        ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.SendMetadata",
+            level=3,
+            num="4.5.2",
         ),
         Heading(name="System", level=2, num="4.6"),
         Heading(
@@ -1224,7 +1241,8 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_S3,
         RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff,
         RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead,
-        RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings,
+        RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_ZeroCopyReplication,
+        RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_SendMetadata,
         RQ_SRS_038_DiskObjectStorageVFS_System_Delete,
         RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption,
         RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection,
@@ -1291,7 +1309,8 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.4.5 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ReadBackoff](#rqsrs-038diskobjectstoragevfssharedsettingsreadbackoff)
     * 4.4.6 [RQ.SRS-038.DiskObjectStorageVFS.SharedSettings.ConcurrentRead](#rqsrs-038diskobjectstoragevfssharedsettingsconcurrentread)
   * 4.5 [Incompatible Settings](#incompatible-settings)
-    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings](#rqsrs-038diskobjectstoragevfsincompatiblesettings)
+    * 4.5.1 [RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.ZeroCopyReplication](#rqsrs-038diskobjectstoragevfsincompatiblesettingszerocopyreplication)
+    * 4.5.2 [RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.SendMetadata](#rqsrs-038diskobjectstoragevfsincompatiblesettingssendmetadata)
   * 4.6 [System](#system)
     * 4.6.1 [RQ.SRS-038.DiskObjectStorageVFS.System.Delete](#rqsrs-038diskobjectstoragevfssystemdelete)
     * 4.6.2 [RQ.SRS-038.DiskObjectStorageVFS.System.ConnectionInterruption](#rqsrs-038diskobjectstoragevfssystemconnectioninterruption)
@@ -1501,15 +1520,16 @@ version: 1.0
 
 ### Incompatible Settings
 
-#### RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings
+#### RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.ZeroCopyReplication
 version: 1.0
 
-[ClickHouse] `DiskObjectStorageVFS` is incompatible with the below settings.
+[ClickHouse] SHALL return an exception when creating a table with
+`allow_s3_zero_copy_replication=1` on a disk with `allow_vfs=1`.
 
-| Setting                        | Incompatible Values |
-| ------------------------------ | ------------------- |
-| allow_s3_zero_copy_replication | true, 1             |
-| send_metadata                  | true, 1             |
+#### RQ.SRS-038.DiskObjectStorageVFS.IncompatibleSettings.SendMetadata
+version: 1.0
+
+[ClickHouse] SHALL log an exception when a disk in configured with `send_metadata=1` and `allow_vfs=1`.
 
 ### System
 

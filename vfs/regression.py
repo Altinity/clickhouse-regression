@@ -20,7 +20,6 @@ xfails = {
     ":/system/optimize/table_settings='min_bytes_for_wide_part=:": [
         (Fail, "needs investigation")
     ],
-    ":/alter/move/:": [(Fail, "needs investigation, WIP")],
 }
 
 ffails = {
@@ -29,6 +28,8 @@ ffails = {
         "vfs not supported on < 24",
         check_clickhouse_version("<24"),
     ),
+    ":/alter/move": (XFail, "Clickhouse crashes"),
+    ":/settings/incompatible with send metadata": (XFail, "Clickhouse crashes"),
 }
 
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
