@@ -633,6 +633,7 @@ def feature(self, node="clickhouse1"):
     """Check using SSL configuration to force only FIPS compatible SSL connections."""
     cluster = self.context.cluster
     self.context.node = self.context.cluster.node(node)
+    bash = self.context.cluster.bash(node=None)
 
     try:
         with Given("I start standalone keeper"):
@@ -645,8 +646,18 @@ def feature(self, node="clickhouse1"):
             for zookeeper_node in self.context.cluster.nodes["zookeeper"]:
                 self.context.cluster.node(zookeeper_node).stop()
 
-        with And("I wait for zookeepers to stop"):
-            time.sleep(10)
+        with And("I check that all zookepers containers were stopped"):
+            for zookeeper_node in self.context.cluster.nodes["zookeeper"]:
+                for retry in retries(timeout=10, delay=1):
+                    with retry:
+                        cmd = bash(f"docker ps | grep {zookeeper_node}")
+                        assert cmd.exitcode == 1
+
+            assert self.context.node.query(
+                f"select count() from system.zookeeper where path='/'",
+                retry_count=5,
+                exitcode=0,
+            )
 
         with And("I enable SSL"):
             enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
