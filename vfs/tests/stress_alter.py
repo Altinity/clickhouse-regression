@@ -98,19 +98,19 @@ def get_random_column_name(self, node, table_name):
 @Name("add column")
 def add_random_column(self):
     """Add a column with a random name."""
-    table_name = get_random_table_name()
-    node = get_random_node_for_table(table_name=table_name)
     with table_schema_lock:
-        By(
-            name=f"add column to {table_name} with {node.name}",
-            test=alter_table_add_column,
-        )(
-            table_name=table_name,
-            column_name=f"c{random.randint(0, 99999)}",
-            column_type="UInt16",
-            node=node,
-            no_checks=True,
-        )
+        for table_name in self.context.table_names:
+            node = get_random_node_for_table(table_name=table_name)
+            By(
+                name=f"add column to {table_name} with {node.name}",
+                test=alter_table_add_column,
+            )(
+                table_name=table_name,
+                column_name=f"c{random.randint(0, 99999)}",
+                column_type="UInt16",
+                node=node,
+                exitcode=0,
+            )
 
 
 @TestStep
@@ -123,10 +123,12 @@ def delete_random_column(self):
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        By(
-            name=f"delete column from {table_name} with {node.name}",
-            test=alter_table_drop_column,
-        )(node=node, table_name=table_name, column_name=column_name, no_checks=True)
+        for table_name in self.context.table_names:
+            node = get_random_node_for_table(table_name=table_name)
+            By(
+                name=f"delete column from {table_name} with {node.name}",
+                test=alter_table_drop_column,
+            )(node=node, table_name=table_name, column_name=column_name, exitcode=0)
 
 
 @TestStep
@@ -140,16 +142,18 @@ def rename_random_column(self):
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        By(
-            name=f"rename column from {table_name} with {node.name}",
-            test=alter_table_rename_column,
-        )(
-            node=node,
-            table_name=table_name,
-            column_name_old=column_name,
-            column_name_new=new_name,
-            no_checks=True,
-        )
+        for table_name in self.context.table_names:
+            node = get_random_node_for_table(table_name=table_name)
+            By(
+                name=f"rename column from {table_name} with {node.name}",
+                test=alter_table_rename_column,
+            )(
+                node=node,
+                table_name=table_name,
+                column_name_old=column_name,
+                column_name_new=new_name,
+                exitcode=0,
+            )
 
 
 @TestStep
@@ -169,7 +173,7 @@ def update_random_column(self):
         expression=f"({column_name} * 5)",
         condition=f"({column_name} < 10000)",
         node=node,
-        no_checks=True,
+        exitcode=0,
     )
 
 
@@ -244,12 +248,12 @@ def drop_random_part(self):
 
         with And("I drop the detached partition"):
             node.query(
-                f"ALTER TABLE {table_name} DROP DETACHED PART {part_id} SETTINGS allow_drop_detached=1",
+                f"ALTER TABLE {table_name} DROP DETACHED PART '{part_id}' SETTINGS allow_drop_detached=1",
                 exitcode=0,
             )
     else:
         with When("I drop the part"):
-            node.query(f"ALTER TABLE {table_name} DROP PART {part_id}", exitcode=0)
+            node.query(f"ALTER TABLE {table_name} DROP PART '{part_id}'", exitcode=0)
 
 
 @TestStep
@@ -262,14 +266,15 @@ def replace_random_part(self):
     node = get_random_node_for_table(table_name=destination_table_name)
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
-    with When("I replace a partition on the second table"):
-        alter_table_replace_partition(
-            node=node,
-            table_name=destination_table_name,
-            partition_name=partition,
-            path_to_backup=source_table_name,
-            exitcode=0,
-        )
+    with table_schema_lock:
+        with When("I replace a partition on the second table"):
+            alter_table_replace_partition(
+                node=node,
+                table_name=destination_table_name,
+                partition_name=partition,
+                path_to_backup=source_table_name,
+                exitcode=0,
+            )
 
 
 @TestStep
@@ -282,14 +287,15 @@ def move_random_partition_to_random_table(self):
     node = get_random_node_for_table(table_name=destination_table_name)
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
-    with When("I attach the partition to the second table"):
-        alter_table_move_partition_to_table(
-            node=node,
-            table_name=source_table_name,
-            partition_name=partition,
-            path_to_backup=destination_table_name,
-            exitcode=0,
-        )
+    with table_schema_lock:
+        with When("I attach the partition to the second table"):
+            alter_table_move_partition_to_table(
+                node=node,
+                table_name=source_table_name,
+                partition_name=partition,
+                path_to_backup=destination_table_name,
+                exitcode=0,
+            )
 
 
 @TestStep
@@ -303,14 +309,15 @@ def attach_random_part_from_table(self):
     node = get_random_node_for_table(table_name=destination_table_name)
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
-    with When("I attach the partition to the second table"):
-        alter_table_attach_partition_from(
-            node=node,
-            table_name=destination_table_name,
-            partition_name=partition,
-            path_to_backup=source_table_name,
-            exitcode=0,
-        )
+    with table_schema_lock:
+        with When("I attach the partition to the second table"):
+            alter_table_attach_partition_from(
+                node=node,
+                table_name=destination_table_name,
+                partition_name=partition,
+                path_to_backup=source_table_name,
+                exitcode=0,
+            )
 
 
 @TestStep
@@ -323,16 +330,18 @@ def fetch_random_part_from_table(self):
     node = get_random_node_for_table(table_name=destination_table_name)
     part_id = get_random_part_id(node=node, table_name=source_table_name)
 
-    with When("I fetch a part from the first table"):
-        node.query(
-            f"ALTER TABLE {destination_table_name} FETCH PART '{part_id}' FROM '/clickhouse/tables/{source_table_name}'",
-            exitcode=0,
-        )
+    with table_schema_lock:
+        with When("I fetch a part from the first table"):
+            node.query(
+                f"ALTER TABLE {destination_table_name} FETCH PART '{part_id}' FROM '/clickhouse/tables/{source_table_name}'",
+                exitcode=0,
+            )
 
-    with And("I attach the part to the second table"):
-        node.query(
-            f"ALTER TABLE {destination_table_name} ATTACH PART '{part_id}'", exitcode=0
-        )
+        with And("I attach the part to the second table"):
+            node.query(
+                f"ALTER TABLE {destination_table_name} ATTACH PART '{part_id}'",
+                exitcode=0,
+            )
 
 
 @TestStep
@@ -379,7 +388,10 @@ def delete_random_rows(self):
 
 @TestStep(Then)
 def check_consistency(self, tables=None):
-    """Check that the given tables hold the same amount of data on all nodes where they exist."""
+    """
+    Check that the given tables hold the same amount of data on all nodes where they exist.
+    Also check that column names match, subsequent part move tests require matching columns.
+    """
     nodes = self.context.ch_nodes
     if tables is None:
         tables = self.context.table_names
@@ -394,6 +406,7 @@ def check_consistency(self, tables=None):
         for attempt in retries(timeout=90, delay=2):
             with attempt:
                 row_counts = {}
+                column_names = {}
                 for node in active_nodes:
                     with When(
                         f"I sync and count rows on node {node.name} for table {table_name}"
@@ -412,11 +425,17 @@ def check_consistency(self, tables=None):
                             row_counts[node.name] = get_row_count(
                                 node=node, table_name=table_name
                             )
+                            column_names[node.name] = get_column_names(
+                                node=node, table_name=table_name
+                            )
 
                 with Then("All replicas should have the same state"):
                     for n1, n2 in combinations(nodes, 2):
                         with By(f"Checking {n1.name} and {n2.name}"):
                             assert row_counts[n1.name] == row_counts[n2.name], error()
+                            assert (
+                                column_names[n1.name] == column_names[n2.name]
+                            ), error()
 
 
 @TestStep
