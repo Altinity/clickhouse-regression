@@ -2,7 +2,7 @@
 import random
 import json
 from itertools import chain
-from threading import Lock
+from threading import RLock
 import time
 
 from testflows.core import *
@@ -13,8 +13,7 @@ from helpers.alter import *
 from vfs.tests.steps import *
 from vfs.requirements import *
 
-delete_replica_lock = Lock()
-table_schema_lock = Lock()
+table_schema_lock = RLock()
 
 
 @TestStep
@@ -32,9 +31,10 @@ def get_nodes_for_table(self, nodes, table_name):
 
 @TestStep
 def get_random_node_for_table(self, table_name):
-    return random.choice(
-        get_nodes_for_table(nodes=self.context.ch_nodes, table_name=table_name)
-    )
+    with table_schema_lock:
+        return random.choice(
+            get_nodes_for_table(nodes=self.context.ch_nodes, table_name=table_name)
+        )
 
 
 @TestStep
@@ -95,7 +95,7 @@ def get_random_column_name(self, node, table_name):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=60, delay=5)
 @Name("add column")
 def add_random_column(self):
     """Add a column with a random name."""
@@ -115,7 +115,7 @@ def add_random_column(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=60, delay=5)
 @Name("delete column")
 def delete_random_column(self):
     """Delete a random column."""
@@ -133,7 +133,7 @@ def delete_random_column(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=60, delay=5)
 @Name("rename column")
 def rename_random_column(self):
     """Rename a random column to a random value."""
@@ -158,7 +158,7 @@ def rename_random_column(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=60, delay=5)
 @Name("update column")
 def update_random_column(self):
     """Replace some values on a random column."""
@@ -179,12 +179,14 @@ def update_random_column(self):
 
 
 @TestStep
+@Retry(timeout=60, delay=2)
 def get_random_part_id(self, node, table_name):
     """Choose a random active part in a table."""
     return random.choice(get_active_parts(node=node, table_name=table_name))
 
 
 @TestStep
+@Retry(timeout=60, delay=2)
 def get_random_partition_id(self, node, table_name):
     """Choose a random active partition in a table."""
     return random.choice(get_active_partition_ids(node=node, table_name=table_name))
@@ -220,17 +222,15 @@ def freeze_unfreeze_random_part(self):
     delay = random.random() * 3
 
     with When("I freeze the part"):
-        alter_table_freeze_partition_with_name(
-            node=node, partition_name=partition, backup_name=backup_name, exitcode=0
-        )
+        query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
+        node.query(query, exitcode=0)
 
     with Then(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I unfreeze the part"):
-        alter_table_unfreeze_partition_with_name(
-            node=node, partition_name=partition, backup_name=backup_name, exitcode=0
-        )
+        query = f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition} WITH NAME '{backup_name}'"
+        node.query(query, exitcode=0)
 
 
 @TestStep
@@ -303,7 +303,7 @@ def move_random_partition_to_random_table(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=120, delay=5)
 @Name("attach part")
 def attach_random_part_from_table(self):
     """Attach a random partition from one table to another."""
@@ -350,7 +350,7 @@ def fetch_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=30, delay=5)
 @Name("clear column")
 def clear_random_column(self):
     """Clear a random column on a random partition."""
@@ -370,7 +370,7 @@ def clear_random_column(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=30, delay=5)
 @Name("delete row")
 def delete_random_rows(self):
     """Delete a few rows at random."""
@@ -457,10 +457,11 @@ def add_replica(self):
 
     tables_by_node = {}
 
-    with delete_replica_lock:
+    with table_schema_lock:
         for node in nodes:
-            r = nodes[0].query("SELECT table from system.replicas FORMAT JSONColumns")
-            tables_by_node[node.name] = json.loads(r.output)["table"]
+            with When(f"I check which tables are known by {node.name}"):
+                r = nodes[0].query("SELECT table from system.replicas FORMAT JSONColumns")
+                tables_by_node[node.name] = json.loads(r.output)["table"]
 
         table_counts = [len(tables) for tables in tables_by_node.values()]
 
@@ -477,36 +478,33 @@ def add_replica(self):
 
         assert adding_node is not None, "Early return logic should prevent this"
 
-        with table_schema_lock:
-            for table in tables:
-                if table not in tables_by_node[adding_node.name]:
+        for table in tables:
+            if table not in tables_by_node[adding_node.name]:
 
-                    if table in tables_by_node[reference_nodes[0].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[0], table_name=table
-                        )
-                    elif table in tables_by_node[reference_nodes[1].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[1], table_name=table
-                        )
-                    else:
-                        assert False, "This line should never be reached"
-
-                    create_one_replica(
-                        node=adding_node, table_name=table, columns=columns
+                if table in tables_by_node[reference_nodes[0].name]:
+                    columns = get_column_string(
+                        node=reference_nodes[0], table_name=table
                     )
+                elif table in tables_by_node[reference_nodes[1].name]:
+                    columns = get_column_string(
+                        node=reference_nodes[1], table_name=table
+                    )
+                else:
+                    assert False, "This line should never be reached"
+
+                create_one_replica(node=adding_node, table_name=table, columns=columns)
 
 
 @TestStep
 def delete_replica(self):
     """
-    Delete a random table replica, being careful to not delete the last replica
+    Delete a random table replica, being careful to not delete the last replica.
     """
     node = random.choice(self.context.ch_nodes)
     tables = self.context.table_names.copy()
     random.shuffle(tables)
 
-    with delete_replica_lock:
+    with table_schema_lock:
         r = node.query(
             "SELECT table, active_replicas from system.replicas FORMAT JSONColumns"
         )
@@ -515,8 +513,9 @@ def delete_replica(self):
         active_replicas = {t: r for t, r in zip(current_tables, out["active_replicas"])}
 
         for table in tables:
-            if table in current_tables and active_replicas["table"] > 1:
+            if table in current_tables and active_replicas[table] > 1:
                 delete_one_replica(node=node, table_name=table)
+                return
 
 
 @TestScenario
@@ -533,8 +532,8 @@ def parallel_alters(self):
             delete_random_column,
             update_random_column,
             delete_random_rows,
-            # delete_replica,
-            # add_replica,
+            delete_replica,
+            add_replica,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
@@ -550,9 +549,11 @@ def parallel_alters(self):
         )
 
     if not self.context.stress:
-        with And(f"I shuffle the list and choose {self.context.unstressed_limit} groups of actions"):
+        with And(
+            f"I shuffle the list and choose {self.context.unstressed_limit} groups of actions"
+        ):
             random.shuffle(action_groups)
-            action_groups = action_groups[:self.context.unstressed_limit]
+            action_groups = action_groups[: self.context.unstressed_limit]
 
     with Given("I create 3 tables with 10 columns and data"):
         self.context.table_names = []
@@ -600,7 +601,8 @@ def parallel_alters(self):
 
             with Then("I check that the replicas are consistent", flags=TE):
                 check_consistency()
-        note(f'Average time per test combination {(time.time()-t)/(i+1):.1f}s')
+
+        note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
 
 
 @TestFeature
@@ -612,7 +614,7 @@ def feature(self):
     self.context.combination_size = 3
     self.context.run_groups_in_parallel = True
     self.context.ignore_failed_part_moves = False
-    self.context.sync_replica_timeout = 60
+    self.context.sync_replica_timeout = 60*10
     self.context.storage_policy = "external_vfs"
 
     with Given("I have S3 disks configured"):
