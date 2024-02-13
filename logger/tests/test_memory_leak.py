@@ -56,6 +56,8 @@ def get_process_memory_usage(self, pid):
     required, use /proc/pid/smaps or /proc/pid/smaps_rollup
     instead, which are much slower but provide accurate,
     detailed information.
+
+    https://man7.org/linux/man-pages/man5/proc.5.html
     """
     ProcessMemory = namedtuple(
         "ProcessMemory", ["size", "resident", "sharded", "trs", "lrs", "drs", "dt"]
@@ -64,11 +66,90 @@ def get_process_memory_usage(self, pid):
     return ProcessMemory(*[int(i.strip()) for i in cmd.output.split(" ")])
 
 
+@TestStep(When)
+def get_process_memory_usage_in_kilobytes(self, pid):
+    """
+    Get process memory usage by reading contents of
+    /proc/{pid}/status.
+
+    Provides information about memory usage, measured in
+    pages. The example of columns are:
+
+    VmPeak Peak virtual memory size.
+
+    VmSize Virtual memory size.
+
+    VmLck  Locked memory size (see mlock(2)).
+
+    VmPin  Pinned memory size (since Linux 3.2).  These are
+            pages that can't be moved because something needs
+            to directly access physical memory.
+
+    VmHWM  Peak resident set size ("high water mark").  This
+            value is inaccurate; see /proc/pid/statm above.
+
+    VmRSS  Resident set size.  Note that the value here is the
+            sum of RssAnon, RssFile, and RssShmem.  This value
+            is inaccurate; see /proc/pid/statm above.
+
+    RssAnon
+            Size of resident anonymous memory.  (since Linux
+            4.5).  This value is inaccurate; see
+            /proc/pid/statm above.
+
+    RssFile
+            Size of resident file mappings.  (since Linux 4.5).
+            This value is inaccurate; see /proc/pid/statm
+            above.
+
+    RssShmem
+            Size of resident shared memory (includes System V
+            shared memory, mappings from tmpfs(5), and shared
+            anonymous mappings).  (since Linux 4.5).
+
+    https://man7.org/linux/man-pages/man5/proc.5.html
+    """
+    ProcessMemory = namedtuple(
+        "ProcessMemory",
+        [
+            "VmPeak",
+            "VmSize",
+            "VmLck",
+            "VmPin",
+            "VmHWM",
+            "VmRSS",
+            "VmData",
+            "VmStk",
+            "VmExe",
+            "VmLib",
+            "VmPTE",
+            "VmSwap",
+        ],
+    )
+    cmd = self.context.node.command(f"grep Vm /proc/{pid}/status", exitcode=0).output
+    """
+    VmPeak:	 3420468 kB
+    VmSize:	 3420468 kB
+    VmLck:	       0 kB
+    VmPin:	       0 kB
+    VmHWM:	  440460 kB
+    VmRSS:	  435520 kB  ----> ['3420468', '3420468', '0', '0', '440460', '435520', '2515044', '132', '291976', '2520', '2212', '0']
+    VmData:	 2515044 kB
+    VmStk:	     132 kB
+    VmExe:	  291976 kB
+    VmLib:	    2520 kB
+    VmPTE:	    2212 kB
+    VmSwap:	       0 kB
+    """
+    output = [line.split("\t")[1].strip().split(" ")[0] for line in cmd.split("\n")]
+    return ProcessMemory(*[int(i.strip()) for i in output])
+
+
 @TestScenario
 def check_create_and_drop_tables(
     self,
     number_of_workers=10,
-    number_of_tables=3000,
+    number_of_tables=10000,
     node=None,
     max_memory_increase=1.3,
     timeout=300,
@@ -82,26 +163,35 @@ def check_create_and_drop_tables(
     with Given("I collect initial memory usage of clickhouse server process"):
         start_memory = get_process_memory_usage(pid=pid)
         note(f"start resident memory: {start_memory.resident}")
+        start_memory_kb = get_process_memory_usage_in_kilobytes(pid=pid)
+        note(f"start resident memory in kilobytes: {start_memory_kb.VmRSS}")
 
     with When(
-        "I create and drop large amount of tables in parallel",
+        "I create and drop large number of tables in parallel",
         description=f"number of workers = {number_of_workers}, number of tables = {number_of_tables}",
     ):
         create_and_drop_tables_parallel(
             number_of_workers=number_of_workers, number_of_tables=number_of_tables
         )
 
-    with And("I collect memory usage after I create and drop large amount of tables"):
+    with And("I collect memory usage after I create and drop large number of tables"):
         end_memory = get_process_memory_usage(pid=pid)
         note(f"end resident memory: {end_memory.resident}")
+        end_memory_kb = get_process_memory_usage_in_kilobytes(pid=pid)
+        note(f"end resident memory in kilobytes: {end_memory_kb.VmRSS}")
 
     with Then("I check for memory leaks"):
         max_memory = start_memory.resident * max_memory_increase
         for attempt in retries(timeout=timeout, delay=10):
             with attempt:
                 current_memory = get_process_memory_usage(pid=pid)
+                current_memory_kb = get_process_memory_usage_in_kilobytes(pid=pid)
                 note(f"start resident memory: {start_memory.resident}")
                 note(f"current resident memory: {current_memory.resident}")
+                note(f"start resident memory in kilobytes: {start_memory_kb.VmRSS}")
+                note(f"current resident memory in kilobytes: {current_memory_kb.VmRSS}")
+                released_memory = end_memory.resident - current_memory.resident
+                note(f"released memory: {released_memory}")
                 assert (
                     current_memory.resident <= max_memory
                 ), f"Memory usage {current_memory.resident} larger than expected {max_memory}"
