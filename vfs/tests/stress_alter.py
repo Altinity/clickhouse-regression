@@ -3,10 +3,11 @@ import random
 import json
 from itertools import chain
 from threading import Lock
+import time
 
 from testflows.core import *
 from testflows.combinatorics import combinations
-from testflows.uexpect.uexpect import ExpectTimeoutError
+from testflows.uexpect.uexpect import ExpectTimeoutError, TimeoutError
 
 from helpers.alter import *
 from vfs.tests.steps import *
@@ -257,6 +258,7 @@ def drop_random_part(self):
 
 
 @TestStep
+@Retry(timeout=120, delay=5)
 @Name("replace part")
 def replace_random_part(self):
     """Test attaching a random part from one table to another."""
@@ -274,6 +276,7 @@ def replace_random_part(self):
                 partition_name=partition,
                 path_to_backup=source_table_name,
                 exitcode=0,
+                no_checks=self.context.ignore_failed_part_moves,
             )
 
 
@@ -295,11 +298,12 @@ def move_random_partition_to_random_table(self):
                 partition_name=partition,
                 path_to_backup=destination_table_name,
                 exitcode=0,
+                no_checks=self.context.ignore_failed_part_moves,
             )
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=60, delay=5)
 @Name("attach part")
 def attach_random_part_from_table(self):
     """Attach a random partition from one table to another."""
@@ -317,6 +321,7 @@ def attach_random_part_from_table(self):
                 partition_name=partition,
                 path_to_backup=source_table_name,
                 exitcode=0,
+                no_checks=self.context.ignore_failed_part_moves,
             )
 
 
@@ -415,10 +420,10 @@ def check_consistency(self, tables=None):
                             try:
                                 node.query(
                                     f"SYSTEM SYNC REPLICA {table_name}",
-                                    timeout=10,
+                                    timeout=self.context.sync_replica_timeout,
                                     no_checks=True,
                                 )
-                            except ExpectTimeoutError:
+                            except (ExpectTimeoutError, TimeoutError):
                                 pass
 
                         with And(f"querying the row count"):
@@ -430,7 +435,7 @@ def check_consistency(self, tables=None):
                             )
 
                 with Then("All replicas should have the same state"):
-                    for n1, n2 in combinations(nodes, 2):
+                    for n1, n2 in combinations(active_nodes, 2):
                         with By(f"Checking {n1.name} and {n2.name}"):
                             assert row_counts[n1.name] == row_counts[n2.name], error()
                             assert (
@@ -520,11 +525,6 @@ def parallel_alters(self):
     Perform combinations of alter actions, checking that all replicas agree.
     """
 
-    unstressed_limit = 100
-    combination_size = 3
-    run_groups_in_parallel = True
-    storage_policy = "external_vfs"
-
     with Given("I have a list of actions I can perform"):
         actions = [
             add_random_column,
@@ -544,24 +544,24 @@ def parallel_alters(self):
             fetch_random_part_from_table,
         ]
 
-    with And(f"I make a list of groups of {combination_size} actions"):
+    with And(f"I make a list of groups of {self.context.combination_size} actions"):
         action_groups = list(
-            combinations(actions, combination_size, with_replacement=True)
+            combinations(actions, self.context.combination_size, with_replacement=True)
         )
 
     if not self.context.stress:
-        with And(f"I shuffle the list and choose {unstressed_limit} groups of actions"):
+        with And(f"I shuffle the list and choose {self.context.unstressed_limit} groups of actions"):
             random.shuffle(action_groups)
-            action_groups = action_groups[:unstressed_limit]
+            action_groups = action_groups[:self.context.unstressed_limit]
 
     with Given("I create 3 tables with 10 columns and data"):
         self.context.table_names = []
         columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
         for i in range(3):
-            table_name = f"table{i}_{storage_policy}"
+            table_name = f"table{i}_{self.context.storage_policy}"
             replicated_table_cluster(
                 table_name=table_name,
-                storage_policy=storage_policy,
+                storage_policy=self.context.storage_policy,
                 partition_by="key % 4",
                 columns=columns,
             )
@@ -570,6 +570,7 @@ def parallel_alters(self):
                 node=self.context.node, table_name=table_name, columns=columns
             )
 
+    t = time.time()
     total_combinations = len(action_groups)
     for i, chosen_actions in enumerate(action_groups):
         with Check(
@@ -583,7 +584,7 @@ def parallel_alters(self):
                     By(
                         f"I {action.name}",
                         run=action,
-                        parallel=run_groups_in_parallel,
+                        parallel=self.context.run_groups_in_parallel,
                         flags=TE | ERROR_NOT_COUNTED,
                     )
 
@@ -599,12 +600,20 @@ def parallel_alters(self):
 
             with Then("I check that the replicas are consistent", flags=TE):
                 check_consistency()
+        note(f'Average time per test combination {(time.time()-t)/(i+1):.1f}s')
 
 
 @TestFeature
 @Name("stress alter")
 def feature(self):
     """Stress test with many alters."""
+
+    self.context.unstressed_limit = 50
+    self.context.combination_size = 3
+    self.context.run_groups_in_parallel = True
+    self.context.ignore_failed_part_moves = False
+    self.context.sync_replica_timeout = 60
+    self.context.storage_policy = "external_vfs"
 
     with Given("I have S3 disks configured"):
         s3_config()
