@@ -32,21 +32,27 @@ def delete_and_check_size_of_the_table(self, node=None):
         node.query(f"OPTIMIZE TABLE {table_name} FINAL")
 
     with And("I check size of the table in system.parts table"):
-        size_in_system_parts_before_deletion = int(
-            node.query(
-                f"SELECT sum(bytes_on_disk) from system.parts "
-                f"where table = '{table_name}' AND active=1"
-            ).output
-        )
+        size_in_system_parts_before_deletion_cmd = node.query(
+            f"SELECT sum(bytes_on_disk) from system.parts "
+            f"where table = '{table_name}' AND active=1"
+        ).output
+        if "No such file or directory" in size_in_system_parts_before_deletion_cmd:
+            size_in_system_parts_before_deletion = 0
+        else:
+            size_in_system_parts_before_deletion = int(
+                size_in_system_parts_before_deletion_cmd
+            )
 
     with And("I check size of the table on disk"):
         for attempt in retries(timeout=100, delay=2):
             with attempt:
-                size_on_disk_before_deletion = int(
-                    node.command(
-                        "du -s /var/lib/clickhouse/store | awk '{print $1}'"
-                    ).output
-                )
+                size_on_disk_before_deletion_cmd = node.command(
+                    "du -s /var/lib/clickhouse/store | awk '{print $1}'"
+                ).output
+                if "No such file or directory" in size_on_disk_before_deletion_cmd:
+                    size_on_disk_before_deletion = 0
+                else:
+                    size_on_disk_before_deletion = int(size_on_disk_before_deletion_cmd)
 
     with When(f"I delete all rows from the table"):
         delete(table_name=table_name, condition="id > 0")
@@ -54,17 +60,28 @@ def delete_and_check_size_of_the_table(self, node=None):
     with Then("I check that rows are deleted immediately"):
         for attempt in retries(timeout=100, delay=2):
             with attempt:
-                size_on_disk_after_deletion = int(
-                    node.command(
-                        "du -s /var/lib/clickhouse/store | awk '{print $1}'"
-                    ).output
-                )
-                size_in_system_parts_after_deletion = int(
-                    node.query(
-                        f"SELECT sum(bytes_on_disk) from system.parts "
-                        f"where table = '{table_name}' AND active=1"
-                    ).output
-                )
+                size_on_disk_after_deletion_cmd = node.command(
+                    "du -s /var/lib/clickhouse/store | awk '{print $1}'"
+                ).output
+                if "No such file or directory" in size_on_disk_after_deletion_cmd:
+                    size_on_disk_after_deletion = 0
+                else:
+                    size_on_disk_after_deletion = int(size_on_disk_after_deletion_cmd)
+
+                size_in_system_parts_after_deletion_cmd = node.query(
+                    f"SELECT sum(bytes_on_disk) from system.parts "
+                    f"where table = '{table_name}' AND active=1"
+                ).output
+                if (
+                    "No such file or directory"
+                    in size_in_system_parts_after_deletion_cmd
+                ):
+                    size_in_system_parts_after_deletion = 0
+                else:
+                    size_in_system_parts_after_deletion = int(
+                        size_in_system_parts_after_deletion_cmd
+                    )
+
                 assert (
                     1.9 * size_on_disk_after_deletion < size_on_disk_before_deletion
                 ), error()
