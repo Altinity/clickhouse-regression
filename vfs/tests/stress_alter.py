@@ -392,6 +392,7 @@ def delete_random_rows(self):
 
 
 @TestStep(Then)
+@Retry(timeout=120, delay=5)
 def check_consistency(self, tables=None):
     """
     Check that the given tables hold the same amount of data on all nodes where they exist.
@@ -407,40 +408,37 @@ def check_consistency(self, tables=None):
                 for n in nodes
                 if table_name in n.query("SHOW TABLES", no_checks=True).output
             ]
+            assert len(active_nodes) > 0, "At least one node should have this table"
 
-        for attempt in retries(timeout=90, delay=2):
-            with attempt:
-                row_counts = {}
-                column_names = {}
-                for node in active_nodes:
-                    with When(
-                        f"I sync and count rows on node {node.name} for table {table_name}"
-                    ):
-                        with By(f"running SYNC REPLICA"):
-                            try:
-                                node.query(
-                                    f"SYSTEM SYNC REPLICA {table_name}",
-                                    timeout=self.context.sync_replica_timeout,
-                                    no_checks=True,
-                                )
-                            except (ExpectTimeoutError, TimeoutError):
-                                pass
+        row_counts = {}
+        column_names = {}
+        for node in active_nodes:
+            with When(
+                f"I sync and count rows on node {node.name} for table {table_name}"
+            ):
+                with By(f"running SYNC REPLICA"):
+                    try:
+                        node.query(
+                            f"SYSTEM SYNC REPLICA {table_name}",
+                            timeout=self.context.sync_replica_timeout,
+                            no_checks=True,
+                        )
+                    except (ExpectTimeoutError, TimeoutError):
+                        pass
 
-                        with And(f"querying the row count"):
-                            row_counts[node.name] = get_row_count(
-                                node=node, table_name=table_name
-                            )
-                            column_names[node.name] = get_column_names(
-                                node=node, table_name=table_name
-                            )
+                with And(f"querying the row count"):
+                    row_counts[node.name] = get_row_count(
+                        node=node, table_name=table_name
+                    )
+                    column_names[node.name] = get_column_names(
+                        node=node, table_name=table_name
+                    )
 
-                with Then("All replicas should have the same state"):
-                    for n1, n2 in combinations(active_nodes, 2):
-                        with By(f"Checking {n1.name} and {n2.name}"):
-                            assert row_counts[n1.name] == row_counts[n2.name], error()
-                            assert (
-                                column_names[n1.name] == column_names[n2.name]
-                            ), error()
+        with Then("All replicas should have the same state"):
+            for n1, n2 in combinations(active_nodes, 2):
+                with By(f"Checking {n1.name} and {n2.name}"):
+                    assert row_counts[n1.name] == row_counts[n2.name], error()
+                    assert column_names[n1.name] == column_names[n2.name], error()
 
 
 @TestStep
@@ -460,18 +458,18 @@ def add_replica(self):
     with table_schema_lock:
         for node in nodes:
             with When(f"I check which tables are known by {node.name}"):
-                r = nodes[0].query("SELECT table from system.replicas FORMAT JSONColumns")
+                r = node.query("SELECT table from system.replicas FORMAT JSONColumns")
                 tables_by_node[node.name] = json.loads(r.output)["table"]
 
         table_counts = [len(tables) for tables in tables_by_node.values()]
 
-        if min(table_counts) == 3:
+        if min(table_counts) == self.context.maximum_replicas:
             return
 
         adding_node = None
         reference_nodes = []
         for node, count in zip(nodes, table_counts):
-            if count < 3 and adding_node is None:
+            if count < self.context.maximum_replicas and adding_node is None:
                 adding_node = node
             else:
                 reference_nodes.append(node)
@@ -480,19 +478,26 @@ def add_replica(self):
 
         for table in tables:
             if table not in tables_by_node[adding_node.name]:
+                with When(f"I check what columns are in {table}"):
+                    if table in tables_by_node[reference_nodes[0].name]:
+                        columns = get_column_string(
+                            node=reference_nodes[0], table_name=table
+                        )
+                    elif table in tables_by_node[reference_nodes[1].name]:
+                        columns = get_column_string(
+                            node=reference_nodes[1], table_name=table
+                        )
+                    else:
+                        assert False, "This line should never be reached"
 
-                if table in tables_by_node[reference_nodes[0].name]:
-                    columns = get_column_string(
-                        node=reference_nodes[0], table_name=table
+                with And(f"I create a new replica on {adding_node.name}"):
+                    create_one_replica(
+                        node=adding_node,
+                        table_name=table,
+                        columns=columns,
+                        order_by="key",
+                        partition_by="key % 4",
                     )
-                elif table in tables_by_node[reference_nodes[1].name]:
-                    columns = get_column_string(
-                        node=reference_nodes[1], table_name=table
-                    )
-                else:
-                    assert False, "This line should never be reached"
-
-                create_one_replica(node=adding_node, table_name=table, columns=columns)
 
 
 @TestStep
@@ -513,7 +518,10 @@ def delete_replica(self):
         active_replicas = {t: r for t, r in zip(current_tables, out["active_replicas"])}
 
         for table in tables:
-            if table in current_tables and active_replicas[table] > 1:
+            if (
+                table in current_tables
+                and active_replicas[table] > self.context.minimum_replicas
+            ):
                 delete_one_replica(node=node, table_name=table)
                 return
 
@@ -555,10 +563,10 @@ def parallel_alters(self):
             random.shuffle(action_groups)
             action_groups = action_groups[: self.context.unstressed_limit]
 
-    with Given("I create 3 tables with 10 columns and data"):
+    with Given(f"I create {self.context.n_tables} tables with 10 columns and data"):
         self.context.table_names = []
         columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
-        for i in range(3):
+        for i in range(self.context.n_tables):
             table_name = f"table{i}_{self.context.storage_policy}"
             replicated_table_cluster(
                 table_name=table_name,
@@ -570,6 +578,14 @@ def parallel_alters(self):
             insert_random(
                 node=self.context.node, table_name=table_name, columns=columns
             )
+
+    # To test a single combination, uncomment and edit as needed.
+    # action_groups = [
+    #     [
+    #         delete_replica,
+    #         add_replica,
+    #     ]
+    # ]
 
     t = time.time()
     total_combinations = len(action_groups)
@@ -593,7 +609,7 @@ def parallel_alters(self):
                     By(
                         f"I OPTIMIZE {table}",
                         test=optimize_random,
-                        parallel=True,
+                        parallel=self.context.run_optimize_in_parallel,
                         flags=TE,
                     )(table_name=table_name)
 
@@ -613,9 +629,13 @@ def feature(self):
     self.context.unstressed_limit = 50
     self.context.combination_size = 3
     self.context.run_groups_in_parallel = True
+    self.context.run_optimize_in_parallel = True
     self.context.ignore_failed_part_moves = False
-    self.context.sync_replica_timeout = 60*10
+    self.context.sync_replica_timeout = 60 * 10
     self.context.storage_policy = "external_vfs"
+    self.context.minimum_replicas = 1
+    self.context.maximum_replicas = 3
+    self.context.n_tables = 3
 
     with Given("I have S3 disks configured"):
         s3_config()
