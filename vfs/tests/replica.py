@@ -232,6 +232,78 @@ def offline_replica(self):
 
 @TestScenario
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
+def add_remove_one_node(self):
+    """
+    Test that no data is lost when a node is removed and added as a replica
+    during inserts on other replicas.
+    """
+
+    table_name = "add_remove_one_replica"
+    storage_policy = "external_vfs"
+    parallel = False
+    nodes = self.context.ch_nodes
+    rows_per_insert = 100_000_000
+    retry_settings = {
+        "timeout": 120,
+        "initial_delay": 5,
+        "delay": 2,
+    }
+
+    if self.context.stress:
+        rows_per_insert = 500_000_000
+        retry_settings["timeout"] = 300
+        retry_settings["delay"] = 5
+
+    with Given("I have a replicated table"):
+        replicated_table_cluster(
+            table_name=table_name, storage_policy=storage_policy, columns="d UInt64"
+        )
+
+    When(
+        "I start inserts on the second node",
+        test=insert_random,
+        parallel=parallel,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+
+    And(
+        "I delete the replica on the third node",
+        test=delete_one_replica,
+        parallel=parallel,
+    )(node=nodes[2], table_name=table_name)
+
+    And(
+        "I replicate the table on the third node",
+        test=create_one_replica,
+        parallel=parallel,
+    )(node=nodes[2], table_name=table_name)
+
+    When(
+        "I start inserts on the first node",
+        test=insert_random,
+        parallel=parallel,
+    )(
+        node=nodes[0],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+
+    join()
+
+    for node in nodes:
+        with Then(f"I wait for {node.name} to sync by watching the row count"):
+            retry(assert_row_count, **retry_settings)(
+                node=node, table_name=table_name, rows=rows_per_insert * 2
+            )
+
+
+@TestScenario
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def parallel_add_remove(self):
     """
     Test that no data is lost when replicas are added and removed
@@ -450,6 +522,10 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
             no_checks=True,
             settings=f"insert_keeper_fault_injection_probability={fault_probability}",
         )
+
+    @TestStep(When)
+    def optimize(self, node):
+        node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
 
     @TestStep(When)
     def select(self, node):
