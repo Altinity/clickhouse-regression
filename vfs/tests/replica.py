@@ -269,6 +269,7 @@ def parallel_add_remove(self):
             columns="d UInt64",
             rows=rows_per_insert,
         )
+        insert_sets = 1
 
         And(
             "I replicate the table on the second node in parallel",
@@ -293,6 +294,7 @@ def parallel_add_remove(self):
             columns="d UInt64",
             rows=rows_per_insert,
         )
+        insert_sets += 1
 
         And(
             "I delete the replica on the first node",
@@ -306,16 +308,28 @@ def parallel_add_remove(self):
             parallel=True,
         )(node=nodes[2], table_name=table_name)
 
+        And(
+            "I continue with parallel inserts on the second node",
+            test=insert_random,
+            parallel=True,
+        )(
+            node=nodes[1],
+            table_name=table_name,
+            columns="d UInt64",
+            rows=rows_per_insert,
+        )
+        insert_sets += 1
+
         join()
 
         with And("I wait for the third node to sync by watching the row count"):
             retry(assert_row_count, **retry_settings)(
-                node=nodes[2], table_name=table_name, rows=rows_per_insert * 2
+                node=nodes[2], table_name=table_name, rows=rows_per_insert * insert_sets
             )
 
         with Then("I also check the row count on the second node"):
             assert_row_count(
-                node=nodes[1], table_name=table_name, rows=rows_per_insert * 2
+                node=nodes[1], table_name=table_name, rows=rows_per_insert * insert_sets
             )
 
         Given(
@@ -328,6 +342,7 @@ def parallel_add_remove(self):
             columns="d UInt64",
             rows=rows_per_insert,
         )
+        insert_sets += 1
         And(
             "I start parallel inserts on the third node in parallel",
             test=insert_random,
@@ -338,6 +353,7 @@ def parallel_add_remove(self):
             columns="d UInt64",
             rows=rows_per_insert,
         )
+        insert_sets += 1
 
         And(
             "I replicate the table on the first node again in parallel",
@@ -349,15 +365,15 @@ def parallel_add_remove(self):
 
         with Then("I wait for the first node to sync by watching the row count"):
             retry(assert_row_count, **retry_settings)(
-                node=nodes[0], table_name=table_name, rows=rows_per_insert * 4
+                node=nodes[0], table_name=table_name, rows=rows_per_insert * insert_sets
             )
 
         with And("I check the row count on the other nodes"):
             assert_row_count(
-                node=nodes[1], table_name=table_name, rows=rows_per_insert * 4
+                node=nodes[1], table_name=table_name, rows=rows_per_insert * insert_sets
             )
             assert_row_count(
-                node=nodes[2], table_name=table_name, rows=rows_per_insert * 4
+                node=nodes[2], table_name=table_name, rows=rows_per_insert * insert_sets
             )
 
     finally:
@@ -434,10 +450,6 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
             no_checks=True,
             settings=f"insert_keeper_fault_injection_probability={fault_probability}",
         )
-
-    @TestStep(When)
-    def optimize(self, node):
-        node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
 
     @TestStep(When)
     def select(self, node):
