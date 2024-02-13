@@ -149,6 +149,11 @@ def regression(
                 executor=pool,
             )(**args)
             Feature(
+                test=load("logger.regression", "regression"),
+                parallel=True,
+                executor=pool,
+            )(**args)
+            Feature(
                 test=load("data_types.regression", "regression"),
                 parallel=True,
                 executor=pool,
