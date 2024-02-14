@@ -163,8 +163,6 @@ def check_create_and_drop_tables(
     with Given("I collect initial memory usage of clickhouse server process"):
         start_memory = get_process_memory_usage(pid=pid)
         note(f"start resident memory: {start_memory.resident}")
-        start_memory_kb = get_process_memory_usage_in_kilobytes(pid=pid)
-        note(f"start resident memory in kilobytes: {start_memory_kb.VmRSS}")
 
     with When(
         "I create and drop large number of tables in parallel",
@@ -177,37 +175,19 @@ def check_create_and_drop_tables(
     with And("I collect memory usage after I create and drop large number of tables"):
         end_memory = get_process_memory_usage(pid=pid)
         note(f"end resident memory: {end_memory.resident}")
-        end_memory_kb = get_process_memory_usage_in_kilobytes(pid=pid)
-        note(f"end resident memory in kilobytes: {end_memory_kb.VmRSS}")
 
     with Then("I check for memory leaks and calculate released memory"):
         max_memory = start_memory.resident * max_memory_increase
         for attempt in retries(timeout=timeout, delay=10):
             with attempt:
                 current_memory = get_process_memory_usage(pid=pid)
-                current_memory_kb = get_process_memory_usage_in_kilobytes(pid=pid)
+                released_memory = end_memory.resident - current_memory.resident
                 note(f"start resident memory: {start_memory.resident}")
                 note(f"current resident memory: {current_memory.resident}")
-                note(f"start resident memory in kilobytes: {start_memory_kb.VmRSS}")
-                note(f"current resident memory in kilobytes: {current_memory_kb.VmRSS}")
-                released_memory = end_memory.resident - current_memory.resident
                 note(f"released memory: {released_memory}")
                 assert (
                     current_memory.resident <= max_memory
-                ), f"Memory usage {current_memory.resident} larger than expected {max_memory}"
-
-    with Then("I calculate released memory"):
-        counter = 0
-        while counter < 5:
-            if get_process_memory_usage(pid=pid).resident == current_memory.resident:
-                counter += 1
-            else:
-                counter = 0
-            current_memory = get_process_memory_usage(pid=pid)
-            time.sleep(10)
-
-        released_memory = end_memory.resident - current_memory.resident
-        note(f"released memory: {released_memory}")
+                ), f"Memory usage {current_memory.resident} larger than expected {max_memory} ({max_memory_increase}*{start_memory.resident})"
 
 
 @TestFeature
