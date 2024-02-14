@@ -183,7 +183,27 @@ def create_s3_endpoint_config_content(
 
 
 @contextmanager
+def s3_storage_context(
+    disks,
+    policies,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    config_file="storage.xml",
+    timeout=300,
+    restart=False,
+    config=None,
+    nodes=None,
+):
+    """Add S3 storage disk configuration."""
+    if config is None:
+        config = create_s3_storage_config_content(
+            disks, policies, config_d_dir, config_file
+        )
+    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
+
+
+@TestStep(Given)
 def s3_storage(
+    self,
     disks,
     policies,
     config_d_dir="/etc/clickhouse-server/config.d",
@@ -453,22 +473,6 @@ def create_mergetree_config_content(
     return Config(content, path, name, uid, "config.xml")
 
 
-@contextmanager
-def mergetree_config_context(
-    settings,
-    config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="merge_tree.xml",
-    timeout=60,
-    restart=False,
-    config=None,
-    nodes=None,
-):
-    """Add MergeTree configuration."""
-    if config is None:
-        config = create_mergetree_config_content(settings, config_d_dir, config_file)
-    return add_config(config, restart=restart, nodes=nodes)
-
-
 @TestStep(Given)
 def mergetree_config(
     self,
@@ -483,7 +487,7 @@ def mergetree_config(
     """Add MergeTree configuration."""
     if config is None:
         config = create_mergetree_config_content(settings, config_d_dir, config_file)
-    yield add_config(config, restart=restart, nodes=nodes)
+    return add_config(config, restart=restart, nodes=nodes)
 
 
 @contextmanager
@@ -1054,7 +1058,7 @@ def default_s3_and_local_disk(self, restart=True):
             },
         }
 
-    with s3_storage(disks, policies, restart=restart):
+    with s3_storage_context(disks, policies, restart=restart):
         yield
 
 
@@ -1083,7 +1087,7 @@ def default_s3_and_local_volume(self, restart=True):
             },
         }
 
-    with s3_storage(disks, policies, restart=restart):
+    with s3_storage_context(disks, policies, restart=restart):
         yield
 
 
@@ -1154,7 +1158,7 @@ def default_s3_disk_and_volume(
         else:
             policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}}
 
-    with s3_storage(disks, policies, restart=restart):
+    with s3_storage_context(disks, policies, restart=restart):
         yield
 
 
