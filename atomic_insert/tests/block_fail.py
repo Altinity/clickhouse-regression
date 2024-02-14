@@ -42,7 +42,7 @@ def block_data_fail(
                 " min_insert_block_size_bytes=1;"
             )
             + (f"COMMIT;" if self.context.use_transaction_for_atomic_insert else ""),
-            exitcode=139,
+            exitcode=395,
         )
 
         if self.context.use_transaction_for_atomic_insert:
@@ -89,7 +89,7 @@ def block_data_fail_in_replicated_table_on_cluster(
             f" FROM numbers({number_of_blocks})"
             " SETTINGS max_block_size=1,"
             " min_insert_block_size_bytes=1;",
-            exitcode=139,
+            exitcode=395,
         )
 
         with And(
