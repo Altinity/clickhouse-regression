@@ -393,11 +393,14 @@ def delete_random_rows(self):
 
 @TestStep(Then)
 @Retry(timeout=120, delay=5)
-def check_consistency(self, tables=None):
+def check_consistency(self, tables=None, sync_timeout=None):
     """
     Check that the given tables hold the same amount of data on all nodes where they exist.
     Also check that column names match, subsequent part move tests require matching columns.
     """
+    if sync_timeout is None:
+        sync_timeout = getattr(self.context, "sync_replica_timeout", 60)
+
     nodes = self.context.ch_nodes
     if tables is None:
         tables = self.context.table_names
@@ -420,7 +423,7 @@ def check_consistency(self, tables=None):
                     try:
                         node.query(
                             f"SYSTEM SYNC REPLICA {table_name}",
-                            timeout=self.context.sync_replica_timeout,
+                            timeout=sync_timeout,
                             no_checks=True,
                         )
                     except (ExpectTimeoutError, TimeoutError):

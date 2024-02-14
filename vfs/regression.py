@@ -29,6 +29,7 @@ ffails = {
         check_clickhouse_version("<24"),
     ),
     ":/alter/move": (XFail, "Clickhouse crashes"),
+    ":/replica/add remove one node": (XFail, "Fix pending"),
     ":/settings/incompatible with send metadata": (XFail, "Clickhouse crashes"),
 }
 
