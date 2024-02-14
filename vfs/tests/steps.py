@@ -7,7 +7,7 @@ from testflows.asserts import error
 
 from helpers.common import getuid, check_clickhouse_version
 
-from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
+from s3.tests.common import s3_storage_context, check_bucket_size, get_bucket_size
 
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
@@ -67,7 +67,7 @@ def s3_config(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True, timeout=60):
+    with s3_storage_context(disks, policies, restart=True, timeout=60):
         yield
 
 
@@ -271,7 +271,7 @@ def storage_config(
     if policies is None:
         policies = {}
 
-    with s3_storage(
+    with s3_storage_context(
         disks,
         policies,
         nodes=nodes,
@@ -312,7 +312,7 @@ def enable_vfs(
 
     policies = {}
 
-    with s3_storage(
+    with s3_storage_context(
         disks,
         policies,
         nodes=nodes,

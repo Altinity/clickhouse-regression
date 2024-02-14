@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 
-from s3.tests.common import getuid, s3_storage
+from s3.tests.common import getuid, s3_storage_context
 from s3.requirements import *
 
 
@@ -86,7 +86,7 @@ def iam_mode_auth(self):
             "aws_external": {"volumes": {"external": {"disk": "aws"}}},
         }
 
-    with s3_storage(disks, policies, restart=True, nodes=[node]):
+    with s3_storage_context(disks, policies, restart=True, nodes=[node]):
         try:
             with Given(f"I create table using S3 storage policy external"):
                 node.query(

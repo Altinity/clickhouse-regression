@@ -199,7 +199,7 @@ def access_failed_skip_check(self):
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             if check_clickhouse_version(">=23.8")(self):
                 with Given(

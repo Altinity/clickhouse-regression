@@ -595,7 +595,7 @@ def multiple_storage(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create table using S3 storage policy external"):
                 node.query(
@@ -703,7 +703,7 @@ def multiple_storage_query(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create table using S3 storage policy external"):
                 node.query(
@@ -810,7 +810,7 @@ def add_storage(self):
             "external": {"volumes": {"external1": {"disk": "first_external"}}},
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create table using S3 storage policy external"):
                 node.query(
@@ -861,7 +861,7 @@ def add_storage(self):
             "external": {"volumes": {"external": {"disk": "second_external"}}},
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create table using S3 storage policy external"):
                 node.query(
@@ -1246,7 +1246,7 @@ def generic_url(self):
              will not start if config is added"""
         )
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create table using S3 storage policy aws_external"):
                 node.query(
@@ -1337,7 +1337,7 @@ def environment_credentials(self):
         }
 
     with s3_env_credentials(endpoints=endpoints, restart=True):
-        with s3_storage(disks, policies, restart=True):
+        with s3_storage_context(disks, policies, restart=True):
             try:
                 with Given(f"I create table using S3 storage policy s3_external"):
                     node.query(
@@ -1633,7 +1633,7 @@ def performance_ttl_move(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create a table"):
                 node.query(
@@ -1719,7 +1719,7 @@ def perform_ttl_move_on_insert(self, bool_value):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create table using S3 storage policy tiered"):
                 node.query(
@@ -1782,7 +1782,7 @@ def perform_ttl_move_on_insert_default(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(f"I create table using S3 storage policy tiered"):
                 node.query(
@@ -1896,7 +1896,7 @@ def alter_move(self, node="clickhouse1"):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         for example in self.examples:
             name, engine = example
             with When(f"for example table name='{name}', engine='{engine}'"):
@@ -2127,7 +2127,7 @@ def default_move_factor(self, node="clickhouse1"):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         for example in self.examples:
             name, engine = example
             with When(f"for example table name='{name}', engine='{engine}'"):
@@ -2280,7 +2280,7 @@ def download_appropriate_disk(self, nodes=None):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with When("I create replicated table on each node"):
                 for i, node in enumerate(nodes):
@@ -2372,7 +2372,7 @@ def alter_on_cluster_modify_ttl(self):
     with And(f"cluster nodes {nodes}"):
         nodes = [cluster.node(name) for name in nodes]
 
-    with s3_storage(disks, policies, restart=True):
+    with s3_storage_context(disks, policies, restart=True):
         try:
             with Given(
                 f"I create a replicated table on each node using S3 storage policy tiered"
