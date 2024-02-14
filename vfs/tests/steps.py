@@ -216,6 +216,7 @@ def create_one_replica(
     table_name,
     columns="d UInt64",
     order_by="d",
+    partition_by=None,
     replica_path_suffix=None,
     replica_name="{replica}",
     no_checks=False,
@@ -229,11 +230,16 @@ def create_one_replica(
     if replica_path_suffix is None:
         replica_path_suffix = table_name
 
+    if partition_by is not None:
+        partition_by = f"PARTITION BY ({partition_by})"
+    else:
+        partition_by = ""
+
     r = node.query(
         f"""
         CREATE TABLE IF NOT EXISTS {table_name} ({columns}) 
         ENGINE=ReplicatedMergeTree('/clickhouse/tables/{replica_path_suffix}', '{replica_name}')
-        ORDER BY ({order_by})
+        ORDER BY ({order_by}) {partition_by}
         SETTINGS storage_policy='{storage_policy}'
         """,
         no_checks=no_checks,
