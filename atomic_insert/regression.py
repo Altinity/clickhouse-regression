@@ -26,6 +26,13 @@ def argparser(parser):
     )
 
 
+ffails = {
+    "/atomic insert/dependent_tables/Replicated*/table with materialized view engine mismatch/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/59670",
+    ),
+}
+
 xfails = {
     "/atomic insert/dependent_tables/Replicated*/table with materialized view*/*": [
         (
@@ -38,6 +45,7 @@ xfails = {
 
 @TestModule
 @ArgumentParser(argparser)
+@FFails(ffails)
 @XFails(xfails)
 @Name("atomic insert")
 @Requirements(RQ_SRS_028_ClickHouse_AtomicInserts("1.0"))
