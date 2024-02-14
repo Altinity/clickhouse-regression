@@ -454,7 +454,7 @@ def create_mergetree_config_content(
 
 
 @contextmanager
-def mergetree_config(
+def mergetree_config_context(
     settings,
     config_d_dir="/etc/clickhouse-server/config.d",
     config_file="merge_tree.xml",
@@ -467,6 +467,23 @@ def mergetree_config(
     if config is None:
         config = create_mergetree_config_content(settings, config_d_dir, config_file)
     return add_config(config, restart=restart, nodes=nodes)
+
+
+@TestStep(Given)
+def mergetree_config(
+    self,
+    settings,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    config_file="merge_tree.xml",
+    timeout=60,
+    restart=False,
+    config=None,
+    nodes=None,
+):
+    """Add MergeTree configuration."""
+    if config is None:
+        config = create_mergetree_config_content(settings, config_d_dir, config_file)
+    yield add_config(config, restart=restart, nodes=nodes)
 
 
 @contextmanager
@@ -1199,9 +1216,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options[
-                "server_side_encryption_customer_key_base64"
-            ] = ssec_key
+            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
+                ssec_key
+            )
         yield
 
     finally:

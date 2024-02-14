@@ -298,13 +298,15 @@ def zero_copy_replication(self, format=None):
         else:
             settings = {"allow_s3_zero_copy_replication": "1"}
 
-    with mergetree_config(settings):
-        benchmark(
-            table_name="zero_copy_replication",
-            table_settings=table_settings,
-            nodes=nodes,
-            format=format,
-        )
+        mergetree_config(settings=settings)
+
+
+    benchmark(
+        table_name="zero_copy_replication",
+        table_settings=table_settings,
+        nodes=nodes,
+        format=format,
+    )
 
 
 @TestScenario
