@@ -119,12 +119,10 @@ def invalid_endpoint(self):
 
     if check_clickhouse_version("<23.8")(self):
         message = "DB::Exception: No key in S3 uri"
-    else: 
+    else:
         message = "Cannot resolve host (unknown-website)"
 
-    invalid_s3_storage_config(
-        disks, policies, message=message, tail=300
-    )
+    invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
 @TestScenario
@@ -199,58 +197,60 @@ def access_failed_skip_check(self):
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
 
-    with s3_storage_context(disks, policies, restart=True):
-        try:
-            if check_clickhouse_version(">=23.8")(self):
-                with Given(
-                    f"""I create table using S3 storage policy external,
-                        expecting failure because there is no access to the S3 bucket"""
-                ):
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} (
-                            d UInt64
-                        ) ENGINE = MergeTree()
-                        ORDER BY d
-                        SETTINGS storage_policy='external'
-                    """,
-                        message="""DB::Exception: Message: Access Denied""",
-                        exitcode=243,
-                    )
-            else:
-                with Given(
-                    f"""I create table using S3 storage policy external,
-                        expecting success because there is no access check to this
-                        disk"""
-                ):
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} (
-                            d UInt64
-                        ) ENGINE = MergeTree()
-                        ORDER BY d
-                        SETTINGS storage_policy='external'
-                    """
-                    )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-                with Then(
-                    """I store simple data in the table, expecting failure
-                        because there is no access to the S3 bucket"""
-                ):
-                    message = (
-                        """DB::Exception: Access Denied."""
-                        if check_clickhouse_version("<22.9")(self)
-                        else """DB::Exception: Message: Access Denied"""
-                    )
-                    node.query(
-                        f"INSERT INTO {name} VALUES (427)",
-                        message=message,
-                        exitcode=243,
-                    )
+    try:
+        if check_clickhouse_version(">=23.8")(self):
+            with Given(
+                f"""I create table using S3 storage policy external,
+                    expecting failure because there is no access to the S3 bucket"""
+            ):
+                node.query(
+                    f"""
+                    CREATE TABLE {name} (
+                        d UInt64
+                    ) ENGINE = MergeTree()
+                    ORDER BY d
+                    SETTINGS storage_policy='external'
+                """,
+                    message="""DB::Exception: Message: Access Denied""",
+                    exitcode=243,
+                )
+        else:
+            with Given(
+                f"""I create table using S3 storage policy external,
+                    expecting success because there is no access check to this
+                    disk"""
+            ):
+                node.query(
+                    f"""
+                    CREATE TABLE {name} (
+                        d UInt64
+                    ) ENGINE = MergeTree()
+                    ORDER BY d
+                    SETTINGS storage_policy='external'
+                """
+                )
 
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name}")
+            with Then(
+                """I store simple data in the table, expecting failure
+                    because there is no access to the S3 bucket"""
+            ):
+                message = (
+                    """DB::Exception: Access Denied."""
+                    if check_clickhouse_version("<22.9")(self)
+                    else """DB::Exception: Message: Access Denied"""
+                )
+                node.query(
+                    f"INSERT INTO {name} VALUES (427)",
+                    message=message,
+                    exitcode=243,
+                )
+
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
 
 
 @TestScenario

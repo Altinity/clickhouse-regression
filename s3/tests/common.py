@@ -182,30 +182,11 @@ def create_s3_endpoint_config_content(
     )
 
 
-@contextmanager
-def s3_storage_context(
-    disks,
-    policies,
-    config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="storage.xml",
-    timeout=300,
-    restart=False,
-    config=None,
-    nodes=None,
-):
-    """Add S3 storage disk configuration."""
-    if config is None:
-        config = create_s3_storage_config_content(
-            disks, policies, config_d_dir, config_file
-        )
-    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
-
-
 @TestStep(Given)
 def s3_storage(
     self,
-    disks,
-    policies,
+    disks=None,
+    policies=None,
     config_d_dir="/etc/clickhouse-server/config.d",
     config_file="storage.xml",
     timeout=300,
@@ -213,7 +194,12 @@ def s3_storage(
     config=None,
     nodes=None,
 ):
-    """Add S3 storage disk configuration."""
+    """Add S3 storage disk and policy configurations."""
+    if disks is None:
+        disks = {}
+    if policies is None:
+        policies = {}
+
     if config is None:
         config = create_s3_storage_config_content(
             disks, policies, config_d_dir, config_file
@@ -1058,8 +1044,7 @@ def default_s3_and_local_disk(self, restart=True):
             },
         }
 
-    with s3_storage_context(disks, policies, restart=restart):
-        yield
+    return s3_storage(disks=disks, policies=policies, restart=restart)
 
 
 @TestStep(Given)
@@ -1087,8 +1072,7 @@ def default_s3_and_local_volume(self, restart=True):
             },
         }
 
-    with s3_storage_context(disks, policies, restart=restart):
-        yield
+    return s3_storage(disks=disks, policies=policies, restart=restart)
 
 
 @TestStep(Given)
@@ -1158,8 +1142,7 @@ def default_s3_disk_and_volume(
         else:
             policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}}
 
-    with s3_storage_context(disks, policies, restart=restart):
-        yield
+    return s3_storage(disks=disks, policies=policies, restart=restart)
 
 
 @TestStep(Given)
