@@ -1000,7 +1000,7 @@ memory:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
-
+          
   parquet:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 300
