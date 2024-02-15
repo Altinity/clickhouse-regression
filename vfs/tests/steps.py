@@ -67,7 +67,7 @@ def s3_config(self):
             },
         }
 
-    return s3_storage(disks=disks, policies=policies, restart=restart, timeout=60)
+    return s3_storage(disks=disks, policies=policies, restart=True, timeout=60)
 
 
 @TestStep(Given)
@@ -252,32 +252,6 @@ def delete_one_replica(self, node, table_name):
     """Delete the local copy of a replicated table."""
     r = node.query(f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0)
     return r
-
-
-@TestStep(Given)
-def storage_config(
-    self,
-    disks=None,
-    policies=None,
-    nodes=None,
-    restart=False,
-    timeout=30,
-    config_file="storage_config.xml",
-):
-    """Create disk and storage policy config."""
-    if disks is None:
-        disks = {}
-    if policies is None:
-        policies = {}
-
-    return s3_storage(
-        disks,
-        policies,
-        nodes=nodes,
-        restart=restart,
-        timeout=timeout,
-        config_file=config_file,
-    )
 
 
 @TestStep(Given)

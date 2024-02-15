@@ -361,7 +361,7 @@ def check_setting_combination(
                     storage_setting[0]: storage_setting[1],
                 }
             }
-            storage_config(disks=disks, restart=False)
+            s3_storage(disks=disks, restart=False, config_file="test_settings.xml")
 
     with Given("a replicated table"):
         _, table_name = replicated_table_cluster(

@@ -523,7 +523,7 @@ def move(self):
         }
 
     with And("I activate the policies"):
-        storage_config(
+        s3_storage(
             policies=policies,
             restart=True,
             timeout=60,
