@@ -149,10 +149,10 @@ def get_process_memory_usage_in_kilobytes(self, pid):
 def check_create_and_drop_tables(
     self,
     number_of_workers=10,
-    number_of_tables=1000,
+    number_of_tables=100000,
     node=None,
-    max_memory_increase=1.3,
-    timeout=300,
+    max_memory_increase=1.1,
+    timeout=3600,
 ):
     """Test memory leak when we create and drop many tables."""
     if node is None:
