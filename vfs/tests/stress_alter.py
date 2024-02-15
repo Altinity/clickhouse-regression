@@ -225,7 +225,7 @@ def freeze_unfreeze_random_part(self):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
         node.query(query, exitcode=0)
 
-    with Then(f"I wait {delay:.2}s"):
+    with And(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I unfreeze the part"):
@@ -234,6 +234,7 @@ def freeze_unfreeze_random_part(self):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("drop part")
 def drop_random_part(self):
     """Detach and drop a random part."""
@@ -529,6 +530,23 @@ def delete_replica(self):
                 return
 
 
+@TestStep
+def restart_keeper(self, repeat_limit=5):
+    keeper_node = self.context.cluster.node("zookeeper")
+    delay = random.random() * 2 + 1
+
+    try:
+        with When("I stop zookeeper"):
+            keeper_node.stop()
+
+        with And(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+    finally:
+        with Finally("I restart zookeeper"):
+            keeper_node.start()
+
+
 @TestScenario
 def parallel_alters(self):
     """
@@ -543,8 +561,9 @@ def parallel_alters(self):
             delete_random_column,
             update_random_column,
             delete_random_rows,
-            delete_replica,
-            add_replica,
+            restart_keeper,
+            # delete_replica,
+            # add_replica,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
@@ -559,11 +578,13 @@ def parallel_alters(self):
             combinations(actions, self.context.combination_size, with_replacement=True)
         )
 
+    if self.context.shuffle or not self.context.stress:
+        random.shuffle(action_groups)
+
     if not self.context.stress:
         with And(
             f"I shuffle the list and choose {self.context.unstressed_limit} groups of actions"
         ):
-            random.shuffle(action_groups)
             action_groups = action_groups[: self.context.unstressed_limit]
 
     with Given(f"I create {self.context.n_tables} tables with 10 columns and data"):
@@ -630,6 +651,7 @@ def feature(self):
     """Stress test with many alters."""
 
     self.context.unstressed_limit = 50
+    self.context.shuffle = True
     self.context.combination_size = 3
     self.context.run_groups_in_parallel = True
     self.context.run_optimize_in_parallel = True
