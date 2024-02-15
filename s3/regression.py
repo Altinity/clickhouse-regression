@@ -348,10 +348,6 @@ def aws_s3_regression(
         self.context.cluster.bucket = bucket
 
         with Module(self.context.object_storage_mode):
-            if self.context.object_storage_mode == "vfs":
-                with Given("I enable allow_object_storage_vfs"):
-                    enable_vfs()
-
             Feature(test=load("s3.tests.table_function", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
@@ -416,10 +412,6 @@ def gcs_regression(
         self.context.cluster = cluster
 
         with Module(self.context.object_storage_mode):
-            if self.context.object_storage_mode == "vfs":
-                with Given("I enable allow_object_storage_vfs"):
-                    enable_vfs()
-
             Feature(test=load("s3.tests.table_function", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )

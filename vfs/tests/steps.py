@@ -67,8 +67,7 @@ def s3_config(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True, timeout=60):
-        yield
+    return s3_storage(disks=disks, policies=policies, restart=True, timeout=60)
 
 
 @TestStep(Given)
@@ -256,33 +255,6 @@ def delete_one_replica(self, node, table_name):
 
 
 @TestStep(Given)
-def storage_config(
-    self,
-    disks=None,
-    policies=None,
-    nodes=None,
-    restart=False,
-    timeout=30,
-    config_file="storage_config.xml",
-):
-    """Create disk and storage policy config."""
-    if disks is None:
-        disks = {}
-    if policies is None:
-        policies = {}
-
-    with s3_storage(
-        disks,
-        policies,
-        nodes=nodes,
-        restart=restart,
-        timeout=timeout,
-        config_file=config_file,
-    ):
-        yield
-
-
-@TestStep(Given)
 def enable_vfs(
     self,
     nodes=None,
@@ -312,15 +284,14 @@ def enable_vfs(
 
     policies = {}
 
-    with s3_storage(
-        disks,
-        policies,
+    return s3_storage(
+        disks=disks,
+        policies=policies,
         nodes=nodes,
         restart=True,
         timeout=timeout,
         config_file=config_file,
-    ):
-        yield
+    )
 
 
 @TestStep
