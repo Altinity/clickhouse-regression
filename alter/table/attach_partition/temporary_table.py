@@ -47,6 +47,9 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     exitcode = 60
                 else:
                     exitcode = 0
+
+                note(f"exitcode should be {exitcode}")
+
                 detach_partition(
                     table=table_name, partition=1, node=client, exitcode=exitcode
                 )
@@ -150,6 +153,8 @@ def check_attach_partition_from_with_temporary_tables(
                     exitcode = 60
                 else:
                     exitcode = 0
+
+                note(f"exitcode should be {exitcode}")
 
                 for partition_id in ["1", "2", "3"]:
                     query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
