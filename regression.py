@@ -65,7 +65,7 @@ def regression(
         "aws_s3_access_key": aws_s3_access_key,
         "aws_s3_key_id": aws_s3_key_id,
         "gcs_key_secret": gcs_key_secret,
-        "gcs_key_id": gcs_key_id
+        "gcs_key_id": gcs_key_id,
     }
 
     self.context.stress = stress
@@ -149,7 +149,7 @@ def regression(
                 executor=pool,
             )(**args)
             Feature(
-                test=load("logger.regression", "regression"),
+                test=load("memory.regression", "regression"),
                 parallel=True,
                 executor=pool,
             )(**args)
