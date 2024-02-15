@@ -79,7 +79,7 @@ def aws_s3(self, uri, key_id, access_key, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     with Given(
-        """I have a disk configuration with a S3 storage disk, access id and keyprovided"""
+        """I have a disk configuration with a S3 storage disk, access id and key provided"""
     ):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
@@ -99,10 +99,10 @@ def aws_s3(self, uri, key_id, access_key, node="clickhouse1"):
             "aws_external": {"volumes": {"external": {"disk": "aws"}}},
         }
 
-    with s3_storage(disks, policies, restart=True):
-        Scenario(
-            run=sanity, examples=Examples("policy", [("default",), ("aws_external",)])
-        )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
+
+    Scenario(run=sanity, examples=Examples("policy", [("default",), ("aws_external",)]))
 
 
 @TestFeature
@@ -132,7 +132,9 @@ def minio(self, uri, key, secret, node="clickhouse1"):
             "minio_external": {"volumes": {"external": {"disk": "minio"}}},
         }
 
-    with s3_storage(disks, policies, restart=True):
-        Scenario(
-            run=sanity, examples=Examples("policy", [("default",), ("minio_external",)])
-        )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
+
+    Scenario(
+        run=sanity, examples=Examples("policy", [("default",), ("minio_external",)])
+    )

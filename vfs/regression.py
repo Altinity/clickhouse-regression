@@ -22,8 +22,9 @@ xfails = {
 ffails = {
     "*": (
         Skip,
-        "vfs not supported on < 24",
-        check_clickhouse_version("<24"),
+        "vfs not supported on < 24.2",
+        lambda test: check_clickhouse_version("<24.2")(test)
+        and not test.context.allow_vfs,
     ),
     ":/alter/move": (XFail, "Fix pending"),
     ":/replica/add remove one node": (XFail, "Fix pending"),
@@ -123,10 +124,11 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    if check_clickhouse_version("<24.1")(self) or not allow_vfs:
-        skip("vfs not supported on < 24.1")
+    if check_clickhouse_version("<24.2")(self) or not allow_vfs:
+        skip("vfs not supported on < 24.2")
 
     self.context.stress = stress
+    self.context.allow_vfs = allow_vfs
 
     if storages is None:
         storages = ["minio"]
