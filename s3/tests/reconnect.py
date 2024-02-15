@@ -2,7 +2,8 @@ from s3.tests.common import *
 from s3.requirements import *
 from lightweight_delete.tests.steps import *
 
-DOCKER_NETWORK = "s3_env_default" if processor() == 'x86_64' else "s3_env_arm64"
+DOCKER_NETWORK = "s3_env_default" if processor() == "x86_64" else "s3_env_arm64"
+
 
 @TestStep(When)
 def disconnect_reconnect(self, node=None):

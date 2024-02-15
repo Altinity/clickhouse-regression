@@ -178,7 +178,13 @@ def alter_table_move_partition_to_table(
 
 @TestStep(Given)
 def alter_table_move_partition(
-    self, table_name, partition_name, disk_name, node=None, disk="VOLUME", **query_kwargs
+    self,
+    table_name,
+    partition_name,
+    disk_name,
+    node=None,
+    disk="VOLUME",
+    **query_kwargs,
 ):
     """Move partition to a different disk or volume using alter."""
     if node is None:

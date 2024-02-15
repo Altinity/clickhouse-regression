@@ -180,7 +180,11 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
     ":/:/zero copy replication/bad detached part": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/pull/58333", check_clickhouse_version("<23.11"))
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/58333",
+            check_clickhouse_version("<23.11"),
+        )
     ],
 }
 
