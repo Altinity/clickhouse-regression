@@ -128,6 +128,7 @@ def regression(
         skip("vfs not supported on < 24.2")
 
     self.context.stress = stress
+    self.context.allow_vfs = allow_vfs
 
     if storages is None:
         storages = ["minio"]
