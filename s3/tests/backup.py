@@ -968,12 +968,14 @@ def local_and_s3_disk(self):
             },
         }
 
-    with s3_storage_context(disks, policies, restart=True):
-        for outline in loads(current_module(), Outline):
-            with Given("I run the clean up"):
-                cleanup(storage=self.context.storage)
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            Scenario(test=outline)(policy_name="local_and_s3_disk")
+    for outline in loads(current_module(), Outline):
+        with Given("I run the clean up"):
+            cleanup(storage=self.context.storage)
+
+        Scenario(test=outline)(policy_name="local_and_s3_disk")
 
 
 @TestScenario
@@ -1011,12 +1013,14 @@ def local_and_s3_volumes(self):
             },
         }
 
-    with s3_storage_context(disks, policies, restart=True):
-        for outline in loads(current_module(), Outline):
-            with Given("I run the clean up"):
-                cleanup(storage=self.context.storage)
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            Scenario(test=outline)(policy_name="default_and_external")
+    for outline in loads(current_module(), Outline):
+        with Given("I run the clean up"):
+            cleanup(storage=self.context.storage)
+
+        Scenario(test=outline)(policy_name="default_and_external")
 
 
 @TestScenario
@@ -1046,12 +1050,14 @@ def s3_disk(self):
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {"external": {"volumes": {"external": {"disk": "external"}}}}
 
-    with s3_storage_context(disks, policies, restart=True):
-        for outline in loads(current_module(), Outline):
-            with Given("I run the clean up"):
-                cleanup(storage=self.context.storage)
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            Scenario(test=outline)(policy_name="external")
+    for outline in loads(current_module(), Outline):
+        with Given("I run the clean up"):
+            cleanup(storage=self.context.storage)
+
+        Scenario(test=outline)(policy_name="external")
 
 
 @TestFeature

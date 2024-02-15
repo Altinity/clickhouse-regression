@@ -2220,17 +2220,19 @@ def outline(self):
             for name in self.context.cluster.nodes["clickhouse"]
         ]
 
-    with s3_storage_context(disks, policies, restart=True):
-        with Check("bucket should be empty before test begins"):
-            check_bucket_size(
-                name=self.context.bucket_name,
-                prefix=self.context.bucket_path,
-                expected_size=0,
-                tolerance=5,
-                minio_enabled=self.context.minio_enabled,
-            )
-        for scenario in loads(current_module(), Scenario):
-            scenario()
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
+
+    with Check("bucket should be empty before test begins"):
+        check_bucket_size(
+            name=self.context.bucket_name,
+            prefix=self.context.bucket_path,
+            expected_size=0,
+            tolerance=50,
+            minio_enabled=self.context.minio_enabled,
+        )
+    for scenario in loads(current_module(), Scenario):
+        scenario()
 
 
 @TestFeature

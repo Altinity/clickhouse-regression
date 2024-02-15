@@ -166,10 +166,12 @@ def regression(
                         },
                     }
 
-                with s3_storage_context(disks, policies, timeout=360):
-                    Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
-                        format=format
-                    )
+                with And("I enable the disk and policy config"):
+                    s3_storage(disks=disks, policies=policies, timeout=360)
+
+                Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
+                    format=format
+                )
 
 
 if main():
