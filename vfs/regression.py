@@ -17,9 +17,6 @@ xfails = {
     ":/replica/command combinations/*": [(Error, "some combos time out")],
     ":/parallel replica/add remove commands/*": [(Fail, "WIP"), (Error, "WIP")],
     ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
-    ":/system/optimize/table_settings='min_bytes_for_wide_part=:": [
-        (Fail, "needs investigation")
-    ],
 }
 
 ffails = {
@@ -28,8 +25,8 @@ ffails = {
         "vfs not supported on < 24",
         check_clickhouse_version("<24"),
     ),
-    ":/alter/move": (XFail, "Clickhouse crashes"),
-    ":/settings/incompatible with send metadata": (XFail, "Clickhouse crashes"),
+    ":/alter/move": (XFail, "Fix pending"),
+    ":/replica/add remove one node": (XFail, "Fix pending"),
 }
 
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration

@@ -7,7 +7,7 @@ from testflows.combinatorics import CoveringArray
 
 from vfs.tests.steps import *
 from vfs.requirements import *
-from vfs.tests.stress_alter import optimize, check_consistency
+from vfs.tests.stress_alter import optimize_random, check_consistency
 from s3.tests.common import invalid_s3_storage_config
 
 
@@ -387,7 +387,7 @@ def check_setting_combination(
     )(table_name=table_name, settings=select_setting)
     When(
         f"I OPTIMIZE {table_name}",
-        test=optimize,
+        test=optimize_random,
         parallel=True,
         flags=TE,
     )(table_name=table_name)
