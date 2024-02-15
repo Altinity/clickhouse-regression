@@ -631,9 +631,7 @@ def metadata(self):
                 insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
 
             with And("a large insert of 10Mb of data"):
-                insert_data_node(
-                    node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2
-                )
+                insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
 
         with Then(
             """The number of bytes written to S3 by the first
@@ -1008,7 +1006,6 @@ def insert_multiple_replicas(self):
             key_id=self.context.access_key_id,
             minio_enabled=self.context.minio_enabled,
         )
-
 
     try:
         with When("I create a replicated table on each node"):
