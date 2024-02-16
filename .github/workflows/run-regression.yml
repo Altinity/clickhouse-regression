@@ -1539,7 +1539,6 @@ jobs:
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --allow-vfs
               ${{ env.args }}
 
       - name: Create and upload logs
