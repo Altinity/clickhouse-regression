@@ -510,6 +510,7 @@ def add_replica(self):
                         columns=columns,
                         order_by="key",
                         partition_by="key % 4",
+                        storage_policy=self.context.storage_policy,
                     )
                     return
 
@@ -565,11 +566,30 @@ def restart_keeper(self, repeat_limit=5):
             keeper_node.start()
 
 
-@TestScenario
-def parallel_alters(self):
+@TestOutline
+def parallel_alters(
+    self,
+    limit=50,
+    shuffle=True,
+    combination_size=3,
+    run_groups_in_parallel=True,
+    run_optimize_in_parallel=True,
+    ignore_failed_part_moves=False,
+    sync_replica_timeout=600,
+    storage_policy="external_vfs",
+    minimum_replicas=1,
+    maximum_replicas=3,
+    n_tables=3,
+):
     """
     Perform combinations of alter actions, checking that all replicas agree.
     """
+
+    self.context.ignore_failed_part_moves = ignore_failed_part_moves
+    self.context.sync_replica_timeout = sync_replica_timeout
+    self.context.storage_policy = storage_policy
+    self.context.minimum_replicas = minimum_replicas
+    self.context.maximum_replicas = maximum_replicas
 
     with Given("I have a list of actions I can perform"):
         actions = [
@@ -580,8 +600,8 @@ def parallel_alters(self):
             update_random_column,
             delete_random_rows,
             restart_keeper,
-            # delete_replica,
-            # add_replica,
+            delete_replica,
+            add_replica,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
@@ -591,23 +611,23 @@ def parallel_alters(self):
             fetch_random_part_from_table,
         ]
 
-    with And(f"I make a list of groups of {self.context.combination_size} actions"):
+    with And(f"I make a list of groups of {combination_size} actions"):
         action_groups = list(
-            combinations(actions, self.context.combination_size, with_replacement=True)
+            combinations(actions, combination_size, with_replacement=True)
         )
 
-    if self.context.shuffle or not self.context.stress:
+    if shuffle:
         with And("I shuffle the list"):
             random.shuffle(action_groups)
 
-    if not self.context.stress:
-        with And(f"I choose {self.context.unstressed_limit} groups of actions"):
-            action_groups = action_groups[: self.context.unstressed_limit]
+    if limit:
+        with And(f"I choose {limit} groups of actions"):
+            action_groups = action_groups[:limit]
 
-    with Given(f"I create {self.context.n_tables} tables with 10 columns and data"):
+    with Given(f"I create {n_tables} tables with 10 columns and data"):
         self.context.table_names = []
         columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
-        for i in range(self.context.n_tables):
+        for i in range(n_tables):
             table_name = f"table{i}_{self.context.storage_policy}"
             replicated_table_cluster(
                 table_name=table_name,
@@ -642,7 +662,7 @@ def parallel_alters(self):
                     By(
                         f"I {action.name}",
                         run=action,
-                        parallel=self.context.run_groups_in_parallel,
+                        parallel=run_groups_in_parallel,
                         flags=TE | ERROR_NOT_COUNTED,
                     )
 
@@ -650,7 +670,7 @@ def parallel_alters(self):
                     By(
                         f"I OPTIMIZE {table}",
                         test=optimize_random,
-                        parallel=self.context.run_optimize_in_parallel,
+                        parallel=run_optimize_in_parallel,
                         flags=TE,
                     )(table_name=table_name)
 
@@ -667,20 +687,19 @@ def parallel_alters(self):
 def feature(self):
     """Stress test with many alters."""
 
-    self.context.unstressed_limit = 50
-    self.context.shuffle = True
-    self.context.combination_size = 3
-    self.context.run_groups_in_parallel = True
-    self.context.run_optimize_in_parallel = True
-    self.context.ignore_failed_part_moves = False
-    self.context.sync_replica_timeout = 60 * 10
-    self.context.storage_policy = "external_vfs"
-    self.context.minimum_replicas = 1
-    self.context.maximum_replicas = 3
-    self.context.n_tables = 3
-
     with Given("I have S3 disks configured"):
         s3_config()
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    Scenario(test=parallel_alters)(
+        limit=None if self.context.stress else 50,
+        shuffle=True,
+        combination_size=3,
+        run_groups_in_parallel=True,
+        run_optimize_in_parallel=True,
+        ignore_failed_part_moves=False,
+        sync_replica_timeout=600,
+        storage_policy="external_no_vfs",
+        minimum_replicas=1,
+        maximum_replicas=3,
+        n_tables=3,
+    )
