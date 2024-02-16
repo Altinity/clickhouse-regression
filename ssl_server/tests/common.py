@@ -963,11 +963,13 @@ def clickhouse_client_connection(
 
     options["preferServerCiphers"] = "true" if prefer_server_ciphers else "false"
 
+    secure_flag = "-s" if check_clickhouse_version("<24.1")(self) else "--secure"
+
     with Given("custom clickhouse-client SSL configuration"):
         add_ssl_clickhouse_client_configuration_file(entries=options)
 
     output = node.command(
-        f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
+        f'clickhouse client {secure_flag} --verbose --host {hostname} --port {port} -q "SELECT 1"',
         message=message,
         messages=messages,
         exitcode=exitcode,
