@@ -465,34 +465,43 @@ def add_replica(self):
                 r = node.query("SELECT table from system.replicas FORMAT JSONColumns")
                 tables_by_node[node.name] = json.loads(r.output)["table"]
 
-        table_counts = [len(tables) for tables in tables_by_node.values()]
+        with And("I check that there exists a node that does not replicate all tables"):
+            table_counts = [len(tables) for tables in tables_by_node.values()]
+            if min(table_counts) == self.context.maximum_replicas:
+                return
 
-        if min(table_counts) == self.context.maximum_replicas:
-            return
+        with Given(
+            "I choose one node to add the new replicated table to, and save the other nodes to query structure from"
+        ):
+            adding_node = None
+            reference_nodes = []
+            for node, count in zip(nodes, table_counts):
+                if count < self.context.maximum_replicas and adding_node is None:
+                    adding_node = node
+                else:
+                    reference_nodes.append(node)
 
-        adding_node = None
-        reference_nodes = []
-        for node, count in zip(nodes, table_counts):
-            if count < self.context.maximum_replicas and adding_node is None:
-                adding_node = node
-            else:
-                reference_nodes.append(node)
-
-        assert adding_node is not None, "Early return logic should prevent this"
+        assert (
+            adding_node is not None
+        ), "Early return logic should prevent failing to find a node that can have a replica added"
 
         for table in tables:
             if table not in tables_by_node[adding_node.name]:
-                with When(f"I check what columns are in {table}"):
-                    if table in tables_by_node[reference_nodes[0].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[0], table_name=table
-                        )
-                    elif table in tables_by_node[reference_nodes[1].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[1], table_name=table
-                        )
-                    else:
-                        assert False, "This line should never be reached"
+                columns = None
+                for ref_node in reference_nodes:
+                    with When(f"I check if {ref_node.name} knows about {table}"):
+                        if table in tables_by_node[ref_node.name]:
+                            with When(
+                                f"I query {ref_node.name} for the columns in {table}"
+                            ):
+                                columns = get_column_string(
+                                    node=ref_node, table_name=table
+                                )
+                                break
+
+                    assert (
+                        columns is not None
+                    ), "There should always be at least one node that knows about a table"
 
                 with And(f"I create a new replica on {adding_node.name}"):
                     create_one_replica(
@@ -502,6 +511,7 @@ def add_replica(self):
                         order_by="key",
                         partition_by="key % 4",
                     )
+                    return
 
 
 @TestStep
@@ -514,20 +524,28 @@ def delete_replica(self):
     random.shuffle(tables)
 
     with table_schema_lock:
-        r = node.query(
-            "SELECT table, active_replicas from system.replicas FORMAT JSONColumns"
-        )
-        out = json.loads(r.output)
-        current_tables = out["table"]
-        active_replicas = {t: r for t, r in zip(current_tables, out["active_replicas"])}
 
-        for table in tables:
-            if (
-                table in current_tables
-                and active_replicas[table] > self.context.minimum_replicas
-            ):
-                delete_one_replica(node=node, table_name=table)
-                return
+        with Given("I check the replica counts for all tables"):
+            r = node.query(
+                "SELECT table, active_replicas from system.replicas FORMAT JSONColumns"
+            )
+            out = json.loads(r.output)
+            current_tables = out["table"]
+            active_replicas = {
+                t: r for t, r in zip(current_tables, out["active_replicas"])
+            }
+
+        with When("I look for a table that has more than the minimum replicas"):
+            for table in tables:
+                if (
+                    table in current_tables
+                    and active_replicas[table] > self.context.minimum_replicas
+                ):
+                    with And(
+                        f"I delete the replica for table {table} on node {node.name}"
+                    ):
+                        delete_one_replica(node=node, table_name=table)
+                        return
 
 
 @TestStep
@@ -579,12 +597,11 @@ def parallel_alters(self):
         )
 
     if self.context.shuffle or not self.context.stress:
-        random.shuffle(action_groups)
+        with And("I shuffle the list"):
+            random.shuffle(action_groups)
 
     if not self.context.stress:
-        with And(
-            f"I shuffle the list and choose {self.context.unstressed_limit} groups of actions"
-        ):
+        with And(f"I choose {self.context.unstressed_limit} groups of actions"):
             action_groups = action_groups[: self.context.unstressed_limit]
 
     with Given(f"I create {self.context.n_tables} tables with 10 columns and data"):
