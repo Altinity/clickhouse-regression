@@ -22,9 +22,9 @@ xfails = {
 ffails = {
     "*": (
         Skip,
-        "vfs not supported on < 24.2",
-        lambda test: check_clickhouse_version("<24.2")(test)
-        and not test.context.allow_vfs,
+        "vfs not supported on < 24.2 and requires --allow-vfs flag",
+        lambda test: not test.context.allow_vfs
+        or check_clickhouse_version("<24.2")(test),
     ),
     ":/alter/move": (XFail, "Fix pending"),
     ":/replica/add remove one node": (XFail, "Fix pending"),
@@ -123,9 +123,10 @@ def regression(
     """Disk Object Storage VFS regression."""
 
     self.context.clickhouse_version = clickhouse_version
-
-    if check_clickhouse_version("<24.2")(self) or not allow_vfs:
-        skip("vfs not supported on < 24.2")
+    note(f"Clickhouse version {clickhouse_version}")
+    if not allow_vfs or check_clickhouse_version("<24.2")(self):
+        skip("vfs not supported on < 24.2 and requires --allow-vfs flag")
+        return
 
     self.context.stress = stress
     self.context.allow_vfs = allow_vfs
