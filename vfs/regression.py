@@ -47,7 +47,10 @@ def minio(
     collect_service_logs,
 ):
     """Setup and run minio tests."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+    nodes = {
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+    }
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -64,6 +67,7 @@ def minio(
         self.context.cluster = cluster
         self.context.node = self.context.cluster.node("clickhouse1")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
         self.context.access_key_id = root_user
         self.context.secret_access_key = root_password
         self.context.bucket_name = "root"

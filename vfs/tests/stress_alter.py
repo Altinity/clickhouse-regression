@@ -73,7 +73,13 @@ def insert_to_random(self):
 
     columns = get_column_string(node=node, table_name=table_name)
     with By(f"inserting rows to {table_name} on {node.name}"):
-        insert_random(node=node, table_name=table_name, columns=columns, no_checks=True)
+        insert_random(
+            node=node,
+            table_name=table_name,
+            columns=columns,
+            no_checks=True,
+            settings=f"insert_keeper_fault_injection_probability={self.context.fault_probability}",
+        )
 
 
 @TestStep
@@ -212,6 +218,7 @@ def detach_attach_random_partition(self):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("freeze part")
 def freeze_unfreeze_random_part(self):
     """Freeze a random part, wait a random time, unfreeze part."""
@@ -551,25 +558,18 @@ def delete_replica(self):
 
 @TestStep
 def restart_keeper(self, repeat_limit=5):
-    keeper_node = self.context.cluster.node("zookeeper")
+    keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
-    try:
-        with When("I stop zookeeper"):
-            keeper_node.stop()
-
-        with And(f"I wait {delay:.2}s"):
+    with pause_node(keeper_node):
+        with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
-
-    finally:
-        with Finally("I restart zookeeper"):
-            keeper_node.start()
 
 
 @TestOutline
 def parallel_alters(
     self,
-    limit=50,
+    limit=10,
     shuffle=True,
     combination_size=3,
     run_groups_in_parallel=True,
@@ -580,6 +580,7 @@ def parallel_alters(
     minimum_replicas=1,
     maximum_replicas=3,
     n_tables=3,
+    insert_keeper_fault_injection_probability=0,
 ):
     """
     Perform combinations of alter actions, checking that all replicas agree.
@@ -590,6 +591,7 @@ def parallel_alters(
     self.context.storage_policy = storage_policy
     self.context.minimum_replicas = minimum_replicas
     self.context.maximum_replicas = maximum_replicas
+    self.context.fault_probability = insert_keeper_fault_injection_probability
 
     with Given("I have a list of actions I can perform"):
         actions = [
@@ -698,8 +700,9 @@ def feature(self):
         run_optimize_in_parallel=True,
         ignore_failed_part_moves=False,
         sync_replica_timeout=600,
-        storage_policy="external_no_vfs",
+        storage_policy="external_vfs",
         minimum_replicas=1,
         maximum_replicas=3,
         n_tables=3,
+        insert_keeper_fault_injection_probability=0.1,
     )
