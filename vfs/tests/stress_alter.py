@@ -73,7 +73,13 @@ def insert_to_random(self):
 
     columns = get_column_string(node=node, table_name=table_name)
     with By(f"inserting rows to {table_name} on {node.name}"):
-        insert_random(node=node, table_name=table_name, columns=columns, no_checks=True)
+        insert_random(
+            node=node,
+            table_name=table_name,
+            columns=columns,
+            no_checks=True,
+            settings=f"insert_keeper_fault_injection_probability={self.context.fault_probability}",
+        )
 
 
 @TestStep
@@ -212,6 +218,7 @@ def detach_attach_random_partition(self):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("freeze part")
 def freeze_unfreeze_random_part(self):
     """Freeze a random part, wait a random time, unfreeze part."""
@@ -465,34 +472,43 @@ def add_replica(self):
                 r = node.query("SELECT table from system.replicas FORMAT JSONColumns")
                 tables_by_node[node.name] = json.loads(r.output)["table"]
 
-        table_counts = [len(tables) for tables in tables_by_node.values()]
+        with And("I check that there exists a node that does not replicate all tables"):
+            table_counts = [len(tables) for tables in tables_by_node.values()]
+            if min(table_counts) == self.context.maximum_replicas:
+                return
 
-        if min(table_counts) == self.context.maximum_replicas:
-            return
+        with Given(
+            "I choose one node to add the new replicated table to, and save the other nodes to query structure from"
+        ):
+            adding_node = None
+            reference_nodes = []
+            for node, count in zip(nodes, table_counts):
+                if count < self.context.maximum_replicas and adding_node is None:
+                    adding_node = node
+                else:
+                    reference_nodes.append(node)
 
-        adding_node = None
-        reference_nodes = []
-        for node, count in zip(nodes, table_counts):
-            if count < self.context.maximum_replicas and adding_node is None:
-                adding_node = node
-            else:
-                reference_nodes.append(node)
-
-        assert adding_node is not None, "Early return logic should prevent this"
+        assert (
+            adding_node is not None
+        ), "Early return logic should prevent failing to find a node that can have a replica added"
 
         for table in tables:
             if table not in tables_by_node[adding_node.name]:
-                with When(f"I check what columns are in {table}"):
-                    if table in tables_by_node[reference_nodes[0].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[0], table_name=table
-                        )
-                    elif table in tables_by_node[reference_nodes[1].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[1], table_name=table
-                        )
-                    else:
-                        assert False, "This line should never be reached"
+                columns = None
+                for ref_node in reference_nodes:
+                    with When(f"I check if {ref_node.name} knows about {table}"):
+                        if table in tables_by_node[ref_node.name]:
+                            with When(
+                                f"I query {ref_node.name} for the columns in {table}"
+                            ):
+                                columns = get_column_string(
+                                    node=ref_node, table_name=table
+                                )
+                                break
+
+                    assert (
+                        columns is not None
+                    ), "There should always be at least one node that knows about a table"
 
                 with And(f"I create a new replica on {adding_node.name}"):
                     create_one_replica(
@@ -501,7 +517,9 @@ def add_replica(self):
                         columns=columns,
                         order_by="key",
                         partition_by="key % 4",
+                        storage_policy=self.context.storage_policy,
                     )
+                    return
 
 
 @TestStep
@@ -514,44 +532,66 @@ def delete_replica(self):
     random.shuffle(tables)
 
     with table_schema_lock:
-        r = node.query(
-            "SELECT table, active_replicas from system.replicas FORMAT JSONColumns"
-        )
-        out = json.loads(r.output)
-        current_tables = out["table"]
-        active_replicas = {t: r for t, r in zip(current_tables, out["active_replicas"])}
 
-        for table in tables:
-            if (
-                table in current_tables
-                and active_replicas[table] > self.context.minimum_replicas
-            ):
-                delete_one_replica(node=node, table_name=table)
-                return
+        with Given("I check the replica counts for all tables"):
+            r = node.query(
+                "SELECT table, active_replicas from system.replicas FORMAT JSONColumns"
+            )
+            out = json.loads(r.output)
+            current_tables = out["table"]
+            active_replicas = {
+                t: r for t, r in zip(current_tables, out["active_replicas"])
+            }
+
+        with When("I look for a table that has more than the minimum replicas"):
+            for table in tables:
+                if (
+                    table in current_tables
+                    and active_replicas[table] > self.context.minimum_replicas
+                ):
+                    with And(
+                        f"I delete the replica for table {table} on node {node.name}"
+                    ):
+                        delete_one_replica(node=node, table_name=table)
+                        return
 
 
 @TestStep
 def restart_keeper(self, repeat_limit=5):
-    keeper_node = self.context.cluster.node("zookeeper")
+    keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
-    try:
-        with When("I stop zookeeper"):
-            keeper_node.stop()
-
-        with And(f"I wait {delay:.2}s"):
+    with pause_node(keeper_node):
+        with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
-    finally:
-        with Finally("I restart zookeeper"):
-            keeper_node.start()
 
-
-@TestScenario
-def parallel_alters(self):
+@TestOutline
+def parallel_alters(
+    self,
+    limit=10,
+    shuffle=True,
+    combination_size=3,
+    run_groups_in_parallel=True,
+    run_optimize_in_parallel=True,
+    ignore_failed_part_moves=False,
+    sync_replica_timeout=600,
+    storage_policy="external_vfs",
+    minimum_replicas=1,
+    maximum_replicas=3,
+    n_tables=3,
+    insert_keeper_fault_injection_probability=0,
+):
     """
     Perform combinations of alter actions, checking that all replicas agree.
     """
+
+    self.context.ignore_failed_part_moves = ignore_failed_part_moves
+    self.context.sync_replica_timeout = sync_replica_timeout
+    self.context.storage_policy = storage_policy
+    self.context.minimum_replicas = minimum_replicas
+    self.context.maximum_replicas = maximum_replicas
+    self.context.fault_probability = insert_keeper_fault_injection_probability
 
     with Given("I have a list of actions I can perform"):
         actions = [
@@ -562,8 +602,8 @@ def parallel_alters(self):
             update_random_column,
             delete_random_rows,
             restart_keeper,
-            # delete_replica,
-            # add_replica,
+            delete_replica,
+            add_replica,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
@@ -573,24 +613,23 @@ def parallel_alters(self):
             fetch_random_part_from_table,
         ]
 
-    with And(f"I make a list of groups of {self.context.combination_size} actions"):
+    with And(f"I make a list of groups of {combination_size} actions"):
         action_groups = list(
-            combinations(actions, self.context.combination_size, with_replacement=True)
+            combinations(actions, combination_size, with_replacement=True)
         )
 
-    if self.context.shuffle or not self.context.stress:
-        random.shuffle(action_groups)
+    if shuffle:
+        with And("I shuffle the list"):
+            random.shuffle(action_groups)
 
-    if not self.context.stress:
-        with And(
-            f"I shuffle the list and choose {self.context.unstressed_limit} groups of actions"
-        ):
-            action_groups = action_groups[: self.context.unstressed_limit]
+    if limit:
+        with And(f"I choose {limit} groups of actions"):
+            action_groups = action_groups[:limit]
 
-    with Given(f"I create {self.context.n_tables} tables with 10 columns and data"):
+    with Given(f"I create {n_tables} tables with 10 columns and data"):
         self.context.table_names = []
         columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
-        for i in range(self.context.n_tables):
+        for i in range(n_tables):
             table_name = f"table{i}_{self.context.storage_policy}"
             replicated_table_cluster(
                 table_name=table_name,
@@ -625,7 +664,7 @@ def parallel_alters(self):
                     By(
                         f"I {action.name}",
                         run=action,
-                        parallel=self.context.run_groups_in_parallel,
+                        parallel=run_groups_in_parallel,
                         flags=TE | ERROR_NOT_COUNTED,
                     )
 
@@ -633,7 +672,7 @@ def parallel_alters(self):
                     By(
                         f"I OPTIMIZE {table}",
                         test=optimize_random,
-                        parallel=self.context.run_optimize_in_parallel,
+                        parallel=run_optimize_in_parallel,
                         flags=TE,
                     )(table_name=table_name)
 
@@ -650,20 +689,20 @@ def parallel_alters(self):
 def feature(self):
     """Stress test with many alters."""
 
-    self.context.unstressed_limit = 50
-    self.context.shuffle = True
-    self.context.combination_size = 3
-    self.context.run_groups_in_parallel = True
-    self.context.run_optimize_in_parallel = True
-    self.context.ignore_failed_part_moves = False
-    self.context.sync_replica_timeout = 60 * 10
-    self.context.storage_policy = "external_vfs"
-    self.context.minimum_replicas = 1
-    self.context.maximum_replicas = 3
-    self.context.n_tables = 3
-
     with Given("I have S3 disks configured"):
         s3_config()
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    Scenario(test=parallel_alters)(
+        limit=None if self.context.stress else 50,
+        shuffle=True,
+        combination_size=3,
+        run_groups_in_parallel=True,
+        run_optimize_in_parallel=True,
+        ignore_failed_part_moves=False,
+        sync_replica_timeout=600,
+        storage_policy="external_vfs",
+        minimum_replicas=1,
+        maximum_replicas=3,
+        n_tables=3,
+        insert_keeper_fault_injection_probability=0.1,
+    )

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import time
+from contextlib import contextmanager
 
 from testflows.core import *
 from testflows.asserts import error
@@ -269,7 +270,7 @@ def enable_vfs(
     """
 
     if check_clickhouse_version("<24.1")(self):
-        skip("vfs not supported on ClickHouse < 24.1")
+        skip("vfs not supported on ClickHouse < 24.2 and requires --allow-vfs flag")
 
     if disk_names is None:
         disk_names = ["external"]
@@ -386,3 +387,15 @@ def get_active_partition_ids(self, node, table_name):
         f"select partition_id from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
     )
     return json.loads(r.output)["partition_id"]
+
+
+@contextmanager
+def pause_node(node):
+    try:
+        with When(f"{node.name} is stopped"):
+            node.stop()
+            yield
+
+    finally:
+        with When(f"{node.name} is started"):
+            node.start()

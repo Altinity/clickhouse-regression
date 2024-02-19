@@ -16,8 +16,9 @@ xfails = {}
 ffails = {
     ":/queries/vfs": (
         Skip,
-        "vfs not supported on < 24.2",
-        lambda test: check_clickhouse_version("<24.2")(test) and not test.context.allow_vfs,
+        "vfs not supported on < 24.2 and requires --allow-vfs flag",
+        lambda test: not test.context.allow_vfs
+        or check_clickhouse_version("<24.2")(test),
     ),
 }
 
