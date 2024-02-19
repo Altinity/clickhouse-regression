@@ -22,9 +22,9 @@ xfails = {
 ffails = {
     "*": (
         Skip,
-        "vfs not supported on < 24.2",
-        lambda test: check_clickhouse_version("<24.2")(test)
-        and not test.context.allow_vfs,
+        "vfs not supported on < 24.2 and requires --allow-vfs flag",
+        lambda test: not test.context.allow_vfs
+        or check_clickhouse_version("<24.2")(test),
     ),
     ":/alter/move": (XFail, "Fix pending"),
     ":/replica/add remove one node": (XFail, "Fix pending"),
@@ -47,7 +47,10 @@ def minio(
     collect_service_logs,
 ):
     """Setup and run minio tests."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+    nodes = {
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+    }
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -64,6 +67,7 @@ def minio(
         self.context.cluster = cluster
         self.context.node = self.context.cluster.node("clickhouse1")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
         self.context.access_key_id = root_user
         self.context.secret_access_key = root_password
         self.context.bucket_name = "root"
@@ -123,9 +127,10 @@ def regression(
     """Disk Object Storage VFS regression."""
 
     self.context.clickhouse_version = clickhouse_version
-
-    if check_clickhouse_version("<24.2")(self) or not allow_vfs:
-        skip("vfs not supported on < 24.2")
+    note(f"Clickhouse version {clickhouse_version}")
+    if not allow_vfs or check_clickhouse_version("<24.2")(self):
+        skip("vfs not supported on < 24.2 and requires --allow-vfs flag")
+        return
 
     self.context.stress = stress
     self.context.allow_vfs = allow_vfs
