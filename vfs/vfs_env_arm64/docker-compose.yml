@@ -169,7 +169,55 @@ services:
       minio1:
         condition: service_healthy
 
-  zookeeper:
+  zookeeper1:
+    volumes:
+      - clickhouse1_jbod1:/clickhouse1_jbod1
+      - clickhouse1_jbod2:/clickhouse1_jbod2
+      - clickhouse1_jbod3:/clickhouse1_jbod3
+      - clickhouse1_jbod4:/clickhouse1_jbod4
+      - clickhouse1_external:/clickhouse1_external
+      - clickhouse1_external2:/clickhouse1_external2
+      - clickhouse2_jbod1:/clickhouse2_jbod1
+      - clickhouse2_jbod2:/clickhouse2_jbod2
+      - clickhouse2_jbod3:/clickhouse2_jbod3
+      - clickhouse2_jbod4:/clickhouse2_jbod4
+      - clickhouse2_external:/clickhouse2_external
+      - clickhouse2_external2:/clickhouse2_external2
+      - clickhouse3_jbod1:/clickhouse3_jbod1
+      - clickhouse3_jbod2:/clickhouse3_jbod2
+      - clickhouse3_jbod3:/clickhouse3_jbod3
+      - clickhouse3_jbod4:/clickhouse3_jbod4
+      - clickhouse3_external:/clickhouse3_external
+      - clickhouse3_external2:/clickhouse3_external2
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+
+  zookeeper2:
+    volumes:
+      - clickhouse1_jbod1:/clickhouse1_jbod1
+      - clickhouse1_jbod2:/clickhouse1_jbod2
+      - clickhouse1_jbod3:/clickhouse1_jbod3
+      - clickhouse1_jbod4:/clickhouse1_jbod4
+      - clickhouse1_external:/clickhouse1_external
+      - clickhouse1_external2:/clickhouse1_external2
+      - clickhouse2_jbod1:/clickhouse2_jbod1
+      - clickhouse2_jbod2:/clickhouse2_jbod2
+      - clickhouse2_jbod3:/clickhouse2_jbod3
+      - clickhouse2_jbod4:/clickhouse2_jbod4
+      - clickhouse2_external:/clickhouse2_external
+      - clickhouse2_external2:/clickhouse2_external2
+      - clickhouse3_jbod1:/clickhouse3_jbod1
+      - clickhouse3_jbod2:/clickhouse3_jbod2
+      - clickhouse3_jbod3:/clickhouse3_jbod3
+      - clickhouse3_jbod4:/clickhouse3_jbod4
+      - clickhouse3_external:/clickhouse3_external
+      - clickhouse3_external2:/clickhouse3_external2
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+
+  zookeeper3:
     volumes:
       - clickhouse1_jbod1:/clickhouse1_jbod1
       - clickhouse1_jbod2:/clickhouse1_jbod2
@@ -209,7 +257,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse2:
@@ -228,7 +276,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper2:
         condition: service_healthy
 
   clickhouse3:
@@ -247,7 +295,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper3:
         condition: service_healthy
 
   aws:
@@ -266,7 +314,11 @@ services:
         condition: service_healthy
       clickhouse3:
         condition: service_healthy
-      zookeeper:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
         condition: service_healthy
       minio1:
         condition: service_healthy
