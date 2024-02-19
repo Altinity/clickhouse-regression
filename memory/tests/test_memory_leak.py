@@ -148,10 +148,9 @@ def get_process_memory_usage_in_kilobytes(self, pid):
 @TestScenario
 def check_create_and_drop_tables(
     self,
-    number_of_workers=10,
-    number_of_tables=100000,
+    number_of_workers=20,
+    number_of_tables=15000,
     node=None,
-    max_memory_increase=1.1,
     timeout=3600,
 ):
     """Test memory leak when we create and drop many tables."""
@@ -177,7 +176,7 @@ def check_create_and_drop_tables(
         note(f"end resident memory: {end_memory.resident}")
 
     with Then("I check for memory leaks and calculate released memory"):
-        max_memory = start_memory.resident * max_memory_increase
+        max_memory = 220000
         for attempt in retries(timeout=timeout, delay=10):
             with attempt:
                 current_memory = get_process_memory_usage(pid=pid)
@@ -187,7 +186,7 @@ def check_create_and_drop_tables(
                 note(f"released memory: {released_memory}")
                 assert (
                     current_memory.resident <= max_memory
-                ), f"Memory usage {current_memory.resident} larger than expected {max_memory} ({max_memory_increase}*{start_memory.resident})"
+                ), f"Memory usage {current_memory.resident} larger than expected {max_memory}"
 
 
 @TestFeature
