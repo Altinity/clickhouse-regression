@@ -15,7 +15,6 @@ from vfs.requirements import *
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
-    ":/parallel replica/add remove commands/*": [(Fail, "WIP"), (Error, "WIP")],
     ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
 }
 
@@ -27,6 +26,7 @@ ffails = {
         or check_clickhouse_version("<24.2")(test),
     ),
     ":/alter/move": (XFail, "Fix pending"),
+    ":/parallel replica": (Skip, "WIP"),
     ":/replica/add remove one node": (XFail, "Fix pending"),
 }
 

@@ -567,7 +567,7 @@ def restart_keeper(self, repeat_limit=5):
 
 
 @TestOutline
-def parallel_alters(
+def alter_combinations(
     self,
     limit=10,
     shuffle=True,
@@ -692,7 +692,7 @@ def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 
-    Scenario(test=parallel_alters)(
+    Scenario(test=alter_combinations)(
         limit=None if self.context.stress else 50,
         shuffle=True,
         combination_size=3,
