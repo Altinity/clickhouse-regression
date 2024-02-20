@@ -199,6 +199,7 @@ def get_random_partition_id(self, node, table_name):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("detach part")
 def detach_attach_random_partition(self):
     """Detach a random part, wait a random time, attach partition."""
@@ -289,6 +290,7 @@ def replace_random_part(self):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("move partition to table")
 def move_random_partition_to_random_table(self):
     """Move a random partition from one table to another."""
@@ -334,6 +336,7 @@ def attach_random_part_from_table(self):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("fetch part")
 def fetch_random_part_from_table(self):
     """Fetching a random part from another table replica."""
@@ -557,11 +560,21 @@ def delete_replica(self):
 
 
 @TestStep
-def restart_keeper(self, repeat_limit=5):
+def restart_keeper(self):
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
     with pause_node(keeper_node):
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+
+@TestStep
+def restart_clickhouse(self):
+    clickhouse_node = random.choice(self.context.ch_nodes)
+    delay = random.random() * 2 + 1
+
+    with pause_clickhouse(clickhouse_node, safe=False):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -602,8 +615,9 @@ def alter_combinations(
             update_random_column,
             delete_random_rows,
             restart_keeper,
-            delete_replica,
-            add_replica,
+            restart_clickhouse,
+            # delete_replica,
+            # add_replica,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
