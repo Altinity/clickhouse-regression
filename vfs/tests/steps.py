@@ -68,7 +68,7 @@ def s3_config(self):
             },
         }
 
-    return s3_storage(disks=disks, policies=policies, restart=True, timeout=60)
+    return s3_storage(disks=disks, policies=policies, restart=True, timeout=60, config_file="vfs_storage.xml")
 
 
 @TestStep(Given)
