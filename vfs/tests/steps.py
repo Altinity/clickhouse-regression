@@ -68,7 +68,13 @@ def s3_config(self):
             },
         }
 
-    return s3_storage(disks=disks, policies=policies, restart=True, timeout=60, config_file="vfs_storage.xml")
+    return s3_storage(
+        disks=disks,
+        policies=policies,
+        restart=True,
+        timeout=60,
+        config_file="vfs_storage.xml",
+    )
 
 
 @TestStep(Given)
@@ -399,3 +405,15 @@ def pause_node(node):
     finally:
         with When(f"{node.name} is started"):
             node.start()
+
+
+@contextmanager
+def pause_clickhouse(node, safe=True):
+    try:
+        with When(f"{node.name} is stopped"):
+            node.stop_clickhouse(safe=safe)
+            yield
+
+    finally:
+        with When(f"{node.name} is started"):
+            node.start_clickhouse(check_version=False)
