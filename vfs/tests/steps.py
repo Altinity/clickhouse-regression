@@ -396,22 +396,22 @@ def get_active_partition_ids(self, node, table_name):
 
 
 @contextmanager
-def pause_node(node):
+def pause_zookeeper(node, signal='KILL'):
     try:
         with When(f"{node.name} is stopped"):
-            node.stop()
+            node.kill_zookeeper(signal=signal)
             yield
 
     finally:
         with When(f"{node.name} is started"):
-            node.start()
+            node.start_zookeeper()
 
 
 @contextmanager
-def pause_clickhouse(node, safe=True):
+def pause_clickhouse(node, safe=True, signal='KILL'):
     try:
         with When(f"{node.name} is stopped"):
-            node.stop_clickhouse(safe=safe)
+            node.stop_clickhouse(safe=safe, signal=signal)
             yield
 
     finally:

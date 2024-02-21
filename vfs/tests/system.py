@@ -17,13 +17,13 @@ def pause_keeper(self):
     insert_rows = 100000
     fault_probability = 0
 
-    with pause_node(random.choice(self.context.zk_nodes)):
+    with pause_zookeeper(random.choice(self.context.zk_nodes)):
         with Given("a table is created"):
             _, table_name = replicated_table_cluster(
                 storage_policy="external_vfs",
             )
 
-    with pause_node(random.choice(self.context.zk_nodes)):
+    with pause_zookeeper(random.choice(self.context.zk_nodes)):
         with Given("data is inserted"):
             insert_random(
                 node=random.choice(nodes),
@@ -32,7 +32,7 @@ def pause_keeper(self):
                 settings=f"insert_keeper_fault_injection_probability={fault_probability}",
             )
 
-    with pause_node(random.choice(self.context.zk_nodes)):
+    with pause_zookeeper(random.choice(self.context.zk_nodes)):
         with Then("I check that tables are consistent"):
             for node in nodes:
                 assert_row_count(node=node, table_name=table_name, rows=insert_rows)
