@@ -209,13 +209,13 @@ def detach_attach_random_partition(self):
     delay = random.random() * 3
 
     with When("I detach a part"):
-        alter_table_detach_partition(node=node, partition_name=partition, exitcode=0)
+        alter_table_detach_partition(node=node, table_name=table_name, partition_name=partition, exitcode=0)
 
     with Then(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I reattach the part"):
-        alter_table_attach_partition(node=node, partition_name=partition, exitcode=0)
+        alter_table_attach_partition(node=node, table_name=table_name, partition_name=partition, exitcode=0)
 
 
 @TestStep
@@ -227,7 +227,7 @@ def freeze_unfreeze_random_part(self):
     node = get_random_node_for_table(table_name=table_name)
     backup_name = f"backup_{getuid()}"
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 3
+    delay = random.random() * 2 + 1
 
     with When("I freeze the part"):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
