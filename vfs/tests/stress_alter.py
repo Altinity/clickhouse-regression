@@ -606,7 +606,7 @@ def restart_keeper(self):
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
-    with pause_node(keeper_node):
+    with pause_zookeeper(keeper_node, signal="SEGV"):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -616,7 +616,7 @@ def restart_clickhouse(self):
     clickhouse_node = random.choice(self.context.ch_nodes)
     delay = random.random() * 2 + 1
 
-    with pause_clickhouse(clickhouse_node, safe=False):
+    with pause_clickhouse(clickhouse_node, safe=False, signal="SEGV"):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -744,10 +744,10 @@ def alter_combinations(
 @TestScenario
 def alters_1(self):
     """
-    3 actions  in parallel, spread across 3 tables, with fault injection.
+    3 actions  in parallel, spread across 3 tables, without fault injection.
     """
     alter_combinations(
-        limit=None if self.context.stress else 10,
+        limit=None if self.context.stress else 50,
         shuffle=True,
         combination_size=3,
         run_groups_in_parallel=True,
@@ -758,7 +758,7 @@ def alters_1(self):
         minimum_replicas=1,
         maximum_replicas=3,
         n_tables=3,
-        insert_keeper_fault_injection_probability=0.1,
+        insert_keeper_fault_injection_probability=0,
     )
 
 
