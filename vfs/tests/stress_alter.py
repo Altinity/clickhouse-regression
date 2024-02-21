@@ -209,13 +209,17 @@ def detach_attach_random_partition(self):
     delay = random.random() * 3
 
     with When("I detach a part"):
-        alter_table_detach_partition(node=node, table_name=table_name, partition_name=partition, exitcode=0)
+        alter_table_detach_partition(
+            node=node, table_name=table_name, partition_name=partition, exitcode=0
+        )
 
     with Then(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I reattach the part"):
-        alter_table_attach_partition(node=node, table_name=table_name, partition_name=partition, exitcode=0)
+        alter_table_attach_partition(
+            node=node, table_name=table_name, partition_name=partition, exitcode=0
+        )
 
 
 @TestStep
@@ -310,6 +314,44 @@ def move_random_partition_to_random_table(self):
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
             )
+
+
+@TestStep
+@Retry(timeout=30, delay=5)
+@Name("move partition to disk")
+def move_random_partition_to_random_disk(self):
+    """Move a random partition from one table to another."""
+
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    partition = get_random_partition_id(node=node, table_name=table_name)
+
+    with Given("I check which disk the partition is on"):
+        r = node.query(
+            f"SELECT disk_name FROM system.parts WHERE table='{table_name}' and partition_id='{partition}' LIMIT 1",
+            exitcode=0,
+        )
+        src_disk = r.output
+
+    with Given("I check which disks are available and choose one"):
+        r = node.query(
+            f"select arrayJoin(disks) from system.storage_policies where policy_name='{self.context.storage_policy}' FORMAT JSONColumns",
+            exitcode=0,
+        )
+        disks = json.loads(r.output)["arrayJoin(disks)"]
+        disks.remove(src_disk)
+        dest_disk = random.choice(disks)
+
+    with When(f"I move the partition from {src_disk} to {dest_disk}"):
+        alter_table_move_partition(
+            node=node,
+            table_name=table_name,
+            partition_name=partition,
+            disk_name=dest_disk,
+            disk="DISK",
+            exitcode=0,
+            no_checks=self.context.ignore_failed_part_moves,
+        )
 
 
 @TestStep
@@ -622,6 +664,7 @@ def alter_combinations(
             freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
+            move_random_partition_to_random_disk,
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
@@ -706,6 +749,9 @@ def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
     Scenario(test=alter_combinations)(
         limit=None if self.context.stress else 50,
         shuffle=True,
@@ -714,7 +760,7 @@ def feature(self):
         run_optimize_in_parallel=True,
         ignore_failed_part_moves=False,
         sync_replica_timeout=600,
-        storage_policy="external_vfs",
+        storage_policy="tiered",
         minimum_replicas=1,
         maximum_replicas=3,
         n_tables=3,
