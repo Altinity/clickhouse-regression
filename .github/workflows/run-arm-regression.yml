@@ -1517,6 +1517,80 @@ jobs:
           name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
+  vfs_aws:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: vfs
+      STORAGE: /aws
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_aws' || inputs.suite == 'vfs_all' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage aws_s3
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
+              --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-aws-artifacts
+          path: ${{ env.artifact_paths}}
+
+  vfs_gcs:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: vfs
+      STORAGE: /gcs
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_gcs' || inputs.suite == 'vfs_all' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage gcs
+              --gcs-uri ${{ secrets.GCS_URI }}
+              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
+              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-gcs-artifacts
+          path: ${{ env.artifact_paths}}
+
   vfs_minio:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
