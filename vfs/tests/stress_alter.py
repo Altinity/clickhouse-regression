@@ -430,7 +430,7 @@ def delete_random_rows(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     column_name = get_random_column_name(node=node, table_name=table_name)
-    divisor = random.choice([47, 53, 59, 61, 67])
+    divisor = random.choice([5, 11, 17, 23])
     remainder = random.randint(0, divisor - 1)
 
     By(
@@ -442,6 +442,30 @@ def delete_random_rows(self):
         node=node,
         no_checks=True,
     )
+
+
+@TestStep
+@Retry(timeout=30, delay=5)
+@Name("light delete row")
+def delete_random_rows_lightweight(self):
+    """Lightweight delete a few rows at random."""
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    column_name = get_random_column_name(node=node, table_name=table_name)
+    divisor = random.choice([5, 11, 17, 23])
+    remainder = random.randint(0, divisor - 1)
+
+    with By(f"delete rows from {table_name} with {node.name}"):
+        node.query(
+            f"DELETE FROM {table_name} WHERE ({column_name} % {divisor} = {remainder})",
+            no_checks=True,
+        )
+
+    if random.randint(0, 1):
+        node.query(
+            f"ALTER TABLE {table_name} APPLY DELETED MASK",
+            no_checks=True,
+        )
 
 
 @TestStep(Then)
@@ -658,6 +682,7 @@ def alter_combinations(
             delete_random_column,
             update_random_column,
             delete_random_rows,
+            delete_random_rows_lightweight,
             restart_keeper,
             restart_clickhouse,
             # delete_replica,
