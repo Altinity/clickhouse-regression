@@ -211,7 +211,7 @@ class ZooKeeperNode(Node):
 
     def zookeeper_pid(self):
         """Return ZooKeeper server pid if present otherwise return None."""
-        if self.command("ls /data/zookeeper_server.pid").exitcode == 0:
+        if self.command("ls /data/zookeeper_server.pid", no_checks=True).exitcode == 0:
             return self.command("cat /data/zookeeper_server.pid").output.strip()
         return None
 
