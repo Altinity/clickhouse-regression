@@ -627,11 +627,11 @@ def delete_replica(self):
 
 @TestStep
 def restart_keeper(self):
-    """Send a kill signal to a random zookeeper instance, wait, and restart"""
+    """Stop a random zookeeper instance, wait, and restart"""
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
-    with pause_zookeeper(keeper_node, signal="SEGV"):
+    with pause_node(keeper_node):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 

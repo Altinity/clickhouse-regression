@@ -396,19 +396,19 @@ def get_active_partition_ids(self, node, table_name):
 
 
 @contextmanager
-def pause_zookeeper(node, signal="KILL"):
+def pause_node(node):
     """
-    Stop the given zookeeper instance with the given signal.
+    Stop the given node container.
     Instance is restarted on context exit.
     """
     try:
         with When(f"{node.name} is stopped"):
-            node.kill_zookeeper(signal=signal)
+            node.stop()
             yield
 
     finally:
         with When(f"{node.name} is started"):
-            node.start_zookeeper()
+            node.start()
 
 
 @contextmanager
