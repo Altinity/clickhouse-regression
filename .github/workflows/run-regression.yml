@@ -1539,9 +1539,10 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
+              --aws-s3-region ${{ secrets.AWS_REGION }}
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
@@ -1557,7 +1558,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   vfs_gcs:
-    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: vfs
@@ -1592,7 +1593,6 @@ jobs:
         with:
           name: ${{ env.SUITE }}-gcs-artifacts
           path: ${{ env.artifact_paths}}
-
 
   vfs_minio:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
