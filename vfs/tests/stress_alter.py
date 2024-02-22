@@ -603,6 +603,7 @@ def delete_replica(self):
 
 @TestStep
 def restart_keeper(self):
+    """Send a kill signal to a random zookeeper instance, wait, and restart"""
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
@@ -613,6 +614,7 @@ def restart_keeper(self):
 
 @TestStep
 def restart_clickhouse(self):
+    """Send a kill signal to a random clickhouse instance, wait, and restart"""
     clickhouse_node = random.choice(self.context.ch_nodes)
     delay = random.random() * 2 + 1
 
