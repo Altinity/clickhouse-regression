@@ -60,6 +60,8 @@ on:
           - tiered_storage_local
           - tiered_storage_minio
           - vfs_all
+          - vfs_aws
+          - vfs_gcs
           - vfs_minio
           - window_functions
       artifacts:
