@@ -192,7 +192,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
 
         start_time = time.time()
 
-        for i in range(1987, 2023):
+        for i in range(start_year, end_year):
             with Scenario(f"loading year {i}"):
                 if format:
                     filename = f"/tmp/ontime_{i}.{format.lower()}"
