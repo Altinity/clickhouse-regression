@@ -68,7 +68,13 @@ def s3_config(self):
             },
         }
 
-    return s3_storage(disks=disks, policies=policies, restart=True, timeout=60)
+    return s3_storage(
+        disks=disks,
+        policies=policies,
+        restart=True,
+        timeout=60,
+        config_file="vfs_storage.xml",
+    )
 
 
 @TestStep(Given)
@@ -391,6 +397,10 @@ def get_active_partition_ids(self, node, table_name):
 
 @contextmanager
 def pause_node(node):
+    """
+    Stop the given node container.
+    Instance is restarted on context exit.
+    """
     try:
         with When(f"{node.name} is stopped"):
             node.stop()
@@ -399,3 +409,19 @@ def pause_node(node):
     finally:
         with When(f"{node.name} is started"):
             node.start()
+
+
+@contextmanager
+def pause_clickhouse(node, safe=True, signal="KILL"):
+    """
+    Stop the given clickhouse instance with the given signal.
+    Instance is restarted on context exit.
+    """
+    try:
+        with When(f"{node.name} is stopped"):
+            node.stop_clickhouse(safe=safe, signal=signal)
+            yield
+
+    finally:
+        with When(f"{node.name} is started"):
+            node.start_clickhouse(check_version=False)

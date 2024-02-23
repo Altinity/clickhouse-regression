@@ -405,7 +405,7 @@ def check_setting_combination(
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead("1.0"),
 )
-def setting_combos(self):
+def setting_combinations(self):
     """Perform concurrent inserts and selects with various settings."""
     settings = {
         "table_setting": (
