@@ -206,8 +206,8 @@ def gcs(
     self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
-    self.context.bucket_name = None
-    self.context.bucket_path = None
+    self.context.bucket_name = "altinity-qa-test"
+    self.context.bucket_path = "data/object-storage"
     self.context.minio_enabled = False
 
     with Given("docker-compose cluster"):
