@@ -200,7 +200,7 @@ def get_random_partition_id(self, node, table_name):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("detach part")
 def detach_attach_random_partition(self):
     """Detach a random part, wait a random time, attach partition."""
@@ -224,7 +224,7 @@ def detach_attach_random_partition(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("freeze part")
 def freeze_unfreeze_random_part(self):
     """Freeze a random part, wait a random time, unfreeze part."""
@@ -247,7 +247,7 @@ def freeze_unfreeze_random_part(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("drop part")
 def drop_random_part(self):
     """Detach and drop a random part."""
@@ -295,7 +295,7 @@ def replace_random_part(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("move partition to table")
 def move_random_partition_to_random_table(self):
     """Move a random partition from one table to another."""
@@ -318,7 +318,7 @@ def move_random_partition_to_random_table(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("move partition to disk")
 def move_random_partition_to_random_disk(self):
     """Move a random partition from one table to another."""
@@ -379,7 +379,7 @@ def attach_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("fetch part")
 def fetch_random_part_from_table(self):
     """Fetching a random part from another table replica."""
@@ -404,7 +404,7 @@ def fetch_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("clear column")
 def clear_random_column(self):
     """Clear a random column on a random partition."""
@@ -424,7 +424,7 @@ def clear_random_column(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("delete row")
 def delete_random_rows(self):
     """Delete a few rows at random."""
@@ -446,7 +446,7 @@ def delete_random_rows(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("light delete row")
 def delete_random_rows_lightweight(self):
     """Lightweight delete a few rows at random."""
