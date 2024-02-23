@@ -12,7 +12,7 @@ from vfs.requirements import *
     RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper("0.0"),
     RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper("0.0"),
 )
-def pause_keeper(self):
+def stop_zookeeper(self):
     nodes = self.context.ch_nodes
     insert_rows = 100000
     fault_probability = 0

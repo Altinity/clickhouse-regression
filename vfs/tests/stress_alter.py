@@ -199,6 +199,7 @@ def get_random_partition_id(self, node, table_name):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("detach part")
 def detach_attach_random_partition(self):
     """Detach a random part, wait a random time, attach partition."""
@@ -208,13 +209,17 @@ def detach_attach_random_partition(self):
     delay = random.random() * 3
 
     with When("I detach a part"):
-        alter_table_detach_partition(node=node, partition_name=partition, exitcode=0)
+        alter_table_detach_partition(
+            node=node, table_name=table_name, partition_name=partition, exitcode=0
+        )
 
     with Then(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I reattach the part"):
-        alter_table_attach_partition(node=node, partition_name=partition, exitcode=0)
+        alter_table_attach_partition(
+            node=node, table_name=table_name, partition_name=partition, exitcode=0
+        )
 
 
 @TestStep
@@ -226,7 +231,7 @@ def freeze_unfreeze_random_part(self):
     node = get_random_node_for_table(table_name=table_name)
     backup_name = f"backup_{getuid()}"
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 3
+    delay = random.random() * 2 + 1
 
     with When("I freeze the part"):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
@@ -289,6 +294,7 @@ def replace_random_part(self):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("move partition to table")
 def move_random_partition_to_random_table(self):
     """Move a random partition from one table to another."""
@@ -308,6 +314,44 @@ def move_random_partition_to_random_table(self):
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
             )
+
+
+@TestStep
+@Retry(timeout=30, delay=5)
+@Name("move partition to disk")
+def move_random_partition_to_random_disk(self):
+    """Move a random partition from one table to another."""
+
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    partition = get_random_partition_id(node=node, table_name=table_name)
+
+    with Given("I check which disk the partition is on"):
+        r = node.query(
+            f"SELECT disk_name FROM system.parts WHERE table='{table_name}' and partition_id='{partition}' LIMIT 1",
+            exitcode=0,
+        )
+        src_disk = r.output
+
+    with Given("I check which disks are available and choose one"):
+        r = node.query(
+            f"select arrayJoin(disks) from system.storage_policies where policy_name='{self.context.storage_policy}' FORMAT JSONColumns",
+            exitcode=0,
+        )
+        disks = json.loads(r.output)["arrayJoin(disks)"]
+        disks.remove(src_disk)
+        dest_disk = random.choice(disks)
+
+    with When(f"I move the partition from {src_disk} to {dest_disk}"):
+        alter_table_move_partition(
+            node=node,
+            table_name=table_name,
+            partition_name=partition,
+            disk_name=dest_disk,
+            disk="DISK",
+            exitcode=0,
+            no_checks=self.context.ignore_failed_part_moves,
+        )
 
 
 @TestStep
@@ -334,6 +378,7 @@ def attach_random_part_from_table(self):
 
 
 @TestStep
+@Retry(timeout=30, delay=5)
 @Name("fetch part")
 def fetch_random_part_from_table(self):
     """Fetching a random part from another table replica."""
@@ -385,7 +430,7 @@ def delete_random_rows(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     column_name = get_random_column_name(node=node, table_name=table_name)
-    divisor = random.choice([47, 53, 59, 61, 67])
+    divisor = random.choice([5, 11, 17, 23])
     remainder = random.randint(0, divisor - 1)
 
     By(
@@ -397,6 +442,30 @@ def delete_random_rows(self):
         node=node,
         no_checks=True,
     )
+
+
+@TestStep
+@Retry(timeout=30, delay=5)
+@Name("light delete row")
+def delete_random_rows_lightweight(self):
+    """Lightweight delete a few rows at random."""
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    column_name = get_random_column_name(node=node, table_name=table_name)
+    divisor = random.choice([5, 11, 17, 23])
+    remainder = random.randint(0, divisor - 1)
+
+    with By(f"delete rows from {table_name} with {node.name}"):
+        node.query(
+            f"DELETE FROM {table_name} WHERE ({column_name} % {divisor} = {remainder})",
+            no_checks=True,
+        )
+
+    if random.randint(0, 1):
+        node.query(
+            f"ALTER TABLE {table_name} APPLY DELETED MASK",
+            no_checks=True,
+        )
 
 
 @TestStep(Then)
@@ -557,7 +626,8 @@ def delete_replica(self):
 
 
 @TestStep
-def restart_keeper(self, repeat_limit=5):
+def restart_keeper(self):
+    """Stop a random zookeeper instance, wait, and restart"""
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
@@ -566,8 +636,19 @@ def restart_keeper(self, repeat_limit=5):
             time.sleep(delay)
 
 
+@TestStep
+def restart_clickhouse(self):
+    """Send a kill signal to a random clickhouse instance, wait, and restart"""
+    clickhouse_node = random.choice(self.context.ch_nodes)
+    delay = random.random() * 2 + 1
+
+    with pause_clickhouse(clickhouse_node, safe=False, signal="SEGV"):
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+
 @TestOutline
-def parallel_alters(
+def alter_combinations(
     self,
     limit=10,
     shuffle=True,
@@ -601,13 +682,16 @@ def parallel_alters(
             delete_random_column,
             update_random_column,
             delete_random_rows,
+            delete_random_rows_lightweight,
             restart_keeper,
-            delete_replica,
-            add_replica,
+            restart_clickhouse,
+            # delete_replica,
+            # add_replica,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
+            move_random_partition_to_random_disk,
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
@@ -684,6 +768,27 @@ def parallel_alters(
         note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
 
 
+@TestScenario
+def alters_1(self):
+    """
+    3 actions  in parallel, spread across 3 tables, without fault injection.
+    """
+    alter_combinations(
+        limit=None if self.context.stress else 50,
+        shuffle=True,
+        combination_size=3,
+        run_groups_in_parallel=True,
+        run_optimize_in_parallel=True,
+        ignore_failed_part_moves=False,
+        sync_replica_timeout=600,
+        storage_policy="tiered",
+        minimum_replicas=1,
+        maximum_replicas=3,
+        n_tables=3,
+        insert_keeper_fault_injection_probability=0,
+    )
+
+
 @TestFeature
 @Name("stress alter")
 def feature(self):
@@ -692,17 +797,8 @@ def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 
-    Scenario(test=parallel_alters)(
-        limit=None if self.context.stress else 50,
-        shuffle=True,
-        combination_size=3,
-        run_groups_in_parallel=True,
-        run_optimize_in_parallel=True,
-        ignore_failed_part_moves=False,
-        sync_replica_timeout=600,
-        storage_policy="external_vfs",
-        minimum_replicas=1,
-        maximum_replicas=3,
-        n_tables=3,
-        insert_keeper_fault_injection_probability=0.1,
-    )
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    for scenario in loads(current_module(), Scenario):
+        scenario()

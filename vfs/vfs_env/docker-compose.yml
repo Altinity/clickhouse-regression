@@ -134,32 +134,6 @@ services:
     extends:
       file: minio-service.yml
       service: minio1
-    depends_on:
-      - proxy1
-      - proxy2
-
-  proxy1:
-    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
-    ports:
-      - "8080"
-      - "80"
-      - "443"
-
-  proxy2:
-    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
-    ports:
-      - "8080"
-      - "80"
-      - "443"
-
-  resolver:
-    image: altinityinfra/python-bottle:265-ea7abf434d5f99618d1e188b8284cf43835724f3
-    ports:
-      - "8080"
-    tty: true
-    depends_on:
-      - proxy1
-      - proxy2
 
   minio-client:
     extends:
@@ -170,76 +144,37 @@ services:
         condition: service_healthy
 
   zookeeper1:
-    volumes:
-      - clickhouse1_jbod1:/clickhouse1_jbod1
-      - clickhouse1_jbod2:/clickhouse1_jbod2
-      - clickhouse1_jbod3:/clickhouse1_jbod3
-      - clickhouse1_jbod4:/clickhouse1_jbod4
-      - clickhouse1_external:/clickhouse1_external
-      - clickhouse1_external2:/clickhouse1_external2
-      - clickhouse2_jbod1:/clickhouse2_jbod1
-      - clickhouse2_jbod2:/clickhouse2_jbod2
-      - clickhouse2_jbod3:/clickhouse2_jbod3
-      - clickhouse2_jbod4:/clickhouse2_jbod4
-      - clickhouse2_external:/clickhouse2_external
-      - clickhouse2_external2:/clickhouse2_external2
-      - clickhouse3_jbod1:/clickhouse3_jbod1
-      - clickhouse3_jbod2:/clickhouse3_jbod2
-      - clickhouse3_jbod3:/clickhouse3_jbod3
-      - clickhouse3_jbod4:/clickhouse3_jbod4
-      - clickhouse3_external:/clickhouse3_external
-      - clickhouse3_external2:/clickhouse3_external2
     extends:
       file: zookeeper-service.yml
       service: zookeeper
+    hostname: zookeeper1
+    environment:
+      ZOO_MY_ID: 1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/datalog/:/datalog"
 
   zookeeper2:
-    volumes:
-      - clickhouse1_jbod1:/clickhouse1_jbod1
-      - clickhouse1_jbod2:/clickhouse1_jbod2
-      - clickhouse1_jbod3:/clickhouse1_jbod3
-      - clickhouse1_jbod4:/clickhouse1_jbod4
-      - clickhouse1_external:/clickhouse1_external
-      - clickhouse1_external2:/clickhouse1_external2
-      - clickhouse2_jbod1:/clickhouse2_jbod1
-      - clickhouse2_jbod2:/clickhouse2_jbod2
-      - clickhouse2_jbod3:/clickhouse2_jbod3
-      - clickhouse2_jbod4:/clickhouse2_jbod4
-      - clickhouse2_external:/clickhouse2_external
-      - clickhouse2_external2:/clickhouse2_external2
-      - clickhouse3_jbod1:/clickhouse3_jbod1
-      - clickhouse3_jbod2:/clickhouse3_jbod2
-      - clickhouse3_jbod3:/clickhouse3_jbod3
-      - clickhouse3_jbod4:/clickhouse3_jbod4
-      - clickhouse3_external:/clickhouse3_external
-      - clickhouse3_external2:/clickhouse3_external2
     extends:
       file: zookeeper-service.yml
       service: zookeeper
+    hostname: zookeeper2
+    environment:
+      ZOO_MY_ID: 2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/datalog/:/datalog/"
 
   zookeeper3:
-    volumes:
-      - clickhouse1_jbod1:/clickhouse1_jbod1
-      - clickhouse1_jbod2:/clickhouse1_jbod2
-      - clickhouse1_jbod3:/clickhouse1_jbod3
-      - clickhouse1_jbod4:/clickhouse1_jbod4
-      - clickhouse1_external:/clickhouse1_external
-      - clickhouse1_external2:/clickhouse1_external2
-      - clickhouse2_jbod1:/clickhouse2_jbod1
-      - clickhouse2_jbod2:/clickhouse2_jbod2
-      - clickhouse2_jbod3:/clickhouse2_jbod3
-      - clickhouse2_jbod4:/clickhouse2_jbod4
-      - clickhouse2_external:/clickhouse2_external
-      - clickhouse2_external2:/clickhouse2_external2
-      - clickhouse3_jbod1:/clickhouse3_jbod1
-      - clickhouse3_jbod2:/clickhouse3_jbod2
-      - clickhouse3_jbod3:/clickhouse3_jbod3
-      - clickhouse3_jbod4:/clickhouse3_jbod4
-      - clickhouse3_external:/clickhouse3_external
-      - clickhouse3_external2:/clickhouse3_external2
     extends:
       file: zookeeper-service.yml
       service: zookeeper
+    hostname: zookeeper3
+    environment:
+      ZOO_MY_ID: 3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/datalog/:/datalog/"
 
   clickhouse1:
     extends:
