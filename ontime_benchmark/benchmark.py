@@ -120,111 +120,113 @@ def regression(
             self.context.secret_access_key = secret_access_key
             self.context.storage = storage
 
-            # cluster = create_cluster(local=local,
-            #     clickhouse_binary_path=clickhouse_binary_path,
+            with Given("docker-compose cluster"):
+                cluster = create_cluster(
+                    local=local,
+                    clickhouse_binary_path=clickhouse_binary_path,
+                    collect_service_logs=collect_service_logs,
+                    nodes=nodes,
+                    docker_compose_project_dir=os.path.join(
+                        current_dir(), os.path.basename(current_dir()) + "_env"
+                    ),
+                    environ=environ,
+                )
+                self.context.cluster = cluster
+                self.context.node = self.context.cluster.node(node)
+                self.context.clickhouse_version = current().context.clickhouse_version
+
+            with And("I set the nodes to use with replicated tables"):
+                nodes = cluster.nodes["clickhouse"][:2]
+
+            with And(f"cluster nodes {nodes}"):
+                nodes = [cluster.node(name) for name in nodes]
+                self.context.nodes = nodes
+
+            with And("I have two S3 disks configured"):
+                disks = {
+                    "default": {"keep_free_space_bytes": "1024"},
+                    "external": {
+                        "type": "s3",
+                        "endpoint": f"{self.context.uri}",
+                        "access_key_id": f"{self.context.access_key_id}",
+                        "secret_access_key": f"{self.context.secret_access_key}",
+                    },
+                }
+
+            with And(
+                """I have a storage policy configured to use the S3 disk and a tiered
+                        storage policy using both S3 disks"""
+            ):
+                policies = {
+                    "default": {"volumes": {"default": {"disk": "default"}}},
+                    "external": {"volumes": {"external": {"disk": "external"}}},
+                    "tiered": {
+                        "volumes": {
+                            "default": {"disk": "default"},
+                            "external": {"disk": "external"},
+                        }
+                    },
+                }
+
+            with And("I enable the disk and policy config"):
+                s3_storage(disks=disks, policies=policies, timeout=360)
+
+            Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
+                format=format
+            )
+            # with Cluster(
+            #     local,
+            #     clickhouse_binary_path,
             #     collect_service_logs=collect_service_logs,
             #     nodes=nodes,
             #     docker_compose_project_dir=os.path.join(
             #         current_dir(), os.path.basename(current_dir()) + "_env"
             #     ),
-            #     environ=environ,)
-            
-            # self.context.cluster = cluster
-            # self.context.node = self.context.cluster.node(node)
-            # self.context.clickhouse_version = current().context.clickhouse_version
+            #     environ=environ,
+            # ) as cluster:
+            #     self.context.cluster = cluster
+            #     self.context.node = self.context.cluster.node(node)
+            #     self.context.clickhouse_version = current().context.clickhouse_version
 
-            # with And("I set the nodes to use with replicated tables"):
-            #     nodes = cluster.nodes["clickhouse"][:2]
+            #     with And("I set the nodes to use with replicated tables"):
+            #         nodes = cluster.nodes["clickhouse"][:2]
 
-            # with And(f"cluster nodes {nodes}"):
-            #     nodes = [cluster.node(name) for name in nodes]
-            #     self.context.nodes = nodes
+            #     with And(f"cluster nodes {nodes}"):
+            #         nodes = [cluster.node(name) for name in nodes]
+            #         self.context.nodes = nodes
 
-            # with And("I have two S3 disks configured"):
-            #     disks = {
-            #         "default": {"keep_free_space_bytes": "1024"},
-            #         "external": {
-            #             "type": "s3",
-            #             "endpoint": f"{self.context.uri}",
-            #             "access_key_id": f"{self.context.access_key_id}",
-            #             "secret_access_key": f"{self.context.secret_access_key}",
-            #         },
-            #     }
+            #     with And("I have two S3 disks configured"):
+            #         disks = {
+            #             "default": {"keep_free_space_bytes": "1024"},
+            #             "external": {
+            #                 "type": "s3",
+            #                 "endpoint": f"{self.context.uri}",
+            #                 "access_key_id": f"{self.context.access_key_id}",
+            #                 "secret_access_key": f"{self.context.secret_access_key}",
+            #             },
+            #         }
 
-            # with And(
-            #     """I have a storage policy configured to use the S3 disk and a tiered
-            #             storage policy using both S3 disks"""
-            # ):
-            #     policies = {
-            #         "default": {"volumes": {"default": {"disk": "default"}}},
-            #         "external": {"volumes": {"external": {"disk": "external"}}},
-            #         "tiered": {
-            #             "volumes": {
-            #                 "default": {"disk": "default"},
-            #                 "external": {"disk": "external"},
-            #             }
-            #         },
-            #     }
+            #     with And(
+            #         """I have a storage policy configured to use the S3 disk and a tiered
+            #              storage policy using both S3 disks"""
+            #     ):
+            #         policies = {
+            #             "default": {"volumes": {"default": {"disk": "default"}}},
+            #             "external": {"volumes": {"external": {"disk": "external"}}},
+            #             "tiered": {
+            #                 "volumes": {
+            #                     "default": {"disk": "default"},
+            #                     "external": {"disk": "external"},
+            #                 }
+            #             },
+            #         }
 
-            # with And("I enable the disk and policy config"):
-            #     s3_storage(disks=disks, policies=policies, timeout=360)
+            #     with And("I enable the disk and policy config"):
+            #         s3_storage(disks=disks, policies=policies, timeout=360)
 
-            # Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
-            #     format=format
-            # )
-            with Cluster(
-                local,
-                clickhouse_binary_path,
-                collect_service_logs=collect_service_logs,
-                nodes=nodes,
-                docker_compose_project_dir=os.path.join(
-                    current_dir(), os.path.basename(current_dir()) + "_env"
-                ),
-                environ=environ,
-            ) as cluster:
-                self.context.cluster = cluster
-                self.context.node = self.context.cluster.node(node)
-                self.context.clickhouse_version = current().context.clickhouse_version
-
-                with And("I set the nodes to use with replicated tables"):
-                    nodes = cluster.nodes["clickhouse"][:2]
-
-                with And(f"cluster nodes {nodes}"):
-                    nodes = [cluster.node(name) for name in nodes]
-                    self.context.nodes = nodes
-
-                with And("I have two S3 disks configured"):
-                    disks = {
-                        "default": {"keep_free_space_bytes": "1024"},
-                        "external": {
-                            "type": "s3",
-                            "endpoint": f"{self.context.uri}",
-                            "access_key_id": f"{self.context.access_key_id}",
-                            "secret_access_key": f"{self.context.secret_access_key}",
-                        },
-                    }
-
-                with And(
-                    """I have a storage policy configured to use the S3 disk and a tiered
-                         storage policy using both S3 disks"""
-                ):
-                    policies = {
-                        "default": {"volumes": {"default": {"disk": "default"}}},
-                        "external": {"volumes": {"external": {"disk": "external"}}},
-                        "tiered": {
-                            "volumes": {
-                                "default": {"disk": "default"},
-                                "external": {"disk": "external"},
-                            }
-                        },
-                    }
-
-                with And("I enable the disk and policy config"):
-                    s3_storage(disks=disks, policies=policies, timeout=360)
-
-                Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
-                    format=format
-                )
+            #     Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
+            #         format=format
+            #     )
 
 
 if main():
