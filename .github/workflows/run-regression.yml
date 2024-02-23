@@ -1521,7 +1521,7 @@ jobs:
 
   vfs_aws:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 300
     env:
       SUITE: vfs
       STORAGE: /aws
@@ -1559,7 +1559,7 @@ jobs:
 
   vfs_gcs:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 300
     env:
       SUITE: vfs
       STORAGE: /gcs

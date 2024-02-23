@@ -1521,7 +1521,7 @@ jobs:
 
   vfs_aws:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 300
     env:
       SUITE: vfs
       STORAGE: /aws
@@ -1558,7 +1558,7 @@ jobs:
 
   vfs_gcs:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 300
     env:
       SUITE: vfs
       STORAGE: /gcs
@@ -1595,7 +1595,7 @@ jobs:
 
   vfs_minio:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 300
     env:
       SUITE: vfs
       STORAGE: /minio
