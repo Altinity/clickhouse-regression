@@ -632,18 +632,18 @@ def restart_keeper(self):
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
-    with pause_node(keeper_node):
+    with interrupt_node(keeper_node):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
 
 @TestStep
-def restart_clickhouse(self):
+def restart_clickhouse(self, signal="SEGV"):
     """Send a kill signal to a random clickhouse instance, wait, and restart"""
     clickhouse_node = random.choice(self.context.ch_nodes)
     delay = random.random() * 2 + 1
 
-    with pause_clickhouse(clickhouse_node, safe=False, signal="SEGV"):
+    with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 

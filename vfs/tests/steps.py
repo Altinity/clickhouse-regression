@@ -396,7 +396,7 @@ def get_active_partition_ids(self, node, table_name):
 
 
 @contextmanager
-def pause_node(node):
+def interrupt_node(node):
     """
     Stop the given node container.
     Instance is restarted on context exit.
@@ -412,7 +412,7 @@ def pause_node(node):
 
 
 @contextmanager
-def pause_clickhouse(node, safe=True, signal="KILL"):
+def interrupt_clickhouse(node, safe=True, signal="KILL"):
     """
     Stop the given clickhouse instance with the given signal.
     Instance is restarted on context exit.
