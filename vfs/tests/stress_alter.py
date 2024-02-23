@@ -657,7 +657,7 @@ def alter_combinations(
     run_optimize_in_parallel=True,
     ignore_failed_part_moves=False,
     sync_replica_timeout=600,
-    storage_policy="external_vfs",
+    storage_policy="tiered",
     minimum_replicas=1,
     maximum_replicas=3,
     n_tables=3,
@@ -779,17 +779,8 @@ def vfs(self):
     alter_combinations(
         limit=None if self.context.stress else 30,
         shuffle=True,
-        combination_size=3,
-        run_groups_in_parallel=True,
-        run_optimize_in_parallel=True,
-        ignore_failed_part_moves=False,
-        sync_replica_timeout=600,
-        storage_policy="tiered",
-        minimum_replicas=1,
-        maximum_replicas=3,
-        n_tables=3,
-        insert_keeper_fault_injection_probability=0,
     )
+
 
 @TestScenario
 def vfs_insert_faults(self):
@@ -802,17 +793,9 @@ def vfs_insert_faults(self):
     alter_combinations(
         limit=None if self.context.stress else 10,
         shuffle=True,
-        combination_size=3,
-        run_groups_in_parallel=True,
-        run_optimize_in_parallel=True,
-        ignore_failed_part_moves=False,
-        sync_replica_timeout=600,
-        storage_policy="tiered",
-        minimum_replicas=1,
-        maximum_replicas=3,
-        n_tables=3,
         insert_keeper_fault_injection_probability=0.1,
     )
+
 
 @TestScenario
 def no_vfs(self):
@@ -822,16 +805,6 @@ def no_vfs(self):
     alter_combinations(
         limit=None if self.context.stress else 10,
         shuffle=True,
-        combination_size=3,
-        run_groups_in_parallel=True,
-        run_optimize_in_parallel=True,
-        ignore_failed_part_moves=False,
-        sync_replica_timeout=600,
-        storage_policy="tiered",
-        minimum_replicas=1,
-        maximum_replicas=3,
-        n_tables=3,
-        insert_keeper_fault_injection_probability=0,
     )
 
 
