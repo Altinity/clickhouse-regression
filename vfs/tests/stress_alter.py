@@ -769,12 +769,58 @@ def alter_combinations(
 
 
 @TestScenario
-def alters_1(self):
+def vfs(self):
     """
-    3 actions  in parallel, spread across 3 tables, without fault injection.
+    3 actions in parallel, spread across 3 tables.
+    """
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    alter_combinations(
+        limit=None if self.context.stress else 30,
+        shuffle=True,
+        combination_size=3,
+        run_groups_in_parallel=True,
+        run_optimize_in_parallel=True,
+        ignore_failed_part_moves=False,
+        sync_replica_timeout=600,
+        storage_policy="tiered",
+        minimum_replicas=1,
+        maximum_replicas=3,
+        n_tables=3,
+        insert_keeper_fault_injection_probability=0,
+    )
+
+@TestScenario
+def vfs_insert_faults(self):
+    """
+    3 actions in parallel, spread across 3 tables, with fault injection.
+    """
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    alter_combinations(
+        limit=None if self.context.stress else 10,
+        shuffle=True,
+        combination_size=3,
+        run_groups_in_parallel=True,
+        run_optimize_in_parallel=True,
+        ignore_failed_part_moves=False,
+        sync_replica_timeout=600,
+        storage_policy="tiered",
+        minimum_replicas=1,
+        maximum_replicas=3,
+        n_tables=3,
+        insert_keeper_fault_injection_probability=0.1,
+    )
+
+@TestScenario
+def no_vfs(self):
+    """
+    3 actions in parallel, spread across 3 tables, without vfs.
     """
     alter_combinations(
-        limit=None if self.context.stress else 50,
+        limit=None if self.context.stress else 10,
         shuffle=True,
         combination_size=3,
         run_groups_in_parallel=True,
@@ -796,9 +842,6 @@ def feature(self):
 
     with Given("I have S3 disks configured"):
         s3_config()
-
-    with Given("VFS is enabled"):
-        enable_vfs(disk_names=["external", "external_tiered"])
 
     for scenario in loads(current_module(), Scenario):
         scenario()
