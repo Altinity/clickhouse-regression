@@ -22,6 +22,11 @@ def feature(self):
             executor=pool,
         )
         Feature(
+            run=load("alter.table.attach_partition.partition_key_datetime", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
             run=load("alter.table.attach_partition.storage", "feature"),
             parallel=True,
             executor=pool,
