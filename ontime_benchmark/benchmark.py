@@ -120,7 +120,7 @@ def regression(
             self.context.secret_access_key = secret_access_key
             self.context.storage = storage
 
-            with Given("docker-compose cluster"):
+            with Given("docker-compose cluster a"):
                 cluster = create_cluster(
                     local=local,
                     clickhouse_binary_path=clickhouse_binary_path,
@@ -130,6 +130,7 @@ def regression(
                         current_dir(), os.path.basename(current_dir()) + "_env"
                     ),
                     environ=environ,
+                    configs_dir=current_dir(),
                 )
                 self.context.cluster = cluster
                 self.context.node = self.context.cluster.node(node)
