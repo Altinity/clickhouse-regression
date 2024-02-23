@@ -628,7 +628,10 @@ def delete_replica(self):
 
 @TestStep
 def restart_keeper(self):
-    """Stop a random zookeeper instance, wait, and restart"""
+    """
+    Stop a random zookeeper instance, wait, and restart.
+    This simulates a short outage.
+    """
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
@@ -639,11 +642,28 @@ def restart_keeper(self):
 
 @TestStep
 def restart_clickhouse(self, signal="SEGV"):
-    """Send a kill signal to a random clickhouse instance, wait, and restart"""
+    """
+    Send a kill signal to a random clickhouse instance, wait, and restart.
+    This simulates a short outage.
+    """
     clickhouse_node = random.choice(self.context.ch_nodes)
     delay = random.random() * 2 + 1
 
     with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+
+@TestStep
+def restart_network(self):
+    """
+    Stop the network on a random instance, wait, and restart.
+    This simulates a short outage.
+    """
+    node = random.choice(self.context.zk_nodes + self.context.ch_nodes)
+    delay = random.random() * 2 + 1
+
+    with interrupt_network(self.context.cluster, node):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -681,7 +701,7 @@ def alter_combinations(
     minimum_replicas=1,
     maximum_replicas=3,
     n_tables=3,
-    restarts=True,
+    restarts=False,
     add_remove_replicas=False,
     insert_keeper_fault_injection_probability=0,
     network_impairment=False,
@@ -714,6 +734,7 @@ def alter_combinations(
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
+            restart_network,
         ]
         if restarts:
             actions.extend(
@@ -734,6 +755,7 @@ def alter_combinations(
         action_groups = list(
             combinations(actions, combination_size, with_replacement=True)
         )
+        note(f"Created {len(action_groups)} groups of actions to run")
 
     if shuffle:
         with And("I shuffle the list"):
@@ -770,7 +792,7 @@ def alter_combinations(
     t = time.time()
     total_combinations = len(action_groups)
     for i, chosen_actions in enumerate(action_groups):
-        title = f"{i}/{total_combinations} " + ",".join(
+        title = f"{i+1}/{total_combinations} " + ",".join(
             [f"{f.name}" for f in chosen_actions]
         )
 
