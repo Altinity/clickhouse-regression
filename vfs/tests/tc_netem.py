@@ -60,6 +60,29 @@ def network_packet_loss(
 
 
 @TestStep(Given)
+@Name("burst loss")
+def network_packet_loss_gemodel(
+    self,
+    node,
+    interruption_probability=5,
+    recovery_probability=50,
+    percent_loss_after_interruption=100,
+    percent_loss_after_recovery=5,
+    device="eth0",
+):
+    """
+    Create burst losses with the Gilbert-Elliott loss model.
+    Switches between good (recovery) and lossy (interruption) states.
+    http://www.voiptroubleshooter.com/indepth/burstloss.html
+
+    The average length in packets of the interruption sequence
+    is given by: 1/(recovery_probability/100)
+    """
+    rule = f"loss gemodel {interruption_probability} {recovery_probability} {percent_loss_after_interruption} {percent_loss_after_recovery}"
+    return run_netem(node=node, device=device, rule=rule)
+
+
+@TestStep(Given)
 @Name("packet corruption")
 def network_packet_corruption(
     self,

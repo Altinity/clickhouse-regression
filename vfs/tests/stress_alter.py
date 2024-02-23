@@ -671,6 +671,7 @@ def restart_network(self):
 network_impairments = [
     network_packet_delay,
     network_packet_loss,
+    network_packet_loss_gemodel,
     network_packet_corruption,
     network_packet_duplication,
     network_packet_reordering,
@@ -684,7 +685,10 @@ def impaired_network(self, network_mode):
     nodes = chain(self.context.zk_nodes, self.context.ch_nodes)
 
     for node in nodes:
-        network_mode(node=node)
+        try: # Can fail if node is offline
+            network_mode(node=node)
+        except:
+            pass
 
 
 @TestOutline
