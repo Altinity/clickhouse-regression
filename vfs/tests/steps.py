@@ -2,6 +2,7 @@
 import json
 import time
 from contextlib import contextmanager
+from platform import processor
 
 from testflows.core import *
 from testflows.asserts import error
@@ -14,6 +15,8 @@ from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
 COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
+
+DOCKER_NETWORK = "vfs_env_default" if processor() == "x86_64" else "vfs_env_arm64"
 
 
 @TestStep(Given)
@@ -425,3 +428,29 @@ def interrupt_clickhouse(node, safe=True, signal="KILL"):
     finally:
         with When(f"{node.name} is started"):
             node.start_clickhouse(check_version=False)
+
+
+@contextmanager
+def interrupt_network(cluster, node):
+    """
+    Disconnect the given node container.
+    Instance is reconnected on context exit.
+    """
+    if processor() == "x86_64":
+        container = f"vfs_env-{node.name}-1"
+    else:
+        container = f"vfs_env_arm64-{node.name}-1"
+
+    try:
+        with When(f"{node.name} is disconnected"):
+            cluster.command(
+                None, f"docker network disconnect {DOCKER_NETWORK} {container}"
+            )
+
+        yield
+
+    finally:
+        with When(f"{node.name} is reconnected"):
+            cluster.command(
+                None, f"docker network connect {DOCKER_NETWORK} {container}"
+            )
