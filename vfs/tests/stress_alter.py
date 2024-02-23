@@ -12,6 +12,7 @@ from testflows.uexpect.uexpect import ExpectTimeoutError, TimeoutError
 from helpers.alter import *
 from vfs.tests.steps import *
 from vfs.requirements import *
+from vfs.tests.tc_netem import *
 
 table_schema_lock = RLock()
 
@@ -647,6 +648,25 @@ def restart_clickhouse(self):
             time.sleep(delay)
 
 
+network_impairments = [
+    network_packet_delay,
+    network_packet_loss,
+    network_packet_corruption,
+    network_packet_duplication,
+    network_packet_reordering,
+    network_packet_rate_limit,
+]
+
+
+@TestStep(Given)
+def impaired_network(self, network_mode):
+    """Apply a network impairment mode to all nodes"""
+    nodes = chain(self.context.zk_nodes, self.context.ch_nodes)
+
+    for node in nodes:
+        network_mode(node=node)
+
+
 @TestOutline
 def alter_combinations(
     self,
@@ -661,7 +681,10 @@ def alter_combinations(
     minimum_replicas=1,
     maximum_replicas=3,
     n_tables=3,
+    restarts=True,
+    add_remove_replicas=False,
     insert_keeper_fault_injection_probability=0,
+    network_impairment=False,
 ):
     """
     Perform combinations of alter actions, checking that all replicas agree.
@@ -683,10 +706,6 @@ def alter_combinations(
             update_random_column,
             delete_random_rows,
             delete_random_rows_lightweight,
-            restart_keeper,
-            restart_clickhouse,
-            # delete_replica,
-            # add_replica,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
@@ -696,6 +715,20 @@ def alter_combinations(
             attach_random_part_from_table,
             fetch_random_part_from_table,
         ]
+        if restarts:
+            actions.extend(
+                [
+                    restart_keeper,
+                    restart_clickhouse,
+                ]
+            )
+        if add_remove_replicas:
+            actions.extend(
+                [
+                    delete_replica,
+                    add_replica,
+                ]
+            )
 
     with And(f"I make a list of groups of {combination_size} actions"):
         action_groups = list(
@@ -737,10 +770,19 @@ def alter_combinations(
     t = time.time()
     total_combinations = len(action_groups)
     for i, chosen_actions in enumerate(action_groups):
-        with Check(
-            f"{i}/{total_combinations} "
-            + ",".join([f"{f.name}" for f in chosen_actions])
-        ):
+        title = f"{i}/{total_combinations} " + ",".join(
+            [f"{f.name}" for f in chosen_actions]
+        )
+
+        if network_impairment:
+            net_mode = random.choice(network_impairments)
+            title += "," + net_mode.name
+
+        with Check(title):
+            if network_impairment:
+                with Given("a network impairment"):
+                    impaired_network(network_mode=net_mode)
+
             with When("I perform a group of actions"):
                 for action in chain(
                     [insert_to_random, select_count_random], chosen_actions
@@ -777,7 +819,7 @@ def vfs(self):
         enable_vfs(disk_names=["external", "external_tiered"])
 
     alter_combinations(
-        limit=None if self.context.stress else 30,
+        limit=None if self.context.stress else 20,
         shuffle=True,
     )
 
@@ -791,9 +833,25 @@ def vfs_insert_faults(self):
         enable_vfs(disk_names=["external", "external_tiered"])
 
     alter_combinations(
-        limit=None if self.context.stress else 10,
+        limit=None if self.context.stress else 20,
         shuffle=True,
         insert_keeper_fault_injection_probability=0.1,
+    )
+
+
+@TestScenario
+def vfs_network_faults(self):
+    """
+    3 actions in parallel, spread across 3 tables, with network faults.
+    """
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        network_impairment=True,
+        restarts=False,
     )
 
 
@@ -803,8 +861,9 @@ def no_vfs(self):
     3 actions in parallel, spread across 3 tables, without vfs.
     """
     alter_combinations(
-        limit=None if self.context.stress else 10,
+        limit=None if self.context.stress else 20,
         shuffle=True,
+        restarts=False,
     )
 
 
