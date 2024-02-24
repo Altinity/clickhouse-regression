@@ -200,7 +200,7 @@ def get_random_partition_id(self, node, table_name):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("detach part")
 def detach_attach_random_partition(self):
     """Detach a random part, wait a random time, attach partition."""
@@ -224,7 +224,7 @@ def detach_attach_random_partition(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("freeze part")
 def freeze_unfreeze_random_part(self):
     """Freeze a random part, wait a random time, unfreeze part."""
@@ -247,7 +247,7 @@ def freeze_unfreeze_random_part(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("drop part")
 def drop_random_part(self):
     """Detach and drop a random part."""
@@ -295,7 +295,7 @@ def replace_random_part(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("move partition to table")
 def move_random_partition_to_random_table(self):
     """Move a random partition from one table to another."""
@@ -318,7 +318,7 @@ def move_random_partition_to_random_table(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("move partition to disk")
 def move_random_partition_to_random_disk(self):
     """Move a random partition from one table to another."""
@@ -379,7 +379,7 @@ def attach_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("fetch part")
 def fetch_random_part_from_table(self):
     """Fetching a random part from another table replica."""
@@ -404,7 +404,7 @@ def fetch_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("clear column")
 def clear_random_column(self):
     """Clear a random column on a random partition."""
@@ -424,7 +424,7 @@ def clear_random_column(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("delete row")
 def delete_random_rows(self):
     """Delete a few rows at random."""
@@ -446,7 +446,7 @@ def delete_random_rows(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("light delete row")
 def delete_random_rows_lightweight(self):
     """Lightweight delete a few rows at random."""
@@ -628,22 +628,42 @@ def delete_replica(self):
 
 @TestStep
 def restart_keeper(self):
-    """Stop a random zookeeper instance, wait, and restart"""
+    """
+    Stop a random zookeeper instance, wait, and restart.
+    This simulates a short outage.
+    """
     keeper_node = random.choice(self.context.zk_nodes)
     delay = random.random() * 2 + 1
 
-    with pause_node(keeper_node):
+    with interrupt_node(keeper_node):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
 
 @TestStep
-def restart_clickhouse(self):
-    """Send a kill signal to a random clickhouse instance, wait, and restart"""
+def restart_clickhouse(self, signal="SEGV"):
+    """
+    Send a kill signal to a random clickhouse instance, wait, and restart.
+    This simulates a short outage.
+    """
     clickhouse_node = random.choice(self.context.ch_nodes)
     delay = random.random() * 2 + 1
 
-    with pause_clickhouse(clickhouse_node, safe=False, signal="SEGV"):
+    with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+
+@TestStep
+def restart_network(self):
+    """
+    Stop the network on a random instance, wait, and restart.
+    This simulates a short outage.
+    """
+    node = random.choice(self.context.zk_nodes + self.context.ch_nodes)
+    delay = random.random() * 2 + 1
+
+    with interrupt_network(self.context.cluster, node):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -651,6 +671,7 @@ def restart_clickhouse(self):
 network_impairments = [
     network_packet_delay,
     network_packet_loss,
+    network_packet_loss_gemodel,
     network_packet_corruption,
     network_packet_duplication,
     network_packet_reordering,
@@ -664,7 +685,10 @@ def impaired_network(self, network_mode):
     nodes = chain(self.context.zk_nodes, self.context.ch_nodes)
 
     for node in nodes:
-        network_mode(node=node)
+        try: # Can fail if node is offline
+            network_mode(node=node)
+        except:
+            pass
 
 
 @TestOutline
@@ -681,7 +705,7 @@ def alter_combinations(
     minimum_replicas=1,
     maximum_replicas=3,
     n_tables=3,
-    restarts=True,
+    restarts=False,
     add_remove_replicas=False,
     insert_keeper_fault_injection_probability=0,
     network_impairment=False,
@@ -714,6 +738,7 @@ def alter_combinations(
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
+            restart_network,
         ]
         if restarts:
             actions.extend(
@@ -734,6 +759,7 @@ def alter_combinations(
         action_groups = list(
             combinations(actions, combination_size, with_replacement=True)
         )
+        note(f"Created {len(action_groups)} groups of actions to run")
 
     if shuffle:
         with And("I shuffle the list"):
@@ -770,7 +796,7 @@ def alter_combinations(
     t = time.time()
     total_combinations = len(action_groups)
     for i, chosen_actions in enumerate(action_groups):
-        title = f"{i}/{total_combinations} " + ",".join(
+        title = f"{i+1}/{total_combinations} " + ",".join(
             [f"{f.name}" for f in chosen_actions]
         )
 

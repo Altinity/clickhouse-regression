@@ -2,6 +2,9 @@
 """
 The test steps in this module use tc-netem to apply adverse 
 network conditions to outgoing packets on a given container.
+
+https://www.man7.org/linux/man-pages/man8/tc-netem.8.html
+https://www.man7.org/linux/man-pages/man8/tc.8.html
 """
 
 import time
@@ -12,15 +15,18 @@ from testflows.asserts import error
 DISTRIBUTIONS = ["uniform", "normal", "pareto", "paretonormal"]
 
 
-def run_netem(node, device, rule):
+@TestStep
+def run_netem(self, node, device, rule):
     """Run a netem rule, then clean it up."""
     cmd = f"tc qdisc add dev {device} root netem {rule}"
 
-    node.command(cmd, exitcode=0)
+    try:
+        node.command(cmd, exitcode=0)
 
-    yield
+        yield
 
-    node.command(f"tc qdisc del dev {device} root netem", exitcode=0)
+    finally:
+        node.command(f"tc qdisc del dev {device} root netem", exitcode=0)
 
 
 @TestStep(Given)
@@ -36,7 +42,7 @@ def network_packet_delay(
 ):
     """Apply a randomized delay to network packets."""
     rule = f"delay {delay_ms}ms {delay_jitter}ms {correlation}% distribution {distribution}"
-    return run_netem(node, device, rule)
+    return run_netem(node=node, device=device, rule=rule)
 
 
 @TestStep(Given)
@@ -50,7 +56,30 @@ def network_packet_loss(
 ):
     """Drop a certain percentage of network packets."""
     rule = f"loss {percent_loss}% {correlation}%"
-    return run_netem(node, device, rule)
+    return run_netem(node=node, device=device, rule=rule)
+
+
+@TestStep(Given)
+@Name("burst loss")
+def network_packet_loss_gemodel(
+    self,
+    node,
+    interruption_probability=5,
+    recovery_probability=50,
+    percent_loss_after_interruption=100,
+    percent_loss_after_recovery=5,
+    device="eth0",
+):
+    """
+    Create burst losses with the Gilbert-Elliott loss model.
+    Switches between good (recovery) and lossy (interruption) states.
+    http://www.voiptroubleshooter.com/indepth/burstloss.html
+
+    The average length in packets of the interruption sequence
+    is given by: 1/(recovery_probability/100)
+    """
+    rule = f"loss gemodel {interruption_probability} {recovery_probability} {percent_loss_after_interruption} {percent_loss_after_recovery}"
+    return run_netem(node=node, device=device, rule=rule)
 
 
 @TestStep(Given)
@@ -64,7 +93,7 @@ def network_packet_corruption(
 ):
     """Corrupt a certain percentage of network packets."""
     rule = f"corrupt {percent_corrupt}% {correlation}%"
-    return run_netem(node, device, rule)
+    return run_netem(node=node, device=device, rule=rule)
 
 
 @TestStep(Given)
@@ -78,7 +107,7 @@ def network_packet_duplication(
 ):
     """Duplicate a certain percentage of network packets."""
     rule = f"duplicate {percent_duplicated}% {correlation}%"
-    return run_netem(node, device, rule)
+    return run_netem(node=node, device=device, rule=rule)
 
 
 @TestStep(Given)
@@ -94,7 +123,7 @@ def network_packet_reordering(
 ):
     """Delay network packets, releasing a certain percentage of them early."""
     rule = f"delay {delay_ms}ms {delay_jitter}ms reorder {percent_reordered}% {correlation}%"
-    return run_netem(node, device, rule)
+    return run_netem(node=node, device=device, rule=rule)
 
 
 @TestStep(Given)
@@ -108,4 +137,4 @@ def network_packet_rate_limit(
 ):
     """Rate limit network packets."""
     rule = f"rate {rate_mbit}mbit {packet_overhead_bytes}"
-    return run_netem(node, device, rule)
+    return run_netem(node=node, device=device, rule=rule)
