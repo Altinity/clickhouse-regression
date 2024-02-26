@@ -63,15 +63,21 @@ def hard_restart(
     with When(
         "I make different inserts into table and kill clickhouse server process in parallel"
     ):
-        By("I make transaction insert", test=simple_transaction_insert, parallel=True)(
-            core_table=tables[0], numbers=numbers, no_checks=True
-        )
+        with Pool(2) as executor:
+            By(
+                "I make transaction insert",
+                test=simple_transaction_insert,
+                parallel=True,
+                executor=executor,
+            )(core_table=tables[0], numbers=numbers, no_checks=True)
 
-        By(
-            name="killing clickhouse process",
-            test=kill_clickhouse_process,
-            parallel=True,
-        )(signal=signal)
+            By(
+                name="killing clickhouse process",
+                test=kill_clickhouse_process,
+                parallel=True,
+                executor=executor,
+            )(signal=signal)
+            join()
 
     with And("I restart server"):
         node.start_clickhouse()
