@@ -7,7 +7,7 @@ from testflows.combinatorics import CoveringArray
 
 from vfs.tests.steps import *
 from vfs.requirements import *
-from vfs.tests.stress_alter import optimize, check_consistency
+from vfs.tests.stress_alter import optimize_random, check_consistency
 from s3.tests.common import invalid_s3_storage_config
 
 
@@ -361,7 +361,7 @@ def check_setting_combination(
                     storage_setting[0]: storage_setting[1],
                 }
             }
-            storage_config(disks=disks, restart=False)
+            s3_storage(disks=disks, restart=False, config_file="test_settings.xml")
 
     with Given("a replicated table"):
         _, table_name = replicated_table_cluster(
@@ -387,7 +387,7 @@ def check_setting_combination(
     )(table_name=table_name, settings=select_setting)
     When(
         f"I OPTIMIZE {table_name}",
-        test=optimize,
+        test=optimize_random,
         parallel=True,
         flags=TE,
     )(table_name=table_name)
@@ -405,7 +405,7 @@ def check_setting_combination(
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead("1.0"),
 )
-def setting_combos(self):
+def setting_combinations(self):
     """Perform concurrent inserts and selects with various settings."""
     settings = {
         "table_setting": (

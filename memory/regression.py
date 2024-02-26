@@ -50,7 +50,11 @@ def regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-    Feature(run=load("memory.tests.test_memory_leak_using_system_memory_dump_log", "feature"))
+    Feature(
+        run=load(
+            "memory.tests.test_memory_leak_using_system_memory_dump_log", "feature"
+        )
+    )
     Feature(run=load("memory.tests.test_memory_leak", "feature"))
 
 

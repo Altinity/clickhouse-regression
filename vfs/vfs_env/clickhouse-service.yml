@@ -34,5 +34,6 @@ services:
       start_period: 300s
     cap_add:
       - SYS_PTRACE
+      - NET_ADMIN
     security_opt:
       - label:disable

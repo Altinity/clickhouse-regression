@@ -376,7 +376,7 @@ def create_table(
     drop_sync=False,
     order_by=None,
     partition_by=None,
-    primary_key = None,
+    primary_key=None,
     comment=None,
     as_select=None,
     settings=None,
@@ -433,7 +433,7 @@ def create_table(
                 query += f"\nAS SELECT {as_select}"
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
-                
+
             node.query(
                 query,
                 settings=settings,
@@ -443,7 +443,9 @@ def create_table(
 
     finally:
         with Finally(f"drop the table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name}{on_cluster} {' SYNC' if drop_sync else ''}")
+            node.query(
+                f"DROP TABLE IF EXISTS {name}{on_cluster} {' SYNC' if drop_sync else ''}"
+            )
 
 
 @TestStep(Given)

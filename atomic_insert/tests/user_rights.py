@@ -52,11 +52,11 @@ def user_rights(
             for node_name in self.context.cluster.nodes["clickhouse"]:
                 for table_name in tables:
                     with When(f"table {table_name}"):
-                        self.context.cluster.node(node_name).query(
-                            f"select count()+737 from {table_name}",
-                            message="737",
+                        output = self.context.cluster.node(node_name).query(
+                            f"select count() from {table_name}",
                             exitcode=0,
                         )
+                        assert int(output.output) == 0
 
     else:
         with Given("I create database and core table in this database"):
@@ -82,8 +82,8 @@ def user_rights(
 
         with And("I make insert from user with not enough permissions", flags=XFAIL):
             node.query(
-                f"INSERT INTO {tables[0]} SELECT now() + number/10, toString(number%9999),"
-                " number % 999"
+                f"INSERT INTO {tables[0]} (timestamp, host, response_time, sign) SELECT now() + number/10, toString(number%9999),"
+                " number % 999, 1"
                 " FROM numbers(1000001)",
                 settings=[("user", "ivan")],
                 timeout=3000,
@@ -109,9 +109,10 @@ def user_rights(
 @TestFeature
 @Name("user_rights")
 @Requirements(RQ_SRS_028_ClickHouse_AtomicInserts_Failures_UserRights("1.0"))
-def feature(self):
+def feature(self, use_transaction_for_atomic_insert=True):
     """Check atomic insert in presence of a query issues by a user that does not have
     enough rights either on the target table or one of its dependent tables."""
+    self.context.use_transaction_for_atomic_insert = use_transaction_for_atomic_insert
     if self.context.stress:
         self.context.engines = [
             "MergeTree",
@@ -132,7 +133,7 @@ def feature(self):
     else:
         self.context.engines = ["MergeTree", "ReplicatedMergeTree"]
 
-    failure_mode = ["dummy"]
+    failure_mode = ["user_rights"]
 
     falure_mode_1 = ["dummy", "throwIf"]
 

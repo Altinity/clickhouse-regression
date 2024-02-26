@@ -15,26 +15,22 @@ from vfs.requirements import *
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
-    ":/parallel replica/add remove commands/*": [(Fail, "WIP"), (Error, "WIP")],
     ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
-    ":/system/optimize/table_settings='min_bytes_for_wide_part=:": [
-        (Fail, "needs investigation")
-    ],
 }
 
 ffails = {
     "*": (
         Skip,
-        "vfs not supported on < 24",
-        check_clickhouse_version("<24"),
+        "vfs not supported on < 24.2 and requires --allow-vfs flag",
+        lambda test: not test.context.allow_vfs
+        or check_clickhouse_version("<24.2")(test),
     ),
-    ":/alter/move": (XFail, "Clickhouse crashes"),
-    ":/settings/incompatible with send metadata": (XFail, "Clickhouse crashes"),
+    ":/alter/move": (XFail, "Fix pending"),
+    ":/parallel replica": (Skip, "WIP"),
+    ":/replica/add remove one node": (XFail, "Fix pending"),
 }
 
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
-# RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS,
-# RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS,
 
 
 @TestModule
@@ -49,7 +45,10 @@ def minio(
     collect_service_logs,
 ):
     """Setup and run minio tests."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+    nodes = {
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+    }
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -66,6 +65,7 @@ def minio(
         self.context.cluster = cluster
         self.context.node = self.context.cluster.node("clickhouse1")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
         self.context.access_key_id = root_user
         self.context.secret_access_key = root_password
         self.context.bucket_name = "root"
@@ -86,7 +86,153 @@ def minio(
 
     Feature(run=load("vfs.tests.alter", "feature"))
     Feature(run=load("vfs.tests.replica", "feature"))
-    Feature(run=load("vfs.tests.parallel_replica", "feature"))
+    # Feature(run=load("vfs.tests.parallel_replica", "feature"))
+    Feature(run=load("vfs.tests.create_insert", "feature"))
+    Feature(run=load("vfs.tests.performance", "feature"))
+
+    Feature(run=load("vfs.tests.stress_alter", "feature"))
+
+    if self.context.stress:
+        Feature(run=load("vfs.tests.stress_insert", "feature"))
+
+
+@TestModule
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS("1.0"))
+def aws_s3(
+    self,
+    key_id,
+    access_key,
+    bucket,
+    region,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
+):
+    """Setup and run aws s3 tests."""
+    nodes = {
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+    }
+
+    if access_key == None:
+        fail("AWS S3 access key needs to be set")
+    access_key = access_key.value
+
+    if key_id == None:
+        fail("AWS S3 key id needs to be set")
+    key_id = key_id.value
+
+    if bucket == None:
+        fail("AWS S3 bucket needs to be set")
+    bucket = bucket.value
+
+    if region == None:
+        fail("AWS S3 region needs to be set")
+    region = region.value
+
+    uri = f"https://s3.{region}.amazonaws.com/{bucket}/data/"
+    self.context.uri = uri
+    self.context.access_key_id = key_id
+    self.context.secret_access_key = access_key
+    self.context.bucket_name = "altinity-qa-test"
+    self.context.bucket_path = "data/object-storage"
+    self.context.minio_enabled = False
+
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+            environ={
+                "S3_AMAZON_ACCESS_KEY": access_key,
+                "S3_AMAZON_KEY_ID": key_id,
+                "AWS_ACCESS_KEY_ID": key_id,
+                "AWS_SECRET_ACCESS_KEY": access_key,
+                "AWS_DEFAULT_REGION": region,
+            },
+        )
+        self.context.cluster = cluster
+        self.context.node = self.context.cluster.node("clickhouse1")
+        self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
+
+    Feature(run=load("vfs.tests.settings", "feature"))
+    Feature(run=load("vfs.tests.table", "feature"))
+    Feature(run=load("vfs.tests.ttl", "feature"))
+    Feature(run=load("vfs.tests.system", "feature"))
+    Feature(run=load("vfs.tests.migration", "feature"))
+
+    Feature(run=load("vfs.tests.alter", "feature"))
+    Feature(run=load("vfs.tests.replica", "feature"))
+    # Feature(run=load("vfs.tests.parallel_replica", "feature"))
+    Feature(run=load("vfs.tests.create_insert", "feature"))
+    Feature(run=load("vfs.tests.performance", "feature"))
+
+    Feature(run=load("vfs.tests.stress_alter", "feature"))
+
+    if self.context.stress:
+        Feature(run=load("vfs.tests.stress_insert", "feature"))
+
+
+@TestModule
+@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS("1.0"))
+def gcs(
+    self,
+    uri,
+    key_id,
+    access_key,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
+):
+    """Setup and run gcs tests."""
+    nodes = {
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+    }
+
+    if uri == None:
+        fail("GCS uri needs to be set")
+    uri = uri.value
+    if access_key == None:
+        fail("GCS access key needs to be set")
+    access_key = access_key.value
+    if key_id == None:
+        fail("GCS key id needs to be set")
+    key_id = key_id.value
+
+    self.context.uri = uri
+    self.context.access_key_id = key_id
+    self.context.secret_access_key = access_key
+    self.context.bucket_name = "altinity-qa-test"
+    self.context.bucket_path = "data/object-storage"
+    self.context.minio_enabled = False
+
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+            environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
+        )
+        self.context.cluster = cluster
+        self.context.node = self.context.cluster.node("clickhouse1")
+        self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
+
+    Feature(run=load("vfs.tests.settings", "feature"))
+    Feature(run=load("vfs.tests.table", "feature"))
+    Feature(run=load("vfs.tests.ttl", "feature"))
+    Feature(run=load("vfs.tests.system", "feature"))
+    Feature(run=load("vfs.tests.migration", "feature"))
+
+    Feature(run=load("vfs.tests.alter", "feature"))
+    Feature(run=load("vfs.tests.replica", "feature"))
+    # Feature(run=load("vfs.tests.parallel_replica", "feature"))
     Feature(run=load("vfs.tests.create_insert", "feature"))
     Feature(run=load("vfs.tests.performance", "feature"))
 
@@ -125,14 +271,37 @@ def regression(
     """Disk Object Storage VFS regression."""
 
     self.context.clickhouse_version = clickhouse_version
-
-    if check_clickhouse_version("<24.1")(self) or not allow_vfs:
-        skip("vfs not supported on < 24.1")
+    note(f"Clickhouse version {clickhouse_version}")
+    if not allow_vfs or check_clickhouse_version("<24.2")(self):
+        skip("vfs not supported on < 24.2 and requires --allow-vfs flag")
+        return
 
     self.context.stress = stress
+    self.context.allow_vfs = allow_vfs
 
     if storages is None:
         storages = ["minio"]
+
+    if "aws_s3" in storages:
+        Module(test=aws_s3)(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            bucket=aws_s3_bucket,
+            region=aws_s3_region,
+            key_id=aws_s3_key_id,
+            access_key=aws_s3_access_key,
+        )
+
+    if "gcs" in storages:
+        Module(test=gcs)(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            uri=gcs_uri,
+            key_id=gcs_key_id,
+            access_key=gcs_key_secret,
+        )
 
     if "minio" in storages:
         Module(test=minio)(

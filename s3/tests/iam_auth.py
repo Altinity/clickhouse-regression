@@ -86,28 +86,30 @@ def iam_mode_auth(self):
             "aws_external": {"volumes": {"external": {"disk": "aws"}}},
         }
 
-    with s3_storage(disks, policies, restart=True, nodes=[node]):
-        try:
-            with Given(f"I create table using S3 storage policy external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='aws_external'
-                """
-                )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            with And("I store simple data in S3 to check import"):
-                node.query(f"INSERT INTO {table_name} VALUES ({expected})")
+    try:
+        with Given(f"I create table using S3 storage policy external"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name} (
+                    d UInt64
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                SETTINGS storage_policy='aws_external'
+            """
+            )
 
-            with Then("I check that select returns matching data"):
-                r = node.query(f"SELECT * FROM {table_name}").output.strip()
-                assert r == expected, error()
-        finally:
-            with Finally("I drip table that uses S3"):
-                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+        with And("I store simple data in S3 to check import"):
+            node.query(f"INSERT INTO {table_name} VALUES ({expected})")
+
+        with Then("I check that select returns matching data"):
+            r = node.query(f"SELECT * FROM {table_name}").output.strip()
+            assert r == expected, error()
+    finally:
+        with Finally("I drip table that uses S3"):
+            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestFeature

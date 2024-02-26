@@ -7,6 +7,27 @@ from parquet.requirements import *
 from helpers.common import *
 
 
+def normalize_output(output):
+    # Split the output into lines and process each line
+    normalized_lines = []
+    for line in output.split("\n"):
+        # Directly replace known escape sequences with their 'real' counterparts
+        normalized_line = line.replace("\\n", "\n").replace("\\t", "\t")
+        # Splitting by tab to preserve the structure, then strip and rejoin to normalize spaces without affecting
+        # tuple structure
+        parts = [part.strip() for part in normalized_line.split("\t")]
+        normalized_line = "\t".join(parts)
+        # Removing excessive internal whitespaces while preserving tuple structure
+        if "Tuple(" in normalized_line:
+            start, middle_end = normalized_line.split("Tuple(", 1)
+            middle, end = middle_end.rsplit(")", 1)
+            middle = " ".join(middle.split())
+            normalized_line = f"{start}Tuple({middle}){end}"
+        normalized_lines.append(normalized_line)
+    # Reassemble the normalized lines back into a single string
+    return "\n".join(normalized_lines)
+
+
 @TestOutline
 def import_export(self, snapshot_name, import_file, snapshot_id=None):
     """Import parquet file into a clickhouse table and export it back."""
@@ -47,7 +68,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
             with values() as that:
                 assert that(
                     snapshot(
-                        import_column_structure.output.strip(),
+                        normalize_output(import_column_structure.output.strip()),
                         name=snapshot_name,
                         id=snapshot_id,
                     )
