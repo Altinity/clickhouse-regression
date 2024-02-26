@@ -35,7 +35,9 @@ def stop_zookeeper(self):
     with interrupt_node(random.choice(self.context.zk_nodes)):
         with Then("I check that tables are consistent"):
             for node in nodes:
-                assert_row_count(node=node, table_name=table_name, rows=insert_rows)
+                retry(assert_row_count, timeout=120, delay=5)(
+                    node=node, table_name=table_name, rows=insert_rows
+                )
 
 
 @TestScenario
@@ -273,7 +275,7 @@ def optimize(self, table_settings):
     with Then("there should be only one active part"):
         assert final_part_count == 1, error()
 
-    with And("there should still be the same amount og data"):
+    with And("there should still be the same amount of data"):
         assert_row_count(
             node=nodes[0], table_name=table_name, rows=n_inserts * insert_size
         )

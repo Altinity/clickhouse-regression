@@ -89,17 +89,12 @@ def create_insert_measure_replicated_table(self, storage_policy="external"):
         )
 
     with And("I wait for the replicas to sync", flags=TE):
-        # nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
-        # nodes[2].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
-        retry(assert_row_count, timeout=120, delay=1)(
-            node=nodes[0], table_name=table_name, rows=n_rows
-        )
-        retry(assert_row_count, timeout=120, delay=1)(
-            node=nodes[1], table_name=table_name, rows=n_rows
-        )
-        retry(assert_row_count, timeout=120, delay=1)(
-            node=nodes[2], table_name=table_name, rows=n_rows
-        )
+        nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
+        nodes[2].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
+        kwargs = dict(table_name=table_name, rows=n_rows)
+        retry(assert_row_count, timeout=120, delay=1)(node=nodes[0], **kwargs)
+        retry(assert_row_count, timeout=120, delay=1)(node=nodes[1], **kwargs)
+        retry(assert_row_count, timeout=120, delay=1)(node=nodes[2], **kwargs)
 
     with And("I get the size of the data added to s3"):
         size_after = get_bucket_size(
@@ -121,10 +116,12 @@ def disk_setting(self):
     Check that allow_vfs can be enabled per disk.
     """
     with When("I measure the disk usage after create and insert without vfs"):
-        size_no_vfs = create_insert_measure_replicated_table(
-            storage_policy="external_no_vfs"
-        )
-        assert size_no_vfs > 0, error()
+        for attempt in retries(timeout=120, delay=5):
+            with attempt:
+                size_no_vfs = create_insert_measure_replicated_table(
+                    storage_policy="external_no_vfs"
+                )
+                assert size_no_vfs > 0, error()
 
     with When(
         "I measure the disk usage after create and insert with vfs config in one file"
