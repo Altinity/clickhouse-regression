@@ -81,6 +81,9 @@ def regression(
             thread_fuzzer=thread_fuzzer,
             nodes=nodes,
             configs_dir=current_dir(),
+            docker_compose_project_dir=os.path.join(
+                current_dir(), os.path.basename(current_dir()) + "_env"
+            ),
         )
         self.context.cluster = cluster
 
