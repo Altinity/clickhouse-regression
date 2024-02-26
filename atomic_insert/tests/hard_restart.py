@@ -98,12 +98,12 @@ def hard_restart_with_small_insert(self, table_engine, signal):
     hard_restart(table_engine=table_engine, signal=signal, node=None, numbers_value=10)
 
 
-# @TestScenario
-# def hard_restart_with_big_insert(self, table_engine, signal):
-#     """Check that uncompleted big insert leaves data in the same state with hard restart."""
-#     hard_restart(
-#         table_engine=table_engine, signal=signal, node=None, numbers_value=50000000000
-#     )
+@TestScenario
+def hard_restart_with_big_insert(self, table_engine, signal):
+    """Check that uncompleted big insert leaves data in the same state with hard restart."""
+    hard_restart(
+        table_engine=table_engine, signal=signal, node=None, numbers_value=50000000000
+    )
 
 
 @TestScenario
