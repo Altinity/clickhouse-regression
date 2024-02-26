@@ -106,16 +106,16 @@ def hard_restart_with_big_insert(self, table_engine, signal):
     )
 
 
-# @TestScenario
-# @Repeat(20, until="fail")
-# def hard_restart_with_random_insert(self, table_engine, signal):
-#     """Check series of random inserts work correctly with parallel hard reset."""
-#     hard_restart(
-#         table_engine=table_engine,
-#         signal=signal,
-#         node=None,
-#         numbers_value=random.randint(1, 20000000),
-#     )
+@TestScenario
+@Repeat(20, until="fail")
+def hard_restart_with_random_insert(self, table_engine, signal):
+    """Check series of random inserts work correctly with parallel hard reset."""
+    hard_restart(
+        table_engine=table_engine,
+        signal=signal,
+        node=None,
+        numbers_value=random.randint(1, 200000000),
+    )
 
 
 @TestFeature

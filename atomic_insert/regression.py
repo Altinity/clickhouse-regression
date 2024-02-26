@@ -40,6 +40,12 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/19352",
         )
     ],
+    "/atomic insert/hard restart/SIGKILL/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/60406",
+        )
+    ],
 }
 
 
