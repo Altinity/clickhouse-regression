@@ -34,10 +34,12 @@ ffails = {
     "/atomic insert/hard restart/SIGKILL/hard restart with big insert/*": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/60406",
+        check_current_cpu("aarch64"),
     ),
     "/atomic insert/hard restart/SIGKILL/hard restart with random insert/*": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/60406",
+        check_current_cpu("aarch64"),
     ),
 }
 
