@@ -8,6 +8,9 @@ def distributed_tables(
     table_engine,
     failure_mode,
     insert_setting="insert_distributed_one_random_shard=1",
+    config="graphite_rollup_example",
+    sign="sign",
+    version="timestamp",
 ):
     """Check that atomic insert works correctly with distributed tables. Test creates distributed table over
     core table and makes insert with some failure mode and checks data is not inserted
@@ -20,14 +23,34 @@ def distributed_tables(
     core_table_d = f"table_A_d{uid}"
     cluster = "ShardedAndReplicated"
 
+    if "GraphiteMergeTree" in table_engine:
+        table_engine = f"GraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in table_engine:
+        table_engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in table_engine:
+        table_engine = f"CollapsingMergeTree({sign})"
+
+    columns = [
+        Column(name="timestamp", datatype=DateTime()),
+        Column(name="host", datatype=String()),
+        Column(name="response_time", datatype=Int32()),
+        Column(name="Path", datatype=String()),
+        Column(name="Time", datatype=DateTime()),
+        Column(name="Value", datatype=Float64()),
+        Column(name="Timestamp", datatype=Int64()),
+        Column(name="sign", datatype=Int8()),
+    ]
+
     try:
         with Given("I create data table"):
-            node.query(
-                f"CREATE TABLE {core_table} ON CLUSTER '{cluster}' "
-                "( timestamp DateTime,"
-                "host      String,"
-                "repsonse_time      Int32"
-                f") ENGINE {table_engine}() ORDER BY (host, timestamp)"
+            create_basic_table(
+                name=core_table,
+                columns=columns,
+                engine=f"{table_engine}",
+                order_by="(host, timestamp)",
+                cluster=cluster,
+                node=node,
+                if_not_exists=True,
             )
 
         with And("I create distributed table over data table"):
@@ -42,8 +65,8 @@ def distributed_tables(
         if failure_mode == "dummy":
             with And(f"I insert into distributed table with setting {insert_setting}"):
                 node.query(
-                    f"INSERT INTO {core_table_d}"
-                    " SELECT now() + number/10, toString(number), number"
+                    f"INSERT INTO {core_table_d} (timestamp, host, response_time, sign)"
+                    " SELECT now() + number/10, toString(number), number, 1"
                     f" FROM numbers(10)"
                     " SETTINGS max_block_size=1,"
                     f" min_insert_block_size_bytes=1,{insert_setting};",
@@ -57,9 +80,9 @@ def distributed_tables(
                 flags=XFAIL,
             ):
                 node.query(
-                    f"INSERT INTO {core_table_d}"
+                    f"INSERT INTO {core_table_d} (timestamp, host, response_time, sign)"
                     " SELECT now() + number/10, toString(number), if(5,"
-                    " throwIf(number=5,'block fail'), number)"
+                    " throwIf(number=5,'block fail'), number), 1"
                     f" FROM numbers(10)"
                     " SETTINGS max_block_size=1,"
                     f" min_insert_block_size_bytes=1,{insert_setting};",
@@ -77,8 +100,8 @@ def distributed_tables(
                 "I make insert from user with not enough permissions", flags=XFAIL
             ):
                 self.context.cluster.node(node_name).query(
-                    f"INSERT INTO {core_table} SELECT now() + number/10, toString(number%9999),"
-                    " number % 999"
+                    f"INSERT INTO {core_table} (timestamp, host, response_time, sign) SELECT now() + number/10, toString(number%9999),"
+                    " number % 999, 1"
                     " FROM numbers(1000001)",
                     settings=[("user", "ivan")],
                     timeout=3000,
@@ -94,15 +117,14 @@ def distributed_tables(
                 if failure_mode == "dummy":
                     for node_name in self.context.cluster.nodes["clickhouse"]:
                         with When(f"on {node_name} "):
-                            retry(
-                                self.context.cluster.node(node_name).query,
-                                timeout=100,
-                                delay=1,
-                            )(
+                            output = self.context.cluster.node(node_name).query(
                                 f"SELECT count() FROM {core_table_d}",
-                                message=f"10",
                                 exitcode=0,
                             )
+                            for attempt in retries(timeout=30, delay=2):
+                                with attempt:
+                                    assert int(output.output) > 0, error()
+
                 elif failure_mode == "throwIf":
                     for node_name in self.context.cluster.nodes["clickhouse"]:
                         with When(f"on {node_name} "):

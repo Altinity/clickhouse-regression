@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import json
 import time
+from contextlib import contextmanager
+from platform import processor
 
 from testflows.core import *
 from testflows.asserts import error
@@ -13,6 +15,8 @@ from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
 COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
+
+DOCKER_NETWORK = "vfs_env_default" if processor() == "x86_64" else "vfs_env_arm64"
 
 
 @TestStep(Given)
@@ -67,8 +71,13 @@ def s3_config(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True, timeout=60):
-        yield
+    return s3_storage(
+        disks=disks,
+        policies=policies,
+        restart=True,
+        timeout=60,
+        config_file="vfs_storage.xml",
+    )
 
 
 @TestStep(Given)
@@ -256,33 +265,6 @@ def delete_one_replica(self, node, table_name):
 
 
 @TestStep(Given)
-def storage_config(
-    self,
-    disks=None,
-    policies=None,
-    nodes=None,
-    restart=False,
-    timeout=30,
-    config_file="storage_config.xml",
-):
-    """Create disk and storage policy config."""
-    if disks is None:
-        disks = {}
-    if policies is None:
-        policies = {}
-
-    with s3_storage(
-        disks,
-        policies,
-        nodes=nodes,
-        restart=restart,
-        timeout=timeout,
-        config_file=config_file,
-    ):
-        yield
-
-
-@TestStep(Given)
 def enable_vfs(
     self,
     nodes=None,
@@ -297,7 +279,7 @@ def enable_vfs(
     """
 
     if check_clickhouse_version("<24.1")(self):
-        skip("vfs not supported on ClickHouse < 24.1")
+        skip("vfs not supported on ClickHouse < 24.2 and requires --allow-vfs flag")
 
     if disk_names is None:
         disk_names = ["external"]
@@ -312,15 +294,14 @@ def enable_vfs(
 
     policies = {}
 
-    with s3_storage(
-        disks,
-        policies,
+    return s3_storage(
+        disks=disks,
+        policies=policies,
         nodes=nodes,
         restart=True,
         timeout=timeout,
         config_file=config_file,
-    ):
-        yield
+    )
 
 
 @TestStep
@@ -415,3 +396,61 @@ def get_active_partition_ids(self, node, table_name):
         f"select partition_id from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
     )
     return json.loads(r.output)["partition_id"]
+
+
+@contextmanager
+def interrupt_node(node):
+    """
+    Stop the given node container.
+    Instance is restarted on context exit.
+    """
+    try:
+        with When(f"{node.name} is stopped"):
+            node.stop()
+            yield
+
+    finally:
+        with When(f"{node.name} is started"):
+            node.start()
+
+
+@contextmanager
+def interrupt_clickhouse(node, safe=True, signal="KILL"):
+    """
+    Stop the given clickhouse instance with the given signal.
+    Instance is restarted on context exit.
+    """
+    try:
+        with When(f"{node.name} is stopped"):
+            node.stop_clickhouse(safe=safe, signal=signal)
+            yield
+
+    finally:
+        with When(f"{node.name} is started"):
+            node.start_clickhouse(check_version=False)
+
+
+@contextmanager
+def interrupt_network(cluster, node):
+    """
+    Disconnect the given node container.
+    Instance is reconnected on context exit.
+    """
+    if processor() == "x86_64":
+        container = f"vfs_env-{node.name}-1"
+    else:
+        container = f"vfs_env_arm64-{node.name}-1"
+
+    try:
+        with When(f"{node.name} is disconnected"):
+            cluster.command(
+                None, f"docker network disconnect {DOCKER_NETWORK} {container}"
+            )
+
+        yield
+
+    finally:
+        with When(f"{node.name} is reconnected"):
+            cluster.command(
+                None, f"docker network connect {DOCKER_NETWORK} {container}"
+            )

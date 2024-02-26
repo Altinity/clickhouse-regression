@@ -29,8 +29,8 @@ def insert_setting(self, table_engine, insert_setting="max_block_size=1"):
                 else ""
             )
             + (
-                f"INSERT INTO {core_table}"
-                f" SELECT now() + number/10, toString(number), number"
+                f"INSERT INTO {core_table} (timestamp, host, response_time, sign)"
+                f" SELECT now() + number/10, toString(number), number, 1"
                 f" FROM numbers(10)"
                 f" SETTINGS {insert_setting};"
             )
@@ -42,7 +42,8 @@ def insert_setting(self, table_engine, insert_setting="max_block_size=1"):
         "I check data is inserted to the core table and any of its dependent tables"
     ):
         with When(f"table {core_table}"):
-            node.query(f"SELECT count() FROM {core_table}", message=f"10", exitcode=0)
+            output = node.query(f"SELECT count() FROM {core_table}", exitcode=0).output
+            assert int(output) > 0
 
 
 @TestOutline
@@ -68,8 +69,8 @@ def insert_setting_in_replicated_table_on_cluster(
 
     with And(f"I use insert with testing setting {insert_setting}"):
         node.query(
-            f"insert into {core_table}"
-            f" select now() + number/10, toString(number), number"
+            f"insert into {core_table} (timestamp, host, response_time, sign)"
+            f" select now() + number/10, toString(number), number, 1"
             f" from numbers(10)"
             f" settings {insert_setting}"
         )
@@ -79,9 +80,10 @@ def insert_setting_in_replicated_table_on_cluster(
     ):
         for node_name in self.context.cluster.nodes["clickhouse"]:
             with When(f"on {node_name} table {core_table}"):
-                node.query(
-                    f"select count() from {core_table}", message=f"10", exitcode=0
-                )
+                output = node.query(
+                    f"SELECT count() FROM {core_table}", exitcode=0
+                ).output
+                assert int(output) > 0
 
 
 @TestScenario

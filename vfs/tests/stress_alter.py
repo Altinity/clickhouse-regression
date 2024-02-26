@@ -12,6 +12,7 @@ from testflows.uexpect.uexpect import ExpectTimeoutError, TimeoutError
 from helpers.alter import *
 from vfs.tests.steps import *
 from vfs.requirements import *
+from vfs.tests.tc_netem import *
 
 table_schema_lock = RLock()
 
@@ -73,7 +74,13 @@ def insert_to_random(self):
 
     columns = get_column_string(node=node, table_name=table_name)
     with By(f"inserting rows to {table_name} on {node.name}"):
-        insert_random(node=node, table_name=table_name, columns=columns, no_checks=True)
+        insert_random(
+            node=node,
+            table_name=table_name,
+            columns=columns,
+            no_checks=True,
+            settings=f"insert_keeper_fault_injection_probability={self.context.fault_probability}",
+        )
 
 
 @TestStep
@@ -193,6 +200,7 @@ def get_random_partition_id(self, node, table_name):
 
 
 @TestStep
+@Retry(timeout=60, delay=5)
 @Name("detach part")
 def detach_attach_random_partition(self):
     """Detach a random part, wait a random time, attach partition."""
@@ -202,16 +210,21 @@ def detach_attach_random_partition(self):
     delay = random.random() * 3
 
     with When("I detach a part"):
-        alter_table_detach_partition(node=node, partition_name=partition, exitcode=0)
+        alter_table_detach_partition(
+            node=node, table_name=table_name, partition_name=partition, exitcode=0
+        )
 
     with Then(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I reattach the part"):
-        alter_table_attach_partition(node=node, partition_name=partition, exitcode=0)
+        alter_table_attach_partition(
+            node=node, table_name=table_name, partition_name=partition, exitcode=0
+        )
 
 
 @TestStep
+@Retry(timeout=60, delay=5)
 @Name("freeze part")
 def freeze_unfreeze_random_part(self):
     """Freeze a random part, wait a random time, unfreeze part."""
@@ -219,13 +232,13 @@ def freeze_unfreeze_random_part(self):
     node = get_random_node_for_table(table_name=table_name)
     backup_name = f"backup_{getuid()}"
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 3
+    delay = random.random() * 2 + 1
 
     with When("I freeze the part"):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
         node.query(query, exitcode=0)
 
-    with Then(f"I wait {delay:.2}s"):
+    with And(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I unfreeze the part"):
@@ -234,6 +247,7 @@ def freeze_unfreeze_random_part(self):
 
 
 @TestStep
+@Retry(timeout=60, delay=5)
 @Name("drop part")
 def drop_random_part(self):
     """Detach and drop a random part."""
@@ -281,6 +295,7 @@ def replace_random_part(self):
 
 
 @TestStep
+@Retry(timeout=60, delay=5)
 @Name("move partition to table")
 def move_random_partition_to_random_table(self):
     """Move a random partition from one table to another."""
@@ -300,6 +315,44 @@ def move_random_partition_to_random_table(self):
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
             )
+
+
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("move partition to disk")
+def move_random_partition_to_random_disk(self):
+    """Move a random partition from one table to another."""
+
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    partition = get_random_partition_id(node=node, table_name=table_name)
+
+    with Given("I check which disk the partition is on"):
+        r = node.query(
+            f"SELECT disk_name FROM system.parts WHERE table='{table_name}' and partition_id='{partition}' LIMIT 1",
+            exitcode=0,
+        )
+        src_disk = r.output
+
+    with Given("I check which disks are available and choose one"):
+        r = node.query(
+            f"select arrayJoin(disks) from system.storage_policies where policy_name='{self.context.storage_policy}' FORMAT JSONColumns",
+            exitcode=0,
+        )
+        disks = json.loads(r.output)["arrayJoin(disks)"]
+        disks.remove(src_disk)
+        dest_disk = random.choice(disks)
+
+    with When(f"I move the partition from {src_disk} to {dest_disk}"):
+        alter_table_move_partition(
+            node=node,
+            table_name=table_name,
+            partition_name=partition,
+            disk_name=dest_disk,
+            disk="DISK",
+            exitcode=0,
+            no_checks=self.context.ignore_failed_part_moves,
+        )
 
 
 @TestStep
@@ -326,6 +379,7 @@ def attach_random_part_from_table(self):
 
 
 @TestStep
+@Retry(timeout=60, delay=5)
 @Name("fetch part")
 def fetch_random_part_from_table(self):
     """Fetching a random part from another table replica."""
@@ -350,7 +404,7 @@ def fetch_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("clear column")
 def clear_random_column(self):
     """Clear a random column on a random partition."""
@@ -370,14 +424,14 @@ def clear_random_column(self):
 
 
 @TestStep
-@Retry(timeout=30, delay=5)
+@Retry(timeout=60, delay=5)
 @Name("delete row")
 def delete_random_rows(self):
     """Delete a few rows at random."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     column_name = get_random_column_name(node=node, table_name=table_name)
-    divisor = random.choice([47, 53, 59, 61, 67])
+    divisor = random.choice([5, 11, 17, 23])
     remainder = random.randint(0, divisor - 1)
 
     By(
@@ -391,13 +445,40 @@ def delete_random_rows(self):
     )
 
 
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("light delete row")
+def delete_random_rows_lightweight(self):
+    """Lightweight delete a few rows at random."""
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    column_name = get_random_column_name(node=node, table_name=table_name)
+    divisor = random.choice([5, 11, 17, 23])
+    remainder = random.randint(0, divisor - 1)
+
+    with By(f"delete rows from {table_name} with {node.name}"):
+        node.query(
+            f"DELETE FROM {table_name} WHERE ({column_name} % {divisor} = {remainder})",
+            no_checks=True,
+        )
+
+    if random.randint(0, 1):
+        node.query(
+            f"ALTER TABLE {table_name} APPLY DELETED MASK",
+            no_checks=True,
+        )
+
+
 @TestStep(Then)
 @Retry(timeout=120, delay=5)
-def check_consistency(self, tables=None):
+def check_consistency(self, tables=None, sync_timeout=None):
     """
     Check that the given tables hold the same amount of data on all nodes where they exist.
     Also check that column names match, subsequent part move tests require matching columns.
     """
+    if sync_timeout is None:
+        sync_timeout = getattr(self.context, "sync_replica_timeout", 60)
+
     nodes = self.context.ch_nodes
     if tables is None:
         tables = self.context.table_names
@@ -420,7 +501,7 @@ def check_consistency(self, tables=None):
                     try:
                         node.query(
                             f"SYSTEM SYNC REPLICA {table_name}",
-                            timeout=self.context.sync_replica_timeout,
+                            timeout=sync_timeout,
                             no_checks=True,
                         )
                     except (ExpectTimeoutError, TimeoutError):
@@ -461,34 +542,43 @@ def add_replica(self):
                 r = node.query("SELECT table from system.replicas FORMAT JSONColumns")
                 tables_by_node[node.name] = json.loads(r.output)["table"]
 
-        table_counts = [len(tables) for tables in tables_by_node.values()]
+        with And("I check that there exists a node that does not replicate all tables"):
+            table_counts = [len(tables) for tables in tables_by_node.values()]
+            if min(table_counts) == self.context.maximum_replicas:
+                return
 
-        if min(table_counts) == self.context.maximum_replicas:
-            return
+        with Given(
+            "I choose one node to add the new replicated table to, and save the other nodes to query structure from"
+        ):
+            adding_node = None
+            reference_nodes = []
+            for node, count in zip(nodes, table_counts):
+                if count < self.context.maximum_replicas and adding_node is None:
+                    adding_node = node
+                else:
+                    reference_nodes.append(node)
 
-        adding_node = None
-        reference_nodes = []
-        for node, count in zip(nodes, table_counts):
-            if count < self.context.maximum_replicas and adding_node is None:
-                adding_node = node
-            else:
-                reference_nodes.append(node)
-
-        assert adding_node is not None, "Early return logic should prevent this"
+        assert (
+            adding_node is not None
+        ), "Early return logic should prevent failing to find a node that can have a replica added"
 
         for table in tables:
             if table not in tables_by_node[adding_node.name]:
-                with When(f"I check what columns are in {table}"):
-                    if table in tables_by_node[reference_nodes[0].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[0], table_name=table
-                        )
-                    elif table in tables_by_node[reference_nodes[1].name]:
-                        columns = get_column_string(
-                            node=reference_nodes[1], table_name=table
-                        )
-                    else:
-                        assert False, "This line should never be reached"
+                columns = None
+                for ref_node in reference_nodes:
+                    with When(f"I check if {ref_node.name} knows about {table}"):
+                        if table in tables_by_node[ref_node.name]:
+                            with When(
+                                f"I query {ref_node.name} for the columns in {table}"
+                            ):
+                                columns = get_column_string(
+                                    node=ref_node, table_name=table
+                                )
+                                break
+
+                    assert (
+                        columns is not None
+                    ), "There should always be at least one node that knows about a table"
 
                 with And(f"I create a new replica on {adding_node.name}"):
                     create_one_replica(
@@ -497,7 +587,9 @@ def add_replica(self):
                         columns=columns,
                         order_by="key",
                         partition_by="key % 4",
+                        storage_policy=self.context.storage_policy,
                     )
+                    return
 
 
 @TestStep
@@ -510,27 +602,124 @@ def delete_replica(self):
     random.shuffle(tables)
 
     with table_schema_lock:
-        r = node.query(
-            "SELECT table, active_replicas from system.replicas FORMAT JSONColumns"
-        )
-        out = json.loads(r.output)
-        current_tables = out["table"]
-        active_replicas = {t: r for t, r in zip(current_tables, out["active_replicas"])}
 
-        for table in tables:
-            if (
-                table in current_tables
-                and active_replicas[table] > self.context.minimum_replicas
-            ):
-                delete_one_replica(node=node, table_name=table)
-                return
+        with Given("I check the replica counts for all tables"):
+            r = node.query(
+                "SELECT table, active_replicas from system.replicas FORMAT JSONColumns"
+            )
+            out = json.loads(r.output)
+            current_tables = out["table"]
+            active_replicas = {
+                t: r for t, r in zip(current_tables, out["active_replicas"])
+            }
+
+        with When("I look for a table that has more than the minimum replicas"):
+            for table in tables:
+                if (
+                    table in current_tables
+                    and active_replicas[table] > self.context.minimum_replicas
+                ):
+                    with And(
+                        f"I delete the replica for table {table} on node {node.name}"
+                    ):
+                        delete_one_replica(node=node, table_name=table)
+                        return
 
 
-@TestScenario
-def parallel_alters(self):
+@TestStep
+def restart_keeper(self):
+    """
+    Stop a random zookeeper instance, wait, and restart.
+    This simulates a short outage.
+    """
+    keeper_node = random.choice(self.context.zk_nodes)
+    delay = random.random() * 2 + 1
+
+    with interrupt_node(keeper_node):
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+
+@TestStep
+def restart_clickhouse(self, signal="SEGV"):
+    """
+    Send a kill signal to a random clickhouse instance, wait, and restart.
+    This simulates a short outage.
+    """
+    clickhouse_node = random.choice(self.context.ch_nodes)
+    delay = random.random() * 2 + 1
+
+    with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+
+@TestStep
+def restart_network(self):
+    """
+    Stop the network on a random instance, wait, and restart.
+    This simulates a short outage.
+    """
+    node = random.choice(self.context.zk_nodes + self.context.ch_nodes)
+    delay = random.random() * 2 + 1
+
+    with interrupt_network(self.context.cluster, node):
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+
+network_impairments = [
+    network_packet_delay,
+    network_packet_loss,
+    network_packet_loss_gemodel,
+    network_packet_corruption,
+    network_packet_duplication,
+    network_packet_reordering,
+    network_packet_rate_limit,
+]
+
+
+@TestStep(Given)
+def impaired_network(self, network_mode):
+    """Apply a network impairment mode to all nodes"""
+    nodes = chain(self.context.zk_nodes, self.context.ch_nodes)
+
+    for node in nodes:
+        try: # Can fail if node is offline
+            network_mode(node=node)
+        except:
+            pass
+
+
+@TestOutline
+def alter_combinations(
+    self,
+    limit=10,
+    shuffle=True,
+    combination_size=3,
+    run_groups_in_parallel=True,
+    run_optimize_in_parallel=True,
+    ignore_failed_part_moves=False,
+    sync_replica_timeout=600,
+    storage_policy="tiered",
+    minimum_replicas=1,
+    maximum_replicas=3,
+    n_tables=3,
+    restarts=False,
+    add_remove_replicas=False,
+    insert_keeper_fault_injection_probability=0,
+    network_impairment=False,
+):
     """
     Perform combinations of alter actions, checking that all replicas agree.
     """
+
+    self.context.ignore_failed_part_moves = ignore_failed_part_moves
+    self.context.sync_replica_timeout = sync_replica_timeout
+    self.context.storage_policy = storage_policy
+    self.context.minimum_replicas = minimum_replicas
+    self.context.maximum_replicas = maximum_replicas
+    self.context.fault_probability = insert_keeper_fault_injection_probability
 
     with Given("I have a list of actions I can perform"):
         actions = [
@@ -540,33 +729,50 @@ def parallel_alters(self):
             delete_random_column,
             update_random_column,
             delete_random_rows,
-            delete_replica,
-            add_replica,
+            delete_random_rows_lightweight,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
+            move_random_partition_to_random_disk,
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
+            restart_network,
         ]
+        if restarts:
+            actions.extend(
+                [
+                    restart_keeper,
+                    restart_clickhouse,
+                ]
+            )
+        if add_remove_replicas:
+            actions.extend(
+                [
+                    delete_replica,
+                    add_replica,
+                ]
+            )
 
-    with And(f"I make a list of groups of {self.context.combination_size} actions"):
+    with And(f"I make a list of groups of {combination_size} actions"):
         action_groups = list(
-            combinations(actions, self.context.combination_size, with_replacement=True)
+            combinations(actions, combination_size, with_replacement=True)
         )
+        note(f"Created {len(action_groups)} groups of actions to run")
 
-    if not self.context.stress:
-        with And(
-            f"I shuffle the list and choose {self.context.unstressed_limit} groups of actions"
-        ):
+    if shuffle:
+        with And("I shuffle the list"):
             random.shuffle(action_groups)
-            action_groups = action_groups[: self.context.unstressed_limit]
 
-    with Given(f"I create {self.context.n_tables} tables with 10 columns and data"):
+    if limit:
+        with And(f"I choose {limit} groups of actions"):
+            action_groups = action_groups[:limit]
+
+    with Given(f"I create {n_tables} tables with 10 columns and data"):
         self.context.table_names = []
         columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
-        for i in range(self.context.n_tables):
+        for i in range(n_tables):
             table_name = f"table{i}_{self.context.storage_policy}"
             replicated_table_cluster(
                 table_name=table_name,
@@ -590,10 +796,19 @@ def parallel_alters(self):
     t = time.time()
     total_combinations = len(action_groups)
     for i, chosen_actions in enumerate(action_groups):
-        with Check(
-            f"{i}/{total_combinations} "
-            + ",".join([f"{f.name}" for f in chosen_actions])
-        ):
+        title = f"{i+1}/{total_combinations} " + ",".join(
+            [f"{f.name}" for f in chosen_actions]
+        )
+
+        if network_impairment:
+            net_mode = random.choice(network_impairments)
+            title += "," + net_mode.name
+
+        with Check(title):
+            if network_impairment:
+                with Given("a network impairment"):
+                    impaired_network(network_mode=net_mode)
+
             with When("I perform a group of actions"):
                 for action in chain(
                     [insert_to_random, select_count_random], chosen_actions
@@ -601,7 +816,7 @@ def parallel_alters(self):
                     By(
                         f"I {action.name}",
                         run=action,
-                        parallel=self.context.run_groups_in_parallel,
+                        parallel=run_groups_in_parallel,
                         flags=TE | ERROR_NOT_COUNTED,
                     )
 
@@ -609,7 +824,7 @@ def parallel_alters(self):
                     By(
                         f"I OPTIMIZE {table}",
                         test=optimize_random,
-                        parallel=self.context.run_optimize_in_parallel,
+                        parallel=run_optimize_in_parallel,
                         flags=TE,
                     )(table_name=table_name)
 
@@ -621,21 +836,67 @@ def parallel_alters(self):
         note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
 
 
+@TestScenario
+def vfs(self):
+    """
+    3 actions in parallel, spread across 3 tables.
+    """
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+    )
+
+
+@TestScenario
+def vfs_insert_faults(self):
+    """
+    3 actions in parallel, spread across 3 tables, with fault injection.
+    """
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        insert_keeper_fault_injection_probability=0.1,
+    )
+
+
+@TestScenario
+def vfs_network_faults(self):
+    """
+    3 actions in parallel, spread across 3 tables, with network faults.
+    """
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        network_impairment=True,
+        restarts=False,
+    )
+
+
+@TestScenario
+def no_vfs(self):
+    """
+    3 actions in parallel, spread across 3 tables, without vfs.
+    """
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        restarts=False,
+    )
+
+
 @TestFeature
 @Name("stress alter")
 def feature(self):
     """Stress test with many alters."""
-
-    self.context.unstressed_limit = 50
-    self.context.combination_size = 3
-    self.context.run_groups_in_parallel = True
-    self.context.run_optimize_in_parallel = True
-    self.context.ignore_failed_part_moves = False
-    self.context.sync_replica_timeout = 60 * 10
-    self.context.storage_policy = "external_vfs"
-    self.context.minimum_replicas = 1
-    self.context.maximum_replicas = 3
-    self.context.n_tables = 3
 
     with Given("I have S3 disks configured"):
         s3_config()

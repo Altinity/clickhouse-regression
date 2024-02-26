@@ -361,7 +361,9 @@ def partitioned_merge_tree_table(self, table_name, partition_by, columns):
 
 
 @TestStep(Given)
-def partitioned_replicated_merge_tree_table(self, table_name, partition_by, columns=None):
+def partitioned_replicated_merge_tree_table(
+    self, table_name, partition_by, columns=None
+):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"

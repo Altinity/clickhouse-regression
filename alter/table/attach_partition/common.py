@@ -139,6 +139,473 @@ def create_empty_partitioned_table(
 
 
 @TestStep(Given)
+def create_partitioned_table_with_datetime_data(
+    self,
+    table_name,
+    engine="MergeTree",
+    partition_by="tuple()",
+    primary_key=None,
+    columns=None,
+    query_settings=None,
+    order_by="tuple()",
+    node=None,
+    number_of_partitions=2,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+):
+    """
+    Create a table with DateTite columns that is partitioned by specified columns.
+    The function inserts various data points into the table with different time intervals
+    (seconds, minutes, hours, days, months, years) to ensure the creation of multiple
+    partitions covering a wide range of temporal resolutions.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    if columns is None:
+        columns = [
+            Column(name="time", datatype=DateTime()),
+            Column(name="date", datatype=Date()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if engine == "GraphiteMergeTree":
+        engine = f"GraphiteMergeTree('{config}')"
+    elif engine == "VersionedCollapsingMergeTree":
+        engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif engine == "CollapsingMergeTree":
+        engine = f"CollapsingMergeTree({sign})"
+
+    params = {
+        "name": table_name,
+        "engine": engine,
+        "partition_by": partition_by,
+        "primary_key": primary_key,
+        "order_by": order_by,
+        "columns": columns,
+        "query_settings": query_settings,
+        "if_not_exists": True,
+        "node": node,
+    }
+
+    not_none_params = {k: v for k, v in params.items() if v is not None}
+
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        create_table(**not_none_params)
+
+    with And(f"inserting various data that will create multiple partitions"):
+        note("seconds")
+        for i in range(1, number_of_partitions + 1):
+            note("different seconds")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and minutes")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and hours")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60*24+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60*24*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60*24*15*12+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("minutes")
+        for i in range(1, number_of_partitions + 1):
+            note("different minutes")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60, toDate('2000-01-01')+{i}, number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and hours")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60*24*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60*24*15*12+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("hours")
+        for i in range(1, number_of_partitions + 1):
+            note("different hours")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different hours and days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+number*60*60*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different hours and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+number*60*60*24*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different hours and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+number*60*60*24*15*12+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("days")
+        for i in range(1, number_of_partitions + 1):
+            note("different days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2003-01-01 00:00:00')+(number)*60*60*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different days and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2003-01-01 00:00:00')+(number)*60*60*15+number*60*60*24*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different days and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2003-01-01 00:00:00')+(number)*60*60*15+number*60*60*24*15*12+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("months")
+        for i in range(1, number_of_partitions + 1):
+            note("different months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2004-01-01 00:00:00')+(number)*60*60*24*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different months and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2004-01-01 00:00:00')+(number)*60*60*24*15+number*60*60*24*15*12+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("quarters")
+        for i in range(1, number_of_partitions + 1):
+            note("different quarters")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2005-01-01 00:00:00')+(number)*3600*24*15*7+{i}, toDate('2000-01-01')+number*15*12, number+1000 FROM numbers(10+{i})"
+            )
+        note("years")
+        for i in range(1, number_of_partitions + 1):
+            note("different years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2005-01-01 00:00:00')+(number)*3600*24*15*12+{i}, toDate('2000-01-01')+number*15*12, number+1000 FROM numbers(10+{i})"
+            )
+
+
+@TestStep(Given)
+def create_empty_partitioned_table_with_datetime_data(
+    self,
+    table_name,
+    engine="MergeTree",
+    partition_by="tuple()",
+    primary_key=None,
+    columns=None,
+    query_settings=None,
+    order_by="tuple()",
+    node=None,
+    number_of_partitions=2,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+):
+    """Create a table that is partitioned by specified columns."""
+
+    if node is None:
+        node = self.context.node
+
+    if columns is None:
+        columns = [
+            Column(name="time", datatype=DateTime()),
+            Column(name="date", datatype=Date()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if engine == "GraphiteMergeTree":
+        engine = f"GraphiteMergeTree('{config}')"
+    elif engine == "VersionedCollapsingMergeTree":
+        engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif engine == "CollapsingMergeTree":
+        engine = f"CollapsingMergeTree({sign})"
+
+    params = {
+        "name": table_name,
+        "engine": engine,
+        "partition_by": partition_by,
+        "primary_key": primary_key,
+        "order_by": order_by,
+        "columns": columns,
+        "query_settings": query_settings,
+        "if_not_exists": True,
+        "node": node,
+    }
+
+    not_none_params = {k: v for k, v in params.items() if v is not None}
+
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        create_table(**not_none_params)
+
+
+@TestStep(Given)
+def create_partitioned_replicated_table_with_datetime_data(
+    self,
+    table_name,
+    engine="ReplicatedMergeTree",
+    partition_by="tuple()",
+    primary_key=None,
+    columns=None,
+    query_settings=None,
+    order_by="tuple()",
+    node=None,
+    number_of_partitions=2,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+    nodes=None,
+):
+    """
+    Create a table with DateTite columns that is partitioned by specified columns.
+    The function inserts various data points into the table with different time intervals
+    (seconds, minutes, hours, days, months, years) to ensure the creation of multiple
+    partitions covering a wide range of temporal resolutions.
+    """
+
+    if columns is None:
+        columns = [
+            Column(name="time", datatype=DateTime()),
+            Column(name="date", datatype=Date()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if "GraphiteMergeTree" in engine:
+        engine = f"ReplicatedGraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in engine:
+        engine = f"ReplicatedVersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in engine:
+        engine = f"ReplicatedCollapsingMergeTree({sign})"
+
+    if nodes is None:
+        nodes = self.context.nodes
+
+    if "Replicated" not in engine:
+        engine = "Replicated" + engine
+
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        for node in nodes:
+            params = {
+                "name": table_name,
+                "engine": engine,
+                "partition_by": partition_by,
+                "primary_key": primary_key,
+                "order_by": order_by,
+                "cluster": "replicated_cluster_secure",
+                "columns": columns,
+                "query_settings": query_settings,
+                "if_not_exists": True,
+                "node": node,
+            }
+            not_none_params = {k: v for k, v in params.items() if v is not None}
+            create_table(**not_none_params)
+
+    node = random.choice(nodes)
+
+    with And(f"inserting various data that will create multiple partitions"):
+        note("seconds")
+        for i in range(1, number_of_partitions + 1):
+            note("different seconds")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and minutes")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and hours")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60*24+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60*24*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different seconds and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2000-01-01 00:00:00')+number+number*60*60*24*15*12+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("minutes")
+        for i in range(1, number_of_partitions + 1):
+            note("different minutes")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60, toDate('2000-01-01')+{i}, number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and hours")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60*24*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different minutes and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2001-01-01 00:00:00')+(number)*60+number*60*60*24*15*12+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("hours")
+        for i in range(1, number_of_partitions + 1):
+            note("different hours")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different hours and days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+number*60*60*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different hours and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+number*60*60*24*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different hours and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2002-01-01 00:00:00')+(number)*60*60+number*60*60*24*15*12+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("days")
+        for i in range(1, number_of_partitions + 1):
+            note("different days")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2003-01-01 00:00:00')+(number)*60*60*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different days and months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2003-01-01 00:00:00')+(number)*60*60*15+number*60*60*24*15+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different days and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2003-01-01 00:00:00')+(number)*60*60*15+number*60*60*24*15*12+{i}+number, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("months")
+        for i in range(1, number_of_partitions + 1):
+            note("different months")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2004-01-01 00:00:00')+(number)*60*60*24*15+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+            note("different months and years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2004-01-01 00:00:00')+(number)*60*60*24*15+number*60*60*24*15*12+{i}, toDate('2000-01-01'), number+1000 FROM numbers(5+{i})"
+            )
+        note("quarters")
+        for i in range(1, number_of_partitions + 1):
+            note("different quarters")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2005-01-01 00:00:00')+(number)*3600*24*15*7+{i}, toDate('2000-01-01')+number*15*12, number+1000 FROM numbers(10+{i})"
+            )
+        note("years")
+        for i in range(1, number_of_partitions + 1):
+            note("different years")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra) SELECT toDateTime('2005-01-01 00:00:00')+(number)*3600*24*15*12+{i}, toDate('2000-01-01')+number*15*12, number+1000 FROM numbers(10+{i})"
+            )
+
+
+@TestStep(Given)
+def create_empty_partitioned_replicated_table_with_datetime_data(
+    self,
+    table_name,
+    engine="ReplicatedMergeTree",
+    partition_by="tuple()",
+    primary_key=None,
+    columns=None,
+    query_settings=None,
+    order_by="tuple()",
+    node=None,
+    number_of_partitions=2,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+    nodes=None,
+):
+    """Create a table that is partitioned by specified columns."""
+
+    if node is None:
+        node = self.context.node
+
+    if columns is None:
+        columns = [
+            Column(name="time", datatype=DateTime()),
+            Column(name="date", datatype=Date()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if "GraphiteMergeTree" in engine:
+        engine = f"ReplicatedGraphiteMergeTree('{config}')"
+    elif "VersionedCollapsingMergeTree" in engine:
+        engine = f"ReplicatedVersionedCollapsingMergeTree({sign},{version})"
+    elif "CollapsingMergeTree" in engine:
+        engine = f"ReplicatedCollapsingMergeTree({sign})"
+
+    if nodes is None:
+        nodes = self.context.nodes
+
+    if "Replicated" not in engine:
+        engine = "Replicated" + engine
+
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        for node in nodes:
+            params = {
+                "name": table_name,
+                "engine": engine,
+                "partition_by": partition_by,
+                "primary_key": primary_key,
+                "cluster": "replicated_cluster_secure",
+                "order_by": order_by,
+                "columns": columns,
+                "query_settings": query_settings,
+                "if_not_exists": True,
+                "node": node,
+            }
+            not_none_params = {k: v for k, v in params.items() if v is not None}
+            create_table(**not_none_params)
+
+
+@TestStep(Given)
 def create_partitioned_replicated_table_with_data(
     self,
     table_name: str,
@@ -763,6 +1230,56 @@ def empty_temporary_partitioned_MergeTree(
         table_name=table_name,
         engine="MergeTree",
         partition_by=partition_by,
+        node=node,
+    )
+
+
+@TestStep(Given)
+def partitioned_datetime_MergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
+    create_partitioned_table_with_datetime_data(
+        table_name=table_name,
+        engine="MergeTree",
+        partition_by=partition_by,
+        node=node,
+    )
+
+
+@TestStep(Given)
+def empty_partitioned_datetime_MergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
+    create_empty_partitioned_table_with_datetime_data(
+        table_name=table_name,
+        engine="MergeTree",
+        partition_by=partition_by,
+        node=node,
+    )
+
+
+@TestStep(Given)
+def partitioned_datetime_ReplicatedMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
+    create_partitioned_replicated_table_with_datetime_data(
+        table_name=table_name,
+        engine="ReplicatedMergeTree",
+        partition_by=partition_by,
+        nodes=nodes,
+        node=node,
+    )
+
+
+@TestStep(Given)
+def empty_partitioned_datetime_ReplicatedMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
+    create_empty_partitioned_replicated_table_with_datetime_data(
+        table_name=table_name,
+        engine="ReplicatedMergeTree",
+        partition_by=partition_by,
+        nodes=nodes,
         node=node,
     )
 

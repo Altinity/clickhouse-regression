@@ -26,14 +26,27 @@ def argparser(parser):
     )
 
 
-xfails = {}
-xflags = {}
+ffails = {
+    "/atomic insert/dependent_tables/Replicated*/table with materialized view engine mismatch/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/59670",
+    ),
+}
+
+xfails = {
+    "/atomic insert/dependent_tables/Replicated*/table with materialized view*/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/19352",
+        )
+    ],
+}
 
 
 @TestModule
 @ArgumentParser(argparser)
+@FFails(ffails)
 @XFails(xfails)
-@XFlags(xflags)
 @Name("atomic insert")
 @Requirements(RQ_SRS_028_ClickHouse_AtomicInserts("1.0"))
 @Specifications(SRS028_ClickHouse_Atomic_Inserts)
@@ -68,6 +81,9 @@ def regression(
             thread_fuzzer=thread_fuzzer,
             nodes=nodes,
             configs_dir=current_dir(),
+            docker_compose_project_dir=os.path.join(
+                current_dir(), os.path.basename(current_dir()) + "_env"
+            ),
         )
         self.context.cluster = cluster
 

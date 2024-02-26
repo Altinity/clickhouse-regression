@@ -110,6 +110,63 @@ def table_with_materialized_view(self, table_engine, failure_mode):
 
 
 @TestScenario
+def table_with_materialized_view_engine_mismatch(self, table_engine, failure_mode):
+    """Check atomic insert by making simple insert with different failure mode in chain of core table
+    (single and on cluster) with single materialized view table_B_mv with dependent table_B.
+    table_A is non-replicated, table_B is replicated.
+    """
+    node = self.context.cluster.node("clickhouse1")
+    uid = getuid()
+
+    database = f"test_database{uid}"
+
+    tables = [
+        f"test_database{uid}.table_A{uid}",
+        f"test_database{uid}.table_B{uid}",
+        f"test_database{uid}.table_B_mv{uid}",
+    ]
+
+    if table_engine.startswith("Replicated"):
+        with Given("I create database and core table on cluster in this database"):
+            wrong_table_engine = table_engine.replace("Replicated", "")
+            create_table_on_cluster(
+                table_engine=wrong_table_engine,
+                node=node,
+                database=database,
+                core_table=tables[0],
+            )
+
+        with And("I add materialized view with one of failure modes"):
+            materialized_view_on_cluster(
+                table_engine=table_engine,
+                node=node,
+                core_table=tables[0],
+                mv_1=tables[2],
+                mv_1_table=tables[1],
+                failure_mode=failure_mode,
+            )
+
+        with And("I make insert into core table"):
+            for i in range(1):
+                When(f"I make insert #{i}", test=insert, parallel=True)(
+                    core_table=tables[0], failure_mode=failure_mode
+                )
+
+        with And(
+            "I check data is not inserted to core table"
+            "and any of its dependent tables on any of the cluster nodes"
+        ):
+            for node_name in self.context.cluster.nodes["clickhouse"]:
+                for table_name in tables:
+                    with When(f"table {table_name}"):
+                        self.context.cluster.node(node_name).query(
+                            f"select count()+737 from {table_name}",
+                            message="737",
+                            exitcode=0,
+                        )
+
+
+@TestScenario
 def table_with_materialized_view_cascading(self, table_engine, failure_mode):
     """Check atomic insert by making simple insert with different failure mode in chain of core table
     (single and on cluster) with cascading materialized views and dependent table_B and table_C.
@@ -343,8 +400,8 @@ def table_with_circle_materialized_view(self, table_engine, failure_mode):
             for table_name in tables:
                 with When(f"table {table_name}"):
                     retry(node.query, timeout=100, delay=1)(
-                        f"SELECT count()+737 FROM {table_name}",
-                        message="737",
+                        f"SELECT count() FROM {table_name}",
+                        message="0",
                         exitcode=0,
                     )
 
@@ -391,7 +448,7 @@ def feature(self, use_transaction_for_atomic_insert=True):
     else:
         self.context.engines = ["MergeTree", "ReplicatedMergeTree"]
 
-    failure_mode = ["dummy"]
+    failure_mode = ["throwIf"]
 
     falure_mode_1 = ["dummy", "throwIf", "column type mismatch", "user_rights"]
 

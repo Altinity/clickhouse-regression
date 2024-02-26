@@ -595,54 +595,56 @@ def multiple_storage(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with Given(f"I create table using S3 storage policy external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64,
-                        d1 DateTime
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    TTL d1 + interval 2 day to volume 'external'
-                    SETTINGS storage_policy='external'
-                """
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
+
+    try:
+        with Given(f"I create table using S3 storage policy external"):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64,
+                    d1 DateTime
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                TTL d1 + interval 2 day to volume 'external'
+                SETTINGS storage_policy='external'
+            """
+            )
+
+        with When("I add data to the table"):
+            with By("first inserting 1MB of data"):
+                tm = time.mktime(
+                    (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
                 )
+                insert_data_time(1, tm, 0)
 
-            with When("I add data to the table"):
-                with By("first inserting 1MB of data"):
-                    tm = time.mktime(
-                        (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
-                    )
-                    insert_data_time(1, tm, 0)
+            with And("another insert of 1MB of data"):
+                tm = time.mktime(
+                    (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
+                )
+                insert_data_time(1, tm, 1024 * 1024)
 
-                with And("another insert of 1MB of data"):
-                    tm = time.mktime(
-                        (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
-                    )
-                    insert_data_time(1, tm, 1024 * 1024)
+            with And("then doing a large insert of 10Mb of data"):
+                tm = time.mktime(datetime.date.today().timetuple())
+                insert_data_time(10, tm, 1024 * 1024 * 2)
 
-                with And("then doing a large insert of 10Mb of data"):
-                    tm = time.mktime(datetime.date.today().timetuple())
-                    insert_data_time(10, tm, 1024 * 1024 * 2)
+        with Then(
+            """I get the name of all partitions for all data parts
+                    in this table"""
+        ):
+            disk_names = node.query(
+                f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+            ).output.splitlines()
 
-            with Then(
-                """I get the name of all partitions for all data parts
-                      in this table"""
-            ):
-                disk_names = node.query(
-                    f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                ).output.splitlines()
+        with And("""I check the names to make sure both disks are used"""):
+            assert (
+                "first_external" in disk_names and "second_external" in disk_names
+            ), error()
 
-            with And("""I check the names to make sure both disks are used"""):
-                assert (
-                    "first_external" in disk_names and "second_external" in disk_names
-                ), error()
-
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
@@ -702,75 +704,74 @@ def multiple_storage_query(self):
                 }
             },
         }
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with Given(f"I create table using S3 storage policy external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64,
-                        d1 DateTime
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    TTL d1 + interval 2 day to volume 'external'
-                    SETTINGS storage_policy='external'
-                """
+    try:
+        with Given(f"I create table using S3 storage policy external"):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64,
+                    d1 DateTime
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                TTL d1 + interval 2 day to volume 'external'
+                SETTINGS storage_policy='external'
+            """
+            )
+
+        with When("I add data to the table"):
+            with By("first inserting 1MB of data"):
+                tm = time.mktime(
+                    (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
                 )
+                insert_data_time(1, tm, 0)
 
-            with When("I add data to the table"):
-                with By("first inserting 1MB of data"):
-                    tm = time.mktime(
-                        (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
-                    )
-                    insert_data_time(1, tm, 0)
-
-                with And("another insert of 1MB of data"):
-                    tm = time.mktime(
-                        (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
-                    )
-                    insert_data_time(1, tm, 1024 * 1024)
-
-                with And("then doing a large insert of 10Mb of data"):
-                    tm = time.mktime(datetime.date.today().timetuple())
-                    insert_data_time(10, tm, 1024 * 1024 * 2)
-
-            with Then(
-                """I get the name of all partitions for all data parts
-                      in this table"""
-            ):
-                disk_names = node.query(
-                    f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                ).output.splitlines()
-
-            with And("""I check the names to make sure both disks are used"""):
-                assert (
-                    "first_external" in disk_names and "second_external" in disk_names
-                ), error()
-
-            with Then("I check simple queries"):
-                check_query(
-                    num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867"
+            with And("another insert of 1MB of data"):
+                tm = time.mktime(
+                    (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
                 )
-                check_query(
-                    num=1,
-                    query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                    expected="10",
-                )
-                check_query(
-                    num=2,
-                    query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                    expected="3407872",
-                )
-                check_query(
-                    num=3,
-                    query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                    expected="0",
-                )
+                insert_data_time(1, tm, 1024 * 1024)
 
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+            with And("then doing a large insert of 10Mb of data"):
+                tm = time.mktime(datetime.date.today().timetuple())
+                insert_data_time(10, tm, 1024 * 1024 * 2)
+
+        with Then(
+            """I get the name of all partitions for all data parts
+                    in this table"""
+        ):
+            disk_names = node.query(
+                f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+            ).output.splitlines()
+
+        with And("""I check the names to make sure both disks are used"""):
+            assert (
+                "first_external" in disk_names and "second_external" in disk_names
+            ), error()
+
+        with Then("I check simple queries"):
+            check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
+            check_query(
+                num=1,
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                expected="10",
+            )
+            check_query(
+                num=2,
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                expected="3407872",
+            )
+            check_query(
+                num=3,
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                expected="0",
+            )
+
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
@@ -790,27 +791,30 @@ def add_storage(self):
         with Given("I edit the Minio URI to avoid path conflicts"):
             uri = uri[: len(uri) - 5] + "/add-storage/"
 
-    with Given("I have a disk configuration with one S3 storage disk"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "first_external": {
-                "type": "s3",
-                "endpoint": f"{uri}subdata1/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-        }
+    with Check("one disk"):
+        with Given("I have a disk configuration with one S3 storage disk"):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "first_external": {
+                    "type": "s3",
+                    "endpoint": f"{uri}subdata1/",
+                    "access_key_id": f"{access_key_id}",
+                    "secret_access_key": f"{secret_access_key}",
+                },
+            }
 
-        if hasattr(self.context, "s3_options"):
-            disks["first_external"].update(self.context.s3_options)
+            if hasattr(self.context, "s3_options"):
+                disks["first_external"].update(self.context.s3_options)
 
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {
-            "default": {"volumes": {"default": {"disk": "default"}}},
-            "external": {"volumes": {"external1": {"disk": "first_external"}}},
-        }
+        with And("I have a storage policy configured to use the S3 disk"):
+            policies = {
+                "default": {"volumes": {"default": {"disk": "default"}}},
+                "external": {"volumes": {"external1": {"disk": "first_external"}}},
+            }
 
-    with s3_storage(disks, policies, restart=True):
+        with And("I enable the disk and policy config"):
+            s3_storage(disks=disks, policies=policies, restart=True)
+
         try:
             with Given(f"I create table using S3 storage policy external"):
                 node.query(
@@ -834,34 +838,37 @@ def add_storage(self):
             with Finally("I drop the table"):
                 node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
-    with Given("I add a disk to the disk configuration"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "first_external": {
-                "type": "s3",
-                "endpoint": f"{uri}subdata1/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-            "second_external": {
-                "type": "s3",
-                "endpoint": f"{uri}subdata2/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-        }
+    with Check("two disks"):
+        with Given("I add a disk to the disk configuration"):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "first_external": {
+                    "type": "s3",
+                    "endpoint": f"{uri}subdata1/",
+                    "access_key_id": f"{access_key_id}",
+                    "secret_access_key": f"{secret_access_key}",
+                },
+                "second_external": {
+                    "type": "s3",
+                    "endpoint": f"{uri}subdata2/",
+                    "access_key_id": f"{access_key_id}",
+                    "secret_access_key": f"{secret_access_key}",
+                },
+            }
 
-        if hasattr(self.context, "s3_options"):
-            disks["first_external"].update(self.context.s3_options)
-            disks["second_external"].update(self.context.s3_options)
+            if hasattr(self.context, "s3_options"):
+                disks["first_external"].update(self.context.s3_options)
+                disks["second_external"].update(self.context.s3_options)
 
-    with And("I have a storage policy configured to use the new S3 disk"):
-        policies = {
-            "default": {"volumes": {"default": {"disk": "default"}}},
-            "external": {"volumes": {"external": {"disk": "second_external"}}},
-        }
+        with And("I have a storage policy configured to use the new S3 disk"):
+            policies = {
+                "default": {"volumes": {"default": {"disk": "default"}}},
+                "external": {"volumes": {"external": {"disk": "second_external"}}},
+            }
 
-    with s3_storage(disks, policies, restart=True):
+        with And("I enable the disk and policy config"):
+            s3_storage(disks=disks, policies=policies, restart=True)
+
         try:
             with Given(f"I create table using S3 storage policy external"):
                 node.query(
@@ -1246,29 +1253,31 @@ def generic_url(self):
              will not start if config is added"""
         )
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with Given(f"I create table using S3 storage policy aws_external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='aws_external'
-                """
-                )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            with When("I store simple data in the table"):
-                node.query(f"INSERT INTO {name} VALUES (427)")
+    try:
+        with Given(f"I create table using S3 storage policy aws_external"):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                SETTINGS storage_policy='aws_external'
+            """
+            )
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT * FROM {name}").output.strip()
-                assert r == expected, error()
+        with When("I store simple data in the table"):
+            node.query(f"INSERT INTO {name} VALUES (427)")
 
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT * FROM {name}").output.strip()
+            assert r == expected, error()
+
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
@@ -1337,29 +1346,32 @@ def environment_credentials(self):
         }
 
     with s3_env_credentials(endpoints=endpoints, restart=True):
-        with s3_storage(disks, policies, restart=True):
-            try:
-                with Given(f"I create table using S3 storage policy s3_external"):
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} (
-                            d UInt64
-                        ) ENGINE = MergeTree()
-                        ORDER BY d
-                        SETTINGS storage_policy='s3_external'
-                    """
-                    )
 
-                with When("I store simple data in the table"):
-                    node.query(f"INSERT INTO {name} VALUES ({expected})")
+        with And("I enable the disk and policy config"):
+            s3_storage(disks=disks, policies=policies, restart=True)
 
-                with Then("I check that a simple SELECT * query returns matching data"):
-                    r = node.query(f"SELECT * FROM {name}").output.strip()
-                    assert r == expected, error()
+        try:
+            with Given(f"I create table using S3 storage policy s3_external"):
+                node.query(
+                    f"""
+                    CREATE TABLE {name} (
+                        d UInt64
+                    ) ENGINE = MergeTree()
+                    ORDER BY d
+                    SETTINGS storage_policy='s3_external'
+                """
+                )
 
-            finally:
-                with Finally("I drop the table"):
-                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+            with When("I store simple data in the table"):
+                node.query(f"INSERT INTO {name} VALUES ({expected})")
+
+            with Then("I check that a simple SELECT * query returns matching data"):
+                r = node.query(f"SELECT * FROM {name}").output.strip()
+                assert r == expected, error()
+
+        finally:
+            with Finally("I drop the table"):
+                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -1633,9 +1645,32 @@ def performance_ttl_move(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with Given(f"I create a table"):
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
+
+    try:
+        with Given(f"I create a table"):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64,
+                    d1 DateTime
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                TTL d1 + interval 0 second to volume 'external'
+                SETTINGS storage_policy='tiered'
+            """
+            )
+
+        with Then("I add 40 Mb of data to the table and save the time taken"):
+            ttl_time = insert_data_time(40, 1024 * 1024 * 2)
+            metric("export_40Mb_ttl", units="seconds", value=str(ttl_time))
+
+        with And("I create the table again with the other policy"):
+            with By("I drop the table"):
+                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+
+            with And("I create the table again"):
                 node.query(
                     f"""
                     CREATE TABLE {name} (
@@ -1644,44 +1679,23 @@ def performance_ttl_move(self):
                     ) ENGINE = MergeTree()
                     ORDER BY d
                     TTL d1 + interval 0 second to volume 'external'
-                    SETTINGS storage_policy='tiered'
+                    SETTINGS storage_policy='tiered_bg'
                 """
                 )
 
-            with Then("I add 40 Mb of data to the table and save the time taken"):
-                ttl_time = insert_data_time(40, 1024 * 1024 * 2)
-                metric("export_40Mb_ttl", units="seconds", value=str(ttl_time))
+        with Then("I add 40 Mb of data to the table and save the time taken"):
+            no_ttl_time = insert_data_time(40, 1024 * 1024 * 2)
+            metric("export_40Mb_no_ttl", units="seconds", value=str(no_ttl_time))
 
-            with And("I create the table again with the other policy"):
-                with By("I drop the table"):
-                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")
-
-                with And("I create the table again"):
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} (
-                            d UInt64,
-                            d1 DateTime
-                        ) ENGINE = MergeTree()
-                        ORDER BY d
-                        TTL d1 + interval 0 second to volume 'external'
-                        SETTINGS storage_policy='tiered_bg'
-                    """
-                    )
-
-            with Then("I add 40 Mb of data to the table and save the time taken"):
-                no_ttl_time = insert_data_time(40, 1024 * 1024 * 2)
-                metric("export_40Mb_no_ttl", units="seconds", value=str(no_ttl_time))
-
-            with And("I log the performance improvement as a percentage"):
-                metric(
-                    "percentage_improvement",
-                    units="%",
-                    value=str(100 * (ttl_time - no_ttl_time) / no_ttl_time),
-                )
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with And("I log the performance improvement as a percentage"):
+            metric(
+                "percentage_improvement",
+                units="%",
+                value=str(100 * (ttl_time - no_ttl_time) / no_ttl_time),
+            )
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -1719,32 +1733,34 @@ def perform_ttl_move_on_insert(self, bool_value):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with Given(f"I create table using S3 storage policy tiered"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64,
-                        d1 DateTime
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    TTL d1 + interval 0 second to volume 'external'
-                    SETTINGS storage_policy='tiered'
-                """
-                )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            with When("I store simple data in the table"):
-                now = time.mktime(datetime.datetime.today().timetuple())
-                node.query(f"INSERT INTO {name} VALUES ({expected}, {now})")
+    try:
+        with Given(f"I create table using S3 storage policy tiered"):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64,
+                    d1 DateTime
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                TTL d1 + interval 0 second to volume 'external'
+                SETTINGS storage_policy='tiered'
+            """
+            )
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT d FROM {name}").output.strip()
-                assert r == expected, error()
+        with When("I store simple data in the table"):
+            now = time.mktime(datetime.datetime.today().timetuple())
+            node.query(f"INSERT INTO {name} VALUES ({expected}, {now})")
 
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT d FROM {name}").output.strip()
+            assert r == expected, error()
+
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
@@ -1782,49 +1798,51 @@ def perform_ttl_move_on_insert_default(self):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with Given(f"I create table using S3 storage policy tiered"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64,
-                        d1 DateTime
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    TTL d1 + interval 0 second to volume 'external'
-                    SETTINGS storage_policy='tiered'
-                """
-                )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            with When("I add data to the table"):
-                with By("first inserting 1MB of data"):
-                    insert_data_time(1, 0)
+    try:
+        with Given(f"I create table using S3 storage policy tiered"):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64,
+                    d1 DateTime
+                ) ENGINE = MergeTree()
+                ORDER BY d
+                TTL d1 + interval 0 second to volume 'external'
+                SETTINGS storage_policy='tiered'
+            """
+            )
 
-                with And("another insert of 1MB of data"):
-                    insert_data_time(1, 1024 * 1024)
+        with When("I add data to the table"):
+            with By("first inserting 1MB of data"):
+                insert_data_time(1, 0)
 
-                with And("then doing a large insert of 10Mb of data"):
-                    insert_data_time(10, 1024 * 1024 * 2)
+            with And("another insert of 1MB of data"):
+                insert_data_time(1, 1024 * 1024)
 
-            with Then(
-                """I get the name of all partitions for all data parts
-                      in this table"""
-            ):
-                disk_names = node.query(
-                    f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                ).output.splitlines()
+            with And("then doing a large insert of 10Mb of data"):
+                insert_data_time(10, 1024 * 1024 * 2)
 
-            with And(
-                """The disk name should match the S3 disk, indicating that
-                     the data parts were moved to S3 immediately as expected"""
-            ):
-                for _name in disk_names:
-                    assert _name == f"{disk_name}", error()
+        with Then(
+            """I get the name of all partitions for all data parts
+                    in this table"""
+        ):
+            disk_names = node.query(
+                f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+            ).output.splitlines()
 
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with And(
+            """The disk name should match the S3 disk, indicating that
+                    the data parts were moved to S3 immediately as expected"""
+        ):
+            for _name in disk_names:
+                assert _name == f"{disk_name}", error()
+
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
@@ -1896,162 +1914,152 @@ def alter_move(self, node="clickhouse1"):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
-        for example in self.examples:
-            name, engine = example
-            with When(f"for example table name='{name}', engine='{engine}'"):
-                with When("I create table"):
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} (
-                            EventDate Date,
-                            number UInt64
-                        ) ENGINE = {engine}
-                        ORDER BY tuple()
-                        PARTITION BY toYYYYMM(EventDate)
-                        SETTINGS storage_policy='jbods_with_external'
-                    """
-                    )
-                try:
-                    with And("I stop merges to avoid conflicts"):
-                        node.query(f"SYSTEM STOP MERGES {name}")
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-                    with And("I insert 4 values"):
-                        node.query(
-                            f"INSERT INTO {name} VALUES(toDate('2019-03-15'), 65)"
-                        )
-                        node.query(
-                            f"INSERT INTO {name} VALUES(toDate('2019-03-16'), 66)"
-                        )
-                        node.query(
-                            f"INSERT INTO {name} VALUES(toDate('2019-04-10'), 42)"
-                        )
-                        node.query(
-                            f"INSERT INTO {name} VALUES(toDate('2019-04-11'), 43)"
-                        )
+    for example in self.examples:
+        name, engine = example
+        with When(f"for example table name='{name}', engine='{engine}'"):
+            with When("I create table"):
+                node.query(
+                    f"""
+                    CREATE TABLE {name} (
+                        EventDate Date,
+                        number UInt64
+                    ) ENGINE = {engine}
+                    ORDER BY tuple()
+                    PARTITION BY toYYYYMM(EventDate)
+                    SETTINGS storage_policy='jbods_with_external'
+                """
+                )
+            try:
+                with And("I stop merges to avoid conflicts"):
+                    node.query(f"SYSTEM STOP MERGES {name}")
 
-                    used_disks = get_used_disks_for_table(node, name)
+                with And("I insert 4 values"):
+                    node.query(f"INSERT INTO {name} VALUES(toDate('2019-03-15'), 65)")
+                    node.query(f"INSERT INTO {name} VALUES(toDate('2019-03-16'), 66)")
+                    node.query(f"INSERT INTO {name} VALUES(toDate('2019-04-10'), 42)")
+                    node.query(f"INSERT INTO {name} VALUES(toDate('2019-04-11'), 43)")
 
-                    with Then("all writes should go to jbods"):
-                        assert all(d.startswith("jbod") for d in used_disks), error()
+                used_disks = get_used_disks_for_table(node, name)
 
-                    with When("I get the first part from system.parts"):
-                        first_part = node.query(
-                            f"SELECT name FROM system.parts WHERE table = '{name}'"
-                            " AND active = 1 ORDER BY modification_time LIMIT 1"
+                with Then("all writes should go to jbods"):
+                    assert all(d.startswith("jbod") for d in used_disks), error()
+
+                with When("I get the first part from system.parts"):
+                    first_part = node.query(
+                        f"SELECT name FROM system.parts WHERE table = '{name}'"
+                        " AND active = 1 ORDER BY modification_time LIMIT 1"
+                    ).output.strip()
+
+                    with And("I try to move first part to 'external' volume"):
+                        time.sleep(1)
+                        node.query(
+                            f"ALTER TABLE {name} MOVE PART '{first_part}' TO VOLUME 'external'"
+                        )
+                    with And("I get disk name from system.parts for the first part"):
+                        disk = node.query(
+                            f"SELECT disk_name FROM system.parts WHERE table = '{name}' "
+                            f" AND name = '{first_part}' and active = 1"
                         ).output.strip()
 
-                        with And("I try to move first part to 'external' volume"):
-                            time.sleep(1)
+                    with Then("the disk name should be 'external'"):
+                        assert disk == "external", error()
+                    with And(
+                        "path should start with '/var/lib/clickhouse/disks/external'"
+                    ):
+                        expected = prefix + "/external"
+                        assert get_path_for_part_from_part_log(
+                            node, name, first_part
+                        ).startswith(expected), error()
+
+                with When("I move the first part to 'jbod1' disk"):
+                    time.sleep(1)
+                    node.query(
+                        f"ALTER TABLE {name} MOVE PART '{first_part}' TO DISK 'jbod1'"
+                    )
+
+                    with And("I get disk name from system.parts for the first part"):
+                        disk = node.query(
+                            f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+                            f" AND name = '{first_part}' and active = 1"
+                        ).output.strip()
+
+                    with Then("the disk name shoul dbe 'jbod1'"):
+                        assert disk == "jbod1", error()
+                    with And("path should start with '/jbod1'"):
+                        expected = "/jbod1"
+                        assert get_path_for_part_from_part_log(
+                            node, name, first_part
+                        ).startswith(expected), error()
+
+                with When("I move partition 201904 to 'external' volume"):
+                    time.sleep(1)
+                    node.query(
+                        f"ALTER TABLE {name} MOVE PARTITION 201904 TO VOLUME 'external'"
+                    )
+
+                    with And("I get disks for this partition"):
+                        disks = (
                             node.query(
-                                f"ALTER TABLE {name} MOVE PART '{first_part}' TO VOLUME 'external'"
-                            )
-                        with And(
-                            "I get disk name from system.parts for the first part"
-                        ):
-                            disk = node.query(
-                                f"SELECT disk_name FROM system.parts WHERE table = '{name}' "
-                                f" AND name = '{first_part}' and active = 1"
-                            ).output.strip()
-
-                        with Then("the disk name should be 'external'"):
-                            assert disk == "external", error()
-                        with And(
-                            "path should start with '/var/lib/clickhouse/disks/external'"
-                        ):
-                            expected = prefix + "/external"
-                            assert get_path_for_part_from_part_log(
-                                node, name, first_part
-                            ).startswith(expected), error()
-
-                    with When("I move the first part to 'jbod1' disk"):
-                        time.sleep(1)
-                        node.query(
-                            f"ALTER TABLE {name} MOVE PART '{first_part}' TO DISK 'jbod1'"
-                        )
-
-                        with And(
-                            "I get disk name from system.parts for the first part"
-                        ):
-                            disk = node.query(
                                 f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                f" AND name = '{first_part}' and active = 1"
-                            ).output.strip()
-
-                        with Then("the disk name shoul dbe 'jbod1'"):
-                            assert disk == "jbod1", error()
-                        with And("path should start with '/jbod1'"):
-                            expected = "/jbod1"
-                            assert get_path_for_part_from_part_log(
-                                node, name, first_part
-                            ).startswith(expected), error()
-
-                    with When("I move partition 201904 to 'external' volume"):
-                        time.sleep(1)
-                        node.query(
-                            f"ALTER TABLE {name} MOVE PARTITION 201904 TO VOLUME 'external'"
+                                " AND partition = '201904' and active = 1"
+                            )
+                            .output.strip()
+                            .split("\n")
                         )
 
-                        with And("I get disks for this partition"):
-                            disks = (
-                                node.query(
-                                    f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                    " AND partition = '201904' and active = 1"
-                                )
-                                .output.strip()
-                                .split("\n")
-                            )
-
-                        with Then("number of disks should be 2"):
-                            assert len(disks) == 2, error()
-                        with And("all disks should be 'external'"):
-                            assert all(d == "external" for d in disks), error()
-                        with And(
-                            "all paths should start with '/var/lib/clickhouse/disks/external'"
-                        ):
-                            expected = prefix + "/external"
-                            assert all(
-                                path.startswith(expected)
-                                for path in get_paths_for_partition_from_part_log(
-                                    node, name, "201904"
-                                )[:2]
-                            ), error()
-
-                    with When("I move partition 201904 to disk 'jbod2'"):
-                        time.sleep(1)
-                        node.query(
-                            f"ALTER TABLE {name} MOVE PARTITION 201904 TO DISK 'jbod2'"
-                        )
-
-                        with And("I get disks for this partition"):
-                            disks = (
-                                node.query(
-                                    f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                    " AND partition = '201904' and active = 1"
-                                )
-                                .output.strip()
-                                .split("\n")
-                            )
-
-                        with Then("number of disks should be 2"):
-                            assert len(disks) == 2, error()
-                        with And("all disks should be 'jbod2'"):
-                            assert all(d == "jbod2" for d in disks), error()
-                        with And("all paths should start with '/jbod2'"):
-                            expected = "/jbod2"
+                    with Then("number of disks should be 2"):
+                        assert len(disks) == 2, error()
+                    with And("all disks should be 'external'"):
+                        assert all(d == "external" for d in disks), error()
+                    with And(
+                        "all paths should start with '/var/lib/clickhouse/disks/external'"
+                    ):
+                        expected = prefix + "/external"
+                        assert all(
+                            path.startswith(expected)
                             for path in get_paths_for_partition_from_part_log(
                                 node, name, "201904"
-                            )[:2]:
-                                assert path.startswith(expected), error()
+                            )[:2]
+                        ), error()
 
-                    with When("in the end I get number of rows in the table"):
-                        count = node.query(f"SELECT COUNT() FROM {name}").output.strip()
-                        with Then("the count should be 4"):
-                            assert count == "4", error()
+                with When("I move partition 201904 to disk 'jbod2'"):
+                    time.sleep(1)
+                    node.query(
+                        f"ALTER TABLE {name} MOVE PARTITION 201904 TO DISK 'jbod2'"
+                    )
 
-                finally:
-                    with Finally("I drop the table"):
-                        node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+                    with And("I get disks for this partition"):
+                        disks = (
+                            node.query(
+                                f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+                                " AND partition = '201904' and active = 1"
+                            )
+                            .output.strip()
+                            .split("\n")
+                        )
+
+                    with Then("number of disks should be 2"):
+                        assert len(disks) == 2, error()
+                    with And("all disks should be 'jbod2'"):
+                        assert all(d == "jbod2" for d in disks), error()
+                    with And("all paths should start with '/jbod2'"):
+                        expected = "/jbod2"
+                        for path in get_paths_for_partition_from_part_log(
+                            node, name, "201904"
+                        )[:2]:
+                            assert path.startswith(expected), error()
+
+                with When("in the end I get number of rows in the table"):
+                    count = node.query(f"SELECT COUNT() FROM {name}").output.strip()
+                    with Then("the count should be 4"):
+                        assert count == "4", error()
+
+            finally:
+                with Finally("I drop the table"):
+                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
@@ -2127,90 +2135,88 @@ def default_move_factor(self, node="clickhouse1"):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
-        for example in self.examples:
-            name, engine = example
-            with When(f"for example table name='{name}', engine='{engine}'"):
-                with When("I create table"):
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} (
-                            s1 String
-                        ) ENGINE = {engine}
-                        ORDER BY tuple()
-                        SETTINGS storage_policy='small_jbod_with_external'
-                    """
-                    )
-                try:
-                    with And("I stop merges to avoid conflicts"):
-                        node.query(f"SYSTEM STOP MERGES {name}")
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-                    with And(
-                        "I fill up first disk above 90%%",
-                        description="small jbod size is 40MB",
-                    ):
-                        with By("first inserting 2MB of data with 2 rows 1MB each"):
+    for example in self.examples:
+        name, engine = example
+        with When(f"for example table name='{name}', engine='{engine}'"):
+            with When("I create table"):
+                node.query(
+                    f"""
+                    CREATE TABLE {name} (
+                        s1 String
+                    ) ENGINE = {engine}
+                    ORDER BY tuple()
+                    SETTINGS storage_policy='small_jbod_with_external'
+                """
+                )
+            try:
+                with And("I stop merges to avoid conflicts"):
+                    node.query(f"SYSTEM STOP MERGES {name}")
+
+                with And(
+                    "I fill up first disk above 90%%",
+                    description="small jbod size is 40MB",
+                ):
+                    with By("first inserting 2MB of data with 2 rows 1MB each"):
+                        data = []
+                        for i in range(2):
+                            data.append(
+                                get_random_string(cluster, 1024 * 1024, steps=False)
+                            )
+                        values = ",".join(["('" + x + "')" for x in data])
+                        node.query(f"INSERT INTO {name} VALUES {values}")
+
+                    with And("then inserting 7 times 5MB of data with 5 rows 1MB each"):
+                        for i in range(7):
                             data = []
-                            for i in range(2):
+                            for i in range(5):
                                 data.append(
                                     get_random_string(cluster, 1024 * 1024, steps=False)
                                 )
                             values = ",".join(["('" + x + "')" for x in data])
                             node.query(f"INSERT INTO {name} VALUES {values}")
 
-                        with And(
-                            "then inserting 7 times 5MB of data with 5 rows 1MB each"
-                        ):
-                            for i in range(7):
-                                data = []
-                                for i in range(5):
-                                    data.append(
-                                        get_random_string(
-                                            cluster, 1024 * 1024, steps=False
-                                        )
-                                    )
-                                values = ",".join(["('" + x + "')" for x in data])
-                                node.query(f"INSERT INTO {name} VALUES {values}")
-
-                    with And("poll maximum 20 times to check used disks for the table"):
+                with And("poll maximum 20 times to check used disks for the table"):
+                    used_disks = get_used_disks_for_table(node, name)
+                    retry = 20
+                    i = 0
+                    while (
+                        not sum(1 for x in used_disks if x == "jbod1") <= 7
+                        and i < retry
+                    ):
+                        with And("sleep 0.5 sec"):
+                            time.sleep(0.5)
                         used_disks = get_used_disks_for_table(node, name)
-                        retry = 20
-                        i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "jbod1") <= 7
-                            and i < retry
-                        ):
-                            with And("sleep 0.5 sec"):
-                                time.sleep(0.5)
-                            used_disks = get_used_disks_for_table(node, name)
-                            i += 1
+                        i += 1
 
-                    with Then(
-                        "check that jbod1 disk is used less than or equal to 7 times"
-                    ):
-                        assert sum(1 for x in used_disks if x == "jbod1") <= 7, error()
+                with Then(
+                    "check that jbod1 disk is used less than or equal to 7 times"
+                ):
+                    assert sum(1 for x in used_disks if x == "jbod1") <= 7, error()
 
-                    with And(
-                        "I check that at least one part has been moved to 'external' disk"
-                    ):
-                        assert "external" in used_disks, error()
+                with And(
+                    "I check that at least one part has been moved to 'external' disk"
+                ):
+                    assert "external" in used_disks, error()
 
-                    for attempt in retries(count=10, delay=1):
-                        with attempt:
-                            with When("I check if parts were deleted from jbod1"):
-                                entries = (
-                                    node.command(
-                                        f"find /jbod1/store/*/*/ -name 'all_*'",
-                                        exitcode=0,
-                                    )
-                                    .output.strip()
-                                    .splitlines()
+                for attempt in retries(count=10, delay=1):
+                    with attempt:
+                        with When("I check if parts were deleted from jbod1"):
+                            entries = (
+                                node.command(
+                                    f"find /jbod1/store/*/*/ -name 'all_*'",
+                                    exitcode=0,
                                 )
-                                assert len(entries) <= 7, error()
+                                .output.strip()
+                                .splitlines()
+                            )
+                            assert len(entries) <= 7, error()
 
-                finally:
-                    with Finally("I drop the table"):
-                        node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+            finally:
+                with Finally("I drop the table"):
+                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
@@ -2280,59 +2286,51 @@ def download_appropriate_disk(self, nodes=None):
             },
         }
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with When("I create replicated table on each node"):
-                for i, node in enumerate(nodes):
-                    node.restart()
-                    node.query(
-                        f"""
-                        CREATE TABLE replicated_table_for_download (
-                            s1 String
-                        ) ENGINE = ReplicatedMergeTree('/clickhouse/replicated_table_for_download', '{i + 1}')
-                        ORDER BY tuple()
-                        SETTINGS storage_policy='moving_jbod_with_external', old_parts_lifetime=1, cleanup_delay_period=1, cleanup_delay_period_random_add=2
-                    """
-                    )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            with When("I insert 50MB of data using 50 rows 1MB each on the first node"):
-                data = []
-                for i in range(50):
-                    data.append(get_random_string(cluster, 1024 * 1024))
-                values = ",".join(["('" + x + "')" for x in data])
-                nodes[0].query(
-                    f"INSERT INTO replicated_table_for_download VALUES {values}"
+    try:
+        with When("I create replicated table on each node"):
+            for i, node in enumerate(nodes):
+                node.restart()
+                node.query(
+                    f"""
+                    CREATE TABLE replicated_table_for_download (
+                        s1 String
+                    ) ENGINE = ReplicatedMergeTree('/clickhouse/replicated_table_for_download', '{i + 1}')
+                    ORDER BY tuple()
+                    SETTINGS storage_policy='moving_jbod_with_external', old_parts_lifetime=1, cleanup_delay_period=1, cleanup_delay_period_random_add=2
+                """
                 )
 
-            with And("I sync the other replica"):
-                for _ in range(10):
-                    try:
-                        nodes[-1].query(
-                            "SYSTEM SYNC REPLICA replicated_table_for_download"
-                        )
-                        break
-                    except:
-                        time.sleep(0.5)
+        with When("I insert 50MB of data using 50 rows 1MB each on the first node"):
+            data = []
+            for i in range(50):
+                data.append(get_random_string(cluster, 1024 * 1024))
+            values = ",".join(["('" + x + "')" for x in data])
+            nodes[0].query(f"INSERT INTO replicated_table_for_download VALUES {values}")
 
-            with When("I check the used disk on other replica"):
-                disks = get_used_disks_for_table(
-                    nodes[-1], "replicated_table_for_download"
-                )
+        with And("I sync the other replica"):
+            for _ in range(10):
+                try:
+                    nodes[-1].query("SYSTEM SYNC REPLICA replicated_table_for_download")
+                    break
+                except:
+                    time.sleep(0.5)
 
-            expected_disks = {
-                "external",
-            }
-            with Then(
-                f"the used disk should match {expected_disks}", format_name=False
-            ):
-                assert set(disks) == expected_disks, error()
+        with When("I check the used disk on other replica"):
+            disks = get_used_disks_for_table(nodes[-1], "replicated_table_for_download")
 
-        finally:
-            with Finally("I drop the table on each node"):
-                for node in nodes:
-                    node.query(
-                        "DROP TABLE IF EXISTS replicated_table_for_download SYNC"
-                    )
+        expected_disks = {
+            "external",
+        }
+        with Then(f"the used disk should match {expected_disks}", format_name=False):
+            assert set(disks) == expected_disks, error()
+
+    finally:
+        with Finally("I drop the table on each node"):
+            for node in nodes:
+                node.query("DROP TABLE IF EXISTS replicated_table_for_download SYNC")
 
 
 @TestScenario
@@ -2372,207 +2370,209 @@ def alter_on_cluster_modify_ttl(self):
     with And(f"cluster nodes {nodes}"):
         nodes = [cluster.node(name) for name in nodes]
 
-    with s3_storage(disks, policies, restart=True):
-        try:
-            with Given(
-                f"I create a replicated table on each node using S3 storage policy tiered"
-            ):
-                for i, node in enumerate(nodes):
-                    node.restart()
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} (
-                            d UInt64,
-                            d1 DateTime
-                        ) ENGINE = ReplicatedMergeTree('/clickhouse/alter_on_cluster_modify_ttl_{self.context.storage}', '{i + 1}')
-                        ORDER BY d
-                        TTL d1 + interval 2 day to volume 'external'
-                        SETTINGS storage_policy='tiered'
-                    """
-                    )
+    with And("I enable the disk and policy config"):
+        s3_storage(disks=disks, policies=policies, restart=True)
 
-            with And("I add data to the table"):
-                with By("first inserting 1MB of data"):
-                    tm = time.mktime(
-                        (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
-                    )
-                    insert_data_time(nodes[0], 1, tm, 0)
-
-                with And("another insert of 1MB of data"):
-                    tm = time.mktime(
-                        (datetime.date.today() - datetime.timedelta(days=4)).timetuple()
-                    )
-                    insert_data_time(nodes[0], 1, tm, 1024 * 1024)
-
-                with And("a large insert of 10Mb of data"):
-                    tm = time.mktime(datetime.date.today().timetuple())
-                    insert_data_time(nodes[0], 10, tm, 1024 * 1024 * 2)
-
-            with Then("I check simple queries on the first node"):
-                check_query_node(
-                    node=nodes[0],
-                    num=0,
-                    query=f"SELECT COUNT() FROM {name}",
-                    expected="1572867",
-                )
-                check_query_node(
-                    node=nodes[0],
-                    num=1,
-                    query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                    expected="10",
-                )
-                check_query_node(
-                    node=nodes[0],
-                    num=2,
-                    query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                    expected="3407872",
-                )
-                check_query_node(
-                    node=nodes[0],
-                    num=3,
-                    query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                    expected="0",
-                )
-
-            with Then("I check simple queries on the second node"):
-                check_query_node(
-                    node=nodes[1],
-                    num=0,
-                    query=f"SELECT COUNT() FROM {name}",
-                    expected="1572867",
-                )
-                check_query_node(
-                    node=nodes[1],
-                    num=1,
-                    query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                    expected="10",
-                )
-                check_query_node(
-                    node=nodes[1],
-                    num=2,
-                    query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                    expected="3407872",
-                )
-                check_query_node(
-                    node=nodes[1],
-                    num=3,
-                    query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                    expected="0",
-                )
-
-            with Then("I check simple queries on the third node"):
-                check_query_node(
-                    node=nodes[2],
-                    num=0,
-                    query=f"SELECT COUNT() FROM {name}",
-                    expected="1572867",
-                )
-                check_query_node(
-                    node=nodes[2],
-                    num=1,
-                    query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                    expected="10",
-                )
-                check_query_node(
-                    node=nodes[2],
-                    num=2,
-                    query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                    expected="3407872",
-                )
-                check_query_node(
-                    node=nodes[2],
-                    num=3,
-                    query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                    expected="0",
-                )
-
-            with When("I alter TTL"):
+    try:
+        with Given(
+            f"I create a replicated table on each node using S3 storage policy tiered"
+        ):
+            for i, node in enumerate(nodes):
+                node.restart()
                 node.query(
-                    f"""ALTER TABLE {name} ON CLUSTER cluster1 MODIFY TTL d1 + interval 5 day to volume 'external'"""
+                    f"""
+                    CREATE TABLE {name} (
+                        d UInt64,
+                        d1 DateTime
+                    ) ENGINE = ReplicatedMergeTree('/clickhouse/alter_on_cluster_modify_ttl_{self.context.storage}', '{i + 1}')
+                    ORDER BY d
+                    TTL d1 + interval 2 day to volume 'external'
+                    SETTINGS storage_policy='tiered'
+                """
                 )
 
-            with Then("I check simple queries on the first node"):
-                check_query_node(
-                    node=nodes[0],
-                    num=0,
-                    query=f"SELECT COUNT() FROM {name}",
-                    expected="1572867",
+        with And("I add data to the table"):
+            with By("first inserting 1MB of data"):
+                tm = time.mktime(
+                    (datetime.date.today() - datetime.timedelta(days=7)).timetuple()
                 )
-                check_query_node(
-                    node=nodes[0],
-                    num=1,
-                    query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                    expected="10",
-                )
-                check_query_node(
-                    node=nodes[0],
-                    num=2,
-                    query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                    expected="3407872",
-                )
-                check_query_node(
-                    node=nodes[0],
-                    num=3,
-                    query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                    expected="0",
-                )
+                insert_data_time(nodes[0], 1, tm, 0)
 
-            with Then("I check simple queries on the second node"):
-                check_query_node(
-                    node=nodes[1],
-                    num=0,
-                    query=f"SELECT COUNT() FROM {name}",
-                    expected="1572867",
+            with And("another insert of 1MB of data"):
+                tm = time.mktime(
+                    (datetime.date.today() - datetime.timedelta(days=4)).timetuple()
                 )
-                check_query_node(
-                    node=nodes[1],
-                    num=1,
-                    query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                    expected="10",
-                )
-                check_query_node(
-                    node=nodes[1],
-                    num=2,
-                    query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                    expected="3407872",
-                )
-                check_query_node(
-                    node=nodes[1],
-                    num=3,
-                    query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                    expected="0",
-                )
+                insert_data_time(nodes[0], 1, tm, 1024 * 1024)
 
-            with Then("I check simple queries on the third node"):
-                check_query_node(
-                    node=nodes[2],
-                    num=0,
-                    query=f"SELECT COUNT() FROM {name}",
-                    expected="1572867",
-                )
-                check_query_node(
-                    node=nodes[2],
-                    num=1,
-                    query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                    expected="10",
-                )
-                check_query_node(
-                    node=nodes[2],
-                    num=2,
-                    query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                    expected="3407872",
-                )
-                check_query_node(
-                    node=nodes[2],
-                    num=3,
-                    query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                    expected="0",
-                )
+            with And("a large insert of 10Mb of data"):
+                tm = time.mktime(datetime.date.today().timetuple())
+                insert_data_time(nodes[0], 10, tm, 1024 * 1024 * 2)
 
-        finally:
-            with Finally("I drop the table on each node"):
-                for node in nodes:
-                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check simple queries on the first node"):
+            check_query_node(
+                node=nodes[0],
+                num=0,
+                query=f"SELECT COUNT() FROM {name}",
+                expected="1572867",
+            )
+            check_query_node(
+                node=nodes[0],
+                num=1,
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                expected="10",
+            )
+            check_query_node(
+                node=nodes[0],
+                num=2,
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                expected="3407872",
+            )
+            check_query_node(
+                node=nodes[0],
+                num=3,
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                expected="0",
+            )
+
+        with Then("I check simple queries on the second node"):
+            check_query_node(
+                node=nodes[1],
+                num=0,
+                query=f"SELECT COUNT() FROM {name}",
+                expected="1572867",
+            )
+            check_query_node(
+                node=nodes[1],
+                num=1,
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                expected="10",
+            )
+            check_query_node(
+                node=nodes[1],
+                num=2,
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                expected="3407872",
+            )
+            check_query_node(
+                node=nodes[1],
+                num=3,
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                expected="0",
+            )
+
+        with Then("I check simple queries on the third node"):
+            check_query_node(
+                node=nodes[2],
+                num=0,
+                query=f"SELECT COUNT() FROM {name}",
+                expected="1572867",
+            )
+            check_query_node(
+                node=nodes[2],
+                num=1,
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                expected="10",
+            )
+            check_query_node(
+                node=nodes[2],
+                num=2,
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                expected="3407872",
+            )
+            check_query_node(
+                node=nodes[2],
+                num=3,
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                expected="0",
+            )
+
+        with When("I alter TTL"):
+            node.query(
+                f"""ALTER TABLE {name} ON CLUSTER cluster1 MODIFY TTL d1 + interval 5 day to volume 'external'"""
+            )
+
+        with Then("I check simple queries on the first node"):
+            check_query_node(
+                node=nodes[0],
+                num=0,
+                query=f"SELECT COUNT() FROM {name}",
+                expected="1572867",
+            )
+            check_query_node(
+                node=nodes[0],
+                num=1,
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                expected="10",
+            )
+            check_query_node(
+                node=nodes[0],
+                num=2,
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                expected="3407872",
+            )
+            check_query_node(
+                node=nodes[0],
+                num=3,
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                expected="0",
+            )
+
+        with Then("I check simple queries on the second node"):
+            check_query_node(
+                node=nodes[1],
+                num=0,
+                query=f"SELECT COUNT() FROM {name}",
+                expected="1572867",
+            )
+            check_query_node(
+                node=nodes[1],
+                num=1,
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                expected="10",
+            )
+            check_query_node(
+                node=nodes[1],
+                num=2,
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                expected="3407872",
+            )
+            check_query_node(
+                node=nodes[1],
+                num=3,
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                expected="0",
+            )
+
+        with Then("I check simple queries on the third node"):
+            check_query_node(
+                node=nodes[2],
+                num=0,
+                query=f"SELECT COUNT() FROM {name}",
+                expected="1572867",
+            )
+            check_query_node(
+                node=nodes[2],
+                num=1,
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                expected="10",
+            )
+            check_query_node(
+                node=nodes[2],
+                num=2,
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                expected="3407872",
+            )
+            check_query_node(
+                node=nodes[2],
+                num=3,
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                expected="0",
+            )
+
+    finally:
+        with Finally("I drop the table on each node"):
+            for node in nodes:
+                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestScenario
