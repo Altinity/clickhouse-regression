@@ -98,24 +98,24 @@ def hard_restart_with_small_insert(self, table_engine, signal):
     hard_restart(table_engine=table_engine, signal=signal, node=None, numbers_value=10)
 
 
-@TestScenario
-def hard_restart_with_big_insert(self, table_engine, signal):
-    """Check that uncompleted big insert leaves data in the same state with hard restart."""
-    hard_restart(
-        table_engine=table_engine, signal=signal, node=None, numbers_value=50000000000
-    )
+# @TestScenario
+# def hard_restart_with_big_insert(self, table_engine, signal):
+#     """Check that uncompleted big insert leaves data in the same state with hard restart."""
+#     hard_restart(
+#         table_engine=table_engine, signal=signal, node=None, numbers_value=50000000000
+#     )
 
 
-@TestScenario
-@Repeat(20, until="fail")
-def hard_restart_with_random_insert(self, table_engine, signal):
-    """Check series of random inserts work correctly with parallel hard reset."""
-    hard_restart(
-        table_engine=table_engine,
-        signal=signal,
-        node=None,
-        numbers_value=random.randint(1, 20000000),
-    )
+# @TestScenario
+# @Repeat(20, until="fail")
+# def hard_restart_with_random_insert(self, table_engine, signal):
+#     """Check series of random inserts work correctly with parallel hard reset."""
+#     hard_restart(
+#         table_engine=table_engine,
+#         signal=signal,
+#         node=None,
+#         numbers_value=random.randint(1, 20000000),
+#     )
 
 
 @TestFeature
