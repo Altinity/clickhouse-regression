@@ -31,6 +31,14 @@ ffails = {
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/59670",
     ),
+    "/atomic insert/hard restart/SIGKILL/hard restart with big insert/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/60406",
+    ),
+    "/atomic insert/hard restart/SIGKILL/hard restart with random insert/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/60406",
+    ),
 }
 
 xfails = {
@@ -38,12 +46,6 @@ xfails = {
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/19352",
-        )
-    ],
-    "/atomic insert/hard restart/SIGKILL/*": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/60406",
         )
     ],
 }
