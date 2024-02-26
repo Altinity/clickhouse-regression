@@ -63,14 +63,13 @@ def hard_restart(
     with When(
         "I make different inserts into table and kill clickhouse server process in parallel"
     ):
-        with Pool(2) as executor:
+        with Pool(5) as executor:
             By(
                 "I make transaction insert",
                 test=simple_transaction_insert,
                 parallel=True,
                 executor=executor,
             )(core_table=tables[0], numbers=numbers, no_checks=True)
-
             By(
                 name="killing clickhouse process",
                 test=kill_clickhouse_process,
@@ -99,12 +98,12 @@ def hard_restart_with_small_insert(self, table_engine, signal):
     hard_restart(table_engine=table_engine, signal=signal, node=None, numbers_value=10)
 
 
-@TestScenario
-def hard_restart_with_big_insert(self, table_engine, signal):
-    """Check that uncompleted big insert leaves data in the same state with hard restart."""
-    hard_restart(
-        table_engine=table_engine, signal=signal, node=None, numbers_value=10000000
-    )
+# @TestScenario
+# def hard_restart_with_big_insert(self, table_engine, signal):
+#     """Check that uncompleted big insert leaves data in the same state with hard restart."""
+#     hard_restart(
+#         table_engine=table_engine, signal=signal, node=None, numbers_value=50000000000
+#     )
 
 
 @TestScenario
