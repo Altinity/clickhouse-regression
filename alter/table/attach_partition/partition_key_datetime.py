@@ -239,16 +239,6 @@ def check(
         )
 
 
-def optimize_table(self, table_name, engine):
-    if "Replicated" in engine:
-        for node in self.context.nodes:
-            node.query(
-                f"OPTIMIZE TABLE {table_name} ON CLUSTER replicated_cluster_secure FINAL"
-            )
-    else:
-        self.context.node_1.query(f"OPTIMIZE TABLE {table_name} FINAL")
-
-
 @TestScenario
 @Flags(TE)
 def check_attach_partition_from(
@@ -266,8 +256,8 @@ def check_attach_partition_from(
     ):
         skip("Different partition keys are not supported before 24.1")
 
-    self.context.source_engine = source_table.__name__.split()[-1]
-    self.context.destination_engine = destination_table.__name__.split()[-1]
+    self.context.source_engine = source_table.__name__.split("_")[-1]
+    self.context.destination_engine = destination_table.__name__.split("_")[-1]
 
     source_table_name = "source_" + getuid()
     destination_table_name = "destination_" + getuid()
@@ -294,34 +284,19 @@ def check_attach_partition_from(
             node=self.context.node_1,
         )
 
-    with And("I check that data was inserted"):
-        get_node(self, "source").query(
-            f"SELECT * FROM {source_table_name} ORDER BY time,date,extra"
-        )
-        get_node(self, "source").query(f"Select count() from {source_table_name}")
-        # pause()
-
     if check_clickhouse_version(">=24.2")(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):
-            for node in self.context.nodes:
-                try:
+            if "Replicated" in self.context.destination_engine:
+                for node in self.context.nodes:
                     node.query(
-                        f"ALTER TABLE {source_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
-                    )
-                except:
-                    note("No such table")
-                try:
-                    self.context.node_1.query(
                         f"ALTER TABLE {destination_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
                     )
-                except:
-                    note("No such table")
-
-            # with And("I optimize tables"):
-            #     optimize_table(self, source_table_name, self.context.source_engine)
-            #     optimize_table(self, destination_table_name, self.context.destination_engine)
+            else:
+                get_node(self, "destination").query(
+                    f"ALTER TABLE {destination_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
+                )
 
     with And("I get the list of partitions"):
         partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition"
@@ -405,19 +380,19 @@ def check_attach_partition_from(
     with And(
         "I change engine names to compare replicated results with non-replicated results in snapshots"
     ):
-        if "Replicated" in source_table.__name__:
-            source_table = source_table.__name__.split("_")[-1]
-            source_table = source_table.replace("Replicated", "")
+        if "Replicated" in self.context.source_engine:
+            source_engine = self.context.source_engine.replace("Replicated", "")
         else:
-            source_table = source_table.__name__.split("_")[-1]
-        if "Replicated" in destination_table.__name__:
-            destination_table = destination_table.__name__.split("_")[-1]
-            destination_table = destination_table.replace("Replicated", "")
+            source_engine = self.context.source_engine
+        if "Replicated" in self.context.destination_engine:
+            destination_engine = self.context.destination_engine.replace(
+                "Replicated", ""
+            )
         else:
-            destination_table = destination_table.__name__.split("_")[-1]
+            destination_engine = self.context.destination_engine
 
     with Then(
-        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {self.context.source_engine}, destination table engine - {self.context.destination_engine}:"
+        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_engine}, destination table engine - {destination_engine}:"
     ):
         if valid:
             source_partition_data = get_node(self, "source").query(
@@ -531,6 +506,7 @@ def attach_partition_from(self):
         "toMinute(time)",
         "toSecond(time)",
     }
+
     destination_partition_keys = {
         "tuple()",
         "toYYYYMMDD(time)",
@@ -560,14 +536,12 @@ def attach_partition_from(self):
     combinations = product(partition_keys_pairs, table_pairs)
 
     with Pool(10) as executor:
-        number = 0
         for partition_keys, tables in combinations:
-            number += 1
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
 
             Scenario(
-                f"combination {number} partition keys {source_partition_key} {destination_partition_key} tables {source_table.__name__} {destination_table.__name__}",
+                f"combination partition keys {source_partition_key} {destination_partition_key} tables {source_table.__name__} {destination_table.__name__}",
                 test=check_attach_partition_from,
                 parallel=True,
                 executor=executor,
