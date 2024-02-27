@@ -544,6 +544,30 @@ def drop_random_projection(self):
             return
 
 
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("modify ttl")
+def modify_random_ttl(self):
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+
+    ttl_expression = f"key + INTERVAL {random.randint(1, 10)} YEAR"
+    if random.randint(0, 1):
+        ttl_expression += " to volume 'external'"
+
+    node.query(f"ALTER TABLE {table_name} MODIFY TTL {ttl_expression}", exitcode=0)
+
+
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("remove ttl")
+def remove_random_ttl(self):
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+
+    node.query(f"ALTER TABLE {table_name} REMOVE TTL")
+
+
 @TestStep(Then)
 @Retry(timeout=120, delay=5)
 def check_consistency(self, tables=None, sync_timeout=None):
@@ -812,6 +836,8 @@ def alter_combinations(
             add_random_projection,
             clear_random_projection,
             drop_random_projection,
+            modify_random_ttl,
+            remove_random_ttl,
             move_random_partition_to_random_disk,
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
@@ -849,21 +875,22 @@ def alter_combinations(
 
     with Given(f"I create {n_tables} tables with 10 columns and data"):
         self.context.table_names = []
-        columns = "key UInt64," + ",".join(f"value{i} UInt16" for i in range(10))
+        columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(10))
         for i in range(n_tables):
             table_name = f"table{i}_{self.context.storage_policy}"
             replicated_table_cluster(
                 table_name=table_name,
                 storage_policy=self.context.storage_policy,
-                partition_by="key % 4",
+                partition_by="toQuarter(key) - 1",
                 columns=columns,
+                ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
             )
             self.context.table_names.append(table_name)
             insert_random(
                 node=self.context.node, table_name=table_name, columns=columns
             )
 
-    with And("I create 5 random projections"):
+    with And("I create 5 random projections and TTLs"):
         for _ in range(5):
             add_random_projection()
 
