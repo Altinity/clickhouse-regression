@@ -149,7 +149,7 @@ def delete_random_column(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=60, delay=2)
 @Name("rename column")
 def rename_random_column(self):
     """Rename a random column to a random value."""
@@ -490,7 +490,7 @@ def add_random_projection(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
 
         node.query(
-            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT * ORDER BY {column_name})",
+            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
             exitcode=0,
         )
 
