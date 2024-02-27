@@ -51,6 +51,15 @@ def optimize(self, node, table_name):
 
 
 @TestStep
+def get_projections(self, node, table_name):
+    r = node.query(
+        f"SELECT distinct(name) FROM system.projection_parts WHERE table='{table_name}' FORMAT JSONColumns",
+        exitcode=0,
+    )
+    return json.loads(r.output)["name"]
+
+
+@TestStep
 @Name("optimize")
 @Retry(timeout=10, delay=1)
 def optimize_random(self, node=None, table_name=None, repeat_limit=3):
@@ -469,6 +478,72 @@ def delete_random_rows_lightweight(self):
         )
 
 
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("add projection")
+def add_random_projection(self):
+    projection_name = "projection_" + getuid()
+
+    with table_schema_lock:
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        column_name = get_random_column_name(node=node, table_name=table_name)
+
+        node.query(
+            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT * ORDER BY {column_name})",
+            exitcode=0,
+        )
+
+    node.query(
+        f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}", exitcode=0
+    )
+
+
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("clear projection")
+def clear_random_projection(self):
+    tables = self.context.table_names.copy()
+    random.shuffle(tables)
+    with table_schema_lock:
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            projections = get_projections(node=node, table_name=table_name)
+            if len(projections) == 0:
+                continue
+
+            projection_name = random.choice(projections)
+            partition_name = get_random_partition_id(node=node, table_name=table_name)
+
+            node.query(
+                f"ALTER TABLE {table_name} CLEAR PROJECTION {projection_name} IN PARTITION {partition_name}",
+                exitcode=0,
+            )
+            return
+
+
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("drop projection")
+def drop_random_projection(self):
+    tables = self.context.table_names.copy()
+    random.shuffle(tables)
+    with table_schema_lock:
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            projections = get_projections(node=node, table_name=table_name)
+            if len(projections) == 0:
+                continue
+
+            projection_name = random.choice(projections)
+
+            node.query(
+                f"ALTER TABLE {table_name} DROP PROJECTION {projection_name}",
+                exitcode=0,
+            )
+            return
+
+
 @TestStep(Then)
 @Retry(timeout=120, delay=5)
 def check_consistency(self, tables=None, sync_timeout=None):
@@ -685,7 +760,7 @@ def impaired_network(self, network_mode):
     nodes = chain(self.context.zk_nodes, self.context.ch_nodes)
 
     for node in nodes:
-        try: # Can fail if node is offline
+        try:  # Can fail if node is offline
             network_mode(node=node)
         except:
             pass
@@ -734,6 +809,9 @@ def alter_combinations(
             freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
+            add_random_projection,
+            clear_random_projection,
+            drop_random_projection,
             move_random_partition_to_random_disk,
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
@@ -784,6 +862,10 @@ def alter_combinations(
             insert_random(
                 node=self.context.node, table_name=table_name, columns=columns
             )
+
+    with And("I create 5 random projections"):
+        for _ in range(5):
+            add_random_projection()
 
     # To test a single combination, uncomment and edit as needed.
     # action_groups = [
