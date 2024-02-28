@@ -84,10 +84,8 @@ xfails = {
         )
     ],
     "/alter/attach partition/partition key datetime/*": [
-        Fail,
-        "Need to investigate",
-        check_clickhouse_version("<=24.2")
-    ]
+        (Fail, "Need to investigate", check_clickhouse_version("<=24.2"))
+    ],
 }
 
 xflags = {}
@@ -147,9 +145,9 @@ def regression(
         )
         self.context.cluster = cluster
 
-    # Feature(run=load("alter.table.replace_partition.feature", "feature"))
+    Feature(run=load("alter.table.replace_partition.feature", "feature"))
     Feature(run=load("alter.table.attach_partition.feature", "feature"))
-    # Feature(run=load("alter.table.move_partition.feature", "feature"))
+    Feature(run=load("alter.table.move_partition.feature", "feature"))
 
 
 if main():
