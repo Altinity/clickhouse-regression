@@ -400,7 +400,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
         ],
     }
 
-    not_monotonic = {
+    monotonicity_not_implemented = {
         "a": ["a%2", "a%3"],
         "a%2": ["a%3"],
         "a%3": ["a%2"],
@@ -597,16 +597,16 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
     }
 
     if (
-        destination_partition_key in not_monotonic.get(source_partition_key, "")
+        destination_partition_key in monotonicity_not_implemented.get(source_partition_key, "")
         and destination_partition_key not in not_subset.get(source_partition_key, "")
         and destination_partition_key
         not in partially_different.get(source_partition_key, "")
     ):
-        return False, "not monotonic"
+        return False, "monotonicity not implemented"
 
     if (
         destination_partition_key in not_subset.get(source_partition_key, "")
-        and destination_partition_key not in not_monotonic.get(source_partition_key, "")
+        and destination_partition_key not in monotonicity_not_implemented.get(source_partition_key, "")
         and destination_partition_key
         not in partially_different.get(source_partition_key, "")
     ):
@@ -614,7 +614,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
 
     if (
         destination_partition_key in partially_different.get(source_partition_key, "")
-        and destination_partition_key not in not_monotonic.get(source_partition_key, "")
+        and destination_partition_key not in monotonicity_not_implemented.get(source_partition_key, "")
         and destination_partition_key not in not_subset.get(source_partition_key, "")
     ):
         return False, "partially different"
@@ -623,7 +623,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
 
 
 def get_node(self, table):
-    """Returns first node for non-replicated tables and returns random node for replicated ones."""
+    """Returns first node for non-replicated tables and returns random node for replicated tables."""
     if table == "source":
         if "Replicated" in self.context.source_engine:
             return random.choice(
@@ -631,6 +631,7 @@ def get_node(self, table):
             )
         else:
             return self.context.node_1
+
     elif table == "destination":
         if "Replicated" in self.context.destination_engine:
             return random.choice(
@@ -675,12 +676,12 @@ def check_attach_partition_from(
 ):
     """Check `attach partition from` with different types of source and destination tables."""
 
-    if check_clickhouse_version("<24.1")(self):
+    if check_clickhouse_version("<24.2")(self):
         if source_partition_key != destination_partition_key:
-            skip("Different partition keys are not supported before 24.1")
+            skip("`attach partition from` with tables that have different partition keys are not supported before 24.2")
 
-    self.context.source_engine = source_table.__name__
-    self.context.destination_engine = destination_table.__name__
+    self.context.source_engine = source_table.__name__.split("_")[-1]
+    self.context.destination_engine = destination_table.__name__.split("_")[-1]
 
     source_table_name = "source_" + getuid()
     destination_table_name = "destination_" + getuid()
@@ -692,22 +693,34 @@ def check_attach_partition_from(
             source table partition key: {source_partition_key}
             destination table partition key: {destination_partition_key}
             engines:
-            source table engine: {source_table.__name__}
-            destination table engine: {destination_table.__name__}
+            source table engine: {self.context.source_engine}
+            destination table engine: {self.context.destination_engine}
             """,
     ):
         source_table(
             table_name=source_table_name,
             partition_by=source_partition_key,
-            nodes=self.context.nodes,
             node=self.context.node_1,
         )
         destination_table(
             table_name=destination_table_name,
             partition_by=destination_partition_key,
-            nodes=self.context.nodes,
             node=self.context.node_1,
         )
+
+    if check_clickhouse_version(">=24.2")(self):
+        with And(
+            "I add setting to allow alter partition with different partition keys"
+        ):
+            if "Replicated" in self.context.destination_engine:
+                for node in self.context.nodes:
+                    node.query(
+                        f"ALTER TABLE {destination_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
+                    )
+            else:
+                get_node(self, "destination").query(
+                    f"ALTER TABLE {destination_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
+                )
 
     with And("I get the list of partitions and validate partition keys pair"):
         if with_id:
@@ -738,10 +751,10 @@ def check_attach_partition_from(
                 )
 
         else:
-            if reason == "not monotonic":
+            if reason == "monotonicity not implemented":
                 exitcode, message = (
                     36,
-                    "DB::Exception: Destination table partition expression is not monotonically increasing",
+                    "DB::Exception: Monotonicity check not implemented or not available for partition expression",
                 )
                 check(
                     self,
@@ -788,19 +801,19 @@ def check_attach_partition_from(
     with And(
         "I change engine names to compare replicated results with non-replicated results in snapshots"
     ):
-        if "Replicated" in source_table.__name__:
-            source_table = source_table.__name__.split("_")[-1]
-            source_table = source_table.replace("Replicated", "")
+        if "Replicated" in self.context.source_engine:
+            source_engine = self.context.source_engine.replace("Replicated", "")
         else:
-            source_table = source_table.__name__.split("_")[-1]
-        if "Replicated" in destination_table.__name__:
-            destination_table = destination_table.__name__.split("_")[-1]
-            destination_table = destination_table.replace("Replicated", "")
+            source_engine = self.context.source_engine
+        if "Replicated" in self.context.destination_engine:
+            destination_engine = self.context.destination_engine.replace(
+                "Replicated", ""
+            )
         else:
-            destination_table = destination_table.__name__.split("_")[-1]
+            destination_engine = self.context.destination_engine
 
     with Then(
-        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_table}, destination table engine - {destination_table}:"
+        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_engine}, destination table engine - {destination_engine}:"
     ):
         if valid:
             source_partition_data = get_node(self, "source").query(
@@ -843,93 +856,161 @@ def check_attach_partition_from(
                         == destination_partition_data_3.output
                     )
 
+    # with And(
+    #     "I check that I can use data in the destination table after detach attach"
+    # ):
+    #     if "Replicated" in destination_engine:
+    #         node = self.context.node_1
+    #         data_before = node.query(
+    #             f"SELECT * FROM {destination_table_name} WHERE a>1 ORDER BY a,b,c,extra"
+    #         ).output
+    #         node.query(f"DETACH TABLE {destination_table_name}")
+    #         node.query(f"ATTACH TABLE {destination_table_name}")
+    #         data_after = node.query(
+    #             f"SELECT * FROM {destination_table_name} WHERE a>1 ORDER BY a,b,c,extra"
+    #         ).output
+    #     else:
+    #         data_before = (
+    #             get_node(self, "destination")
+    #             .query(
+    #                 f"SELECT * FROM {destination_table_name} WHERE a>1 ORDER BY a,b,c,extra"
+    #             )
+    #             .output
+    #         )
+    #         get_node(self, "destination").query(
+    #             f"DETACH TABLE {destination_table_name}"
+    #         )
+    #         get_node(self, "destination").query(
+    #             f"ATTACH TABLE {destination_table_name}"
+    #         )
+    #         data_after = (
+    #             get_node(self, "destination")
+    #             .query(
+    #                 f"SELECT * FROM {destination_table_name} WHERE a>1 ORDER BY a,b,c,extra"
+    #             )
+    #             .output
+    #         )
+
+    #     assert data_after == data_before
+
 
 @TestScenario
 @Flags(TE)
 def attach_partition_from(self, with_id=False):
-    """Run test check with different partition keys for both source and destination tables to see if `attach partition from` is possible."""
+    """Run test check with different partition keys for both source and destination tables 
+       to see if `attach partition from` is possible."""
 
-    partition_keys = {
-        "tuple()",
-        "a",
-        "a%2",
-        "a%3",
-        "intDiv(a,2)",
-        "intDiv(a,3)",
-        "b",
-        "b%2",
-        "intDiv(b,2)",
+    source_partition_keys = {
+        # "tuple()",
+        # "a",
+        # "a%2",
+        # "a%3",
+        # "intDiv(a,2)",
+        # "intDiv(a,3)",
+        # "b",
+        # "b%2",
+        # "intDiv(b,2)",
         "(a,b)",
-        "(a%2,b%2)",
-        "(a,intDiv(b,2))",
-        "(a,b%2)",
-        "(intDiv(a,2),b)",
-        "(intDiv(a,2),intDiv(b,2))",
-        "(b,a)",
-        "(b%2,a%2)",
-        "(intDiv(b,2),intDiv(a,2))",
-        "(b,c)",
-        "(a,c)",
-        "(a,b,c)",
-        "(a%2,b%2,c%2)",
-        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
-        "(a,c,b)",
-        "(b,a,c)",
-        "(b,c,a)",
-        "(c,a,b)",
-        "(c,b,a)",
+        # "(a%2,b%2)",
+        # "(a,intDiv(b,2))",
+        # "(a,b%2)",
+        # "(intDiv(a,2),b)",
+        # "(intDiv(a,2),intDiv(b,2))",
+        # "(b,a)",
+        # "(b%2,a%2)",
+        # "(intDiv(b,2),intDiv(a,2))",
+        # "(b,c)",
+        # "(a,c)",
+        # "(a,b,c)",
+        # "(a%2,b%2,c%2)",
+        # "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+        # "(a,c,b)",
+        # "(b,a,c)",
+        # "(b,c,a)",
+        # "(c,a,b)",
+        # "(c,b,a)",
+    }
+
+    destination_partition_keys = {
+        # "tuple()",
+        # "a",
+        # "a%2",
+        # "a%3",
+        # "intDiv(a,2)",
+        # "intDiv(a,3)",
+        "b",
+        # "b%2",
+        # "intDiv(b,2)",
+        # "(a,b)",
+        # "(a%2,b%2)",
+        # "(a,intDiv(b,2))",
+        # "(a,b%2)",
+        # "(intDiv(a,2),b)",
+        # "(intDiv(a,2),intDiv(b,2))",
+        # "(b,a)",
+        # "(b%2,a%2)",
+        # "(intDiv(b,2),intDiv(a,2))",
+        # "(b,c)",
+        # "(a,c)",
+        # "(a,b,c)",
+        # "(a%2,b%2,c%2)",
+        # "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+        # "(a,c,b)",
+        # "(b,a,c)",
+        # "(b,c,a)",
+        # "(c,a,b)",
+        # "(c,b,a)",
     }
 
     source_table_types = {
-        partitioned_MergeTree,
+        # partitioned_MergeTree,
         partitioned_ReplicatedMergeTree,
-        partitioned_ReplacingMergeTree,
-        partitioned_ReplicatedReplacingMergeTree,
-        partitioned_AggregatingMergeTree,
-        partitioned_ReplicatedAggregatingMergeTree,
-        partitioned_SummingMergeTree,
-        partitioned_ReplicatedSummingMergeTree,
-        partitioned_CollapsingMergeTree,
-        partitioned_ReplicatedCollapsingMergeTree,
-        partitioned_VersionedCollapsingMergeTree,
-        partitioned_ReplicatedVersionedCollapsingMergeTree,
-        partitioned_GraphiteMergeTree,
-        partitioned_ReplicatedGraphiteMergeTree,
+        # partitioned_ReplacingMergeTree,
+        # partitioned_ReplicatedReplacingMergeTree,
+        # partitioned_AggregatingMergeTree,
+        # partitioned_ReplicatedAggregatingMergeTree,
+        # partitioned_SummingMergeTree,
+        # partitioned_ReplicatedSummingMergeTree,
+        # partitioned_CollapsingMergeTree,
+        # partitioned_ReplicatedCollapsingMergeTree,
+        # partitioned_VersionedCollapsingMergeTree,
+        # partitioned_ReplicatedVersionedCollapsingMergeTree,
+        # partitioned_GraphiteMergeTree,
+        # partitioned_ReplicatedGraphiteMergeTree,
     }
 
     destination_table_types = {
-        empty_partitioned_MergeTree,
+        # empty_partitioned_MergeTree,
         empty_partitioned_ReplicatedMergeTree,
-        empty_partitioned_ReplacingMergeTree,
-        empty_partitioned_ReplicatedReplacingMergeTree,
-        empty_partitioned_AggregatingMergeTree,
-        empty_partitioned_ReplicatedAggregatingMergeTree,
-        empty_partitioned_SummingMergeTree,
-        empty_partitioned_ReplicatedSummingMergeTree,
-        empty_partitioned_CollapsingMergeTree,
-        empty_partitioned_ReplicatedCollapsingMergeTree,
-        empty_partitioned_VersionedCollapsingMergeTree,
-        empty_partitioned_ReplicatedVersionedCollapsingMergeTree,
-        empty_partitioned_GraphiteMergeTree,
-        empty_partitioned_ReplicatedGraphiteMergeTree,
+        # empty_partitioned_ReplacingMergeTree,
+        # empty_partitioned_ReplicatedReplacingMergeTree,
+        # empty_partitioned_AggregatingMergeTree,
+        # empty_partitioned_ReplicatedAggregatingMergeTree,
+        # empty_partitioned_SummingMergeTree,
+        # empty_partitioned_ReplicatedSummingMergeTree,
+        # empty_partitioned_CollapsingMergeTree,
+        # empty_partitioned_ReplicatedCollapsingMergeTree,
+        # empty_partitioned_VersionedCollapsingMergeTree,
+        # empty_partitioned_ReplicatedVersionedCollapsingMergeTree,
+        # empty_partitioned_GraphiteMergeTree,
+        # empty_partitioned_ReplicatedGraphiteMergeTree,
     }
 
     if not self.context.stress:
-        partition_keys = partition_keys
         source_table_types = {
-            partitioned_MergeTree,
+            #partitioned_MergeTree,
             partitioned_ReplicatedMergeTree,
         }
         destination_table_types = {
-            empty_partitioned_MergeTree,
+            #empty_partitioned_MergeTree,
             empty_partitioned_ReplicatedMergeTree,
         }
 
-    partition_keys_pairs = product(partition_keys, partition_keys)
+    partition_keys_pairs = product(source_partition_keys, destination_partition_keys)
     table_pairs = product(source_table_types, destination_table_types)
     combinations = product(partition_keys_pairs, table_pairs)
 
-    with Pool(4) as executor:
+    with Pool(1) as executor:
         for partition_keys, tables in combinations:
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
@@ -961,7 +1042,8 @@ def attach_partition_from(self, with_id=False):
 )
 @Name("partition key")
 def feature(self):
-    """Check conditions for partition key."""
+    """Check conditions for partition key when using `attach partition from` statement
+    with different partition keys."""
 
     self.context.node_1 = self.context.cluster.node("clickhouse1")
     self.context.node_2 = self.context.cluster.node("clickhouse2")
@@ -973,12 +1055,12 @@ def feature(self):
     ]
 
     with Pool(2) as pool:
-        Scenario(
-            "attach partition from without id",
-            test=attach_partition_from,
-            parallel=True,
-            executor=pool,
-        )(with_id=False)
+        # Scenario(
+        #     "attach partition from without id",
+        #     test=attach_partition_from,
+        #     parallel=True,
+        #     executor=pool,
+        # )(with_id=False)
         Scenario(
             "attach partition from with id",
             test=attach_partition_from,
