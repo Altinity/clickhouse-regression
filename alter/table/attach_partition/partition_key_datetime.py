@@ -31,8 +31,6 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
         ],
     }
 
-    not_monotonic = {}
-
     partially_monotonic = {
         "toMonth(time)": ["toQuarter(time)"],
         "toDayOfYear(time)": [
@@ -160,18 +158,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
     }
 
     if (
-        destination_partition_key in not_monotonic.get(source_partition_key, "")
-        and destination_partition_key not in not_subset.get(source_partition_key, "")
-        and destination_partition_key
-        not in partially_different.get(source_partition_key, "")
-        and destination_partition_key
-        not in partially_monotonic.get(source_partition_key, "")
-    ):
-        return False, "not monotonic"
-
-    if (
         destination_partition_key in not_subset.get(source_partition_key, "")
-        and destination_partition_key not in not_monotonic.get(source_partition_key, "")
         and destination_partition_key
         not in partially_different.get(source_partition_key, "")
         and destination_partition_key
@@ -181,7 +168,6 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
 
     if (
         destination_partition_key in partially_different.get(source_partition_key, "")
-        and destination_partition_key not in not_monotonic.get(source_partition_key, "")
         and destination_partition_key not in not_subset.get(source_partition_key, "")
         and destination_partition_key
         not in partially_monotonic.get(source_partition_key, "")
@@ -190,7 +176,6 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
 
     if (
         destination_partition_key in partially_different.get(source_partition_key, "")
-        and destination_partition_key not in not_monotonic.get(source_partition_key, "")
         and destination_partition_key not in not_subset.get(source_partition_key, "")
         and destination_partition_key
         not in partially_monotonic.get(source_partition_key, "")
@@ -254,7 +239,9 @@ def check_attach_partition_from(
         check_clickhouse_version("<24.2")(self)
         and source_partition_key != destination_partition_key
     ):
-        skip("Different partition keys are not supported before 24.1")
+        skip(
+            "`attach partition from` with tables that have different partition keys are not supported before 24.2"
+        )
 
     self.context.source_engine = source_table.__name__.split("_")[-1]
     self.context.destination_engine = destination_table.__name__.split("_")[-1]
@@ -269,8 +256,8 @@ def check_attach_partition_from(
             source table partition key: {source_partition_key}
             destination table partition key: {destination_partition_key}
             engines:
-            source table engine: {source_table.__name__}
-            destination table engine: {destination_table.__name__}
+            source table engine: {self.context.source_engine}
+            destination table engine: {self.context.destination_engine}
             """,
     ):
         source_table(
@@ -320,20 +307,7 @@ def check_attach_partition_from(
                     f"SELECT * FROM {destination_table_name} format PrettyCompactMonoBlock"
                 )
         else:
-            if reason == "not monotonic":
-                exitcode, message = (
-                    36,
-                    "DB::Exception: Destination table partition expression is not monotonically increasing",
-                )
-                check(
-                    self,
-                    partition_ids=partition_ids,
-                    source_table_name=source_table_name,
-                    destination_table_name=destination_table_name,
-                    exitcode=exitcode,
-                    message=message,
-                )
-            elif reason == "not subset":
+            if reason == "not subset":
                 exitcode, message = (
                     36,
                     "DB::Exception: Destination table partition expression columns must be a subset of source table partition expression columns.",
@@ -346,6 +320,7 @@ def check_attach_partition_from(
                     exitcode=exitcode,
                     message=message,
                 )
+
             elif reason == "partially different":
                 exitcode, message = (
                     248,
@@ -361,6 +336,7 @@ def check_attach_partition_from(
                         )
                     except:
                         note("Partition can be attached")
+
             elif reason == "partially monotonic":
                 exitcode, message = (
                     36,
@@ -384,6 +360,7 @@ def check_attach_partition_from(
             source_engine = self.context.source_engine.replace("Replicated", "")
         else:
             source_engine = self.context.source_engine
+
         if "Replicated" in self.context.destination_engine:
             destination_engine = self.context.destination_engine.replace(
                 "Replicated", ""
@@ -392,7 +369,13 @@ def check_attach_partition_from(
             destination_engine = self.context.destination_engine
 
     with Then(
-        f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {source_engine}, destination table engine - {destination_engine}:"
+        f"""
+        I check that partitions were attached when 
+        source table partition_id - {source_partition_key}, 
+        destination table partition key - {destination_partition_key}, 
+        source table engine - {source_engine}, 
+        destination table engine - {destination_engine}:
+        """
     ):
         if valid:
             source_partition_data = get_node(self, "source").query(
@@ -409,15 +392,12 @@ def check_attach_partition_from(
                     ), error()
 
         elif reason == "partially different":
-            with Then(
-                f"source partition key - {source_partition_key}, destination partition key - {destination_partition_key}, source engine - {source_table}, destination engine - {destination_table}"
-            ):
-                execute_query(
-                    f"SELECT time,extra FROM {destination_table_name} ORDER BY time,date,extra",
-                    snapshot_name="/alter/table/attach_partition/partition_key_datetime/attach_partition_from/"
-                    + current().name.split("/")[-1],
-                    node=get_node(self, "destination"),
-                )
+            execute_query(
+                f"SELECT time,extra FROM {destination_table_name} ORDER BY time,date,extra",
+                snapshot_name="/alter/table/attach_partition/partition_key_datetime/attach_partition_from/"
+                + current().name.split("/")[-1],
+                node=get_node(self, "destination"),
+            )
 
             source_partition_data = get_node(self, "source").query(
                 f"SELECT * FROM {source_table_name} ORDER BY time,date,extra"
@@ -433,15 +413,12 @@ def check_attach_partition_from(
                     ), "not partially different"
 
         elif reason == "partially monotonic":
-            with Then(
-                f"source and destination partition keys {source_partition_key} {destination_partition_key} source and destination engines {source_table} {destination_table}"
-            ):
-                execute_query(
-                    f"SELECT time,extra FROM {destination_table_name} ORDER BY time,date,extra",
-                    snapshot_name="/alter/table/attach_partition/partition_key_datetime/attach_partition_from/"
-                    + current().name.split("/")[-1],
-                    node=get_node(self, "destination"),
-                )
+            execute_query(
+                f"SELECT time,extra FROM {destination_table_name} ORDER BY time,date,extra",
+                snapshot_name="/alter/table/attach_partition/partition_key_datetime/attach_partition_from/"
+                + current().name.split("/")[-1],
+                node=get_node(self, "destination"),
+            )
             source_partition_data = get_node(self, "source").query(
                 f"SELECT * FROM {source_table_name} ORDER BY time,date,extra"
             )
@@ -472,16 +449,22 @@ def check_attach_partition_from(
                         destination_partition_data_1.output
                         == destination_partition_data_2.output
                         == destination_partition_data_3.output
-                    )
+                    ), error()
 
-    # with And(
-    #     "I check that I can use data in the destination table after detach attach"
-    # ):
-    #     get_node(self, "source").query(f"DETACH TABLE {destination_table_name}")
-    #     get_node(self, "source").query(f"ATTACH TABLE {destination_table_name}")
-    #     get_node(self, "source").query(
-    #         f"SELECT * FROM {destination_table_name} where time > '2000-05-10'"
-    #     )
+    with And(
+        "I check that I can use data in the destination table after detach attach"
+    ):
+        data_before = self.context.node_1.query(
+            f"SELECT * FROM {destination_table_name} WHERE time > '2000-05-10' ORDER BY time,date,extra"
+        ).output
+        self.context.node_1.query(f"DETACH TABLE {destination_table_name}")
+        self.context.node_1.query(f"ATTACH TABLE {destination_table_name}")
+        data_after = self.context.node_1.query(
+            f"SELECT * FROM {destination_table_name} WHERE time > '2000-05-10' ORDER BY time,date,extra"
+        )
+        for attempt in retries(timeout=30, delay=2):
+            with attempt:
+                assert data_after.output == data_before, error()
 
 
 @TestScenario
@@ -525,11 +508,46 @@ def attach_partition_from(self):
     source_table_types = {
         partitioned_datetime_MergeTree,
         partitioned_datetime_ReplicatedMergeTree,
+        partitioned_datetime_ReplacingMergeTree,
+        partitioned_datetime_ReplicatedReplacingMergeTree,
+        partitioned_datetime_AggregatingMergeTree,
+        partitioned_datetime_ReplicatedAggregatingMergeTree,
+        partitioned_datetime_SummingMergeTree,
+        partitioned_datetime_ReplicatedSummingMergeTree,
+        partitioned_datetime_CollapsingMergeTree,
+        partitioned_datetime_ReplicatedCollapsingMergeTree,
+        partitioned_datetime_VersionedCollapsingMergeTree,
+        partitioned_datetime_ReplicatedVersionedCollapsingMergeTree,
+        partitioned_datetime_GraphiteMergeTree,
+        partitioned_datetime_ReplicatedGraphiteMergeTree,
     }
+
     destination_table_types = {
         empty_partitioned_datetime_MergeTree,
         empty_partitioned_datetime_ReplicatedMergeTree,
+        empty_partitioned_datetime_ReplacingMergeTree,
+        empty_partitioned_datetime_ReplicatedReplacingMergeTree,
+        empty_partitioned_datetime_AggregatingMergeTree,
+        empty_partitioned_datetime_ReplicatedAggregatingMergeTree,
+        empty_partitioned_datetime_SummingMergeTree,
+        empty_partitioned_datetime_ReplicatedSummingMergeTree,
+        empty_partitioned_datetime_CollapsingMergeTree,
+        empty_partitioned_datetime_ReplicatedCollapsingMergeTree,
+        empty_partitioned_datetime_VersionedCollapsingMergeTree,
+        empty_partitioned_datetime_ReplicatedVersionedCollapsingMergeTree,
+        empty_partitioned_datetime_GraphiteMergeTree,
+        empty_partitioned_datetime_ReplicatedGraphiteMergeTree,
     }
+
+    if not self.context.stress:
+        source_table_types = {
+            partitioned_datetime_MergeTree,
+            partitioned_datetime_ReplicatedMergeTree,
+        }
+        destination_table_types = {
+            empty_partitioned_datetime_MergeTree,
+            empty_partitioned_datetime_ReplicatedMergeTree,
+        }
 
     partition_keys_pairs = product(source_partition_keys, destination_partition_keys)
     table_pairs = product(source_table_types, destination_table_types)
@@ -564,7 +582,8 @@ def attach_partition_from(self):
 )
 @Name("partition key datetime")
 def feature(self):
-    """Check conditions for partition key."""
+    """Check conditions for partition key when using `attach partition from` statement
+    with different partition keys and datetime data."""
 
     self.context.node_1 = self.context.cluster.node("clickhouse1")
     self.context.node_2 = self.context.cluster.node("clickhouse2")
