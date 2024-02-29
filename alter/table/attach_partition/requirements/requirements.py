@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231023.1135725.
+# document by TestFlows v2.0.240111.1210833.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -143,7 +143,7 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionOrPart = Requirement(
     description=(
         "[ClickHouse] SHALL support the `ALTER TABLE ATTACH PARTITION|PART` statement.\n"
         "\n"
-        "This statement SHALL allow the user to add data, either a full `PARTITITION` or a single `PART` to the table from the `detached` directory. \n"
+        "This statement SHALL allow the user to add data, either a full `PARTITION` or a single `PART` to the table from the `detached` directory. \n"
         "\n"
         "```sql\n"
         "ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART [partition_expr]\n"
@@ -175,12 +175,12 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionOrPart_RBAC = Requirement(
         "| ALTER          |\n"
         "| ALTER TABLE    |\n"
         "\n"
-        "The `ATTACH PARTITION FROM` SHALL only work when the user has the following privileges for the source and destination tables:\n"
+        "The `ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for the table:\n"
         "\n"
-        "| Source | Destination          |\n"
-        "|--------|----------------------|\n"
-        "| SELECT | ALTER TABLE, INSERT  |\n"
-        "| SELECT | ALTER, INSERT        |\n"
+        "| Table Privilege |\n"
+        "|-----------------|\n"
+        "| INSERT          |\n"
+        "\n"
         "\n"
     ),
     link=None,
@@ -387,9 +387,26 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKe
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [desctination table]. \n"
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [destination table]. \n"
         "It is allowed to attach a partition from the table with different partition expression when the destination partition expression does not re-partition.\n"
         "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  \n"
+        "\n"
+        "The partition key can be any expression from the table columns.\n"
+        "List of the types of partition expressions that can be used in ClickHouse:\n"
+        "* Column (of any type)\n"
+        "* Functions of Columns:\n"
+        "    * Date and Time Functions: Such as toYYYYMM(dateColumn), toMonday(dateColumn) or toStartOfMonth(dateColumn)\n"
+        "    * Hashing Functions: Such as cityHash64(userID) or intHash32(status)\n"
+        "    * Mathematical Functions: Such as intDiv(number, N) or number % N\n"
+        "    * String Functions: Such as substring(stringColumn, 1, N)\n"
+        "    * Complex Expressions: Such as combinations of functions and operations, e.g., toYYYYMM(dateColumn) * 100 + intDiv(numberColumn, 1000)\n"
+        "\n"
+        "* Expressions Involving Multiple Columns:\n"
+        "    * Example: toYYYYMMDD(dateColumn) + intDiv(numberColumn, 100) or (dateColumn, eventType) \n"
+        "* Tuple of expressions\n"
+        "    * Example: (CounterID, StartDate, intHash32(UserID))\n"
+        "\n"
+        "By default, the floating-point partition key is not supported. To use it enable the setting allow_floating_point_partition_key.\n"
         "\n"
     ),
     link=None,
@@ -413,12 +430,12 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_RBAC = Requirement(
         "| ALTER          |\n"
         "| ALTER TABLE    |\n"
         "\n"
-        "The `ATTACH PARTITION` SHALL only work when the user has the following privileges for the table:\n"
+        "The `ATTACH PARTITION FROM` SHALL only work when the user has the following privileges for the source and destination tables:\n"
         "\n"
-        "| Table Privilege |\n"
-        "|-----------------|\n"
-        "| INSERT          |\n"
-        "\n"
+        "| Source | Destination          |\n"
+        "|--------|----------------------|\n"
+        "| SELECT | ALTER TABLE, INSERT  |\n"
+        "| SELECT | ALTER, INSERT        |\n"
         "\n"
         "\n"
     ),
@@ -449,8 +466,8 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         Heading(name="Definitions", level=1, num="3"),
         Heading(name="Source Table", level=2, num="3.1"),
         Heading(name="Destination Table", level=2, num="3.2"),
-        Heading(name="Compact part_type", level=2, num="3.3"),
-        Heading(name="Wide part_type", level=2, num="3.4"),
+        Heading(name="Compact Part Type", level=2, num="3.3"),
+        Heading(name="Wide Part Type", level=2, num="3.4"),
         Heading(name="Attaching Partitions or Parts", level=1, num="4"),
         Heading(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition", level=2, num="4.1"
@@ -592,7 +609,7 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
             level=4,
             num="11.7.6.1",
         ),
-        Heading(name="Partition Key Condtitions", level=3, num="11.7.7"),
+        Heading(name="Partition Key Conditions", level=3, num="11.7.7"),
         Heading(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey",
             level=4,
@@ -644,8 +661,8 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
 * 3 [Definitions](#definitions)
     * 3.1 [Source Table](#source-table)
     * 3.2 [Destination Table](#destination-table)
-    * 3.3 [Compact part_type](#compact-part_type)
-    * 3.4 [Wide part_type](#wide-part_type)
+    * 3.3 [Compact Part Type](#compact-part-type)
+    * 3.4 [Wide Part Type](#wide-part-type)
 * 4 [Attaching Partitions or Parts](#attaching-partitions-or-parts)
     * 4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition](#rqsrs-034clickhousealtertableattachpartition)
 * 5 [Supported Table Engines](#supported-table-engines)
@@ -689,7 +706,7 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
             * 11.7.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestoragepolicy)
         * 11.7.6 [Tables With The Same Indices and Projections](#tables-with-the-same-indices-and-projections)
             * 11.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
-        * 11.7.7 [Partition Key Condtitions](#partition-key-condtitions)
+        * 11.7.7 [Partition Key Conditions](#partition-key-conditions)
             * 11.7.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkey)
     * 11.8 [Role-Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
         * 11.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC](#rqsrs-034clickhousealtertableattachpartitionfromrbac)
@@ -721,11 +738,11 @@ The table from which a partition or part is taken.
 
 The table to which a partition or part is going to be attached.
 
-### Compact part_type
+### Compact Part Type
 
 All columns are stored in one file in a filesystem.
 
-### Wide part_type
+### Wide Part Type
 
 Each column is stored in a separate file in a filesystem.
 
@@ -823,7 +840,7 @@ version: 1.0
 
 [ClickHouse] SHALL support the `ALTER TABLE ATTACH PARTITION|PART` statement.
 
-This statement SHALL allow the user to add data, either a full `PARTITITION` or a single `PART` to the table from the `detached` directory. 
+This statement SHALL allow the user to add data, either a full `PARTITION` or a single `PART` to the table from the `detached` directory. 
 
 ```sql
 ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART [partition_expr]
@@ -850,12 +867,12 @@ version: 1.0
 | ALTER          |
 | ALTER TABLE    |
 
-The `ATTACH PARTITION FROM` SHALL only work when the user has the following privileges for the source and destination tables:
+The `ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for the table:
 
-| Source | Destination          |
-|--------|----------------------|
-| SELECT | ALTER TABLE, INSERT  |
-| SELECT | ALTER, INSERT        |
+| Table Privilege |
+|-----------------|
+| INSERT          |
+
 
 ## Attach Partition From Another Table
 
@@ -955,14 +972,31 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same indices and projections.
 
-#### Partition Key Condtitions
+#### Partition Key Conditions
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [desctination table]. 
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [destination table]. 
 It is allowed to attach a partition from the table with different partition expression when the destination partition expression does not re-partition.
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  
+
+The partition key can be any expression from the table columns.
+List of the types of partition expressions that can be used in ClickHouse:
+* Column (of any type)
+* Functions of Columns:
+    * Date and Time Functions: Such as toYYYYMM(dateColumn), toMonday(dateColumn) or toStartOfMonth(dateColumn)
+    * Hashing Functions: Such as cityHash64(userID) or intHash32(status)
+    * Mathematical Functions: Such as intDiv(number, N) or number % N
+    * String Functions: Such as substring(stringColumn, 1, N)
+    * Complex Expressions: Such as combinations of functions and operations, e.g., toYYYYMM(dateColumn) * 100 + intDiv(numberColumn, 1000)
+
+* Expressions Involving Multiple Columns:
+    * Example: toYYYYMMDD(dateColumn) + intDiv(numberColumn, 100) or (dateColumn, eventType) 
+* Tuple of expressions
+    * Example: (CounterID, StartDate, intHash32(UserID))
+
+By default, the floating-point partition key is not supported. To use it enable the setting allow_floating_point_partition_key.
 
 ### Role-Based Access Control when Attach Partition From Another Table
 
@@ -977,12 +1011,12 @@ version: 1.0
 | ALTER          |
 | ALTER TABLE    |
 
-The `ATTACH PARTITION` SHALL only work when the user has the following privileges for the table:
+The `ATTACH PARTITION FROM` SHALL only work when the user has the following privileges for the source and destination tables:
 
-| Table Privilege |
-|-----------------|
-| INSERT          |
-
+| Source | Destination          |
+|--------|----------------------|
+| SELECT | ALTER TABLE, INSERT  |
+| SELECT | ALTER, INSERT        |
 
 
 ## References
