@@ -1028,7 +1028,7 @@ def no_vfs(self):
         scenario()
 
 
-@TestSuite
+@TestFeature
 @Name("stress alter")
 def feature(self):
     """Stress test with many alters."""
@@ -1036,5 +1036,8 @@ def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 
-    Feature(run=no_vfs)
-    Feature(run=vfs)
+    for sub_feature in loads(current_module(), Feature):
+        if sub_feature is feature:
+            continue
+        Feature(run=sub_feature)
+

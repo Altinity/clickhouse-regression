@@ -3,132 +3,6 @@ version: '2.3'
 volumes:
   data1-1:
 
-  clickhouse1_jbod1:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse1_jbod2:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse1_jbod3:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse1_jbod4:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse1_external:
-    driver: local
-    driver_opts:
-      o: "size=200m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse1_external2:
-    driver: local
-    driver_opts:
-      o: "size=200m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse2_jbod1:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse2_jbod2:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse2_jbod3:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse2_jbod4:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse2_external:
-    driver: local
-    driver_opts:
-      o: "size=200m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse2_external2:
-    driver: local
-    driver_opts:
-      o: "size=200m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse3_jbod1:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse3_jbod2:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse3_jbod3:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse3_jbod4:
-    driver: local
-    driver_opts:
-      o: "size=40m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse3_external:
-    driver: local
-    driver_opts:
-      o: "size=200m"
-      device: tmpfs
-      type: tmpfs
-
-  clickhouse3_external2:
-    driver: local
-    driver_opts:
-      o: "size=200m"
-      device: tmpfs
-      type: tmpfs
-
 services:
   minio1:
     extends:
@@ -208,12 +82,6 @@ services:
       service: clickhouse
     hostname: clickhouse1
     volumes:
-      - clickhouse1_jbod1:/jbod1
-      - clickhouse1_jbod2:/jbod2
-      - clickhouse1_jbod3:/jbod3
-      - clickhouse1_jbod4:/jbod4
-      - clickhouse1_external:/external
-      - clickhouse1_external2:/external2
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
@@ -227,12 +95,6 @@ services:
       service: clickhouse
     hostname: clickhouse2
     volumes:
-      - clickhouse1_jbod1:/jbod1
-      - clickhouse1_jbod2:/jbod2
-      - clickhouse1_jbod3:/jbod3
-      - clickhouse1_jbod4:/jbod4
-      - clickhouse1_external:/external
-      - clickhouse1_external2:/external2
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
@@ -246,12 +108,6 @@ services:
       service: clickhouse
     hostname: clickhouse3
     volumes:
-      - clickhouse1_jbod1:/jbod1
-      - clickhouse1_jbod2:/jbod2
-      - clickhouse1_jbod3:/jbod3
-      - clickhouse1_jbod4:/jbod4
-      - clickhouse1_external:/external
-      - clickhouse1_external2:/external2
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
