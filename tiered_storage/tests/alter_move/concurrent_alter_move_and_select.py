@@ -150,51 +150,51 @@ def scenario(self, cluster, node="clickhouse1"):
                             assert r == "500", error()
 
                 with When("I check if there are any duplicate parts on the disks"):
-                    jbod1_entries = set(
-                        [
-                            os.path.basename(entry)
-                            for entry in node.command(
-                                f"find /jbod1/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
-                                exitcode=0,
-                            )
-                            .output.strip()
-                            .splitlines()
-                        ]
-                    )
-
-                    jbod2_entries = set(
-                        [
-                            os.path.basename(entry)
-                            for entry in node.command(
-                                f"find /jbod2/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
-                                exitcode=0,
-                            )
-                            .output.strip()
-                            .splitlines()
-                        ]
-                    )
-
-                    if not (
-                        hasattr(cluster, "with_minio")
-                        and hasattr(cluster, "with_s3amazon")
-                        and hasattr(cluster, "with_s3gcs")
-                    ):
-                        external_entries = set(
-                            [
-                                os.path.basename(entry)
-                                for entry in node.command(
-                                    f"find /external/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
-                                    exitcode=0,
-                                )
-                                .output.strip()
-                                .splitlines()
-                            ]
-                        )
-                    else:
-                        external_entries = set()
-
                     for retry in retries(timeout=60, delay=10):
                         with retry:
+                            jbod1_entries = set(
+                                [
+                                    os.path.basename(entry)
+                                    for entry in node.command(
+                                        f"find /jbod1/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
+                                        exitcode=0,
+                                    )
+                                    .output.strip()
+                                    .splitlines()
+                                ]
+                            )
+
+                            jbod2_entries = set(
+                                [
+                                    os.path.basename(entry)
+                                    for entry in node.command(
+                                        f"find /jbod2/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
+                                        exitcode=0,
+                                    )
+                                    .output.strip()
+                                    .splitlines()
+                                ]
+                            )
+
+                            if not (
+                                hasattr(cluster, "with_minio")
+                                and hasattr(cluster, "with_s3amazon")
+                                and hasattr(cluster, "with_s3gcs")
+                            ):
+                                external_entries = set(
+                                    [
+                                        os.path.basename(entry)
+                                        for entry in node.command(
+                                            f"find /external/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
+                                            exitcode=0,
+                                        )
+                                        .output.strip()
+                                        .splitlines()
+                                    ]
+                                )
+                            else:
+                                external_entries = set()
+
                             with Then("there should be no duplicate parts"):
                                 len_union = len(
                                     jbod1_entries.union(jbod2_entries).union(
