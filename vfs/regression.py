@@ -90,7 +90,7 @@ def minio(
     Feature(run=load("vfs.tests.create_insert", "feature"))
     Feature(run=load("vfs.tests.performance", "feature"))
 
-    Suite(run=load("vfs.tests.stress_alter", "feature"))
+    Feature(run=load("vfs.tests.stress_alter", "feature"))
 
     if self.context.stress:
         Feature(run=load("vfs.tests.stress_insert", "feature"))
