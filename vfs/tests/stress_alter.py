@@ -754,6 +754,7 @@ def restart_clickhouse(self, signal="SEGV"):
 
 
 @TestStep
+@Retry(timeout=60, delay=5)
 def restart_network(self):
     """
     Stop the network on a random instance, wait, and restart.
@@ -943,6 +944,16 @@ def alter_combinations(
                 check_consistency()
 
         note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
+
+    with Finally(
+        "I drop each table on each node in case the cluster is in a bad state"
+    ):
+        for node in self.context.ch_nodes:
+            for table in self.context.table_names:
+                When(test=delete_one_replica, parallel=True)(
+                    node=node, table_name=table_name
+                )
+        join()
 
 
 @TestScenario
