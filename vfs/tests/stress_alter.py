@@ -565,7 +565,7 @@ def remove_random_ttl(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
 
-    node.query(f"ALTER TABLE {table_name} REMOVE TTL")
+    node.query(f"ALTER TABLE {table_name} REMOVE TTL", no_checks=True)
 
 
 @TestStep(Then)
@@ -946,26 +946,23 @@ def alter_combinations(
 
 
 @TestScenario
-def vfs(self):
+def safe(self):
     """
-    3 actions in parallel, spread across 3 tables.
+    Perform only actions that are relatively unlikely to cause crashes.
     """
-    with Given("VFS is enabled"):
-        enable_vfs(disk_names=["external", "external_tiered"])
 
     alter_combinations(
         limit=None if self.context.stress else 20,
         shuffle=True,
+        restarts=False,
     )
 
 
 @TestScenario
-def vfs_insert_faults(self):
+def insert_faults(self):
     """
-    3 actions in parallel, spread across 3 tables, with fault injection.
+    Perform actions with keeper fault injection on inserts.
     """
-    with Given("VFS is enabled"):
-        enable_vfs(disk_names=["external", "external_tiered"])
 
     alter_combinations(
         limit=None if self.context.stress else 20,
@@ -975,12 +972,10 @@ def vfs_insert_faults(self):
 
 
 @TestScenario
-def vfs_network_faults(self):
+def network_faults(self):
     """
-    3 actions in parallel, spread across 3 tables, with network faults.
+    Perform actions with random network interference.
     """
-    with Given("VFS is enabled"):
-        enable_vfs(disk_names=["external", "external_tiered"])
 
     alter_combinations(
         limit=None if self.context.stress else 20,
@@ -991,18 +986,38 @@ def vfs_network_faults(self):
 
 
 @TestScenario
-def no_vfs(self):
+def restarts(self):
     """
-    3 actions in parallel, spread across 3 tables, without vfs.
+    Allow restarting nodes randomly. High probability of crashes.
     """
+
     alter_combinations(
         limit=None if self.context.stress else 20,
         shuffle=True,
-        restarts=False,
+        restarts=True,
     )
 
 
 @TestFeature
+def vfs(self):
+    """Run test scenarios with vfs."""
+
+    with Given("VFS is enabled"):
+        enable_vfs(disk_names=["external", "external_tiered"])
+
+    for scenario in loads(current_module(), Scenario):
+        scenario()
+
+
+@TestFeature
+def no_vfs(self):
+    """Run test scenarios without vfs."""
+
+    for scenario in loads(current_module(), Scenario):
+        scenario()
+
+
+@TestSuite
 @Name("stress alter")
 def feature(self):
     """Stress test with many alters."""
@@ -1010,5 +1025,5 @@ def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    Feature(run=no_vfs)
+    Feature(run=vfs)
