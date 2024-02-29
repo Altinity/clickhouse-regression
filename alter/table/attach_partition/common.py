@@ -350,13 +350,13 @@ def create_partitioned_table_with_datetime_data(
             )
             note("different months and years")
             node.query(
-                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*24*15+number*60*60*24*15*12+{i}, toDate('2004-01-01')+1, number+1000, 1 FROM numbers(5+{i})"
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*30+number*60*60*24*15*12+{i}, toDate('2004-01-01')+1, number+1000, 1 FROM numbers(5+{i})"
             )
         note("quarters")
         for i in range(1, number_of_partitions + 1):
             note("different quarters")
             node.query(
-                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*24*15*7+{i}, toDate('2005-01-01'), number+1000, 1 FROM numbers(10+{i})"
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*30*12+{i}, toDate('2005-01-01'), number+1000, 1 FROM numbers(10+{i})"
             )
         note("years")
         for i in range(1, number_of_partitions + 1):
@@ -364,6 +364,35 @@ def create_partitioned_table_with_datetime_data(
             node.query(
                 f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*3600*24*15*12+{i}, toDate('2006-01-01')+number*15*12, number+1000, 1 FROM numbers(10+{i})"
             )
+        note("Insert more various data to cover all possible ranges")
+        for i in range(1, number_of_partitions + 1):
+            note("toMinute")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-01-01 00:00:00')+number+40*60+{i}+5*3600, toDate('2007-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-01-01 00:00:00')+number*60+40*60+{i}*60+5*3600, toDate('2008-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+            note("toMonth")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-05-01 00:00:00')+number*60+40*60+{i}*60+5*3600, toDate('2008-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+            note("toSecond")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-05-01 00:00:00')+number+30+40*60+{i}*60+5*3600, toDate('2009-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+        note("toQuarter")
+        node.query(
+            f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2011-01-01 00:00:00')+60*60*24*30*7, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
+        )
+        note("toHour")
+        node.query(
+            f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2012-01-01 00:00:00')+60*60*24+60*60*10, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
+        )
+        note("toMinute")
+        node.query(
+            f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2012-01-01 00:00:00')+60*60*24+60*24, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
+        )
 
 
 @TestStep(Given)
@@ -523,13 +552,13 @@ def create_partitioned_replicated_table_with_datetime_data(
             )
             note("different months and years")
             node.query(
-                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*24*15+number*60*60*24*15*12+{i}, toDate('2004-01-01')+1, number+1000, 1 FROM numbers(5+{i})"
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*30+number*60*60*24*15*12+{i}, toDate('2004-01-01')+1, number+1000, 1 FROM numbers(5+{i})"
             )
         note("quarters")
         for i in range(1, number_of_partitions + 1):
             note("different quarters")
             node.query(
-                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*24*15*7+{i}, toDate('2005-01-01'), number+1000, 1 FROM numbers(10+{i})"
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*60*60*30*12+{i}, toDate('2005-01-01'), number+1000, 1 FROM numbers(10+{i})"
             )
         note("years")
         for i in range(1, number_of_partitions + 1):
@@ -537,6 +566,35 @@ def create_partitioned_replicated_table_with_datetime_data(
             node.query(
                 f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2000-01-01 00:00:00')+(number)*3600*24*15*12+{i}, toDate('2006-01-01')+number*15*12, number+1000, 1 FROM numbers(10+{i})"
             )
+        note("Insert more various data to cover all possible ranges")
+        for i in range(1, number_of_partitions + 1):
+            note("toMinute")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-01-01 00:00:00')+number+40*60+{i}+5*3600, toDate('2007-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-01-01 00:00:00')+number*60+40*60+{i}*60+5*3600, toDate('2008-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+            note("toMonth")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-05-01 00:00:00')+number*60+40*60+{i}*60+5*3600, toDate('2008-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+            note("toSecond")
+            node.query(
+                f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2001-05-01 00:00:00')+number+30+40*60+{i}*60+5*3600, toDate('2009-01-01'), number+1000, 1 FROM numbers(5+{i})"
+            )
+        note("toQuarter")
+        node.query(
+            f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2011-01-01 00:00:00')+60*60*24*30*7, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
+        )
+        note("toHour")
+        node.query(
+            f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2012-01-01 00:00:00')+60*60*24+60*60*10, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
+        )
+        note("toMinute")
+        node.query(
+            f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2012-01-01 00:00:00')+60*60*24+60*24, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
+        )
 
 
 @TestStep(Given)
@@ -1362,6 +1420,7 @@ def empty_temporary_partitioned_ReplacingMergeTree(
         node=node,
     )
 
+
 @TestStep(Given)
 def partitioned_datetime_ReplacingMergeTree(
     self, table_name, partition_by, nodes=None, node=None
@@ -1868,7 +1927,6 @@ def empty_temporary_partitioned_VersionedCollapsingMergeTree(
     )
 
 
-
 @TestStep(Given)
 def partitioned_datetime_VersionedCollapsingMergeTree(
     self, table_name, partition_by, nodes=None, node=None
@@ -2062,7 +2120,7 @@ def insert_random(
 
     if columns == None:
         columns = ["a", "b", "c", "extra"]
-    
+
     columns = f"({'',''.join([columns])})"
     note(columns)
     pause()
