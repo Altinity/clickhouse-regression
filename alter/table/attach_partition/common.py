@@ -1,5 +1,4 @@
 import platform
-import json
 
 from testflows.asserts import values, error, snapshot
 from testflows.core import *
@@ -31,6 +30,7 @@ def create_partitioned_table_with_data(
     sign="sign",
     version="a",
     bias=0,
+    small=False,
 ):
     """Create a table that is partitioned by specified columns."""
 
@@ -75,10 +75,21 @@ def create_partitioned_table_with_data(
         create_table(**not_none_params)
 
     with And(f"inserting data that will create multiple partitions"):
-        for i in range(1, number_of_partitions + 1):
+        if small:
             node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT 0, 0, 0, number+1000, 1 FROM numbers({4})"
             )
+            node.query(
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT 1, 1, 1, number+1000, 1 FROM numbers({4})"
+            )
+        else:
+            for i in range(1, number_of_partitions + 1):
+                node.query(
+                    f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+                )
+                node.query(
+                    f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT number+10, number+{i+bias}+14, number+{i+bias}+18, number+1001, 1 FROM numbers({10})"
+                )
 
 
 @TestStep(Given)
@@ -106,65 +117,6 @@ def create_empty_partitioned_table(
             Column(name="a", datatype=UInt16()),
             Column(name="b", datatype=UInt16()),
             Column(name="c", datatype=UInt16()),
-            Column(name="extra", datatype=UInt64()),
-            Column(name="Path", datatype=String()),
-            Column(name="Time", datatype=DateTime()),
-            Column(name="Value", datatype=Float64()),
-            Column(name="Timestamp", datatype=Int64()),
-            Column(name="sign", datatype=Int8()),
-        ]
-
-    if engine == "GraphiteMergeTree":
-        engine = f"GraphiteMergeTree('{config}')"
-    elif engine == "VersionedCollapsingMergeTree":
-        engine = f"VersionedCollapsingMergeTree({sign},{version})"
-    elif engine == "CollapsingMergeTree":
-        engine = f"CollapsingMergeTree({sign})"
-
-    params = {
-        "name": table_name,
-        "engine": engine,
-        "partition_by": partition_by,
-        "primary_key": primary_key,
-        "order_by": order_by,
-        "columns": columns,
-        "query_settings": query_settings,
-        "if_not_exists": True,
-        "node": node,
-    }
-
-    not_none_params = {k: v for k, v in params.items() if v is not None}
-
-    with By(f"creating a table that is partitioned by '{partition_by}'"):
-        create_table(**not_none_params)
-
-
-@TestStep(Given)
-def create_empty_partitioned_table_with_datetime_data(
-    self,
-    table_name,
-    engine="MergeTree",
-    partition_by="tuple()",
-    primary_key=None,
-    columns=None,
-    query_settings=None,
-    order_by="tuple()",
-    node=None,
-    number_of_partitions=2,
-    config="graphite_rollup_example",
-    sign="sign",
-    version="a",
-    bias=0,
-):
-    """Create a table that is partitioned by specified columns."""
-
-    if node is None:
-        node = self.context.node
-
-    if columns is None:
-        columns = [
-            Column(name="time", datatype=DateTime()),
-            Column(name="date", datatype=Date()),
             Column(name="extra", datatype=UInt64()),
             Column(name="Path", datatype=String()),
             Column(name="Time", datatype=DateTime()),
@@ -393,6 +345,66 @@ def create_partitioned_table_with_datetime_data(
         node.query(
             f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2012-01-01 00:00:00')+60*60*24+60*24, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
         )
+
+
+@TestStep(Given)
+def create_empty_partitioned_table_with_datetime_data(
+    self,
+    table_name,
+    engine="MergeTree",
+    partition_by="tuple()",
+    primary_key=None,
+    columns=None,
+    query_settings=None,
+    order_by="tuple()",
+    node=None,
+    number_of_partitions=2,
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
+    bias=0,
+):
+    """Create a table that is partitioned by specified columns."""
+
+    if node is None:
+        node = self.context.node
+
+    if columns is None:
+        columns = [
+            Column(name="time", datatype=DateTime()),
+            Column(name="date", datatype=Date()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
+    if engine == "GraphiteMergeTree":
+        engine = f"GraphiteMergeTree('{config}')"
+    elif engine == "VersionedCollapsingMergeTree":
+        engine = f"VersionedCollapsingMergeTree({sign},{version})"
+    elif engine == "CollapsingMergeTree":
+        engine = f"CollapsingMergeTree({sign})"
+
+    params = {
+        "name": table_name,
+        "engine": engine,
+        "partition_by": partition_by,
+        "primary_key": primary_key,
+        "order_by": order_by,
+        "columns": columns,
+        "query_settings": query_settings,
+        "if_not_exists": True,
+        "node": node,
+    }
+
+    not_none_params = {k: v for k, v in params.items() if v is not None}
+
+    with By(f"creating a table that is partitioned by '{partition_by}'"):
+        create_table(**not_none_params)
+
 
 
 @TestStep(Given)
@@ -683,6 +695,7 @@ def create_partitioned_replicated_table_with_data(
     sign="sign",
     version="a",
     bias=0,
+    small=False,
 ):
     """Create a table with the specified engine."""
     if columns is None:
@@ -728,10 +741,21 @@ def create_partitioned_replicated_table_with_data(
 
     node = random.choice(nodes)
     with And(f"inserting data that will create multiple partitions"):
-        for i in range(1, number_of_partitions + 1):
+        if small:
             node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT 0, 0, 0, number+1000, 1 FROM numbers({4})"
             )
+            node.query(
+                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT 1, 1, 1, number+1000, 1 FROM numbers({4})"
+            )
+        else:
+            for i in range(1, number_of_partitions + 1):
+                node.query(
+                    f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+                )
+                node.query(
+                    f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT number+10, number+{i+bias}+14, number+{i+bias}+18, number+1001, 1 FROM numbers({10})"
+                )
 
 
 @TestStep(Given)
@@ -1235,6 +1259,17 @@ def partitioned_MergeTree(self, table_name, partition_by, nodes=None, node=None)
 
 
 @TestStep(Given)
+def partitioned_small_MergeTree(self, table_name, partition_by, nodes=None, node=None):
+    create_partitioned_table_with_data(
+        table_name=table_name,
+        engine="MergeTree",
+        partition_by=partition_by,
+        node=node,
+        small=True
+    )
+
+
+@TestStep(Given)
 def empty_partitioned_MergeTree(self, table_name, partition_by, nodes=None, node=None):
     create_empty_partitioned_table(
         table_name=table_name,
@@ -1254,6 +1289,20 @@ def partitioned_ReplicatedMergeTree(
         partition_by=partition_by,
         nodes=nodes,
         node=node,
+    )
+
+
+@TestStep(Given)
+def partitioned_small_ReplicatedMergeTree(
+    self, table_name, partition_by, nodes=None, node=None
+):
+    create_partitioned_replicated_table_with_data(
+        table_name=table_name,
+        engine="ReplicatedMergeTree",
+        partition_by=partition_by,
+        nodes=nodes,
+        node=node,
+        small=True,
     )
 
 
@@ -2106,97 +2155,3 @@ def empty_partitioned_datetime_ReplicatedGraphiteMergeTree(
         nodes=nodes,
         node=node,
     )
-
-
-@TestStep(Given)
-def insert_random(
-    self,
-    node,
-    table_name,
-    rows: int = 1000,
-    columns: list = None,
-):
-    """Insert random data to a table."""
-
-    if columns == None:
-        columns = ["a", "b", "c", "extra"]
-
-    columns = f"({'',''.join([columns])})"
-    note(columns)
-    pause()
-
-    node.query(
-        f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT number, number+10, number+100, number+1000, 1 FROM numbers({rows})",
-        exitcode=0,
-    )
-
-
-@TestStep
-def get_row_count(self, node, table_name):
-    """Get the number of rows in the given table."""
-    r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSON",
-        exitcode=0,
-    )
-    return int(json.loads(r.output)["data"][0]["count()"])
-
-
-@TestStep(Then)
-def assert_row_count(self, node, table_name: str, rows: int = 1000000):
-    """Assert that the number of rows in a table is as expected."""
-    if node is None:
-        node = current().context.node
-
-    actual_count = get_row_count(node=node, table_name=table_name)
-    assert rows == actual_count, error()
-
-
-@TestStep(Given)
-def delete_one_replica(self, node, table_name):
-    """Delete the local copy of a replicated table."""
-    r = node.query(f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0)
-    return r
-
-
-@TestStep(Given)
-def create_one_replica(
-    self,
-    node,
-    table_name,
-    partition_by=None,
-    replica_path_suffix=None,
-    replica_name="{replica}",
-    columns=None,
-):
-    """
-    Create a simple replicated table on the given node.
-    Call multiple times with the same table name and different nodes
-    to create multiple replicas.
-    """
-    if columns is None:
-        columns = [
-            Column(name="a", datatype=UInt32()),
-            Column(name="b", datatype=UInt16()),
-            Column(name="c", datatype=UInt16()),
-            Column(name="extra", datatype=UInt64()),
-        ]
-
-    columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
-
-    if replica_path_suffix is None:
-        replica_path_suffix = table_name
-
-    if partition_by is not None:
-        partition_by = f"PARTITION BY ({partition_by})"
-    else:
-        partition_by = ""
-
-    r = node.query(
-        f"""
-        CREATE TABLE IF NOT EXISTS {table_name} {columns_def}
-        ENGINE=ReplicatedMergeTree('/clickhouse/tables/{replica_path_suffix}', '{replica_name}')
-        ORDER BY tuple() {partition_by}
-        """,
-        exitcode=0,
-    )
-    return r
