@@ -4,7 +4,10 @@ SCRIPT_DIR=$(dirname "$0")
 INSTANCES_DIR="$SCRIPT_DIR/../_instances"
 
 CLICKHOUSE_FOLDERS=("database" "logs")
-VOLUME_SIZE="100M"
+ZOOKEEPER_FOLDERS=("data" "datalog")
+
+CH_VOLUME_SIZE="100M"
+ZK_VOLUME_SIZE="100M"
 
 if [ "$(id -u)" -ne "0" ]; then
     echo "This script must be run as root."
@@ -21,7 +24,12 @@ for i in {1..3}; do
     for SUBFOLDER in "${CLICKHOUSE_FOLDERS[@]}"; do
         NEW_FOLDER="clickhouse$i/$SUBFOLDER"
         mkdir -p $NEW_FOLDER
-        mount -o size="$VOLUME_SIZE" -t tmpfs none "$NEW_FOLDER"
+        mount -o size="$CH_VOLUME_SIZE" -t tmpfs none "$NEW_FOLDER"
+    done
+    for SUBFOLDER in "${ZOOKEEPER_FOLDERS[@]}"; do
+        NEW_FOLDER="zookeeper$i/$SUBFOLDER"
+        mkdir -p $NEW_FOLDER
+        mount -o size="$ZK_VOLUME_SIZE" -t tmpfs none "$NEW_FOLDER"
     done
 done
 
