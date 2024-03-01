@@ -552,7 +552,7 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "(intDiv(a,2),b)",
             "(intDiv(a,2),intDiv(b,2))",
             "(a,intDiv(b,2))",
-            "(intDiv(b,2),intDiv(a,2))", 
+            "(intDiv(b,2),intDiv(a,2))",
         ],
         "(b%2,a%2)": [
             "a",
@@ -849,12 +849,14 @@ def check_attach_partition_from(
                     ), error()
 
         elif reason == "partially different":
-            addition_to_snapshpt_name = "_small" if "small" in source_table.__name__ else ""
+            addition_to_snapshpt_name = (
+                "_small" if "small" in source_table.__name__ else ""
+            )
             execute_query(
                 f"SELECT a,b,c,extra FROM {destination_table_name} ORDER BY a,b,c,extra",
                 snapshot_name=current().name.split("/")[-1] + addition_to_snapshpt_name,
                 node=get_node(self, "destination"),
-            )    
+            )
 
     with And(f"I check that all replicas of destination table have same data:"):
         if "Replicated" in self.context.destination_engine:

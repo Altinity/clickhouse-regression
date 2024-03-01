@@ -79,7 +79,7 @@ def check_attach_partition_on_different_types_of_disks(
         "I attach partition to the destination table and validate that the data was attached"
     ):
         if ("not" in source_table.__name__) == ("not" in destination_table.__name__):
-            for partition in [1, 2, 3]:
+            for partition in [1, 2, 3, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]:
                 attach_partition_from(
                     destination_table=destination_table_name,
                     source_table=source_table_name,
