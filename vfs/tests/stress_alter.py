@@ -7,7 +7,6 @@ import time
 
 from testflows.core import *
 from testflows.combinatorics import combinations
-from testflows.uexpect.uexpect import ExpectTimeoutError, TimeoutError
 
 from helpers.alter import *
 from vfs.tests.steps import *
@@ -592,21 +591,19 @@ def check_consistency(self, tables=None, sync_timeout=None):
 
         row_counts = {}
         column_names = {}
-        for node in active_nodes:
-            with When(
-                f"I sync and count rows on node {node.name} for table {table_name}"
-            ):
-                with By(f"running SYNC REPLICA"):
-                    try:
-                        node.query(
-                            f"SYSTEM SYNC REPLICA {table_name}",
-                            timeout=sync_timeout,
-                            no_checks=True,
-                        )
-                    except (ExpectTimeoutError, TimeoutError):
-                        pass
+        with When(f"I sync and count rows on nodes for table {table_name}"):
+            for node in active_nodes:
+                By(f"running SYNC REPLICA", test=sync_replica, parallel=True)(
+                    node=node,
+                    table_name=table_name,
+                    raise_on_timeout=False,
+                    timeout=sync_timeout,
+                    no_checks=True,
+                )
+                join()
 
-                with And(f"querying the row count"):
+            for node in active_nodes:
+                with By(f"querying the row count"):
                     row_counts[node.name] = get_row_count(
                         node=node, table_name=table_name
                     )
