@@ -216,7 +216,7 @@ def detach_attach_random_partition(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 3
+    delay = random.random() * 5 + 1
 
     with When("I detach a part"):
         alter_table_detach_partition(
@@ -241,7 +241,7 @@ def freeze_unfreeze_random_part(self):
     node = get_random_node_for_table(table_name=table_name)
     backup_name = f"backup_{getuid()}"
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 5 + 1
 
     with When("I freeze the part"):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
@@ -732,7 +732,7 @@ def restart_keeper(self):
     This simulates a short outage.
     """
     keeper_node = random.choice(self.context.zk_nodes)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 10 + 1
 
     with interrupt_node(keeper_node):
         with When(f"I wait {delay:.2}s"):
@@ -746,7 +746,7 @@ def restart_clickhouse(self, signal="SEGV"):
     This simulates a short outage.
     """
     clickhouse_node = random.choice(self.context.ch_nodes)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 10 + 1
 
     with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
         with When(f"I wait {delay:.2}s"):
@@ -761,7 +761,7 @@ def restart_network(self):
     This simulates a short outage.
     """
     node = random.choice(self.context.zk_nodes + self.context.ch_nodes)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 5 + 1
 
     with interrupt_network(self.context.cluster, node):
         with When(f"I wait {delay:.2}s"):
