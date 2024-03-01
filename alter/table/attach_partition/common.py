@@ -406,7 +406,6 @@ def create_empty_partitioned_table_with_datetime_data(
         create_table(**not_none_params)
 
 
-
 @TestStep(Given)
 def create_partitioned_replicated_table_with_datetime_data(
     self,
@@ -865,11 +864,13 @@ def create_temporary_partitioned_table_with_data(
             f"CREATE TEMPORARY TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
         )
 
-    with And(f"inserting data that will create multiple partitions"):
-        for i in range(1, number_of_partitions + 1):
-            node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
-            )
+    for i in range(1, number_of_partitions + 1):
+        node.query(
+            f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+        )
+        node.query(
+            f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT number+10, number+{i+bias}+14, number+{i+bias}+18, number+1001, 1 FROM numbers({10})"
+        )
 
 
 @TestStep(Given)
@@ -957,11 +958,13 @@ def create_regular_partitioned_table_with_data(
             f"CREATE TABLE {table_name} {columns_def} ENGINE = {engine} PARTITION BY {partition_by} ORDER BY {order_by}"
         )
 
-    with And(f"inserting data that will create multiple partitions"):
-        for i in range(1, number_of_partitions + 1):
-            node.query(
-                f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
-            )
+    for i in range(1, number_of_partitions + 1):
+        node.query(
+            f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT {i+bias}, {i+4+bias}, {i+8+bias}, number+1000, 1 FROM numbers({4})"
+        )
+        node.query(
+            f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT number+10, number+{i+bias}+14, number+{i+bias}+18, number+1001, 1 FROM numbers({10})"
+        )
 
 
 @TestStep(Given)
@@ -1265,7 +1268,7 @@ def partitioned_small_MergeTree(self, table_name, partition_by, nodes=None, node
         engine="MergeTree",
         partition_by=partition_by,
         node=node,
-        small=True
+        small=True,
     )
 
 
