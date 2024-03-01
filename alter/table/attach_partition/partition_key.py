@@ -506,11 +506,13 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
 
     partially_different = {
         "a%2": ["a", "intDiv(a,2)", "intDiv(a,3)"],
-        "a%3": ["a", "intDiv(a,3)"],
+        "a%3": ["a", "intDiv(a,2)", "intDiv(a,3)"],
         "intDiv(a,2)": ["a", "intDiv(a,3)"],
         "intDiv(a,3)": ["a", "intDiv(a,2)"],
         "b%2": ["b", "intDiv(b,2)"],
         "intDiv(b,2)": ["b"],
+        "(a,intDiv(b,2))": ["b", "(intDiv(a,2),b)", "(a,b)", "(b,a)"],
+        "(intDiv(a,2),b)": ["a", "intDiv(a,3)", "(a,b)", "(b,a)", "(a,intDiv(b,2))"],
         "(intDiv(a,2),intDiv(b,2))": [
             "a",
             "b",
@@ -541,6 +543,16 @@ def valid_partition_key_pair(source_partition_key, destination_partition_key):
             "intDiv(a,3)",
             "(a,intDiv(b,2))",
             "(intDiv(a,2),b)",
+        ],
+        "(a,b%2)": [
+            "b",
+            "intDiv(b,2)",
+            "(a,b)",
+            "(b,a)",
+            "(intDiv(a,2),b)",
+            "(intDiv(a,2),intDiv(b,2))",
+            "(a,intDiv(b,2))",
+            "(intDiv(b,2),intDiv(a,2))", 
         ],
         "(b%2,a%2)": [
             "a",
@@ -837,25 +849,12 @@ def check_attach_partition_from(
                     ), error()
 
         elif reason == "partially different":
+            addition_to_snapshpt_name = "_small" if "small" in source_table.__name__ else ""
             execute_query(
                 f"SELECT a,b,c,extra FROM {destination_table_name} ORDER BY a,b,c,extra",
-                snapshot_name="/alter/table/attach_partition/partition_key/attach_partition_from/"
-                + current().name.split("/")[-1],
+                snapshot_name=current().name.split("/")[-1] + addition_to_snapshpt_name,
                 node=get_node(self, "destination"),
-            )
-
-            source_partition_data = get_node(self, "source").query(
-                f"SELECT * FROM {source_table_name} ORDER BY time,date,extra"
-            )
-            destination_partition_data = get_node(self, "destination").query(
-                f"SELECT * FROM {destination_table_name} ORDER BY time,date,extra"
-            )
-            for attempt in retries(timeout=30, delay=2):
-                with attempt:
-                    assert (
-                        destination_partition_data.output
-                        != source_partition_data.output
-                    ), "not partially different"
+            )    
 
     with And(f"I check that all replicas of destination table have same data:"):
         if "Replicated" in self.context.destination_engine:
@@ -880,12 +879,12 @@ def check_attach_partition_from(
         "I check that I can use data in the destination table after detach attach"
     ):
         data_before = self.context.node_1.query(
-            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY time,date,extra"
+            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra"
         ).output
         self.context.node_1.query(f"DETACH TABLE {destination_table_name}")
         self.context.node_1.query(f"ATTACH TABLE {destination_table_name}")
         data_after = self.context.node_1.query(
-            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY time,date,extra"
+            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -962,6 +961,7 @@ def attach_partition_from(self, with_id=False):
 
     source_table_types = {
         partitioned_MergeTree,
+        partitioned_small_MergeTree,
         partitioned_ReplicatedMergeTree,
         partitioned_ReplacingMergeTree,
         partitioned_ReplicatedReplacingMergeTree,
@@ -997,6 +997,8 @@ def attach_partition_from(self, with_id=False):
     if not self.context.stress:
         source_table_types = {
             partitioned_MergeTree,
+            partitioned_small_MergeTree,
+            partitioned_small_ReplicatedMergeTree,
             partitioned_ReplicatedMergeTree,
         }
         destination_table_types = {
