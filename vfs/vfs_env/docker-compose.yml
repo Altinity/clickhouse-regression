@@ -25,8 +25,8 @@ services:
     environment:
       ZOO_MY_ID: 1
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/datalog/:/datalog"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/datalog/:/datalog"
 
   zookeeper2:
     extends:
@@ -36,8 +36,8 @@ services:
     environment:
       ZOO_MY_ID: 2
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/datalog/:/datalog/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/datalog/:/datalog/"
 
   zookeeper3:
     extends:
@@ -47,8 +47,8 @@ services:
     environment:
       ZOO_MY_ID: 3
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/datalog/:/datalog/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/datalog/:/datalog/"
 
   clickhouse1:
     extends:
