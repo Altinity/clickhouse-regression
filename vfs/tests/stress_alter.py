@@ -910,26 +910,13 @@ def alter_combinations(
             restart_network,
         ]
         if restarts:
-            actions.extend(
-                [
-                    restart_keeper,
-                    restart_clickhouse,
-                ]
-            )
+            actions += [restart_keeper, restart_clickhouse]
+
         if add_remove_replicas:
-            actions.extend(
-                [
-                    delete_replica,
-                    add_replica,
-                ]
-            )
+            actions += [delete_replica, add_replica]
+
         if fill_disks:
-            actions.extend(
-                [
-                    fill_clickhouse_disks,
-                    fill_zookeeper_disks,
-                ]
-            )
+            actions += [fill_clickhouse_disks, fill_zookeeper_disks]
 
     with And(f"I make a list of groups of {combination_size} actions"):
         action_groups = list(
@@ -1089,8 +1076,8 @@ def full_disk(self):
 
     with Given("disk space is restricted"):
         r = cluster.command(None, "df | grep -c clickhouse-regression", no_checks=True)
-        restrictions_enabled = (int(r.output) == 3 * 2 * 2)
- 
+        restrictions_enabled = int(r.output) == 3 * 2 * 2
+
     if not restrictions_enabled:
         skip("run vfs_env/create_fixed_volumes.sh before this scenario")
 
