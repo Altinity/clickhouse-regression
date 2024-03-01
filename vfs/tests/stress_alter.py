@@ -791,6 +791,69 @@ def impaired_network(self, network_mode):
             pass
 
 
+@TestStep
+def fill_clickhouse_disks(self):
+    node = random.choice(self.context.ch_nodes)
+    clickhouse_disk_mounts = ["/var/log/clickhouse-server", "/var/lib/clickhouse"]
+    delay = random.random() * 5 + 1
+    file_name = "file.dat"
+
+    try:
+        for disk_mount in clickhouse_disk_mounts:
+            with When(f"I get the size of {disk_mount} on {node.name}"):
+                r = node.command(f"df -k --output=size {disk_mount}")
+                disk_size_k = r.output.splitlines()[1].strip()
+
+            with And(f"I create a file to fill {disk_mount} on {node.name}"):
+                node.command(
+                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
+                    no_checks=True,
+                )
+
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+    finally:
+        with Finally(f"I delete the large file on {node.name}"):
+            for disk_mount in clickhouse_disk_mounts:
+                node.command(f"rm {disk_mount}/{file_name}")
+
+        with And(f"I restart {node.name} in case it crashed"):
+            node.restart_clickhouse(safe=False)
+
+
+@TestStep
+def fill_zookeeper_disks(self):
+    node = random.choice(self.context.zk_nodes)
+    zookeeper_disk_mounts = ["/data", "/datalog"]
+    delay = random.random() * 5 + 1
+    file_name = "file.dat"
+
+    try:
+        for disk_mount in zookeeper_disk_mounts:
+            with When(f"I get the size of {disk_mount} on {node.name}"):
+                r = node.command(f"df -k --output=size {disk_mount}")
+                disk_size_k = r.output.splitlines()[1].strip()
+
+            with And(f"I create a file to fill {disk_mount} on {node.name}"):
+
+                node.command(
+                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
+                    no_checks=True,
+                )
+
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+    finally:
+        with Finally(f"I delete the large file on {node.name}"):
+            for disk_mount in zookeeper_disk_mounts:
+                node.command(f"rm {disk_mount}/{file_name}")
+
+        with And(f"I restart {node.name} in case it crashed"):
+            node.restart_clickhouse(safe=False)
+
+
 @TestOutline
 def alter_combinations(
     self,
@@ -807,6 +870,7 @@ def alter_combinations(
     n_tables=3,
     restarts=False,
     add_remove_replicas=False,
+    fill_disks=False,
     insert_keeper_fault_injection_probability=0,
     network_impairment=False,
 ):
@@ -857,6 +921,13 @@ def alter_combinations(
                 [
                     delete_replica,
                     add_replica,
+                ]
+            )
+        if fill_disks:
+            actions.extend(
+                [
+                    fill_clickhouse_disks,
+                    fill_zookeeper_disks,
                 ]
             )
 
@@ -1009,6 +1080,27 @@ def restarts(self):
     )
 
 
+@TestScenario
+def full_disk(self):
+    """
+    Allow filling clickhouse and zookeeper disks.
+    """
+    cluster = self.context.cluster
+
+    with Given("disk space is restricted"):
+        r = cluster.command(None, "df | grep -c clickhouse-regression", no_checks=True)
+        restrictions_enabled = (int(r.output) == 3 * 2 * 2)
+ 
+    if not restrictions_enabled:
+        skip("run vfs_env/create_fixed_volumes.sh before this scenario")
+
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        fill_disks=True,
+    )
+
+
 @TestFeature
 def vfs(self):
     """Run test scenarios with vfs."""
@@ -1040,4 +1132,3 @@ def feature(self):
         if sub_feature is feature:
             continue
         Feature(run=sub_feature)
-
