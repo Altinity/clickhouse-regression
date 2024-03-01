@@ -156,7 +156,21 @@ def check_attach_partition_from_with_temporary_tables(
 
                 note(f"exitcode should be {exitcode}")
 
-                for partition_id in ["1", "2", "3"]:
+                for partition_id in [
+                    "1",
+                    "2",
+                    "3",
+                    "10",
+                    "11",
+                    "12",
+                    "13",
+                    "14",
+                    "15",
+                    "16",
+                    "17",
+                    "18",
+                    "19",
+                ]:
                     query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
                     client.query(query, exitcode=exitcode)
 
