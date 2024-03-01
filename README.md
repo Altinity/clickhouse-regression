@@ -41,7 +41,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 * [Ubuntu] 22.04
 * [Python 3] >= 3.8
 * [TestFlows] >= 1.9.51
-* [Docker Compose] V2
+* [Docker Compose] >= v2.23.1 (non-Python version)
 
 ## [Prerequisites](#table-of-contents)
 
