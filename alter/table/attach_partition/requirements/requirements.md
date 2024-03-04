@@ -342,6 +342,7 @@ List of the types of partition expressions that can be used in ClickHouse:
     * Example: toYYYYMMDD(dateColumn) + intDiv(numberColumn, 100) or (dateColumn, eventType) 
 * Tuple of expressions
     * Example: (CounterID, StartDate, intHash32(UserID))
+* User-Defined Functions (UDFs)
 
 By default, the floating-point partition key is not supported. To use it enable the setting allow_floating_point_partition_key.
 
