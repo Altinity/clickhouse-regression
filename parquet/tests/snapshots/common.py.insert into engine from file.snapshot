@@ -27574,3 +27574,39 @@ _parquet_aws_s3_s3_compression_type__NONE__engine_insert_into_engine_from_file_I
 {"struct":[1,128,101,32767,10101,101010101,10101010,"1010101010101010","1010101010101010",10101010,5.6e266,"1970-01-11","1970-01-01 01:00:10","'hello'","111100111111"],"toTypeName(struct)":"Tuple(UInt8, UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Date, DateTime, String, String)"}
 """
 
+_parquet_aws_s3_s3_compression_type__NONE__outline_engine_insert_into_engine_from_file_I_check_that_the_table_reads_the_data_correctly_by_checking_the_table_columns_list_bool = r"""
+{"list_bool":[1],"toTypeName(list_bool)":"Array(UInt8)"}
+{"list_bool":[0],"toTypeName(list_bool)":"Array(UInt8)"}
+{"list_bool":[1],"toTypeName(list_bool)":"Array(UInt8)"}
+"""
+
+_parquet_aws_s3_s3_compression_type__NONE__outline_engine_insert_into_engine_from_file_I_check_that_the_table_reads_the_data_correctly_by_checking_the_table_columns_list_struct_bool = r"""
+{"list_struct_bool":[[1]],"toTypeName(list_struct_bool)":"Array(Tuple(UInt8))"}
+{"list_struct_bool":[[0]],"toTypeName(list_struct_bool)":"Array(Tuple(UInt8))"}
+{"list_struct_bool":[[1]],"toTypeName(list_struct_bool)":"Array(Tuple(UInt8))"}
+"""
+
+_parquet_aws_s3_s3_compression_type__NONE__outline_engine_insert_into_engine_from_file_I_check_that_the_table_reads_the_data_correctly_by_checking_the_table_columns_bool = r"""
+{"bool":1,"toTypeName(bool)":"UInt8"}
+{"bool":0,"toTypeName(bool)":"UInt8"}
+{"bool":1,"toTypeName(bool)":"UInt8"}
+"""
+
+_parquet_aws_s3_s3_compression_type__NONE__outline_engine_insert_into_engine_from_file_I_check_that_the_table_reads_the_data_correctly_by_checking_the_table_columns_map_bool_bool = r"""
+{"map_bool_bool":{"1":1,"1":0,"1":1},"toTypeName(map_bool_bool)":"Map(UInt8, UInt8)"}
+{"map_bool_bool":{"0":1,"0":0,"0":1},"toTypeName(map_bool_bool)":"Map(UInt8, UInt8)"}
+{"map_bool_bool":{"1":1,"1":0,"1":1},"toTypeName(map_bool_bool)":"Map(UInt8, UInt8)"}
+"""
+
+_parquet_aws_s3_s3_compression_type__NONE__outline_engine_insert_into_engine_from_file_I_check_that_the_table_reads_the_data_correctly_by_checking_the_table_columns_list_map_bool_bool = r"""
+{"list_map_bool_bool":[{"1":1},{"1":0},{"1":1}],"toTypeName(list_map_bool_bool)":"Array(Map(UInt8, UInt8))"}
+{"list_map_bool_bool":[{"0":1},{"0":0},{"0":1}],"toTypeName(list_map_bool_bool)":"Array(Map(UInt8, UInt8))"}
+{"list_map_bool_bool":[{"1":1},{"1":0},{"1":1}],"toTypeName(list_map_bool_bool)":"Array(Map(UInt8, UInt8))"}
+"""
+
+_parquet_aws_s3_s3_compression_type__NONE__outline_engine_insert_into_engine_from_file_I_check_that_the_table_reads_the_data_correctly_by_checking_the_table_columns_map_bool_list_bool = r"""
+{"map_bool_list_bool":{"1":[1],"1":[0],"1":[1]},"toTypeName(map_bool_list_bool)":"Map(UInt8, Array(UInt8))"}
+{"map_bool_list_bool":{"0":[1],"0":[0],"0":[1]},"toTypeName(map_bool_list_bool)":"Map(UInt8, Array(UInt8))"}
+{"map_bool_list_bool":{"1":[1],"1":[0],"1":[1]},"toTypeName(map_bool_list_bool)":"Map(UInt8, Array(UInt8))"}
+"""
+

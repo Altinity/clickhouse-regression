@@ -7,29 +7,8 @@ from parquet.requirements import *
 from helpers.common import *
 
 
-def normalize_output(output):
-    # Split the output into lines and process each line
-    normalized_lines = []
-    for line in output.split("\n"):
-        # Directly replace known escape sequences with their 'real' counterparts
-        normalized_line = line.replace("\\n", "\n").replace("\\t", "\t")
-        # Splitting by tab to preserve the structure, then strip and rejoin to normalize spaces without affecting
-        # tuple structure
-        parts = [part.strip() for part in normalized_line.split("\t")]
-        normalized_line = "\t".join(parts)
-        # Removing excessive internal whitespaces while preserving tuple structure
-        if "Tuple(" in normalized_line:
-            start, middle_end = normalized_line.split("Tuple(", 1)
-            middle, end = middle_end.rsplit(")", 1)
-            middle = " ".join(middle.split())
-            normalized_line = f"{start}Tuple({middle}){end}"
-        normalized_lines.append(normalized_line)
-    # Reassemble the normalized lines back into a single string
-    return "\n".join(normalized_lines)
-
-
 @TestOutline
-def import_export(self, snapshot_name, import_file, snapshot_id=None):
+def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None):
     """Import parquet file into a clickhouse table and export it back."""
     node = self.context.node
     table_name = "table_" + getuid()
@@ -37,8 +16,14 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
     file_import = f"import_{getuid()}"
     file_export = f"export_{getuid()}"
 
+    if limit is None:
+        limit = 100
+
     if snapshot_id is None:
-        snapshot_id = self.context.snapshot_id
+        if check_clickhouse_version(">=24.1")(self):
+            snapshot_id = f"{self.context.snapshot_id}_above_24"
+        else:
+            snapshot_id = self.context.snapshot_id
 
     with Given("I save file structure"):
         import_column_structure = node.query(
@@ -50,7 +35,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
             f"""
             CREATE TABLE {table_name}
             ENGINE = MergeTree
-            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) LIMIT 100
+            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) LIMIT {limit}
             """,
             file_output="output" + getuid(),
             use_file=True,
@@ -68,7 +53,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
             with values() as that:
                 assert that(
                     snapshot(
-                        normalize_output(import_column_structure.output.strip()),
+                        import_column_structure.output.strip(),
                         name=snapshot_name,
                         id=snapshot_id,
                     )
@@ -77,7 +62,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
     with Check("export"):
         with When("I export the table back into a new parquet file"):
             node.query(
-                f"SELECT * FROM {table_name} LIMIT 100 INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet",
+                f"SELECT * FROM {table_name} LIMIT {limit} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet",
                 use_file=True,
                 file_output="output" + getuid(),
             )
