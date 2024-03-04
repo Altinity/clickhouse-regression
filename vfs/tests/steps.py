@@ -6,6 +6,7 @@ from platform import processor
 
 from testflows.core import *
 from testflows.asserts import error
+from testflows.uexpect.uexpect import ExpectTimeoutError
 
 from helpers.common import getuid, check_clickhouse_version
 
@@ -262,6 +263,15 @@ def delete_one_replica(self, node, table_name):
     """Delete the local copy of a replicated table."""
     r = node.query(f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0)
     return r
+
+
+@TestStep
+def sync_replica(self, node, table_name, raise_on_timeout=False, **kwargs):
+    try:
+        node.query(f"SYSTEM SYNC REPLICA {table_name}", **kwargs)
+    except (ExpectTimeoutError, TimeoutError):
+        if raise_on_timeout:
+            raise
 
 
 @TestStep(Given)

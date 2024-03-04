@@ -7,7 +7,6 @@ import time
 
 from testflows.core import *
 from testflows.combinatorics import combinations
-from testflows.uexpect.uexpect import ExpectTimeoutError, TimeoutError
 
 from helpers.alter import *
 from vfs.tests.steps import *
@@ -216,7 +215,7 @@ def detach_attach_random_partition(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 3
+    delay = random.random() * 5 + 1
 
     with When("I detach a part"):
         alter_table_detach_partition(
@@ -241,7 +240,7 @@ def freeze_unfreeze_random_part(self):
     node = get_random_node_for_table(table_name=table_name)
     backup_name = f"backup_{getuid()}"
     partition = get_random_partition_id(node=node, table_name=table_name)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 5 + 1
 
     with When("I freeze the part"):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
@@ -592,21 +591,19 @@ def check_consistency(self, tables=None, sync_timeout=None):
 
         row_counts = {}
         column_names = {}
-        for node in active_nodes:
-            with When(
-                f"I sync and count rows on node {node.name} for table {table_name}"
-            ):
-                with By(f"running SYNC REPLICA"):
-                    try:
-                        node.query(
-                            f"SYSTEM SYNC REPLICA {table_name}",
-                            timeout=sync_timeout,
-                            no_checks=True,
-                        )
-                    except (ExpectTimeoutError, TimeoutError):
-                        pass
+        with When(f"I sync and count rows on nodes for table {table_name}"):
+            for node in active_nodes:
+                By(f"running SYNC REPLICA", test=sync_replica, parallel=True)(
+                    node=node,
+                    table_name=table_name,
+                    raise_on_timeout=False,
+                    timeout=sync_timeout,
+                    no_checks=True,
+                )
+                join()
 
-                with And(f"querying the row count"):
+            for node in active_nodes:
+                with By(f"querying the row count"):
                     row_counts[node.name] = get_row_count(
                         node=node, table_name=table_name
                     )
@@ -732,7 +729,7 @@ def restart_keeper(self):
     This simulates a short outage.
     """
     keeper_node = random.choice(self.context.zk_nodes)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 10 + 1
 
     with interrupt_node(keeper_node):
         with When(f"I wait {delay:.2}s"):
@@ -746,7 +743,7 @@ def restart_clickhouse(self, signal="SEGV"):
     This simulates a short outage.
     """
     clickhouse_node = random.choice(self.context.ch_nodes)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 10 + 1
 
     with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
         with When(f"I wait {delay:.2}s"):
@@ -761,7 +758,7 @@ def restart_network(self):
     This simulates a short outage.
     """
     node = random.choice(self.context.zk_nodes + self.context.ch_nodes)
-    delay = random.random() * 2 + 1
+    delay = random.random() * 5 + 1
 
     with interrupt_network(self.context.cluster, node):
         with When(f"I wait {delay:.2}s"):
@@ -791,6 +788,69 @@ def impaired_network(self, network_mode):
             pass
 
 
+@TestStep
+def fill_clickhouse_disks(self):
+    node = random.choice(self.context.ch_nodes)
+    clickhouse_disk_mounts = ["/var/log/clickhouse-server", "/var/lib/clickhouse"]
+    delay = random.random() * 5 + 1
+    file_name = "file.dat"
+
+    try:
+        for disk_mount in clickhouse_disk_mounts:
+            with When(f"I get the size of {disk_mount} on {node.name}"):
+                r = node.command(f"df -k --output=size {disk_mount}")
+                disk_size_k = r.output.splitlines()[1].strip()
+
+            with And(f"I create a file to fill {disk_mount} on {node.name}"):
+                node.command(
+                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
+                    no_checks=True,
+                )
+
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+    finally:
+        with Finally(f"I delete the large file on {node.name}"):
+            for disk_mount in clickhouse_disk_mounts:
+                node.command(f"rm {disk_mount}/{file_name}")
+
+        with And(f"I restart {node.name} in case it crashed"):
+            node.restart_clickhouse(safe=False)
+
+
+@TestStep
+def fill_zookeeper_disks(self):
+    node = random.choice(self.context.zk_nodes)
+    zookeeper_disk_mounts = ["/data", "/datalog"]
+    delay = random.random() * 5 + 1
+    file_name = "file.dat"
+
+    try:
+        for disk_mount in zookeeper_disk_mounts:
+            with When(f"I get the size of {disk_mount} on {node.name}"):
+                r = node.command(f"df -k --output=size {disk_mount}")
+                disk_size_k = r.output.splitlines()[1].strip()
+
+            with And(f"I create a file to fill {disk_mount} on {node.name}"):
+
+                node.command(
+                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
+                    no_checks=True,
+                )
+
+        with When(f"I wait {delay:.2}s"):
+            time.sleep(delay)
+
+    finally:
+        with Finally(f"I delete the large file on {node.name}"):
+            for disk_mount in zookeeper_disk_mounts:
+                node.command(f"rm {disk_mount}/{file_name}")
+
+        with And(f"I restart {node.name} in case it crashed"):
+            node.restart_clickhouse(safe=False)
+
+
 @TestOutline
 def alter_combinations(
     self,
@@ -807,6 +867,7 @@ def alter_combinations(
     n_tables=3,
     restarts=False,
     add_remove_replicas=False,
+    fill_disks=False,
     insert_keeper_fault_injection_probability=0,
     network_impairment=False,
 ):
@@ -846,19 +907,13 @@ def alter_combinations(
             restart_network,
         ]
         if restarts:
-            actions.extend(
-                [
-                    restart_keeper,
-                    restart_clickhouse,
-                ]
-            )
+            actions += [restart_keeper, restart_clickhouse]
+
         if add_remove_replicas:
-            actions.extend(
-                [
-                    delete_replica,
-                    add_replica,
-                ]
-            )
+            actions += [delete_replica, add_replica]
+
+        if fill_disks:
+            actions += [fill_clickhouse_disks, fill_zookeeper_disks]
 
     with And(f"I make a list of groups of {combination_size} actions"):
         action_groups = list(
@@ -1009,6 +1064,27 @@ def restarts(self):
     )
 
 
+@TestScenario
+def full_disk(self):
+    """
+    Allow filling clickhouse and zookeeper disks.
+    """
+    cluster = self.context.cluster
+
+    with Given("disk space is restricted"):
+        r = cluster.command(None, "df | grep -c clickhouse-regression", no_checks=True)
+        restrictions_enabled = int(r.output) == 3 * 2 * 2
+
+    if not restrictions_enabled:
+        skip("run vfs_env/create_fixed_volumes.sh before this scenario")
+
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        fill_disks=True,
+    )
+
+
 @TestFeature
 def vfs(self):
     """Run test scenarios with vfs."""
@@ -1028,7 +1104,7 @@ def no_vfs(self):
         scenario()
 
 
-@TestSuite
+@TestFeature
 @Name("stress alter")
 def feature(self):
     """Stress test with many alters."""
@@ -1036,5 +1112,9 @@ def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 
-    Feature(run=no_vfs)
-    Feature(run=vfs)
+    for sub_feature in loads(current_module(), Feature):
+        if sub_feature is feature:
+            continue
+        Feature(run=sub_feature)
+
+
