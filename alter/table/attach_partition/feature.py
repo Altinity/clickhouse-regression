@@ -73,11 +73,11 @@ def feature(self):
             parallel=True,
             executor=pool,
         )
-        # Feature(
-        #     run=load("alter.table.attach_partition.replica.replica_sanity", "feature"),
-        #     parallel=True,
-        #     executor=pool,
-        # )
+        Feature(
+            run=load("alter.table.attach_partition.replica.replica_sanity", "feature"),
+            parallel=True,
+            executor=pool,
+        )
         Feature(
             run=load(
                 "alter.table.attach_partition.small_partition_key_test", "feature"
