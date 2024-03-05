@@ -132,6 +132,7 @@ def replicated_table_cluster(
     settings: str = None,
     allow_zero_copy: bool = None,
     exitcode: int = 0,
+    no_cleanup=False,
 ):
     """Create a replicated table with the ON CLUSTER clause."""
     node = current().context.node
@@ -187,10 +188,11 @@ def replicated_table_cluster(
         yield r, table_name
 
     finally:
-        with Finally(f"I drop the table"):
-            node.query(
-                f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC"
-            )
+        if not no_cleanup:
+            with Finally(f"I drop the table"):
+                node.query(
+                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC"
+                )
 
 
 @TestStep(Given)

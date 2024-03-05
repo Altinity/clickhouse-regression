@@ -57,6 +57,7 @@ def get_projections(self, node, table_name):
     )
     return json.loads(r.output)["name"]
 
+
 @TestStep
 def get_indexes(self, node, table_name):
     r = node.query(
@@ -64,6 +65,7 @@ def get_indexes(self, node, table_name):
         exitcode=0,
     )
     return json.loads(r.output)["name"]
+
 
 @TestStep
 @Name("optimize")
@@ -549,6 +551,7 @@ def drop_random_projection(self):
             )
             return
 
+
 @TestStep
 @Retry(timeout=60, delay=5)
 @Name("add index")
@@ -565,9 +568,7 @@ def add_random_index(self):
             exitcode=0,
         )
 
-    node.query(
-        f"ALTER TABLE {table_name} MATERIALIZE index {index_name}", exitcode=0
-    )
+    node.query(f"ALTER TABLE {table_name} MATERIALIZE index {index_name}", exitcode=0)
 
 
 @TestStep
@@ -613,6 +614,7 @@ def drop_random_index(self):
             exitcode=0,
         )
         return
+
 
 @TestStep
 @Retry(timeout=60, delay=5)
@@ -1014,6 +1016,7 @@ def alter_combinations(
                 partition_by="toQuarter(key) - 1",
                 columns=columns,
                 ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
+                no_cleanup=True,
             )
             self.context.table_names.append(table_name)
             insert_random(
@@ -1191,5 +1194,3 @@ def feature(self):
         if sub_feature is feature:
             continue
         Feature(run=sub_feature)
-
-
