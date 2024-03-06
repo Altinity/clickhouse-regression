@@ -56,6 +56,7 @@ def regression(
         )
     )
     Feature(run=load("memory.tests.test_memory_leak", "feature"))
+    Feature(run=load("memory.tests.insert", "feature"))
 
 
 if main():
