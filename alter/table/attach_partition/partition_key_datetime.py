@@ -240,7 +240,7 @@ def check_attach_partition_from(
         and source_partition_key != destination_partition_key
     ):
         skip(
-            "`attach partition from` with tables that have different partition keys are not supported before 24.2"
+            "`attach partition from` with tables that have different partition keys are not supported before 24.3"
         )
 
     self.context.source_engine = source_table.__name__.split("_")[-1]
