@@ -17,7 +17,7 @@ from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functi
 
 @TestModule
 @ArgumentParser(argparser)
-@Name("logger")
+@Name("memory")
 @Specifications(SRS_031_ClickHouse_Aggregate_Functions)
 def regression(
     self,
