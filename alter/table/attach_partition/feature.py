@@ -10,7 +10,7 @@ from alter.table.attach_partition.requirements.requirements import (
 @Name("attach partition")
 def feature(self):
     """Run features from the attach partition suite."""
-    with Pool(2) as pool:
+    with Pool(5) as pool:
         Feature(
             run=load("alter.table.attach_partition.partition_types", "feature"),
             parallel=True,
@@ -75,6 +75,18 @@ def feature(self):
         )
         Feature(
             run=load("alter.table.attach_partition.replica.replica_sanity", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load("alter.table.attach_partition.replica.replica_stress", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load(
+                "alter.table.attach_partition.replica.add_delete_replica", "feature"
+            ),
             parallel=True,
             executor=pool,
         )
