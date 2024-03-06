@@ -73,6 +73,16 @@ def check_move_partition(
     destination_table_name = "destination_" + getuid()
 
     with Given(
+        "I check that both source and destination table engines are replicated or both of them are non-replciated"
+    ):
+        source_is_replicated = "Replicated" in self.context.source_engine
+        destination_is_replicated = "Replicated" in self.context.destination_engine
+        if source_is_replicated != destination_is_replicated:
+            skip(
+                "Source and destination table engines both must be either replicated or non-replicated"
+            )
+
+    with And(
         "I create two tables with specified engines and partition keys",
         description=f"""
             partition keys:
@@ -369,12 +379,12 @@ def move_partition(self):
         source_table_types = {
             partitioned_MergeTree,
             partitioned_small_MergeTree,
-            # partitioned_ReplicatedMergeTree,
-            # partitioned_small_ReplicatedMergeTree,
+            partitioned_ReplicatedMergeTree,
+            partitioned_small_ReplicatedMergeTree,
         }
         destination_table_types = {
             empty_partitioned_MergeTree,
-            # empty_partitioned_ReplicatedMergeTree,
+            empty_partitioned_ReplicatedMergeTree,
         }
         partition_keys_pairs = product(
             source_partition_keys, destination_partition_keys
@@ -397,7 +407,7 @@ def move_partition(self):
             for item in covering_array
         ]
 
-    with Pool(4) as executor:
+    with Pool(10) as executor:
         for partition_keys, tables in combinations:
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
