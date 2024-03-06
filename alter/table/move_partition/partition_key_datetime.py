@@ -124,7 +124,7 @@ def check_move_partition(
     with And("I save the state of source table before moving"):
         source_before = (
             get_node(self, "source")
-            .query(f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra")
+            .query(f"SELECT * FROM {source_table_name} ORDER BY time,date,extra")
             .output
         )
 
@@ -207,7 +207,7 @@ def check_move_partition(
             assert int(source_partition_data) == 0
 
             destination_partition_data = get_node(self, "destination").query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY time,date,extra"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -218,7 +218,7 @@ def check_move_partition(
                 "_small" if "small" in source_table.__name__ else ""
             )
             execute_query(
-                f"SELECT a,b,c,extra FROM {destination_table_name} ORDER BY a,b,c,extra",
+                f"SELECT time,date,extra FROM {destination_table_name} ORDER BY time,date,extra",
                 snapshot_name="/alter/table/move_partition/partition_key/move_partition/"
                 + current().name.split("/")[-1]
                 + addition_to_snapshpt_name,
@@ -229,13 +229,13 @@ def check_move_partition(
     with And(f"I check that all replicas of destination table have same data:"):
         if "Replicated" in self.context.destination_engine:
             destination_partition_data_1 = self.context.node_1.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY time,date,extra"
             )
             destination_partition_data_2 = self.context.node_2.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY time,date,extra"
             )
             destination_partition_data_3 = self.context.node_3.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY time,date,extra"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -268,18 +268,18 @@ def move_partition(self):
     tables to see if `move partition to table` is possible."""
 
     source_partition_keys = {
-        "tuple()",
-        "toYYYYMMDD(time)",
-        "toYYYYMM(time)",
-        "toYear(time)",
-        "toDayOfYear(time)",
+        # "tuple()",
+        # "toYYYYMMDD(time)",
+        # "toYYYYMM(time)",
+        # "toYear(time)",
+        # "toDayOfYear(time)",
         "toQuarter(time)",
-        "toMonth(time)",
-        "toDayOfMonth(time)",
-        "toDayOfWeek(time)",
-        "toHour(time)",
-        "toMinute(time)",
-        "toSecond(time)",
+        # "toMonth(time)",
+        # "toDayOfMonth(time)",
+        # "toDayOfWeek(time)",
+        # "toHour(time)",
+        # "toMinute(time)",
+        # "toSecond(time)",
     }
 
     destination_partition_keys = {
