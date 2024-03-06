@@ -74,6 +74,16 @@ def check_move_partition(
     destination_table_name = "destination_" + getuid()
 
     with Given(
+        "I check that both source and destination table engines are replicated or both of them are non-replciated"
+    ):
+        source_is_replicated = "Replicated" in self.context.source_engine
+        destination_is_replicated = "Replicated" in self.context.destination_engine
+        if source_is_replicated != destination_is_replicated:
+            skip(
+                "Source and destination table engines both must be either replicated or non-replicated"
+            )
+
+    with And(
         "I create two tables with specified engines and partition keys",
         description=f"""
             partition keys:
@@ -268,18 +278,18 @@ def move_partition(self):
     tables to see if `move partition to table` is possible."""
 
     source_partition_keys = {
-        # "tuple()",
-        # "toYYYYMMDD(time)",
-        # "toYYYYMM(time)",
-        # "toYear(time)",
-        # "toDayOfYear(time)",
+        "tuple()",
+        "toYYYYMMDD(time)",
+        "toYYYYMM(time)",
+        "toYear(time)",
+        "toDayOfYear(time)",
         "toQuarter(time)",
-        # "toMonth(time)",
-        # "toDayOfMonth(time)",
-        # "toDayOfWeek(time)",
-        # "toHour(time)",
-        # "toMinute(time)",
-        # "toSecond(time)",
+        "toMonth(time)",
+        "toDayOfMonth(time)",
+        "toDayOfWeek(time)",
+        "toHour(time)",
+        "toMinute(time)",
+        "toSecond(time)",
     }
 
     destination_partition_keys = {
