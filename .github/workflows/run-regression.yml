@@ -22,6 +22,7 @@ on:
           - alter_all
           - alter_replace_partition
           - alter_attach_partition
+          - alter_move_partition
           - base_58
           - benchmark_all
           - benchmark_aws
