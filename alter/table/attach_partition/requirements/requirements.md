@@ -55,6 +55,11 @@
             * 11.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
         * 11.7.7 [Partition Key Conditions](#partition-key-conditions)
             * 11.7.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkey)
+                * 11.7.7.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Column](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeycolumn)
+                * 11.7.7.1.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyfunctionsofcolumns)
+                * 11.7.7.1.3 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.ExpressionsInvolvingMultipleColumns](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyexpressionsinvolvingmultiplecolumns)
+                * 11.7.7.1.4 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.TupleOfExpressions](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeytupleofexpressions)
+                * 11.7.7.1.5 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.UDFs](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyudfs)
     * 11.8 [Role-Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
         * 11.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC](#rqsrs-034clickhousealtertableattachpartitionfromrbac)
 * 12 [References](#references)
@@ -330,19 +335,35 @@ It is allowed to attach a partition from the table with different partition expr
 
 The partition key can be any expression from the table columns.
 List of the types of partition expressions that can be used in ClickHouse:
-* Column (of any type)
-* Functions of Columns:
+
+###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Column
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` with a column (of any type) as the partition expression.
+
+###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` with functions of columns as the partition expression.
+
+**It includes:**
+* ###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns.DateTime
     * Date and Time Functions: Such as toYYYYMM(dateColumn), toMonday(dateColumn) or toStartOfMonth(dateColumn)
+* ###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns.HashingFunctions
     * Hashing Functions: Such as cityHash64(userID) or intHash32(status)
+* ###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns.MathFunctions
     * Mathematical Functions: Such as intDiv(number, N) or number % N
+* ###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns.StringFunctions
     * String Functions: Such as substring(stringColumn, 1, N)
+* ###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns.ComplexFunctions
     * Complex Expressions: Such as combinations of functions and operations, e.g., toYYYYMM(dateColumn) * 100 + intDiv(numberColumn, 1000)
 
-* Expressions Involving Multiple Columns:
+###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.ExpressionsInvolvingMultipleColumns
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` with expressions involving multiple columns as the partition expression.
     * Example: toYYYYMMDD(dateColumn) + intDiv(numberColumn, 100) or (dateColumn, eventType) 
-* Tuple of expressions
+
+###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.TupleOfExpressions
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` with tuple of expressions as the partition expression.
     * Example: (CounterID, StartDate, intHash32(UserID))
-* User-Defined Functions (UDFs)
+
+###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.UDFs
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` with user-defined functions as the partition expression.
 
 By default, the floating-point partition key is not supported. To use it enable the setting allow_floating_point_partition_key.
 
