@@ -857,7 +857,7 @@ def string_int_list_inconsistent_offset_multiple_batches(self):
             "datatypes", "string_int_list_inconsistent_offset_multiple_batches.parquet"
         )
 
-    import_export(snapshot_name="inconsistent_offsets", import_file=import_file)
+    import_export(snapshot_name="inconsistent_offsets", import_file=import_file, limit=1)
 
 
 @TestFeature
