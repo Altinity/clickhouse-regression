@@ -289,7 +289,7 @@ jobs:
           name: ${{ env.SUITE }}-attach-partition-artifacts
           path: ${{ env.artifact_paths}}
     
-    alter_move_partition:
+  alter_move_partition:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 3000
     env:
