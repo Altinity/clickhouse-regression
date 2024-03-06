@@ -151,7 +151,7 @@ def parallel_add_remove_sanity(self):
 
 @TestFeature
 @Requirements(RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Replicas("1.0"))
-@Name("replica")
+@Name("replica sanity")
 def feature(self):
     """Test that replicas can be added and removed without errors or duplicate data."""
 
