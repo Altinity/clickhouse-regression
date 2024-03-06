@@ -346,11 +346,11 @@ def move_partition(self):
     if not self.context.stress:
         source_table_types = {
             partitioned_datetime_MergeTree,
-            # partitioned_datetime_ReplicatedMergeTree,
+            partitioned_datetime_ReplicatedMergeTree,
         }
         destination_table_types = {
             empty_partitioned_datetime_MergeTree,
-            # empty_partitioned_datetime_ReplicatedMergeTree,
+            empty_partitioned_datetime_ReplicatedMergeTree,
         }
         partition_keys_pairs = product(
             source_partition_keys, destination_partition_keys
