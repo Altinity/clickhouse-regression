@@ -245,10 +245,20 @@ def check_move_partition(
                         == destination_partition_data_3.output
                     )
 
-    with And("I check that I can use data in te destination table after detach attach"):
+    with And(
+        "I check that I can use data in the destination table after detach attach"
+    ):
+        data_before = self.context.node_1.query(
+            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra"
+        ).output
         self.context.node_1.query(f"DETACH TABLE {destination_table_name}")
         self.context.node_1.query(f"ATTACH TABLE {destination_table_name}")
-        self.context.node_1.query(f"SELECT * FROM {destination_table_name} where a=1")
+        data_after = self.context.node_1.query(
+            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra"
+        )
+        for attempt in retries(timeout=30, delay=2):
+            with attempt:
+                assert data_after.output == data_before, error()
 
 
 @TestScenario
