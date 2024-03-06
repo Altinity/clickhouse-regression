@@ -1,5 +1,5 @@
 from testflows.core import *
-from testflows.combinatorics import product
+from testflows.combinatorics import product, CoveringArray
 
 from alter.table.attach_partition.common import *
 from alter.table.attach_partition.requirements.requirements import *
@@ -965,6 +965,7 @@ def attach_partition_from(self, with_id=False):
         partitioned_MergeTree,
         partitioned_small_MergeTree,
         partitioned_ReplicatedMergeTree,
+        partitioned_small_ReplicatedMergeTree,
         partitioned_ReplacingMergeTree,
         partitioned_ReplicatedReplacingMergeTree,
         partitioned_AggregatingMergeTree,
@@ -1006,11 +1007,27 @@ def attach_partition_from(self, with_id=False):
         destination_table_types = {
             empty_partitioned_MergeTree,
             empty_partitioned_ReplicatedMergeTree,
+        }      
+        partition_keys_pairs = product(
+            source_partition_keys, destination_partition_keys
+        )
+        table_pairs = product(source_table_types, destination_table_types)
+        combinations = product(partition_keys_pairs, table_pairs)
+    else:
+        combinations_dict = {
+            "source_table": source_table_types,
+            "destination_table": destination_table_types,
+            "source_key": source_partition_keys,
+            "destination_key": destination_partition_keys,
         }
-
-    partition_keys_pairs = product(source_partition_keys, destination_partition_keys)
-    table_pairs = product(source_table_types, destination_table_types)
-    combinations = product(partition_keys_pairs, table_pairs)
+        covering_array = CoveringArray(combinations_dict, strength=3)
+        combinations = [
+            (
+                (item["source_key"], item["destination_key"]),
+                (item["source_table"], item["destination_table"]),
+            )
+            for item in covering_array
+        ]
 
     with Pool(4) as executor:
         for partition_keys, tables in combinations:

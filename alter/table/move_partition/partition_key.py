@@ -1,6 +1,6 @@
 import os
 from testflows.core import *
-from testflows.combinatorics import product
+from testflows.combinatorics import product, CoveringArray
 
 from alter.table.attach_partition.common import *
 from alter.table.move_partition.requirements.requirements import *
@@ -257,7 +257,38 @@ def move_partition(self):
     """Run test check with different partition keys for both source and destination
     tables to see if `move partition to table` is possible."""
 
-    partition_keys = {
+    source_partition_keys = {
+        "tuple()",
+        "a",
+        "a%2",
+        "a%3",
+        "intDiv(a,2)",
+        "intDiv(a,3)",
+        "b",
+        "b%2",
+        "intDiv(b,2)",
+        "(a,b)",
+        "(a%2,b%2)",
+        "(a,intDiv(b,2))",
+        "(a,b%2)",
+        "(intDiv(a,2),b)",
+        "(intDiv(a,2),intDiv(b,2))",
+        "(b,a)",
+        "(b%2,a%2)",
+        "(intDiv(b,2),intDiv(a,2))",
+        "(b,c)",
+        "(a,c)",
+        "(a,b,c)",
+        "(a%2,b%2,c%2)",
+        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+        "(a,c,b)",
+        "(b,a,c)",
+        "(b,c,a)",
+        "(c,a,b)",
+        "(c,b,a)",
+    }
+
+    destination_partition_keys = {
         "tuple()",
         "a",
         "a%2",
@@ -290,7 +321,9 @@ def move_partition(self):
 
     source_table_types = {
         partitioned_MergeTree,
+        partitioned_small_MergeTree,
         partitioned_ReplicatedMergeTree,
+        partitioned_small_ReplicatedMergeTree,
         partitioned_ReplacingMergeTree,
         partitioned_ReplicatedReplacingMergeTree,
         partitioned_AggregatingMergeTree,
@@ -323,7 +356,6 @@ def move_partition(self):
     }
 
     if not self.context.stress:
-        partition_keys = partition_keys
         source_table_types = {
             partitioned_MergeTree,
             partitioned_small_MergeTree,
@@ -334,10 +366,26 @@ def move_partition(self):
             empty_partitioned_MergeTree,
             # empty_partitioned_ReplicatedMergeTree,
         }
-
-    partition_keys_pairs = product(partition_keys, partition_keys)
-    table_pairs = product(source_table_types, destination_table_types)
-    combinations = product(partition_keys_pairs, table_pairs)
+        partition_keys_pairs = product(
+            source_partition_keys, destination_partition_keys
+        )
+        table_pairs = product(source_table_types, destination_table_types)
+        combinations = product(partition_keys_pairs, table_pairs)
+    else:
+        combinations_dict = {
+            "source_table": source_table_types,
+            "destination_table": destination_table_types,
+            "source_key": source_partition_keys,
+            "destination_key": destination_partition_keys,
+        }
+        covering_array = CoveringArray(combinations_dict, strength=3)
+        combinations = [
+            (
+                (item["source_key"], item["destination_key"]),
+                (item["source_table"], item["destination_table"]),
+            )
+            for item in covering_array
+        ]
 
     with Pool(4) as executor:
         for partition_keys, tables in combinations:
