@@ -691,7 +691,7 @@ def check_attach_partition_from(
 ):
     """Check `attach partition from` with different types of source and destination tables."""
 
-    if check_clickhouse_version("<24.2")(self):
+    if check_clickhouse_version("<24.3")(self):
         if source_partition_key != destination_partition_key:
             skip(
                 "`attach partition from` with tables that have different partition keys are not supported before 24.2"
@@ -725,7 +725,7 @@ def check_attach_partition_from(
             node=self.context.node_1,
         )
 
-    if check_clickhouse_version(">=24.2")(self):
+    if check_clickhouse_version(">=24.3")(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):
