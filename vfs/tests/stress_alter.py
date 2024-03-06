@@ -59,6 +59,15 @@ def get_projections(self, node, table_name):
 
 
 @TestStep
+def get_indexes(self, node, table_name):
+    r = node.query(
+        f"SELECT name FROM system.data_skipping_indices WHERE table='{table_name}' FORMAT JSONColumns",
+        exitcode=0,
+    )
+    return json.loads(r.output)["name"]
+
+
+@TestStep
 @Name("optimize")
 @Retry(timeout=10, delay=1)
 def optimize_random(self, node=None, table_name=None, repeat_limit=3):
@@ -545,6 +554,70 @@ def drop_random_projection(self):
 
 @TestStep
 @Retry(timeout=60, delay=5)
+@Name("add index")
+def add_random_index(self):
+    index_name = "index_" + getuid()
+
+    with table_schema_lock:
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        column_name = get_random_column_name(node=node, table_name=table_name)
+
+        node.query(
+            f"ALTER TABLE {table_name} ADD index {index_name} {column_name} TYPE bloom_filter",
+            exitcode=0,
+        )
+
+    node.query(f"ALTER TABLE {table_name} MATERIALIZE index {index_name}", exitcode=0)
+
+
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("clear index")
+def clear_random_index(self):
+    tables = self.context.table_names.copy()
+    random.shuffle(tables)
+
+    for table_name in tables:
+        node = get_random_node_for_table(table_name=table_name)
+        indexes = get_indexes(node=node, table_name=table_name)
+        if len(indexes) == 0:
+            continue
+
+        index_name = random.choice(indexes)
+        partition_name = get_random_partition_id(node=node, table_name=table_name)
+
+        node.query(
+            f"ALTER TABLE {table_name} CLEAR index {index_name} IN PARTITION {partition_name}",
+            exitcode=0,
+        )
+        return
+
+
+@TestStep
+@Retry(timeout=60, delay=5)
+@Name("drop index")
+def drop_random_index(self):
+    tables = self.context.table_names.copy()
+    random.shuffle(tables)
+
+    for table_name in tables:
+        node = get_random_node_for_table(table_name=table_name)
+        indexs = get_indexes(node=node, table_name=table_name)
+        if len(indexs) == 0:
+            continue
+
+        index_name = random.choice(indexs)
+
+        node.query(
+            f"ALTER TABLE {table_name} DROP index {index_name}",
+            exitcode=0,
+        )
+        return
+
+
+@TestStep
+@Retry(timeout=60, delay=5)
 @Name("modify ttl")
 def modify_random_ttl(self):
     table_name = get_random_table_name()
@@ -898,6 +971,9 @@ def alter_combinations(
             add_random_projection,
             clear_random_projection,
             drop_random_projection,
+            add_random_index,
+            clear_random_index,
+            drop_random_index,
             modify_random_ttl,
             remove_random_ttl,
             move_random_partition_to_random_disk,
@@ -940,15 +1016,17 @@ def alter_combinations(
                 partition_by="toQuarter(key) - 1",
                 columns=columns,
                 ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
+                no_cleanup=True,
             )
             self.context.table_names.append(table_name)
             insert_random(
                 node=self.context.node, table_name=table_name, columns=columns
             )
 
-    with And("I create 5 random projections and TTLs"):
+    with And("I create 5 random projections and indexes"):
         for _ in range(5):
             add_random_projection()
+            add_random_index()
 
     # To test a single combination, uncomment and edit as needed.
     # action_groups = [
@@ -1116,5 +1194,3 @@ def feature(self):
         if sub_feature is feature:
             continue
         Feature(run=sub_feature)
-
-
