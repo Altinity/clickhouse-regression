@@ -1007,7 +1007,7 @@ def attach_partition_from(self, with_id=False):
         destination_table_types = {
             empty_partitioned_MergeTree,
             empty_partitioned_ReplicatedMergeTree,
-        }      
+        }
         partition_keys_pairs = product(
             source_partition_keys, destination_partition_keys
         )
