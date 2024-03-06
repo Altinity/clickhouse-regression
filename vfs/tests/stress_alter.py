@@ -1171,7 +1171,7 @@ def vfs(self):
         enable_vfs(disk_names=["external", "external_tiered"])
 
     for scenario in loads(current_module(), Scenario):
-        scenario()
+        Scenario(run=scenario, tags=["long", "combinatoric"])
 
 
 @TestFeature
@@ -1179,7 +1179,7 @@ def no_vfs(self):
     """Run test scenarios without vfs."""
 
     for scenario in loads(current_module(), Scenario):
-        scenario()
+        Scenario(run=scenario, tags=["long", "combinatoric"])
 
 
 @TestFeature

@@ -86,7 +86,8 @@ def create_test_table(
     )
 
 
-@TestOutline(Combination)
+@TestOutline(Scenario)
+@Tags("combinatoric")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
 def check_table_combination(
     self,
@@ -164,4 +165,4 @@ def feature(self):
             continue
 
         title = ",".join([f"{k}={v}" for k, v in table_config.items()])
-        Combination(title, test=check_table_combination)(**table_config)
+        Scenario(title, test=check_table_combination)(**table_config)

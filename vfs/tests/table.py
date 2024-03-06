@@ -9,6 +9,7 @@ from vfs.requirements import *
 
 
 @TestScenario
+@Tags("sanity")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Table_Detach("1.0"))
 def bad_detached_part(self):
     """
