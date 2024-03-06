@@ -110,6 +110,7 @@ def create_insert_measure_replicated_table(self, storage_policy="external"):
 
 
 @TestScenario
+@Tags("sanity")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"))
 def disk_setting(self):
     """
@@ -396,6 +397,7 @@ def check_setting_combination(
 
 
 @TestScenario
+@Tags("long", "combinatoric")
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_Mutation("0.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_S3("1.0"),

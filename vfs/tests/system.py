@@ -41,6 +41,7 @@ def stop_zookeeper(self):
 
 
 @TestScenario
+@Tags("sanity")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_Delete("1.0"))
 def delete(self):
     """
@@ -224,6 +225,7 @@ def get_active_part_count(self, node, table_name):
 
 
 @TestOutline(Scenario)
+@Tags("long", "combinatoric")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_Optimize("0.0"))
 @Examples("table_settings", [[None], [WIDE_PART_SETTING], [COMPACT_PART_SETTING]])
 def optimize(self, table_settings):

@@ -11,6 +11,7 @@ from vfs.requirements import *
 
 
 @TestScenario
+@Tags("sanity")
 def no_duplication(self):
     """
     Check that data on replicated tables only exists once in S3.
@@ -106,6 +107,7 @@ def no_duplication(self):
 
 
 @TestScenario
+@Tags("sanity")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Add("1.0"))
 def add_replica(self):
     """
@@ -186,6 +188,7 @@ def add_replica(self):
 
 
 @TestScenario
+@Tags("sanity")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline("1.0"))
 def offline_replica(self):
     """
@@ -231,6 +234,7 @@ def offline_replica(self):
 
 
 @TestScenario
+@Tags("sanity")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def add_remove_one_node(self):
     """
@@ -646,6 +650,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
 
 
 @TestScenario
+@Tags("combinatoric")
 @Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"))
 def command_combinations(self, parallel=True):
     """

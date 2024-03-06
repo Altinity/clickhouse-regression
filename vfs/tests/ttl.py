@@ -34,6 +34,7 @@ def insert_data_time(self, node, table_name, days_ago, rows):
 
 
 @TestOutline(Scenario)
+@Tags("sanity")
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Table_TTLDelete("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_TTL("1.0"),
@@ -78,6 +79,7 @@ def ttl_delete(self, move_on_insert):
 
 
 @TestOutline(Scenario)
+@Tags("sanity")
 @Requirements(
     RQ_SRS_038_DiskObjectStorageVFS_Table_TTLMove("1.0"),
     RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_TTL("1.0"),

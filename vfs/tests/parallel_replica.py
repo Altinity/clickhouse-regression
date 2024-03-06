@@ -225,6 +225,7 @@ def add_remove_outline(self, random_seed=None, allow_vfs=True):
 
 
 @TestScenario
+@Tags("long", "combinatoric")
 def add_remove_commands(self, parallel=True):
     """
     Perform parallel actions on replicas and check that they all agree.
