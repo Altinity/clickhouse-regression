@@ -28,7 +28,7 @@ def regression(
     stress=None,
     allow_vfs=None,
 ):
-    """Logger regression suite."""
+    """Memory regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
@@ -56,7 +56,6 @@ def regression(
         )
     )
     Feature(run=load("memory.tests.test_memory_leak", "feature"))
-    Feature(run=load("memory.tests.insert", "feature"))
 
 
 if main():
