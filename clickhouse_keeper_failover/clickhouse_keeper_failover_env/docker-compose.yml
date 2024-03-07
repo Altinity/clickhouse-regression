@@ -2,11 +2,11 @@ version: "3.7"
 
 services:
 
-  clickhouse1:
+  keeper-1:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: clickhouse-keeper-1
+    container_name: keeper-1
     hostname: clickhouse-keeper-1
     ports:
       - "19181:9181"
@@ -17,11 +17,11 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-01/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-01/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
   
-  clickhouse2:
+  keeper-2:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: clickhouse-keeper-2
+    container_name: keeper-2
     hostname: clickhouse-keeper-2
     ports:
       - "29181:9181"
@@ -32,11 +32,11 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-02/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-02/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
-  clickhouse3:
+  keeper-3:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: clickhouse-keeper-3
+    container_name: keeper-3
     hostname: clickhouse-keeper-3
     ports:
       - "39181:9181"
@@ -47,12 +47,12 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-03/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-03/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
-  clickhouse4:
+  keeper-4:
     build:
       context: .
       dockerfile: Dockerfile
     #command: --force-recovery
-    container_name: clickhouse-keeper-4
+    container_name: keeper-4
     hostname: clickhouse-keeper-4
     ports:
       - "49181:9181"
@@ -63,11 +63,11 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-04/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-04/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
   
-  clickhouse5:
+  keeper-5:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: clickhouse-keeper-5
+    container_name: keeper-5
     hostname: clickhouse-keeper-5
     ports:
       - "58181:9181"
@@ -78,11 +78,11 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-05/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-05/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
-  clickhouse6:
+  keeper-6:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: clickhouse-keeper-6
+    container_name: keeper-6
     hostname: clickhouse-keeper-6
     ports:
       - "59181:9181"

@@ -5,9 +5,11 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import create_cluster
+from helpers.cluster import create_cluster, ClickHouseNode
 from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version, current_cpu
+
+from clickhouse_keeper_failover.tests.steps import *
 
 
 xfails = {}
@@ -32,7 +34,7 @@ def regression(
     """ClickHouse regression when using clickhouse-keeper."""
     nodes = {
         "clickhouse": [],
-        "clickhouse-keeper": [f"clickhouse-keeper-{i}" for i in range(1, 6)],
+        "keeper": [f"keeper-{i}" for i in range(1, 6)],
     }
 
     self.context.clickhouse_version = clickhouse_version
@@ -52,6 +54,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+        self.context.keeper_nodes = [cluster.node(n) for n in cluster.nodes["keeper"]]
+
+    with And("I know which ports are in use"):
+        self.context.keeper_ports = get_external_ports(internal_port=9182)
 
     Feature(run=load("clickhouse_keeper_failover.tests.manual_failover", "feature"))
     Feature(
