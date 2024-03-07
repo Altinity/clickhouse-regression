@@ -69,20 +69,17 @@ def check_move_partition(
     self.context.source_engine = source_table.__name__.split("_")[-1]
     self.context.destination_engine = destination_table.__name__.split("_")[-1]
 
+    source_is_replicated = "Replicated" in self.context.source_engine
+    destination_is_replicated = "Replicated" in self.context.destination_engine
+    if source_is_replicated != destination_is_replicated:
+        skip(
+            "Source and destination table engines both must be either replicated or non-replicated"
+        )
+
     source_table_name = "source_" + getuid()
     destination_table_name = "destination_" + getuid()
 
     with Given(
-        "I check that both source and destination table engines are replicated or both of them are non-replciated"
-    ):
-        source_is_replicated = "Replicated" in self.context.source_engine
-        destination_is_replicated = "Replicated" in self.context.destination_engine
-        if source_is_replicated != destination_is_replicated:
-            skip(
-                "Source and destination table engines both must be either replicated or non-replicated"
-            )
-
-    with And(
         "I create two tables with specified engines and partition keys",
         description=f"""
             partition keys:
