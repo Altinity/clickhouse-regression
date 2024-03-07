@@ -60,6 +60,7 @@ def regression(
         self.context.node = cluster.node("clickhouse1")
 
     Feature(run=load("issues.tests.merge", "feature"))
+    Feature(run=load("issues.tests.insert", "feature"))
 
 
 if main():
