@@ -10,13 +10,24 @@ from helpers.tables import *
 from helpers.argparser import argparser
 from helpers.cluster import create_cluster
 
-from aggregate_functions.tests.steps import aggregate_functions, window_functions
-from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
+
+issue_59401 = "https://github.com/ClickHouse/ClickHouse/issues/59401"
+
+xfails = {
+    "/issues/merge/*": [
+        (
+            Fail,
+            issue_59401,
+            check_clickhouse_version(">=23.6") and check_clickhouse_version("<24.2"),
+        )
+    ],
+}
 
 
 @TestModule
 @ArgumentParser(argparser)
 @Name("issues")
+@XFails(xfails)
 def regression(
     self,
     local,
