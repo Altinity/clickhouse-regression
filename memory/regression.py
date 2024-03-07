@@ -11,14 +11,10 @@ from helpers.argparser import argparser
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, check_current_cpu
 
-from aggregate_functions.tests.steps import aggregate_functions, window_functions
-from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
-
 
 @TestModule
 @ArgumentParser(argparser)
 @Name("memory")
-@Specifications(SRS_031_ClickHouse_Aggregate_Functions)
 def regression(
     self,
     local,
