@@ -35,7 +35,7 @@ def network_packet_delay(
     self,
     node,
     delay_ms=15,
-    delay_jitter=10,
+    delay_jitter=5,
     correlation=25,
     distribution="paretonormal",
     device="eth0",
@@ -65,7 +65,7 @@ def network_packet_loss_gemodel(
     self,
     node,
     interruption_probability=5,
-    recovery_probability=50,
+    recovery_probability=70,
     percent_loss_after_interruption=100,
     percent_loss_after_recovery=5,
     device="eth0",
@@ -87,7 +87,7 @@ def network_packet_loss_gemodel(
 def network_packet_corruption(
     self,
     node,
-    percent_corrupt=20,
+    percent_corrupt=10,
     correlation=25,
     device="eth0",
 ):
@@ -131,7 +131,7 @@ def network_packet_reordering(
 def network_packet_rate_limit(
     self,
     node,
-    rate_mbit=10,
+    rate_mbit=20,
     packet_overhead_bytes=0,
     device="eth0",
 ):
