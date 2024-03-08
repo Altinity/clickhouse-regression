@@ -574,8 +574,15 @@ def attach_partition_from(self):
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
 
+            source_partition_key_str = source_partition_key.replace("(", "_")
+            source_partition_key_str = source_partition_key_str.replace(")", "_")
+            destination_partition_key_str = destination_partition_key.replace("(", "_")
+            destination_partition_key_str = destination_partition_key_str.replace(
+                ")", "_"
+            )
+
             Scenario(
-                f"combination partition keys {source_partition_key} {destination_partition_key} tables {source_table.__name__} {destination_table.__name__}",
+                f"combination partition keys {source_partition_key_str} {destination_partition_key_str}  tables  {source_table.__name__} {destination_table.__name__}",
                 test=check_attach_partition_from,
                 parallel=True,
                 executor=executor,

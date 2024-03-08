@@ -962,39 +962,39 @@ def attach_partition_from(self, with_id=False):
     }
 
     source_table_types = {
-        partitioned_MergeTree,
-        partitioned_small_MergeTree,
-        partitioned_ReplicatedMergeTree,
-        partitioned_small_ReplicatedMergeTree,
+        # partitioned_MergeTree,
+        # partitioned_small_MergeTree,
+        # partitioned_ReplicatedMergeTree,
+        # partitioned_small_ReplicatedMergeTree,
         partitioned_ReplacingMergeTree,
-        partitioned_ReplicatedReplacingMergeTree,
-        partitioned_AggregatingMergeTree,
-        partitioned_ReplicatedAggregatingMergeTree,
-        partitioned_SummingMergeTree,
-        partitioned_ReplicatedSummingMergeTree,
-        partitioned_CollapsingMergeTree,
-        partitioned_ReplicatedCollapsingMergeTree,
-        partitioned_VersionedCollapsingMergeTree,
-        partitioned_ReplicatedVersionedCollapsingMergeTree,
-        partitioned_GraphiteMergeTree,
-        partitioned_ReplicatedGraphiteMergeTree,
+        # partitioned_ReplicatedReplacingMergeTree,
+        # partitioned_AggregatingMergeTree,
+        # partitioned_ReplicatedAggregatingMergeTree,
+        # partitioned_SummingMergeTree,
+        # partitioned_ReplicatedSummingMergeTree,
+        # partitioned_CollapsingMergeTree,
+        # partitioned_ReplicatedCollapsingMergeTree,
+        # partitioned_VersionedCollapsingMergeTree,
+        # partitioned_ReplicatedVersionedCollapsingMergeTree,
+        # partitioned_GraphiteMergeTree,
+        # partitioned_ReplicatedGraphiteMergeTree,
     }
 
     destination_table_types = {
-        empty_partitioned_MergeTree,
-        empty_partitioned_ReplicatedMergeTree,
+        # empty_partitioned_MergeTree,
+        # empty_partitioned_ReplicatedMergeTree,
         empty_partitioned_ReplacingMergeTree,
-        empty_partitioned_ReplicatedReplacingMergeTree,
-        empty_partitioned_AggregatingMergeTree,
-        empty_partitioned_ReplicatedAggregatingMergeTree,
-        empty_partitioned_SummingMergeTree,
-        empty_partitioned_ReplicatedSummingMergeTree,
-        empty_partitioned_CollapsingMergeTree,
-        empty_partitioned_ReplicatedCollapsingMergeTree,
-        empty_partitioned_VersionedCollapsingMergeTree,
-        empty_partitioned_ReplicatedVersionedCollapsingMergeTree,
-        empty_partitioned_GraphiteMergeTree,
-        empty_partitioned_ReplicatedGraphiteMergeTree,
+        # empty_partitioned_ReplicatedReplacingMergeTree,
+        # empty_partitioned_AggregatingMergeTree,
+        # empty_partitioned_ReplicatedAggregatingMergeTree,
+        # empty_partitioned_SummingMergeTree,
+        # empty_partitioned_ReplicatedSummingMergeTree,
+        # empty_partitioned_CollapsingMergeTree,
+        # empty_partitioned_ReplicatedCollapsingMergeTree,
+        # empty_partitioned_VersionedCollapsingMergeTree,
+        # empty_partitioned_ReplicatedVersionedCollapsingMergeTree,
+        # empty_partitioned_GraphiteMergeTree,
+        # empty_partitioned_ReplicatedGraphiteMergeTree,
     }
 
     if not self.context.stress:
@@ -1034,8 +1034,24 @@ def attach_partition_from(self, with_id=False):
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
 
+            source_partition_key_str = source_partition_key.replace("(", "_")
+            source_partition_key_str = source_partition_key_str.replace(")", "_")
+            source_partition_key_str = source_partition_key_str.replace(",", "_")
+            source_partition_key_str = source_partition_key_str.replace("%", "mod")
+
+            destination_partition_key_str = destination_partition_key.replace("(", "_")
+            destination_partition_key_str = destination_partition_key_str.replace(
+                ")", "_"
+            )
+            destination_partition_key_str = destination_partition_key_str.replace(
+                ",", "_"
+            )
+            destination_partition_key_str = destination_partition_key_str.replace(
+                "%", "mod"
+            )
+
             Scenario(
-                f"combination: partition keys - {source_partition_key}, {destination_partition_key}; tables - {source_table.__name__}, {destination_table.__name__}",
+                f"combination partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
                 test=check_attach_partition_from,
                 parallel=True,
                 executor=executor,

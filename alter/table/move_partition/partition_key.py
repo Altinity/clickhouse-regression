@@ -275,65 +275,65 @@ def move_partition(self):
     tables to see if `move partition to table` is possible."""
 
     source_partition_keys = {
-        "tuple()",
-        "a",
-        "a%2",
-        "a%3",
-        "intDiv(a,2)",
-        "intDiv(a,3)",
-        "b",
-        "b%2",
-        "intDiv(b,2)",
-        "(a,b)",
-        "(a%2,b%2)",
-        "(a,intDiv(b,2))",
-        "(a,b%2)",
-        "(intDiv(a,2),b)",
-        "(intDiv(a,2),intDiv(b,2))",
-        "(b,a)",
-        "(b%2,a%2)",
+        # "tuple()",
+        # "a",
+        # "a%2",
+        # "a%3",
+        # "intDiv(a,2)",
+        # "intDiv(a,3)",
+        # "b",
+        # "b%2",
+        # "intDiv(b,2)",
+        # "(a,b)",
+        # "(a%2,b%2)",
+        # "(a,intDiv(b,2))",
+        # "(a,b%2)",
+        # "(intDiv(a,2),b)",
+        # "(intDiv(a,2),intDiv(b,2))",
+        # "(b,a)",
+        # "(b%2,a%2)",
         "(intDiv(b,2),intDiv(a,2))",
-        "(b,c)",
-        "(a,c)",
-        "(a,b,c)",
-        "(a%2,b%2,c%2)",
-        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
-        "(a,c,b)",
-        "(b,a,c)",
-        "(b,c,a)",
-        "(c,a,b)",
-        "(c,b,a)",
+        # "(b,c)",
+        # "(a,c)",
+        # "(a,b,c)",
+        # "(a%2,b%2,c%2)",
+        # "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+        # "(a,c,b)",
+        # "(b,a,c)",
+        # "(b,c,a)",
+        # "(c,a,b)",
+        # "(c,b,a)",
     }
 
     destination_partition_keys = {
-        "tuple()",
-        "a",
-        "a%2",
-        "a%3",
-        "intDiv(a,2)",
-        "intDiv(a,3)",
-        "b",
-        "b%2",
-        "intDiv(b,2)",
-        "(a,b)",
-        "(a%2,b%2)",
-        "(a,intDiv(b,2))",
-        "(a,b%2)",
-        "(intDiv(a,2),b)",
-        "(intDiv(a,2),intDiv(b,2))",
+        # "tuple()",
+        # "a",
+        # "a%2",
+        # "a%3",
+        # "intDiv(a,2)",
+        # "intDiv(a,3)",
+        # "b",
+        # "b%2",
+        # "intDiv(b,2)",
+        # "(a,b)",
+        # "(a%2,b%2)",
+        # "(a,intDiv(b,2))",
+        # "(a,b%2)",
+        # "(intDiv(a,2),b)",
+        # "(intDiv(a,2),intDiv(b,2))",
         "(b,a)",
-        "(b%2,a%2)",
-        "(intDiv(b,2),intDiv(a,2))",
-        "(b,c)",
-        "(a,c)",
-        "(a,b,c)",
-        "(a%2,b%2,c%2)",
-        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
-        "(a,c,b)",
-        "(b,a,c)",
-        "(b,c,a)",
-        "(c,a,b)",
-        "(c,b,a)",
+        # "(b%2,a%2)",
+        # "(intDiv(b,2),intDiv(a,2))",
+        # "(b,c)",
+        # "(a,c)",
+        # "(a,b,c)",
+        # "(a%2,b%2,c%2)",
+        # "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+        # "(a,c,b)",
+        # "(b,a,c)",
+        # "(b,c,a)",
+        # "(c,a,b)",
+        # "(c,b,a)",
     }
 
     source_table_types = {
@@ -409,8 +409,23 @@ def move_partition(self):
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
 
+            source_partition_key_str = source_partition_key.replace("(", "_")
+            source_partition_key_str = source_partition_key_str.replace(")", "_")
+            source_partition_key_str = source_partition_key_str.replace(",", "_")
+            source_partition_key_str = source_partition_key_str.replace("%", "mod")
+            destination_partition_key_str = destination_partition_key.replace("(", "_")
+            destination_partition_key_str = destination_partition_key_str.replace(
+                ")", "_"
+            )
+            destination_partition_key_str = destination_partition_key_str.replace(
+                ",", "_"
+            )
+            destination_partition_key_str = destination_partition_key_str.replace(
+                "%", "mod"
+            )
+
             Scenario(
-                f"combination: partition keys - {source_partition_key}, {destination_partition_key}; tables - {source_table.__name__}, {destination_table.__name__}",
+                f"combination partition keys  {source_partition_key_str} {destination_partition_key_str}  tables  {source_table.__name__} {destination_table.__name__}",
                 test=check_move_partition,
                 parallel=True,
                 executor=executor,

@@ -377,8 +377,15 @@ def move_partition(self):
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
 
+            source_partition_key_str = source_partition_key.replace("(", "_")
+            source_partition_key_str = source_partition_key_str.replace(")", "_")
+            destination_partition_key_str = destination_partition_key.replace("(", "_")
+            destination_partition_key_str = destination_partition_key_str.replace(
+                ")", "_"
+            )
+
             Scenario(
-                f"combination {number} partition keys {source_partition_key} {destination_partition_key} tables {source_table.__name__} {destination_table.__name__}",
+                f"combination {number} partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
                 test=check_move_partition,
                 parallel=True,
                 executor=executor,
