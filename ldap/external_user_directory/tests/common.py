@@ -160,7 +160,7 @@ def create_entries_ldap_external_user_directory_config_content(
 
 
 def invalid_ldap_external_user_directory_config(
-    server, roles, message, tail=30, timeout=60, config=None
+    server, roles, message, tail=50, timeout=60, config=None
 ):
     """Check that ClickHouse errors when trying to load invalid LDAP external user directory
     configuration file.
@@ -174,7 +174,7 @@ def invalid_ldap_external_user_directory_config(
         )
 
     try:
-        with Given("I prepare the error log by writting empty lines into it"):
+        with Given("I prepare the error log by writing empty lines into it"):
             node.command(
                 'echo -e "%s" > /var/log/clickhouse-server/clickhouse-server.err.log'
                 % ("-\\n" * tail)
