@@ -1141,6 +1141,17 @@ def restarts(self):
         restarts=True,
     )
 
+@TestScenario
+def add_remove_replicas(self):
+    """
+    Allow adding and removing replicas randomly.
+    """
+
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        add_remove_replicas=True,
+    )
 
 @TestScenario
 def full_disk(self):
