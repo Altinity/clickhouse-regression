@@ -4,6 +4,7 @@ from testflows.core import *
 from testflows.combinatorics import product, CoveringArray
 
 from alter.table.attach_partition.common import *
+from alter.table.move_partition.common import execute_query
 from alter.table.move_partition.requirements.requirements import *
 from alter.table.attach_partition.partition_key_datetime import valid_partition_key_pair
 
@@ -221,14 +222,14 @@ def check_move_partition(
                     assert destination_partition_data.output == source_before, error()
 
         elif reason == "partially different":
-            addition_to_snapshpt_name = (
+            addition_to_snapshot_name = (
                 "_small" if "small" in source_table.__name__ else ""
             )
             execute_query(
                 f"SELECT time,date,extra FROM {destination_table_name} ORDER BY time,date,extra",
                 snapshot_name="/alter/table/move_partition/partition_key/move_partition/"
                 + current().name.split("/")[-1]
-                + addition_to_snapshpt_name,
+                + addition_to_snapshot_name,
                 node=get_node(self, "destination"),
                 path=os.path.join(os.getcwd(), "table/move_partition/snapshots"),
             )
@@ -371,9 +372,7 @@ def move_partition(self):
         ]
 
     with Pool(4) as executor:
-        number = 0
         for partition_keys, tables in combinations:
-            number += 1
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
 
@@ -385,7 +384,7 @@ def move_partition(self):
             )
 
             Scenario(
-                f"combination {number} partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
+                f"combination partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
                 test=check_move_partition,
                 parallel=True,
                 executor=executor,
