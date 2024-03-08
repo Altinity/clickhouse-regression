@@ -1038,7 +1038,6 @@ def attach_partition_from(self, with_id=False):
             source_partition_key_str = source_partition_key_str.replace(")", "_")
             source_partition_key_str = source_partition_key_str.replace(",", "_")
             source_partition_key_str = source_partition_key_str.replace("%", "mod")
-
             destination_partition_key_str = destination_partition_key.replace("(", "_")
             destination_partition_key_str = destination_partition_key_str.replace(
                 ")", "_"
