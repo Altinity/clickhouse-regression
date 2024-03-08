@@ -1206,7 +1206,6 @@ def execute_query(
     message=None,
     no_checks=False,
     snapshot_name=None,
-    format="TabSeparatedWithNames",
     node=None,
     path=None,
 ):
@@ -1219,7 +1218,7 @@ def execute_query(
 
     with When("I execute query", description=sql):
         r = node.query(
-            sql + " FORMAT " + format,
+            sql,
             exitcode=exitcode,
             message=message,
             no_checks=no_checks,
