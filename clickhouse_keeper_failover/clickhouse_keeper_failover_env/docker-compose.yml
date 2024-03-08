@@ -17,7 +17,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-01/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-01/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
   
   keeper-2:
     build:
@@ -34,7 +34,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-02/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-02/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
 
   keeper-3:
     build:
@@ -51,7 +51,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-03/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-03/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
 
   keeper-4:
     build:
@@ -69,7 +69,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-04/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-04/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
   
   keeper-5:
     build:
@@ -86,7 +86,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-05/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-05/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
 
   keeper-6:
     build:
@@ -103,4 +103,4 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-06/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-06/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
