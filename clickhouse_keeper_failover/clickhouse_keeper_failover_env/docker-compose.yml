@@ -7,45 +7,51 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: keeper-1
-    hostname: clickhouse-keeper-1
+    hostname: keeper-1
     ports:
       - "19181:9181"
       - "19234:9234"
       - "19182:9182"
+    environment:
+      - KEEPER_SERVER_ID=1
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-01/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-01/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-01/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
   
   keeper-2:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: keeper-2
-    hostname: clickhouse-keeper-2
+    hostname: keeper-2
     ports:
       - "29181:9181"
       - "29234:9234"
       - "29182:9182"
+    environment:
+      - KEEPER_SERVER_ID=2
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-02/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-02/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-02/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
   keeper-3:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: keeper-3
-    hostname: clickhouse-keeper-3
+    hostname: keeper-3
     ports:
       - "39181:9181"
       - "39234:9234"
       - "39182:9182"
+    environment:
+      - KEEPER_SERVER_ID=3
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-03/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-03/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-03/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
   keeper-4:
     build:
@@ -53,37 +59,43 @@ services:
       dockerfile: Dockerfile
     #command: --force-recovery
     container_name: keeper-4
-    hostname: clickhouse-keeper-4
+    hostname: keeper-4
     ports:
       - "49181:9181"
       - "49234:9234"
       - "49182:9182"
+    environment:
+      - KEEPER_SERVER_ID=4
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-04/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-04/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-04/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
   
   keeper-5:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: keeper-5
-    hostname: clickhouse-keeper-5
+    hostname: keeper-5
     ports:
       - "58181:9181"
       - "58234:9234"
       - "58182:9182"
+    environment:
+      - KEEPER_SERVER_ID=5
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-05/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-05/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-05/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
   keeper-6:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: keeper-6
-    hostname: clickhouse-keeper-6
+    hostname: keeper-6
+    environment:
+      - KEEPER_SERVER_ID=6
     ports:
       - "59181:9181"
       - "59234:9234"
@@ -91,4 +103,4 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-06/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-06/data/:/var/lib/clickhouse"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper-06/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"

@@ -4,13 +4,13 @@
 		<log>/var/log/clickhouse-server/clickhouse-keeper.log</log>
         <errorlog>/var/log/clickhouse-server/clickhouse-keeper.err.log</errorlog>
         <size>100M</size>
-        <count>5</count>	
+        <count>5</count>
 	    <console>true</console>
     </logger>
     <listen_host>0.0.0.0</listen_host>
     <keeper_server>
         <tcp_port>9181</tcp_port>
-        <server_id>5</server_id>
+        <server_id from_env="KEEPER_SERVER_ID"/>
 	    <log_storage_path>/var/lib/clickhouse/coordination/log</log_storage_path>
 	    <snapshot_storage_path>/var/lib/clickhouse/coordination/snapshots</snapshot_storage_path>
         
@@ -39,34 +39,34 @@
         <raft_configuration>
             <server>
                 <id>1</id>
-                <hostname>clickhouse-keeper-1</hostname>
+                <hostname>keeper-1</hostname>
                 <port>9234</port>
             </server>           
             <server>
                 <id>2</id>
-                <hostname>clickhouse-keeper-2</hostname>
+                <hostname>keeper-2</hostname>
                 <port>9234</port>
             </server>
             <server>
                 <id>3</id>
-                <hostname>clickhouse-keeper-3</hostname>
+                <hostname>keeper-3</hostname>
                 <port>9234</port>
             </server>
             <server>
                 <id>4</id>
-                <hostname>clickhouse-keeper-4</hostname>
+                <hostname>keeper-4</hostname>
                 <port>9234</port>
                 <can_become_leader>false</can_become_leader>
             </server>
             <server>
                 <id>5</id>
-                <hostname>clickhouse-keeper-5</hostname>
+                <hostname>keeper-5</hostname>
                 <port>9234</port>
                 <can_become_leader>false</can_become_leader>
             </server>
             <server>
                 <id>6</id>
-                <hostname>clickhouse-keeper-6</hostname>
+                <hostname>keeper-6</hostname>
                 <port>9234</port>
                 <can_become_leader>false</can_become_leader>
             </server>
