@@ -849,12 +849,12 @@ def check_attach_partition_from(
                     ), error()
 
         elif reason == "partially different":
-            addition_to_snapshpt_name = (
+            addition_to_snapshot_name = (
                 "_small" if "small" in source_table.__name__ else ""
             )
             execute_query(
                 f"SELECT a,b,c,extra FROM {destination_table_name} ORDER BY a,b,c,extra",
-                snapshot_name=current().name.split("/")[-1] + addition_to_snapshpt_name,
+                snapshot_name=current().name.split("/")[-1] + addition_to_snapshot_name,
                 node=get_node(self, "destination"),
             )
 
