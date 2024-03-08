@@ -90,21 +90,17 @@ def scenario(self, cluster, node="clickhouse1"):
                             with Then(f"it should return the result of {rows_count}"):
                                 assert r == f"{rows_count}", error()
 
-                    with And("poll maximum 30 times to check used disks for the table"):
-                        used_disks = get_used_disks_for_table(node, name)
-                        retry = 30
-                        i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "jbod1") == 8
-                            and i < retry
-                        ):
-                            with And("sleep 0.5 sec"):
-                                time.sleep(0.5)
-                            used_disks = get_used_disks_for_table(node, name)
-                            i += 1
+                    with When("check used disks for the table"):
+                        for attempt in retries(timeout=15, delay=2):
+                            with attempt:
+                                used_disks = get_used_disks_for_table(node, name)
 
-                    with Then("check that jbod1 disk is used equals to 8 times"):
-                        assert sum(1 for x in used_disks if x == "jbod1") == 8, error()
+                                with Then(
+                                    "check that jbod1 disk is used equals to 8 times"
+                                ):
+                                    assert (
+                                        sum(1 for x in used_disks if x == "jbod1") == 8
+                                    ), error()
 
                     with When(
                         "I change storage policy to contain another volume and restart"
@@ -120,28 +116,22 @@ def scenario(self, cluster, node="clickhouse1"):
                             with Then(f"it should return the result of {rows_count}"):
                                 assert r == f"{rows_count}", error()
 
-                    with And("poll maximum 60 times to check used disks for the table"):
-                        used_disks = get_used_disks_for_table(node, name)
-                        retry = 60
-                        i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "external") >= 1
-                            and i < retry
-                        ):
-                            with And("sleep 0.5 sec"):
-                                time.sleep(0.5)
-                            used_disks = get_used_disks_for_table(node, name)
-                            i += 1
+                    with When("check used disks for the table"):
+                        for attempt in retries(timeout=60, delay=2):
+                            with attempt:
+                                used_disks = get_used_disks_for_table(node, name)
 
-                    with Then(
-                        "check that jbod1 disk is used is less than or equals to 7 times"
-                    ):
-                        assert sum(1 for x in used_disks if x == "jbod1") <= 7, error()
+                                with Then(
+                                    "check that jbod1 disk is used is less than or equals to 7 times"
+                                ):
+                                    assert (
+                                        sum(1 for x in used_disks if x == "jbod1") <= 7
+                                    ), error()
 
-                    with And(
-                        "that the first two (oldest) parts were moved to 'external'"
-                    ):
-                        assert used_disks[0] == "external", error()
+                                with And(
+                                    "that the first two (oldest) parts were moved to 'external'"
+                                ):
+                                    assert used_disks[0] == "external", error()
 
                     with When("I restart again"):
                         node.restart()
