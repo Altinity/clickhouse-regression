@@ -16,9 +16,9 @@ def feature(self):
             parallel=True,
             executor=pool,
         )
-        Feature(
-            run=load("alter.table.move_partition.partition_key_datetime", "feature"),
-            parallel=True,
-            executor=pool,
-        )
+        # Feature(
+        #     run=load("alter.table.move_partition.partition_key_datetime", "feature"),
+        #     parallel=True,
+        #     executor=pool,
+        # )
         join()
