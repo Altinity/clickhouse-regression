@@ -1,5 +1,6 @@
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-{"a":1,"b":5,"c":9,"extra":"1000"}
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r""""""
+
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""{"a":1,"b":5,"c":9,"extra":"1000"}
 {"a":1,"b":5,"c":9,"extra":"1001"}
 {"a":1,"b":5,"c":9,"extra":"1002"}
 {"a":1,"b":5,"c":9,"extra":"1003"}
@@ -12,15 +13,15 @@ _alter_table_move_partition_partition_key_move_partition_I_check_that_partitions
 {"a":16,"b":21,"c":25,"extra":"1007"}
 {"a":17,"b":24,"c":28,"extra":"1008"}
 {"a":18,"b":23,"c":27,"extra":"1009"}
-{"a":19,"b":26,"c":30,"extra":"1010"}
-"""
+{"a":19,"b":26,"c":30,"extra":"1010"}"""
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r""""""
 
-"""
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r""""""
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-{"a":1,"b":5,"c":9,"extra":"1000"}
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r""""""
+
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""{"a":1,"b":5,"c":9,"extra":"1000"}
 {"a":1,"b":5,"c":9,"extra":"1001"}
 {"a":1,"b":5,"c":9,"extra":"1002"}
 {"a":1,"b":5,"c":9,"extra":"1003"}
@@ -33,15 +34,9 @@ _alter_table_move_partition_partition_key_move_partition_I_check_that_partitions
 {"a":16,"b":21,"c":25,"extra":"1007"}
 {"a":17,"b":24,"c":28,"extra":"1008"}
 {"a":18,"b":23,"c":27,"extra":"1009"}
-{"a":19,"b":26,"c":30,"extra":"1010"}
-"""
+{"a":19,"b":26,"c":30,"extra":"1010"}"""
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-{"a":1,"b":5,"c":9,"extra":"1000"}
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""{"a":1,"b":5,"c":9,"extra":"1000"}
 {"a":1,"b":5,"c":9,"extra":"1001"}
 {"a":1,"b":5,"c":9,"extra":"1002"}
 {"a":1,"b":5,"c":9,"extra":"1003"}
@@ -54,15 +49,9 @@ _alter_table_move_partition_partition_key_move_partition_I_check_that_partitions
 {"a":16,"b":21,"c":25,"extra":"1007"}
 {"a":17,"b":24,"c":28,"extra":"1008"}
 {"a":18,"b":23,"c":27,"extra":"1009"}
-{"a":19,"b":26,"c":30,"extra":"1010"}
-"""
+{"a":19,"b":26,"c":30,"extra":"1010"}"""
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-{"a":1,"b":5,"c":9,"extra":"1000"}
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""{"a":1,"b":5,"c":9,"extra":"1000"}
 {"a":1,"b":5,"c":9,"extra":"1001"}
 {"a":1,"b":5,"c":9,"extra":"1002"}
 {"a":1,"b":5,"c":9,"extra":"1003"}
@@ -75,15 +64,11 @@ _alter_table_move_partition_partition_key_move_partition_I_check_that_partitions
 {"a":16,"b":21,"c":25,"extra":"1007"}
 {"a":17,"b":24,"c":28,"extra":"1008"}
 {"a":18,"b":23,"c":27,"extra":"1009"}
-{"a":19,"b":26,"c":30,"extra":"1010"}
-"""
+{"a":19,"b":26,"c":30,"extra":"1010"}"""
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r""""""
 
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-{"a":1,"b":5,"c":9,"extra":"1000"}
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""{"a":1,"b":5,"c":9,"extra":"1000"}
 {"a":1,"b":5,"c":9,"extra":"1001"}
 {"a":1,"b":5,"c":9,"extra":"1002"}
 {"a":1,"b":5,"c":9,"extra":"1003"}
@@ -96,15 +81,11 @@ _alter_table_move_partition_partition_key_move_partition_I_check_that_partitions
 {"a":16,"b":21,"c":25,"extra":"1007"}
 {"a":17,"b":24,"c":28,"extra":"1008"}
 {"a":18,"b":23,"c":27,"extra":"1009"}
-{"a":19,"b":26,"c":30,"extra":"1010"}
-"""
+{"a":19,"b":26,"c":30,"extra":"1010"}"""
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r""""""
 
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-{"a":1,"b":5,"c":9,"extra":"1000"}
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""{"a":1,"b":5,"c":9,"extra":"1000"}
 {"a":1,"b":5,"c":9,"extra":"1001"}
 {"a":1,"b":5,"c":9,"extra":"1002"}
 {"a":1,"b":5,"c":9,"extra":"1003"}
@@ -117,15 +98,18 @@ _alter_table_move_partition_partition_key_move_partition_I_check_that_partitions
 {"a":16,"b":21,"c":25,"extra":"1007"}
 {"a":17,"b":24,"c":28,"extra":"1008"}
 {"a":18,"b":23,"c":27,"extra":"1009"}
-{"a":19,"b":26,"c":30,"extra":"1010"}
-"""
+{"a":19,"b":26,"c":30,"extra":"1010"}"""
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""{"a":0,"b":0,"c":0,"extra":"1000"}
+{"a":0,"b":0,"c":0,"extra":"1001"}
+{"a":0,"b":0,"c":0,"extra":"1002"}
+{"a":0,"b":0,"c":0,"extra":"1003"}
+{"a":1,"b":1,"c":1,"extra":"1000"}
+{"a":1,"b":1,"c":1,"extra":"1001"}
+{"a":1,"b":1,"c":1,"extra":"1002"}
+{"a":1,"b":1,"c":1,"extra":"1003"}"""
 
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-{"a":1,"b":5,"c":9,"extra":"1000"}
+_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""{"a":1,"b":5,"c":9,"extra":"1000"}
 {"a":1,"b":5,"c":9,"extra":"1001"}
 {"a":1,"b":5,"c":9,"extra":"1002"}
 {"a":1,"b":5,"c":9,"extra":"1003"}
@@ -154,17 +138,5 @@ _alter_table_move_partition_partition_key_move_partition_I_check_that_partitions
 {"a":18,"b":25,"c":29,"extra":"1009"}
 {"a":19,"b":24,"c":28,"extra":"1010"}
 {"a":19,"b":25,"c":29,"extra":"1010"}
-{"a":19,"b":26,"c":30,"extra":"1010"}
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-{"a":0,"b":0,"c":0,"extra":"1000"}
-{"a":0,"b":0,"c":0,"extra":"1001"}
-{"a":0,"b":0,"c":0,"extra":"1002"}
-{"a":0,"b":0,"c":0,"extra":"1003"}
-{"a":1,"b":1,"c":1,"extra":"1000"}
-{"a":1,"b":1,"c":1,"extra":"1001"}
-{"a":1,"b":1,"c":1,"extra":"1002"}
-{"a":1,"b":1,"c":1,"extra":"1003"}
-"""
+{"a":19,"b":26,"c":30,"extra":"1010"}"""
 

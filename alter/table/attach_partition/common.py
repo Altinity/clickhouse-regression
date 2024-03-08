@@ -1248,7 +1248,8 @@ def execute_query(
                 with values() as that:
                     assert that(
                         snapshot(
-                            "\n" + r.output.strip() + "\n",
+                            # "\n" + r.output.strip() + "\n",
+                            r.output.strip(),
                             "tests." + current_cpu(),
                             name=snapshot_name,
                             path=path,
