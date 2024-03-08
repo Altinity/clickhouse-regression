@@ -3,6 +3,7 @@ from testflows.asserts import values, error, snapshot
 
 from helpers.common import *
 
+
 def execute_query(
     sql,
     expected=None,
@@ -16,7 +17,7 @@ def execute_query(
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
-        snapshot_name="/alter/table/move_partition" + current().name
+        snapshot_name = "/alter/table/move_partition" + current().name
 
     if node is None:
         node = current().context.node
