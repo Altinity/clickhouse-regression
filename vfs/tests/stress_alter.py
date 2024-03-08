@@ -1149,19 +1149,23 @@ def full_disk(self):
     """
     cluster = self.context.cluster
 
-    with Given("disk space is restricted"):
-        r = cluster.command(None, "df | grep -c clickhouse-regression", no_checks=True)
-        restrictions_enabled = int(r.output) == 3 * 2 * 2
+    try:
+        with Given("disk space is restricted"):
+            cluster.command(None, f"{current_dir()}/../vfs_env/create_fixed_volumes.sh", no_checks=True)
+            r = cluster.command(None, "df | grep -c clickhouse-regression", no_checks=True)
+            restrictions_enabled = int(r.output) == 3 * 2 * 2
 
-    if not restrictions_enabled:
-        skip("run vfs_env/create_fixed_volumes.sh before this scenario")
+        if not restrictions_enabled:
+            skip("run vfs_env/create_fixed_volumes.sh before this scenario")
 
-    alter_combinations(
-        limit=None if self.context.stress else 20,
-        shuffle=True,
-        fill_disks=True,
-    )
-
+        alter_combinations(
+            limit=None if self.context.stress else 20,
+            shuffle=True,
+            fill_disks=True,
+        )
+    finally:
+        with Finally("disk space is de-restricted"):
+            cluster.command(None, f"{current_dir()}/../vfs_env/destroy_fixed_volumes.sh", no_checks=True)
 
 @TestFeature
 def vfs(self):
