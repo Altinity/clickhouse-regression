@@ -855,10 +855,8 @@ def impaired_network(self, network_mode):
     nodes = chain(self.context.zk_nodes, self.context.ch_nodes)
 
     for node in nodes:
-        try:  # Can fail if node is offline
-            network_mode(node=node)
-        except:
-            pass
+        network_mode(node=node)
+
 
 
 @TestStep
@@ -980,10 +978,12 @@ def alter_combinations(
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
-            restart_network,
         ]
         if restarts:
             actions += [restart_keeper, restart_clickhouse]
+
+        if not network_impairment:
+            actions.append(restart_network)
 
         if add_remove_replicas:
             actions += [delete_replica, add_replica]

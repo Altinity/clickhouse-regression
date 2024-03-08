@@ -48,6 +48,6 @@ def execute_query(
                                     name=snapshot_name,
                                     path=path,
                                     encoder=str,
-                                    mode=snapshot.CHECK | snapshot.UPDATE,
+                                    mode=snapshot.CHECK,
                                 )
                             ), error()
