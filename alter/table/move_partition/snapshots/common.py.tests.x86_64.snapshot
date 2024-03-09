@@ -2284,7 +2284,7 @@ I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_b_2__
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-04 00:00:04	2000-01-04	1003
 2000-01-04 00:00:05	2000-01-04	1003
@@ -2335,7 +2335,7 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-04 00:00:04	2000-01-04	1003
 2000-01-04 00:00:05	2000-01-04	1003
@@ -2386,7 +2386,7 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-06 00:00:06	2000-01-04	1005
 2000-01-06 00:00:07	2000-01-04	1005
@@ -2401,7 +2401,7 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-06 00:00:06	2000-01-04	1005
 2000-01-06 00:00:07	2000-01-04	1005
@@ -2416,7 +2416,7 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-04 00:00:04	2000-01-04	1003
 2000-01-04 00:00:05	2000-01-04	1003
@@ -2467,7 +2467,7 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-04 00:00:04	2000-01-04	1003
 2000-01-04 00:00:05	2000-01-04	1003
@@ -2534,63 +2534,12 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-07 00:00:08	2000-01-04	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2000-01-04 00:00:04	2000-01-04	1003
-2000-01-04 00:00:05	2000-01-04	1003
-2000-01-04 03:00:06	2003-01-01	1005
-2000-01-04 03:00:07	2003-01-01	1005
-2000-01-04 03:05:01	2001-01-03	1005
-2000-01-04 03:05:02	2001-01-03	1005
-2000-01-04 08:00:06	2002-01-02	1005
-2000-01-04 08:00:07	2002-01-02	1005
-2000-01-04 18:00:08	2003-01-01	1006
-2000-01-04 18:06:02	2001-01-03	1006
-2000-01-06 00:00:06	2000-01-04	1005
-2000-01-06 00:00:07	2000-01-04	1005
-2000-01-07 00:00:08	2000-01-04	1006
-2000-06-29 01:00:01	2006-06-30	1001
-2000-06-29 01:00:02	2000-01-06	1001
-2000-06-29 01:00:02	2006-06-30	1001
-2000-06-29 01:00:03	2000-01-06	1001
-2000-06-29 01:01:01	2001-01-05	1001
-2000-06-29 01:01:02	2001-01-05	1001
-2000-06-29 02:00:02	2002-01-04	1001
-2000-06-29 02:00:03	2002-01-04	1001
-2000-06-29 16:00:02	2003-01-03	1001
-2000-06-29 16:00:03	2003-01-03	1001
-2000-12-28 12:00:01	2004-01-02	1002
-2000-12-28 12:00:02	2004-01-02	1002
-2001-06-24 01:00:01	2007-06-25	1003
-2001-06-24 01:00:02	2007-06-25	1003
-2001-06-24 01:00:04	2000-01-06	1003
-2001-06-24 01:00:05	2000-01-06	1003
-2001-06-24 01:03:01	2001-01-05	1003
-2001-06-24 01:03:02	2001-01-05	1003
-2001-06-24 04:00:04	2002-01-04	1003
-2001-06-24 04:00:05	2002-01-04	1003
-2001-12-21 00:00:01	2007-12-22	1004
-2001-12-21 00:00:02	2007-12-22	1004
-2001-12-21 00:00:05	2000-01-06	1004
-2001-12-21 00:00:06	2000-01-06	1004
-2001-12-21 00:04:01	2001-01-05	1004
-2001-12-21 00:04:02	2001-01-05	1004
-2001-12-21 04:00:05	2002-01-04	1004
-2001-12-21 04:00:06	2002-01-04	1004
-2002-06-22 04:00:06	2003-01-03	1005
-2002-06-22 04:00:07	2003-01-03	1005
-2003-12-11 00:00:01	2009-12-11	1008
-2003-12-11 00:00:02	2009-12-11	1008
-2004-06-08 01:00:01	2010-06-09	1009
-2004-06-08 01:00:02	2010-06-09	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-04 00:00:04	2000-01-04	1003
 2000-01-04 00:00:05	2000-01-04	1003
@@ -2641,7 +2590,58 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-04 00:00:04	2000-01-04	1003
+2000-01-04 00:00:05	2000-01-04	1003
+2000-01-04 03:00:06	2003-01-01	1005
+2000-01-04 03:00:07	2003-01-01	1005
+2000-01-04 03:05:01	2001-01-03	1005
+2000-01-04 03:05:02	2001-01-03	1005
+2000-01-04 08:00:06	2002-01-02	1005
+2000-01-04 08:00:07	2002-01-02	1005
+2000-01-04 18:00:08	2003-01-01	1006
+2000-01-04 18:06:02	2001-01-03	1006
+2000-01-06 00:00:06	2000-01-04	1005
+2000-01-06 00:00:07	2000-01-04	1005
+2000-01-07 00:00:08	2000-01-04	1006
+2000-06-29 01:00:01	2006-06-30	1001
+2000-06-29 01:00:02	2000-01-06	1001
+2000-06-29 01:00:02	2006-06-30	1001
+2000-06-29 01:00:03	2000-01-06	1001
+2000-06-29 01:01:01	2001-01-05	1001
+2000-06-29 01:01:02	2001-01-05	1001
+2000-06-29 02:00:02	2002-01-04	1001
+2000-06-29 02:00:03	2002-01-04	1001
+2000-06-29 16:00:02	2003-01-03	1001
+2000-06-29 16:00:03	2003-01-03	1001
+2000-12-28 12:00:01	2004-01-02	1002
+2000-12-28 12:00:02	2004-01-02	1002
+2001-06-24 01:00:01	2007-06-25	1003
+2001-06-24 01:00:02	2007-06-25	1003
+2001-06-24 01:00:04	2000-01-06	1003
+2001-06-24 01:00:05	2000-01-06	1003
+2001-06-24 01:03:01	2001-01-05	1003
+2001-06-24 01:03:02	2001-01-05	1003
+2001-06-24 04:00:04	2002-01-04	1003
+2001-06-24 04:00:05	2002-01-04	1003
+2001-12-21 00:00:01	2007-12-22	1004
+2001-12-21 00:00:02	2007-12-22	1004
+2001-12-21 00:00:05	2000-01-06	1004
+2001-12-21 00:00:06	2000-01-06	1004
+2001-12-21 00:04:01	2001-01-05	1004
+2001-12-21 00:04:02	2001-01-05	1004
+2001-12-21 04:00:05	2002-01-04	1004
+2001-12-21 04:00:06	2002-01-04	1004
+2002-06-22 04:00:06	2003-01-03	1005
+2002-06-22 04:00:07	2003-01-03	1005
+2003-12-11 00:00:01	2009-12-11	1008
+2003-12-11 00:00:02	2009-12-11	1008
+2004-06-08 01:00:01	2010-06-09	1009
+2004-06-08 01:00:02	2010-06-09	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfMonth_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-04 00:00:04	2000-01-04	1003
 2000-01-04 00:00:05	2000-01-04	1003
@@ -2722,182 +2722,47 @@ time	date	extra
 2004-06-08 01:00:02	2010-06-09	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfWeek_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2000-01-05 00:00:05	2000-01-04	1004
-2000-01-05 00:00:06	2000-01-04	1004
-2000-01-05 00:00:08	2002-01-02	1006
-2000-01-06 00:00:06	2000-01-04	1005
-2000-01-06 00:00:07	2000-01-04	1005
-2000-01-07 00:00:08	2000-01-04	1006
-2000-02-01 06:00:03	2003-01-02	1002
-2000-02-01 06:00:04	2003-01-02	1002
-2000-02-16 21:00:04	2003-01-02	1003
-2000-02-16 21:00:05	2003-01-02	1003
-2000-03-03 12:00:05	2003-01-02	1004
-2000-03-03 12:00:06	2003-01-02	1004
-2000-03-19 03:00:06	2003-01-02	1005
-2000-03-19 03:00:07	2003-01-02	1005
-2000-04-03 19:00:08	2003-01-02	1006
-2000-04-15 01:00:01	2005-01-01	1007
-2000-04-15 01:00:02	2005-01-01	1007
-2000-05-15 01:00:01	2005-01-01	1009
-2000-05-15 01:00:02	2005-01-01	1009
-2000-05-30 01:00:01	2005-01-01	1010
-2000-05-30 01:00:02	2005-01-01	1010
-2000-06-14 01:00:02	2005-01-01	1011
-2000-06-30 07:00:01	2004-01-02	1001
-2000-06-30 07:00:02	2004-01-02	1001
-2000-12-27 06:00:03	2003-01-03	1002
-2000-12-27 06:00:04	2003-01-03	1002
-2000-12-28 12:00:01	2004-01-02	1002
-2000-12-28 12:00:02	2004-01-02	1002
-2001-06-27 19:00:01	2004-01-02	1003
-2001-06-27 19:00:02	2004-01-02	1003
-2001-12-26 00:00:01	2004-01-02	1004
-2001-12-26 00:00:02	2004-01-02	1004
-2002-06-22 04:00:06	2003-01-03	1005
-2002-06-22 04:00:07	2003-01-03	1005
-2002-12-19 18:00:08	2003-01-03	1006
-2003-06-14 01:00:01	2009-06-14	1007
-2003-06-14 01:00:02	2009-06-14	1007
-2003-12-11 00:00:01	2009-12-11	1008
-2003-12-11 00:00:02	2009-12-11	1008
-2004-06-08 01:00:01	2010-06-09	1009
-2004-06-08 01:00:02	2010-06-09	1009
-2004-12-05 00:00:01	2010-12-06	1010
-2004-12-05 00:00:02	2010-12-06	1010
-2005-06-03 01:00:02	2011-06-04	1011
-2011-07-30 01:00:00	2010-01-01	1000
-2011-07-30 01:00:00	2010-01-01	1001
-2011-07-30 01:00:00	2010-01-01	1002
-2011-07-30 01:00:00	2010-01-01	1003
-2011-07-30 01:00:00	2010-01-01	1004
-2011-07-30 01:00:00	2010-01-01	1005
-2011-07-30 01:00:00	2010-01-01	1006
-2011-07-30 01:00:00	2010-01-01	1007
-2011-07-30 01:00:00	2010-01-01	1008
-2011-07-30 01:00:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2000-01-05 00:00:05	2000-01-04	1004
-2000-01-05 00:00:06	2000-01-04	1004
-2000-01-05 00:00:08	2002-01-02	1006
-2000-01-06 00:00:06	2000-01-04	1005
-2000-01-06 00:00:07	2000-01-04	1005
-2000-01-07 00:00:08	2000-01-04	1006
-2000-02-01 06:00:03	2003-01-02	1002
-2000-02-01 06:00:04	2003-01-02	1002
-2000-02-16 21:00:04	2003-01-02	1003
-2000-02-16 21:00:05	2003-01-02	1003
-2000-03-03 12:00:05	2003-01-02	1004
-2000-03-03 12:00:06	2003-01-02	1004
-2000-03-19 03:00:06	2003-01-02	1005
-2000-03-19 03:00:07	2003-01-02	1005
-2000-04-03 19:00:08	2003-01-02	1006
-2000-04-15 01:00:01	2005-01-01	1007
-2000-04-15 01:00:02	2005-01-01	1007
-2000-05-15 01:00:01	2005-01-01	1009
-2000-05-15 01:00:02	2005-01-01	1009
-2000-05-30 01:00:01	2005-01-01	1010
-2000-05-30 01:00:02	2005-01-01	1010
-2000-06-14 01:00:02	2005-01-01	1011
-2000-06-30 07:00:01	2004-01-02	1001
-2000-06-30 07:00:02	2004-01-02	1001
-2000-12-27 06:00:03	2003-01-03	1002
-2000-12-27 06:00:04	2003-01-03	1002
-2000-12-28 12:00:01	2004-01-02	1002
-2000-12-28 12:00:02	2004-01-02	1002
-2001-06-27 19:00:01	2004-01-02	1003
-2001-06-27 19:00:02	2004-01-02	1003
-2001-12-26 00:00:01	2004-01-02	1004
-2001-12-26 00:00:02	2004-01-02	1004
-2002-06-22 04:00:06	2003-01-03	1005
-2002-06-22 04:00:07	2003-01-03	1005
-2002-12-19 18:00:08	2003-01-03	1006
-2003-06-14 01:00:01	2009-06-14	1007
-2003-06-14 01:00:02	2009-06-14	1007
-2003-12-11 00:00:01	2009-12-11	1008
-2003-12-11 00:00:02	2009-12-11	1008
-2004-06-08 01:00:01	2010-06-09	1009
-2004-06-08 01:00:02	2010-06-09	1009
-2004-12-05 00:00:01	2010-12-06	1010
-2004-12-05 00:00:02	2010-12-06	1010
-2005-06-03 01:00:02	2011-06-04	1011
-2011-07-30 01:00:00	2010-01-01	1000
-2011-07-30 01:00:00	2010-01-01	1001
-2011-07-30 01:00:00	2010-01-01	1002
-2011-07-30 01:00:00	2010-01-01	1003
-2011-07-30 01:00:00	2010-01-01	1004
-2011-07-30 01:00:00	2010-01-01	1005
-2011-07-30 01:00:00	2010-01-01	1006
-2011-07-30 01:00:00	2010-01-01	1007
-2011-07-30 01:00:00	2010-01-01	1008
-2011-07-30 01:00:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2000-01-07 00:00:08	2000-01-04	1006
-2000-04-03 19:00:08	2003-01-02	1006
-2000-06-14 01:00:02	2005-01-01	1011
-2002-12-19 18:00:08	2003-01-03	1006
-2005-06-03 01:00:02	2011-06-04	1011
-2011-07-30 01:00:00	2010-01-01	1000
-2011-07-30 01:00:00	2010-01-01	1001
-2011-07-30 01:00:00	2010-01-01	1002
-2011-07-30 01:00:00	2010-01-01	1003
-2011-07-30 01:00:00	2010-01-01	1004
-2011-07-30 01:00:00	2010-01-01	1005
-2011-07-30 01:00:00	2010-01-01	1006
-2011-07-30 01:00:00	2010-01-01	1007
-2011-07-30 01:00:00	2010-01-01	1008
-2011-07-30 01:00:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-03 00:00:03	2000-01-04	1002
 2000-01-03 00:00:04	2000-01-04	1002
@@ -3080,7 +2945,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-03 00:00:03	2000-01-04	1002
 2000-01-03 00:00:04	2000-01-04	1002
@@ -3263,7 +3128,123 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-05 00:00:05	2000-01-04	1004
+2000-01-05 00:00:06	2000-01-04	1004
+2000-01-05 00:00:08	2002-01-02	1006
+2000-01-06 00:00:06	2000-01-04	1005
+2000-01-06 00:00:07	2000-01-04	1005
+2000-01-07 00:00:08	2000-01-04	1006
+2000-02-01 06:00:03	2003-01-02	1002
+2000-02-01 06:00:04	2003-01-02	1002
+2000-02-16 21:00:04	2003-01-02	1003
+2000-02-16 21:00:05	2003-01-02	1003
+2000-03-03 12:00:05	2003-01-02	1004
+2000-03-03 12:00:06	2003-01-02	1004
+2000-03-19 03:00:06	2003-01-02	1005
+2000-03-19 03:00:07	2003-01-02	1005
+2000-04-03 19:00:08	2003-01-02	1006
+2000-04-15 01:00:01	2005-01-01	1007
+2000-04-15 01:00:02	2005-01-01	1007
+2000-05-15 01:00:01	2005-01-01	1009
+2000-05-15 01:00:02	2005-01-01	1009
+2000-05-30 01:00:01	2005-01-01	1010
+2000-05-30 01:00:02	2005-01-01	1010
+2000-06-14 01:00:02	2005-01-01	1011
+2000-06-30 07:00:01	2004-01-02	1001
+2000-06-30 07:00:02	2004-01-02	1001
+2000-12-27 06:00:03	2003-01-03	1002
+2000-12-27 06:00:04	2003-01-03	1002
+2000-12-28 12:00:01	2004-01-02	1002
+2000-12-28 12:00:02	2004-01-02	1002
+2001-06-27 19:00:01	2004-01-02	1003
+2001-06-27 19:00:02	2004-01-02	1003
+2001-12-26 00:00:01	2004-01-02	1004
+2001-12-26 00:00:02	2004-01-02	1004
+2002-06-22 04:00:06	2003-01-03	1005
+2002-06-22 04:00:07	2003-01-03	1005
+2002-12-19 18:00:08	2003-01-03	1006
+2003-06-14 01:00:01	2009-06-14	1007
+2003-06-14 01:00:02	2009-06-14	1007
+2003-12-11 00:00:01	2009-12-11	1008
+2003-12-11 00:00:02	2009-12-11	1008
+2004-06-08 01:00:01	2010-06-09	1009
+2004-06-08 01:00:02	2010-06-09	1009
+2004-12-05 00:00:01	2010-12-06	1010
+2004-12-05 00:00:02	2010-12-06	1010
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-05 00:00:05	2000-01-04	1004
+2000-01-05 00:00:06	2000-01-04	1004
+2000-01-05 00:00:08	2002-01-02	1006
+2000-01-06 00:00:06	2000-01-04	1005
+2000-01-06 00:00:07	2000-01-04	1005
+2000-01-07 00:00:08	2000-01-04	1006
+2000-02-01 06:00:03	2003-01-02	1002
+2000-02-01 06:00:04	2003-01-02	1002
+2000-02-16 21:00:04	2003-01-02	1003
+2000-02-16 21:00:05	2003-01-02	1003
+2000-03-03 12:00:05	2003-01-02	1004
+2000-03-03 12:00:06	2003-01-02	1004
+2000-03-19 03:00:06	2003-01-02	1005
+2000-03-19 03:00:07	2003-01-02	1005
+2000-04-03 19:00:08	2003-01-02	1006
+2000-04-15 01:00:01	2005-01-01	1007
+2000-04-15 01:00:02	2005-01-01	1007
+2000-05-15 01:00:01	2005-01-01	1009
+2000-05-15 01:00:02	2005-01-01	1009
+2000-05-30 01:00:01	2005-01-01	1010
+2000-05-30 01:00:02	2005-01-01	1010
+2000-06-14 01:00:02	2005-01-01	1011
+2000-06-30 07:00:01	2004-01-02	1001
+2000-06-30 07:00:02	2004-01-02	1001
+2000-12-27 06:00:03	2003-01-03	1002
+2000-12-27 06:00:04	2003-01-03	1002
+2000-12-28 12:00:01	2004-01-02	1002
+2000-12-28 12:00:02	2004-01-02	1002
+2001-06-27 19:00:01	2004-01-02	1003
+2001-06-27 19:00:02	2004-01-02	1003
+2001-12-26 00:00:01	2004-01-02	1004
+2001-12-26 00:00:02	2004-01-02	1004
+2002-06-22 04:00:06	2003-01-03	1005
+2002-06-22 04:00:07	2003-01-03	1005
+2002-12-19 18:00:08	2003-01-03	1006
+2003-06-14 01:00:01	2009-06-14	1007
+2003-06-14 01:00:02	2009-06-14	1007
+2003-12-11 00:00:01	2009-12-11	1008
+2003-12-11 00:00:02	2009-12-11	1008
+2004-06-08 01:00:01	2010-06-09	1009
+2004-06-08 01:00:02	2010-06-09	1009
+2004-12-05 00:00:01	2010-12-06	1010
+2004-12-05 00:00:02	2010-12-06	1010
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-03 00:00:03	2000-01-04	1002
 2000-01-03 00:00:04	2000-01-04	1002
@@ -3446,7 +3427,758 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-03 00:00:03	2000-01-04	1002
+2000-01-03 00:00:04	2000-01-04	1002
+2000-01-03 00:00:04	2002-01-02	1003
+2000-01-03 00:00:05	2002-01-02	1003
+2000-01-03 12:00:05	2003-01-01	1004
+2000-01-03 12:00:06	2003-01-01	1004
+2000-01-03 12:04:01	2001-01-03	1004
+2000-01-03 12:04:02	2001-01-03	1004
+2000-01-03 16:00:05	2002-01-02	1004
+2000-01-03 16:00:06	2002-01-02	1004
+2000-01-04 00:00:04	2000-01-04	1003
+2000-01-04 00:00:05	2000-01-04	1003
+2000-01-04 03:00:06	2003-01-01	1005
+2000-01-04 03:00:07	2003-01-01	1005
+2000-01-04 03:05:01	2001-01-03	1005
+2000-01-04 03:05:02	2001-01-03	1005
+2000-01-04 08:00:06	2002-01-02	1005
+2000-01-04 08:00:07	2002-01-02	1005
+2000-01-04 18:00:08	2003-01-01	1006
+2000-01-04 18:06:02	2001-01-03	1006
+2000-01-05 00:00:05	2000-01-04	1004
+2000-01-05 00:00:06	2000-01-04	1004
+2000-01-05 00:00:08	2002-01-02	1006
+2000-01-06 00:00:06	2000-01-04	1005
+2000-01-06 00:00:07	2000-01-04	1005
+2000-01-07 00:00:08	2000-01-04	1006
+2000-01-16 00:00:01	2004-01-01	1001
+2000-01-16 00:00:01	2005-01-01	1001
+2000-01-16 00:00:02	2000-01-05	1001
+2000-01-16 00:00:02	2004-01-01	1001
+2000-01-16 00:00:02	2005-01-01	1001
+2000-01-16 00:00:03	2000-01-05	1001
+2000-01-16 00:01:01	2001-01-04	1001
+2000-01-16 00:01:02	2001-01-04	1001
+2000-01-16 01:00:02	2002-01-03	1001
+2000-01-16 01:00:03	2002-01-03	1001
+2000-01-16 15:00:02	2003-01-02	1001
+2000-01-16 15:00:03	2003-01-02	1001
+2000-01-31 00:00:01	2004-01-01	1002
+2000-01-31 00:00:01	2005-01-01	1002
+2000-01-31 00:00:02	2004-01-01	1002
+2000-01-31 00:00:02	2005-01-01	1002
+2000-01-31 00:00:03	2000-01-05	1002
+2000-01-31 00:00:04	2000-01-05	1002
+2000-01-31 00:02:01	2001-01-04	1002
+2000-01-31 00:02:02	2001-01-04	1002
+2000-01-31 02:00:03	2002-01-03	1002
+2000-01-31 02:00:04	2002-01-03	1002
+2000-02-01 06:00:03	2003-01-02	1002
+2000-02-01 06:00:04	2003-01-02	1002
+2000-02-15 00:00:01	2004-01-01	1003
+2000-02-15 00:00:01	2005-01-01	1003
+2000-02-15 00:00:02	2004-01-01	1003
+2000-02-15 00:00:02	2005-01-01	1003
+2000-02-15 00:00:04	2000-01-05	1003
+2000-02-15 00:00:05	2000-01-05	1003
+2000-02-15 00:03:01	2001-01-04	1003
+2000-02-15 00:03:02	2001-01-04	1003
+2000-02-15 03:00:04	2002-01-03	1003
+2000-02-15 03:00:05	2002-01-03	1003
+2000-02-16 21:00:04	2003-01-02	1003
+2000-02-16 21:00:05	2003-01-02	1003
+2000-03-01 00:00:01	2004-01-01	1004
+2000-03-01 00:00:01	2005-01-01	1004
+2000-03-01 00:00:02	2004-01-01	1004
+2000-03-01 00:00:02	2005-01-01	1004
+2000-03-01 00:00:05	2000-01-05	1004
+2000-03-01 00:00:06	2000-01-05	1004
+2000-03-01 00:04:01	2001-01-04	1004
+2000-03-01 00:04:02	2001-01-04	1004
+2000-03-01 04:00:05	2002-01-03	1004
+2000-03-01 04:00:06	2002-01-03	1004
+2000-03-03 12:00:05	2003-01-02	1004
+2000-03-03 12:00:06	2003-01-02	1004
+2000-03-16 00:00:01	2004-01-01	1005
+2000-03-16 00:00:01	2005-01-01	1005
+2000-03-16 00:00:02	2004-01-01	1005
+2000-03-16 00:00:02	2005-01-01	1005
+2000-03-16 00:00:06	2000-01-05	1005
+2000-03-16 00:00:07	2000-01-05	1005
+2000-03-16 00:05:01	2001-01-04	1005
+2000-03-16 00:05:02	2001-01-04	1005
+2000-03-16 05:00:06	2002-01-03	1005
+2000-03-16 05:00:07	2002-01-03	1005
+2000-03-19 03:00:06	2003-01-02	1005
+2000-03-19 03:00:07	2003-01-02	1005
+2000-03-31 01:00:01	2005-01-01	1006
+2000-03-31 01:00:02	2004-01-01	1006
+2000-03-31 01:00:02	2005-01-01	1006
+2000-03-31 01:00:08	2000-01-05	1006
+2000-03-31 01:06:02	2001-01-04	1006
+2000-03-31 07:00:08	2002-01-03	1006
+2000-04-03 19:00:08	2003-01-02	1006
+2000-04-15 01:00:01	2005-01-01	1007
+2000-04-15 01:00:02	2005-01-01	1007
+2000-05-15 01:00:01	2005-01-01	1009
+2000-05-15 01:00:02	2005-01-01	1009
+2000-05-30 01:00:01	2005-01-01	1010
+2000-05-30 01:00:02	2005-01-01	1010
+2000-06-14 01:00:02	2005-01-01	1011
+2000-06-29 01:00:01	2006-06-30	1001
+2000-06-29 01:00:02	2000-01-06	1001
+2000-06-29 01:00:02	2006-06-30	1001
+2000-06-29 01:00:03	2000-01-06	1001
+2000-06-29 01:01:01	2001-01-05	1001
+2000-06-29 01:01:02	2001-01-05	1001
+2000-06-29 02:00:02	2002-01-04	1001
+2000-06-29 02:00:03	2002-01-04	1001
+2000-06-29 16:00:02	2003-01-03	1001
+2000-06-29 16:00:03	2003-01-03	1001
+2000-06-30 07:00:01	2004-01-02	1001
+2000-06-30 07:00:02	2004-01-02	1001
+2000-12-26 00:00:01	2006-12-27	1002
+2000-12-26 00:00:02	2006-12-27	1002
+2000-12-26 00:00:03	2000-01-06	1002
+2000-12-26 00:00:04	2000-01-06	1002
+2000-12-26 00:02:01	2001-01-05	1002
+2000-12-26 00:02:02	2001-01-05	1002
+2000-12-26 02:00:03	2002-01-04	1002
+2000-12-26 02:00:04	2002-01-04	1002
+2000-12-27 06:00:03	2003-01-03	1002
+2000-12-27 06:00:04	2003-01-03	1002
+2000-12-28 12:00:01	2004-01-02	1002
+2000-12-28 12:00:02	2004-01-02	1002
+2001-06-24 01:00:01	2007-06-25	1003
+2001-06-24 01:00:02	2007-06-25	1003
+2001-06-24 01:00:04	2000-01-06	1003
+2001-06-24 01:00:05	2000-01-06	1003
+2001-06-24 01:03:01	2001-01-05	1003
+2001-06-24 01:03:02	2001-01-05	1003
+2001-06-24 04:00:04	2002-01-04	1003
+2001-06-24 04:00:05	2002-01-04	1003
+2001-06-27 19:00:01	2004-01-02	1003
+2001-06-27 19:00:02	2004-01-02	1003
+2001-12-21 00:00:01	2007-12-22	1004
+2001-12-21 00:00:02	2007-12-22	1004
+2001-12-21 00:00:05	2000-01-06	1004
+2001-12-21 00:00:06	2000-01-06	1004
+2001-12-21 00:04:01	2001-01-05	1004
+2001-12-21 00:04:02	2001-01-05	1004
+2001-12-21 04:00:05	2002-01-04	1004
+2001-12-21 04:00:06	2002-01-04	1004
+2001-12-26 00:00:01	2004-01-02	1004
+2001-12-26 00:00:02	2004-01-02	1004
+2002-06-19 01:00:01	2008-06-19	1005
+2002-06-19 01:00:02	2008-06-19	1005
+2002-06-19 01:00:06	2000-01-06	1005
+2002-06-19 01:00:07	2000-01-06	1005
+2002-06-19 01:05:01	2001-01-05	1005
+2002-06-19 01:05:02	2001-01-05	1005
+2002-06-19 06:00:06	2002-01-04	1005
+2002-06-19 06:00:07	2002-01-04	1005
+2002-06-22 04:00:06	2003-01-03	1005
+2002-06-22 04:00:07	2003-01-03	1005
+2002-12-16 00:00:01	2008-12-16	1006
+2002-12-16 00:00:02	2008-12-16	1006
+2002-12-16 00:00:08	2000-01-06	1006
+2002-12-16 00:06:02	2001-01-05	1006
+2002-12-16 06:00:08	2002-01-04	1006
+2002-12-19 18:00:08	2003-01-03	1006
+2003-06-14 01:00:01	2009-06-14	1007
+2003-06-14 01:00:02	2009-06-14	1007
+2003-12-11 00:00:01	2009-12-11	1008
+2003-12-11 00:00:02	2009-12-11	1008
+2004-06-08 01:00:01	2010-06-09	1009
+2004-06-08 01:00:02	2010-06-09	1009
+2004-12-05 00:00:01	2010-12-06	1010
+2004-12-05 00:00:02	2010-12-06	1010
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-07 00:00:08	2000-01-04	1006
+2000-04-03 19:00:08	2003-01-02	1006
+2000-06-14 01:00:02	2005-01-01	1011
+2002-12-19 18:00:08	2003-01-03	1006
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-03 00:00:03	2000-01-04	1002
+2000-01-03 00:00:04	2000-01-04	1002
+2000-01-03 00:00:04	2002-01-02	1003
+2000-01-03 00:00:05	2002-01-02	1003
+2000-01-03 12:00:05	2003-01-01	1004
+2000-01-03 12:00:06	2003-01-01	1004
+2000-01-03 12:04:01	2001-01-03	1004
+2000-01-03 12:04:02	2001-01-03	1004
+2000-01-03 16:00:05	2002-01-02	1004
+2000-01-03 16:00:06	2002-01-02	1004
+2000-01-04 00:00:04	2000-01-04	1003
+2000-01-04 00:00:05	2000-01-04	1003
+2000-01-04 03:00:06	2003-01-01	1005
+2000-01-04 03:00:07	2003-01-01	1005
+2000-01-04 03:05:01	2001-01-03	1005
+2000-01-04 03:05:02	2001-01-03	1005
+2000-01-04 08:00:06	2002-01-02	1005
+2000-01-04 08:00:07	2002-01-02	1005
+2000-01-04 18:00:08	2003-01-01	1006
+2000-01-04 18:06:02	2001-01-03	1006
+2000-01-05 00:00:05	2000-01-04	1004
+2000-01-05 00:00:06	2000-01-04	1004
+2000-01-05 00:00:08	2002-01-02	1006
+2000-01-06 00:00:06	2000-01-04	1005
+2000-01-06 00:00:07	2000-01-04	1005
+2000-01-07 00:00:08	2000-01-04	1006
+2000-01-16 00:00:01	2004-01-01	1001
+2000-01-16 00:00:01	2005-01-01	1001
+2000-01-16 00:00:02	2000-01-05	1001
+2000-01-16 00:00:02	2004-01-01	1001
+2000-01-16 00:00:02	2005-01-01	1001
+2000-01-16 00:00:03	2000-01-05	1001
+2000-01-16 00:01:01	2001-01-04	1001
+2000-01-16 00:01:02	2001-01-04	1001
+2000-01-16 01:00:02	2002-01-03	1001
+2000-01-16 01:00:03	2002-01-03	1001
+2000-01-16 15:00:02	2003-01-02	1001
+2000-01-16 15:00:03	2003-01-02	1001
+2000-01-31 00:00:01	2004-01-01	1002
+2000-01-31 00:00:01	2005-01-01	1002
+2000-01-31 00:00:02	2004-01-01	1002
+2000-01-31 00:00:02	2005-01-01	1002
+2000-01-31 00:00:03	2000-01-05	1002
+2000-01-31 00:00:04	2000-01-05	1002
+2000-01-31 00:02:01	2001-01-04	1002
+2000-01-31 00:02:02	2001-01-04	1002
+2000-01-31 02:00:03	2002-01-03	1002
+2000-01-31 02:00:04	2002-01-03	1002
+2000-02-01 06:00:03	2003-01-02	1002
+2000-02-01 06:00:04	2003-01-02	1002
+2000-02-15 00:00:01	2004-01-01	1003
+2000-02-15 00:00:01	2005-01-01	1003
+2000-02-15 00:00:02	2004-01-01	1003
+2000-02-15 00:00:02	2005-01-01	1003
+2000-02-15 00:00:04	2000-01-05	1003
+2000-02-15 00:00:05	2000-01-05	1003
+2000-02-15 00:03:01	2001-01-04	1003
+2000-02-15 00:03:02	2001-01-04	1003
+2000-02-15 03:00:04	2002-01-03	1003
+2000-02-15 03:00:05	2002-01-03	1003
+2000-02-16 21:00:04	2003-01-02	1003
+2000-02-16 21:00:05	2003-01-02	1003
+2000-03-01 00:00:01	2004-01-01	1004
+2000-03-01 00:00:01	2005-01-01	1004
+2000-03-01 00:00:02	2004-01-01	1004
+2000-03-01 00:00:02	2005-01-01	1004
+2000-03-01 00:00:05	2000-01-05	1004
+2000-03-01 00:00:06	2000-01-05	1004
+2000-03-01 00:04:01	2001-01-04	1004
+2000-03-01 00:04:02	2001-01-04	1004
+2000-03-01 04:00:05	2002-01-03	1004
+2000-03-01 04:00:06	2002-01-03	1004
+2000-03-03 12:00:05	2003-01-02	1004
+2000-03-03 12:00:06	2003-01-02	1004
+2000-03-16 00:00:01	2004-01-01	1005
+2000-03-16 00:00:01	2005-01-01	1005
+2000-03-16 00:00:02	2004-01-01	1005
+2000-03-16 00:00:02	2005-01-01	1005
+2000-03-16 00:00:06	2000-01-05	1005
+2000-03-16 00:00:07	2000-01-05	1005
+2000-03-16 00:05:01	2001-01-04	1005
+2000-03-16 00:05:02	2001-01-04	1005
+2000-03-16 05:00:06	2002-01-03	1005
+2000-03-16 05:00:07	2002-01-03	1005
+2000-03-19 03:00:06	2003-01-02	1005
+2000-03-19 03:00:07	2003-01-02	1005
+2000-03-31 01:00:01	2005-01-01	1006
+2000-03-31 01:00:02	2004-01-01	1006
+2000-03-31 01:00:02	2005-01-01	1006
+2000-03-31 01:00:08	2000-01-05	1006
+2000-03-31 01:06:02	2001-01-04	1006
+2000-03-31 07:00:08	2002-01-03	1006
+2000-04-03 19:00:08	2003-01-02	1006
+2000-04-15 01:00:01	2005-01-01	1007
+2000-04-15 01:00:02	2005-01-01	1007
+2000-05-15 01:00:01	2005-01-01	1009
+2000-05-15 01:00:02	2005-01-01	1009
+2000-05-30 01:00:01	2005-01-01	1010
+2000-05-30 01:00:02	2005-01-01	1010
+2000-06-14 01:00:02	2005-01-01	1011
+2000-06-29 01:00:01	2006-06-30	1001
+2000-06-29 01:00:02	2000-01-06	1001
+2000-06-29 01:00:02	2006-06-30	1001
+2000-06-29 01:00:03	2000-01-06	1001
+2000-06-29 01:01:01	2001-01-05	1001
+2000-06-29 01:01:02	2001-01-05	1001
+2000-06-29 02:00:02	2002-01-04	1001
+2000-06-29 02:00:03	2002-01-04	1001
+2000-06-29 16:00:02	2003-01-03	1001
+2000-06-29 16:00:03	2003-01-03	1001
+2000-06-30 07:00:01	2004-01-02	1001
+2000-06-30 07:00:02	2004-01-02	1001
+2000-12-26 00:00:01	2006-12-27	1002
+2000-12-26 00:00:02	2006-12-27	1002
+2000-12-26 00:00:03	2000-01-06	1002
+2000-12-26 00:00:04	2000-01-06	1002
+2000-12-26 00:02:01	2001-01-05	1002
+2000-12-26 00:02:02	2001-01-05	1002
+2000-12-26 02:00:03	2002-01-04	1002
+2000-12-26 02:00:04	2002-01-04	1002
+2000-12-27 06:00:03	2003-01-03	1002
+2000-12-27 06:00:04	2003-01-03	1002
+2000-12-28 12:00:01	2004-01-02	1002
+2000-12-28 12:00:02	2004-01-02	1002
+2001-06-24 01:00:01	2007-06-25	1003
+2001-06-24 01:00:02	2007-06-25	1003
+2001-06-24 01:00:04	2000-01-06	1003
+2001-06-24 01:00:05	2000-01-06	1003
+2001-06-24 01:03:01	2001-01-05	1003
+2001-06-24 01:03:02	2001-01-05	1003
+2001-06-24 04:00:04	2002-01-04	1003
+2001-06-24 04:00:05	2002-01-04	1003
+2001-06-27 19:00:01	2004-01-02	1003
+2001-06-27 19:00:02	2004-01-02	1003
+2001-12-21 00:00:01	2007-12-22	1004
+2001-12-21 00:00:02	2007-12-22	1004
+2001-12-21 00:00:05	2000-01-06	1004
+2001-12-21 00:00:06	2000-01-06	1004
+2001-12-21 00:04:01	2001-01-05	1004
+2001-12-21 00:04:02	2001-01-05	1004
+2001-12-21 04:00:05	2002-01-04	1004
+2001-12-21 04:00:06	2002-01-04	1004
+2001-12-26 00:00:01	2004-01-02	1004
+2001-12-26 00:00:02	2004-01-02	1004
+2002-06-19 01:00:01	2008-06-19	1005
+2002-06-19 01:00:02	2008-06-19	1005
+2002-06-19 01:00:06	2000-01-06	1005
+2002-06-19 01:00:07	2000-01-06	1005
+2002-06-19 01:05:01	2001-01-05	1005
+2002-06-19 01:05:02	2001-01-05	1005
+2002-06-19 06:00:06	2002-01-04	1005
+2002-06-19 06:00:07	2002-01-04	1005
+2002-06-22 04:00:06	2003-01-03	1005
+2002-06-22 04:00:07	2003-01-03	1005
+2002-12-16 00:00:01	2008-12-16	1006
+2002-12-16 00:00:02	2008-12-16	1006
+2002-12-16 00:00:08	2000-01-06	1006
+2002-12-16 00:06:02	2001-01-05	1006
+2002-12-16 06:00:08	2002-01-04	1006
+2002-12-19 18:00:08	2003-01-03	1006
+2003-06-14 01:00:01	2009-06-14	1007
+2003-06-14 01:00:02	2009-06-14	1007
+2003-12-11 00:00:01	2009-12-11	1008
+2003-12-11 00:00:02	2009-12-11	1008
+2004-06-08 01:00:01	2010-06-09	1009
+2004-06-08 01:00:02	2010-06-09	1009
+2004-12-05 00:00:01	2010-12-06	1010
+2004-12-05 00:00:02	2010-12-06	1010
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-03 00:00:03	2000-01-04	1002
+2000-01-03 00:00:04	2000-01-04	1002
+2000-01-03 00:00:04	2002-01-02	1003
+2000-01-03 00:00:05	2002-01-02	1003
+2000-01-03 12:00:05	2003-01-01	1004
+2000-01-03 12:00:06	2003-01-01	1004
+2000-01-03 12:04:01	2001-01-03	1004
+2000-01-03 12:04:02	2001-01-03	1004
+2000-01-03 16:00:05	2002-01-02	1004
+2000-01-03 16:00:06	2002-01-02	1004
+2000-01-04 00:00:04	2000-01-04	1003
+2000-01-04 00:00:05	2000-01-04	1003
+2000-01-04 03:00:06	2003-01-01	1005
+2000-01-04 03:00:07	2003-01-01	1005
+2000-01-04 03:05:01	2001-01-03	1005
+2000-01-04 03:05:02	2001-01-03	1005
+2000-01-04 08:00:06	2002-01-02	1005
+2000-01-04 08:00:07	2002-01-02	1005
+2000-01-04 18:00:08	2003-01-01	1006
+2000-01-04 18:06:02	2001-01-03	1006
+2000-01-05 00:00:05	2000-01-04	1004
+2000-01-05 00:00:06	2000-01-04	1004
+2000-01-05 00:00:08	2002-01-02	1006
+2000-01-06 00:00:06	2000-01-04	1005
+2000-01-06 00:00:07	2000-01-04	1005
+2000-01-07 00:00:08	2000-01-04	1006
+2000-01-16 00:00:01	2004-01-01	1001
+2000-01-16 00:00:01	2005-01-01	1001
+2000-01-16 00:00:02	2000-01-05	1001
+2000-01-16 00:00:02	2004-01-01	1001
+2000-01-16 00:00:02	2005-01-01	1001
+2000-01-16 00:00:03	2000-01-05	1001
+2000-01-16 00:01:01	2001-01-04	1001
+2000-01-16 00:01:02	2001-01-04	1001
+2000-01-16 01:00:02	2002-01-03	1001
+2000-01-16 01:00:03	2002-01-03	1001
+2000-01-16 15:00:02	2003-01-02	1001
+2000-01-16 15:00:03	2003-01-02	1001
+2000-01-31 00:00:01	2004-01-01	1002
+2000-01-31 00:00:01	2005-01-01	1002
+2000-01-31 00:00:02	2004-01-01	1002
+2000-01-31 00:00:02	2005-01-01	1002
+2000-01-31 00:00:03	2000-01-05	1002
+2000-01-31 00:00:04	2000-01-05	1002
+2000-01-31 00:02:01	2001-01-04	1002
+2000-01-31 00:02:02	2001-01-04	1002
+2000-01-31 02:00:03	2002-01-03	1002
+2000-01-31 02:00:04	2002-01-03	1002
+2000-02-01 06:00:03	2003-01-02	1002
+2000-02-01 06:00:04	2003-01-02	1002
+2000-02-15 00:00:01	2004-01-01	1003
+2000-02-15 00:00:01	2005-01-01	1003
+2000-02-15 00:00:02	2004-01-01	1003
+2000-02-15 00:00:02	2005-01-01	1003
+2000-02-15 00:00:04	2000-01-05	1003
+2000-02-15 00:00:05	2000-01-05	1003
+2000-02-15 00:03:01	2001-01-04	1003
+2000-02-15 00:03:02	2001-01-04	1003
+2000-02-15 03:00:04	2002-01-03	1003
+2000-02-15 03:00:05	2002-01-03	1003
+2000-02-16 21:00:04	2003-01-02	1003
+2000-02-16 21:00:05	2003-01-02	1003
+2000-03-01 00:00:01	2004-01-01	1004
+2000-03-01 00:00:01	2005-01-01	1004
+2000-03-01 00:00:02	2004-01-01	1004
+2000-03-01 00:00:02	2005-01-01	1004
+2000-03-01 00:00:05	2000-01-05	1004
+2000-03-01 00:00:06	2000-01-05	1004
+2000-03-01 00:04:01	2001-01-04	1004
+2000-03-01 00:04:02	2001-01-04	1004
+2000-03-01 04:00:05	2002-01-03	1004
+2000-03-01 04:00:06	2002-01-03	1004
+2000-03-03 12:00:05	2003-01-02	1004
+2000-03-03 12:00:06	2003-01-02	1004
+2000-03-16 00:00:01	2004-01-01	1005
+2000-03-16 00:00:01	2005-01-01	1005
+2000-03-16 00:00:02	2004-01-01	1005
+2000-03-16 00:00:02	2005-01-01	1005
+2000-03-16 00:00:06	2000-01-05	1005
+2000-03-16 00:00:07	2000-01-05	1005
+2000-03-16 00:05:01	2001-01-04	1005
+2000-03-16 00:05:02	2001-01-04	1005
+2000-03-16 05:00:06	2002-01-03	1005
+2000-03-16 05:00:07	2002-01-03	1005
+2000-03-19 03:00:06	2003-01-02	1005
+2000-03-19 03:00:07	2003-01-02	1005
+2000-03-31 01:00:01	2005-01-01	1006
+2000-03-31 01:00:02	2004-01-01	1006
+2000-03-31 01:00:02	2005-01-01	1006
+2000-03-31 01:00:08	2000-01-05	1006
+2000-03-31 01:06:02	2001-01-04	1006
+2000-03-31 07:00:08	2002-01-03	1006
+2000-04-03 19:00:08	2003-01-02	1006
+2000-04-15 01:00:01	2005-01-01	1007
+2000-04-15 01:00:02	2005-01-01	1007
+2000-05-15 01:00:01	2005-01-01	1009
+2000-05-15 01:00:02	2005-01-01	1009
+2000-05-30 01:00:01	2005-01-01	1010
+2000-05-30 01:00:02	2005-01-01	1010
+2000-06-14 01:00:02	2005-01-01	1011
+2000-06-29 01:00:01	2006-06-30	1001
+2000-06-29 01:00:02	2000-01-06	1001
+2000-06-29 01:00:02	2006-06-30	1001
+2000-06-29 01:00:03	2000-01-06	1001
+2000-06-29 01:01:01	2001-01-05	1001
+2000-06-29 01:01:02	2001-01-05	1001
+2000-06-29 02:00:02	2002-01-04	1001
+2000-06-29 02:00:03	2002-01-04	1001
+2000-06-29 16:00:02	2003-01-03	1001
+2000-06-29 16:00:03	2003-01-03	1001
+2000-06-30 07:00:01	2004-01-02	1001
+2000-06-30 07:00:02	2004-01-02	1001
+2000-12-26 00:00:01	2006-12-27	1002
+2000-12-26 00:00:02	2006-12-27	1002
+2000-12-26 00:00:03	2000-01-06	1002
+2000-12-26 00:00:04	2000-01-06	1002
+2000-12-26 00:02:01	2001-01-05	1002
+2000-12-26 00:02:02	2001-01-05	1002
+2000-12-26 02:00:03	2002-01-04	1002
+2000-12-26 02:00:04	2002-01-04	1002
+2000-12-27 06:00:03	2003-01-03	1002
+2000-12-27 06:00:04	2003-01-03	1002
+2000-12-28 12:00:01	2004-01-02	1002
+2000-12-28 12:00:02	2004-01-02	1002
+2001-06-24 01:00:01	2007-06-25	1003
+2001-06-24 01:00:02	2007-06-25	1003
+2001-06-24 01:00:04	2000-01-06	1003
+2001-06-24 01:00:05	2000-01-06	1003
+2001-06-24 01:03:01	2001-01-05	1003
+2001-06-24 01:03:02	2001-01-05	1003
+2001-06-24 04:00:04	2002-01-04	1003
+2001-06-24 04:00:05	2002-01-04	1003
+2001-06-27 19:00:01	2004-01-02	1003
+2001-06-27 19:00:02	2004-01-02	1003
+2001-12-21 00:00:01	2007-12-22	1004
+2001-12-21 00:00:02	2007-12-22	1004
+2001-12-21 00:00:05	2000-01-06	1004
+2001-12-21 00:00:06	2000-01-06	1004
+2001-12-21 00:04:01	2001-01-05	1004
+2001-12-21 00:04:02	2001-01-05	1004
+2001-12-21 04:00:05	2002-01-04	1004
+2001-12-21 04:00:06	2002-01-04	1004
+2001-12-26 00:00:01	2004-01-02	1004
+2001-12-26 00:00:02	2004-01-02	1004
+2002-06-19 01:00:01	2008-06-19	1005
+2002-06-19 01:00:02	2008-06-19	1005
+2002-06-19 01:00:06	2000-01-06	1005
+2002-06-19 01:00:07	2000-01-06	1005
+2002-06-19 01:05:01	2001-01-05	1005
+2002-06-19 01:05:02	2001-01-05	1005
+2002-06-19 06:00:06	2002-01-04	1005
+2002-06-19 06:00:07	2002-01-04	1005
+2002-06-22 04:00:06	2003-01-03	1005
+2002-06-22 04:00:07	2003-01-03	1005
+2002-12-16 00:00:01	2008-12-16	1006
+2002-12-16 00:00:02	2008-12-16	1006
+2002-12-16 00:00:08	2000-01-06	1006
+2002-12-16 00:06:02	2001-01-05	1006
+2002-12-16 06:00:08	2002-01-04	1006
+2002-12-19 18:00:08	2003-01-03	1006
+2003-06-14 01:00:01	2009-06-14	1007
+2003-06-14 01:00:02	2009-06-14	1007
+2003-12-11 00:00:01	2009-12-11	1008
+2003-12-11 00:00:02	2009-12-11	1008
+2004-06-08 01:00:01	2010-06-09	1009
+2004-06-08 01:00:02	2010-06-09	1009
+2004-12-05 00:00:01	2010-12-06	1010
+2004-12-05 00:00:02	2010-12-06	1010
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toDayOfYear_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-01-03 00:00:03	2000-01-04	1002
+2000-01-03 00:00:04	2000-01-04	1002
+2000-01-03 00:00:04	2002-01-02	1003
+2000-01-03 00:00:05	2002-01-02	1003
+2000-01-03 12:00:05	2003-01-01	1004
+2000-01-03 12:00:06	2003-01-01	1004
+2000-01-03 12:04:01	2001-01-03	1004
+2000-01-03 12:04:02	2001-01-03	1004
+2000-01-03 16:00:05	2002-01-02	1004
+2000-01-03 16:00:06	2002-01-02	1004
+2000-01-04 00:00:04	2000-01-04	1003
+2000-01-04 00:00:05	2000-01-04	1003
+2000-01-04 03:00:06	2003-01-01	1005
+2000-01-04 03:00:07	2003-01-01	1005
+2000-01-04 03:05:01	2001-01-03	1005
+2000-01-04 03:05:02	2001-01-03	1005
+2000-01-04 08:00:06	2002-01-02	1005
+2000-01-04 08:00:07	2002-01-02	1005
+2000-01-04 18:00:08	2003-01-01	1006
+2000-01-04 18:06:02	2001-01-03	1006
+2000-01-05 00:00:05	2000-01-04	1004
+2000-01-05 00:00:06	2000-01-04	1004
+2000-01-05 00:00:08	2002-01-02	1006
+2000-01-06 00:00:06	2000-01-04	1005
+2000-01-06 00:00:07	2000-01-04	1005
+2000-01-07 00:00:08	2000-01-04	1006
+2000-01-16 00:00:01	2004-01-01	1001
+2000-01-16 00:00:01	2005-01-01	1001
+2000-01-16 00:00:02	2000-01-05	1001
+2000-01-16 00:00:02	2004-01-01	1001
+2000-01-16 00:00:02	2005-01-01	1001
+2000-01-16 00:00:03	2000-01-05	1001
+2000-01-16 00:01:01	2001-01-04	1001
+2000-01-16 00:01:02	2001-01-04	1001
+2000-01-16 01:00:02	2002-01-03	1001
+2000-01-16 01:00:03	2002-01-03	1001
+2000-01-16 15:00:02	2003-01-02	1001
+2000-01-16 15:00:03	2003-01-02	1001
+2000-01-31 00:00:01	2004-01-01	1002
+2000-01-31 00:00:01	2005-01-01	1002
+2000-01-31 00:00:02	2004-01-01	1002
+2000-01-31 00:00:02	2005-01-01	1002
+2000-01-31 00:00:03	2000-01-05	1002
+2000-01-31 00:00:04	2000-01-05	1002
+2000-01-31 00:02:01	2001-01-04	1002
+2000-01-31 00:02:02	2001-01-04	1002
+2000-01-31 02:00:03	2002-01-03	1002
+2000-01-31 02:00:04	2002-01-03	1002
+2000-02-01 06:00:03	2003-01-02	1002
+2000-02-01 06:00:04	2003-01-02	1002
+2000-02-15 00:00:01	2004-01-01	1003
+2000-02-15 00:00:01	2005-01-01	1003
+2000-02-15 00:00:02	2004-01-01	1003
+2000-02-15 00:00:02	2005-01-01	1003
+2000-02-15 00:00:04	2000-01-05	1003
+2000-02-15 00:00:05	2000-01-05	1003
+2000-02-15 00:03:01	2001-01-04	1003
+2000-02-15 00:03:02	2001-01-04	1003
+2000-02-15 03:00:04	2002-01-03	1003
+2000-02-15 03:00:05	2002-01-03	1003
+2000-02-16 21:00:04	2003-01-02	1003
+2000-02-16 21:00:05	2003-01-02	1003
+2000-03-01 00:00:01	2004-01-01	1004
+2000-03-01 00:00:01	2005-01-01	1004
+2000-03-01 00:00:02	2004-01-01	1004
+2000-03-01 00:00:02	2005-01-01	1004
+2000-03-01 00:00:05	2000-01-05	1004
+2000-03-01 00:00:06	2000-01-05	1004
+2000-03-01 00:04:01	2001-01-04	1004
+2000-03-01 00:04:02	2001-01-04	1004
+2000-03-01 04:00:05	2002-01-03	1004
+2000-03-01 04:00:06	2002-01-03	1004
+2000-03-03 12:00:05	2003-01-02	1004
+2000-03-03 12:00:06	2003-01-02	1004
+2000-03-16 00:00:01	2004-01-01	1005
+2000-03-16 00:00:01	2005-01-01	1005
+2000-03-16 00:00:02	2004-01-01	1005
+2000-03-16 00:00:02	2005-01-01	1005
+2000-03-16 00:00:06	2000-01-05	1005
+2000-03-16 00:00:07	2000-01-05	1005
+2000-03-16 00:05:01	2001-01-04	1005
+2000-03-16 00:05:02	2001-01-04	1005
+2000-03-16 05:00:06	2002-01-03	1005
+2000-03-16 05:00:07	2002-01-03	1005
+2000-03-19 03:00:06	2003-01-02	1005
+2000-03-19 03:00:07	2003-01-02	1005
+2000-03-31 01:00:01	2005-01-01	1006
+2000-03-31 01:00:02	2004-01-01	1006
+2000-03-31 01:00:02	2005-01-01	1006
+2000-03-31 01:00:08	2000-01-05	1006
+2000-03-31 01:06:02	2001-01-04	1006
+2000-03-31 07:00:08	2002-01-03	1006
+2000-04-03 19:00:08	2003-01-02	1006
+2000-04-15 01:00:01	2005-01-01	1007
+2000-04-15 01:00:02	2005-01-01	1007
+2000-05-15 01:00:01	2005-01-01	1009
+2000-05-15 01:00:02	2005-01-01	1009
+2000-05-30 01:00:01	2005-01-01	1010
+2000-05-30 01:00:02	2005-01-01	1010
+2000-06-14 01:00:02	2005-01-01	1011
+2000-06-29 01:00:01	2006-06-30	1001
+2000-06-29 01:00:02	2000-01-06	1001
+2000-06-29 01:00:02	2006-06-30	1001
+2000-06-29 01:00:03	2000-01-06	1001
+2000-06-29 01:01:01	2001-01-05	1001
+2000-06-29 01:01:02	2001-01-05	1001
+2000-06-29 02:00:02	2002-01-04	1001
+2000-06-29 02:00:03	2002-01-04	1001
+2000-06-29 16:00:02	2003-01-03	1001
+2000-06-29 16:00:03	2003-01-03	1001
+2000-06-30 07:00:01	2004-01-02	1001
+2000-06-30 07:00:02	2004-01-02	1001
+2000-12-26 00:00:01	2006-12-27	1002
+2000-12-26 00:00:02	2006-12-27	1002
+2000-12-26 00:00:03	2000-01-06	1002
+2000-12-26 00:00:04	2000-01-06	1002
+2000-12-26 00:02:01	2001-01-05	1002
+2000-12-26 00:02:02	2001-01-05	1002
+2000-12-26 02:00:03	2002-01-04	1002
+2000-12-26 02:00:04	2002-01-04	1002
+2000-12-27 06:00:03	2003-01-03	1002
+2000-12-27 06:00:04	2003-01-03	1002
+2000-12-28 12:00:01	2004-01-02	1002
+2000-12-28 12:00:02	2004-01-02	1002
+2001-06-24 01:00:01	2007-06-25	1003
+2001-06-24 01:00:02	2007-06-25	1003
+2001-06-24 01:00:04	2000-01-06	1003
+2001-06-24 01:00:05	2000-01-06	1003
+2001-06-24 01:03:01	2001-01-05	1003
+2001-06-24 01:03:02	2001-01-05	1003
+2001-06-24 04:00:04	2002-01-04	1003
+2001-06-24 04:00:05	2002-01-04	1003
+2001-06-27 19:00:01	2004-01-02	1003
+2001-06-27 19:00:02	2004-01-02	1003
+2001-12-21 00:00:01	2007-12-22	1004
+2001-12-21 00:00:02	2007-12-22	1004
+2001-12-21 00:00:05	2000-01-06	1004
+2001-12-21 00:00:06	2000-01-06	1004
+2001-12-21 00:04:01	2001-01-05	1004
+2001-12-21 00:04:02	2001-01-05	1004
+2001-12-21 04:00:05	2002-01-04	1004
+2001-12-21 04:00:06	2002-01-04	1004
+2001-12-26 00:00:01	2004-01-02	1004
+2001-12-26 00:00:02	2004-01-02	1004
+2002-06-19 01:00:01	2008-06-19	1005
+2002-06-19 01:00:02	2008-06-19	1005
+2002-06-19 01:00:06	2000-01-06	1005
+2002-06-19 01:00:07	2000-01-06	1005
+2002-06-19 01:05:01	2001-01-05	1005
+2002-06-19 01:05:02	2001-01-05	1005
+2002-06-19 06:00:06	2002-01-04	1005
+2002-06-19 06:00:07	2002-01-04	1005
+2002-06-22 04:00:06	2003-01-03	1005
+2002-06-22 04:00:07	2003-01-03	1005
+2002-12-16 00:00:01	2008-12-16	1006
+2002-12-16 00:00:02	2008-12-16	1006
+2002-12-16 00:00:08	2000-01-06	1006
+2002-12-16 00:06:02	2001-01-05	1006
+2002-12-16 06:00:08	2002-01-04	1006
+2002-12-19 18:00:08	2003-01-03	1006
+2003-06-14 01:00:01	2009-06-14	1007
+2003-06-14 01:00:02	2009-06-14	1007
+2003-12-11 00:00:01	2009-12-11	1008
+2003-12-11 00:00:02	2009-12-11	1008
+2004-06-08 01:00:01	2010-06-09	1009
+2004-06-08 01:00:02	2010-06-09	1009
+2004-12-05 00:00:01	2010-12-06	1010
+2004-12-05 00:00:02	2010-12-06	1010
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-06-25 22:00:04	2003-01-03	1003
 2001-06-25 22:00:05	2003-01-03	1003
@@ -3462,7 +4194,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-06-25 22:00:04	2003-01-03	1003
 2001-06-25 22:00:05	2003-01-03	1003
@@ -3478,7 +4210,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-06-25 22:00:04	2003-01-03	1003
 2001-06-25 22:00:05	2003-01-03	1003
@@ -3494,7 +4226,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-06-25 22:00:04	2003-01-03	1003
 2001-06-25 22:00:05	2003-01-03	1003
@@ -3510,7 +4242,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-01 15:00:02	2003-01-01	1001
 2000-01-01 15:00:03	2003-01-01	1001
@@ -3536,7 +4268,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-01 03:00:04	2000-01-03	1003
 2000-01-01 03:00:04	2002-01-01	1003
@@ -3582,7 +4314,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2012-01-02 10:00:00	2010-01-01	1000
 2012-01-02 10:00:00	2010-01-01	1001
@@ -3596,7 +4328,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-06-25 22:00:04	2003-01-03	1003
 2001-06-25 22:00:05	2003-01-03	1003
@@ -3612,7 +4344,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-01 15:00:02	2003-01-01	1001
 2000-01-01 15:00:03	2003-01-01	1001
@@ -3638,7 +4370,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toHour_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-01 02:00:03	2000-01-03	1002
 2000-01-01 02:00:03	2002-01-01	1002
@@ -3702,7 +4434,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -3729,7 +4461,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -3756,7 +4488,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -3783,7 +4515,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -3810,7 +4542,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -3837,7 +4569,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -3864,7 +4596,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2012-01-02 00:24:00	2010-01-01	1000
 2012-01-02 00:24:00	2010-01-01	1001
@@ -3878,34 +4610,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2001-01-01 05:40:01	2007-01-01	1000
-2001-01-01 05:40:02	2007-01-01	1000
-2001-01-01 05:40:02	2007-01-01	1001
-2001-01-01 05:40:03	2007-01-01	1001
-2001-01-01 05:40:03	2007-01-01	1002
-2001-01-01 05:40:04	2007-01-01	1002
-2001-01-01 05:40:04	2007-01-01	1003
-2001-01-01 05:40:05	2007-01-01	1003
-2001-01-01 05:40:05	2007-01-01	1004
-2001-01-01 05:40:06	2007-01-01	1004
-2001-01-01 05:40:06	2007-01-01	1005
-2001-01-01 05:40:07	2007-01-01	1005
-2001-01-01 05:40:08	2007-01-01	1006
-2012-01-02 00:24:00	2010-01-01	1000
-2012-01-02 00:24:00	2010-01-01	1001
-2012-01-02 00:24:00	2010-01-01	1002
-2012-01-02 00:24:00	2010-01-01	1003
-2012-01-02 00:24:00	2010-01-01	1004
-2012-01-02 00:24:00	2010-01-01	1005
-2012-01-02 00:24:00	2010-01-01	1006
-2012-01-02 00:24:00	2010-01-01	1007
-2012-01-02 00:24:00	2010-01-01	1008
-2012-01-02 00:24:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -3932,7 +4637,34 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2001-01-01 05:40:01	2007-01-01	1000
+2001-01-01 05:40:02	2007-01-01	1000
+2001-01-01 05:40:02	2007-01-01	1001
+2001-01-01 05:40:03	2007-01-01	1001
+2001-01-01 05:40:03	2007-01-01	1002
+2001-01-01 05:40:04	2007-01-01	1002
+2001-01-01 05:40:04	2007-01-01	1003
+2001-01-01 05:40:05	2007-01-01	1003
+2001-01-01 05:40:05	2007-01-01	1004
+2001-01-01 05:40:06	2007-01-01	1004
+2001-01-01 05:40:06	2007-01-01	1005
+2001-01-01 05:40:07	2007-01-01	1005
+2001-01-01 05:40:08	2007-01-01	1006
+2012-01-02 00:24:00	2010-01-01	1000
+2012-01-02 00:24:00	2010-01-01	1001
+2012-01-02 00:24:00	2010-01-01	1002
+2012-01-02 00:24:00	2010-01-01	1003
+2012-01-02 00:24:00	2010-01-01	1004
+2012-01-02 00:24:00	2010-01-01	1005
+2012-01-02 00:24:00	2010-01-01	1006
+2012-01-02 00:24:00	2010-01-01	1007
+2012-01-02 00:24:00	2010-01-01	1008
+2012-01-02 00:24:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMinute_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-01 00:01:01	2001-01-01	1001
 2000-01-01 00:01:02	2000-01-02	1001
@@ -4022,7 +4754,7 @@ time	date	extra
 2012-01-02 00:24:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4036,7 +4768,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4050,7 +4782,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4064,7 +4796,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4078,7 +4810,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4092,35 +4824,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2011-07-30 01:00:00	2010-01-01	1000
-2011-07-30 01:00:00	2010-01-01	1001
-2011-07-30 01:00:00	2010-01-01	1002
-2011-07-30 01:00:00	2010-01-01	1003
-2011-07-30 01:00:00	2010-01-01	1004
-2011-07-30 01:00:00	2010-01-01	1005
-2011-07-30 01:00:00	2010-01-01	1006
-2011-07-30 01:00:00	2010-01-01	1007
-2011-07-30 01:00:00	2010-01-01	1008
-2011-07-30 01:00:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2011-07-30 01:00:00	2010-01-01	1000
-2011-07-30 01:00:00	2010-01-01	1001
-2011-07-30 01:00:00	2010-01-01	1002
-2011-07-30 01:00:00	2010-01-01	1003
-2011-07-30 01:00:00	2010-01-01	1004
-2011-07-30 01:00:00	2010-01-01	1005
-2011-07-30 01:00:00	2010-01-01	1006
-2011-07-30 01:00:00	2010-01-01	1007
-2011-07-30 01:00:00	2010-01-01	1008
-2011-07-30 01:00:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-02-01 06:00:03	2003-01-02	1002
 2000-02-01 06:00:04	2003-01-02	1002
@@ -4183,7 +4887,35 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-02-01 06:00:03	2003-01-02	1002
 2000-02-01 06:00:04	2003-01-02	1002
@@ -4246,7 +4978,70 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toMonth_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2000-02-01 06:00:03	2003-01-02	1002
+2000-02-01 06:00:04	2003-01-02	1002
+2000-02-15 00:00:01	2004-01-01	1003
+2000-02-15 00:00:01	2005-01-01	1003
+2000-02-15 00:00:02	2004-01-01	1003
+2000-02-15 00:00:02	2005-01-01	1003
+2000-02-15 00:00:04	2000-01-05	1003
+2000-02-15 00:00:05	2000-01-05	1003
+2000-02-15 00:03:01	2001-01-04	1003
+2000-02-15 00:03:02	2001-01-04	1003
+2000-02-15 03:00:04	2002-01-03	1003
+2000-02-15 03:00:05	2002-01-03	1003
+2000-02-16 21:00:04	2003-01-02	1003
+2000-02-16 21:00:05	2003-01-02	1003
+2000-03-01 00:00:01	2004-01-01	1004
+2000-03-01 00:00:01	2005-01-01	1004
+2000-03-01 00:00:02	2004-01-01	1004
+2000-03-01 00:00:02	2005-01-01	1004
+2000-03-01 00:00:05	2000-01-05	1004
+2000-03-01 00:00:06	2000-01-05	1004
+2000-03-01 00:04:01	2001-01-04	1004
+2000-03-01 00:04:02	2001-01-04	1004
+2000-03-01 04:00:05	2002-01-03	1004
+2000-03-01 04:00:06	2002-01-03	1004
+2000-03-03 12:00:05	2003-01-02	1004
+2000-03-03 12:00:06	2003-01-02	1004
+2000-03-16 00:00:01	2004-01-01	1005
+2000-03-16 00:00:01	2005-01-01	1005
+2000-03-16 00:00:02	2004-01-01	1005
+2000-03-16 00:00:02	2005-01-01	1005
+2000-03-16 00:00:06	2000-01-05	1005
+2000-03-16 00:00:07	2000-01-05	1005
+2000-03-16 00:05:01	2001-01-04	1005
+2000-03-16 00:05:02	2001-01-04	1005
+2000-03-16 05:00:06	2002-01-03	1005
+2000-03-16 05:00:07	2002-01-03	1005
+2000-03-19 03:00:06	2003-01-02	1005
+2000-03-19 03:00:07	2003-01-02	1005
+2000-03-31 01:00:01	2005-01-01	1006
+2000-03-31 01:00:02	2004-01-01	1006
+2000-03-31 01:00:02	2005-01-01	1006
+2000-03-31 01:00:08	2000-01-05	1006
+2000-03-31 01:06:02	2001-01-04	1006
+2000-03-31 07:00:08	2002-01-03	1006
+2000-04-03 19:00:08	2003-01-02	1006
+2000-04-15 01:00:01	2005-01-01	1007
+2000-04-15 01:00:02	2005-01-01	1007
+2000-04-30 01:00:01	2005-01-01	1008
+2000-04-30 01:00:02	2005-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4260,7 +5055,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4274,7 +5069,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4288,7 +5083,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4302,7 +5097,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4316,7 +5111,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4330,7 +5125,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4344,7 +5139,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4358,7 +5153,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4372,7 +5167,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toQuarter_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2011-07-30 01:00:00	2010-01-01	1000
 2011-07-30 01:00:00	2010-01-01	1001
@@ -4386,7 +5181,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4403,7 +5198,7 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4420,7 +5215,7 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4437,7 +5232,7 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4454,29 +5249,12 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2001-05-01 05:41:30	2009-01-01	1000
-2001-05-01 05:41:31	2009-01-01	1001
-2001-05-01 05:41:32	2009-01-01	1002
-2001-05-01 05:41:33	2009-01-01	1003
-2001-05-01 05:41:34	2009-01-01	1004
-2001-05-01 05:41:35	2009-01-01	1005
-2001-05-01 05:42:30	2009-01-01	1000
-2001-05-01 05:42:31	2009-01-01	1001
-2001-05-01 05:42:32	2009-01-01	1002
-2001-05-01 05:42:33	2009-01-01	1003
-2001-05-01 05:42:34	2009-01-01	1004
-2001-05-01 05:42:35	2009-01-01	1005
-2001-05-01 05:42:36	2009-01-01	1006
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4493,7 +5271,7 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4510,7 +5288,7 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4527,7 +5305,7 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-05-01 05:41:30	2009-01-01	1000
 2001-05-01 05:41:31	2009-01-01	1001
@@ -4544,7 +5322,24 @@ time	date	extra
 2001-05-01 05:42:36	2009-01-01	1006
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMMDD_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toSecond_time___destination_table_partition_key___toYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2001-05-01 05:41:30	2009-01-01	1000
+2001-05-01 05:41:31	2009-01-01	1001
+2001-05-01 05:41:32	2009-01-01	1002
+2001-05-01 05:41:33	2009-01-01	1003
+2001-05-01 05:41:34	2009-01-01	1004
+2001-05-01 05:41:35	2009-01-01	1005
+2001-05-01 05:42:30	2009-01-01	1000
+2001-05-01 05:42:31	2009-01-01	1001
+2001-05-01 05:42:32	2009-01-01	1002
+2001-05-01 05:42:33	2009-01-01	1003
+2001-05-01 05:42:34	2009-01-01	1004
+2001-05-01 05:42:35	2009-01-01	1005
+2001-05-01 05:42:36	2009-01-01	1006
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMMDD_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-05 00:00:05	2000-01-04	1004
 2000-01-05 00:00:06	2000-01-04	1004
@@ -4663,7 +5458,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMMDD_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMMDD_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-05 00:00:05	2000-01-04	1004
 2000-01-05 00:00:06	2000-01-04	1004
@@ -4730,7 +5525,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMMDD_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMMDD_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2000-01-07 00:00:08	2000-01-04	1006
 2000-04-03 19:00:08	2003-01-02	1006
@@ -4750,7 +5545,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -4845,7 +5640,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -4940,7 +5735,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -5035,7 +5830,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -5110,7 +5905,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2003-06-14 01:00:01	2009-06-14	1007
 2003-06-14 01:00:02	2009-06-14	1007
@@ -5133,7 +5928,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5148,7 +5943,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYYYYMM_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2001-01-01 05:40:01	2007-01-01	1000
 2001-01-01 05:40:02	2007-01-01	1000
@@ -5243,7 +6038,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toDayOfMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5278,7 +6073,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toDayOfWeek_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5313,7 +6108,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toDayOfYear_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5348,7 +6143,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toHour_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5363,7 +6158,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toMinute_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5378,42 +6173,7 @@ time	date	extra
 2011-07-30 01:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2005-06-03 01:00:02	2011-06-04	1011
-2011-07-30 01:00:00	2010-01-01	1000
-2011-07-30 01:00:00	2010-01-01	1001
-2011-07-30 01:00:00	2010-01-01	1002
-2011-07-30 01:00:00	2010-01-01	1003
-2011-07-30 01:00:00	2010-01-01	1004
-2011-07-30 01:00:00	2010-01-01	1005
-2011-07-30 01:00:00	2010-01-01	1006
-2011-07-30 01:00:00	2010-01-01	1007
-2011-07-30 01:00:00	2010-01-01	1008
-2011-07-30 01:00:00	2010-01-01	1009
-2012-01-02 00:24:00	2010-01-01	1000
-2012-01-02 00:24:00	2010-01-01	1001
-2012-01-02 00:24:00	2010-01-01	1002
-2012-01-02 00:24:00	2010-01-01	1003
-2012-01-02 00:24:00	2010-01-01	1004
-2012-01-02 00:24:00	2010-01-01	1005
-2012-01-02 00:24:00	2010-01-01	1006
-2012-01-02 00:24:00	2010-01-01	1007
-2012-01-02 00:24:00	2010-01-01	1008
-2012-01-02 00:24:00	2010-01-01	1009
-2012-01-02 10:00:00	2010-01-01	1000
-2012-01-02 10:00:00	2010-01-01	1001
-2012-01-02 10:00:00	2010-01-01	1002
-2012-01-02 10:00:00	2010-01-01	1003
-2012-01-02 10:00:00	2010-01-01	1004
-2012-01-02 10:00:00	2010-01-01	1005
-2012-01-02 10:00:00	2010-01-01	1006
-2012-01-02 10:00:00	2010-01-01	1007
-2012-01-02 10:00:00	2010-01-01	1008
-2012-01-02 10:00:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toMonth_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5448,22 +6208,7 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-time	date	extra
-2005-06-03 01:00:02	2011-06-04	1011
-2011-07-30 01:00:00	2010-01-01	1000
-2011-07-30 01:00:00	2010-01-01	1001
-2011-07-30 01:00:00	2010-01-01	1002
-2011-07-30 01:00:00	2010-01-01	1003
-2011-07-30 01:00:00	2010-01-01	1004
-2011-07-30 01:00:00	2010-01-01	1005
-2011-07-30 01:00:00	2010-01-01	1006
-2011-07-30 01:00:00	2010-01-01	1007
-2011-07-30 01:00:00	2010-01-01	1008
-2011-07-30 01:00:00	2010-01-01	1009
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toQuarter_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
@@ -5498,7 +6243,57 @@ time	date	extra
 2012-01-02 10:00:00	2010-01-01	1009
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toSecond_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toYYYYMMDD_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+time	date	extra
+2005-06-03 01:00:02	2011-06-04	1011
+2011-07-30 01:00:00	2010-01-01	1000
+2011-07-30 01:00:00	2010-01-01	1001
+2011-07-30 01:00:00	2010-01-01	1002
+2011-07-30 01:00:00	2010-01-01	1003
+2011-07-30 01:00:00	2010-01-01	1004
+2011-07-30 01:00:00	2010-01-01	1005
+2011-07-30 01:00:00	2010-01-01	1006
+2011-07-30 01:00:00	2010-01-01	1007
+2011-07-30 01:00:00	2010-01-01	1008
+2011-07-30 01:00:00	2010-01-01	1009
+2012-01-02 00:24:00	2010-01-01	1000
+2012-01-02 00:24:00	2010-01-01	1001
+2012-01-02 00:24:00	2010-01-01	1002
+2012-01-02 00:24:00	2010-01-01	1003
+2012-01-02 00:24:00	2010-01-01	1004
+2012-01-02 00:24:00	2010-01-01	1005
+2012-01-02 00:24:00	2010-01-01	1006
+2012-01-02 00:24:00	2010-01-01	1007
+2012-01-02 00:24:00	2010-01-01	1008
+2012-01-02 00:24:00	2010-01-01	1009
+2012-01-02 10:00:00	2010-01-01	1000
+2012-01-02 10:00:00	2010-01-01	1001
+2012-01-02 10:00:00	2010-01-01	1002
+2012-01-02 10:00:00	2010-01-01	1003
+2012-01-02 10:00:00	2010-01-01	1004
+2012-01-02 10:00:00	2010-01-01	1005
+2012-01-02 10:00:00	2010-01-01	1006
+2012-01-02 10:00:00	2010-01-01	1007
+2012-01-02 10:00:00	2010-01-01	1008
+2012-01-02 10:00:00	2010-01-01	1009
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___toYear_time___destination_table_partition_key___toYYYYMM_time___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 time	date	extra
 2005-06-03 01:00:02	2011-06-04	1011
 2011-07-30 01:00:00	2010-01-01	1000
