@@ -145,49 +145,56 @@ def check_move_partition(
                     f"SELECT * FROM {destination_table_name} format PrettyCompactMonoBlock"
                 )
 
-        else:
-            if reason == "not monotonic":
-                exitcode, message = (
-                    36,
-                    "DB::Exception: Destination table partition expression is not monotonically increasing",
-                )
-                check(
-                    self,
-                    partition_ids=partition_ids,
-                    source_table_name=source_table_name,
-                    destination_table_name=destination_table_name,
-                    exitcode=exitcode,
-                    message=message,
-                )
-            elif reason == "not subset":
-                exitcode, message = (
-                    36,
-                    "DB::Exception: Destination table partition expression columns must be a subset of source table partition expression columns.",
-                )
-                check(
-                    self,
-                    partition_ids=partition_ids,
-                    source_table_name=source_table_name,
-                    destination_table_name=destination_table_name,
-                    exitcode=exitcode,
-                    message=message,
-                )
+        elif reason == "not subset":
+            exitcode, message = (
+                36,
+                "DB::Exception: Destination table partition expression columns must be a subset of source table partition expression columns.",
+            )
+            check(
+                self,
+                partition_ids=partition_ids,
+                source_table_name=source_table_name,
+                destination_table_name=destination_table_name,
+                exitcode=exitcode,
+                message=message,
+            )
 
-            elif reason == "partially different":
-                exitcode, message = (
-                    248,
-                    "DB::Exception: Can not create the partition. A partition can not contain values that have different partition ids.",
-                )
-                for partition_id in partition_ids:
-                    query = f"ALTER TABLE {source_table_name} MOVE PARTITION {partition_id} TO TABLE {destination_table_name}"
-                    try:
-                        self.context.node_1.query(
-                            query,
-                            exitcode=exitcode,
-                            message=message,
-                        )
-                    except:
-                        note("Partition can be moved")
+        elif reason == "partially different":
+            exitcode, message = (
+                248,
+                "DB::Exception: Can not create the partition. A partition can not contain values that have different partition ids.",
+            )
+            for partition_id in partition_ids:
+                query = f"ALTER TABLE {source_table_name} MOVE PARTITION {partition_id} TO TABLE {destination_table_name}"
+                try:
+                    self.context.node_1.query(
+                        query,
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                except:
+                    note("Partition can be moved")
+
+        elif reason == "partially monotonic":
+            exitcode, message = (
+                36,
+                "DB::Exception: Destination table partition expression is not monotonically increasing",
+            )
+            for partition_id in partition_ids:
+                query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
+                try:
+                    self.context.node_1.query(
+                        query,
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                except:
+                    note("Partition can be attached")
+
+        else:
+            fail(
+                f"Pair {source_partition_key}, {destination_partition_key} was not validated"
+            )
 
     with And(
         "I change engine names to compare replicated results with non-replicated results in snapshots"
@@ -227,11 +234,18 @@ def check_move_partition(
             )
             execute_query(
                 f"SELECT time,date,extra FROM {destination_table_name} ORDER BY time,date,extra",
-                snapshot_name="/alter/table/move_partition/partition_key/move_partition/"
-                + current().name.split("/")[-1]
-                + addition_to_snapshot_name,
+                snapshot_name=current().name.split("/")[-1] + addition_to_snapshot_name,
                 node=get_node(self, "destination"),
-                path=os.path.join(os.getcwd(), "table/move_partition/snapshots"),
+            )
+
+        elif reason == "partially monotonic":
+            addition_to_snapshot_name = (
+                "_small" if "small" in source_table.__name__ else ""
+            )
+            execute_query(
+                f"SELECT time,date,extra FROM {destination_table_name} ORDER BY time,date,extra",
+                snapshot_name=current().name.split("/")[-1] + addition_to_snapshot_name,
+                node=get_node(self, "destination"),
             )
 
     with And(f"I check that all replicas of destination table have same data:"):
@@ -307,9 +321,7 @@ def move_partition(self):
 
     source_table_types = {
         partitioned_datetime_MergeTree,
-        partitioned_small_MergeTree,
         partitioned_datetime_ReplicatedMergeTree,
-        partitioned_small_ReplicatedMergeTree,
         partitioned_datetime_ReplacingMergeTree,
         partitioned_datetime_ReplicatedReplacingMergeTree,
         partitioned_datetime_AggregatingMergeTree,
