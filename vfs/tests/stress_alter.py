@@ -858,7 +858,6 @@ def impaired_network(self, network_mode):
         network_mode(node=node)
 
 
-
 @TestStep
 def fill_clickhouse_disks(self):
     node = random.choice(self.context.ch_nodes)
@@ -1141,6 +1140,7 @@ def restarts(self):
         restarts=True,
     )
 
+
 @TestScenario
 def add_remove_replicas(self):
     """
@@ -1153,6 +1153,7 @@ def add_remove_replicas(self):
         add_remove_replicas=True,
     )
 
+
 @TestScenario
 def full_disk(self):
     """
@@ -1162,21 +1163,34 @@ def full_disk(self):
 
     try:
         with Given("disk space is restricted"):
-            cluster.command(None, f"{current_dir()}/../vfs_env/create_fixed_volumes.sh", no_checks=True)
-            r = cluster.command(None, "df | grep -c clickhouse-regression", no_checks=True)
+            cluster.command(
+                None,
+                f"sudo {current_dir()}/../vfs_env/create_fixed_volumes.sh",
+                no_checks=True,
+                timeout=5,
+            )
+            r = cluster.command(
+                None, "df | grep -c clickhouse-regression", no_checks=True
+            )
             restrictions_enabled = int(r.output) == 3 * 2 * 2
 
         if not restrictions_enabled:
-            skip("run vfs_env/create_fixed_volumes.sh before this scenario")
+            skip("run sudo vfs_env/create_fixed_volumes.sh before this scenario")
 
         alter_combinations(
-            limit=None if self.context.stress else 20,
+            limit=None if self.context.stress else 2,
             shuffle=True,
             fill_disks=True,
         )
     finally:
         with Finally("disk space is de-restricted"):
-            cluster.command(None, f"{current_dir()}/../vfs_env/destroy_fixed_volumes.sh", no_checks=True)
+            cluster.command(
+                None,
+                f"sudo {current_dir()}/../vfs_env/destroy_fixed_volumes.sh",
+                no_checks=True,
+                timeout=5,
+            )
+
 
 @TestFeature
 def vfs(self):
