@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240109.1181209.
+# document by TestFlows v2.0.231215.1221232.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -456,6 +456,30 @@ RQ_SRS_038_DiskObjectStorageVFS_System_ZookeeperTransactions = Requirement(
     link=None,
     level=3,
     num="4.6.8",
+)
+
+RQ_SRS_038_DiskObjectStorageVFS_System_Events = Requirement(
+    name="RQ.SRS-038.DiskObjectStorageVFS.System.Events",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL track the following events related to VFS performance.\n"
+        "\n"
+        "| Event                            | Description                                                                |\n"
+        "| :------------------------------- | :------------------------------------------------------------------------- |\n"
+        "| VFSGcRunsCompleted               | Number of successful VFS garbage collector runs.                           |\n"
+        "| VFSGcRunsSkipped                 | Number of VFS garbage collector skipped runs.                              |\n"
+        "| VFSGcTotalSeconds                | Total time taken by VFS garbage collector.                                 |\n"
+        "| VFSGcCumulativeSnapshotBytesRead | Total size of snapshots read from object storage by VFS garbage collector. |\n"
+        "| VFSGcCumulativeLogItemsRead      | Total number of log items read from Keeper by VFS garbage collector.       |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.6.9",
 )
 
 RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch = Requirement(
@@ -1112,6 +1136,9 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
             level=3,
             num="4.6.8",
         ),
+        Heading(
+            name="RQ.SRS-038.DiskObjectStorageVFS.System.Events", level=3, num="4.6.9"
+        ),
         Heading(name="Alter", level=2, num="4.7"),
         Heading(
             name="RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch", level=3, num="4.7.1"
@@ -1251,6 +1278,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
         RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts,
         RQ_SRS_038_DiskObjectStorageVFS_System_Optimize,
         RQ_SRS_038_DiskObjectStorageVFS_System_ZookeeperTransactions,
+        RQ_SRS_038_DiskObjectStorageVFS_System_Events,
         RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch,
         RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach,
         RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop,
@@ -1320,6 +1348,7 @@ SRS_038_ClickHouse_Disk_Object_Storage_VFS = Specification(
     * 4.6.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
     * 4.6.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
     * 4.6.8 [RQ.SRS-038.DiskObjectStorageVFS.System.ZookeeperTransactions](#rqsrs-038diskobjectstoragevfssystemzookeepertransactions)
+    * 4.6.9 [RQ.SRS-038.DiskObjectStorageVFS.System.Events](#rqsrs-038diskobjectstoragevfssystemevents)
   * 4.7 [Alter](#alter)
     * 4.7.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
     * 4.7.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
@@ -1585,6 +1614,19 @@ version: 0.0
 version: 0.0
 
 [ClickHouse] SHALL produce a reasonable number of Zookeeper transactions when tables are updated with VFS enabled.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.Events
+version: 1.0
+
+[ClickHouse] SHALL track the following events related to VFS performance.
+
+| Event                            | Description                                                                |
+| :------------------------------- | :------------------------------------------------------------------------- |
+| VFSGcRunsCompleted               | Number of successful VFS garbage collector runs.                           |
+| VFSGcRunsSkipped                 | Number of VFS garbage collector skipped runs.                              |
+| VFSGcTotalSeconds                | Total time taken by VFS garbage collector.                                 |
+| VFSGcCumulativeSnapshotBytesRead | Total size of snapshots read from object storage by VFS garbage collector. |
+| VFSGcCumulativeLogItemsRead      | Total number of log items read from Keeper by VFS garbage collector.       |
 
 ### Alter
 
