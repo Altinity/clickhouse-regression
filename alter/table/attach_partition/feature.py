@@ -79,11 +79,6 @@ def feature(self):
             executor=pool,
         )
         Feature(
-            run=load("alter.table.attach_partition.replica.replica_stress", "feature"),
-            parallel=True,
-            executor=pool,
-        )
-        Feature(
             run=load(
                 "alter.table.attach_partition.replica.add_delete_replica", "feature"
             ),

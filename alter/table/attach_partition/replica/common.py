@@ -128,7 +128,6 @@ def insert_to_random_replica(
             f"INSERT INTO {table_name} {column_names} SELECT {'rand(),'*(len(columns)-1)} 1 FROM numbers({rows})",
             exitcode=0,
         )
-        # node.query(f"SYSTEM SYNC REPLICA {table_name} PULL")
         self.context.num_inserted_rows += rows
     else:
         skip("No active replicas to insert data")
