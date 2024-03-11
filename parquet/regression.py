@@ -194,13 +194,13 @@ ffails = {
     ),
     "/parquet/broken/*": (
         Skip,
-        "Different error messages on 23.6",
+        "Different error messages on 23.6 and above",
         check_clickhouse_version(">=23.6"),
     ),
     "/parquet/encrypted/": (
         Skip,
-        "Different error message on 23.8",
-        check_clickhouse_version("<23.13"),
+        "Different error message on 23.8 and above",
+        check_clickhouse_version("<=24.3"),
     ),
     "/parquet/compression/*": (
         Skip,
