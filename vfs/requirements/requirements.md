@@ -37,6 +37,7 @@
     * 4.6.6 [RQ.SRS-038.DiskObjectStorageVFS.System.CompactWideParts](#rqsrs-038diskobjectstoragevfssystemcompactwideparts)
     * 4.6.7 [RQ.SRS-038.DiskObjectStorageVFS.System.Optimize](#rqsrs-038diskobjectstoragevfssystemoptimize)
     * 4.6.8 [RQ.SRS-038.DiskObjectStorageVFS.System.ZookeeperTransactions](#rqsrs-038diskobjectstoragevfssystemzookeepertransactions)
+    * 4.6.9 [RQ.SRS-038.DiskObjectStorageVFS.System.Events](#rqsrs-038diskobjectstoragevfssystemevents)
   * 4.7 [Alter](#alter)
     * 4.7.1 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Fetch](#rqsrs-038diskobjectstoragevfsalterfetch)
     * 4.7.2 [RQ.SRS-038.DiskObjectStorageVFS.Alter.Detach](#rqsrs-038diskobjectstoragevfsalterdetach)
@@ -302,6 +303,19 @@ version: 0.0
 version: 0.0
 
 [ClickHouse] SHALL produce a reasonable number of Zookeeper transactions when tables are updated with VFS enabled.
+
+#### RQ.SRS-038.DiskObjectStorageVFS.System.Events
+version: 1.0
+
+[ClickHouse] SHALL track the following events related to VFS performance.
+
+| Event                            | Description                                                                |
+| :------------------------------- | :------------------------------------------------------------------------- |
+| VFSGcRunsCompleted               | Number of successful VFS garbage collector runs.                           |
+| VFSGcRunsSkipped                 | Number of VFS garbage collector skipped runs.                              |
+| VFSGcTotalSeconds                | Total time taken by VFS garbage collector.                                 |
+| VFSGcCumulativeSnapshotBytesRead | Total size of snapshots read from object storage by VFS garbage collector. |
+| VFSGcCumulativeLogItemsRead      | Total number of log items read from Keeper by VFS garbage collector.       |
 
 ### Alter
 
