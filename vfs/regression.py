@@ -16,6 +16,7 @@ xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
     ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
+    ":/alter/move/:": [(Fail, "Fix pending")],
 }
 
 ffails = {
@@ -25,9 +26,7 @@ ffails = {
         lambda test: not test.context.allow_vfs
         or check_clickhouse_version("<24.2")(test),
     ),
-    ":/alter/move": (XFail, "Fix pending"),
     ":/parallel replica": (Skip, "WIP"),
-    ":/replica/add remove one node": (XFail, "Fix pending"),
 }
 
 # RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
