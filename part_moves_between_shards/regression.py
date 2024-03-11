@@ -29,10 +29,30 @@ xfails = {}
 xflags = {}
 
 
+ffails = {
+    "/part moves between shards/part_moves/part move parallel with big insert": (
+        Skip,
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything",
+        check_clickhouse_version(">=24.1"),
+    ),
+    "/part moves between shards/part_moves/part move parallel with insert to destination": (
+        Skip,
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything",
+        check_clickhouse_version(">=24.1"),
+    ),
+    "/part moves between shards/part_moves/part move parallel with insert to source": (
+        Skip,
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything",
+        check_clickhouse_version(">=24.1"),
+    ),
+}
+
+
 @TestModule
 @ArgumentParser(fuzzer_arg)
 @XFails(xfails)
 @XFlags(xflags)
+@FFails(ffails)
 @Name("part moves between shards")
 @Requirements(RQ_SRS_027_ClickHouse_PartMovesBetweenShards("1.0"))
 @Specifications(SRS027_ClickHouse_Part_Moves_Between_Shards)
