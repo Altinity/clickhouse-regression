@@ -3,6 +3,7 @@ import re
 import json
 
 from testflows.core import *
+from testflows.asserts import error
 
 
 @TestStep
@@ -32,6 +33,20 @@ def get_current_leader(self):
         is_leader = json.loads(r.output)["details"]["role"] == "leader"
         if is_leader:
             return node
+
+
+@TestStep
+def get_node_role(self, node):
+    cluster = self.context.cluster
+
+    port = self.context.keeper_ports[node.name]
+    r = cluster.command(None, f"curl 'http://localhost:{port}/ready'")
+    return json.loads(r.output)["details"]["role"]
+
+
+@TestStep
+def keeper_query(self, node, query):
+    return node.command(f'clickhouse-keeper-client -q "{query}"')
 
 
 @TestStep
