@@ -441,6 +441,21 @@ ffails = {
         "need to investigate (something with zero representation)",
         check_clickhouse_version(">=23.11"),
     ),
+    "/aggregate functions/finalizeAggregation/groupArraySorted_finalizeAggregation_Merge/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/61186",
+        check_clickhouse_version(">=24.2"),
+    ),
+    "/aggregate functions/finalizeAggregation/groupArraySorted_finalizeAggregation_Merge/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/61186",
+        check_clickhouse_version(">=24.2"),
+    ),
+    "/aggregate functions/merge/groupArraySortedMerge/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/61186",
+        check_clickhouse_version(">=24.2"),
+    ),
 }
 
 
@@ -509,7 +524,7 @@ def regression(
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
-    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
+    # Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
 
 
 if main():

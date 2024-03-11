@@ -154,6 +154,7 @@ def feature(self):
         "exponentialMovingAverage",
         "groupArrayLast",
         "groupArraySample",
+        "groupArraySorted",
         "histogram",
         "kolmogorovSmirnovTest",
         "mannWhitneyUTest",
