@@ -16,8 +16,8 @@ def create_and_drop_table(self, number_of_tables=100):
 
 @TestScenario
 def logger_leak(self, node=None):
-    if check_clickhouse_version("<=24.2")(self):
-        skip("system.memory_dump_log is available from 24.2")
+    if check_clickhouse_version("<24.3")(self):
+        skip("system.memory_dump_log is available from 24.3")
 
     if node is None:
         node = self.context.node
