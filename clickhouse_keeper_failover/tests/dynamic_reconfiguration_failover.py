@@ -6,7 +6,7 @@ from clickhouse_keeper_failover.tests.steps import *
 
 @TestFeature
 @Name("dynamic failover")
-def feature(self):
+def feature(self, restart_on_reconfig=True):
     """Test keeper dynamic reconfiguration failover."""
 
     with Given("I check that the leader exists"):
@@ -29,10 +29,14 @@ def feature(self):
 
             with When(f"I enable leadership on nodes {enabled_ids}"):
                 config_name = f"keeper_config_enable_{''.join(enabled_ids)}.xml"
-                set_keeper_config(nodes=all_nodes, config_file_name=config_name)
+                set_keeper_config(
+                    nodes=all_nodes,
+                    config_file_name=config_name,
+                    restart=restart_on_reconfig,
+                )
 
             with Then(f"I check {node.name} has changed to follower"):
-                for attempt in retries(timeout=30, delay=2):
+                for attempt in retries(timeout=10, delay=2):
                     with attempt:
                         assert get_node_role(node=node) == "follower", error()
 
@@ -41,20 +45,27 @@ def feature(self):
                 assert r.output.count("participant") == i - 1, error()
 
             with When(f"I remove and re-add {node.name}"):
-                keeper_query(f"reconfig remove {i}")
+                keeper_query(node=pr_ensemble[0], query=f"reconfig remove {i}")
                 r = keeper_query(
-                    node=node, query=f"reconfig add 'server.{i} keeper-0{i}:9234'"
+                    node=pr_ensemble[0],
+                    query=f"reconfig add 'server.{i}=keeper-{i}:9234'",
                 )
+                if restart_on_reconfig:
+                    node.restart()
 
             with Then(f"I check that {node.name} is now a follower"):
                 assert r.output.count("participant") == i, error()
 
             with When(f"I request leadership"):
-                r = keeper_query(node=node, query="rqld")
+                r = retry(keeper_query, timeout=60, delay=5, initial_delay=10)(
+                    node=node, query="rqld"
+                )
                 assert r.output == "Sent leadership request to leader.", error()
 
             with Then(f"I check that {node.name} is now a leader"):
-                assert get_node_role(node=node) == "leader", error()
+                for attempt in retries(timeout=10, delay=2, initial_delay=2):
+                    with attempt:
+                        assert get_node_role(node=node) == "leader", error()
 
     with When("I stop the PR ensemble"):
         for node in pr_ensemble:
@@ -63,5 +74,3 @@ def feature(self):
     with When("I run `mntr` on all DR nodes"):
         for node in dr_ensemble:
             keeper_query(node=node, query="mntr")
-
-    pause()

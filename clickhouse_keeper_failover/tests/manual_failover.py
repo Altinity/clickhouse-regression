@@ -6,7 +6,7 @@ from clickhouse_keeper_failover.tests.steps import *
 
 @TestFeature
 @Name("manual failover")
-def feature(self):
+def feature(self, restart_on_reconfig=True):
     """Test keeper manual failover."""
 
     with Given("I check that the leader exists"):
@@ -24,7 +24,9 @@ def feature(self):
 
     with Given("I enable leadership on DR ensemble"):
         set_keeper_config(
-            nodes=dr_ensemble, config_file_name="keeper_config_manual_failover.xml"
+            nodes=dr_ensemble,
+            config_file_name="keeper_config_manual_failover.xml",
+            restart=restart_on_reconfig,
         )
 
     pause()

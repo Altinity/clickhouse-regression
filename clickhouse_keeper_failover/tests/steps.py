@@ -50,7 +50,7 @@ def keeper_query(self, node, query):
 
 
 @TestStep
-def set_keeper_config(self, nodes, config_file_name):
+def set_keeper_config(self, nodes, config_file_name, restart=False):
     source_path = "/etc/clickhouse-keeper-configs/"
     dest_file = "/etc/clickhouse-keeper/keeper_config.xml"
 
@@ -63,3 +63,5 @@ def set_keeper_config(self, nodes, config_file_name):
             "echo '||||||INSERTING NEW CONFIG' >> /var/log/clickhouse-keeper/clickhouse-keeper.log"
         )
         node.command(cmd)
+        if restart:
+            node.restart()
