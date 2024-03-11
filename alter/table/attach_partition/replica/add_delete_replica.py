@@ -131,6 +131,6 @@ def feature(self):
         self.context.node_2,
         self.context.node_3,
     ]
-    self.context.lock = threading.Lock()
+    self.context.replica_operation_lock = threading.Lock()
 
     Scenario(run=replica)
