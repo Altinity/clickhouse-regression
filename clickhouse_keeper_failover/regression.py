@@ -34,7 +34,7 @@ def regression(
     """ClickHouse regression when using clickhouse-keeper."""
     nodes = {
         "clickhouse": [],
-        "keeper": [f"keeper-{i}" for i in range(1, 6)],
+        "keeper": [f"keeper-{i}" for i in range(1, 7)],
     }
 
     self.context.clickhouse_version = clickhouse_version
