@@ -524,7 +524,7 @@ def regression(
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
-    # Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
+    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
 
 
 if main():
