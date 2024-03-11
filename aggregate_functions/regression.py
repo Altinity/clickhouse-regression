@@ -261,6 +261,16 @@ ffails = {
         "groupArrayLast works from 23",
         check_clickhouse_version("<23"),
     ),
+    "/aggregate functions/groupArrayIntersect/*": (
+        Skip,
+        "groupArrayIntersect works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
+    "/aggregate functions/groupArraySorted/*": (
+        Skip,
+        "groupArraySorted works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
     "/aggregate functions/kolmogorovSmirnovTest/*": (
         Skip,
         "kolmogorovSmirnovTest works from 23.4",
@@ -496,10 +506,10 @@ def regression(
 
         join()
 
-    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
+    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
 
 
 if main():
