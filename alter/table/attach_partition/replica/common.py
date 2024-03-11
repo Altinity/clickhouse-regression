@@ -3,11 +3,9 @@ import time
 
 from testflows.asserts import error
 from testflows.core import *
+from testflows._core.flags import LAST_RETRY
 
 from helpers.tables import *
-
-
-time_sleep = 0.5
 
 
 @TestStep(Given)
@@ -165,7 +163,7 @@ def delete_replica_on_first_node(
     self, table_name, active_replicas, keep_one_replica=False
 ):
     """Delete the local copy of a replicated table on first node."""
-    with self.context.lock:
+    with self.context.replica_operation_lock:
         if keep_one_replica:
             if (len(active_replicas) == 1) and (0 in active_replicas):
                 skip("Can not delete last replica")
@@ -183,7 +181,7 @@ def delete_replica_on_second_node(
     self, active_replicas, table_name, keep_one_replica=False
 ):
     """Delete the local copy of a replicated table on second node."""
-    with self.context.lock:
+    with self.context.replica_operation_lock:
         if keep_one_replica:
             if (len(active_replicas) == 1) and (1 in active_replicas):
                 skip("Can not delete last replica")
@@ -201,7 +199,7 @@ def delete_replica_on_third_node(
     self, active_replicas, table_name, keep_one_replica=False
 ):
     """Delete the local copy of a replicated table on third node."""
-    with self.context.lock:
+    with self.context.replica_operation_lock:
         if keep_one_replica:
             if (len(active_replicas) == 1) and (2 in active_replicas):
                 skip("Can not delete last replica")
@@ -279,7 +277,7 @@ def create_replica_on_first_node(
     order_by="tuple()",
 ):
     with Given("I create replica on first node"):
-        with self.context.lock:
+        with self.context.replica_operation_lock:
             if 0 not in active_replicas:
                 create_one_replica(
                     node=self.context.nodes[0],
@@ -307,7 +305,7 @@ def create_replica_on_second_node(
     order_by="tuple()",
 ):
     with Given("I create replica on second node"):
-        with self.context.lock:
+        with self.context.replica_operation_lock:
             if 1 not in active_replicas:
                 create_one_replica(
                     node=self.context.nodes[1],
@@ -335,7 +333,7 @@ def create_replica_on_third_node(
     order_by="tuple()",
 ):
     with Given("I create replica on third node"):
-        with self.context.lock:
+        with self.context.replica_operation_lock:
             if 2 not in active_replicas:
                 create_one_replica(
                     node=self.context.nodes[2],
@@ -351,9 +349,17 @@ def create_replica_on_third_node(
 
 
 @TestStep
-def add_remove_replica_on_first_node(self, table_name, active_replicas):
+def add_remove_replica_on_first_node(
+    self, table_name, active_replicas, delay_before_delete=None
+):
+    "Create replica on first node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_first_node(table_name=table_name, active_replicas=active_replicas)
-    time.sleep(time_sleep)
+
+    if delay_before_delete is None:
+        delay_before_delete = random.random() * 2
+
+    time.sleep(delay_before_delete)
+
     delete_replica_on_first_node(
         table_name=table_name,
         active_replicas=active_replicas,
@@ -362,11 +368,19 @@ def add_remove_replica_on_first_node(self, table_name, active_replicas):
 
 
 @TestStep
-def add_remove_replica_on_second_node(self, table_name, active_replicas):
+def add_remove_replica_on_second_node(
+    self, table_name, active_replicas, delay_before_delete=None
+):
+    "Create replica on second node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_second_node(
         table_name=table_name, active_replicas=active_replicas
     )
-    time.sleep(time_sleep)
+
+    if delay_before_delete is None:
+        delay_before_delete = random.random() * 2
+
+    time.sleep(delay_before_delete)
+
     delete_replica_on_second_node(
         table_name=table_name,
         active_replicas=active_replicas,
@@ -375,12 +389,20 @@ def add_remove_replica_on_second_node(self, table_name, active_replicas):
 
 
 @TestStep
-def add_remove_replica_on_third_node(self, table_name, active_replicas):
+def add_remove_replica_on_third_node(
+    self, table_name, active_replicas, delay_before_delete=None
+):
+    "Create replica on third node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_third_node(
         table_name=table_name,
         active_replicas=active_replicas,
     )
-    time.sleep(time_sleep)
+
+    if delay_before_delete is None:
+        delay_before_delete = random.random() * 2
+
+    time.sleep(delay_before_delete)
+
     delete_replica_on_third_node(
         table_name=table_name,
         active_replicas=active_replicas,
@@ -390,6 +412,7 @@ def add_remove_replica_on_third_node(self, table_name, active_replicas):
 
 @TestStep
 def get_partition_list(self, table_name, node, exitcode=None, message=None):
+    "Get list of partitions from system.parts table."
     partition_list_query = (
         f"SELECT partition FROM system.parts WHERE table='{table_name}'"
     )
@@ -407,6 +430,9 @@ def get_partition_list(self, table_name, node, exitcode=None, message=None):
 
 @TestStep
 def attach_partition_from(self, source_table_name, destination_table_name):
+    """Attach partition from source table to the destination table
+    on random active node."""
+
     if len(self.context.active_replicas) > 0:
         with Given("I choose random active node"):
             node_num = random.choice(self.context.active_replicas)
@@ -432,15 +458,21 @@ def attach_partition_from(self, source_table_name, destination_table_name):
 def attach_partition_from_on_node(
     self, source_table_name, destination_table_name, node
 ):
-    "Attach partition from source to destination if source table exists on specified node."
+    """Attach partition from source table to the destination table
+    if source table exists on specified node."""
     try:
-        with self.context.lock:
-            query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION 1 FROM {source_table_name}"
-            node.query(query)
-            num_rows = node.query(f"SELECT count() from {destination_table_name}")
-            for attempt in retries(timeout=30, delay=2):
-                with attempt:
-                    assert int(num_rows.output) > 0, error()
+        query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION 1 FROM {source_table_name}"
+        node.query(query)
+        num_rows = node.query(f"SELECT count() from {destination_table_name}")
+
+        for attempt in retries(timeout=30, delay=2):
+            with attempt:
+                if attempt.kwargs["flags"] & LAST_RETRY:
+                    assert int(num_rows.output) in [0, 10], error()
+                    if int(num_rows.output) == 0:
+                        return False
+                else:
+                    assert int(num_rows.output) == 10, error()
 
         return True
 
