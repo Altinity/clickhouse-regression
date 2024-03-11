@@ -290,7 +290,7 @@ def partition_by(self):
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
-    if check_clickhouse_version(">=24.1")(self):
+    if check_clickhouse_version(">=24.3")(self):
         exitcode, message = io_error_message(
             exitcode=36,
             message="Destination table partition expression columns must be a subset of source table partition expression columns",
