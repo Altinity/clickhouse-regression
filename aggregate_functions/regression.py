@@ -274,7 +274,17 @@ ffails = {
         "groupArrayIntersect works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
+    "/aggregate functions/*/*groupArrayIntersect*/*": (
+        Skip,
+        "groupArrayIntersect works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
     "/aggregate functions/groupArraySorted/*": (
+        Skip,
+        "groupArraySorted works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
+    "/aggregate functions/*/*groupArraySorted*/*": (
         Skip,
         "groupArraySorted works from 24.2",
         check_clickhouse_version("<=24.1"),
@@ -335,7 +345,7 @@ ffails = {
     "/aggregate functions/:/first_value_respect_nulls*/*": (
         Skip,
         "first_value_respect_nulls works from 23.5",
-        check_clickhouse_version("<23.5") or check_clickhouse_version(">23.8"),
+        check_clickhouse_version("<23.5"),
     ),
     "/aggregate functions/last_value_respect_nulls/*": (
         Skip,
@@ -345,7 +355,7 @@ ffails = {
     "/aggregate functions/:/last_value_respect_nulls*/*": (
         Skip,
         "last_value_respect_nulls works from 23.5",
-        check_clickhouse_version("<23.5") or check_clickhouse_version(">23.8"),
+        check_clickhouse_version("<23.5"),
     ),
     "/aggregate functions/flameGraph/*": (
         Skip,
