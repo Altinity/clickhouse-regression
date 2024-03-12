@@ -110,10 +110,18 @@ xfails = {
         )
     ],
     "/aggregate functions/sumMapFiltered/inf, -inf, nan/*": [
-        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+        (
+            Fail,
+            issue_58741,
+            check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
+        )
     ],
     "/aggregate functions/sumMapFilteredWithOverflow/inf, -inf, nan/*": [
-        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+        (
+            Fail,
+            issue_58741,
+            check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
+        )
     ],
     "/aggregate functions/simpleLinearRegression/*": [
         (
@@ -424,12 +432,12 @@ ffails = {
     "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": (
         Skip,
         issue_58741,
-        check_clickhouse_version(">=23.11"),
+        check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
     "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": (
         Skip,
         issue_58741,
-        check_clickhouse_version(">=23.11"),
+        check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
     "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": (
         Skip,
