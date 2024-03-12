@@ -13,7 +13,7 @@ def feature(self, restart_on_reconfig=True):
         current_leader = retry(
             get_current_leader, timeout=10, delay=1, initial_delay=2
         )()
-
+ 
     with Given("I split the nodes into ensembles for PR and DR"):
         all_nodes = self.context.keeper_nodes
         pr_ensemble = all_nodes[:3]
@@ -48,7 +48,7 @@ def feature(self, restart_on_reconfig=True):
                     query=f"reconfig add 'server.{i}=keeper-{i}:9234'",
                 )
                 if restart_on_reconfig:
-                    node.restart()
+                    node.restart_keeper()
 
             with Then(f"I check that {node.name} is now a follower"):
                 assert r.output.count("participant") == i, error()
@@ -74,7 +74,7 @@ def feature(self, restart_on_reconfig=True):
 
     with When("I stop the PR ensemble"):
         for node in pr_ensemble:
-            node.command("kill 1")
+            node.stop_keeper(signal="KILL")
 
     with Then("I get the current leader"):
         current_leader = retry(

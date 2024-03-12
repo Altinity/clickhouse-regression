@@ -32,17 +32,13 @@ def feature(self):
     with When("I restart one node with --force-recovery"):
         cluster = self.context.cluster
         recovery_node = dr_ensemble[0]
-        cluster.command(None, f"{cluster.docker_compose} stop {recovery_node.name}")
-        cluster.command(
-            None,
-            f"{cluster.docker_compose} run --service-ports -d {recovery_node.name} ./entrypoint.sh --force-recovery",
-        )
+        recovery_node.stop_keeper()
+        recovery_node.start_keeper(force_recovery=True)
 
     with Then("I wait for the node to restart in recovery mode"):
         retry(check_logs, timeout=60, delay=1)(
             node=recovery_node,
             message="KeeperServer: This instance is in recovery mode",
-            use_compose_workaround=True,
             tail=50,
         )
 
@@ -50,13 +46,12 @@ def feature(self):
         retry(check_logs, timeout=30, delay=1)(
             node=recovery_node,
             message="INIT RAFT SERVER",
-            use_compose_workaround=True,
             tail=30,
         )
 
     with When("I restart all other DR nodes"):
         for node in dr_ensemble[1:]:
-            node.restart()
+            node.restart_keeper()
 
     with Then("I check that the leader exists"):
         current_leader = retry(
@@ -64,5 +59,5 @@ def feature(self):
         )()
 
     with And("I check that the cluster is healthy"):
-        r = keeper_query(node=recovery_node, query="mntr", use_compose_workaround=True)
+        r = keeper_query(node=recovery_node, query="mntr")
         assert "zk_synced_followers\t2" in r.output, error()
