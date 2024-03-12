@@ -1,5 +1,5 @@
 _aggregate_functions_first_value_respect_nulls_NULL_for_all_rows = r"""
-{"first_value_respect_nullsDistinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(number))":"UInt64"}
+{"first_value_respect_nullsDistinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_first_value_respect_nulls__inf = r"""
