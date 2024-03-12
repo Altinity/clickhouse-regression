@@ -69,13 +69,11 @@ def cluster_command_workaround(self, node_name, cmd):
 
 
 @TestStep
-def keeper_query(self, node, query, use_compose_workaround=False):
+def keeper_query(self, node, query):
     """Send a query to keeper client."""
     cmd = f'clickhouse-keeper-client -q "{query}"'
-    if not use_compose_workaround:
-        return node.command(cmd)
-    else:
-        return cluster_command_workaround(node_name=node.name, cmd=cmd)
+    return node.command(cmd)
+
 
 
 @TestStep
@@ -101,16 +99,14 @@ def set_keeper_config(self, config_file_name, nodes=None, restart=False):
     if restart:
         with By("I restart all nodes"):
             for node in nodes:
-                node.restart()
+                node.restart_keeper()
 
 
 @TestStep
-def check_logs(self, node, message, tail=30, use_compose_workaround=False):
+def check_logs(self, node, message, tail=30):
     """
     Check for a given message in the server logs
     """
     cmd = f'tail -n {tail} /var/log/clickhouse-keeper/clickhouse-keeper.log | grep "{message}"'
-    if not use_compose_workaround:
-        return node.command(cmd, exitcode=0)
-    else:
-        return cluster_command_workaround(node_name=node.name, cmd=cmd)
+    return node.command(cmd, exitcode=0)
+
