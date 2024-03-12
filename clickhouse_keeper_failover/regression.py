@@ -56,16 +56,31 @@ def regression(
         self.context.cluster = cluster
         self.context.keeper_nodes = [cluster.node(n) for n in cluster.nodes["keeper"]]
 
+    with And("I set the keeper config file"):
+        set_keeper_config(
+            nodes=self.context.keeper_nodes,
+            config_file_name="keeper_config_6node.xml",
+            restart=False,
+        )
+
     with And("I know which ports are in use"):
         self.context.keeper_ports = get_external_ports(internal_port=9182)
 
-    Feature(run=load("clickhouse_keeper_failover.tests.manual_failover", "feature"))
-    Feature(
-        run=load(
-            "clickhouse_keeper_failover.tests.dynamic_reconfiguration_failover",
-            "feature",
+    try:
+        Feature(run=load("clickhouse_keeper_failover.tests.manual_failover", "feature"))
+        Feature(
+            run=load(
+                "clickhouse_keeper_failover.tests.dynamic_reconfiguration_failover",
+                "feature",
+            )
         )
-    )
+    finally:
+        with Finally("I reset the config"):
+            set_keeper_config(
+                nodes=self.context.keeper_nodes,
+                config_file_name="keeper_config_6node.xml",
+                restart=False,
+            )
 
 
 if main():

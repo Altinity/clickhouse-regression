@@ -50,18 +50,38 @@ def keeper_query(self, node, query):
 
 
 @TestStep
-def set_keeper_config(self, nodes, config_file_name, restart=False):
+def set_keeper_config(self, config_file_name, nodes=None, restart=False):
+    assert not (nodes is None and restart), "Nodes to restart must be specified"
+
+    config_dir = current_dir() + "/../configs/keeper/config/"
     source_path = "/etc/clickhouse-keeper-configs/"
-    dest_file = "/etc/clickhouse-keeper/keeper_config.xml"
+    dest_file = config_dir + "keeper_config.xml"
 
     source_file = source_path + config_file_name
 
-    cmd = f"ln -s -f {source_file} {dest_file}"
+    cluster = self.context.cluster
+    cluster.command(None, f"ln -s -f {source_file} {dest_file}", exitcode=0)
 
-    for node in nodes:
-        node.command(
-            "echo '||||||INSERTING NEW CONFIG' >> /var/log/clickhouse-keeper/clickhouse-keeper.log"
-        )
-        node.command(cmd)
-        if restart:
+    if restart:
+        for node in nodes:
             node.restart()
+
+
+@TestStep
+def check_logs(self, node, message, tail=30, use_compose=False):
+    """
+    Check for a given message in the server logs
+
+    use_compose is a workaround for containers that were started with `run`
+    """
+    cmd = f'tail -n {tail} /var/log/clickhouse-keeper/clickhouse-keeper.log | grep "{message}"'
+    if not use_compose:
+        return node.command(cmd, exitcode=0)
+    else:
+        cluster = self.context.cluster
+        cluster.command(
+            None,
+            f"{cluster.docker_compose} run {node.name} {cmd}",
+            exitcode=0,
+            steps=False,
+        )
