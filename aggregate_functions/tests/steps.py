@@ -211,6 +211,9 @@ def execute_query(
     settings=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
+    if settings is None:
+        settings = [("allow_suspicious_low_cardinality_types", 1)]
+
     if snapshot_name is None:
         snapshot_name = current().name
 
