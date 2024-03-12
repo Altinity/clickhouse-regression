@@ -16,6 +16,7 @@ xfails = {}
 
 ffails = {}
 
+
 @TestModule
 def run_feature(
     self,
@@ -95,7 +96,7 @@ def regression(
     if check_clickhouse_version("<21.4")(self):
         skip(reason="only supported on ClickHouse version >= 21.4")
 
-    features = ["manual_failover", "dynamic_reconfiguration_failover"]
+    features = ["dynamic_reconfiguration_failover", "manual_failover"]
 
     for feature in features:
         run_feature(
