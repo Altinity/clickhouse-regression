@@ -11,8 +11,9 @@ def feature(self, restart_on_reconfig=True):
 
     with Given("I check that the leader exists"):
         current_leader = retry(
-            get_current_leader, timeout=10, delay=1, initial_delay=2
+            get_current_leader, timeout=30, delay=5, initial_delay=10
         )()
+        assert current_leader is not None
 
     with Given("I split the nodes into ensembles for PR and DR"):
         pr_ensemble = self.context.keeper_nodes[:3]
@@ -26,7 +27,42 @@ def feature(self, restart_on_reconfig=True):
         set_keeper_config(
             nodes=dr_ensemble,
             config_file_name="keeper_config_manual_failover.xml",
-            restart=restart_on_reconfig,
+            restart=False,
         )
 
-    pause()
+    with When("I restart one node with --force-recovery"):
+        cluster = self.context.cluster
+        new_leader_node = dr_ensemble[0]
+        cluster.command(None, f"{cluster.docker_compose} stop {new_leader_node.name}")
+        cluster.command(
+            None,
+            f"{cluster.docker_compose} run --service-ports -d {new_leader_node.name} ./entrypoint.sh --force-recovery",
+        )
+
+    with Then("I wait for the node to restart in recovery mode"):
+        retry(check_logs, timeout=30, delay=1)(
+            node=new_leader_node,
+            message="KeeperServer: This instance is in recovery mode",
+            use_compose=True,
+            tail=50,
+        )
+
+    with Then("I wait for the server to finish starting"):
+        retry(check_logs, timeout=30, delay=1)(
+            node=new_leader_node, message="INIT RAFT SERVER", use_compose=True, tail=30
+        )
+
+    with When("I restart all other DR nodes"):
+        for node in dr_ensemble[1:]:
+            node.restart()
+
+    with Then("I check that the leader exists"):
+        current_leader = retry(
+            get_current_leader, timeout=30, delay=5, initial_delay=10
+        )()
+        assert current_leader is not None
+
+    with And("I check that the cluster is healthy"):
+        r = keeper_query(node=new_leader_node, query="mntr", use_compose=True)
+        assert "zk_synced_followers\t2" in r.output, error()
+

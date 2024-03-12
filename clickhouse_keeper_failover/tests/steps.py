@@ -29,10 +29,17 @@ def get_current_leader(self):
     cluster = self.context.cluster
 
     for node, port in self.context.keeper_ports.items():
-        r = cluster.command(None, f"curl 'http://localhost:{port}/ready'")
+        r = cluster.command(
+            None, f"curl 'http://localhost:{port}/ready'", no_checks=True
+        )
+        if "Failed to connect" in r.output:
+            continue
+
         is_leader = json.loads(r.output)["details"]["role"] == "leader"
         if is_leader:
             return node
+
+    return None
 
 
 @TestStep
@@ -45,8 +52,18 @@ def get_node_role(self, node):
 
 
 @TestStep
-def keeper_query(self, node, query):
-    return node.command(f'clickhouse-keeper-client -q "{query}"')
+def keeper_query(self, node, query, use_compose=False):
+    cmd = f'clickhouse-keeper-client -q "{query}"'
+    if not use_compose:
+        return node.command(cmd)
+    else:
+        cluster = self.context.cluster
+        return cluster.command(
+            None,
+            f"{cluster.docker_compose} exec {node.name} {cmd}",
+            exitcode=0,
+            steps=False,
+        )
 
 
 @TestStep
@@ -79,9 +96,9 @@ def check_logs(self, node, message, tail=30, use_compose=False):
         return node.command(cmd, exitcode=0)
     else:
         cluster = self.context.cluster
-        cluster.command(
+        return cluster.command(
             None,
-            f"{cluster.docker_compose} run {node.name} {cmd}",
+            f"{cluster.docker_compose} exec {node.name} {cmd}",
             exitcode=0,
             steps=False,
         )
