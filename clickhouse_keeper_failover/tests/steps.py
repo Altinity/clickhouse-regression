@@ -34,14 +34,14 @@ def get_current_leader(self):
         r = cluster.command(
             None, f"curl 'http://localhost:{port}/ready'", no_checks=True
         )
-        if "Failed to connect" in r.output:
+        if r.exitcode != 0:
             continue
 
         is_leader = json.loads(r.output)["details"]["role"] == "leader"
         if is_leader:
             return node
 
-    return None
+    fail("did not receive a leader response from any node")
 
 
 @TestStep
@@ -92,7 +92,7 @@ def set_keeper_config(self, config_file_name, nodes=None, restart=False):
 
     with By("I return early if the link is already set"):
         r = cluster.command(None, f"ls -l {dest_file}", no_checks=True)
-        if source_path in r.output:
+        if source_file in r.output:
             return
 
     with And("I replace the link with the new target"):

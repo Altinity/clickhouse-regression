@@ -13,7 +13,6 @@ def feature(self, restart_on_reconfig=True):
         current_leader = retry(
             get_current_leader, timeout=10, delay=1, initial_delay=2
         )()
-        assert current_leader is not None
 
     with Given("I split the nodes into ensembles for PR and DR"):
         all_nodes = self.context.keeper_nodes

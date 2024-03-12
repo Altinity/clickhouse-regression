@@ -13,8 +13,7 @@ def feature(self):
         current_leader = retry(
             get_current_leader, timeout=30, delay=5, initial_delay=10
         )()
-        assert current_leader is not None
-
+        
     with Given("I split the nodes into ensembles for PR and DR"):
         pr_ensemble = self.context.keeper_nodes[:3]
         dr_ensemble = self.context.keeper_nodes[3:]
@@ -40,7 +39,7 @@ def feature(self):
         )
 
     with Then("I wait for the node to restart in recovery mode"):
-        retry(check_logs, timeout=30, delay=1)(
+        retry(check_logs, timeout=60, delay=1)(
             node=new_leader_node,
             message="KeeperServer: This instance is in recovery mode",
             use_compose_workaround=True,
@@ -63,7 +62,6 @@ def feature(self):
         current_leader = retry(
             get_current_leader, timeout=30, delay=5, initial_delay=10
         )()
-        assert current_leader is not None
 
     with And("I check that the cluster is healthy"):
         r = keeper_query(
