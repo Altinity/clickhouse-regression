@@ -53,10 +53,11 @@ def feature(self, restart_on_reconfig=True):
             with Then(f"I check that {node.name} is now a follower"):
                 assert r.output.count("participant") == i, error()
 
-            with When(f"I request leadership"):
-                r = retry(keeper_query, timeout=60, delay=5, initial_delay=10)(
-                    node=node, query="rqld"
-                )
+            with When(f"I wait for {node.name} to finish starting"):
+                retry(get_node_role, timeout=30, delay=2, initial_delay=2)(node=node)
+
+            with And(f"I request leadership"):
+                r = retry(keeper_query, timeout=30, delay=5)(node=node, query="rqld")
                 assert r.output == "Sent leadership request to leader.", error()
 
             with Then(f"I check that {node.name} is now a leader"):
@@ -64,10 +65,25 @@ def feature(self, restart_on_reconfig=True):
                     with attempt:
                         assert get_node_role(node=node) == "leader", error()
 
+    with When("I remove the PR ensemble from the config"):
+        set_keeper_config(
+            nodes=dr_ensemble,
+            config_file_name="keeper_config_3node_failover.xml",
+            restart=restart_on_reconfig,
+        )
+
     with When("I stop the PR ensemble"):
         for node in pr_ensemble:
             node.command("kill 1")
 
-    with When("I run `mntr` on all DR nodes"):
+    with Then("I get the current leader"):
+        current_leader = retry(
+            get_current_leader, timeout=60, delay=5, initial_delay=10
+        )()
+
+    with And("I check that the cluster is healthy"):
         for node in dr_ensemble:
-            keeper_query(node=node, query="mntr")
+            if node.name != current_leader:
+                continue
+            r = keeper_query(node=node, query="mntr")
+            assert "zk_synced_followers\t2" in r.output, error()

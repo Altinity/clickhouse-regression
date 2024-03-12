@@ -25,7 +25,7 @@ def feature(self):
     with Given("I enable leadership on DR ensemble"):
         set_keeper_config(
             nodes=dr_ensemble,
-            config_file_name="keeper_config_manual_failover.xml",
+            config_file_name="keeper_config_3node_failover.xml",
             restart=False,
         )
 
