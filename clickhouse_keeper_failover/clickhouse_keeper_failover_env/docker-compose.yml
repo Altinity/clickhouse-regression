@@ -15,8 +15,8 @@ services:
     environment:
       - KEEPER_SERVER_ID=1
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-01/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-01/data/:/var/lib/clickhouse"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-1/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-1/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
   
   keeper-2:
@@ -32,8 +32,8 @@ services:
     environment:
       - KEEPER_SERVER_ID=2
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-02/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-02/data/:/var/lib/clickhouse"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-2/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-2/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
 
   keeper-3:
@@ -49,8 +49,8 @@ services:
     environment:
       - KEEPER_SERVER_ID=3
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-03/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-03/data/:/var/lib/clickhouse"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-3/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-3/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
 
   keeper-4:
@@ -67,8 +67,8 @@ services:
     environment:
       - KEEPER_SERVER_ID=4
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-04/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-04/data/:/var/lib/clickhouse"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-4/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-4/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
   
   keeper-5:
@@ -84,8 +84,8 @@ services:
     environment:
       - KEEPER_SERVER_ID=5
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-05/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-05/data/:/var/lib/clickhouse"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-5/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-5/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
 
   keeper-6:
@@ -101,6 +101,6 @@ services:
       - "59234:9234"
       - "59182:9182"
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-06/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-06/data/:/var/lib/clickhouse"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
