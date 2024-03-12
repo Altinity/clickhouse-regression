@@ -13,14 +13,12 @@ def feature(self, restart_on_reconfig=True):
         current_leader = retry(
             get_current_leader, timeout=10, delay=1, initial_delay=2
         )()
+        assert current_leader is not None
 
     with Given("I split the nodes into ensembles for PR and DR"):
         all_nodes = self.context.keeper_nodes
         pr_ensemble = all_nodes[:3]
         dr_ensemble = all_nodes[3:]
-        note(len(all_nodes))
-        note(len(pr_ensemble))
-        note(len(dr_ensemble))
 
     with When("I update learner nodes to follower"):
         enabled_ids = []
