@@ -6,7 +6,7 @@ from clickhouse_keeper_failover.tests.steps import *
 
 @TestFeature
 @Name("manual failover")
-def feature(self, restart_on_reconfig=True):
+def feature(self):
     """Test keeper manual failover."""
 
     with Given("I check that the leader exists"):
@@ -43,13 +43,16 @@ def feature(self, restart_on_reconfig=True):
         retry(check_logs, timeout=30, delay=1)(
             node=new_leader_node,
             message="KeeperServer: This instance is in recovery mode",
-            use_compose=True,
+            use_compose_workaround=True,
             tail=50,
         )
 
     with Then("I wait for the server to finish starting"):
         retry(check_logs, timeout=30, delay=1)(
-            node=new_leader_node, message="INIT RAFT SERVER", use_compose=True, tail=30
+            node=new_leader_node,
+            message="INIT RAFT SERVER",
+            use_compose_workaround=True,
+            tail=30,
         )
 
     with When("I restart all other DR nodes"):
@@ -63,6 +66,7 @@ def feature(self, restart_on_reconfig=True):
         assert current_leader is not None
 
     with And("I check that the cluster is healthy"):
-        r = keeper_query(node=new_leader_node, query="mntr", use_compose=True)
+        r = keeper_query(
+            node=new_leader_node, query="mntr", use_compose_workaround=True
+        )
         assert "zk_synced_followers\t2" in r.output, error()
-

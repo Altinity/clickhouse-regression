@@ -8,6 +8,7 @@ from testflows.asserts import error
 
 @TestStep
 def get_external_ports(self, internal_port):
+    """Get the mapping of external ports per node for a given internal port."""
     port_regex = r"(keeper-\d).*:(\d+)->" + str(internal_port)
 
     cluster = self.context.cluster
@@ -26,6 +27,7 @@ def get_external_ports(self, internal_port):
 
 @TestStep
 def get_current_leader(self):
+    """Query keeper nodes until one responds claiming to be leader."""
     cluster = self.context.cluster
 
     for node, port in self.context.keeper_ports.items():
@@ -44,6 +46,7 @@ def get_current_leader(self):
 
 @TestStep
 def get_node_role(self, node):
+    """Get the keeper role of a given node."""
     cluster = self.context.cluster
 
     port = self.context.keeper_ports[node.name]
@@ -52,53 +55,62 @@ def get_node_role(self, node):
 
 
 @TestStep
-def keeper_query(self, node, query, use_compose=False):
+def cluster_command_workaround(self, node_name, cmd):
+    """
+    Node.command isn't compatible with the method used to activate recovery mode.
+    """
+    cluster = self.context.cluster
+    return cluster.command(
+        None,
+        f"{cluster.docker_compose} exec {node_name} {cmd}",
+        exitcode=0,
+        steps=False,
+    )
+
+
+@TestStep
+def keeper_query(self, node, query, use_compose_workaround=False):
+    """Send a query to keeper client."""
     cmd = f'clickhouse-keeper-client -q "{query}"'
-    if not use_compose:
+    if not use_compose_workaround:
         return node.command(cmd)
     else:
-        cluster = self.context.cluster
-        return cluster.command(
-            None,
-            f"{cluster.docker_compose} exec {node.name} {cmd}",
-            exitcode=0,
-            steps=False,
-        )
+        return cluster_command_workaround(node_name=node.name, cmd=cmd)
 
 
 @TestStep
 def set_keeper_config(self, config_file_name, nodes=None, restart=False):
+    """Swaps the config file."""
     assert not (nodes is None and restart), "Nodes to restart must be specified"
 
     config_dir = current_dir() + "/../configs/keeper/config/"
     source_path = "/etc/clickhouse-keeper-configs/"
     dest_file = config_dir + "keeper_config.xml"
-
     source_file = source_path + config_file_name
 
     cluster = self.context.cluster
-    cluster.command(None, f"ln -s -f {source_file} {dest_file}", exitcode=0)
+
+    with By("I return early if the link is already set"):
+        r = cluster.command(None, f"ls -l {dest_file}", no_checks=True)
+        if source_path in r.output:
+            return
+
+    with And("I replace the link with the new target"):
+        cluster.command(None, f"ln -s -f {source_file} {dest_file}", exitcode=0)
 
     if restart:
-        for node in nodes:
-            node.restart()
+        with By("I restart all nodes"):
+            for node in nodes:
+                node.restart()
 
 
 @TestStep
-def check_logs(self, node, message, tail=30, use_compose=False):
+def check_logs(self, node, message, tail=30, use_compose_workaround=False):
     """
     Check for a given message in the server logs
-
-    use_compose is a workaround for containers that were started with `run`
     """
     cmd = f'tail -n {tail} /var/log/clickhouse-keeper/clickhouse-keeper.log | grep "{message}"'
-    if not use_compose:
+    if not use_compose_workaround:
         return node.command(cmd, exitcode=0)
     else:
-        cluster = self.context.cluster
-        return cluster.command(
-            None,
-            f"{cluster.docker_compose} exec {node.name} {cmd}",
-            exitcode=0,
-            steps=False,
-        )
+        return cluster_command_workaround(node_name=node.name, cmd=cmd)
