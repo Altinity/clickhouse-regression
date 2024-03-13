@@ -7,7 +7,7 @@ from vfs.requirements import *
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Table_Migration("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Table_Migration("1.0"))
 @Examples("source destination", permutations(["replicated", "zero-copy", "vfs"], 2))
 def migration(self, source, destination):
     """Test migrating tables between disks with and without vfs."""

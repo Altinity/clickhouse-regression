@@ -10,7 +10,7 @@ from vfs.requirements import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Update("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Update("0.0"))
 def update_delete(self):
     """Test that ALTER UPDATE and DELETE execute without errors."""
     table_name = "update_table"
@@ -48,7 +48,7 @@ def update_delete(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_OrderBy("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_OrderBy("0.0"))
 def order_by(self):
     """Test that MODIFY ORDER BY executes without errors."""
     table_name = "order_table"
@@ -68,7 +68,7 @@ def order_by(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_SampleBy("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_SampleBy("0.0"))
 def sample_by(self):
     """Test that MODIFY SAMPLE BY executes without errors."""
     table_name = "sample_table"
@@ -93,7 +93,7 @@ def sample_by(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Index("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Index("0.0"))
 def index(self):
     """Test that MODIFY ORDER BY executes without errors."""
     table_name = "index_table"
@@ -135,7 +135,7 @@ def index(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Projections("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Projections("0.0"))
 def projection(self):
     """Test that adding projections does not error."""
     table_name = "proj_table"
@@ -173,7 +173,7 @@ def projection(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Freeze("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Freeze("0.0"))
 @Examples("partition", [[""], ["PARTITION 1"]])
 def freeze(self, partition):
     """Check tables work with ALTER TABLE FREEZE."""
@@ -206,8 +206,8 @@ def freeze(self, partition):
 
 @TestOutline(Scenario)
 @Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Alter_Fetch("0.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Alter_Attach("0.0"),
+    RQ_SRS038_DiskObjectStorageVFS_Alter_Fetch("0.0"),
+    RQ_SRS038_DiskObjectStorageVFS_Alter_Attach("0.0"),
 )
 @Examples("fetch_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
 def fetch(self, fetch_item):
@@ -248,7 +248,7 @@ def fetch(self, fetch_item):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_AttachFrom("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_AttachFrom("0.0"))
 def attach_from(self):
     """Test attaching a part from one table to another."""
 
@@ -292,7 +292,7 @@ def attach_from(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MoveToTable("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_MoveToTable("0.0"))
 def move_to_table(self):
     """Test moving a part from one table to another."""
 
@@ -349,7 +349,7 @@ def move_to_table(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Replace("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Replace("0.0"))
 def replace(self):
     """Test attaching a part from one table to another."""
 
@@ -398,7 +398,7 @@ def replace(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Drop("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Drop("0.0"))
 @Examples(
     "drop_item detach_first", product(["PARTITION 2", "PART '2_0_0_0'"], [False, True])
 )
@@ -491,7 +491,7 @@ def check_move(self, move_item, policy, disk_order, to_type):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_MovePart("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_MovePart("0.0"))
 def move(self):
     """
     Test moving  part between vfs and non-vfs disks.
@@ -544,7 +544,7 @@ def move(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Alter_Detach("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Detach("0.0"))
 @Examples("detach_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
 def detach(self, detach_item):
     """Test detaching a part."""
@@ -584,8 +584,8 @@ def detach(self, detach_item):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_Alter_Column("0.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"),
+    RQ_SRS038_DiskObjectStorageVFS_Alter_Column("0.0"),
+    RQ_SRS038_DiskObjectStorageVFS_Combinatoric("0.0"),
 )
 def columns(self):
     """Test that alter column commands execute without errors."""

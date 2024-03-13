@@ -10,7 +10,7 @@ from vfs.requirements import *
 
 @TestScenario
 @Tags("sanity")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Table_Detach("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Table_Detach("1.0"))
 def bad_detached_part(self):
     """
     Test that a bad detached part on one replica does not affect the other replica.
@@ -80,8 +80,8 @@ def bad_detached_part(self):
 
 
 """
-RQ_SRS_038_DiskObjectStorageVFS_Table_BackgroundCollapse
-RQ_SRS_038_DiskObjectStorageVFS_Table_StoragePolicy
+RQ_SRS038_DiskObjectStorageVFS_Table_BackgroundCollapse
+RQ_SRS038_DiskObjectStorageVFS_Table_StoragePolicy
 """
 
 

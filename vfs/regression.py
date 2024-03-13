@@ -29,11 +29,11 @@ ffails = {
     ":/parallel replica": (Skip, "WIP"),
 }
 
-# RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
+# RQ_SRS038_DiskObjectStorageVFS_Providers_Configuration
 
 
 @TestModule
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
 def minio(
     self,
     uri,
@@ -96,7 +96,7 @@ def minio(
 
 
 @TestModule
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_AWS("1.0"))
 def aws_s3(
     self,
     key_id,
@@ -176,7 +176,7 @@ def aws_s3(
 
 
 @TestModule
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_GCS("1.0"))
 def gcs(
     self,
     uri,
@@ -244,7 +244,7 @@ def gcs(
 @TestModule
 @Name("vfs")
 @ArgumentParser(argparser)
-@Specifications(SRS_038_ClickHouse_Disk_Object_Storage_VFS)
+@Specifications(SRS038_ClickHouse_Disk_Object_Storage_VFS)
 @XFails(xfails)
 @FFails(ffails)
 def regression(

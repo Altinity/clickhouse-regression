@@ -9,7 +9,7 @@ from vfs.requirements import *
 
 @TestOutline(Scenario)
 @Tags("long", "combinatoric")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Performance("1.0"))
 @Examples(
     "n_cols max_inserts allow_vfs",
     [

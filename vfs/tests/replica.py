@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 import random
-import json
+from threading import Event
 
 from testflows.core import *
 from testflows.combinatorics import product, combinations
@@ -108,7 +108,7 @@ def no_duplication(self):
 
 @TestScenario
 @Tags("sanity")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Add("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Add("1.0"))
 def add_replica(self):
     """
     Test that replicas can be added to an existing table:
@@ -189,7 +189,7 @@ def add_replica(self):
 
 @TestScenario
 @Tags("sanity")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Offline("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Offline("1.0"))
 def offline_replica(self):
     """
     Test that an offline replica can recover data that was inserted on another replica.
@@ -235,7 +235,7 @@ def offline_replica(self):
 
 @TestScenario
 @Tags("sanity")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def add_remove_one_node(self):
     """
     Test that no data is lost when a node is removed and added as a replica
@@ -307,7 +307,7 @@ def add_remove_one_node(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def parallel_add_remove(self):
     """
     Test that no data is lost when replicas are added and removed
@@ -459,7 +459,7 @@ def parallel_add_remove(self):
 
 
 @TestOutline(Example)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=True):
     """
     Perform combinations of actions on replicas, including adding and removing,
@@ -540,17 +540,9 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     def truncate(self, node):
         node.query(f"TRUNCATE TABLE IF EXISTS {table_name}", no_checks=True)
 
-    @TestStep(When)
-    def get_row_count(self, node):
-        r = node.query(
-            f"SELECT count() FROM {table_name} FORMAT JSON",
-            exitcode=0,
-        )
-        return int(json.loads(r.output)["data"][0]["count()"])
-
     @TestStep(Then)
     @Retry(timeout=60, delay=0.5)
-    def check_consistency(self):
+    def _check_consistency(self):
         with When("I check which nodes have the table"):
             active_nodes = [
                 n
@@ -560,20 +552,8 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
             if not active_nodes:
                 return
 
-        with When("I make sure all nodes are synced"):
-            for node in active_nodes:
-                node.query(
-                    f"SYSTEM SYNC REPLICA {table_name}", timeout=10, no_checks=True
-                )
-
-        with When("I query all nodes for their row counts"):
-            row_counts = {}
-            for node in active_nodes:
-                row_counts[node.name] = get_row_count(node=node)
-
-        with Then("All replicas should have the same state"):
-            for n1, n2 in combinations(active_nodes, 2):
-                assert row_counts[n1.name] == row_counts[n2.name], error()
+        with Then("I check that the nodes agree"):
+            check_consistency(nodes=active_nodes, table_name=table_name)
 
     actions = [
         add_replica,
@@ -626,7 +606,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
                 join()
 
                 with Then("I check that the replicas are consistent", flags=TE):
-                    check_consistency()
+                    _check_consistency()
 
                 a = (time.time() - t) / (i + 1)
                 with And(f"I note the average time taken: {a:.2f}s"):
@@ -651,7 +631,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
 
 @TestScenario
 @Tags("combinatoric")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Combinatoric("0.0"))
 def command_combinations(self, parallel=True):
     """
     Perform parallel actions on replicas and check that they all agree.
@@ -668,7 +648,7 @@ def command_combinations(self, parallel=True):
 
 
 @TestFeature
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS("1.0"))
 @Name("replica")
 def feature(self):
     """Test that replicas can be added and removed without errors or duplicate data."""
