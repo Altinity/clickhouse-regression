@@ -213,8 +213,15 @@ def table_check_dec(self, arithmetic_func, expected_result, node=None):
 
     table_name = f"table_{getuid()}"
 
+    if arithmetic_func in ["intDiv", "intDivOrZero"] and check_clickhouse_version(
+        ">=24.2"
+    ):
+        data_type = "Int256"
+    else:
+        data_type = "Decimal256(0)"
+
     with Given(f"I have a table"):
-        table(name=table_name, data_type="Decimal256(0)")
+        table(name=table_name, data_type=data_type)
 
     if arithmetic_func in ["negate", "abs"]:
         with When(f"I insert {arithmetic_func} with toDecimal256 into the table"):

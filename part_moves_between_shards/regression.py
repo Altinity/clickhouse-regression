@@ -32,17 +32,17 @@ xflags = {}
 ffails = {
     "/part moves between shards/part_moves/part move parallel with big insert": (
         Skip,
-        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything",
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything: https://github.com/ClickHouse/ClickHouse/issues/61220",
         check_clickhouse_version(">=24.1"),
     ),
     "/part moves between shards/part_moves/part move parallel with insert to destination": (
         Skip,
-        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything",
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything: https://github.com/ClickHouse/ClickHouse/issues/61220",
         check_clickhouse_version(">=24.1"),
     ),
     "/part moves between shards/part_moves/part move parallel with insert to source": (
         Skip,
-        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything",
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything: https://github.com/ClickHouse/ClickHouse/issues/61220",
         check_clickhouse_version(">=24.1"),
     ),
 }
