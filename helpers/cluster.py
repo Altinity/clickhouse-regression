@@ -1587,7 +1587,7 @@ class Cluster(object):
                 elif name.startswith("clickhouse"):
                     self.node(name).start_clickhouse(thread_fuzzer=self.thread_fuzzer)
 
-            for name in self.nodes["keeper"]:
+            for name in self.nodes.get("keeper", []):
                 if name.startswith("keeper"):
                     self.node(name).start_keeper()
 
