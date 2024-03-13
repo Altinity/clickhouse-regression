@@ -172,7 +172,7 @@ def lack_of_disk_space_tiered_storage(self, node=None):
             with attempt:
                 r = node.query(f"SELECT count(*) FROM {table_name}")
                 assert r.output in ("14500000", "13050000"), error()
-                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=0")
+                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1")
                 assert r.output in ("0", "1450000"), error()
 
 
