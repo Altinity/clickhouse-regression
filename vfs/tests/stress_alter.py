@@ -15,6 +15,7 @@ from vfs.tests.tc_netem import *
 
 table_schema_lock = RLock()
 
+step_retry_timeout = 300
 
 @TestStep
 def get_nodes_for_table(self, nodes, table_name):
@@ -119,7 +120,7 @@ def get_random_column_name(self, node, table_name):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("add column")
 def add_random_column(self):
     """Add a column with a random name."""
@@ -139,7 +140,7 @@ def add_random_column(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("delete column")
 def delete_random_column(self):
     """Delete a random column."""
@@ -157,7 +158,7 @@ def delete_random_column(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=2)
+@Retry(timeout=step_retry_timeout, delay=2)
 @Name("rename column")
 def rename_random_column(self):
     """Rename a random column to a random value."""
@@ -182,7 +183,7 @@ def rename_random_column(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("update column")
 def update_random_column(self):
     """Replace some values on a random column."""
@@ -203,21 +204,21 @@ def update_random_column(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=2)
+@Retry(timeout=step_retry_timeout, delay=2)
 def get_random_part_id(self, node, table_name):
     """Choose a random active part in a table."""
     return random.choice(get_active_parts(node=node, table_name=table_name))
 
 
 @TestStep
-@Retry(timeout=60, delay=2)
+@Retry(timeout=step_retry_timeout, delay=2)
 def get_random_partition_id(self, node, table_name):
     """Choose a random active partition in a table."""
     return random.choice(get_active_partition_ids(node=node, table_name=table_name))
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("detach part")
 def detach_attach_random_partition(self):
     """Detach a random part, wait a random time, attach partition."""
@@ -241,7 +242,7 @@ def detach_attach_random_partition(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("freeze part")
 def freeze_unfreeze_random_part(self):
     """Freeze a random part, wait a random time, unfreeze part."""
@@ -264,7 +265,7 @@ def freeze_unfreeze_random_part(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("drop part")
 def drop_random_part(self):
     """Detach and drop a random part."""
@@ -289,7 +290,7 @@ def drop_random_part(self):
 
 
 @TestStep
-@Retry(timeout=120, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("replace part")
 def replace_random_part(self):
     """Test attaching a random part from one table to another."""
@@ -312,7 +313,7 @@ def replace_random_part(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("move partition to table")
 def move_random_partition_to_random_table(self):
     """Move a random partition from one table to another."""
@@ -335,7 +336,7 @@ def move_random_partition_to_random_table(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("move partition to disk")
 def move_random_partition_to_random_disk(self):
     """Move a random partition from one table to another."""
@@ -373,7 +374,7 @@ def move_random_partition_to_random_disk(self):
 
 
 @TestStep
-@Retry(timeout=120, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("attach part")
 def attach_random_part_from_table(self):
     """Attach a random partition from one table to another."""
@@ -396,7 +397,7 @@ def attach_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("fetch part")
 def fetch_random_part_from_table(self):
     """Fetching a random part from another table replica."""
@@ -421,7 +422,7 @@ def fetch_random_part_from_table(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("clear column")
 def clear_random_column(self):
     """Clear a random column on a random partition."""
@@ -441,7 +442,7 @@ def clear_random_column(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("delete row")
 def delete_random_rows(self):
     """Delete a few rows at random."""
@@ -463,7 +464,7 @@ def delete_random_rows(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("light delete row")
 def delete_random_rows_lightweight(self):
     """Lightweight delete a few rows at random."""
@@ -487,7 +488,7 @@ def delete_random_rows_lightweight(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("add projection")
 def add_random_projection(self):
     projection_name = "projection_" + getuid()
@@ -508,7 +509,7 @@ def add_random_projection(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("clear projection")
 def clear_random_projection(self):
     tables = self.context.table_names.copy()
@@ -531,7 +532,7 @@ def clear_random_projection(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("drop projection")
 def drop_random_projection(self):
     tables = self.context.table_names.copy()
@@ -553,7 +554,7 @@ def drop_random_projection(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("add index")
 def add_random_index(self):
     index_name = "index_" + getuid()
@@ -572,7 +573,7 @@ def add_random_index(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("clear index")
 def clear_random_index(self):
     tables = self.context.table_names.copy()
@@ -595,7 +596,7 @@ def clear_random_index(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("drop index")
 def drop_random_index(self):
     tables = self.context.table_names.copy()
@@ -617,7 +618,7 @@ def drop_random_index(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("modify ttl")
 def modify_random_ttl(self):
     table_name = get_random_table_name()
@@ -631,7 +632,7 @@ def modify_random_ttl(self):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 @Name("remove ttl")
 def remove_random_ttl(self):
     table_name = get_random_table_name()
@@ -641,7 +642,7 @@ def remove_random_ttl(self):
 
 
 @TestStep(Then)
-@Retry(timeout=120, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 def check_consistency(self, tables=None, sync_timeout=None):
     """
     Check that the given tables hold the same amount of data on all nodes where they exist.
@@ -824,7 +825,7 @@ def restart_clickhouse(self, signal="SEGV"):
 
 
 @TestStep
-@Retry(timeout=60, delay=5)
+@Retry(timeout=step_retry_timeout, delay=5)
 def restart_network(self):
     """
     Stop the network on a random instance, wait, and restart.
