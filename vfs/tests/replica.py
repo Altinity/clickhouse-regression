@@ -232,6 +232,72 @@ def offline_replica(self):
     with And("I check the row count on the second node"):
         assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
 
+@TestScenario
+@Tags("sanity")
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Stale("1.0"))
+def stale_replica(self):
+    """
+    Similar to offline test, but under load.
+    """
+
+    table_name = "vfs_stale_replica"
+    nodes = self.context.ch_nodes
+    columns = "d UInt64, s String"
+    insert_size = 10_000_000
+    insert_time = 15
+
+    with Given(f"I create a replicated vfs table on each node"):
+        replicated_table_cluster(
+            table_name=table_name, columns=columns, storage_policy="external_vfs"
+        )
+
+    with And("I have an Event to control background inserts"):
+        stop_background_inserts = Event()
+
+    with And("I add data to the table"):
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=columns, rows=insert_size
+        )
+
+    with And("I stop node 2"):
+        nodes[1].stop()
+
+    When("I start inserts on node 1", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[0], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+    When("I start inserts on node 3", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[2], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+
+    with When(f"I wait {insert_time} seconds and I restart node 2"):
+        time.sleep(insert_time)
+        nodes[1].start()
+
+    When("I start inserts on node 2", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[1], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+
+    with When("I tell node 2 to sync"):
+        sync_replica(node=nodes[1], table_name=table_name, timeout=insert_time)
+
+    with When(f"I wait {insert_time} seconds and stop the inserts"):
+        time.sleep(insert_time)
+        stop_background_inserts.set()
+        join()
+
+    with Then("I check that the nodes are consistent"):
+        check_consistency(nodes=nodes, table_name=table_name)
+
+
 
 @TestScenario
 @Tags("sanity")
