@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231001.1175523.
+# document by TestFlows v2.0.240111.1210833.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -3494,6 +3494,29 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL = Requirement(
     num="15.4.5",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Indexes = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Indexes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing from Parquet files that utilize indexes.\n"
+        "\n"
+        "| Indexes Supported by Parquet |\n"
+        "|------------------------------|\n"
+        "| Page                         |\n"
+        "| Min/Max                      |\n"
+        "| Bloom Filter                 |\n"
+        "| Dictionary                   |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="16.4.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat",
     version="1.0",
@@ -3513,7 +3536,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
     ),
     link=None,
     level=3,
-    num="16.1.1",
+    num="17.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requirement(
@@ -3541,7 +3564,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requiremen
     ),
     link=None,
     level=3,
-    num="16.1.2",
+    num="17.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
@@ -3682,7 +3705,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
     ),
     link=None,
     level=3,
-    num="16.1.3",
+    num="17.1.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
@@ -3698,7 +3721,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
     ),
     link=None,
     level=3,
-    num="16.1.4",
+    num="17.1.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
@@ -3713,7 +3736,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
     ),
     link=None,
     level=3,
-    num="16.2.1",
+    num="17.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
@@ -3729,7 +3752,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
     ),
     link=None,
     level=3,
-    num="16.2.2",
+    num="17.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
@@ -3745,7 +3768,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
     ),
     link=None,
     level=3,
-    num="16.2.3",
+    num="17.2.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -3772,7 +3795,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requi
     ),
     link=None,
     level=2,
-    num="17.1",
+    num="18.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File = Requirement(
@@ -3789,7 +3812,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File = Requirement(
     ),
     link=None,
     level=2,
-    num="17.2",
+    num="18.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Column = Requirement(
@@ -3806,7 +3829,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Column = Requiremen
     ),
     link=None,
     level=2,
-    num="17.3",
+    num="18.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageHeader = Requirement(
@@ -3823,7 +3846,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageHeader = Requir
     ),
     link=None,
     level=2,
-    num="17.4",
+    num="18.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageData = Requirement(
@@ -3840,7 +3863,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageData = Requirem
     ),
     link=None,
     level=2,
-    num="17.5",
+    num="18.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Checksum = Requirement(
@@ -3856,7 +3879,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Checksum = Requirem
     ),
     link=None,
     level=2,
-    num="17.6",
+    num="18.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values = Requirement(
@@ -3877,7 +3900,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values = Requirement(
     ),
     link=None,
     level=2,
-    num="17.7",
+    num="18.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Date = Requirement(
@@ -3894,7 +3917,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Date = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.1",
+    num="18.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Int = Requirement(
@@ -3910,7 +3933,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Int = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.2",
+    num="18.7.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_BigInt = Requirement(
@@ -3926,7 +3949,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_BigInt = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.3",
+    num="18.7.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_SmallInt = Requirement(
@@ -3942,7 +3965,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_SmallInt = Requiremen
     ),
     link=None,
     level=3,
-    num="17.7.4",
+    num="18.7.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TinyInt = Requirement(
@@ -3958,7 +3981,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TinyInt = Requirement
     ),
     link=None,
     level=3,
-    num="17.7.5",
+    num="18.7.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UInt = Requirement(
@@ -3974,7 +3997,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UInt = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.6",
+    num="18.7.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UBigInt = Requirement(
@@ -3990,7 +4013,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UBigInt = Requirement
     ),
     link=None,
     level=3,
-    num="17.7.7",
+    num="18.7.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_USmallInt = Requirement(
@@ -4006,7 +4029,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_USmallInt = Requireme
     ),
     link=None,
     level=3,
-    num="17.7.8",
+    num="18.7.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UTinyInt = Requirement(
@@ -4023,7 +4046,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UTinyInt = Requiremen
     ),
     link=None,
     level=3,
-    num="17.7.9",
+    num="18.7.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampUS = Requirement(
@@ -4039,7 +4062,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampUS = Require
     ),
     link=None,
     level=3,
-    num="17.7.10",
+    num="18.7.10",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampMS = Requirement(
@@ -4055,7 +4078,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampMS = Require
     ),
     link=None,
     level=3,
-    num="17.7.11",
+    num="18.7.11",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Bool = Requirement(
@@ -4071,7 +4094,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Bool = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.12",
+    num="18.7.12",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Float = Requirement(
@@ -4087,7 +4110,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Float = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.13",
+    num="18.7.13",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Double = Requirement(
@@ -4103,7 +4126,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Double = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.14",
+    num="18.7.14",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeMS = Requirement(
@@ -4119,7 +4142,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeMS = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.15",
+    num="18.7.15",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeUS = Requirement(
@@ -4135,7 +4158,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeUS = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.16",
+    num="18.7.16",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeNS = Requirement(
@@ -4151,7 +4174,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeNS = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.17",
+    num="18.7.17",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_String = Requirement(
@@ -4167,7 +4190,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_String = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.18",
+    num="18.7.18",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Binary = Requirement(
@@ -4183,7 +4206,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Binary = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.19",
+    num="18.7.19",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_FixedLengthByteArray = Requirement(
@@ -4199,7 +4222,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_FixedLengthByteArray 
     ),
     link=None,
     level=3,
-    num="17.7.20",
+    num="18.7.20",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Decimal = Requirement(
@@ -4215,7 +4238,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Decimal = Requirement
     ),
     link=None,
     level=3,
-    num="17.7.21",
+    num="18.7.21",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_List = Requirement(
@@ -4231,7 +4254,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_List = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.22",
+    num="18.7.22",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Struct = Requirement(
@@ -4247,7 +4270,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Struct = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.23",
+    num="18.7.23",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Map = Requirement(
@@ -4263,7 +4286,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Map = Requirement(
     ),
     link=None,
     level=3,
-    num="17.7.24",
+    num="18.7.24",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_x86_To_ARM = Requirement(
@@ -4279,7 +4302,7 @@ RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_x86_To_ARM = Requirement(
     ),
     link=None,
     level=3,
-    num="18.1.1",
+    num="19.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_ARM_To_x86 = Requirement(
@@ -4300,7 +4323,7 @@ RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_ARM_To_x86 = Requirement(
     ),
     link=None,
     level=3,
-    num="18.2.1",
+    num="19.2.1",
 )
 
 SRS032_ClickHouse_Parquet_Data_Format = Specification(
@@ -5323,214 +5346,216 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="15.4.5",
         ),
-        Heading(name="Metadata", level=1, num="16"),
-        Heading(name="ParquetFormat", level=2, num="16.1"),
+        Heading(name="Indexes", level=1, num="16"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Indexes", level=3, num="16.4.1"),
+        Heading(name="Metadata", level=1, num="17"),
+        Heading(name="ParquetFormat", level=2, num="17.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat",
             level=3,
-            num="16.1.1",
+            num="17.1.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output",
             level=3,
-            num="16.1.2",
+            num="17.1.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content",
             level=3,
-            num="16.1.3",
+            num="17.1.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax",
             level=3,
-            num="16.1.4",
+            num="17.1.4",
         ),
-        Heading(name="Metadata Types", level=2, num="16.2"),
+        Heading(name="Metadata Types", level=2, num="17.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="16.2.1"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="16.2.2"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="17.2.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="16.2.3"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="17.2.2"
         ),
-        Heading(name="Error Recovery", level=1, num="17"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="17.2.3"
+        ),
+        Heading(name="Error Recovery", level=1, num="18"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber",
-            level=2,
-            num="17.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File",
-            level=2,
-            num="17.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column",
-            level=2,
-            num="17.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader",
-            level=2,
-            num="17.4",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData",
-            level=2,
-            num="17.5",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum",
-            level=2,
-            num="17.6",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values",
-            level=2,
-            num="17.7",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date",
-            level=3,
-            num="17.7.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int",
-            level=3,
-            num="17.7.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt",
-            level=3,
-            num="17.7.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt",
-            level=3,
-            num="17.7.4",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt",
-            level=3,
-            num="17.7.5",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt",
-            level=3,
-            num="17.7.6",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt",
-            level=3,
-            num="17.7.7",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt",
-            level=3,
-            num="17.7.8",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt",
-            level=3,
-            num="17.7.9",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS",
-            level=3,
-            num="17.7.10",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS",
-            level=3,
-            num="17.7.11",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool",
-            level=3,
-            num="17.7.12",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float",
-            level=3,
-            num="17.7.13",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double",
-            level=3,
-            num="17.7.14",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS",
-            level=3,
-            num="17.7.15",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS",
-            level=3,
-            num="17.7.16",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS",
-            level=3,
-            num="17.7.17",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String",
-            level=3,
-            num="17.7.18",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary",
-            level=3,
-            num="17.7.19",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray",
-            level=3,
-            num="17.7.20",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal",
-            level=3,
-            num="17.7.21",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List",
-            level=3,
-            num="17.7.22",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct",
-            level=3,
-            num="17.7.23",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map",
-            level=3,
-            num="17.7.24",
-        ),
-        Heading(name="Interoperability Between ARM and x86", level=1, num="18"),
-        Heading(
-            name="Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine",
             level=2,
             num="18.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM",
-            level=3,
-            num="18.1.1",
-        ),
-        Heading(
-            name="Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine",
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File",
             level=2,
             num="18.2",
         ),
         Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column",
+            level=2,
+            num="18.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader",
+            level=2,
+            num="18.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData",
+            level=2,
+            num="18.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum",
+            level=2,
+            num="18.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values",
+            level=2,
+            num="18.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date",
+            level=3,
+            num="18.7.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int",
+            level=3,
+            num="18.7.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt",
+            level=3,
+            num="18.7.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt",
+            level=3,
+            num="18.7.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt",
+            level=3,
+            num="18.7.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt",
+            level=3,
+            num="18.7.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt",
+            level=3,
+            num="18.7.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt",
+            level=3,
+            num="18.7.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt",
+            level=3,
+            num="18.7.9",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS",
+            level=3,
+            num="18.7.10",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS",
+            level=3,
+            num="18.7.11",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool",
+            level=3,
+            num="18.7.12",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float",
+            level=3,
+            num="18.7.13",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double",
+            level=3,
+            num="18.7.14",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS",
+            level=3,
+            num="18.7.15",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS",
+            level=3,
+            num="18.7.16",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS",
+            level=3,
+            num="18.7.17",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String",
+            level=3,
+            num="18.7.18",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary",
+            level=3,
+            num="18.7.19",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray",
+            level=3,
+            num="18.7.20",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal",
+            level=3,
+            num="18.7.21",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List",
+            level=3,
+            num="18.7.22",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct",
+            level=3,
+            num="18.7.23",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map",
+            level=3,
+            num="18.7.24",
+        ),
+        Heading(name="Interoperability Between ARM and x86", level=1, num="19"),
+        Heading(
+            name="Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine",
+            level=2,
+            num="19.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM",
+            level=3,
+            num="19.1.1",
+        ),
+        Heading(
+            name="Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine",
+            level=2,
+            num="19.2",
+        ),
+        Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.ARM.To.x86",
             level=3,
-            num="18.2.1",
+            num="19.2.1",
         ),
     ),
     requirements=(
@@ -5725,6 +5750,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Dictionary,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL,
+        RQ_SRS_032_ClickHouse_Parquet_Indexes,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content,
@@ -6073,53 +6099,55 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 15.4.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
         * 15.4.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
         * 15.4.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
-* 16 [Metadata](#metadata)
-    * 16.1 [ParquetFormat](#parquetformat)
-        * 16.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
-        * 16.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
-        * 16.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
-        * 16.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
-    * 16.2 [Metadata Types](#metadata-types)
-        * 16.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
-        * 16.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
-        * 16.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
-* 17 [Error Recovery](#error-recovery)
-    * 17.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
-    * 17.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
-    * 17.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatacolumn)
-    * 17.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapageheader)
-    * 17.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapagedata)
-    * 17.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatachecksum)
-    * 17.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalues)
-        * 17.7.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdate)
-        * 17.7.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesint)
-        * 17.7.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbigint)
-        * 17.7.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluessmallint)
-        * 17.7.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestinyint)
-        * 17.7.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesuint)
-        * 17.7.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesubigint)
-        * 17.7.8 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesusmallint)
-        * 17.7.9 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesutinyint)
-        * 17.7.10 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampus)
-        * 17.7.11 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampms)
-        * 17.7.12 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbool)
-        * 17.7.13 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfloat)
-        * 17.7.14 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdouble)
-        * 17.7.15 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimems)
-        * 17.7.16 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimeus)
-        * 17.7.17 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimens)
-        * 17.7.18 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstring)
-        * 17.7.19 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbinary)
-        * 17.7.20 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfixedlengthbytearray)
-        * 17.7.21 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdecimal)
-        * 17.7.22 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalueslist)
-        * 17.7.23 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstruct)
-        * 17.7.24 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesmap)
-* 18 [Interoperability Between ARM and x86](#interoperability-between-arm-and-x86)
-    * 18.1 [Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine](#importing-and-exporting-parquet-files-on-arm-that-were-generated-on-x86-machine)
-        * 18.1.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM](#rqsrs-032clickhouseparquetinteroperabilityfromx86toarm)
-    * 18.2 [Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine](#importing-and-exporting-parquet-files-on-x86-that-were-generated-on-arm-machine)
-        * 18.2.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.ARM.To.x86](#rqsrs-032clickhouseparquetinteroperabilityfromarmtox86)
+* 16 [Indexes](#indexes)
+        * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes](#rqsrs-032clickhouseparquetindexes)
+* 17 [Metadata](#metadata)
+    * 17.1 [ParquetFormat](#parquetformat)
+        * 17.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
+        * 17.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
+        * 17.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
+        * 17.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+    * 17.2 [Metadata Types](#metadata-types)
+        * 17.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
+        * 17.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
+        * 17.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+* 18 [Error Recovery](#error-recovery)
+    * 18.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
+    * 18.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
+    * 18.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatacolumn)
+    * 18.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapageheader)
+    * 18.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapagedata)
+    * 18.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatachecksum)
+    * 18.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalues)
+        * 18.7.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdate)
+        * 18.7.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesint)
+        * 18.7.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbigint)
+        * 18.7.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluessmallint)
+        * 18.7.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestinyint)
+        * 18.7.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesuint)
+        * 18.7.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesubigint)
+        * 18.7.8 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesusmallint)
+        * 18.7.9 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesutinyint)
+        * 18.7.10 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampus)
+        * 18.7.11 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampms)
+        * 18.7.12 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbool)
+        * 18.7.13 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfloat)
+        * 18.7.14 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdouble)
+        * 18.7.15 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimems)
+        * 18.7.16 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimeus)
+        * 18.7.17 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimens)
+        * 18.7.18 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstring)
+        * 18.7.19 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbinary)
+        * 18.7.20 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfixedlengthbytearray)
+        * 18.7.21 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdecimal)
+        * 18.7.22 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalueslist)
+        * 18.7.23 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstruct)
+        * 18.7.24 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesmap)
+* 19 [Interoperability Between ARM and x86](#interoperability-between-arm-and-x86)
+    * 19.1 [Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine](#importing-and-exporting-parquet-files-on-arm-that-were-generated-on-x86-machine)
+        * 19.1.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM](#rqsrs-032clickhouseparquetinteroperabilityfromx86toarm)
+    * 19.2 [Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine](#importing-and-exporting-parquet-files-on-x86-that-were-generated-on-arm-machine)
+        * 19.2.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.ARM.To.x86](#rqsrs-032clickhouseparquetinteroperabilityfromarmtox86)
 
 
 ## Revision History
@@ -8156,6 +8184,20 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `URL` table engine.
+
+## Indexes
+
+#### RQ.SRS-032.ClickHouse.Parquet.Indexes
+version: 1.0
+
+[ClickHouse] SHALL support importing from Parquet files that utilize indexes.
+
+| Indexes Supported by Parquet |
+|------------------------------|
+| Page                         |
+| Min/Max                      |
+| Bloom Filter                 |
+| Dictionary                   |
 
 ## Metadata
 
