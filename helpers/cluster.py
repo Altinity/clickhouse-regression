@@ -846,6 +846,137 @@ class ClickHouseNode(Node):
         return r
 
 
+class ClickHouseKeeperNode(Node):
+    """Node with ClickHouse Keeper."""
+
+    def keeper_pid(self):
+        """Return ClickHouse Keeper pid if present
+        otherwise return None.
+        """
+        if self.command("ls /tmp/clickhouse-keeper.pid", no_checks=True).exitcode == 0:
+            return self.command("cat /tmp/clickhouse-keeper.pid").output.strip()
+        return None
+
+    def stop_keeper(self, timeout=100, signal="TERM"):
+        """Stop ClickHouse Keeper."""
+
+        with By(f"sending kill -{signal} to ClickHouse Keeper process on {self.name}"):
+            pid = self.keeper_pid()
+            self.command(f"kill -{signal} {pid}", exitcode=0, steps=False)
+
+        with And("checking pid does not exist"):
+            for i, attempt in enumerate(retries(timeout=timeout, delay=5)):
+                with attempt:
+                    if i > 0 and i % 20 == 0:
+                        self.command(f"kill -KILL {pid}", steps=False)
+
+                    # The keeper image uses busybox ps, which can't check a specific pid
+                    # instead, check that memory usage is 0
+                    r = self.command(
+                        f"cat /proc/{pid}/statm | grep '[1-9]'",
+                        steps=False,
+                        no_checks=True,
+                    )
+
+                    if r.exitcode == 0:
+                        fail("pid still alive")
+
+        with And("deleting ClickHouse Keeper pid file"):
+            self.command("rm -rf /tmp/clickhouse-keeper.pid", exitcode=0, steps=False)
+
+    def start_keeper(
+        self,
+        timeout=100,
+        user="clickhouse",
+        force_recovery=False,
+    ):
+        """Start ClickHouse Keeper."""
+        pid = self.keeper_pid()
+        if pid:
+            raise RuntimeError(f"ClickHouse Keeper already running with pid {pid}")
+
+        start_cmd = (
+            "/usr/bin/clickhouse-keeper --config-file=/etc/clickhouse-keeper/keeper_config.xml"
+            " --log-file=/var/log/clickhouse-keeper/clickhouse-keeper.log"
+            " --errorlog-file=/var/log/clickhouse-keeper/clickhouse-keeper.err.log"
+            " --pidfile=/tmp/clickhouse-keeper.pid --daemon"
+        )
+        if force_recovery:
+            start_cmd += " --force-recovery"
+        if user is not None:
+            start_cmd = f'su {user} -c "{start_cmd}"'
+
+        with By("starting ClickHouse keeper process"):
+            self.command(
+                start_cmd,
+                exitcode=0,
+                steps=False,
+            )
+
+        with And("checking that ClickHouse keeper pid file was created"):
+            for attempt in retries(timeout=timeout, delay=1):
+                with attempt:
+                    if (
+                        self.command(
+                            "ls /tmp/clickhouse-keeper.pid", steps=False, no_checks=True
+                        ).exitcode
+                        != 0
+                    ):
+                        fail("no pid file yet")
+
+    def restart_keeper(self, timeout=100, user="clickhouse"):
+        """Restart ClickHouse Keeper."""
+        if self.keeper_pid():
+            self.stop_keeper(timeout=timeout)
+
+        self.start_keeper(timeout=timeout, user=user)
+
+    def stop(self, timeout=100, retry_count=5):
+        """Stop node."""
+        if self.keeper_pid():
+            self.stop_keeper(timeout=timeout)
+
+        return super(ClickHouseKeeperNode, self).stop(
+            timeout=timeout, retry_count=retry_count
+        )
+
+    def start(
+        self,
+        timeout=100,
+        start_keeper=True,
+        wait_healthy=True,
+        retry_count=5,
+        user="clickhouse",
+    ):
+        """Start node."""
+        super(ClickHouseKeeperNode, self).start(
+            timeout=timeout, retry_count=retry_count
+        )
+
+        if start_keeper:
+            self.start_keeper(
+                timeout=timeout,
+                wait_healthy=wait_healthy,
+                user=user,
+            )
+
+    def restart(
+        self,
+        timeout=100,
+        safe=True,
+        start_keeper=True,
+        user=None,
+    ):
+        """Restart node."""
+        if self.keeper_pid():
+            self.stop_keeper(timeout=timeout, safe=safe)
+
+        super(ClickHouseKeeperNode, self).restart(timeout=timeout)
+
+        if start_keeper:
+            self.start_keeper(timeout=timeout, user=user)
+
+
 class Cluster(object):
     """Simple object around docker-compose cluster."""
 
@@ -1280,6 +1411,8 @@ class Cluster(object):
                     return ZooKeeperNode(self, name)
             if name.startswith("clickhouse"):
                 return ClickHouseNode(self, name)
+            elif name.startswith("keeper"):
+                return ClickHouseKeeperNode(self, name)
         return Node(self, name)
 
     def down(self, timeout=300):
@@ -1453,6 +1586,10 @@ class Cluster(object):
                     )
                 elif name.startswith("clickhouse"):
                     self.node(name).start_clickhouse(thread_fuzzer=self.thread_fuzzer)
+
+            for name in self.nodes["keeper"]:
+                if name.startswith("keeper"):
+                    self.node(name).start_keeper()
 
         self.running = True
 
