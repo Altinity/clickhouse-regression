@@ -10,10 +10,9 @@ def feature(self, restart_on_reconfig=True):
     """Test keeper dynamic reconfiguration failover."""
 
     with Given("I check that the leader exists"):
-        current_leader = retry(
-            get_current_leader, timeout=10, delay=1, initial_delay=2
-        )()
- 
+        current_leader = retry(get_current_leader, timeout=10, delay=1)()
+        note(f"The current leader is {current_leader}")
+
     with Given("I split the nodes into ensembles for PR and DR"):
         all_nodes = self.context.keeper_nodes
         pr_ensemble = all_nodes[:3]
@@ -64,6 +63,9 @@ def feature(self, restart_on_reconfig=True):
                 for attempt in retries(timeout=10, delay=2, initial_delay=2):
                     with attempt:
                         assert get_node_role(node=node) == "leader", error()
+
+    with When("I check the current leader"):
+        note(f"The current leader is {get_current_leader()}")
 
     with When("I remove the PR ensemble from the config"):
         set_keeper_config(
