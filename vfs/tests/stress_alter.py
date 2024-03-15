@@ -975,7 +975,7 @@ def alter_combinations(
             modify_random_ttl,
             remove_random_ttl,
             move_random_partition_to_random_disk,
-            # move_random_partition_to_random_table,
+            move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
         ]
@@ -1005,88 +1005,90 @@ def alter_combinations(
         with And(f"I choose {limit} groups of actions"):
             action_groups = action_groups[:limit]
 
-    with Given(f"I create {n_tables} tables with 10 columns and data"):
-        self.context.table_names = []
-        columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(10))
-        for i in range(n_tables):
-            table_name = f"table{i}_{self.context.storage_policy}"
-            replicated_table_cluster(
-                table_name=table_name,
-                storage_policy=self.context.storage_policy,
-                partition_by="toQuarter(key) - 1",
-                columns=columns,
-                ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
-                no_cleanup=True,
-            )
-            self.context.table_names.append(table_name)
-            insert_random(
-                node=self.context.node, table_name=table_name, columns=columns
-            )
-
-    with And("I create 5 random projections and indexes"):
-        for _ in range(5):
-            add_random_projection()
-            add_random_index()
-
-    # To test a single combination, uncomment and edit as needed.
-    # action_groups = [
-    #     [
-    #         delete_replica,
-    #         add_replica,
-    #     ]
-    # ]
-
-    t = time.time()
-    total_combinations = len(action_groups)
-    for i, chosen_actions in enumerate(action_groups):
-        title = f"{i+1}/{total_combinations} " + ",".join(
-            [f"{f.name}" for f in chosen_actions]
-        )
-
-        if network_impairment:
-            net_mode = random.choice(network_impairments)
-            title += "," + net_mode.name
-
-        with Check(title):
-            if network_impairment:
-                with Given("a network impairment"):
-                    impaired_network(network_mode=net_mode)
-
-            with When("I perform a group of actions"):
-                for action in chain(
-                    [insert_to_random, select_count_random], chosen_actions
-                ):
-                    By(
-                        f"I {action.name}",
-                        run=action,
-                        parallel=run_groups_in_parallel,
-                        flags=TE | ERROR_NOT_COUNTED,
-                    )
-
-                for table in self.context.table_names:
-                    By(
-                        f"I OPTIMIZE {table}",
-                        test=optimize_random,
-                        parallel=run_optimize_in_parallel,
-                        flags=TE,
-                    )(table_name=table_name)
-
-                join()
-
-            with Then("I check that the replicas are consistent", flags=TE):
-                check_consistency()
-
-        note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
-
-    with Finally(
-        "I drop each table on each node in case the cluster is in a bad state"
-    ):
-        for node in self.context.ch_nodes:
-            for table in self.context.table_names:
-                When(test=delete_one_replica, parallel=True)(
-                    node=node, table_name=table_name
+    try:
+        with Given(f"I create {n_tables} tables with 10 columns and data"):
+            self.context.table_names = []
+            columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(10))
+            for i in range(n_tables):
+                table_name = f"table{i}_{self.context.storage_policy}"
+                replicated_table_cluster(
+                    table_name=table_name,
+                    storage_policy=self.context.storage_policy,
+                    partition_by="toQuarter(key) - 1",
+                    columns=columns,
+                    ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
+                    no_cleanup=True,
                 )
-        join()
+                self.context.table_names.append(table_name)
+                insert_random(
+                    node=self.context.node, table_name=table_name, columns=columns
+                )
+
+        with And("I create 5 random projections and indexes"):
+            for _ in range(5):
+                add_random_projection()
+                add_random_index()
+
+        # To test a single combination, uncomment and edit as needed.
+        # action_groups = [
+        #     [
+        #         delete_replica,
+        #         add_replica,
+        #     ]
+        # ]
+
+        t = time.time()
+        total_combinations = len(action_groups)
+        for i, chosen_actions in enumerate(action_groups):
+            title = f"{i+1}/{total_combinations} " + ",".join(
+                [f"{f.name}" for f in chosen_actions]
+            )
+
+            if network_impairment:
+                net_mode = random.choice(network_impairments)
+                title += "," + net_mode.name
+
+            with Check(title):
+                if network_impairment:
+                    with Given("a network impairment"):
+                        impaired_network(network_mode=net_mode)
+
+                with When("I perform a group of actions"):
+                    for action in chain(
+                        [insert_to_random, select_count_random], chosen_actions
+                    ):
+                        By(
+                            f"I {action.name}",
+                            run=action,
+                            parallel=run_groups_in_parallel,
+                            flags=TE | ERROR_NOT_COUNTED,
+                        )
+
+                    for table in self.context.table_names:
+                        By(
+                            f"I OPTIMIZE {table}",
+                            test=optimize_random,
+                            parallel=run_optimize_in_parallel,
+                            flags=TE,
+                        )(table_name=table_name)
+
+                    join()
+
+                with Then("I check that the replicas are consistent", flags=TE):
+                    check_consistency()
+
+            note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
+
+    finally:
+        with Finally(
+            "I drop each table on each node in case the cluster is in a bad state"
+        ):
+            for node in self.context.ch_nodes:
+                for table_name in self.context.table_names:
+                    When(test=delete_one_replica, parallel=True)(
+                        node=node, table_name=table_name
+                    )
+            join()
 
 
 @TestScenario
