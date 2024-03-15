@@ -153,7 +153,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -185,7 +185,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -217,7 +217,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -250,7 +250,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -283,7 +283,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -316,7 +316,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -348,7 +348,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -386,7 +386,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -423,7 +423,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -457,7 +457,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -490,7 +490,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -524,7 +524,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -556,7 +556,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -588,7 +588,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -620,7 +620,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -652,7 +652,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -684,7 +684,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -716,7 +716,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -748,7 +748,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -780,7 +780,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -808,7 +808,7 @@ jobs:
 
   #     - name: Create and upload logs
   #       if: always()
-  #       run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
   #     - uses: actions/upload-artifact@v3
   #       if: always()
@@ -840,7 +840,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -872,7 +872,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -903,7 +903,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -934,7 +934,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -966,7 +966,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -998,7 +998,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1030,7 +1030,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1062,7 +1062,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1095,7 +1095,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1130,7 +1130,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1169,7 +1169,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1201,7 +1201,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1233,7 +1233,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1271,7 +1271,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1308,7 +1308,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1342,7 +1342,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1374,7 +1374,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1406,7 +1406,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1438,7 +1438,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1475,7 +1475,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1512,7 +1512,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1544,7 +1544,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1578,7 +1578,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1616,7 +1616,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1653,7 +1653,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1687,7 +1687,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1719,7 +1719,7 @@ jobs:
 
       - name: Create and upload logs
         if: always()
-        run: ./retry.sh 30 30 .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
