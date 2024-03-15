@@ -53,3 +53,4 @@ then
     ./retry.sh 5 30 'aws s3 sync . s3://'"$artifact_s3_bucket_path"'/'"$artifact_s3_dir"'/'"$(uname -i)"'/'"$SUITE$STORAGE"'/ --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"'
     ./retry.sh 5 30 'aws s3 sync . s3://'"$artifact_s3_bucket_path"'/'"$artifact_s3_dir"'/'"$(uname -i)"'/'"$SUITE$STORAGE"'/ --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8"'
 fi
+sleep 3600 #debug
