@@ -998,7 +998,7 @@ def alter_combinations(
             delete_random_rows,
             delete_random_rows_lightweight,
             detach_attach_random_partition,
-            # freeze_unfreeze_random_part,
+            freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
             add_random_projection,
