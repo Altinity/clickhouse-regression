@@ -332,6 +332,7 @@ def move_random_partition_to_random_table(self):
                 path_to_backup=destination_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
+                timeout=30,
             )
 
 
@@ -370,6 +371,7 @@ def move_random_partition_to_random_disk(self):
             disk="DISK",
             exitcode=0,
             no_checks=self.context.ignore_failed_part_moves,
+            timeout=30,
         )
 
 
