@@ -121,12 +121,16 @@ def lack_of_disk_space_tiered_storage(self, node=None):
             table_name=table_name, settings=f"SETTINGS storage_policy = 'small_disk'"
         )
 
+    partitions = 10
+    parts_per_partition = 1
+    block_size = 1500000
+
     with When("I insert data into the table"):
         insert(
             table_name=table_name,
-            partitions=10,
-            parts_per_partition=1,
-            block_size=1450000,
+            partitions=partitions,
+            parts_per_partition=parts_per_partition,
+            block_size=block_size,
         )
 
     with And("I check table takes up more than one disk"):
@@ -134,19 +138,21 @@ def lack_of_disk_space_tiered_storage(self, node=None):
             f"SELECT DISTINCT disk_name FROM system.parts "
             f"WHERE table = '{table_name}'"
         )
-
         assert set(r.output.strip().splitlines()) == {"jbod1", "jbod2"}, error()
 
         r = node.query(
             f"SELECT sum(bytes_on_disk)/1024/1024 FROM system.parts "
             f"WHERE table = '{table_name}' and active = 1"
         )
+        node.query(
+            f"select name, disk_name, partition from system.parts where table='{table_name}' and active"
+        )
 
     with Then("I expect data is successfully inserted"):
         r = node.query(f"SELECT count(*) FROM {table_name}")
-        assert r.output == "14500000", error()
+        assert r.output == f"{block_size*partitions}", error()
 
-    with Then("I perform delete insert operations in loop"):
+    with And("I perform delete insert operations in loop"):
         with Then("I perform delete operation"):
             i = 0
             while i < 100:
@@ -158,7 +164,7 @@ def lack_of_disk_space_tiered_storage(self, node=None):
                         table_name=table_name,
                         partitions=1,
                         parts_per_partition=1,
-                        block_size=1450000,
+                        block_size=block_size,
                         no_checks=True,
                         settings=[("insert_distributed_sync", "1")],
                     )
@@ -167,13 +173,27 @@ def lack_of_disk_space_tiered_storage(self, node=None):
                 i += 1
         assert r.exitcode != 0, error()
 
-    with Then("I check table state"):
-        for attempt in retries(timeout=100, delay=1):
+    with And("I verify that only rows satisfying the condition were deleted"):
+        for i in range(partitions):
+            if i == 1:
+                continue
+            r = node.query(f"SELECT count(*) FROM {table_name} WHERE id={i}")
+            assert r.output == f"{block_size}", error()
+
+    with And("I check table state"):
+        for attempt in retries(timeout=100, delay=5, initial_delay=10):
             with attempt:
+                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1")
+                note(
+                    f"Number of rows that should have been deleted from the table: {r.output}"
+                )
                 r = node.query(f"SELECT count(*) FROM {table_name}")
-                assert r.output in ("14500000", "13050000"), error()
-                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=0")
-                assert r.output in ("0", "1450000"), error()
+                assert r.output in (
+                    f"{block_size*partitions}",
+                    f"{block_size*partitions-block_size}",
+                ), error()
+                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1")
+                assert r.output in ("0", f"{block_size}"), error()
 
 
 @TestFeature
