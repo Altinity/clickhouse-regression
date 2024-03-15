@@ -493,27 +493,30 @@ def delete_random_rows_lightweight(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("add projection")
 def add_random_projection(self):
+    """Add a random projection to all tables."""
     projection_name = "projection_" + getuid()
 
     with table_schema_lock:
         table_name = get_random_table_name()
         node = get_random_node_for_table(table_name=table_name)
         column_name = get_random_column_name(node=node, table_name=table_name)
-
-        node.query(
-            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
-            exitcode=0,
-        )
-
-    node.query(
-        f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}", exitcode=0
-    )
+        
+        for table_name in self.context.table_names:
+            node = get_random_node_for_table(table_name=table_name)
+            node.query(
+                f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
+                exitcode=0,
+            )
+            node.query(
+                f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}", exitcode=0
+            )
 
 
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("clear projection")
 def clear_random_projection(self):
+    """Clear a random projection on a random part."""
     tables = self.context.table_names.copy()
     random.shuffle(tables)
     with table_schema_lock:
@@ -537,22 +540,24 @@ def clear_random_projection(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("drop projection")
 def drop_random_projection(self):
+    """Delete a random projection from all tables."""
     tables = self.context.table_names.copy()
     random.shuffle(tables)
     with table_schema_lock:
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        projections = get_projections(node=node, table_name=table_name)
+        if len(projections) == 0:
+            return
+        
+        projection_name = random.choice(projections)
+
         for table_name in tables:
             node = get_random_node_for_table(table_name=table_name)
-            projections = get_projections(node=node, table_name=table_name)
-            if len(projections) == 0:
-                continue
-
-            projection_name = random.choice(projections)
-
             node.query(
                 f"ALTER TABLE {table_name} DROP PROJECTION {projection_name}",
                 exitcode=0,
             )
-            return
 
 
 @TestStep
