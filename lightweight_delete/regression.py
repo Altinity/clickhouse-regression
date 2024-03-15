@@ -50,6 +50,9 @@ xfails = {
     "concurrent alter and delete/:/concurrent delete drop partition/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
     ],
+    "lack of disk space/lack of disk space tiered storage/I check table state/": [
+        (Fail, "Should fail because there are no space to finish all mutations")
+    ],
 }
 
 xflags = {}
