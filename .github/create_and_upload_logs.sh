@@ -50,6 +50,6 @@ then
     ./retry.sh 30 30 aws s3 cp compare.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/compare.html
     ./retry.sh 30 30 aws s3 cp coverage.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/coverage.html
     sudo rm --recursive --force $SUITE/_instances/*/database/
-    ./retry.sh 30 30 aws s3 cp . s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
-    ./retry.sh 30 30 aws s3 cp . s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8"
+    ./retry.sh 30 30 'aws s3 cp . s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"'
+    ./retry.sh 30 30 'aws s3 cp . s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8"'
 fi
