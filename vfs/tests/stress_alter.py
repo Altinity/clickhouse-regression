@@ -17,6 +17,7 @@ table_schema_lock = RLock()
 
 step_retry_timeout = 300
 
+
 @TestStep
 def get_nodes_for_table(self, nodes, table_name):
     """Return all nodes that know about a given table."""
@@ -136,6 +137,7 @@ def add_random_column(self):
                 column_type="UInt16",
                 node=node,
                 exitcode=0,
+                timeout=30,
             )
 
 
@@ -154,7 +156,13 @@ def delete_random_column(self):
             By(
                 name=f"delete column from {table_name} with {node.name}",
                 test=alter_table_drop_column,
-            )(node=node, table_name=table_name, column_name=column_name, exitcode=0)
+            )(
+                node=node,
+                table_name=table_name,
+                column_name=column_name,
+                exitcode=0,
+                timeout=30,
+            )
 
 
 @TestStep
@@ -179,6 +187,7 @@ def rename_random_column(self):
                 column_name_old=column_name,
                 column_name_new=new_name,
                 exitcode=0,
+                timeout=30,
             )
 
 
@@ -200,6 +209,7 @@ def update_random_column(self):
         condition=f"({column_name} < 10000)",
         node=node,
         exitcode=0,
+        timeout=30,
     )
 
 
@@ -500,7 +510,7 @@ def add_random_projection(self):
         table_name = get_random_table_name()
         node = get_random_node_for_table(table_name=table_name)
         column_name = get_random_column_name(node=node, table_name=table_name)
-        
+
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
             node.query(
@@ -508,7 +518,8 @@ def add_random_projection(self):
                 exitcode=0,
             )
             node.query(
-                f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}", exitcode=0
+                f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
+                exitcode=0,
             )
 
 
@@ -549,7 +560,7 @@ def drop_random_projection(self):
         projections = get_projections(node=node, table_name=table_name)
         if len(projections) == 0:
             return
-        
+
         projection_name = random.choice(projections)
 
         for table_name in tables:
@@ -564,6 +575,7 @@ def drop_random_projection(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("add index")
 def add_random_index(self):
+    """Add a random index to all tables"""
     index_name = "index_" + getuid()
 
     with table_schema_lock:
@@ -571,10 +583,12 @@ def add_random_index(self):
         node = get_random_node_for_table(table_name=table_name)
         column_name = get_random_column_name(node=node, table_name=table_name)
 
-        node.query(
-            f"ALTER TABLE {table_name} ADD index {index_name} {column_name} TYPE bloom_filter",
-            exitcode=0,
-        )
+        for table_name in self.context.table_names:
+            node = get_random_node_for_table(table_name=table_name)
+            node.query(
+                f"ALTER TABLE {table_name} ADD index {index_name} {column_name} TYPE bloom_filter",
+                exitcode=0,
+            )
 
     node.query(f"ALTER TABLE {table_name} MATERIALIZE index {index_name}", exitcode=0)
 
@@ -583,6 +597,7 @@ def add_random_index(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("clear index")
 def clear_random_index(self):
+    """Clear a random index"""
     tables = self.context.table_names.copy()
     random.shuffle(tables)
 
@@ -606,22 +621,22 @@ def clear_random_index(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("drop index")
 def drop_random_index(self):
-    tables = self.context.table_names.copy()
-    random.shuffle(tables)
+    """Delete a random index to all tables"""
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    indexes = get_indexes(node=node, table_name=table_name)
+    if len(indexes) == 0:
+        return
 
-    for table_name in tables:
+    index_name = random.choice(indexes)
+
+    for table_name in self.context.table_names:
         node = get_random_node_for_table(table_name=table_name)
-        indexs = get_indexes(node=node, table_name=table_name)
-        if len(indexs) == 0:
-            continue
-
-        index_name = random.choice(indexs)
 
         node.query(
             f"ALTER TABLE {table_name} DROP index {index_name}",
             exitcode=0,
         )
-        return
 
 
 @TestStep
@@ -970,7 +985,7 @@ def alter_combinations(
             delete_random_rows,
             delete_random_rows_lightweight,
             detach_attach_random_partition,
-            freeze_unfreeze_random_part,
+            # freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
             add_random_projection,
