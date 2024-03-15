@@ -284,6 +284,51 @@ def optimize(self, table_settings):
 
 
 @TestScenario
+@Tags("sanity")
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_System_Events("1.0"))
+def vfs_events(self):
+    """Check that vfs events are created."""
+    node = self.context.node
+    table_name = "vfs_events"
+    insert_size = 10_000_000
+
+    vfs_events = [
+        "VFSGcRunsCompleted",
+        "VFSGcRunsException",
+        "VFSGcRunsSkipped",
+        "VFSGcTotalSeconds",
+        "VFSGcCumulativeSnapshotBytesRead",
+        "VFSGcCumulativeLogItemsRead",
+    ]
+
+    with Given("I enable vfs with small vfs_gc_sleep_ms"):
+        enable_vfs(disk_names=["external"], vfs_gc_sleep_ms=100)
+
+    with Given("I have a vfs table"):
+        replicated_table_cluster(
+            table_name=table_name,
+            storage_policy="external",
+        )
+
+    with When("I make two inserts"):
+        insert_random(node=node, table_name=table_name, rows=insert_size)
+        insert_random(node=node, table_name=table_name, rows=insert_size)
+
+    with And("I disable the network to trigger exceptions"):
+        cluster = self.context.cluster
+        with interrupt_network(cluster, node):
+            time.sleep(2)
+
+    with And("I wait for the parts to merge"):
+        node.query(f"OPTIMIZE TABLE {table_name} FINAL")
+
+    with Then("I check that all vfs events exist"):
+        r = node.query("SELECT event FROM system.events WHERE event like 'VFS%'")
+        for event in vfs_events:
+            assert event in r.output, error()
+
+
+@TestScenario
 @Requirements(
     RQ_SRS038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection("0.0")
 )
