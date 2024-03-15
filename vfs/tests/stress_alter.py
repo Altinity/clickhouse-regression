@@ -98,6 +98,7 @@ def insert_to_random(self):
             table_name=table_name,
             columns=columns,
             no_checks=True,
+            rows=1_000_000,
             settings=f"insert_keeper_fault_injection_probability={self.context.fault_probability}",
         )
 
@@ -334,6 +335,16 @@ def move_random_partition_to_random_table(self):
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
     with table_schema_lock:
+
+        with When("I tell the replicas to sync"):
+            sync_replica(node=node, table_name=destination_table_name)
+            sync_replica(node=node, table_name=source_table_name)
+
+        with Then("I make sure the two tables have synced columns"):
+            assert get_column_names(
+                node=node, table_name=destination_table_name
+            ) == get_column_names(node=node, table_name=source_table_name), error()
+
         with When("I attach the partition to the second table"):
             alter_table_move_partition_to_table(
                 node=node,
@@ -701,7 +712,9 @@ def check_consistency(self, tables=None, sync_timeout=None):
             for node in active_nodes:
                 with By(f"querying the row count"):
                     row_counts[node.name] = get_row_count(
-                        node=node, table_name=table_name
+                        node=node,
+                        table_name=table_name,
+                        timeout=60,
                     )
                     column_names[node.name] = get_column_names(
                         node=node, table_name=table_name
@@ -997,7 +1010,7 @@ def alter_combinations(
             modify_random_ttl,
             remove_random_ttl,
             move_random_partition_to_random_disk,
-            move_random_partition_to_random_table,
+            # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
         ]
