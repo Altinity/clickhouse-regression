@@ -36,8 +36,6 @@ tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "A
 tfs --debug --no-colors report results -a "https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
 tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
 
-sleep 3600 #debug
-
 #Specify whether logs should be uploaded.
 if [[ $1 == 1 ]];
 then
