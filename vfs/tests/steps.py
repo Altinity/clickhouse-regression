@@ -78,7 +78,7 @@ def s3_config(self):
         disks=disks,
         policies=policies,
         restart=True,
-        timeout=60,
+        timeout=30,
         config_file="vfs_storage.xml",
     )
 
