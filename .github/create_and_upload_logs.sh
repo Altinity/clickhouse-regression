@@ -50,5 +50,5 @@ then
     ./retry.sh 5 30 aws s3 cp compare.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/compare.html
     ./retry.sh 5 30 aws s3 cp coverage.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/coverage.html
     sudo rm --recursive --force $SUITE/_instances/*/database/
-    #./retry.sh 5 30 'aws s3 sync . s3://'"$artifact_s3_bucket_path"'/'"$artifact_s3_dir"'/'"$(uname -i)"'/'"$SUITE$STORAGE"'/ --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8"'
+    ./retry.sh 5 30 'aws s3 sync . s3://altinity-test-reports/clickhouse/'"${{ env.version }}$"'/'"$GITHUB_RUN_ID"'/testflows/'"$(uname -i)"'/'"$SUITE$STORAGE"'/ --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8" --no-follow-symlinks'
 fi
