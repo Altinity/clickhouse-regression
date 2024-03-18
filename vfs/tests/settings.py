@@ -89,8 +89,8 @@ def create_insert_measure_replicated_table(self, storage_policy="external"):
         )
 
     with And("I wait for the replicas to sync", flags=TE):
-        nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
-        nodes[2].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=300)
+        sync_replica(node=nodes[1], table_name=table_name, timeout=300)
+        sync_replica(node=nodes[2], table_name=table_name, timeout=300)
         kwargs = dict(table_name=table_name, rows=n_rows)
         retry(assert_row_count, timeout=120, delay=1)(node=nodes[0], **kwargs)
         retry(assert_row_count, timeout=120, delay=1)(node=nodes[1], **kwargs)
@@ -165,8 +165,8 @@ def disable_vfs_with_vfs_table(self):
             )
 
         with And("I insert some data"):
-            nodes[1].query(
-                f"INSERT INTO {table_name} VALUES {','.join(f'({x})' for x in range(100))}"
+            insert_random(
+                node=nodes[1], table_name=table_name, columns="d UInt64", rows=100
             )
 
         with Then("the data is accessible"):
@@ -210,8 +210,8 @@ def enable_vfs_with_non_vfs_table(self):
         )
 
     with And("I insert some data"):
-        node.query(
-            f"INSERT INTO my_non_vfs_table SELECT * FROM generateRandom('d UInt64') LIMIT 1000000"
+        insert_random(
+            node=node, table_name="my_non_vfs_table", columns="d UInt64", rows=1000000
         )
         assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
 
