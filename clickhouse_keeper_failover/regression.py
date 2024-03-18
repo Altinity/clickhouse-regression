@@ -30,46 +30,35 @@ def run_feature(
         "keeper": [f"keeper-{i}" for i in range(1, 7)],
     }
 
-    try:
-        with Given("docker-compose cluster"):
-            cluster = create_cluster(
-                local=local,
-                clickhouse_binary_path=clickhouse_binary_path,
-                collect_service_logs=collect_service_logs,
-                nodes=nodes,
-                configs_dir=current_dir(),
-            )
-            self.context.cluster = cluster
-            self.context.keeper_nodes = [
-                cluster.node(n) for n in cluster.nodes["keeper"]
-            ]
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            configs_dir=current_dir(),
+        )
+        self.context.cluster = cluster
+        self.context.keeper_nodes = [cluster.node(n) for n in cluster.nodes["keeper"]]
 
-        with And("I set the keeper config file"):
-            set_keeper_config(
-                nodes=self.context.keeper_nodes,
-                config_file_name="keeper_config_6node.xml",
-                restart=True,
-            )
-
-        with And("I know which ports are in use"):
-            self.context.keeper_ports = get_external_ports(internal_port=9182)
-
-        with And("I wait for a leader to be elected"):
-            current_leader = retry(
-                get_current_leader, timeout=30, delay=5, initial_delay=10
-            )()
-
-        Feature(
-            run=load(f"clickhouse_keeper_failover.tests.{feature_file_name}", "feature")
+    with And("I set the keeper config file"):
+        set_keeper_config(
+            nodes=self.context.keeper_nodes,
+            config_file_name="keeper_config_6node.xml",
+            restart=True,
         )
 
-    finally:
-        with Finally("I reset the config"):
-            set_keeper_config(
-                nodes=self.context.keeper_nodes,
-                config_file_name="keeper_config_6node.xml",
-                restart=False,
-            )
+    with And("I know which ports are in use"):
+        self.context.keeper_ports = get_external_ports(internal_port=9182)
+
+    with And("I wait for a leader to be elected"):
+        current_leader = retry(
+            get_current_leader, timeout=30, delay=5, initial_delay=10
+        )()
+
+    Feature(
+        run=load(f"clickhouse_keeper_failover.tests.{feature_file_name}", "feature")
+    )
 
 
 @TestModule
