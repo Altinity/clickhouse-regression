@@ -68,8 +68,8 @@ def no_duplication(self):
             )
 
         with And("I wait for the nodes to sync"):
-            nodes[0].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
-            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
+            sync_replica(node=nodes[0], table_name=table_name, timeout=30)
+            sync_replica(node=nodes[1], table_name=table_name, timeout=30)
             retry(assert_row_count, timeout=120, delay=1)(
                 node=nodes[0], table_name=table_name, rows=2000000
             )
@@ -155,7 +155,7 @@ def add_replica(self):
             create_one_replica(node=nodes[1], table_name=table_name)
 
         with And("I wait for the replica to sync"):
-            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=30)
+            sync_replica(node=nodes[1], table_name=table_name, timeout=30)
             retry(assert_row_count, timeout=120, delay=1)(
                 node=nodes[1], table_name=table_name, rows=1000000
             )
@@ -176,7 +176,7 @@ def add_replica(self):
             assert_row_count(node=nodes[0], table_name=table_name, rows=1000000)
 
         with And("I wait for the second node to sync"):
-            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=10)
+            sync_replica(node=nodes[1], table_name=table_name, timeout=10)
 
         with And("I check the row count on the second node"):
             assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
@@ -184,7 +184,7 @@ def add_replica(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+                delete_one_replica(node=node, table_name=table_name)
 
 
 @TestScenario
@@ -227,10 +227,11 @@ def offline_replica(self):
         assert_row_count(node=nodes[0], table_name=table_name, rows=1000000)
 
     with And("I wait for the second node to sync"):
-        nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=10)
+        sync_replica(node=nodes[1], table_name=table_name, timeout=10)
 
     with And("I check the row count on the second node"):
         assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
+
 
 @TestScenario
 @Tags("sanity")
@@ -298,7 +299,6 @@ def stale_replica(self):
         check_consistency(nodes=nodes, table_name=table_name)
 
 
-
 @TestScenario
 @Tags("sanity")
 @Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Remove("1.0"))
@@ -329,11 +329,7 @@ def add_remove_one_node(self):
             table_name=table_name, storage_policy=storage_policy, columns="d UInt64"
         )
 
-    When(
-        "I start inserts on the second node",
-        test=insert_random,
-        parallel=parallel,
-    )(
+    When("I start inserts on the second node", test=insert_random, parallel=parallel,)(
         node=nodes[1],
         table_name=table_name,
         columns="d UInt64",
@@ -352,11 +348,7 @@ def add_remove_one_node(self):
         parallel=parallel,
     )(node=nodes[2], table_name=table_name)
 
-    When(
-        "I start inserts on the first node",
-        test=insert_random,
-        parallel=parallel,
-    )(
+    When("I start inserts on the first node", test=insert_random, parallel=parallel,)(
         node=nodes[0],
         table_name=table_name,
         columns="d UInt64",
@@ -521,7 +513,7 @@ def parallel_add_remove(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+                delete_one_replica(node=node, table_name=table_name)
 
 
 @TestOutline(Example)
@@ -689,9 +681,7 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
             for node in nodes:
                 for attempt in retries(timeout=120, delay=2):
                     with attempt:
-                        node.query(
-                            f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0
-                        )
+                        delete_one_replica(node=node, table_name=table_name)
                         node.restart()
 
 
