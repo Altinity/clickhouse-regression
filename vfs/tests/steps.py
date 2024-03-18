@@ -203,8 +203,8 @@ def insert_random(
     table_name,
     columns: str = None,
     rows: int = 1000000,
-    no_checks=False,
     settings=None,
+    **kwargs,
 ):
     """Insert random data to a table."""
     if columns is None:
@@ -217,8 +217,8 @@ def insert_random(
 
     node.query(
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
-        no_checks=no_checks,
         exitcode=0,
+        **kwargs,
     )
 
 
@@ -270,13 +270,21 @@ def delete_one_replica(self, node, table_name, timeout=30):
     return r
 
 
-@TestStep
+@TestStep(When)
 def sync_replica(self, node, table_name, raise_on_timeout=False, **kwargs):
+    """Call SYSTEM SYNC REPLICA on the given node and table"""
     try:
         node.query(f"SYSTEM SYNC REPLICA {table_name}", **kwargs)
     except (ExpectTimeoutError, TimeoutError):
         if raise_on_timeout:
             raise
+
+
+@TestStep(When)
+def optimize(self, node, table_name, final=False):
+    """Apply OPTIMIZE on the given table and node"""
+    q = f"OPTIMIZE TABLE {table_name}" + " FINAL" if final else ""
+    node.query(q, no_checks=True)
 
 
 @TestStep(Given)

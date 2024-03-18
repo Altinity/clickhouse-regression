@@ -51,6 +51,7 @@ def delete(self):
     bucket_path = self.context.bucket_path
     table_name = "vfs_deleting_replicas"
     nodes = self.context.ch_nodes[:2]
+    columns = "d UInt64"
 
     with Given("I get the size of the s3 bucket before adding data"):
         size_empty = get_stable_bucket_size(
@@ -61,76 +62,64 @@ def delete(self):
             key_id=self.context.access_key_id,
         )
 
-    with And("I enable vfs"):
-        enable_vfs()
-
-    try:
-        with Given("I have a replicated table"):
-            for i, node in enumerate(nodes):
-                node.query(
-                    f"""
-                    CREATE TABLE {table_name}  (
-                        d UInt64
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                    """
-                )
-
-        with And("I add data to the table on the first node"):
-            insert_random(
-                node=nodes[0], table_name=table_name, columns="d UInt64", rows=1000000
+    with Given("I have a replicated table with vfs storage"):
+        for node in nodes:
+            create_one_replica(
+                node=node,
+                table_name=table_name,
+                columns=columns,
+                storage_policy="external_vfs",
             )
 
-        with And("I wait for the second node to sync"):
-            nodes[1].query(f"SYSTEM SYNC REPLICA {table_name}", timeout=10)
+    with And("I add data to the table on the first node"):
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=columns, rows=1000000
+        )
 
-        with And("I check the row count on the second node"):
-            assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
+    with And("I wait for the second node to sync"):
+        sync_replica(node=nodes[1], table_name=table_name, timeout=10)
 
-        with When("I check how much data was added to the s3 bucket"):
-            size_after_insert = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                minio_enabled=self.context.minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-            )
-            assert size_after_insert > size_empty, error()
+    with And("I check the row count on the second node"):
+        assert_row_count(node=nodes[1], table_name=table_name, rows=1000000)
 
-        with When("I drop the table on the second node"):
-            nodes[1].query(f"DROP TABLE {table_name} SYNC")
+    with When("I check how much data was added to the s3 bucket"):
+        size_after_insert = get_bucket_size(
+            name=bucket_name,
+            prefix=bucket_path,
+            minio_enabled=self.context.minio_enabled,
+            access_key=self.context.secret_access_key,
+            key_id=self.context.access_key_id,
+        )
+        assert size_after_insert > size_empty, error()
 
-        with Then("The size of the s3 bucket should be the same"):
-            check_stable_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                expected_size=size_after_insert,
-                tolerance=500,
-                minio_enabled=self.context.minio_enabled,
-            )
+    with When("I drop the table on the second node"):
+        delete_one_replica(node=nodes[1], table_name=table_name)
 
-        with And("I check the row count on the first node"):
-            assert_row_count(node=nodes[0], table_name=table_name, rows=1000000)
+    with Then("The size of the s3 bucket should be the same"):
+        check_stable_bucket_size(
+            name=bucket_name,
+            prefix=bucket_path,
+            expected_size=size_after_insert,
+            tolerance=500,
+            minio_enabled=self.context.minio_enabled,
+        )
 
-        with When("I drop the table on the first node"):
-            nodes[0].query(f"DROP TABLE {table_name} SYNC")
+    with And("I check the row count on the first node"):
+        assert_row_count(node=nodes[0], table_name=table_name, rows=1000000)
 
-        with Then(
-            "The size of the s3 bucket should be very close to the size before adding any data"
-        ):
-            check_stable_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                expected_size=size_empty,
-                tolerance=15,
-                minio_enabled=self.context.minio_enabled,
-            )
+    with When("I drop the table on the first node"):
+        delete_one_replica(node=nodes[0], table_name=table_name)
 
-    finally:
-        with Finally("I drop the table on each node"):
-            for node in nodes:
-                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+    with Then(
+        "The size of the s3 bucket should be very close to the size before adding any data"
+    ):
+        check_stable_bucket_size(
+            name=bucket_name,
+            prefix=bucket_path,
+            expected_size=size_empty,
+            tolerance=15,
+            minio_enabled=self.context.minio_enabled,
+        )
 
 
 @TestScenario
@@ -228,7 +217,7 @@ def get_active_part_count(self, node, table_name):
 @Tags("long", "combinatoric")
 @Requirements(RQ_SRS038_DiskObjectStorageVFS_System_Optimize("0.0"))
 @Examples("table_settings", [[None], [WIDE_PART_SETTING], [COMPACT_PART_SETTING]])
-def optimize(self, table_settings):
+def optimize_parts(self, table_settings):
     """Check that OPTIMIZE works as expected on VFS."""
 
     table_name = "opt_table_" + getuid()
@@ -251,23 +240,24 @@ def optimize(self, table_settings):
         join()
 
     with When("Check the number of active parts"):
-        # SELECT count(), sum(active) FROM system.parts where table='opt_table'
         initial_part_count = get_active_part_count(node=nodes[0], table_name=table_name)
 
     with And("I perform OPTIMIZE"):
-        nodes[0].query(f"OPTIMIZE TABLE {table_name}")
-
-    with Then("There should be fewer active parts"):
-        optimized_part_count = get_active_part_count(
-            node=nodes[0], table_name=table_name
-        )
-        assert optimized_part_count < initial_part_count, error()
-
-    with When("I perform OPTIMIZE FINAL"):
-        nodes[0].query(f"OPTIMIZE TABLE {table_name} FINAL")
+        optimize(node=nodes[0], table_name=table_name, final=False)
 
     with Then("There should be fewer active parts"):
         for attempt in retries(timeout=15, delay=1):
+            with attempt:
+                optimized_part_count = get_active_part_count(
+                    node=nodes[0], table_name=table_name
+                )
+                assert optimized_part_count < initial_part_count, error()
+
+    with When("I perform OPTIMIZE FINAL"):
+        optimize(node=nodes[0], table_name=table_name, final=True)
+
+    with Then("There should be fewer active parts"):
+        for attempt in retries(timeout=60, delay=1):
             with attempt:
                 final_part_count = get_active_part_count(
                     node=nodes[0], table_name=table_name
@@ -320,7 +310,7 @@ def vfs_events(self):
             time.sleep(2)
 
     with And("I wait for the parts to merge"):
-        node.query(f"OPTIMIZE TABLE {table_name} FINAL")
+        optimize(node=node, table_name=table_name, final=True)
 
     with Then("I check that all vfs events exist"):
         r = node.query("SELECT event FROM system.events WHERE event like 'VFS%'")

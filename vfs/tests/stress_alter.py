@@ -45,13 +45,6 @@ def get_random_table_name(self):
 
 
 @TestStep
-def optimize(self, node, table_name):
-    """Apply OPTIMIZE on the given table and node"""
-    with By(f"optimizing {table_name} on {node.name}"):
-        node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
-
-
-@TestStep
 def get_projections(self, node, table_name):
     r = node.query(
         f"SELECT distinct(name) FROM system.projection_parts WHERE table='{table_name}' FORMAT JSONColumns",
