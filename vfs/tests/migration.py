@@ -46,7 +46,7 @@ def migration(self, source, destination):
         node.query(f"INSERT INTO {dest_table_name} SELECT * from {source_table_name}")
 
     with And("I delete the source table"):
-        node.query(f"DROP TABLE {source_table_name}")
+        delete_one_replica(node=node, table_name=source_table_name)
 
     with Then("the data should be in the destination table"):
         assert_row_count(node=node, table_name=dest_table_name, rows=1000000)

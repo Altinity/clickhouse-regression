@@ -281,10 +281,10 @@ def sync_replica(self, node, table_name, raise_on_timeout=False, **kwargs):
 
 
 @TestStep(When)
-def optimize(self, node, table_name, final=False):
+def optimize(self, node, table_name, final=False, no_checks=False):
     """Apply OPTIMIZE on the given table and node"""
     q = f"OPTIMIZE TABLE {table_name}" + " FINAL" if final else ""
-    node.query(q, no_checks=True)
+    node.query(q, no_checks=no_checks, exitcode=0)
 
 
 @TestStep(Given)
