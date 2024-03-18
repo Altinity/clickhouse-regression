@@ -1034,9 +1034,9 @@ def alter_combinations(
             action_groups = action_groups[:limit]
 
     try:
-        with Given(f"I create {n_tables} tables with 10 columns and data"):
+        with Given(f"I create {n_tables} tables with 20 columns and data"):
             self.context.table_names = []
-            columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(10))
+            columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(20))
             for i in range(n_tables):
                 table_name = f"table{i}_{self.context.storage_policy}"
                 replicated_table_cluster(
