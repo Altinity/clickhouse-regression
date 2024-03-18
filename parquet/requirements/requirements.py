@@ -3504,12 +3504,59 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes = Requirement(
     description=(
         "[ClickHouse] SHALL support importing from Parquet files that utilize indexes.\n"
         "\n"
-        "| Indexes Supported by Parquet |\n"
-        "|------------------------------|\n"
-        "| Page                         |\n"
-        "| Min/Max                      |\n"
-        "| Bloom Filter                 |\n"
-        "| Dictionary                   |\n"
+    ),
+    link=None,
+    level=2,
+    num="16.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Indexes_Page = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Indexes.Page",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support utilizing 'Page Index' of a parquet file in order to read data from the file more efficiently.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="16.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support utilizing 'Bloom Filter' of a parquet file in order to read data from the file more efficiently.\n"
+        "\n"
+        "> A Bloom filter is a compact data structure that overapproximates a set. It can respond to membership \n"
+        "> queries with either “definitely no” or “probably yes”, where the probability of false positives is configured when the filter is initialized. Bloom filters do not have false negatives.\n"
+        "> \n"
+        "> Because Bloom filters are small compared to dictionaries, they can be used for predicate pushdown even in columns with high cardinality and when space is at a premium.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="16.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support utilizing 'Dictionary' of a parquet file in order to read data from the file more efficiently.\n"
+        "\n"
         "\n"
     ),
     link=None,
@@ -5347,7 +5394,23 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="15.4.5",
         ),
         Heading(name="Indexes", level=1, num="16"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Indexes", level=3, num="16.4.1"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Indexes", level=2, num="16.1"),
+        Heading(name="Page", level=2, num="16.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.Page", level=3, num="16.2.1"
+        ),
+        Heading(name="Bloom Filter", level=2, num="16.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter",
+            level=3,
+            num="16.3.1",
+        ),
+        Heading(name="Dictionary", level=2, num="16.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary",
+            level=3,
+            num="16.4.1",
+        ),
         Heading(name="Metadata", level=1, num="17"),
         Heading(name="ParquetFormat", level=2, num="17.1"),
         Heading(
@@ -5751,6 +5814,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL,
         RQ_SRS_032_ClickHouse_Parquet_Indexes,
+        RQ_SRS_032_ClickHouse_Parquet_Indexes_Page,
+        RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter,
+        RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content,
@@ -6100,7 +6166,13 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 15.4.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
         * 15.4.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
 * 16 [Indexes](#indexes)
-        * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes](#rqsrs-032clickhouseparquetindexes)
+    * 16.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes](#rqsrs-032clickhouseparquetindexes)
+    * 16.2 [Page](#page)
+        * 16.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Page](#rqsrs-032clickhouseparquetindexespage)
+    * 16.3 [Bloom Filter](#bloom-filter)
+        * 16.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
+    * 16.4 [Dictionary](#dictionary)
+        * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 17 [Metadata](#metadata)
     * 17.1 [ParquetFormat](#parquetformat)
         * 17.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
@@ -8187,17 +8259,37 @@ version: 1.0
 
 ## Indexes
 
-#### RQ.SRS-032.ClickHouse.Parquet.Indexes
+### RQ.SRS-032.ClickHouse.Parquet.Indexes
 version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files that utilize indexes.
 
-| Indexes Supported by Parquet |
-|------------------------------|
-| Page                         |
-| Min/Max                      |
-| Bloom Filter                 |
-| Dictionary                   |
+### Page
+
+#### RQ.SRS-032.ClickHouse.Parquet.Indexes.Page
+version: 1.0
+
+[ClickHouse] SHALL support utilizing 'Page Index' of a parquet file in order to read data from the file more efficiently.
+
+### Bloom Filter
+
+#### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter
+version: 1.0
+
+[ClickHouse] SHALL support utilizing 'Bloom Filter' of a parquet file in order to read data from the file more efficiently.
+
+> A Bloom filter is a compact data structure that overapproximates a set. It can respond to membership 
+> queries with either “definitely no” or “probably yes”, where the probability of false positives is configured when the filter is initialized. Bloom filters do not have false negatives.
+> 
+> Because Bloom filters are small compared to dictionaries, they can be used for predicate pushdown even in columns with high cardinality and when space is at a premium.
+
+### Dictionary
+
+#### RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary
+version: 1.0
+
+[ClickHouse] SHALL support utilizing 'Dictionary' of a parquet file in order to read data from the file more efficiently.
+
 
 ## Metadata
 
