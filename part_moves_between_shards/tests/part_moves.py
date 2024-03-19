@@ -620,14 +620,19 @@ def part_move_parallel_with_insert(
             with When(f"move number {i}"):
                 with By("waiting for new part in system.parts table"):
                     part = ""
-                    while part == "":
-                        part = (
-                            self.context.cluster.node("clickhouse1")
-                            .query(
-                                f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                    for retr in retries(timeout=60):
+                        with retr:
+                            part = (
+                                self.context.cluster.node("clickhouse1")
+                                .query(
+                                    f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                                )
+                                .output.strip()
                             )
-                            .output.strip()
-                        )
+
+                            assert (
+                                part != ""
+                            ), f"No part with uuid {part_uuid} in system.parts table"
 
                 By(
                     "I move part from shard 1 to shard 3 and return it",
@@ -787,14 +792,20 @@ def part_move_parallel_with_big_insert(self, iterations=1, number=100):
                 )
                 part = ""
                 while part == "":
-                    part = (
-                        self.context.cluster.node("clickhouse1")
-                        .query(
-                            f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
-                        )
-                        .output.strip()
-                    )
-                with Given(f"LOOP STEP {i}"):
+                    for retr in retries(timeout=60):
+                        with retr:
+                            part = (
+                                self.context.cluster.node("clickhouse1")
+                                .query(
+                                    f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                                )
+                                .output.strip()
+                            )
+
+                            assert (
+                                part != ""
+                            ), f"No part with uuid {part_uuid} in system.parts table"
+                with Given(f"iteration {i}"):
                     When(
                         "I move part from shard 1 to shard 3 and return it",
                         test=move_part_and_return,
@@ -808,7 +819,7 @@ def part_move_parallel_with_big_insert(self, iterations=1, number=100):
                         node_name1="clickhouse1",
                         node_name2="clickhouse3",
                     )
-                    with Step("I make big insert into table"):
+                    with When("I make big insert into table"):
                         node.query(
                             f"insert into {table_name} select rand(1)%100,"
                             f" rand(2) from numbers({number}) "

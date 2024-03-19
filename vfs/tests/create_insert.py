@@ -88,7 +88,7 @@ def create_test_table(
 
 @TestOutline(Scenario)
 @Tags("combinatoric")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
 def check_table_combination(
     self,
     engine: str,
@@ -146,7 +146,7 @@ def check_table_combination(
 
 @TestFeature
 @Name("create insert")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Combinatoric("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Combinatoric("0.0"))
 def feature(self):
     """Test CREATE and INSERT commands with VFS enabled on a variety of table configurations."""
 

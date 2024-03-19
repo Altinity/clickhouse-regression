@@ -1,5 +1,5 @@
 _aggregate_functions_state_last_value_respect_nullsState_NULL_for_all_rows = r"""
-{"hex(last_value_respect_nullsStateDistinct(if(modulo(number, 2), NULL, NULL)))":null,"any(toTypeName(number))":"UInt64"}
+{"hex(last_value_respect_nullsStateDistinct(if(modulo(number, 2), NULL, NULL)))":null,"any(toTypeName(NULL))":"Nullable(Nothing)"}
 """
 
 _aggregate_functions_state_last_value_respect_nullsState__inf = r"""

@@ -9,8 +9,8 @@ from vfs.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_System_AddKeeper("0.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_System_RemoveKeeper("0.0"),
+    RQ_SRS038_DiskObjectStorageVFS_System_AddKeeper("0.0"),
+    RQ_SRS038_DiskObjectStorageVFS_System_RemoveKeeper("0.0"),
 )
 def stop_zookeeper(self):
     nodes = self.context.ch_nodes
@@ -42,7 +42,7 @@ def stop_zookeeper(self):
 
 @TestScenario
 @Tags("sanity")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_Delete("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_System_Delete("1.0"))
 def delete(self):
     """
     Check that when a table is dropped, data in S3 is cleaned up.
@@ -134,7 +134,7 @@ def delete(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_System_CompactWideParts("1.0"))
 def wide_parts(self):
     """Check that data can be stored in S3 using only wide data parts."""
     name = "table_" + getuid()
@@ -176,7 +176,7 @@ def wide_parts(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_CompactWideParts("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_System_CompactWideParts("1.0"))
 def compact_parts(self):
     """Check that data can be stored in S3 using only compact data parts."""
     name = "table_" + getuid()
@@ -226,7 +226,7 @@ def get_active_part_count(self, node, table_name):
 
 @TestOutline(Scenario)
 @Tags("long", "combinatoric")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_System_Optimize("0.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_System_Optimize("0.0"))
 @Examples("table_settings", [[None], [WIDE_PART_SETTING], [COMPACT_PART_SETTING]])
 def optimize(self, table_settings):
     """Check that OPTIMIZE works as expected on VFS."""
@@ -285,7 +285,7 @@ def optimize(self, table_settings):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection("0.0")
+    RQ_SRS038_DiskObjectStorageVFS_System_ConnectionInterruption_FaultInjection("0.0")
 )
 def fault_injection(self):
     """Test that ClickHouse is robust against injected faults."""

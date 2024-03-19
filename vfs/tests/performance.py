@@ -21,7 +21,7 @@ def insert_data_time(self, node, table_name, number_of_mb, start=0):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Performance("1.0"))
 def performance_insert(self):
     """
     Compare insert performance using object storage vfs and not using vfs.
@@ -66,7 +66,7 @@ def performance_insert(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Performance("1.0"))
 def performance_select(self):
     """Compare select performance using object storage vfs and not using vfs."""
     nodes = self.context.ch_nodes
@@ -149,7 +149,7 @@ def performance_select(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Performance("1.0"))
 def performance_alter(self):
     """Compare alter table performance using object storage vfs and not using vfs."""
     nodes = self.context.ch_nodes
@@ -237,7 +237,7 @@ def performance_alter(self):
 
 @TestFeature
 @Name("performance")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Performance("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Performance("1.0"))
 def feature(self):
     """Compare table performance with and without vfs."""
 

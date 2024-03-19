@@ -161,7 +161,7 @@ def select(self, node, table_name):
 
 
 @TestOutline(Example)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Replica_Remove("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Replica_Remove("1.0"))
 def add_remove_outline(self, random_seed=None, allow_vfs=True):
     """
     Perform combinations of add/remove actions on replicas,

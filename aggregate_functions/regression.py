@@ -110,10 +110,18 @@ xfails = {
         )
     ],
     "/aggregate functions/sumMapFiltered/inf, -inf, nan/*": [
-        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+        (
+            Fail,
+            issue_58741,
+            check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
+        )
     ],
     "/aggregate functions/sumMapFilteredWithOverflow/inf, -inf, nan/*": [
-        (Fail, issue_58741, check_clickhouse_version(">=23.11"))
+        (
+            Fail,
+            issue_58741,
+            check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
+        )
     ],
     "/aggregate functions/simpleLinearRegression/*": [
         (
@@ -261,6 +269,26 @@ ffails = {
         "groupArrayLast works from 23",
         check_clickhouse_version("<23"),
     ),
+    "/aggregate functions/groupArrayIntersect/*": (
+        Skip,
+        "groupArrayIntersect works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
+    "/aggregate functions/*/*groupArrayIntersect*/*": (
+        Skip,
+        "groupArrayIntersect works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
+    "/aggregate functions/groupArraySorted/*": (
+        Skip,
+        "groupArraySorted works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
+    "/aggregate functions/*/*groupArraySorted*/*": (
+        Skip,
+        "groupArraySorted works from 24.2",
+        check_clickhouse_version("<=24.1"),
+    ),
     "/aggregate functions/kolmogorovSmirnovTest/*": (
         Skip,
         "kolmogorovSmirnovTest works from 23.4",
@@ -317,7 +345,7 @@ ffails = {
     "/aggregate functions/:/first_value_respect_nulls*/*": (
         Skip,
         "first_value_respect_nulls works from 23.5",
-        check_clickhouse_version("<23.5") or check_clickhouse_version(">23.8"),
+        check_clickhouse_version("<23.5"),
     ),
     "/aggregate functions/last_value_respect_nulls/*": (
         Skip,
@@ -327,7 +355,7 @@ ffails = {
     "/aggregate functions/:/last_value_respect_nulls*/*": (
         Skip,
         "last_value_respect_nulls works from 23.5",
-        check_clickhouse_version("<23.5") or check_clickhouse_version(">23.8"),
+        check_clickhouse_version("<23.5"),
     ),
     "/aggregate functions/flameGraph/*": (
         Skip,
@@ -414,12 +442,12 @@ ffails = {
     "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": (
         Skip,
         issue_58741,
-        check_clickhouse_version(">=23.11"),
+        check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
     "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": (
         Skip,
         issue_58741,
-        check_clickhouse_version(">=23.11"),
+        check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
     "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": (
         Skip,
@@ -430,6 +458,21 @@ ffails = {
         Skip,
         "need to investigate (something with zero representation)",
         check_clickhouse_version(">=23.11"),
+    ),
+    "/aggregate functions/finalizeAggregation/groupArraySorted_finalizeAggregation_Merge/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/61186",
+        check_clickhouse_version(">=24.2"),
+    ),
+    "/aggregate functions/finalizeAggregation/groupArraySorted_finalizeAggregation_Merge/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/61186",
+        check_clickhouse_version(">=24.2"),
+    ),
+    "/aggregate functions/merge/groupArraySortedMerge/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/61186",
+        check_clickhouse_version(">=24.2"),
     ),
 }
 
@@ -496,10 +539,10 @@ def regression(
 
         join()
 
-    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
+    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
 
 
 if main():
