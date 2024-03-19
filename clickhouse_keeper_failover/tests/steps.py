@@ -55,46 +55,23 @@ def get_node_role(self, node):
 
 
 @TestStep
-def cluster_command_workaround(self, node_name, cmd):
-    """
-    Node.command isn't compatible with the method used to activate recovery mode.
-    """
-    cluster = self.context.cluster
-    return cluster.command(
-        None,
-        f"{cluster.docker_compose} exec {node_name} {cmd}",
-        exitcode=0,
-        steps=False,
-    )
-
-
-@TestStep
 def keeper_query(self, node, query):
     """Send a query to keeper client."""
     cmd = f'clickhouse-keeper-client -q "{query}"'
     return node.command(cmd)
 
 
-
 @TestStep
-def set_keeper_config(self, config_file_name, nodes=None, restart=False):
+def set_keeper_config(self, nodes, config_file_name, restart=False):
     """Swaps the config file."""
-    assert not (nodes is None and restart), "Nodes to restart must be specified"
 
-    config_dir = current_dir() + "/../configs/keeper/config/"
     source_path = "/etc/clickhouse-keeper-configs/"
-    dest_file = config_dir + "keeper_config.xml"
+    dest_file = "/etc/clickhouse-keeper/keeper_config.xml"
     source_file = source_path + config_file_name
 
-    cluster = self.context.cluster
-
-    with By("I return early if the link is already set"):
-        r = cluster.command(None, f"ls -l {dest_file}", no_checks=True)
-        if source_file in r.output:
-            return
-
-    with And("I replace the link with the new target"):
-        cluster.command(None, f"ln -s -f {source_file} {dest_file}", exitcode=0)
+    for node in nodes:
+        with By("I replace the link with the new target"):
+            node.command(f"ln -s -f {source_file} {dest_file}", exitcode=0)
 
     if restart:
         with By("I restart all nodes"):
@@ -109,4 +86,3 @@ def check_logs(self, node, message, tail=30):
     """
     cmd = f'tail -n {tail} /var/log/clickhouse-keeper/clickhouse-keeper.log | grep "{message}"'
     return node.command(cmd, exitcode=0)
-

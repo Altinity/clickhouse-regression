@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-import time, datetime
-
 from testflows.core import *
-from testflows.combinatorics import permutations
 
 from vfs.tests.steps import *
 from vfs.requirements import *

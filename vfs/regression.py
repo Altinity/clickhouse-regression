@@ -17,6 +17,7 @@ xfails = {
     ":/replica/command combinations/*": [(Error, "some combos time out")],
     ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
     ":/alter/move/:": [(Fail, "Fix pending")],
+    ":/system/vfs events": [(Fail, "WIP")],
 }
 
 ffails = {

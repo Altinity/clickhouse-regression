@@ -39,7 +39,7 @@ def update_delete(self):
         )
 
     with And("I OPTIMIZE FINAL with success"):
-        nodes[0].query(f"OPTIMIZE TABLE {table_name} FINAL", exitcode=0)
+        optimize(node=nodes[0], table_name=table_name, final=True, no_checks=False)
 
     with And("I DELETE with success"):
         alter_table_delete_rows(
@@ -509,7 +509,7 @@ def move(self):
         ["external_vfs", "external_vfs_2"],
     ]
     destination_types = ["DISK", "VOLUME"]
-    policies= {}
+    policies = {}
 
     with Given("I have storage policies for the disk pairs"):
         policies = {

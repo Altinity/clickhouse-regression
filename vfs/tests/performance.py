@@ -85,8 +85,9 @@ def performance_select(self):
         with Then("I sync the replicas"):
             for attempt in retries(timeout=600, delay=5):
                 with attempt:
-                    nodes[1].query(
-                        f"SYSTEM SYNC REPLICA {table_name}",
+                    sync_replica(
+                        node=nodes[1],
+                        table_name=table_name,
                         settings=[("receive_timeout", 600)],
                     )
 
@@ -102,7 +103,8 @@ def performance_select(self):
     finally:
         with Finally("I drop the tables on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS vfsSelect SYNC")
+                delete_one_replica(node=node, table_name=table_name)
+                delete_one_replica(node=node, table_name="vfsSelect")
 
     try:
         table_name = "allow_vfs_select"
@@ -121,8 +123,9 @@ def performance_select(self):
         with Then("I sync the replicas"):
             for attempt in retries(timeout=600, delay=5):
                 with attempt:
-                    nodes[1].query(
-                        f"SYSTEM SYNC REPLICA {table_name}",
+                    sync_replica(
+                        node=nodes[1],
+                        table_name=table_name,
                         settings=[("receive_timeout", 600)],
                     )
 
@@ -138,7 +141,8 @@ def performance_select(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS vfsSelect SYNC")
+                delete_one_replica(node=node, table_name=table_name)
+                delete_one_replica(node=node, table_name="vfsSelect")
 
     with Finally("I print the difference in time taken"):
         metric(
@@ -175,10 +179,11 @@ def performance_alter(self):
         with Then("I sync the replicas"):
             for attempt in retries(timeout=1200, delay=5):
                 with attempt:
-                    nodes[1].query(
-                        f"SYSTEM SYNC REPLICA {table_name}",
-                        settings=[("receive_timeout", 600)],
+                    sync_replica(
+                        node=nodes[1],
+                        table_name=table_name,
                         timeout=600,
+                        settings=[("receive_timeout", 600)],
                     )
 
         with Then("I alter the table and save the time taken"):
@@ -191,7 +196,7 @@ def performance_alter(self):
     finally:
         with Finally("I drop the tables on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS vfsSelect SYNC")
+                delete_one_replica(node=node, table_name=table_name)
 
     try:
         table_name = "allow_vfs_alter"
@@ -210,8 +215,9 @@ def performance_alter(self):
         with Then("I sync the replicas"):
             for attempt in retries(timeout=600, delay=5):
                 with attempt:
-                    nodes[1].query(
-                        f"SYSTEM SYNC REPLICA {table_name}",
+                    sync_replica(
+                        node=nodes[1],
+                        table_name=table_name,
                         settings=[("receive_timeout", 600)],
                     )
 
@@ -225,7 +231,7 @@ def performance_alter(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS vfsSelect SYNC")
+                delete_one_replica(node=node, table_name=table_name)
 
     with Finally("I print the difference in time taken"):
         metric(
