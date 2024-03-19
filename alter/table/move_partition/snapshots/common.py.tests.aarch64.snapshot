@@ -1,24 +1,8 @@
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -30,27 +14,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -62,27 +30,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -94,27 +46,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -126,27 +62,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -158,27 +78,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -190,27 +94,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -222,27 +110,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -254,27 +126,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -286,27 +142,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -318,27 +158,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -350,27 +174,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -382,27 +190,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2__intDiv_c_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2__intDiv_c_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -414,27 +206,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -446,27 +222,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -478,11 +238,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -494,7 +254,247 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2__intDiv_c_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2__intDiv_c_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_2_b_2_c_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -520,7 +520,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -532,7 +532,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -558,7 +558,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -570,7 +570,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -596,7 +596,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -608,7 +608,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -634,7 +634,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -646,7 +646,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -672,7 +672,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -684,7 +684,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -710,7 +710,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -722,7 +722,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -748,7 +748,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -760,7 +760,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -786,7 +786,7 @@ a	b	c	extra
 19	25	29	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_b_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -798,7 +798,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -824,7 +824,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -836,7 +836,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -862,7 +862,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -874,7 +874,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -900,7 +900,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -912,7 +912,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -938,7 +938,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____a_intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -950,27 +950,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -982,27 +966,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1014,27 +982,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1046,27 +998,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1078,27 +1014,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_a_2__intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1110,11 +1030,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key____intDiv_b_2__intDiv_a_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1126,7 +1046,87 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____b_2_a_2___destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1152,7 +1152,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1164,7 +1164,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1190,7 +1190,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1202,7 +1202,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1228,7 +1228,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1240,7 +1240,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1266,7 +1266,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1278,7 +1278,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1320,7 +1320,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__b___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1332,7 +1332,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1350,33 +1350,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1394,33 +1372,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1438,11 +1394,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1460,11 +1416,55 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1498,7 +1498,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1510,7 +1510,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1528,33 +1528,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1572,33 +1550,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1616,33 +1572,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1660,33 +1594,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_c_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1704,33 +1616,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1748,33 +1638,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1792,11 +1660,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_a_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1814,11 +1682,143 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____b_c_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____c_b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1852,7 +1852,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_a_2__intDiv_b_2__intDiv_c_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -1864,7 +1864,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1882,33 +1882,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1926,33 +1904,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____a_intDiv_b_2____source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-1	5	9	1000
-1	5	9	1001
-1	5	9	1002
-1	5	9	1003
-10	15	19	1001
-11	18	22	1002
-12	17	21	1003
-13	20	24	1004
-14	19	23	1005
-15	22	26	1006
-16	21	25	1007
-17	24	28	1008
-18	23	27	1009
-19	26	30	1010
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1970,11 +1926,11 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____b_a___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -1992,11 +1948,55 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key____intDiv_a_2__b___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+1	5	9	1000
+1	5	9	1001
+1	5	9	1002
+1	5	9	1003
+10	15	19	1001
+11	18	22	1002
+12	17	21	1003
+13	20	24	1004
+14	19	23	1005
+15	22	26	1006
+16	21	25	1007
+17	24	28	1008
+18	23	27	1009
+19	26	30	1010
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -2030,7 +2030,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id____intDiv_b_2__intDiv_a_2____destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -2042,27 +2042,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -2074,27 +2058,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -2106,27 +2074,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_2__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -2138,27 +2090,11 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
-a	b	c	extra
-0	0	0	1000
-0	0	0	1001
-0	0	0	1002
-0	0	0	1003
-1	1	1	1000
-1	1	1	1001
-1	1	1	1002
-1	1	1	1003
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
-a	b	c	extra
-"""
-
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -2170,7 +2106,71 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___a_3__destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+a	b	c	extra
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___b_2__destination_table_partition_key___intDiv_b_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+a	b	c	extra
+0	0	0	1000
+0	0	0	1001
+0	0	0	1002
+0	0	0	1003
+1	1	1	1000
+1	1	1	1001
+1	1	1	1002
+1	1	1	1003
+"""
+
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -2178,11 +2178,11 @@ a	b	c	extra
 1	5	9	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -2214,7 +2214,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_2___destination_table_partition_key___intDiv_a_3___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -2226,7 +2226,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 3	7	11	1000
 3	7	11	1001
@@ -2234,11 +2234,11 @@ a	b	c	extra
 3	7	11	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___a__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 3	7	11	1000
 3	7	11	1001
@@ -2258,7 +2258,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_a_3___destination_table_partition_key___intDiv_a_2___source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 0	0	0	1000
 0	0	0	1001
@@ -2270,7 +2270,7 @@ a	b	c	extra
 1	1	1	1003
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree_ = r"""
 a	b	c	extra
 1	5	9	1000
 1	5	9	1001
@@ -2280,7 +2280,7 @@ a	b	c	extra
 19	26	30	1010
 """
 
-_alter_table_move_partition_partition_key_move_partition_I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
+I_check_that_partitions_were_moved_when_source_table_partition_id___intDiv_b_2___destination_table_partition_key___b__source_table_engine___MergeTree__destination_table_engine___MergeTree__small = r"""
 a	b	c	extra
 """
 

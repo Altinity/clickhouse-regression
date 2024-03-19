@@ -16,6 +16,7 @@ xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
     ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
+    ":/alter/move/:": [(Fail, "Fix pending")],
 }
 
 ffails = {
@@ -25,16 +26,14 @@ ffails = {
         lambda test: not test.context.allow_vfs
         or check_clickhouse_version("<24.2")(test),
     ),
-    ":/alter/move": (XFail, "Fix pending"),
     ":/parallel replica": (Skip, "WIP"),
-    ":/replica/add remove one node": (XFail, "Fix pending"),
 }
 
-# RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration
+# RQ_SRS038_DiskObjectStorageVFS_Providers_Configuration
 
 
 @TestModule
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
 def minio(
     self,
     uri,
@@ -97,7 +96,7 @@ def minio(
 
 
 @TestModule
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_AWS("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_AWS("1.0"))
 def aws_s3(
     self,
     key_id,
@@ -177,7 +176,7 @@ def aws_s3(
 
 
 @TestModule
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_GCS("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_GCS("1.0"))
 def gcs(
     self,
     uri,
@@ -245,7 +244,7 @@ def gcs(
 @TestModule
 @Name("vfs")
 @ArgumentParser(argparser)
-@Specifications(SRS_038_ClickHouse_Disk_Object_Storage_VFS)
+@Specifications(SRS038_ClickHouse_Disk_Object_Storage_VFS)
 @XFails(xfails)
 @FFails(ffails)
 def regression(

@@ -3,10 +3,12 @@ import json
 import time
 from contextlib import contextmanager
 from platform import processor
+from threading import Event
 
 from testflows.core import *
 from testflows.asserts import error
 from testflows.uexpect.uexpect import ExpectTimeoutError
+from testflows.combinatorics import combinations
 
 from helpers.common import getuid, check_clickhouse_version
 
@@ -466,3 +468,32 @@ def interrupt_network(cluster, node):
             cluster.command(
                 None, f"docker network connect {DOCKER_NETWORK} {container}"
             )
+
+
+@TestStep(Then)
+def check_consistency(self, nodes, table_name):
+    """SYNC the given nodes and check that they agree about the given table"""
+
+    with When("I make sure all nodes are synced"):
+        for node in nodes:
+            sync_replica(node=node, table_name=table_name, timeout=10, no_checks=True)
+
+    with When("I query all nodes for their row counts"):
+        row_counts = {}
+        for node in nodes:
+            row_counts[node.name] = get_row_count(node=node, table_name=table_name)
+
+    with Then("All replicas should have the same state"):
+        for n1, n2 in combinations(nodes, 2):
+            assert row_counts[n1.name] == row_counts[n2.name], error()
+
+
+@TestStep(When)
+def repeat_until_stop(self, stop_event: Event, func, delay=0.5):
+    """
+    Call the given function with no arguments until stop_event is set.
+    Use with parallel=True.
+    """
+    while not stop_event.is_set():
+        func()
+        time.sleep(delay)

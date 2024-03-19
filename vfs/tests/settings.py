@@ -13,7 +13,7 @@ from s3.tests.common import invalid_s3_storage_config
 
 @TestScenario
 @Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_ZeroCopyReplication("1.0")
+    RQ_SRS038_DiskObjectStorageVFS_IncompatibleSettings_ZeroCopyReplication("1.0")
 )
 def incompatible_with_zero_copy(self):
     """
@@ -32,7 +32,7 @@ def incompatible_with_zero_copy(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_IncompatibleSettings_SendMetadata("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_IncompatibleSettings_SendMetadata("1.0"))
 def incompatible_with_send_metadata(self):
     """
     Check that using send_metadata when vfs is enabled is not allowed.
@@ -111,7 +111,7 @@ def create_insert_measure_replicated_table(self, storage_policy="external"):
 
 @TestScenario
 @Tags("sanity")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_Disk("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Settings_Disk("1.0"))
 def disk_setting(self):
     """
     Check that allow_vfs can be enabled per disk.
@@ -145,7 +145,7 @@ def disk_setting(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
 def disable_vfs_with_vfs_table(self):
     """
     Check that removing global allow_vfs=1 when a vfs table exists does not cause data to become inaccessible.
@@ -192,7 +192,7 @@ def disable_vfs_with_vfs_table(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
 def enable_vfs_with_non_vfs_table(self):
     """
     Check that globally enabling allow_vfs when a non-vfs table exists does not cause data to become inaccessible.
@@ -223,7 +223,7 @@ def enable_vfs_with_non_vfs_table(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_SchemaInference("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_SharedSettings_SchemaInference("1.0"))
 @Examples(
     "settings",
     [["schema_inference_use_cache_for_s3=1"], ["schema_inference_use_cache_for_s3=0"]],
@@ -399,10 +399,10 @@ def check_setting_combination(
 @TestScenario
 @Tags("long", "combinatoric")
 @Requirements(
-    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_Mutation("0.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_S3("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ReadBackoff("1.0"),
-    RQ_SRS_038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead("1.0"),
+    RQ_SRS038_DiskObjectStorageVFS_SharedSettings_Mutation("0.0"),
+    RQ_SRS038_DiskObjectStorageVFS_SharedSettings_S3("1.0"),
+    RQ_SRS038_DiskObjectStorageVFS_SharedSettings_ReadBackoff("1.0"),
+    RQ_SRS038_DiskObjectStorageVFS_SharedSettings_ConcurrentRead("1.0"),
 )
 def setting_combinations(self):
     """Perform concurrent inserts and selects with various settings."""
@@ -450,7 +450,7 @@ def setting_combinations(self):
 
 @TestFeature
 @Name("settings")
-@Requirements(RQ_SRS_038_DiskObjectStorageVFS_Providers_Configuration("1.0"))
+@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_Configuration("1.0"))
 def feature(self):
     """Test interactions between VFS and other settings."""
     with Given("I have S3 disks configured"):
