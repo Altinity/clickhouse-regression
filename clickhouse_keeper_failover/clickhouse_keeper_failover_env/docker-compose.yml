@@ -57,7 +57,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    #command: --force-recovery
     container_name: keeper-4
     hostname: keeper-4
     ports:

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from testflows.core import *
 
-from helpers.create import create_replicated_merge_tree_table
-
 from vfs.tests.steps import *
 from vfs.requirements import *
 
@@ -62,12 +60,12 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
     total_rows = 0
     for n_inserts in insert_sequence():
         with When(f"I perform {n_inserts:,} individual inserts"):
-            nodes[0].query(
-                f"""
-                INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') 
-                LIMIT {n_inserts} SETTINGS {insert_settings}
-                """,
-                exitcode=0,
+            insert_random(
+                node=nodes[0],
+                table_name=table_name,
+                columns=columns,
+                rows=n_inserts,
+                settings=insert_settings,
                 timeout=600,
             )
             total_rows += n_inserts
@@ -77,7 +75,7 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
 
     with When("I perform optimize on each node"):
         for node in nodes:
-            node.query(f"OPTIMIZE TABLE {table_name}")
+            optimize(node=node, table_name=table_name)
 
     with Then(f"there should still be {total_rows} rows"):
         assert_row_count(node=nodes[0], table_name=table_name, rows=total_rows)

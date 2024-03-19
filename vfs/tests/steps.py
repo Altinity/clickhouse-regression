@@ -78,7 +78,7 @@ def s3_config(self):
         disks=disks,
         policies=policies,
         restart=True,
-        timeout=60,
+        timeout=30,
         config_file="vfs_storage.xml",
     )
 
@@ -101,11 +101,10 @@ def check_vfs_state(
 
 
 @TestStep
-def get_row_count(self, node, table_name):
+def get_row_count(self, node, table_name, timeout=30):
     """Get the number of rows in the given table."""
     r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSON",
-        exitcode=0,
+        f"SELECT count() FROM {table_name} FORMAT JSON", exitcode=0, timeout=timeout
     )
     return int(json.loads(r.output)["data"][0]["count()"])
 
@@ -204,8 +203,8 @@ def insert_random(
     table_name,
     columns: str = None,
     rows: int = 1000000,
-    no_checks=False,
     settings=None,
+    **kwargs,
 ):
     """Insert random data to a table."""
     if columns is None:
@@ -218,8 +217,8 @@ def insert_random(
 
     node.query(
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
-        no_checks=no_checks,
         exitcode=0,
+        **kwargs,
     )
 
 
@@ -263,19 +262,29 @@ def create_one_replica(
 
 
 @TestStep(Given)
-def delete_one_replica(self, node, table_name):
+def delete_one_replica(self, node, table_name, timeout=30):
     """Delete the local copy of a replicated table."""
-    r = node.query(f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0)
+    r = node.query(
+        f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0, timeout=timeout
+    )
     return r
 
 
-@TestStep
+@TestStep(When)
 def sync_replica(self, node, table_name, raise_on_timeout=False, **kwargs):
+    """Call SYSTEM SYNC REPLICA on the given node and table"""
     try:
         node.query(f"SYSTEM SYNC REPLICA {table_name}", **kwargs)
     except (ExpectTimeoutError, TimeoutError):
         if raise_on_timeout:
             raise
+
+
+@TestStep(When)
+def optimize(self, node, table_name, final=False, no_checks=False):
+    """Apply OPTIMIZE on the given table and node"""
+    q = f"OPTIMIZE TABLE {table_name}" + " FINAL" if final else ""
+    node.query(q, no_checks=no_checks, exitcode=0)
 
 
 @TestStep(Given)
@@ -381,33 +390,41 @@ def check_stable_bucket_size(
 
 
 @TestStep
-def get_column_string(self, node, table_name) -> str:
+def get_column_string(self, node, table_name, timeout=30) -> str:
     """Get a string with column names and types."""
-    r = node.query(f"DESCRIBE TABLE {table_name}")
+    r = node.query(
+        f"DESCRIBE TABLE {table_name}",
+        timeout=timeout,
+    )
     return ",".join([l.strip() for l in r.output.splitlines()])
 
 
 @TestStep
-def get_column_names(self, node, table_name) -> list:
+def get_column_names(self, node, table_name, timeout=30) -> list:
     """Get a list of a table's column names."""
-    r = node.query(f"DESCRIBE TABLE {table_name} FORMAT JSONColumns")
-    return json.loads(r.output)["name"]
-
-
-@TestStep
-def get_active_parts(self, node, table_name):
-    """Get a list of active parts in a table."""
     r = node.query(
-        f"select name from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
+        f"DESCRIBE TABLE {table_name} FORMAT JSONColumns",
+        timeout=timeout,
     )
     return json.loads(r.output)["name"]
 
 
 @TestStep
-def get_active_partition_ids(self, node, table_name):
+def get_active_parts(self, node, table_name, timeout=30):
+    """Get a list of active parts in a table."""
+    r = node.query(
+        f"SELECT name FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
+        timeout=timeout,
+    )
+    return json.loads(r.output)["name"]
+
+
+@TestStep
+def get_active_partition_ids(self, node, table_name, timeout=30):
     """Get a list of active partitions in a table."""
     r = node.query(
-        f"select partition_id from system.parts where table='{table_name}' and active=1 FORMAT JSONColumns"
+        f"SELECT partition_id FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
+        timeout=timeout,
     )
     return json.loads(r.output)["partition_id"]
 

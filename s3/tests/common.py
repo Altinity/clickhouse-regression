@@ -75,7 +75,7 @@ def add_config(
                 logsize = cmd.output.split(" ")[0].strip()
 
             with And("I start ClickHouse back up"):
-                node.start_clickhouse(user=user, wait_healthy=wait_healthy)
+                node.start_clickhouse(user=user, wait_healthy=wait_healthy, timeout=timeout)
 
             with Then("I tail the log file from using previous log size as the offset"):
                 bash.prompt = bash.__class__.prompt

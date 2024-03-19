@@ -20,7 +20,9 @@ def set_tiered_policy(self, allow_vfs=1, move_on_insert=0):
         }
         for n in ["external", "external_tiered"]
     }
-    s3_storage(disks=disks, policies=policies, restart=True, config_file="policy_settings.xml")
+    s3_storage(
+        disks=disks, policies=policies, restart=True, config_file="policy_settings.xml"
+    )
 
 
 @TestStep(When)

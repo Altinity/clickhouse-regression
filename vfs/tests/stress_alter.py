@@ -17,6 +17,7 @@ table_schema_lock = RLock()
 
 step_retry_timeout = 300
 
+
 @TestStep
 def get_nodes_for_table(self, nodes, table_name):
     """Return all nodes that know about a given table."""
@@ -41,13 +42,6 @@ def get_random_node_for_table(self, table_name):
 @TestStep
 def get_random_table_name(self):
     return random.choice(self.context.table_names)
-
-
-@TestStep
-def optimize(self, node, table_name):
-    """Apply OPTIMIZE on the given table and node"""
-    with By(f"optimizing {table_name} on {node.name}"):
-        node.query(f"OPTIMIZE TABLE {table_name}", no_checks=True)
 
 
 @TestStep
@@ -97,6 +91,7 @@ def insert_to_random(self):
             table_name=table_name,
             columns=columns,
             no_checks=True,
+            rows=1_000_000,
             settings=f"insert_keeper_fault_injection_probability={self.context.fault_probability}",
         )
 
@@ -136,6 +131,7 @@ def add_random_column(self):
                 column_type="UInt16",
                 node=node,
                 exitcode=0,
+                timeout=30,
             )
 
 
@@ -154,7 +150,13 @@ def delete_random_column(self):
             By(
                 name=f"delete column from {table_name} with {node.name}",
                 test=alter_table_drop_column,
-            )(node=node, table_name=table_name, column_name=column_name, exitcode=0)
+            )(
+                node=node,
+                table_name=table_name,
+                column_name=column_name,
+                exitcode=0,
+                timeout=30,
+            )
 
 
 @TestStep
@@ -179,6 +181,7 @@ def rename_random_column(self):
                 column_name_old=column_name,
                 column_name_new=new_name,
                 exitcode=0,
+                timeout=30,
             )
 
 
@@ -200,6 +203,7 @@ def update_random_column(self):
         condition=f"({column_name} < 10000)",
         node=node,
         exitcode=0,
+        timeout=30,
     )
 
 
@@ -324,6 +328,16 @@ def move_random_partition_to_random_table(self):
     partition = get_random_partition_id(node=node, table_name=source_table_name)
 
     with table_schema_lock:
+
+        with When("I tell the replicas to sync"):
+            sync_replica(node=node, table_name=destination_table_name)
+            sync_replica(node=node, table_name=source_table_name)
+
+        with Then("I make sure the two tables have synced columns"):
+            assert get_column_names(
+                node=node, table_name=destination_table_name
+            ) == get_column_names(node=node, table_name=source_table_name), error()
+
         with When("I attach the partition to the second table"):
             alter_table_move_partition_to_table(
                 node=node,
@@ -332,6 +346,7 @@ def move_random_partition_to_random_table(self):
                 path_to_backup=destination_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
+                timeout=30,
             )
 
 
@@ -370,6 +385,7 @@ def move_random_partition_to_random_disk(self):
             disk="DISK",
             exitcode=0,
             no_checks=self.context.ignore_failed_part_moves,
+            timeout=30,
         )
 
 
@@ -491,6 +507,7 @@ def delete_random_rows_lightweight(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("add projection")
 def add_random_projection(self):
+    """Add a random projection to all tables."""
     projection_name = "projection_" + getuid()
 
     with table_schema_lock:
@@ -498,20 +515,23 @@ def add_random_projection(self):
         node = get_random_node_for_table(table_name=table_name)
         column_name = get_random_column_name(node=node, table_name=table_name)
 
-        node.query(
-            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
-            exitcode=0,
-        )
-
-    node.query(
-        f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}", exitcode=0
-    )
+        for table_name in self.context.table_names:
+            node = get_random_node_for_table(table_name=table_name)
+            node.query(
+                f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
+                exitcode=0,
+            )
+            node.query(
+                f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
+                exitcode=0,
+            )
 
 
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("clear projection")
 def clear_random_projection(self):
+    """Clear a random projection on a random part."""
     tables = self.context.table_names.copy()
     random.shuffle(tables)
     with table_schema_lock:
@@ -535,28 +555,31 @@ def clear_random_projection(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("drop projection")
 def drop_random_projection(self):
+    """Delete a random projection from all tables."""
     tables = self.context.table_names.copy()
     random.shuffle(tables)
     with table_schema_lock:
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        projections = get_projections(node=node, table_name=table_name)
+        if len(projections) == 0:
+            return
+
+        projection_name = random.choice(projections)
+
         for table_name in tables:
             node = get_random_node_for_table(table_name=table_name)
-            projections = get_projections(node=node, table_name=table_name)
-            if len(projections) == 0:
-                continue
-
-            projection_name = random.choice(projections)
-
             node.query(
                 f"ALTER TABLE {table_name} DROP PROJECTION {projection_name}",
                 exitcode=0,
             )
-            return
 
 
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("add index")
 def add_random_index(self):
+    """Add a random index to all tables"""
     index_name = "index_" + getuid()
 
     with table_schema_lock:
@@ -564,10 +587,12 @@ def add_random_index(self):
         node = get_random_node_for_table(table_name=table_name)
         column_name = get_random_column_name(node=node, table_name=table_name)
 
-        node.query(
-            f"ALTER TABLE {table_name} ADD index {index_name} {column_name} TYPE bloom_filter",
-            exitcode=0,
-        )
+        for table_name in self.context.table_names:
+            node = get_random_node_for_table(table_name=table_name)
+            node.query(
+                f"ALTER TABLE {table_name} ADD index {index_name} {column_name} TYPE bloom_filter",
+                exitcode=0,
+            )
 
     node.query(f"ALTER TABLE {table_name} MATERIALIZE index {index_name}", exitcode=0)
 
@@ -576,6 +601,7 @@ def add_random_index(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("clear index")
 def clear_random_index(self):
+    """Clear a random index"""
     tables = self.context.table_names.copy()
     random.shuffle(tables)
 
@@ -599,22 +625,22 @@ def clear_random_index(self):
 @Retry(timeout=step_retry_timeout, delay=5)
 @Name("drop index")
 def drop_random_index(self):
-    tables = self.context.table_names.copy()
-    random.shuffle(tables)
+    """Delete a random index to all tables"""
+    table_name = get_random_table_name()
+    node = get_random_node_for_table(table_name=table_name)
+    indexes = get_indexes(node=node, table_name=table_name)
+    if len(indexes) == 0:
+        return
 
-    for table_name in tables:
+    index_name = random.choice(indexes)
+
+    for table_name in self.context.table_names:
         node = get_random_node_for_table(table_name=table_name)
-        indexs = get_indexes(node=node, table_name=table_name)
-        if len(indexs) == 0:
-            continue
-
-        index_name = random.choice(indexs)
 
         node.query(
             f"ALTER TABLE {table_name} DROP index {index_name}",
             exitcode=0,
         )
-        return
 
 
 @TestStep
@@ -679,7 +705,9 @@ def check_consistency(self, tables=None, sync_timeout=None):
             for node in active_nodes:
                 with By(f"querying the row count"):
                     row_counts[node.name] = get_row_count(
-                        node=node, table_name=table_name
+                        node=node,
+                        table_name=table_name,
+                        timeout=60,
                     )
                     column_names[node.name] = get_column_names(
                         node=node, table_name=table_name
@@ -1005,88 +1033,90 @@ def alter_combinations(
         with And(f"I choose {limit} groups of actions"):
             action_groups = action_groups[:limit]
 
-    with Given(f"I create {n_tables} tables with 10 columns and data"):
-        self.context.table_names = []
-        columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(10))
-        for i in range(n_tables):
-            table_name = f"table{i}_{self.context.storage_policy}"
-            replicated_table_cluster(
-                table_name=table_name,
-                storage_policy=self.context.storage_policy,
-                partition_by="toQuarter(key) - 1",
-                columns=columns,
-                ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
-                no_cleanup=True,
-            )
-            self.context.table_names.append(table_name)
-            insert_random(
-                node=self.context.node, table_name=table_name, columns=columns
-            )
-
-    with And("I create 5 random projections and indexes"):
-        for _ in range(5):
-            add_random_projection()
-            add_random_index()
-
-    # To test a single combination, uncomment and edit as needed.
-    # action_groups = [
-    #     [
-    #         delete_replica,
-    #         add_replica,
-    #     ]
-    # ]
-
-    t = time.time()
-    total_combinations = len(action_groups)
-    for i, chosen_actions in enumerate(action_groups):
-        title = f"{i+1}/{total_combinations} " + ",".join(
-            [f"{f.name}" for f in chosen_actions]
-        )
-
-        if network_impairment:
-            net_mode = random.choice(network_impairments)
-            title += "," + net_mode.name
-
-        with Check(title):
-            if network_impairment:
-                with Given("a network impairment"):
-                    impaired_network(network_mode=net_mode)
-
-            with When("I perform a group of actions"):
-                for action in chain(
-                    [insert_to_random, select_count_random], chosen_actions
-                ):
-                    By(
-                        f"I {action.name}",
-                        run=action,
-                        parallel=run_groups_in_parallel,
-                        flags=TE | ERROR_NOT_COUNTED,
-                    )
-
-                for table in self.context.table_names:
-                    By(
-                        f"I OPTIMIZE {table}",
-                        test=optimize_random,
-                        parallel=run_optimize_in_parallel,
-                        flags=TE,
-                    )(table_name=table_name)
-
-                join()
-
-            with Then("I check that the replicas are consistent", flags=TE):
-                check_consistency()
-
-        note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
-
-    with Finally(
-        "I drop each table on each node in case the cluster is in a bad state"
-    ):
-        for node in self.context.ch_nodes:
-            for table in self.context.table_names:
-                When(test=delete_one_replica, parallel=True)(
-                    node=node, table_name=table_name
+    try:
+        with Given(f"I create {n_tables} tables with 20 columns and data"):
+            self.context.table_names = []
+            columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(20))
+            for i in range(n_tables):
+                table_name = f"table{i}_{self.context.storage_policy}"
+                replicated_table_cluster(
+                    table_name=table_name,
+                    storage_policy=self.context.storage_policy,
+                    partition_by="toQuarter(key) - 1",
+                    columns=columns,
+                    ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
+                    no_cleanup=True,
                 )
-        join()
+                self.context.table_names.append(table_name)
+                insert_random(
+                    node=self.context.node, table_name=table_name, columns=columns
+                )
+
+        with And("I create 5 random projections and indexes"):
+            for _ in range(5):
+                add_random_projection()
+                add_random_index()
+
+        # To test a single combination, uncomment and edit as needed.
+        # action_groups = [
+        #     [
+        #         delete_replica,
+        #         add_replica,
+        #     ]
+        # ]
+
+        t = time.time()
+        total_combinations = len(action_groups)
+        for i, chosen_actions in enumerate(action_groups):
+            title = f"{i+1}/{total_combinations} " + ",".join(
+                [f"{f.name}" for f in chosen_actions]
+            )
+
+            if network_impairment:
+                net_mode = random.choice(network_impairments)
+                title += "," + net_mode.name
+
+            with Check(title):
+                if network_impairment:
+                    with Given("a network impairment"):
+                        impaired_network(network_mode=net_mode)
+
+                with When("I perform a group of actions"):
+                    for action in chain(
+                        [insert_to_random, select_count_random], chosen_actions
+                    ):
+                        By(
+                            f"I {action.name}",
+                            run=action,
+                            parallel=run_groups_in_parallel,
+                            flags=TE | ERROR_NOT_COUNTED,
+                        )
+
+                    for table in self.context.table_names:
+                        By(
+                            f"I OPTIMIZE {table}",
+                            test=optimize_random,
+                            parallel=run_optimize_in_parallel,
+                            flags=TE,
+                        )(table_name=table_name)
+
+                    join()
+
+                with Then("I check that the replicas are consistent", flags=TE):
+                    check_consistency()
+
+            note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
+
+    finally:
+        with Finally(
+            "I drop each table on each node in case the cluster is in a bad state"
+        ):
+            for node in self.context.ch_nodes:
+                for table_name in self.context.table_names:
+                    When(test=delete_one_replica, parallel=True)(
+                        node=node, table_name=table_name
+                    )
+            join()
 
 
 @TestScenario
