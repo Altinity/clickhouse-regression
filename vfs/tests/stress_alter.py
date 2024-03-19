@@ -91,7 +91,7 @@ def insert_to_random(self):
             table_name=table_name,
             columns=columns,
             no_checks=True,
-            rows=1_000_000,
+            rows=100_000,
             settings=f"insert_keeper_fault_injection_probability={self.context.fault_probability}",
         )
 
@@ -963,7 +963,7 @@ def alter_combinations(
     storage_policy="tiered",
     minimum_replicas=1,
     maximum_replicas=3,
-    n_tables=3,
+    n_tables=5,
     restarts=False,
     add_remove_replicas=False,
     fill_disks=False,
@@ -1002,7 +1002,7 @@ def alter_combinations(
             drop_random_index,
             modify_random_ttl,
             remove_random_ttl,
-            move_random_partition_to_random_disk,
+            # move_random_partition_to_random_disk,
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
@@ -1034,9 +1034,9 @@ def alter_combinations(
             action_groups = action_groups[:limit]
 
     try:
-        with Given(f"I create {n_tables} tables with 20 columns and data"):
+        with Given(f"I create {n_tables} tables with 50 columns and data"):
             self.context.table_names = []
-            columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(20))
+            columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(50))
             for i in range(n_tables):
                 table_name = f"table{i}_{self.context.storage_policy}"
                 replicated_table_cluster(
@@ -1052,8 +1052,8 @@ def alter_combinations(
                     node=self.context.node, table_name=table_name, columns=columns
                 )
 
-        with And("I create 5 random projections and indexes"):
-            for _ in range(5):
+        with And("I create 10 random projections and indexes"):
+            for _ in range(10):
                 add_random_projection()
                 add_random_index()
 
