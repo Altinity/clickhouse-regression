@@ -728,7 +728,6 @@ class ClickHouseNode(Node):
 
         client = "clickhouse client -n"
         if secure:
-            print(f"{current().context.clickhouse_version}")
             client += (
                 " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
             )
