@@ -791,20 +791,19 @@ def part_move_parallel_with_big_insert(self, iterations=1, number=100):
                     .output.strip()
                 )
                 part = ""
-                while part == "":
-                    for retr in retries(timeout=60):
-                        with retr:
-                            part = (
-                                self.context.cluster.node("clickhouse1")
-                                .query(
-                                    f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
-                                )
-                                .output.strip()
+                for retr in retries(timeout=60):
+                    with retr:
+                        part = (
+                            self.context.cluster.node("clickhouse1")
+                            .query(
+                                f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
                             )
+                            .output.strip()
+                        )
 
-                            assert (
-                                part != ""
-                            ), f"No part with uuid {part_uuid} in system.parts table"
+                        assert (
+                            part != ""
+                        ), f"No part with uuid {part_uuid} in system.parts table"
                 with Given(f"iteration {i}"):
                     When(
                         "I move part from shard 1 to shard 3 and return it",
