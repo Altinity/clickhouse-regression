@@ -45,6 +45,16 @@ ffails = {
         "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything: https://github.com/ClickHouse/ClickHouse/issues/61220",
         check_clickhouse_version(">=24.1"),
     ),
+    "/part moves between shards/deduplication/distributed table": (
+        Skip,
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything: https://github.com/ClickHouse/ClickHouse/issues/61220",
+        check_clickhouse_version(">=24.1"),
+    ),
+    "/part moves between shards/deduplication/distributed table stopped replica": (
+        Skip,
+        "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything: https://github.com/ClickHouse/ClickHouse/issues/61220",
+        check_clickhouse_version(">=24.1"),
+    ),
 }
 
 
