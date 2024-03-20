@@ -270,12 +270,15 @@ def move_part_and_return(
     #     time.sleep(45)
 
     part = ""
-    while part == "":
-        part = (
-            cluster.node(node_name2)
-            .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}'")
-            .output.strip()
-        )
+    for retr in retries(timeout=30):
+        with retr:
+            part = (
+                cluster.node(node_name2)
+                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}'")
+                .output.strip()
+            )
+
+            assert part != "", f"No part with uuid {part_uuid} in system.parts table"
 
     # with Step("Stop step 3"):
     #     time.sleep(45)
@@ -323,12 +326,15 @@ def move_part_and_return_stopped_replica(
         self.context.cluster.node("clickhouse4").start_clickhouse()
 
     part = ""
-    while part == "":
-        part = (
-            self.context.cluster.node(node_name2)
-            .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}'")
-            .output.strip()
-        )
+    for retr in retries(timeout=30):
+        with retr:
+            part = (
+                self.context.cluster.node(node_name2)
+                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}'")
+                .output.strip()
+            )
+
+            assert part != "", f"No part with uuid {part_uuid} in system.parts table"
 
     retry(self.context.cluster.node(node_name2).query, timeout=100, delay=1)(
         f"ALTER TABLE {table_name} MOVE PART '{part}' TO SHARD '/clickhouse/tables/"

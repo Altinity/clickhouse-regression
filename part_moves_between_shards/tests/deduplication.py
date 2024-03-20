@@ -177,14 +177,19 @@ def distributed_table(self):
             )
             for i in range(10):
                 part = ""
-                while part == "":
-                    part = (
-                        self.context.cluster.node("clickhouse1")
-                        .query(
-                            f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                for retr in retries(timeout=30):
+                    with retr:
+                        part = (
+                            self.context.cluster.node("clickhouse1")
+                            .query(
+                                f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                            )
+                            .output.strip()
                         )
-                        .output.strip()
-                    )
+
+                        assert (
+                            part != ""
+                        ), f"No part with uuid {part_uuid} in system.parts table"
                 with Given(f"LOOP STEP {i}"):
                     When(
                         "I move part from shard 1 to shard 3 and return it",
@@ -267,15 +272,19 @@ def distributed_table_stopped_replica(self):
             )
             for i in range(5):
                 part = ""
-                while part == "":
-                    part = (
-                        self.context.cluster.node("clickhouse1")
-                        .query(
-                            f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                for retr in retries(timeout=30):
+                    with retr:
+                        part = (
+                            self.context.cluster.node("clickhouse1")
+                            .query(
+                                f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                            )
+                            .output.strip()
                         )
-                        .output.strip()
-                    )
 
+                        assert (
+                            part != ""
+                        ), f"No part with uuid {part_uuid} in system.parts table"
                 with Given(f"LOOP STEP {i}"):
                     When(
                         "I move part from shard 1 to shard 3 and return it",
