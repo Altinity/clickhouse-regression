@@ -83,7 +83,7 @@ def no_duplication(self):
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=expected_size,
-                tolerance=1500,
+                tolerance=int(expected_size*0.00005),
                 minio_enabled=self.context.minio_enabled,
             )
 

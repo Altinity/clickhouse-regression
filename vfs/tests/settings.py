@@ -129,8 +129,8 @@ def disk_setting(self):
     ):
         size_vfs = create_insert_measure_replicated_table(storage_policy="external_vfs")
 
-    with Then("Data usage should be less than half compared to no vfs"):
-        assert size_vfs <= size_no_vfs // 2, error()
+    with Then("Data usage should be about 1/3 compared to no vfs"):
+        assert size_vfs <= size_no_vfs // 3 + 100, error()
 
     with Given("VFS is enabled for 'external' disk"):
         enable_vfs(disk_names=["external"])
@@ -140,8 +140,8 @@ def disk_setting(self):
     ):
         size_vfs = create_insert_measure_replicated_table(storage_policy="external")
 
-    with Then("Data usage should be less than half compared to no vfs"):
-        assert size_vfs <= size_no_vfs // 2, error()
+    with Then("Data usage should be about 1/3 compared to no vfs"):
+        assert size_vfs <= size_no_vfs // 3 + 200, error()
 
 
 @TestScenario
