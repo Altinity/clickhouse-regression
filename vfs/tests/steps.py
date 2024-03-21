@@ -336,6 +336,7 @@ def get_stable_bucket_size(
     access_key,
     key_id,
     delay=10,
+    timeout=300,
 ):
     """Get the size of an s3 bucket, waiting until the size hasn't change for [delay] seconds."""
 
@@ -347,6 +348,8 @@ def get_stable_bucket_size(
             access_key=access_key,
             key_id=key_id,
         )
+
+    start_time = time.time()
     while True:
         with And(f"Waiting {delay}s"):
             time.sleep(delay)
@@ -362,6 +365,11 @@ def get_stable_bucket_size(
             if size_previous == size:
                 break
         size_previous = size
+
+        with And("Checking timeout"):
+            assert time.time() - start_time <= timeout, error(
+                f"Bucket size did not stabilize in {timeout}s"
+            )
 
     return size
 
