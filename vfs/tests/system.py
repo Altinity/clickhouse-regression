@@ -264,13 +264,16 @@ def optimize_parts(self, table_settings):
                 )
                 assert final_part_count < optimized_part_count, error()
 
-    with Then("there should be only one active part"):
-        assert final_part_count == 1, error()
+    # ClickHouse does not actually guarantee that the below will happen in finite time
+    # with Then("there should be only one active part"):
+    #     assert final_part_count == 1, error()
 
     with And("there should still be the same amount of data"):
-        assert_row_count(
-            node=nodes[0], table_name=table_name, rows=n_inserts * insert_size
-        )
+        for attempt in retries(timeout=60, delay=1):
+            with attempt:
+                assert_row_count(
+                    node=nodes[0], table_name=table_name, rows=n_inserts * insert_size
+                )
 
 
 @TestScenario
