@@ -200,31 +200,44 @@ def disable_vfs_with_vfs_table(self):
 @Requirements(RQ_SRS038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
 def enable_vfs_with_non_vfs_table(self):
     """
-    Check that globally enabling allow_vfs when a non-vfs table exists does not cause data to become inaccessible.
+    Check that enabling allow_vfs when a non-vfs table exists does not cause data to become inaccessible.
     """
 
     node = current().context.node
+    table_name = "my_non_vfs_table"
 
     with Given("VFS is not enabled"):
         check_vfs_state(enabled=False)
 
     with And("I have a table without vfs"):
         replicated_table_cluster(
-            table_name="my_non_vfs_table",
+            table_name=table_name,
             columns="d UInt64",
         )
 
     with And("I insert some data"):
         insert_random(
-            node=node, table_name="my_non_vfs_table", columns="d UInt64", rows=1000000
+            node=node, table_name=table_name, columns="d UInt64", rows=1000000
         )
-        assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
+        assert_row_count(node=node, table_name=table_name, rows=1000000)
 
     with And("I enable allow_object_storage_vfs"):
         enable_vfs()
 
     with Then("the data remains accessible"):
-        assert_row_count(node=node, table_name="my_non_vfs_table", rows=1000000)
+        assert_row_count(node=node, table_name=table_name, rows=1000000)
+
+    with When("I insert some more data"):
+        insert_random(
+            node=node, table_name=table_name, columns="d UInt64", rows=1000000
+        )
+        assert_row_count(node=node, table_name=table_name, rows=2000000)
+
+    with And("I delete some data"):
+        node.query(f"DELETE FROM {table_name} WHERE (d % 4 = 0)")
+
+    with Then("some data remains"):
+        assert get_row_count(node=node, table_name=table_name) > 0, error()
 
 
 @TestOutline(Scenario)
