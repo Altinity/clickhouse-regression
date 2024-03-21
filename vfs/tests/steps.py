@@ -87,7 +87,7 @@ def s3_config(self):
 def check_vfs_state(
     self, node=None, enabled: bool = True, config_file="enable_vfs.xml"
 ):
-    """DEPRECATED assert that vfs is enabled on at least one or on no disks."""
+    """Assert that vfs is enabled on at least one or on no disks in a config file."""
     if node is None:
         node = current().context.node
 
@@ -215,7 +215,7 @@ def insert_random(
     else:
         settings = ""
 
-    node.query(
+    return node.query(
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
         exitcode=0,
         **kwargs,
