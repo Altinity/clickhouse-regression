@@ -15,7 +15,6 @@ from vfs.requirements import *
 xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
-    ":/settings/disable vfs with vfs table/access:": [(Fail, "not supported")],
     ":/alter/move/:": [(Fail, "Fix pending")],
     ":/system/vfs events": [(Fail, "WIP")],
 }

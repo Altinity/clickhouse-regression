@@ -148,7 +148,7 @@ def disk_setting(self):
 @Requirements(RQ_SRS038_DiskObjectStorageVFS_Settings_VFSToggled("1.0"))
 def disable_vfs_with_vfs_table(self):
     """
-    Check that removing global allow_vfs=1 when a vfs table exists does not cause data to become inaccessible.
+    Check that removing allow_vfs=1 from a disk also removes tables using that disk.
     """
     nodes = current().context.ch_nodes
     table_name = "my_replicated_vfs_table"
@@ -179,15 +179,20 @@ def disable_vfs_with_vfs_table(self):
         with When("VFS is no longer enabled"):
             check_vfs_state(node=nodes[0], enabled=False)
 
-        with Then("the data remains accessible"):
-            assert_row_count(node=nodes[0], table_name=table_name, rows=100)
+        with Then("the table is hidden"):
+            nodes[2].query(
+                f"SELECT * FROM {table_name}",
+                message=f"DB::Exception: Table default.{table_name} does not exist",
+            )
 
-        with When("I delete some data"):
-            nodes[2].query(f"DELETE FROM {table_name} WHERE d=40")
+    with Check("try again with VFS"):
+        with Given("I enable allow_vfs"):
+            enable_vfs()
 
-        with Then("Not all data is deleted"):
-            retry(assert_row_count, timeout=5, delay=1)(
-                node=nodes[1], table_name=table_name, rows=99
+        with Then("the data is still not accessible"):
+            nodes[1].query(
+                f"SELECT * FROM {table_name}",
+                message=f"DB::Exception: Table default.{table_name} does not exist",
             )
 
 
