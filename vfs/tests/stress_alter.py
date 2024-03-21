@@ -1002,7 +1002,7 @@ def alter_combinations(
             drop_random_index,
             modify_random_ttl,
             remove_random_ttl,
-            # move_random_partition_to_random_disk,
+            move_random_partition_to_random_disk,
             # move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
