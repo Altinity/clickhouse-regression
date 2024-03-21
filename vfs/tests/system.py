@@ -18,14 +18,16 @@ def stop_zookeeper(self):
     fault_probability = 0
 
     with interrupt_node(random.choice(self.context.zk_nodes)):
-        with Given("a table is created"):
-            _, table_name = replicated_table_cluster(
-                storage_policy="external_vfs",
-            )
+        for attempt in retries(timeout=120, delay=5):
+            with attempt:
+                with Given("a table is created"):
+                    _, table_name = replicated_table_cluster(
+                        storage_policy="external_vfs",
+                    )
 
     with interrupt_node(random.choice(self.context.zk_nodes)):
         with Given("data is inserted"):
-            insert_random(
+            retry(insert_random, timeout=120, delay=5)(
                 node=random.choice(nodes),
                 table_name=table_name,
                 rows=insert_rows,
