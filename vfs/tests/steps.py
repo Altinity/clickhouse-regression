@@ -191,9 +191,12 @@ def replicated_table_cluster(
     finally:
         if not no_cleanup:
             with Finally(f"I drop the table"):
-                node.query(
-                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC"
-                )
+                for attempt in retries(timeout=120, delay=5):
+                    with attempt:
+                        node.query(
+                            f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC",
+                            timeout=60,
+                        )
 
 
 @TestStep(Given)

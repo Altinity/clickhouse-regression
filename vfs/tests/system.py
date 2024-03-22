@@ -15,6 +15,7 @@ from vfs.requirements import *
 def stop_zookeeper(self):
     nodes = self.context.ch_nodes
     insert_rows = 100000
+    n_inserts = 12
     fault_probability = 0
 
     with interrupt_node(random.choice(self.context.zk_nodes)):
@@ -33,12 +34,26 @@ def stop_zookeeper(self):
                 rows=insert_rows,
                 settings=f"insert_keeper_fault_injection_probability={fault_probability}",
             )
+            for _ in range(n_inserts - 1):
+                insert_random(
+                    node=random.choice(nodes),
+                    table_name=table_name,
+                    rows=insert_rows,
+                    settings=f"insert_keeper_fault_injection_probability={fault_probability}",
+                )
+
+    with interrupt_node(self.context.zk_nodes[0]):
+        with interrupt_node(self.context.zk_nodes[1]):
+            with interrupt_node(self.context.zk_nodes[2]):
+                with Given("I trigger merges"):
+                    for node in nodes:
+                        optimize(node=node, table_name=table_name, final=False)
 
     with interrupt_node(random.choice(self.context.zk_nodes)):
         with Then("I check that tables are consistent"):
             for node in nodes:
                 retry(assert_row_count, timeout=120, delay=5)(
-                    node=node, table_name=table_name, rows=insert_rows
+                    node=node, table_name=table_name, rows=insert_rows * n_inserts
                 )
 
 
