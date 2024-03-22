@@ -1073,20 +1073,23 @@ class Cluster(object):
                     "I download ClickHouse server binary using wget",
                     description=f"{self.clickhouse_binary_path}",
                 ):
-                    filename = f"{short_hash(self.clickhouse_binary_path)}-{self.clickhouse_binary_path.rsplit('/', 1)[-1]}"
-                    if not os.path.exists(f"./{filename}"):
+                    file_name = f"{short_hash(self.clickhouse_binary_path)}-{self.clickhouse_binary_path.rsplit('/', 1)[-1]}"
+                    file_dir = f"{current_dir()}/../binaries/"
+                    os.makedirs(file_dir, exist_ok=True)
+                    file_path = file_dir + file_name
+                    if not os.path.exists(file_path):
                         with Shell() as bash:
                             bash.timeout = 300
                             try:
                                 cmd = bash(
-                                    f'wget --progress dot:giga "{self.clickhouse_binary_path}" -O {filename}'
+                                    f'wget --progress dot:giga "{self.clickhouse_binary_path}" -O {file_path}'
                                 )
                                 assert cmd.exitcode == 0
                             except BaseException:
-                                if os.path.exists(filename):
-                                    os.remove(filename)
+                                if os.path.exists(file_path):
+                                    os.remove(file_path)
                                 raise
-                    self.clickhouse_binary_path = f"./{filename}"
+                    self.clickhouse_binary_path = file_path
 
             elif self.clickhouse_binary_path.startswith("docker://"):
                 if current().context.clickhouse_version is None:
@@ -1134,7 +1137,7 @@ class Cluster(object):
                                 f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse-odbc-bridge -O > "{deb_binary_dir}/clickhouse-odbc-bridge"'
                             )
                             bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
-                    self.clickhouse_binary_path = f"./{deb_binary_dir}/clickhouse"
+                    self.clickhouse_binary_path = f"{deb_binary_dir}/clickhouse"
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
