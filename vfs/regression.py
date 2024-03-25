@@ -16,7 +16,9 @@ xfails = {
     ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
     ":/replica/command combinations/*": [(Error, "some combos time out")],
     ":/alter/move/:": [(Fail, "Fix pending")],
-    ":/system/vfs events": [(Fail, "WIP")],
+    ":/system/vfs events/VFSGcRunsException": [
+        (Fail, "TODO: find method to generate this")
+    ],
 }
 
 ffails = {
