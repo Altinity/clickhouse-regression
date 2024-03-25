@@ -12,7 +12,7 @@ from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, check_current_cpu
 
 xfails = {
-    "/memory/memory leak/*": [(Fail, "should be fixed")],
+    "/memory/memory leak/*": [(Fail, "should be fixed", check_clickhouse_version("<24"))],
 }
 
 
