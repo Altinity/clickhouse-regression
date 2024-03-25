@@ -169,7 +169,7 @@ def check_create_and_drop_tables(
     number_of_workers=20,
     number_of_tables=15000,
     node=None,
-    timeout=3600,
+    timeout=600,
 ):
     """Test memory leak when we create and drop many tables."""
     if node is None:
