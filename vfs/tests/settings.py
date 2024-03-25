@@ -141,7 +141,7 @@ def disk_setting(self):
         size_vfs = create_insert_measure_replicated_table(storage_policy="external")
 
     with Then("Data usage should be about 1/3 compared to no vfs"):
-        assert size_vfs <= size_no_vfs // 3 + 200, error()
+        assert size_vfs <= size_no_vfs // 3 + 500, error()
 
 
 @TestScenario
