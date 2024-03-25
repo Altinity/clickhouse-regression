@@ -223,6 +223,9 @@ def create_one_replica(
     columns=None,
     engine="ReplicatedMergeTree",
     order_by="tuple()",
+    config="graphite_rollup_example",
+    sign="sign",
+    version="a",
 ):
     """
     Create a simple replicated table on the given node.
@@ -245,7 +248,13 @@ def create_one_replica(
     if replica_path_suffix is None:
         replica_path_suffix = table_name
 
-    if "Replicated" in engine:
+    if "ReplicatedGraphiteMergeTree" in engine:
+        engine = f"{engine}('/clickhouse/tables/{replica_path_suffix}', '{replica_name}', '{config}')"
+    elif "ReplicatedVersionedCollapsingMergeTree" in engine:
+        engine = f"{engine}('/clickhouse/tables/{replica_path_suffix}', '{replica_name}', {sign}, {version})"
+    elif "ReplicatedCollapsingMergeTree" in engine:
+        engine = f"{engine}('/clickhouse/tables/{replica_path_suffix}', '{replica_name}', {sign})"
+    elif "Replicated" in engine:
         engine = (
             f"{engine}('/clickhouse/tables/{replica_path_suffix}', '{replica_name}')"
         )
@@ -350,10 +359,12 @@ def create_replica_on_third_node(
 
 @TestStep
 def add_remove_replica_on_first_node(
-    self, table_name, active_replicas, delay_before_delete=None
+    self, table_name, active_replicas, engine, delay_before_delete=None
 ):
     "Create replica on first node, wait less that 2 seconds and delete replica from the node."
-    create_replica_on_first_node(table_name=table_name, active_replicas=active_replicas)
+    create_replica_on_first_node(
+        table_name=table_name, active_replicas=active_replicas, engine=engine
+    )
 
     if delay_before_delete is None:
         delay_before_delete = random.random() * 2
@@ -369,11 +380,11 @@ def add_remove_replica_on_first_node(
 
 @TestStep
 def add_remove_replica_on_second_node(
-    self, table_name, active_replicas, delay_before_delete=None
+    self, table_name, active_replicas, engine, delay_before_delete=None
 ):
     "Create replica on second node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_second_node(
-        table_name=table_name, active_replicas=active_replicas
+        table_name=table_name, active_replicas=active_replicas, engine=engine
     )
 
     if delay_before_delete is None:
@@ -390,12 +401,13 @@ def add_remove_replica_on_second_node(
 
 @TestStep
 def add_remove_replica_on_third_node(
-    self, table_name, active_replicas, delay_before_delete=None
+    self, table_name, active_replicas, engine, delay_before_delete=None
 ):
     "Create replica on third node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_third_node(
         table_name=table_name,
         active_replicas=active_replicas,
+        engine=engine,
     )
 
     if delay_before_delete is None:
@@ -456,7 +468,12 @@ def attach_partition_from(self, source_table_name, destination_table_name):
 
 @TestStep
 def attach_partition_from_on_node(
-    self, source_table_name, destination_table_name, node
+    self,
+    source_table_name,
+    destination_table_name,
+    node,
+    source_table_engine,
+    destination_table_engine,
 ):
     """Attach partition from source table to the destination table
     if source table exists on specified node."""
@@ -467,12 +484,23 @@ def attach_partition_from_on_node(
 
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                if (
+                    source_table_engine == "ReplicatedReplacingMergeTree"
+                    or source_table_engine == "ReplicatedCollapsingMergeTree"
+                    or source_table_engine == "ReplicatedGraphiteMergeTree"
+                ):
+                    values = [0, 1]
+                    value = 1
+                else:
+                    values = [0, 10]
+                    value = 10
+
                 if attempt.kwargs["flags"] & LAST_RETRY:
-                    assert int(num_rows.output) in [0, 10], error()
+                    assert int(num_rows.output) in values, error()
                     if int(num_rows.output) == 0:
                         return False
                 else:
-                    assert int(num_rows.output) == 10, error()
+                    assert int(num_rows.output) == value, error()
 
         return True
 
