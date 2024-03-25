@@ -11,9 +11,14 @@ from helpers.argparser import argparser
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, check_current_cpu
 
+xfails = {
+    "/memory/memory leak/*": [(Fail, "should be fixed")],
+}
+
 
 @TestModule
 @ArgumentParser(argparser)
+@XFails(xfails)
 @Name("memory")
 def regression(
     self,
