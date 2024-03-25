@@ -7,7 +7,7 @@ from testflows.combinatorics import CoveringArray
 
 from vfs.tests.steps import *
 from vfs.requirements import *
-from vfs.tests.stress_alter import optimize_random, check_consistency
+from alter_stress.tests.stress_alter import optimize_random, check_consistency
 from s3.tests.common import invalid_s3_storage_config
 
 

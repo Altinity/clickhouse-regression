@@ -11,7 +11,7 @@ from testflows.combinatorics import combinations
 from helpers.alter import *
 from vfs.tests.steps import *
 from vfs.requirements import *
-from vfs.tests.tc_netem import *
+from alter_stress.tests.tc_netem import *
 
 table_schema_lock = RLock()
 
@@ -1003,7 +1003,7 @@ def alter_combinations(
             modify_random_ttl,
             remove_random_ttl,
             move_random_partition_to_random_disk,
-            # move_random_partition_to_random_table,
+            move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
         ]
@@ -1196,7 +1196,7 @@ def full_disk(self):
         with Given("disk space is restricted"):
             cluster.command(
                 None,
-                f"sudo {current_dir()}/../vfs_env/create_fixed_volumes.sh",
+                f"sudo {current_dir()}/../create_fixed_volumes.sh",
                 no_checks=True,
                 timeout=5,
             )
@@ -1217,7 +1217,7 @@ def full_disk(self):
         with Finally("disk space is de-restricted"):
             cluster.command(
                 None,
-                f"sudo {current_dir()}/../vfs_env/destroy_fixed_volumes.sh",
+                f"sudo {current_dir()}/../destroy_fixed_volumes.sh",
                 no_checks=True,
                 timeout=5,
             )

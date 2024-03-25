@@ -10,32 +10,11 @@ from helpers.common import check_clickhouse_version
 from s3.regression import argparser
 from s3.tests.common import start_minio
 
-from vfs.requirements import *
+xfails={"*move partition to table:": [(Fail, "Needs investigation")]}
 
-xfails = {
-    ":/settings/incompatible with zero copy": [(Fail, "not implemented yet")],
-    ":/replica/command combinations/*": [(Error, "some combos time out")],
-    ":/alter/move/:": [(Fail, "Fix pending")],
-    ":/system/vfs events/VFSGcRunsException": [
-        (Fail, "TODO: find method to generate this")
-    ],
-}
-
-ffails = {
-    "*": (
-        Skip,
-        "vfs not supported on < 24.2 and requires --allow-vfs flag",
-        lambda test: not test.context.allow_vfs
-        or check_clickhouse_version("<24.2")(test),
-    ),
-    ":/parallel replica": (Skip, "WIP"),
-}
-
-# RQ_SRS038_DiskObjectStorageVFS_Providers_Configuration
-
+ffails={}
 
 @TestModule
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_MinIO("1.0"))
 def minio(
     self,
     uri,
@@ -79,24 +58,11 @@ def minio(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
         self.context.uri = uri_bucket_file
 
-    Feature(run=load("vfs.tests.settings", "feature"))
-    Feature(run=load("vfs.tests.table", "feature"))
-    Feature(run=load("vfs.tests.ttl", "feature"))
-    Feature(run=load("vfs.tests.system", "feature"))
-    Feature(run=load("vfs.tests.migration", "feature"))
+    Feature(run=load("vfs.tests.stress_alter", "feature"))
 
-    Feature(run=load("vfs.tests.alter", "feature"))
-    Feature(run=load("vfs.tests.replica", "feature"))
-    # Feature(run=load("vfs.tests.parallel_replica", "feature"))
-    Feature(run=load("vfs.tests.create_insert", "feature"))
-    Feature(run=load("vfs.tests.performance", "feature"))
-
-    if self.context.stress:
-        Feature(run=load("vfs.tests.stress_insert", "feature"))
 
 
 @TestModule
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_AWS("1.0"))
 def aws_s3(
     self,
     key_id,
@@ -157,24 +123,11 @@ def aws_s3(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
-    Feature(run=load("vfs.tests.settings", "feature"))
-    Feature(run=load("vfs.tests.table", "feature"))
-    Feature(run=load("vfs.tests.ttl", "feature"))
-    Feature(run=load("vfs.tests.system", "feature"))
-    Feature(run=load("vfs.tests.migration", "feature"))
+    Feature(run=load("vfs.tests.stress_alter", "feature"))
 
-    Feature(run=load("vfs.tests.alter", "feature"))
-    Feature(run=load("vfs.tests.replica", "feature"))
-    # Feature(run=load("vfs.tests.parallel_replica", "feature"))
-    Feature(run=load("vfs.tests.create_insert", "feature"))
-    Feature(run=load("vfs.tests.performance", "feature"))
-
-    if self.context.stress:
-        Feature(run=load("vfs.tests.stress_insert", "feature"))
 
 
 @TestModule
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Providers_GCS("1.0"))
 def gcs(
     self,
     uri,
@@ -221,26 +174,14 @@ def gcs(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
-    Feature(run=load("vfs.tests.settings", "feature"))
-    Feature(run=load("vfs.tests.table", "feature"))
-    Feature(run=load("vfs.tests.ttl", "feature"))
-    Feature(run=load("vfs.tests.system", "feature"))
-    Feature(run=load("vfs.tests.migration", "feature"))
+    Feature(run=load("vfs.tests.stress_alter", "feature"))
 
-    Feature(run=load("vfs.tests.alter", "feature"))
-    Feature(run=load("vfs.tests.replica", "feature"))
-    # Feature(run=load("vfs.tests.parallel_replica", "feature"))
-    Feature(run=load("vfs.tests.create_insert", "feature"))
-    Feature(run=load("vfs.tests.performance", "feature"))
 
-    if self.context.stress:
-        Feature(run=load("vfs.tests.stress_insert", "feature"))
 
 
 @TestModule
-@Name("vfs")
+@Name("stress")
 @ArgumentParser(argparser)
-@Specifications(SRS038_ClickHouse_Disk_Object_Storage_VFS)
 @XFails(xfails)
 @FFails(ffails)
 def regression(
@@ -266,10 +207,6 @@ def regression(
     """Disk Object Storage VFS regression."""
 
     self.context.clickhouse_version = clickhouse_version
-    note(f"Clickhouse version {clickhouse_version}")
-    if not allow_vfs or check_clickhouse_version("<24.2")(self):
-        skip("vfs not supported on < 24.2 and requires --allow-vfs flag")
-        return
 
     self.context.stress = stress
     self.context.allow_vfs = allow_vfs
