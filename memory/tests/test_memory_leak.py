@@ -5,7 +5,7 @@ from collections import namedtuple
 
 
 @TestStep(Given)
-def create_and_drop_tables(self, number_of_tables=1000):
+def create_and_drop_tables_old(self, number_of_tables=1000):
     """Create and drop tables."""
     node = self.context.node
     for _ in range(number_of_tables):
@@ -16,6 +16,24 @@ def create_and_drop_tables(self, number_of_tables=1000):
             f"CREATE TABLE {table_name} (x UInt8) ENGINE = MergeTree ORDER BY tuple()"
         )
         node.query(f"DROP TABLE {table_name} SYNC")
+
+
+@TestStep(Given)
+def create_and_drop_tables(self, number_of_tables=1000):
+    """Create and drop tables."""
+    command = ""
+    node = self.context.node
+
+    for _ in range(number_of_tables):
+        table_name = f"test_table_{getuid()}"
+        command += (
+            f"DROP TABLE IF EXISTS {table_name}; "
+            + f"CREATE TABLE {table_name} (x UInt8) ENGINE = MergeTree ORDER BY tuple(); "
+            + f"DROP TABLE {table_name} SYNC; "
+            + "SELECT 1; "
+        )
+
+    node.query(command)
 
 
 @TestStep(Given)
