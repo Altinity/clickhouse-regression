@@ -459,21 +459,6 @@ ffails = {
         "need to investigate (something with zero representation)",
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/finalizeAggregation/groupArraySorted_finalizeAggregation_Merge/*": (
-        Skip,
-        "https://github.com/ClickHouse/ClickHouse/issues/61186",
-        check_clickhouse_version(">=24.2"),
-    ),
-    "/aggregate functions/finalizeAggregation/groupArraySorted_finalizeAggregation_Merge/*": (
-        Skip,
-        "https://github.com/ClickHouse/ClickHouse/issues/61186",
-        check_clickhouse_version(">=24.2"),
-    ),
-    "/aggregate functions/merge/groupArraySortedMerge/*": (
-        Skip,
-        "https://github.com/ClickHouse/ClickHouse/issues/61186",
-        check_clickhouse_version(">=24.2"),
-    ),
 }
 
 
