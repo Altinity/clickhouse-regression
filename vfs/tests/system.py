@@ -332,10 +332,13 @@ def vfs_events(self):
     with And("I wait for the parts to merge"):
         optimize(node=node, table_name=table_name, final=True)
 
-    with Then("I check that all vfs events exist"):
+    with When("I query for vfs events"):
         r = node.query("SELECT event FROM system.events WHERE event like 'VFS%'")
-        for event in vfs_events:
-            assert event in r.output, error()
+
+    for event in vfs_events:
+        with Check(event):
+            with Then("I check that the event exists"):
+                assert event in r.output, error()
 
 
 @TestScenario
