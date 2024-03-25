@@ -829,6 +829,11 @@ def selectdatewithfilter(self):
 )
 def unsupportednull(self):
     """Checking that ClickHouse outputs an error when trying to import a Parquet file with 'null' datatype."""
+    if check_clickhouse_version("<24.2")(self):
+        message, exitcode = ("DB::Exception: Unsupported Parquet type", 50)
+    else:
+        message, exitcode = ("DB::Exception: Unsupported Parquet type", 124)
+
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -843,8 +848,8 @@ def unsupportednull(self):
                 ENGINE = MergeTree
                 ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
                 """,
-                message="DB::Exception: Unsupported Parquet type",
-                exitcode=50,
+                message=message,
+                exitcode=exitcode,
             )
 
 
@@ -857,7 +862,9 @@ def string_int_list_inconsistent_offset_multiple_batches(self):
             "datatypes", "string_int_list_inconsistent_offset_multiple_batches.parquet"
         )
 
-    import_export(snapshot_name="inconsistent_offsets", import_file=import_file, limit=1)
+    import_export(
+        snapshot_name="inconsistent_offsets", import_file=import_file, limit=1
+    )
 
 
 @TestFeature
