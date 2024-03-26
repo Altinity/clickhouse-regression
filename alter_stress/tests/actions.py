@@ -3,6 +3,7 @@ import random
 import json
 import time
 from threading import RLock
+from itertools import chain
 
 from testflows.core import *
 from testflows.combinatorics import combinations
