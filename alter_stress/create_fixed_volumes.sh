@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR=$(dirname "$0")
-INSTANCES_DIR="$SCRIPT_DIR/../_instances"
+INSTANCES_DIR="$SCRIPT_DIR/_instances"
 
 CLICKHOUSE_FOLDERS=("database" "logs")
 ZOOKEEPER_FOLDERS=("data" "datalog")

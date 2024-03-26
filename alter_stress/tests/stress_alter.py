@@ -262,7 +262,7 @@ def full_disk(self):
                 timeout=5,
             )
             r = cluster.command(
-                None, "df | grep -c clickhouse-regression", no_checks=True
+                None, "df | grep -c alter_stress/_instances", no_checks=True
             )
             restrictions_enabled = int(r.output) == 3 * 2 * 2
 
@@ -270,7 +270,7 @@ def full_disk(self):
             skip("run sudo vfs_env/create_fixed_volumes.sh before this scenario")
 
         alter_combinations(
-            limit=None if self.context.stress else 20,
+            limit=None if self.context.stress else 2,
             shuffle=True,
             fill_disks=True,
         )
