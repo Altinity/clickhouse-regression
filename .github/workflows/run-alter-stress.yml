@@ -1,4 +1,4 @@
-name: Run CI/CD regression tests
+name: Run CI/CD alter stress tests
 run-name: ${{ inputs.custom_run_name || format('{0} is running regression tests', github.actor) }}
 on:
   workflow_dispatch:
