@@ -257,7 +257,7 @@ def full_disk(self):
         with Given("disk space is restricted"):
             cluster.command(
                 None,
-                f"sudo {current_dir()}/../create_fixed_volumes.sh",
+                f"sudo {current_dir()}/../create_fixed_volumes.sh 100M",
                 no_checks=True,
                 timeout=5,
             )
@@ -270,7 +270,7 @@ def full_disk(self):
             skip("run sudo vfs_env/create_fixed_volumes.sh before this scenario")
 
         alter_combinations(
-            limit=None if self.context.stress else 2,
+            limit=None if self.context.stress else 20,
             shuffle=True,
             fill_disks=True,
         )

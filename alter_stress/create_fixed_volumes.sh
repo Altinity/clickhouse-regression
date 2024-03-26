@@ -6,8 +6,8 @@ INSTANCES_DIR="$SCRIPT_DIR/../_instances"
 CLICKHOUSE_FOLDERS=("database" "logs")
 ZOOKEEPER_FOLDERS=("data" "datalog")
 
-CH_VOLUME_SIZE="100M"
-ZK_VOLUME_SIZE="100M"
+CH_VOLUME_SIZE="$1"
+ZK_VOLUME_SIZE="$1"
 
 if [ "$(id -u)" -ne "0" ]; then
     echo "This script must be run as root."
