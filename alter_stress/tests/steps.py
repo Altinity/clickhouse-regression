@@ -7,7 +7,46 @@ from platform import processor
 from testflows.core import *
 
 from helpers.alter import *
+from s3.tests.common import s3_storage
 
+
+@TestStep(Given)
+def s3_config(self):
+    """Set up disks and policies for vfs tests."""
+    with Given("I have two S3 disks configured"):
+        disks = {
+            "external": {
+                "type": "s3",
+                "endpoint": f"{self.context.uri}object-storage/storage/",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+            },
+            "external_tiered": {
+                "type": "s3",
+                "endpoint": f"{self.context.uri}object-storage/tiered/",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+            },
+        }
+
+    with And("""I have a storage policy configured to use the S3 disk"""):
+        policies = {
+            "external": {"volumes": {"external": {"disk": "external"}}},
+            "tiered": {
+                "volumes": {
+                    "default": {"disk": "external"},
+                    "external": {"disk": "external_tiered"},
+                }
+            },
+        }
+
+    return s3_storage(
+        disks=disks,
+        policies=policies,
+        restart=True,
+        timeout=30,
+        config_file="vfs_storage.xml",
+    )
 
 @TestStep
 def get_nodes_for_table(self, nodes, table_name):

@@ -7,8 +7,8 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
-from alter_stress.tests.steps import *
 from alter_stress.tests.actions import *
+from alter_stress.tests.steps import *
 
 
 @TestOutline
@@ -125,13 +125,6 @@ def alter_combinations(
         #         add_replica,
         #     ]
         # ]
-        action_groups = [
-            [
-                drop_random_part,
-                delete_random_rows,
-                move_random_partition_to_random_table,
-            ]
-        ] * 5
 
         t = time.time()
         total_combinations = len(action_groups)
@@ -294,6 +287,9 @@ def full_disk(self):
 @TestFeature
 def vfs(self):
     """Run test scenarios with vfs."""
+
+    if check_clickhouse_version("<24.2")(self):
+        skip("vfs not supported on ClickHouse < 24.2 and requires --allow-vfs flag")
 
     with Given("VFS is enabled"):
         enable_vfs(disk_names=["external", "external_tiered"])
