@@ -298,8 +298,7 @@ def enable_vfs(
     Add the config file for object storage vfs for the disks in `disk_names`.
     Default disk names are ["external"].
     """
-
-    if check_clickhouse_version("<24.1")(self):
+    if check_clickhouse_version("<24.2")(self):
         skip("vfs not supported on ClickHouse < 24.2 and requires --allow-vfs flag")
 
     if disk_names is None:
