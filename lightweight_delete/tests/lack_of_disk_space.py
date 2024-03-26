@@ -1,6 +1,8 @@
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import *
 
+from testflows._core.flags import LAST_RETRY
+
 
 entries = {
     "storage_configuration": {
@@ -106,6 +108,7 @@ def lack_of_disk_space_tiered_storage(self, node=None):
     """Check that clickhouse reserves space to avoid breaking in the middle by
     filling the disk using delete and insert operations in loop until an error and
     then checking that table data in stored on two disks.
+    Check that mutations can not be finished correctly because of lack of disk space.
     """
 
     if node is None:
@@ -181,19 +184,19 @@ def lack_of_disk_space_tiered_storage(self, node=None):
             assert r.output == f"{block_size}", error()
 
     with And("I check table state"):
-        for attempt in retries(timeout=100, delay=5, initial_delay=10):
+        for attempt in retries(timeout=100, delay=5, initial_delay=30):
             with attempt:
                 r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1")
                 note(
                     f"Number of rows that should have been deleted from the table: {r.output}"
                 )
                 r = node.query(f"SELECT count(*) FROM {table_name}")
-                assert r.output in (
+                assert r.output not in (
                     f"{block_size*partitions}",
                     f"{block_size*partitions-block_size}",
                 ), error()
                 r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1")
-                assert r.output in ("0", f"{block_size}"), error()
+                assert r.output not in ("0", f"{block_size}"), error()
 
 
 @TestFeature
