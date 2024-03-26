@@ -10,9 +10,17 @@ from helpers.common import check_clickhouse_version
 from s3.regression import argparser
 from s3.tests.common import start_minio
 
-xfails={"*move partition to table:": [(Fail, "Needs investigation")]}
+xfails = {
+    "/stress/minio/alter/:/:/:move partition to tab:": [
+        (Fail, "Needs investigation"),
+        (Error, "Needs investigation"),
+    ]
+}
 
-ffails={}
+ffails = {
+    # "/stress/minio/alter/:/:/:move partition to tab:": (XFail, "Needs investigation")
+}
+
 
 @TestModule
 def minio(
@@ -58,8 +66,7 @@ def minio(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
         self.context.uri = uri_bucket_file
 
-    Feature(run=load("vfs.tests.stress_alter", "feature"))
-
+    Feature(run=load("alter_stress.tests.stress_alter", "feature"))
 
 
 @TestModule
@@ -123,8 +130,7 @@ def aws_s3(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
-    Feature(run=load("vfs.tests.stress_alter", "feature"))
-
+    Feature(run=load("alter_stress.tests.stress_alter", "feature"))
 
 
 @TestModule
@@ -174,9 +180,7 @@ def gcs(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
-    Feature(run=load("vfs.tests.stress_alter", "feature"))
-
-
+    Feature(run=load("alter_stress.tests.stress_alter", "feature"))
 
 
 @TestModule

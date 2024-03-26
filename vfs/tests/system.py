@@ -3,6 +3,8 @@ import random
 
 from testflows.core import *
 
+from alter_stress.tests.steps import interrupt_network, interrupt_node
+
 from vfs.tests.steps import *
 from vfs.requirements import *
 
@@ -326,7 +328,7 @@ def vfs_events(self):
 
     with And("I disable the network to trigger exceptions"):
         cluster = self.context.cluster
-        with interrupt_network(cluster, node):
+        with interrupt_network(cluster, node, 'vfs'):
             time.sleep(2)
 
     with And("I wait for the parts to merge"):
