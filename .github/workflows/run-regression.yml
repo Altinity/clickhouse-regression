@@ -1,6 +1,6 @@
 name: Run CI/CD regression tests
 #run-name: ${{ inputs.custom_run_name || format('{0} is running regression tests', github.actor) }}
-run-name: ${{ inputs.custom_run_name || format('{0} on suite {1} x86', inputs.version, inputs.suite) }}
+run-name: ${{ inputs.custom_run_name || format('{0} | {1} | x86', inputs.version, inputs.suite) }}
 on:
   workflow_dispatch:
     inputs:
