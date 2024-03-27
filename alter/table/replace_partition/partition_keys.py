@@ -8,7 +8,7 @@ from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, check_clickhouse_version
 
 
-def get_exitcode_and_message(source_partition_key, destination_partition_key):
+def get_exitcode_and_message(self, source_partition_key, destination_partition_key):
     """Get exitcode and message for different partition keys."""
     one_column_keys = [
         "a",
@@ -83,7 +83,7 @@ def get_exitcode_and_message(source_partition_key, destination_partition_key):
         exitcode = 248
         message = "DB::Exception: Wrong number of fields"
     else:
-        if check_clickhouse_version(">=24.3"):
+        if check_clickhouse_version(">=24.3")(self):
             exitcode = 36
             message = "DB::Exception: Cannot replace partition"
         else:
@@ -131,7 +131,7 @@ def check_replace_partition(self, source_partition_key, destination_partition_ke
             exitcode, message = None, None
         else:
             exitcode, message = get_exitcode_and_message(
-                source_partition_key, destination_partition_key
+                self, source_partition_key, destination_partition_key
             )
         partition = random.choice(partition_ids)
         node.query(
