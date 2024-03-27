@@ -4,11 +4,13 @@ import json
 import time
 from threading import RLock
 from itertools import chain
+import os
 
 from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
+from helpers.common import KeyWithAttributes, create_xml_config_content, add_config
 from vfs.tests.steps import *
 from alter_stress.tests.tc_netem import *
 from alter_stress.tests.steps import *
@@ -836,10 +838,15 @@ def impaired_network(self, network_mode):
         network_mode(node=node)
 
 
-@TestStep
+@TestStep(When)
 def fill_clickhouse_disks(self):
+    """Force clickhouse to run on a full disk."""
+
     node = random.choice(self.context.ch_nodes)
-    clickhouse_disk_mounts = ["/var/log/clickhouse-server", "/var/lib/clickhouse"]
+    clickhouse_disk_mounts = [
+        "/var/log/clickhouse-server-limited",
+        "/var/lib/clickhouse-limited",
+    ]
     delay = random.random() * 5 + 1
     file_name = "file.dat"
 
@@ -848,13 +855,16 @@ def fill_clickhouse_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
+                assert disk_size_k < 100e6, error(
+                    "Disk does not appear to be restricted!"
+                )
 
             with And(f"I create a file to fill {disk_mount} on {node.name}"):
                 node.command(
                     f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
                     no_checks=True,
                 )
-
+        pause(f"Check disk usage of {node.name}")
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -867,8 +877,98 @@ def fill_clickhouse_disks(self):
             node.restart_clickhouse(safe=False)
 
 
+@TestStep(Given)
+def clickhouse_limited_disk_config(self, node):
+    """Install a config file overriding clickhouse storage locations"""
+
+    config_override = {
+        "logger": {
+            KeyWithAttributes(
+                "log", {"replace": "replace"}
+            ): "/var/log/clickhouse-server-limited/clickhouse-server.log",
+            KeyWithAttributes(
+                "errorlog", {"replace": "replace"}
+            ): "/var/log/clickhouse-server-limited/clickhouse-server.err.log",
+        },
+        KeyWithAttributes(
+            "path", {"replace": "replace"}
+        ): "/var/lib/clickhouse-limited/",
+        KeyWithAttributes(
+            "tmp_path", {"replace": "replace"}
+        ): "/var/lib/clickhouse-limited/tmp/",
+        KeyWithAttributes(
+            "user_files_path", {"replace": "replace"}
+        ): "/var/lib/clickhouse-limited/user_files/",
+        KeyWithAttributes(
+            "access_control_path", {"replace": "replace"}
+        ): "/var/lib/clickhouse-limited/access/",
+        "user_directories": {
+            "local_directory": {
+                KeyWithAttributes(
+                    "path", {"replace": "replace"}
+                ): "/var/lib/clickhouse-limited/access/"
+            },
+        },
+    }
+
+    config = create_xml_config_content(
+        entries=config_override,
+        config_file="override_data_dir.xml",
+    )
+
+    return add_config(
+        config=config,
+        restart=False,
+        node=node,
+        check_preprocessed=False,
+    )
+
+
+@TestStep(Given)
+def limit_clickhouse_disks(self, node):
+    """
+    Restart clickhouse using small disks.
+    """
+
+    migrate_dirs = {
+        "/var/lib/clickhouse": "/var/lib/clickhouse-limited",
+        "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
+    }
+
+    try:
+        with Given("I stop clickhouse"):
+            node.stop_clickhouse()
+
+        with And("I move clickhouse files to small disks"):
+            node.command("apt update && apt install rsync -y")
+
+            for normal_dir, limited_dir in migrate_dirs.items():
+                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
+
+        with And("I write an override config for clickhouse"):
+            clickhouse_limited_disk_config(node=node)
+
+        with And("I restart clickhouse on those disks"):
+            node.start_clickhouse(log_dir="/var/log/clickhouse-server-limited")
+
+        yield
+
+    finally:
+        with Finally("I stop clickhouse"):
+            node.stop_clickhouse()
+
+        with And("I move clickhouse files from the small disks"):
+            for normal_dir, limited_dir in migrate_dirs.items():
+                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
+
+        with And("I restart clickhouse on those disks"):
+            node.start_clickhouse()
+
+
 @TestStep
 def fill_zookeeper_disks(self):
+    """Force clickhouse to run on a full disk."""
+
     node = random.choice(self.context.zk_nodes)
     zookeeper_disk_mounts = ["/data", "/datalog"]
     delay = random.random() * 5 + 1
@@ -879,6 +979,9 @@ def fill_zookeeper_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
+                assert disk_size_k < 100e6, error(
+                    "Disk does not appear to be restricted!"
+                )
 
             with And(f"I create a file to fill {disk_mount} on {node.name}"):
 
