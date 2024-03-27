@@ -260,7 +260,7 @@ def full_disk(self):
             limit_clickhouse_disks(node=node)
 
     alter_combinations(
-        limit=None if self.context.stress else 5,
+        limit=None if self.context.stress else 20,
         shuffle=True,
         fill_disks=True,
         restarts=False,

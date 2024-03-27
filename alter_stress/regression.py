@@ -18,7 +18,10 @@ xfails = {
 }
 
 ffails = {
-    "/stress/minio/alter/:/:/:move partition to tab:": (XFail, "Times out, needs investigation")
+    "/stress/minio/alter/:/:/:move partition to tab:": (
+        XFail,
+        "Times out, needs investigation",
+    )
 }
 
 
