@@ -11,8 +11,8 @@ on:
       version:
         description: "Expected version. Example: 23.3.1.64"
         type: string
-      subset:
-        description: "Stress subset to run (default: safe)"
+      scenario:
+        description: "Stress scenario to run (default: safe)"
         type: choice
         options:
           - safe
@@ -88,7 +88,7 @@ env:
     --log raw.log ${{ inputs.extra_args }}
     --stress
     --allow-vfs
-    --only ":/alter/${{ inputs.storage_fs }}/${{ inputs.subset }}*"
+    --only ":/alter/${{ inputs.storage_fs }}/${{ inputs.scenario }}*"
   artifact_paths: |
     ./report.html
     ./*.log.txt

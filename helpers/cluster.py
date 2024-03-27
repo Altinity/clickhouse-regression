@@ -401,6 +401,7 @@ class ClickHouseNode(Node):
         user=None,
         thread_fuzzer=False,
         check_version=True,
+        log_dir="/var/log/clickhouse-server",
     ):
         """Start ClickHouse server."""
         pid = self.clickhouse_pid()
@@ -414,8 +415,8 @@ class ClickHouseNode(Node):
             with By("starting ClickHouse server process"):
                 self.command(
                     "clickhouse server --config-file=/etc/clickhouse-server/config.xml"
-                    " --log-file=/var/log/clickhouse-server/clickhouse-server.log"
-                    " --errorlog-file=/var/log/clickhouse-server/clickhouse-server.err.log"
+                    f" --log-file={log_dir}/clickhouse-server.log"
+                    f" --errorlog-file={log_dir}/clickhouse-server.err.log"
                     " --pidfile=/tmp/clickhouse-server.pid --daemon",
                     exitcode=0,
                     steps=False,
@@ -425,8 +426,8 @@ class ClickHouseNode(Node):
                 self.command(
                     f"su {user} -c"
                     '"clickhouse server --config-file=/etc/clickhouse-server/config.xml'
-                    " --log-file=/var/log/clickhouse-server/clickhouse-server.log"
-                    " --errorlog-file=/var/log/clickhouse-server/clickhouse-server.err.log"
+                    f" --log-file={log_dir}/clickhouse-server.log"
+                    f" --errorlog-file={log_dir}/clickhouse-server.err.log"
                     ' --pidfile=/tmp/clickhouse-server.pid --daemon"',
                     exitcode=0,
                     steps=False,
