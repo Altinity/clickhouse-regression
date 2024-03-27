@@ -433,13 +433,14 @@ def add_config(
                     debug(config.content)
 
             with node.cluster.shell(node.name) as bash:
-                bash.expect(bash.prompt)
-                bash.send(
-                    "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
-                )
-                # make sure tail process is launched and started to follow the file
-                bash.expect("<==")
-                bash.expect("\n")
+                if check_preprocessed:
+                    bash.expect(bash.prompt)
+                    bash.send(
+                        "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
+                    )
+                    # make sure tail process is launched and started to follow the file
+                    bash.expect("<==")
+                    bash.expect("\n")
 
                 with When("I add the config", description=config.path):
                     command = (
@@ -463,13 +464,14 @@ def add_config(
         if not modify:
             with Finally(f"I remove {config.name} on {node.name}"):
                 with node.cluster.shell(node.name) as bash:
-                    bash.expect(bash.prompt)
-                    bash.send(
-                        "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
-                    )
-                    # make sure tail process is launched and started to follow the file
-                    bash.expect("<==")
-                    bash.expect("\n")
+                    if check_preprocessed:
+                        bash.expect(bash.prompt)
+                        bash.send(
+                            "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
+                        )
+                        # make sure tail process is launched and started to follow the file
+                        bash.expect("<==")
+                        bash.expect("\n")
 
                     with By("removing the config file", description=config.path):
                         node.command(f"rm -rf {config.path}", exitcode=0)

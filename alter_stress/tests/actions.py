@@ -855,14 +855,16 @@ def fill_clickhouse_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert disk_size_k < 100e6, error("Disk does not appear to be restricted!")
+                assert disk_size_k < 100e6, error(
+                    "Disk does not appear to be restricted!"
+                )
 
             with And(f"I create a file to fill {disk_mount} on {node.name}"):
                 node.command(
                     f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
                     no_checks=True,
                 )
-
+        pause(f"Check disk usage of {node.name}")
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -918,7 +920,6 @@ def clickhouse_limited_disk_config(self, node):
         config=config,
         restart=False,
         node=node,
-        wait_healthy=False,
         check_preprocessed=False,
     )
 
@@ -929,7 +930,6 @@ def limit_clickhouse_disks(self, node):
     Restart clickhouse using small disks.
     """
 
-    node = random.choice(self.context.ch_nodes)
     migrate_dirs = {
         "/var/lib/clickhouse": "/var/lib/clickhouse-limited",
         "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
@@ -943,7 +943,7 @@ def limit_clickhouse_disks(self, node):
             node.command("apt update && apt install rsync -y")
 
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H {normal_dir} {limited_dir}")
+                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
 
         with And("I write an override config for clickhouse"):
             clickhouse_limited_disk_config(node=node)
@@ -959,9 +959,7 @@ def limit_clickhouse_disks(self, node):
 
         with And("I move clickhouse files from the small disks"):
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rm -rf {normal_dir}/*")
-                node.command(f"rsync -a -H {limited_dir} {normal_dir}")
-                node.command(f"rm -rf {limited_dir}/*")
+                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse()
@@ -981,7 +979,9 @@ def fill_zookeeper_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert disk_size_k < 100e6, error("Disk does not appear to be restricted!")
+                assert disk_size_k < 100e6, error(
+                    "Disk does not appear to be restricted!"
+                )
 
             with And(f"I create a file to fill {disk_mount} on {node.name}"):
 
