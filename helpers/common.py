@@ -458,6 +458,7 @@ def add_config(
                         wait_for_config_to_be_loaded(user=user)
 
         yield
+
     finally:
         if not modify:
             with Finally(f"I remove {config.name} on {node.name}"):
@@ -473,14 +474,15 @@ def add_config(
                     with By("removing the config file", description=config.path):
                         node.command(f"rm -rf {config.path}", exitcode=0)
 
-                    with Then(
-                        f"{config.preprocessed_name} should be updated",
-                        description=f"timeout {timeout}",
-                    ):
-                        check_preprocessed_config_is_updated(after_removal=True)
+                    if check_preprocessed:
+                        with Then(
+                            f"{config.preprocessed_name} should be updated",
+                            description=f"timeout {timeout}",
+                        ):
+                            check_preprocessed_config_is_updated(after_removal=True)
 
-                    with And("I wait for config to be reloaded"):
-                        wait_for_config_to_be_loaded()
+                        with And("I wait for config to be reloaded"):
+                            wait_for_config_to_be_loaded()
 
 
 @TestStep(Given)
