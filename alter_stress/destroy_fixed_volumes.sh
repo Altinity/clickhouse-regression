@@ -8,6 +8,6 @@ if [ "$(id -u)" -ne "0" ]; then
     exit 1
 fi
 
-cd "$SCRIPT_DIR/../"
+cd "$SCRIPT_DIR/"
 
 umount _instances/*/*

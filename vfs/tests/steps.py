@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import json
 import time
-from contextlib import contextmanager
-from platform import processor
 from threading import Event
 
 from testflows.core import *
@@ -14,12 +12,9 @@ from helpers.common import getuid, check_clickhouse_version
 
 from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
 
-
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
 COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
-
-DOCKER_NETWORK = "vfs_env_default" if processor() == "x86_64" else "vfs_env_arm64"
 
 
 @TestStep(Given)
@@ -303,8 +298,7 @@ def enable_vfs(
     Add the config file for object storage vfs for the disks in `disk_names`.
     Default disk names are ["external"].
     """
-
-    if check_clickhouse_version("<24.1")(self):
+    if check_clickhouse_version("<24.2")(self):
         skip("vfs not supported on ClickHouse < 24.2 and requires --allow-vfs flag")
 
     if disk_names is None:
@@ -438,64 +432,6 @@ def get_active_partition_ids(self, node, table_name, timeout=30):
         timeout=timeout,
     )
     return json.loads(r.output)["partition_id"]
-
-
-@contextmanager
-def interrupt_node(node):
-    """
-    Stop the given node container.
-    Instance is restarted on context exit.
-    """
-    try:
-        with When(f"{node.name} is stopped"):
-            node.stop()
-            yield
-
-    finally:
-        with When(f"{node.name} is started"):
-            node.start()
-
-
-@contextmanager
-def interrupt_clickhouse(node, safe=True, signal="KILL"):
-    """
-    Stop the given clickhouse instance with the given signal.
-    Instance is restarted on context exit.
-    """
-    try:
-        with When(f"{node.name} is stopped"):
-            node.stop_clickhouse(safe=safe, signal=signal)
-            yield
-
-    finally:
-        with When(f"{node.name} is started"):
-            node.start_clickhouse(check_version=False)
-
-
-@contextmanager
-def interrupt_network(cluster, node):
-    """
-    Disconnect the given node container.
-    Instance is reconnected on context exit.
-    """
-    if processor() == "x86_64":
-        container = f"vfs_env-{node.name}-1"
-    else:
-        container = f"vfs_env_arm64-{node.name}-1"
-
-    try:
-        with When(f"{node.name} is disconnected"):
-            cluster.command(
-                None, f"docker network disconnect {DOCKER_NETWORK} {container}"
-            )
-
-        yield
-
-    finally:
-        with When(f"{node.name} is reconnected"):
-            cluster.command(
-                None, f"docker network connect {DOCKER_NETWORK} {container}"
-            )
 
 
 @TestStep(Then)
