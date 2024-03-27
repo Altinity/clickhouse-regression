@@ -86,4 +86,10 @@ def feature(self):
                 "feature",
             )
         )
+        Feature(
+            run=load(
+                "alter.table.replace_partition.partition_keys",
+                "feature",
+            )
+        )
         join()
