@@ -339,7 +339,7 @@ class ClickHouseNode(Node):
                 with attempt:
                     if (
                         self.query(
-                            "SELECT version()", no_checks=1, steps=False
+                            "SELECT version() FORMAT CSV", no_checks=1, steps=False
                         ).exitcode
                         != 0
                     ):
@@ -347,8 +347,8 @@ class ClickHouseNode(Node):
 
             if check_version:
                 node_version = self.query(
-                    "SELECT version()", no_checks=1, steps=False
-                ).output
+                    "SELECT version() FORMAT CSV", no_checks=1, steps=False
+                ).output.replace('"', "")
                 if current().context.clickhouse_version is None:
                     current().context.clickhouse_version = node_version
                 else:
