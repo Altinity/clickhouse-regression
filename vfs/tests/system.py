@@ -3,6 +3,8 @@ import random
 
 from testflows.core import *
 
+from alter_stress.tests.steps import interrupt_network, interrupt_node
+
 from vfs.tests.steps import *
 from vfs.requirements import *
 
@@ -326,16 +328,19 @@ def vfs_events(self):
 
     with And("I disable the network to trigger exceptions"):
         cluster = self.context.cluster
-        with interrupt_network(cluster, node):
+        with interrupt_network(cluster, node, 'vfs'):
             time.sleep(2)
 
     with And("I wait for the parts to merge"):
         optimize(node=node, table_name=table_name, final=True)
 
-    with Then("I check that all vfs events exist"):
+    with When("I query for vfs events"):
         r = node.query("SELECT event FROM system.events WHERE event like 'VFS%'")
-        for event in vfs_events:
-            assert event in r.output, error()
+
+    for event in vfs_events:
+        with Check(event):
+            with Then("I check that the event exists"):
+                assert event in r.output, error()
 
 
 @TestScenario
