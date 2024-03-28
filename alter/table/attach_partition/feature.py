@@ -85,6 +85,14 @@ def feature(self):
             parallel=True,
             executor=pool,
         )
+        # Feature(
+        #     run=load(
+        #         "alter.table.attach_partition.operations_on_attached_partition",
+        #         "feature",
+        #     ),
+        #     parallel=True,
+        #     executor=pool,
+        # )
         Feature(
             run=load(
                 "alter.table.attach_partition.small_partition_key_test", "feature"
@@ -93,3 +101,7 @@ def feature(self):
             executor=pool,
         )
         join()
+
+    Feature(
+        run=load("alter.table.attach_partition.restart_clickhouse_server", "feature")
+    )
