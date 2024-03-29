@@ -4,6 +4,7 @@ import random
 from testflows.core import *
 
 from alter_stress.tests.steps import interrupt_network, interrupt_node
+from ssl_server.tests.zookeeper.steps import add_zookeeper_config
 
 from vfs.tests.steps import *
 from vfs.requirements import *
@@ -328,7 +329,7 @@ def vfs_events(self):
 
     with And("I disable the network to trigger exceptions"):
         cluster = self.context.cluster
-        with interrupt_network(cluster, node, 'vfs'):
+        with interrupt_network(cluster, node, "vfs"):
             time.sleep(2)
 
     with And("I wait for the parts to merge"):
@@ -383,6 +384,13 @@ def fault_injection(self):
             table_name=table_name,
             rows=(rows_per_insert * insert_rounds * len(nodes)),
         )
+
+
+@TestScenario
+def zookeeper_timeout(self):
+
+    for node in self.context.zk_nodes:
+        node.restart_zookeeper()
 
 
 @TestFeature
