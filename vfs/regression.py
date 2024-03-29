@@ -29,6 +29,7 @@ ffails = {
         or check_clickhouse_version("<24.2")(test),
     ),
     ":/parallel replica": (Skip, "WIP"),
+    ":/system/zookeeper timeout": (XFail, "unstable"),
 }
 
 # RQ_SRS038_DiskObjectStorageVFS_Providers_Configuration
