@@ -423,7 +423,7 @@ def zookeeper_timeout(self, settings, check_inserts=True):
         for node in self.context.zk_nodes:
             add_zookeeper_config_file(entries=settings, restart=True, node=node)
 
-    with When("I perform inserts"):
+    with When("I perform more inserts"):
         for _ in range(insert_rounds):
             for node in nodes:
                 with By(f"Inserting {rows_per_insert} rows on {node.name}"):
@@ -445,7 +445,7 @@ def zookeeper_timeout(self, settings, check_inserts=True):
             assert_row_count(
                 node=nodes[0],
                 table_name=table_name,
-                rows=(rows_per_insert * insert_rounds * len(nodes) * 2) ,
+                rows=(rows_per_insert * insert_rounds * len(nodes) * 2),
             )
 
 
