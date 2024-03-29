@@ -13,7 +13,7 @@ from helpers.tables import *
 
 def get_node(self, table):
     """Returns first node for non-replicated tables and returns random node for replicated tables."""
-    
+
     if table == "source":
         if "Replicated" in self.context.source_engine:
             return random.choice(
@@ -538,7 +538,7 @@ def attach_partition_from(self):
     table_pairs = product(source_table_types, destination_table_types)
     combinations = product(partition_keys_pairs, table_pairs)
 
-    with Pool(4) as executor:
+    with Pool(10) as executor:
         for partition_keys, tables in combinations:
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
