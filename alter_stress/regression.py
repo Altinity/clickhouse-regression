@@ -47,6 +47,7 @@ def minio(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
+            use_zookeeper_nodes=True,
             configs_dir=current_dir(),
             environ={
                 "MINIO_ROOT_PASSWORD": root_password,
@@ -119,6 +120,7 @@ def aws_s3(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
+            use_zookeeper_nodes=True,
             configs_dir=current_dir(),
             environ={
                 "S3_AMAZON_ACCESS_KEY": access_key,
@@ -175,6 +177,7 @@ def gcs(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
+            use_zookeeper_nodes=True,
             configs_dir=current_dir(),
             environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
         )

@@ -7,11 +7,13 @@ services:
       dockerfile: Dockerfile.zookeeper
     expose:
       - "2181"
+    init: true
     environment:
       ZOO_TICK_TIME: 500
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
+    command: tail -f /dev/null
     healthcheck:
-      test: echo stat | nc localhost 2181
+      test: echo 1
       interval: 10s
       timeout: 10s
       retries: 3
