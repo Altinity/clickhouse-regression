@@ -4,6 +4,7 @@ import random
 from testflows.core import *
 
 from alter_stress.tests.steps import interrupt_network, interrupt_node
+from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 from vfs.tests.steps import *
 from vfs.requirements import *
@@ -328,7 +329,7 @@ def vfs_events(self):
 
     with And("I disable the network to trigger exceptions"):
         cluster = self.context.cluster
-        with interrupt_network(cluster, node, 'vfs'):
+        with interrupt_network(cluster, node, "vfs"):
             time.sleep(2)
 
     with And("I wait for the parts to merge"):
@@ -383,6 +384,69 @@ def fault_injection(self):
             table_name=table_name,
             rows=(rows_per_insert * insert_rounds * len(nodes)),
         )
+
+
+@TestOutline(Scenario)
+@Examples(
+    "settings, check_inserts",
+    [
+        [{"syncLimit": "1"}, True],
+        [{"tickTime": "30"}, True],
+        [{"maxSessionTimeout": "2000"}, True],
+        [{"syncLimit": "1", "tickTime": "30"}, True],
+        [{"syncLimit": "1", "tickTime": "30", "maxSessionTimeout": "2000"}, True],
+    ],
+)
+def zookeeper_timeout(self, settings, check_inserts=True):
+    """Check for data loss with session timeouts"""
+    nodes = self.context.ch_nodes
+    rows_per_insert = 5000
+    insert_rounds = 5
+
+    with Given("a replicated vfs table"):
+        _, table_name = replicated_table_cluster(
+            storage_policy="external_vfs",
+        )
+
+    with When("I perform inserts"):
+        for _ in range(insert_rounds):
+            for node in nodes:
+                with By(f"Inserting {rows_per_insert} rows on {node.name}"):
+                    insert_random(
+                        node=node,
+                        table_name=table_name,
+                        rows=rows_per_insert,
+                        no_checks=False,
+                    )
+
+    with Given("short timeout config for zookeeper"):
+        for node in self.context.zk_nodes:
+            add_zookeeper_config_file(entries=settings, restart=True, node=node)
+
+    with When("I perform more inserts"):
+        for _ in range(insert_rounds):
+            for node in nodes:
+                with By(f"Inserting {rows_per_insert} rows on {node.name}"):
+                    insert_random(
+                        node=node,
+                        table_name=table_name,
+                        rows=rows_per_insert,
+                        no_checks=(not check_inserts),
+                    )
+
+    with And("I optimize"):
+        for node in nodes:
+            optimize(node=node, table_name=table_name)
+
+    with Then("I check the number of rows in the table"):
+        check_consistency(nodes=nodes, table_name=table_name)
+
+        if check_inserts:
+            assert_row_count(
+                node=nodes[0],
+                table_name=table_name,
+                rows=(rows_per_insert * insert_rounds * len(nodes) * 2),
+            )
 
 
 @TestFeature
