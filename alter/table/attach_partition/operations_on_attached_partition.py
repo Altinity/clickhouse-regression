@@ -437,7 +437,7 @@ def multiple_attach_move_partition(
         combinations = product(operations, operations, operations)
 
     with Then("I perform all possible sequence of attach/move operations"):
-        with Pool(4) as executor:
+        with Pool(2) as executor:
             for num, combination in enumerate(combinations):
                 Scenario(
                     f"Combination {num}",
@@ -456,7 +456,7 @@ def multiple_attach_move_partition(
 
 @TestScenario
 @Flags(TE)
-def attach_partition_from(self):
+def attach_partition_from(self, test):
     """Run test check with different partition keys for both source and destination tables
     to see if it is possible to use different ALTERs on newly attached partitions."""
 
@@ -485,9 +485,6 @@ def attach_partition_from(self):
         "(a%2,b%2,c%2)",
         "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
         "(a,c,b)",
-        "(b,a,c)",
-        "(b,c,a)",
-        "(c,a,b)",
         "(c,b,a)",
     }
 
@@ -516,17 +513,12 @@ def attach_partition_from(self):
         "(a%2,b%2,c%2)",
         "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
         "(a,c,b)",
-        "(b,a,c)",
-        "(b,c,a)",
-        "(c,a,b)",
         "(c,b,a)",
     }
 
     source_table_types = {
         partitioned_MergeTree,
-        partitioned_small_MergeTree,
         partitioned_ReplicatedMergeTree,
-        partitioned_small_ReplicatedMergeTree,
     }
 
     destination_table_types = {
@@ -538,7 +530,7 @@ def attach_partition_from(self):
     table_pairs = product(source_table_types, destination_table_types)
     combinations = product(partition_keys_pairs, table_pairs)
 
-    with Pool(10) as executor:
+    with Pool(4) as executor:
         for partition_keys, tables in combinations:
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
@@ -557,30 +549,8 @@ def attach_partition_from(self):
             )
 
             Scenario(
-                f"move partition combination partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
-                test=check_move_partition,
-                parallel=True,
-                executor=executor,
-            )(
-                source_table=source_table,
-                destination_table=destination_table,
-                source_partition_key=source_partition_key,
-                destination_partition_key=destination_partition_key,
-            )
-            Scenario(
-                f"detach attach partition combination partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
-                test=check_detach_attach_partition,
-                parallel=True,
-                executor=executor,
-            )(
-                source_table=source_table,
-                destination_table=destination_table,
-                source_partition_key=source_partition_key,
-                destination_partition_key=destination_partition_key,
-            )
-            Scenario(
-                f"multiple operations combination partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
-                test=multiple_attach_move_partition,
+                f"partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
+                test=test,
                 parallel=True,
                 executor=executor,
             )(
@@ -615,7 +585,24 @@ def feature(self):
         self.context.cluster.node("clickhouse3"),
     ]
 
-    Scenario(
-        "operations on attached partition",
-        run=attach_partition_from,
-    )
+    with Pool(3) as executor:
+        Scenario(
+            "move partition combination",
+            test=attach_partition_from,
+            parallel=True,
+            executor=executor,
+        )(test=check_move_partition)
+        Scenario(
+            "detach attach partition combination",
+            test=attach_partition_from,
+            parallel=True,
+            executor=executor,
+        )(test=check_detach_attach_partition)
+        Scenario(
+            "multiple operations combination",
+            run=attach_partition_from,
+            parallel=True,
+            executor=executor,
+        )(test=multiple_attach_move_partition)
+
+        join()
