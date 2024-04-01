@@ -80,7 +80,7 @@ def alter_combinations(
         if fill_disks:
             actions += [
                 fill_clickhouse_disks,
-                # fill_zookeeper_disks,
+                fill_zookeeper_disks,
             ]
 
     with And(f"I make a list of groups of {combination_size} actions"):
@@ -88,6 +88,15 @@ def alter_combinations(
             combinations(actions, combination_size, with_replacement=True)
         )
         note(f"Created {len(action_groups)} groups of actions to run")
+
+    if fill_disks:
+        with Given("Clickhouse is restarted with limited disk space"):
+            for node in self.context.ch_nodes:
+                limit_clickhouse_disks(node=node)
+
+        with And("Zookeeper is restarted with limited disk space"):
+            for node in self.context.zk_nodes:
+                limit_zookeeper_disks(node=node)
 
     if shuffle:
         with And("I shuffle the list"):
@@ -254,10 +263,6 @@ def full_disk(self):
     """
     Allow filling clickhouse and zookeeper disks.
     """
-
-    with Given("Clickhouse is restarted with limited disk space"):
-        for node in self.context.ch_nodes:
-            limit_clickhouse_disks(node=node)
 
     alter_combinations(
         limit=None if self.context.stress else 20,
