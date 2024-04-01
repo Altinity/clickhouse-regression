@@ -1,13 +1,16 @@
+import random
+
 from testflows.core import *
+
+from helpers.common import *
+from helpers.tables import Column
+from helpers.datatypes import UInt64, UInt16
 
 from alter.table.attach_partition.common import (
     create_partitioned_table_with_data,
     create_empty_partitioned_table,
 )
 from alter.table.attach_partition.requirements.requirements import *
-from helpers.common import getuid, attach_partition_from
-from helpers.tables import Column
-from helpers.datatypes import UInt64, UInt16
 
 
 @TestScenario
@@ -394,8 +397,8 @@ def projections(self):
 @Requirements(RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions("1.0"))
 @Name("conditions")
 def feature(self, node="clickhouse1"):
-    """Check that it is not possible to attach the partition from the source table to the destination table when these two tables have
-    different:
+    """Check that it is not possible to attach the partition from the source table to the
+    destination table when these two tables have different:
     * Structure
     * Order By key
     * Primary key

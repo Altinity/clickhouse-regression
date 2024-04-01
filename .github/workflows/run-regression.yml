@@ -163,7 +163,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   aggregate_functions:
-    runs-on: [self-hosted, type-cpx41, image-x86-app-docker-ce]
+    runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: aggregate_functions
