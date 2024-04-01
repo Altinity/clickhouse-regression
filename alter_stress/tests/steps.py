@@ -45,8 +45,9 @@ def s3_config(self):
         policies=policies,
         restart=True,
         timeout=30,
-        config_file="vfs_storage.xml",
+        config_file="s3_storage.xml",
     )
+
 
 @TestStep
 def get_nodes_for_table(self, nodes, table_name):

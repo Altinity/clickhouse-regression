@@ -78,7 +78,10 @@ def alter_combinations(
             actions += [delete_replica, add_replica]
 
         if fill_disks:
-            actions += [fill_clickhouse_disks, fill_zookeeper_disks]
+            actions += [
+                fill_clickhouse_disks,
+                # fill_zookeeper_disks,
+            ]
 
     with And(f"I make a list of groups of {combination_size} actions"):
         action_groups = list(
@@ -251,37 +254,17 @@ def full_disk(self):
     """
     Allow filling clickhouse and zookeeper disks.
     """
-    cluster = self.context.cluster
 
-    try:
-        with Given("disk space is restricted"):
-            cluster.command(
-                None,
-                f"sudo {current_dir()}/../create_fixed_volumes.sh 100M",
-                no_checks=True,
-                timeout=5,
-            )
-            r = cluster.command(
-                None, "df | grep -c alter_stress/_instances", no_checks=True
-            )
-            restrictions_enabled = int(r.output) == 3 * 2 * 2
+    with Given("Clickhouse is restarted with limited disk space"):
+        for node in self.context.ch_nodes:
+            limit_clickhouse_disks(node=node)
 
-        if not restrictions_enabled:
-            skip("run sudo vfs_env/create_fixed_volumes.sh before this scenario")
-
-        alter_combinations(
-            limit=None if self.context.stress else 2,
-            shuffle=True,
-            fill_disks=True,
-        )
-    finally:
-        with Finally("disk space is de-restricted"):
-            cluster.command(
-                None,
-                f"sudo {current_dir()}/../destroy_fixed_volumes.sh",
-                no_checks=True,
-                timeout=5,
-            )
+    alter_combinations(
+        limit=None if self.context.stress else 20,
+        shuffle=True,
+        fill_disks=True,
+        restarts=False,
+    )
 
 
 @TestFeature

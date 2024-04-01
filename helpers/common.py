@@ -433,13 +433,14 @@ def add_config(
                     debug(config.content)
 
             with node.cluster.shell(node.name) as bash:
-                bash.expect(bash.prompt)
-                bash.send(
-                    "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
-                )
-                # make sure tail process is launched and started to follow the file
-                bash.expect("<==")
-                bash.expect("\n")
+                if check_preprocessed:
+                    bash.expect(bash.prompt)
+                    bash.send(
+                        "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
+                    )
+                    # make sure tail process is launched and started to follow the file
+                    bash.expect("<==")
+                    bash.expect("\n")
 
                 with When("I add the config", description=config.path):
                     command = (
@@ -458,29 +459,32 @@ def add_config(
                         wait_for_config_to_be_loaded(user=user)
 
         yield
+
     finally:
         if not modify:
             with Finally(f"I remove {config.name} on {node.name}"):
                 with node.cluster.shell(node.name) as bash:
-                    bash.expect(bash.prompt)
-                    bash.send(
-                        "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
-                    )
-                    # make sure tail process is launched and started to follow the file
-                    bash.expect("<==")
-                    bash.expect("\n")
+                    if check_preprocessed:
+                        bash.expect(bash.prompt)
+                        bash.send(
+                            "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
+                        )
+                        # make sure tail process is launched and started to follow the file
+                        bash.expect("<==")
+                        bash.expect("\n")
 
                     with By("removing the config file", description=config.path):
                         node.command(f"rm -rf {config.path}", exitcode=0)
 
-                    with Then(
-                        f"{config.preprocessed_name} should be updated",
-                        description=f"timeout {timeout}",
-                    ):
-                        check_preprocessed_config_is_updated(after_removal=True)
+                    if check_preprocessed:
+                        with Then(
+                            f"{config.preprocessed_name} should be updated",
+                            description=f"timeout {timeout}",
+                        ):
+                            check_preprocessed_config_is_updated(after_removal=True)
 
-                    with And("I wait for config to be reloaded"):
-                        wait_for_config_to_be_loaded()
+                        with And("I wait for config to be reloaded"):
+                            wait_for_config_to_be_loaded()
 
 
 @TestStep(Given)

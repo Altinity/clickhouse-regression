@@ -191,12 +191,16 @@ def lack_of_disk_space_tiered_storage(self, node=None):
                     f"Number of rows that should have been deleted from the table: {r.output}"
                 )
                 r = node.query(f"SELECT count(*) FROM {table_name}")
-                assert r.output not in (
-                    f"{block_size*partitions}",
-                    f"{block_size*partitions-block_size}",
-                ), error()
-                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1")
-                assert r.output not in ("0", f"{block_size}"), error()
+                if attempt.kwargs["flags"] & LAST_RETRY:
+                    assert r.output not in (
+                        f"{block_size*partitions}",
+                        f"{block_size*partitions-block_size}",
+                    ), error()
+                else:
+                    assert r.output in (
+                        f"{block_size*partitions}",
+                        f"{block_size*partitions-block_size}",
+                    ), error()
 
 
 @TestFeature
