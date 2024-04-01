@@ -1,3 +1,6 @@
+import time
+import json
+
 from testflows.core import *
 from testflows.combinatorics import product, CoveringArray
 
@@ -124,6 +127,24 @@ def move_all_partitions(self, source_table_name, destination_table_name, node):
 
 
 @TestStep
+def freeze_unfreeze_random_part(self, table_name, node, partition):
+    """Freeze a random part, wait a random time, unfreeze part."""
+    backup_name = f"backup_{getuid()}"
+    delay = random.random() * 5 + 1
+
+    with When("I freeze the part"):
+        query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
+        node.query(query, exitcode=0)
+
+    with And(f"I wait {delay:.2}s"):
+        time.sleep(delay)
+
+    with Finally("I unfreeze the part"):
+        query = f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition} WITH NAME '{backup_name}'"
+        node.query(query, exitcode=0)
+
+
+@TestStep
 def attach_partition_from_table(
     self,
     source_partition_key,
@@ -245,7 +266,7 @@ def check_detach_attach_partition(
     if table_name is None:
         skip("Table was not created")
 
-    with And("I get the list of partitions and validate partition keys pair"):
+    with And("I get the list of partitions"):
         destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
         destination_partition_ids = sorted(
             list(
@@ -287,6 +308,238 @@ def check_detach_attach_partition(
 
 
 @TestScenario
+def check_drop_partition(
+    self,
+    source_partition_key,
+    destination_partition_key,
+    source_table,
+    destination_table,
+):
+    """Check that it is possible to drop newly attached partition from another table."""
+
+    with Given(
+        "I get a table with newly attached partition, all partitions from source table are attached to destination table"
+    ):
+        table_name = attach_partition_from_table(
+            source_partition_key=source_partition_key,
+            destination_partition_key=destination_partition_key,
+            source_table=source_table,
+            destination_table=destination_table,
+        )
+
+    if table_name is None:
+        skip("Table was not created")
+
+    with And("I get the list of partitions"):
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_ids = sorted(
+            list(
+                set(
+                    get_node(self, "destination")
+                    .query(destination_partition_list_query)
+                    .output.split()
+                )
+            )
+        )
+
+    with And("I drop all partitions from the table"):
+        for partition in destination_partition_ids:
+            self.context.node_1.query(
+                f"ALTER TABLE {table_name} DROP PARTITION {partition}"
+            )
+
+    with And("I check that partitions were dropped"):
+        for partition in destination_partition_ids:
+            data = self.context.node_1.query(f"SELECT count() FROM {table_name}")
+            for attempt in retries(timeout=30, delay=2):
+                with attempt:
+                    assert int(data.output) == 0, error()
+
+
+@TestScenario
+def check_replace_partition(
+    self,
+    source_partition_key,
+    destination_partition_key,
+    source_table,
+    destination_table,
+):
+    """Check that it is possible to use newly attached partition in `replace partition`."""
+
+    with Given(
+        "I get a table with newly attached partition, all partitions from source table are attached to destination table"
+    ):
+        table_name = attach_partition_from_table(
+            source_partition_key=source_partition_key,
+            destination_partition_key=destination_partition_key,
+            source_table=source_table,
+            destination_table=destination_table,
+        )
+
+    if table_name is None:
+        skip("Table was not created")
+
+    with And("I create a table with the same structure as the destination table"):
+        replace_table_name = "replace_" + getuid()
+        destination_table(
+            table_name=replace_table_name,
+            partition_by=destination_partition_key,
+            node=self.context.node_1,
+        )
+
+    with And("I insert some data to the replace table"):
+        self.context.node_1.query(
+            f"INSERT INTO {replace_table_name} (a, b, c, extra) SELECT a+1, b+1, c+1, extra+1 FROM {table_name}"
+        )
+
+    with And("I get the list of partitions"):
+        replace_partition_list = f"SELECT partition FROM system.parts WHERE table='{replace_table_name}' ORDER BY partition_id"
+        replace_partition_ids = sorted(
+            list(set(self.context.node_1.query(replace_partition_list).output.split()))
+        )
+        source_partition_list = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        source_partition_ids = sorted(
+            list(set(self.context.node_1.query(source_partition_list).output.split()))
+        )
+        intersection = list(set(replace_partition_ids) & set(source_partition_ids))
+
+    with And("I replace partition in the destination table with the replace table"):
+        for partition in intersection:
+            self.context.node_1.query(
+                f"ALTER TABLE {replace_table_name} REPLACE PARTITION {partition} FROM {table_name}"
+            )
+
+    with And("I drop non-intersecting partitions from the tables"):
+        replace_diff = [x for x in replace_partition_ids if x not in intersection]
+        source_diff = [x for x in source_partition_ids if x not in intersection]
+        for partition in replace_diff:
+            self.context.node_1.query(
+                f"ALTER TABLE {replace_table_name} DROP PARTITION {partition}"
+            )
+        for partition in source_diff:
+            self.context.node_1.query(
+                f"ALTER TABLE {table_name} DROP PARTITION {partition}"
+            )
+
+    with Then("I check that partitions were replaced"):
+        source_data = self.context.node_1.query(
+            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+        ).output
+        replace_data = self.context.node_1.query(
+            f"SELECT * FROM {replace_table_name} ORDER BY tuple(*)"
+        )
+        for attempt in retries(timeout=30, delay=2):
+            with attempt:
+                assert replace_data.output == source_data, error()
+
+
+@TestScenario
+def check_freeze_partition(
+    self,
+    source_partition_key,
+    destination_partition_key,
+    source_table,
+    destination_table,
+):
+    """Check that it is possible to freeze/unfreeze partition from the table."""
+
+    with Given(
+        "I get a table with newly attached partition, all partitions from source table are attached to destination table"
+    ):
+        table_name = attach_partition_from_table(
+            source_partition_key=source_partition_key,
+            destination_partition_key=destination_partition_key,
+            source_table=source_table,
+            destination_table=destination_table,
+        )
+
+    if table_name is None:
+        skip("Table was not created")
+
+    with And("I get the list of partitions and validate partition keys pair"):
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_ids = sorted(
+            list(
+                set(
+                    get_node(self, "destination")
+                    .query(destination_partition_list_query)
+                    .output.split()
+                )
+            )
+        )
+
+    with And("I freeze/unfreeze random partition from the table"):
+        partition = random.choice(destination_partition_ids)
+        freeze_unfreeze_random_part(
+            table_name=table_name,
+            node=get_node(self, "destination"),
+            partition=partition,
+        )
+
+
+@TestScenario
+@Flags(TE)
+def check_update_in_partition(
+    self,
+    source_partition_key,
+    destination_partition_key,
+    source_table,
+    destination_table,
+):
+    """Check that it is possible to use `UPDATE IN PARTITION` statement on newly attached partition."""
+
+    with Given(
+        "I get a table with newly attached partition, all partitions from source table are attached to destination table"
+    ):
+        table_name = attach_partition_from_table(
+            source_partition_key=source_partition_key,
+            destination_partition_key=destination_partition_key,
+            source_table=source_table,
+            destination_table=destination_table,
+        )
+
+    if table_name is None:
+        skip("Table was not created")
+
+    with And("I get the list of partitions and validate partition keys pair"):
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_ids = sorted(
+            list(
+                set(
+                    get_node(self, "destination")
+                    .query(destination_partition_list_query)
+                    .output.split()
+                )
+            )
+        )
+
+    with And("I update all partitions from the table"):
+        if "a" not in destination_partition_key:
+            update_column = "a"
+        elif "b" not in destination_partition_key:
+            update_column = "b"
+        elif "c" not in destination_partition_key:
+            update_column = "c"
+        else:
+            skip("No columns to update")
+
+        expected_data = self.context.node_1.query(
+            f"SELECT {update_column}+1 FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*)"
+        ).output
+        for partition in destination_partition_ids:
+            self.context.node_1.query(
+                f"ALTER TABLE {table_name} UPDATE {update_column}={update_column}+1 IN PARTITION {partition} WHERE {update_column} > 2"
+            )
+
+        result_data = self.context.node_1.query(
+            f"SELECT {update_column} FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*)"
+        )
+        for attempt in retries(timeout=120, delay=2):
+            with attempt:
+                assert result_data.output == expected_data, error()
+
+
+@TestScenario
 def check_move_partition(
     self,
     source_partition_key,
@@ -322,7 +575,7 @@ def check_move_partition(
                 f"ALTER TABLE {move_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
             )
 
-    with And("I get the list of partitions and validate partition keys pair"):
+    with And("I get the list of partitions"):
         destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
         destination_partition_ids = sorted(
             list(
@@ -456,7 +709,7 @@ def multiple_attach_move_partition(
 
 @TestScenario
 @Flags(TE)
-def attach_partition_from(self, test):
+def attach_partition_from(self, test, sample_size=100):
     """Run test check with different partition keys for both source and destination tables
     to see if it is possible to use different ALTERs on newly attached partitions."""
 
@@ -528,9 +781,12 @@ def attach_partition_from(self, test):
 
     partition_keys_pairs = product(source_partition_keys, destination_partition_keys)
     table_pairs = product(source_table_types, destination_table_types)
-    combinations = product(partition_keys_pairs, table_pairs)
+    combinations = list(product(partition_keys_pairs, table_pairs))
 
-    with Pool(4) as executor:
+    if not self.context.stress:
+        combinations = random.sample(combinations, sample_size)
+
+    with Pool(6) as executor:
         for partition_keys, tables in combinations:
             source_partition_key, destination_partition_key = partition_keys
             source_table, destination_table = tables
@@ -587,22 +843,46 @@ def feature(self):
 
     with Pool(3) as executor:
         Scenario(
-            "move partition combination",
+            "move partition",
             test=attach_partition_from,
             parallel=True,
             executor=executor,
         )(test=check_move_partition)
         Scenario(
-            "detach attach partition combination",
+            "detach attach partition",
             test=attach_partition_from,
             parallel=True,
             executor=executor,
         )(test=check_detach_attach_partition)
         Scenario(
-            "multiple operations combination",
+            "multiple operations",
             run=attach_partition_from,
             parallel=True,
             executor=executor,
         )(test=multiple_attach_move_partition)
+        Scenario(
+            "drop partition",
+            test=attach_partition_from,
+            parallel=True,
+            executor=executor,
+        )(test=check_drop_partition)
+        Scenario(
+            "replace partition",
+            test=attach_partition_from,
+            parallel=True,
+            executor=executor,
+        )(test=check_replace_partition)
+        Scenario(
+            "freeze partition",
+            test=attach_partition_from,
+            parallel=True,
+            executor=executor,
+        )(test=check_freeze_partition)
+        Scenario(
+            "update in partition",
+            test=attach_partition_from,
+            parallel=True,
+            executor=executor,
+        )(test=check_update_in_partition, sample_size=200)
 
         join()
