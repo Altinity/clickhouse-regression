@@ -13,6 +13,7 @@ from helpers.common import KeyWithAttributes, create_xml_config_content, add_con
 from vfs.tests.steps import *
 from alter_stress.tests.tc_netem import *
 from alter_stress.tests.steps import *
+from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
 
@@ -846,7 +847,7 @@ def fill_clickhouse_disks(self):
         "/var/log/clickhouse-server-limited",
         "/var/lib/clickhouse-limited",
     ]
-    delay = random.random() * 5 + 1
+    delay = random.random() * 10 + 5
     file_name = "file.dat"
 
     try:
@@ -854,7 +855,7 @@ def fill_clickhouse_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert disk_size_k < 100e6, error(
+                assert int(disk_size_k) < 100e6, error(
                     "Disk does not appear to be restricted!"
                 )
 
@@ -863,7 +864,7 @@ def fill_clickhouse_disks(self):
                     f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
                     no_checks=True,
                 )
-        pause(f"Check disk usage of {node.name}")
+
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
@@ -964,13 +965,52 @@ def limit_clickhouse_disks(self, node):
             node.start_clickhouse()
 
 
+@TestStep(Given)
+def limit_zookeeper_disks(self, node):
+    """
+    Restart zookeeper using small disks.
+    """
+
+    migrate_dirs = {
+        "/data": "/data-limited",
+        "/datalog": "/datalog-limited",
+    }
+    zk_config = {"dataDir": "/data-limited", "dataLogDir": "/datalog-limited"}
+
+    try:
+        with Given("I stop zookeeper"):
+            node.stop_zookeeper()
+
+        with And("I move zookeeper files to small disks"):
+            node.command("apt update && apt install rsync -y")
+
+            for normal_dir, limited_dir in migrate_dirs.items():
+                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
+
+        with And("I write an override config for zookeeper"):
+            add_zookeeper_config_file(entries=zk_config, restart=True, node=node)
+
+        yield
+
+    finally:
+        with Finally("I stop zookeeper"):
+            node.stop_zookeeper()
+
+        with And("I move zookeeper files from the small disks"):
+            for normal_dir, limited_dir in migrate_dirs.items():
+                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
+
+        with Finally("I start zookeeper"):
+            node.start_zookeeper()
+
+
 @TestStep
 def fill_zookeeper_disks(self):
-    """Force clickhouse to run on a full disk."""
+    """Force zookeeper to run on a full disk."""
 
     node = random.choice(self.context.zk_nodes)
-    zookeeper_disk_mounts = ["/data", "/datalog"]
-    delay = random.random() * 5 + 1
+    zookeeper_disk_mounts = ["/data-limited", "/datalog-limited"]
+    delay = random.random() * 10 + 5
     file_name = "file.dat"
 
     try:
@@ -978,7 +1018,7 @@ def fill_zookeeper_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert disk_size_k < 100e6, error(
+                assert int(disk_size_k) < 100e6, error(
                     "Disk does not appear to be restricted!"
                 )
 
@@ -998,4 +1038,4 @@ def fill_zookeeper_disks(self):
                 node.command(f"rm {disk_mount}/{file_name}")
 
         with And(f"I restart {node.name} in case it crashed"):
-            node.restart_clickhouse(safe=False)
+            node.restart_zookeeper()
