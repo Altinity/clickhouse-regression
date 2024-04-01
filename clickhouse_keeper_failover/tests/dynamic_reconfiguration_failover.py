@@ -87,5 +87,7 @@ def feature(self, restart_on_reconfig=True):
         for node in dr_ensemble:
             if node.name != current_leader:
                 continue
+            r = keeper_query(node=node, query="srvr")
+            assert "Mode: leader" in r.output, error()
             r = keeper_query(node=node, query="mntr")
             assert "zk_synced_followers\t2" in r.output, error()
