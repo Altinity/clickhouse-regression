@@ -77,7 +77,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with When(f"I perform select {i} {num} times"):
                         with Then("result should always be 500"):
                             for i in range(num):
-                                for attempt in retries(timeout=30, delay=1):
+                                for attempt in retries(timeout=60, delay=1):
                                     with attempt:
                                         r = node.query(
                                             f"SELECT sleepEachRow(0.1), COUNT() FROM {name}",

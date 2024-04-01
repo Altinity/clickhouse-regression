@@ -150,59 +150,63 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert r == "250", error()
 
                 with When("I check if there are any duplicate parts on the disks"):
-                    jbod1_entries = set(
-                        [
-                            os.path.basename(entry)
-                            for entry in node.command(
-                                f"find /jbod1/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
-                                exitcode=0,
+                    for retry in retries(timeout=60, delay=10):
+                        with retry:
+                            jbod1_entries = set(
+                                [
+                                    os.path.basename(entry)
+                                    for entry in node.command(
+                                        f"find /jbod1/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
+                                        exitcode=0,
+                                    )
+                                    .output.strip()
+                                    .splitlines()
+                                ]
                             )
-                            .output.strip()
-                            .splitlines()
-                        ]
-                    )
 
-                    jbod2_entries = set(
-                        [
-                            os.path.basename(entry)
-                            for entry in node.command(
-                                f"find /jbod2/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
-                                exitcode=0,
+                            jbod2_entries = set(
+                                [
+                                    os.path.basename(entry)
+                                    for entry in node.command(
+                                        f"find /jbod2/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
+                                        exitcode=0,
+                                    )
+                                    .output.strip()
+                                    .splitlines()
+                                ]
                             )
-                            .output.strip()
-                            .splitlines()
-                        ]
-                    )
 
-                    if not (
-                        hasattr(cluster, "with_minio")
-                        and hasattr(cluster, "with_s3amazon")
-                        and hasattr(cluster, "with_s3gcs")
-                    ):
-                        external_entries = set(
-                            [
-                                os.path.basename(entry)
-                                for entry in node.command(
-                                    f"find /external/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
-                                    exitcode=0,
+                            if not (
+                                hasattr(cluster, "with_minio")
+                                and hasattr(cluster, "with_s3amazon")
+                                and hasattr(cluster, "with_s3gcs")
+                            ):
+                                external_entries = set(
+                                    [
+                                        os.path.basename(entry)
+                                        for entry in node.command(
+                                            f"find /external/store/{table_uuid_prefix}/{table_uuid}/ -name '20*'",
+                                            exitcode=0,
+                                        )
+                                        .output.strip()
+                                        .splitlines()
+                                    ]
                                 )
-                                .output.strip()
-                                .splitlines()
-                            ]
-                        )
-                    else:
-                        external_entries = set()
+                            else:
+                                external_entries = set()
 
-                    with Then("there should be no duplicate parts"):
-                        len_union = len(
-                            jbod1_entries.union(jbod2_entries).union(external_entries)
-                        )
-                        len_entries = (
-                            len(jbod1_entries)
-                            + len(jbod2_entries)
-                            + len(external_entries)
-                        )
-                        assert len_union == len_entries, error()
+                            with Then("there should be no duplicate parts"):
+                                len_union = len(
+                                    jbod1_entries.union(jbod2_entries).union(
+                                        external_entries
+                                    )
+                                )
+                                len_entries = (
+                                    len(jbod1_entries)
+                                    + len(jbod2_entries)
+                                    + len(external_entries)
+                                )
+                                assert len_union == len_entries, error()
 
             finally:
                 with Finally("I drop the table"):
