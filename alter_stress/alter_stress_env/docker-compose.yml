@@ -6,7 +6,7 @@ volumes:
   var_lib_clickhouse-limited-1:
     driver: local
     driver_opts:
-      o: "size=40G"
+      o: "size=30G"
       device: tmpfs
       type: tmpfs
 
@@ -20,7 +20,7 @@ volumes:
   var_lib_clickhouse-limited-2:
     driver: local
     driver_opts:
-      o: "size=40G"
+      o: "size=30G"
       device: tmpfs
       type: tmpfs
 
@@ -34,11 +34,53 @@ volumes:
   var_lib_clickhouse-limited-3:
     driver: local
     driver_opts:
-      o: "size=40G"
+      o: "size=30G"
       device: tmpfs
       type: tmpfs
 
   var_log_clickhouse-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_data-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_datalog-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_data-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_datalog-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_data-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_datalog-limited-3:
     driver: local
     driver_opts:
       o: "size=5G"
@@ -69,6 +111,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/data/:/data/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/datalog/:/datalog"
+      - zookeeper_data-limited-1:/data-limited
+      - zookeeper_datalog-limited-1:/datalog-limited
 
   zookeeper2:
     extends:
@@ -80,6 +124,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/data/:/data/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/datalog/:/datalog/"
+      - zookeeper_data-limited-2:/data-limited
+      - zookeeper_datalog-limited-2:/datalog-limited
 
   zookeeper3:
     extends:
@@ -91,6 +137,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/data/:/data/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/datalog/:/datalog/"
+      - zookeeper_data-limited-3:/data-limited
+      - zookeeper_datalog-limited-3:/datalog-limited
 
   clickhouse1:
     extends:
