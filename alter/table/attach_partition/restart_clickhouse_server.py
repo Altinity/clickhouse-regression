@@ -179,7 +179,7 @@ def restart_clickhouse_server(self):
 
 @TestFeature
 @Requirements(RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions("1.0"))
-@Name("conditions")
+@Name("restart clickhouse server")
 def feature(self, node="clickhouse1"):
     """Check that I can use newly attached data after restart ClickHouse server."""
     self.context.node = self.context.cluster.node(node)

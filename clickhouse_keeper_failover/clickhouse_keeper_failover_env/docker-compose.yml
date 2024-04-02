@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     container_name: keeper-1
     hostname: keeper-1
+    init: true
     ports:
       - "19181:9181"
       - "19234:9234"
@@ -25,6 +26,7 @@ services:
       dockerfile: Dockerfile
     container_name: keeper-2
     hostname: keeper-2
+    init: true
     ports:
       - "29181:9181"
       - "29234:9234"
@@ -42,6 +44,7 @@ services:
       dockerfile: Dockerfile
     container_name: keeper-3
     hostname: keeper-3
+    init: true
     ports:
       - "39181:9181"
       - "39234:9234"
@@ -59,6 +62,7 @@ services:
       dockerfile: Dockerfile
     container_name: keeper-4
     hostname: keeper-4
+    init: true
     ports:
       - "49181:9181"
       - "49234:9234"
@@ -76,6 +80,7 @@ services:
       dockerfile: Dockerfile
     container_name: keeper-5
     hostname: keeper-5
+    init: true
     ports:
       - "58181:9181"
       - "58234:9234"
@@ -93,12 +98,13 @@ services:
       dockerfile: Dockerfile
     container_name: keeper-6
     hostname: keeper-6
-    environment:
-      - KEEPER_SERVER_ID=6
+    init: true
     ports:
       - "59181:9181"
       - "59234:9234"
       - "59182:9182"
+    environment:
+      - KEEPER_SERVER_ID=6
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/data/:/var/lib/clickhouse"

@@ -367,7 +367,7 @@ def add_remove_replica_on_first_node(
     )
 
     if delay_before_delete is None:
-        delay_before_delete = random.random() * 2
+        delay_before_delete = random.random() * 10
 
     time.sleep(delay_before_delete)
 
@@ -388,7 +388,7 @@ def add_remove_replica_on_second_node(
     )
 
     if delay_before_delete is None:
-        delay_before_delete = random.random() * 2
+        delay_before_delete = random.random() * 10
 
     time.sleep(delay_before_delete)
 
@@ -411,7 +411,7 @@ def add_remove_replica_on_third_node(
     )
 
     if delay_before_delete is None:
-        delay_before_delete = random.random() * 2
+        delay_before_delete = random.random() * 10
 
     time.sleep(delay_before_delete)
 
