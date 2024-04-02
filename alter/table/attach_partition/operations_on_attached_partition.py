@@ -690,7 +690,7 @@ def multiple_attach_move_partition(
         combinations = product(operations, operations, operations)
 
     with Then("I perform all possible sequence of attach/move operations"):
-        with Pool(2) as executor:
+        with Pool(4) as executor:
             for num, combination in enumerate(combinations):
                 Scenario(
                     f"Combination {num}",
@@ -856,7 +856,7 @@ def feature(self):
         )(test=check_detach_attach_partition)
         Scenario(
             "multiple operations",
-            run=attach_partition_from,
+            test=attach_partition_from,
             parallel=True,
             executor=executor,
         )(test=multiple_attach_move_partition)
