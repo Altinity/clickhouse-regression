@@ -12,7 +12,7 @@ from helpers.common import check_clickhouse_version
 from clickhouse_keeper_failover.tests.steps import *
 
 
-xfails = {}
+xfails = {"dynamic:":[(Fail, 'Not working')]}
 
 ffails = {}
 

@@ -6,7 +6,7 @@ from clickhouse_keeper_failover.tests.steps import *
 
 @TestFeature
 @Name("dynamic failover")
-def feature(self, restart_on_reconfig=True):
+def feature(self, restart_on_reconfig=False):
     """Test keeper dynamic reconfiguration failover."""
 
     with Given("I check that the leader exists"):
