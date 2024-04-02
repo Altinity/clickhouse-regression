@@ -105,7 +105,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     exitcode=0,
                                 )
                             with And("I wait until mutation completes"):
-                                wait_mutation_completes(retry=20, sleep=1)
+                                wait_mutation_completes(retry=20, sleep=3)
                             with Then("mutation should have been applied"):
                                 r = node.query(
                                     f"SELECT sum(endsWith(s1, 'x')) FROM {name}"

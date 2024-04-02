@@ -35,7 +35,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/raft_keeper.xml:/etc/clickhouse-server/config.d/raft_keeper.xml"
 
   bash-tools:
-    image: registry.gitlab.com/altinity-public/container-images/test/bash-tools:3.0
+    image: altinityinfra/bash-tools:1.0
     hostname: bash-tools
     restart: "no"
     entrypoint:
