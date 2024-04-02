@@ -86,7 +86,6 @@ xfails = {
     "/alter/attach partition/partition key datetime/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24.2"))
     ],
-    "/alter/attach partition/small test/*": [(Fail, "Should fail")],
 }
 
 xflags = {}
