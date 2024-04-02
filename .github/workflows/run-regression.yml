@@ -555,7 +555,6 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --ssl
               ${{ env.args }}
 
       - name: Create and upload logs
