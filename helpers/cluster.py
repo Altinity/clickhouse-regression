@@ -1474,9 +1474,6 @@ class Cluster(object):
                     assert os.path.exists(self.clickhouse_binary_path)
 
             with And("I set all the necessary environment variables"):
-                self.environ[
-                    "CLICKHOUSE_VERSION"
-                ] = current().context.clickhouse_version
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
                 self.environ[
                     "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
