@@ -506,7 +506,7 @@ jobs:
     timeout-minutes: 180
     env:
       SUITE: clickhouse_keeper_failover
-      STORAGE: /no_ssl
+      STORAGE: /failover
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
     steps:
       - name: Checkout
