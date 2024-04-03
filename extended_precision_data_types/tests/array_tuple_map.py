@@ -18,8 +18,10 @@ def get_table_name():
 )
 def array_func(self, data_type, node=None):
     """Check array functions with extended precision data types."""
-    if check_clickhouse_version(">=23.2")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
+    clickhouse_version = (
+        ">=23.2" if check_clickhouse_version("<24.3")(self) else ">=24.3"
+    )
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=clickhouse_version)
 
     if node is None:
         node = self.context.node
@@ -59,7 +61,7 @@ def array_func(self, data_type, node=None):
             with When("I insert the output into the table"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}array({to_data_type(data_type,3)},"
-                    f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)}))"
+                    f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)})) FORMAT TabSeparated"
                 )
 
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
@@ -95,7 +97,7 @@ def array_func(self, data_type, node=None):
 
             with When("I insert the output into the table"):
                 node.query(
-                    f"INSERT INTO {table_name} SELECT {func}array({to_data_type(data_type,1)}))"
+                    f"INSERT INTO {table_name} SELECT {func}array({to_data_type(data_type,1)})) FORMAT TabSeparated"
                 )
 
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
@@ -120,12 +122,16 @@ def array_func(self, data_type, node=None):
         f"hasAny([{to_data_type(data_type,2)}, {to_data_type(data_type,1)}], ",
         f"hasSubstr([{to_data_type(data_type,2)}, {to_data_type(data_type,1)}], ",
     ]:
-        if func in [
-            "arrayMin(",
-            "arrayMax(",
-            "arraySum(",
-            "arrayAvg(",
-        ] and data_type in ["Decimal256(0)"]:
+        if (
+            func
+            in [
+                "arrayMin(",
+                "arrayMax(",
+                "arraySum(",
+                "arrayAvg(",
+            ]
+            and data_type in ["Decimal256(0)"]
+        ):
             exitcode = 44
             message = "Exception:"
             if check_clickhouse_version(">=23.2")(self):
@@ -134,7 +140,7 @@ def array_func(self, data_type, node=None):
 
             with Scenario(f"Inline - {data_type} - {func})"):
                 node.query(
-                    f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
+                    f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)})) FORMAT TabSeparated",
                     exitcode=exitcode,
                     message=message,
                 )
@@ -147,7 +153,7 @@ def array_func(self, data_type, node=None):
                 with When("I insert the output into the table"):
                     node.query(
                         f"INSERT INTO {table_name} SELECT {func}array({to_data_type(data_type,3)},"
-                        f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
+                        f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)})) FORMAT TabSeparated",
                         exitcode=exitcode,
                         message=message,
                     )
@@ -156,7 +162,9 @@ def array_func(self, data_type, node=None):
 
         else:
             with Scenario(f"Inline - {data_type} - {func})"):
-                if check_clickhouse_version(">=23.10")(self):
+                if check_clickhouse_version(f">=24.3")(self):
+                    self.context.snapshot_id = f"tests.post24.3"
+                elif check_clickhouse_version(">=23.10")(self):
                     self.context.snapshot_id = "tests.post23.10"
 
                 execute_query(
@@ -204,7 +212,7 @@ def array_func(self, data_type, node=None):
                 message = ""
 
             node.query(
-                f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
+                f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)})) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
             )
@@ -231,7 +239,7 @@ def array_func(self, data_type, node=None):
             with When("I insert the output into the table"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}array({to_data_type(data_type,3)},"
-                    f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
+                    f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)})) FORMAT TabSeparated",
                     exitcode=exitcode,
                     message=message,
                 )
@@ -332,7 +340,7 @@ def tuple_func(self, data_type, node=None):
 
     with Scenario(f"Creating a tuple with {data_type}"):
         node.query(
-            f"SELECT tuple({to_data_type(data_type,1)}, {to_data_type(data_type,1)}, {to_data_type(data_type,1)})"
+            f"SELECT tuple({to_data_type(data_type,1)}, {to_data_type(data_type,1)}, {to_data_type(data_type,1)}) FORMAT TabSeparated"
         )
 
     with Scenario(f"Creating a tuple with {data_type} on a table"):
@@ -352,7 +360,7 @@ def tuple_func(self, data_type, node=None):
 
     with Scenario(f"tupleElement with {data_type}"):
         node.query(
-            f"SELECT tupleElement(({to_data_type(data_type,1)}, {to_data_type(data_type,1)}), 1)"
+            f"SELECT tupleElement(({to_data_type(data_type,1)}, {to_data_type(data_type,1)}), 1) FORMAT TabSeparated"
         )
 
     with Scenario(f"tupleElement with {data_type} on a table"):
@@ -368,7 +376,9 @@ def tuple_func(self, data_type, node=None):
         execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     with Scenario(f"untuple with {data_type}"):
-        node.query(f"SELECT untuple(({to_data_type(data_type,1)},))")
+        node.query(
+            f"SELECT untuple(({to_data_type(data_type,1)},)) FORMAT TabSeparated"
+        )
 
     with Scenario(f"untuple with {data_type} on a table"):
         table_name = get_table_name()
@@ -385,7 +395,7 @@ def tuple_func(self, data_type, node=None):
     with Scenario(f"tupleHammingDistance with {data_type}"):
         node.query(
             f"SELECT tupleHammingDistance(({to_data_type(data_type,1)}, {to_data_type(data_type,1)}),"
-            f"({to_data_type(data_type,2)}, {to_data_type(data_type,2)}))"
+            f"({to_data_type(data_type,2)}, {to_data_type(data_type,2)})) FORMAT TabSeparated"
         )
 
     with Scenario(f"tupleHammingDistance with {data_type} on a table"):
@@ -396,7 +406,7 @@ def tuple_func(self, data_type, node=None):
         with When("I insert the output into a table"):
             node.query(
                 f"INSERT INTO {table_name} SELECT tupleHammingDistance(({to_data_type(data_type,1)},"
-                f"{to_data_type(data_type,1)}), ({to_data_type(data_type,2)}, {to_data_type(data_type,2)}))"
+                f"{to_data_type(data_type,1)}), ({to_data_type(data_type,2)}, {to_data_type(data_type,2)})) FORMAT TabSeparated"
             )
 
         execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
@@ -410,12 +420,15 @@ def tuple_func(self, data_type, node=None):
 def map_func(self, data_type, node=None):
     """Check Map functions with extended precision data types."""
 
+    if check_clickhouse_version(">=24.3")(self):
+        self.context.snapshot_id = f"tests.post24.3"
+
     if node is None:
         node = self.context.node
 
     with Scenario(f"Creating a map with {data_type}"):
         node.query(
-            f"SELECT map('key1', {to_data_type(data_type,1)}, 'key2', {to_data_type(data_type,2)})"
+            f"SELECT map('key1', {to_data_type(data_type,1)}, 'key2', {to_data_type(data_type,2)}) FORMAT TabSeparated"
         )
 
     with Scenario(f"Creating a map with {data_type} on a table"):
@@ -504,7 +517,8 @@ def map_func(self, data_type, node=None):
     with Scenario(f"mapPopulateSeries with {data_type}"):
         sql = (
             f"SELECT mapPopulateSeries([1,2,3], [{to_data_type(data_type,1)},"
-            f"{to_data_type(data_type,2)}, {to_data_type(data_type,3)}], 5)"
+            f"{to_data_type(data_type,2)}, {to_data_type(data_type,3)}], 5) "
+            f"FORMAT TabSeparated"
         )
 
         exitcode, message = 0, None
@@ -544,7 +558,7 @@ def map_func(self, data_type, node=None):
     with Scenario(f"mapContains with {data_type}"):
         node.query(
             f"SELECT mapContains( map('key1', {to_data_type(data_type,1)},"
-            f"'key2', {to_data_type(data_type,2)}), 'key1')"
+            f"'key2', {to_data_type(data_type,2)}), 'key1') FORMAT TabSeparated"
         )
 
     with Scenario(f"mapContains with {data_type} on a table"):
@@ -562,7 +576,7 @@ def map_func(self, data_type, node=None):
 
     with Scenario(f"mapKeys with {data_type}"):
         node.query(
-            f"SELECT mapKeys( map('key1', {to_data_type(data_type,1)}, 'key2', {to_data_type(data_type,2)}))"
+            f"SELECT mapKeys( map('key1', {to_data_type(data_type,1)}, 'key2', {to_data_type(data_type,2)})) FORMAT TabSeparated"
         )
 
     with Scenario(f"mapKeys with {data_type} on a table"):
@@ -580,7 +594,7 @@ def map_func(self, data_type, node=None):
 
     with Scenario(f"mapValues with {data_type}"):
         node.query(
-            f"SELECT mapValues( map('key1', {to_data_type(data_type,1)}, 'key2', {to_data_type(data_type,2)}))"
+            f"SELECT mapValues( map('key1', {to_data_type(data_type,1)}, 'key2', {to_data_type(data_type,2)})) FORMAT TabSeparated"
         )
 
     with Scenario(f"mapValues with {data_type} on a table"):
