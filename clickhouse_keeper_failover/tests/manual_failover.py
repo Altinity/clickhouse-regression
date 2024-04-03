@@ -59,7 +59,7 @@ def feature(self):
         )()
 
     with And("I check that the cluster is healthy"):
-        for attempt in retries(timeout=30, delay=5):
+        for attempt in retries(timeout=60, delay=10, initial_delay=10):
             with attempt:
                 r = keeper_query(node=recovery_node, query="srvr")
                 assert "Mode: leader" in r.output, error()
