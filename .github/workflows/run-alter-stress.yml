@@ -102,9 +102,9 @@ env:
 jobs:
   alter_stress_aws:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 4000
+    timeout-minutes: 10000
     env:
-      SUITE: alter_stress
+      SUITE: alter/stress
       STORAGE: /aws
     if: ${{ inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3' }}
     steps:
@@ -140,9 +140,9 @@ jobs:
 
   alter_stress_gcs:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 4000
+    timeout-minutes: 10000
     env:
-      SUITE: alter_stress
+      SUITE: alter/stress
       STORAGE: /gcs
     if: ${{ inputs.storage_provider == 'all' || inputs.storage_provider == 'gcs' }}
     steps:
@@ -177,9 +177,9 @@ jobs:
 
   alter_stress_minio:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 4000
+    timeout-minutes: 10000
     env:
-      SUITE: alter_stress
+      SUITE: alter/stress
       STORAGE: /minio
     if: ${{ inputs.storage_provider == 'all' || inputs.storage_provider == 'minio' }}
     steps:
