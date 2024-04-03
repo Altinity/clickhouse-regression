@@ -813,7 +813,7 @@ def restart_network(self):
     node = random.choice(self.context.zk_nodes + self.context.ch_nodes)
     delay = random.random() * 5 + 1
 
-    with interrupt_network(self.context.cluster, node, "alter_stress"):
+    with interrupt_network(self.context.cluster, node, "stress"):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
