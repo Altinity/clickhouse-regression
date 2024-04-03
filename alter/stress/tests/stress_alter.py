@@ -7,8 +7,8 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
-from alter_stress.tests.actions import *
-from alter_stress.tests.steps import *
+from alter.stress.tests.actions import *
+from alter.stress.tests.steps import *
 
 
 @TestOutline
