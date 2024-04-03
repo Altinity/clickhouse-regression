@@ -42,7 +42,9 @@ def inline_check(self, arithmetic_func, expected_result, int_type, min, max, nod
 
     if arithmetic_func in ["negate", "abs"]:
         with When(f"I check {arithmetic_func} with {int_type}"):
-            output = node.query(f"SELECT {arithmetic_func}(to{int_type}(1))").output
+            output = node.query(
+                f"SELECT {arithmetic_func}(to{int_type}(1)) FORMAT TabSeparated"
+            ).output
             assert output == expected_result, error()
 
         with When(f"I check {arithmetic_func} with {int_type} max and min value"):
@@ -55,7 +57,7 @@ def inline_check(self, arithmetic_func, expected_result, int_type, min, max, nod
     else:
         with When(f"I check {arithmetic_func} with {int_type}"):
             output = node.query(
-                f"SELECT {arithmetic_func}(to{int_type}(1), to{int_type}(1))"
+                f"SELECT {arithmetic_func}(to{int_type}(1), to{int_type}(1)) FORMAT TabSeparated"
             ).output
             assert output == expected_result, error()
 
@@ -67,7 +69,7 @@ def inline_check(self, arithmetic_func, expected_result, int_type, min, max, nod
 
             with When(f"I check {arithmetic_func} with {int_type} max and min value"):
                 node.query(
-                    f"SELECT {arithmetic_func}(to{int_type}('{max}'), to{int_type}(1)), {arithmetic_func}(to{int_type}('{min}'), to{int_type}(1))",
+                    f"SELECT {arithmetic_func}(to{int_type}('{max}'), to{int_type}(1)), {arithmetic_func}(to{int_type}('{min}'), to{int_type}(1)) FORMAT TabSeparated",
                     exitcode=exitcode,
                     message="Exception:",
                 )
@@ -103,7 +105,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
                 f"I insert {arithmetic_func} with {int_type} {value} into the table"
             ):
                 node.query(
-                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{value}'))"
+                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{value}')) FORMAT TabSeparated"
                 )
 
         with Then(f"I check the table output of {arithmetic_func} with {int_type}"):
@@ -116,11 +118,13 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
     else:
         with When(f"I insert {arithmetic_func} with {int_type} into the table"):
             node.query(
-                f"INSERT INTO {table_name} SELECT round({arithmetic_func}(to{int_type}(1), to{int_type}(1)), {rounding_precision})"
+                f"INSERT INTO {table_name} SELECT round({arithmetic_func}(to{int_type}(1), to{int_type}(1)), {rounding_precision}) FORMAT TabSeparated"
             )
 
         with Then("I check that the output matches the expected value"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert output == expected_result, error()
 
         if arithmetic_func in ["gcd", "lcm"]:
@@ -129,7 +133,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
                     f"I insert {arithmetic_func} with {int_type} {min} into the table"
                 ):
                     node.query(
-                        f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{min}'), to{int_type}(1))",
+                        f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{min}'), to{int_type}(1)) FORMAT TabSeparated",
                         exitcode=153,
                         message="Exception:",
                     )
@@ -138,7 +142,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
                     f"I insert {arithmetic_func} with {int_type} {max} into the table"
                 ):
                     node.query(
-                        f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{max}'), to{int_type}(1))"
+                        f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{max}'), to{int_type}(1)) FORMAT TabSeparated"
                     )
 
             else:
@@ -147,7 +151,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
                         f"I insert {arithmetic_func} with {int_type} {value} into the table"
                     ):
                         node.query(
-                            f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{value}'), to{int_type}(1))",
+                            f"INSERT INTO {table_name} SELECT {arithmetic_func}(to{int_type}('{value}'), to{int_type}(1)) FORMAT TabSeparated",
                             exitcode=151,
                             message="Exception:",
                         )
@@ -158,7 +162,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
                     f"I insert {arithmetic_func} with {int_type} {value} into the table"
                 ):
                     node.query(
-                        f"INSERT INTO {table_name} SELECT round({arithmetic_func}(to{int_type}('{value}'), to{int_type}(1)), {rounding_precision})"
+                        f"INSERT INTO {table_name} SELECT round({arithmetic_func}(to{int_type}('{value}'), to{int_type}(1)), {rounding_precision}) FORMAT TabSeparated"
                     )
 
         with Then(f"I check the table output of {arithmetic_func} with {int_type}"):
@@ -179,18 +183,20 @@ def inline_check_dec(self, arithmetic_func, expected_result, node=None):
 
     if arithmetic_func in ["negate", "abs"]:
         with When(f"I check {arithmetic_func} with toDecimal256"):
-            output = node.query(f"SELECT {arithmetic_func}(toDecimal256(1,0))").output
+            output = node.query(
+                f"SELECT {arithmetic_func}(toDecimal256(1,0)) FORMAT TabSeparated"
+            ).output
             assert output == expected_result, error()
 
     elif arithmetic_func in ["modulo", "moduloOrZero", "gcd", "lcm"]:
         with When(f"I check {arithmetic_func} with toDecimal256"):
             if arithmetic_func == "modulo" and check_clickhouse_version(">=23.8")(self):
                 node.query(
-                    f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                    f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0)) FORMAT TabSeparated",
                 )
             else:
                 node.query(
-                    f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                    f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0)) FORMAT TabSeparated",
                     exitcode=43,
                     message="Exception:",
                 )
@@ -198,7 +204,7 @@ def inline_check_dec(self, arithmetic_func, expected_result, node=None):
     else:
         with When(f"I check {arithmetic_func} with toDecimal256"):
             output = node.query(
-                f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))"
+                f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0)) FORMAT TabSeparated"
             ).output
             assert output == expected_result, error()
 
@@ -226,7 +232,7 @@ def table_check_dec(self, arithmetic_func, expected_result, node=None):
     if arithmetic_func in ["negate", "abs"]:
         with When(f"I insert {arithmetic_func} with toDecimal256 into the table"):
             node.query(
-                f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0))"
+                f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0)) FORMAT TabSeparated"
             )
 
         with Then(f"I check the table for output of {arithmetic_func} with Decimal256"):
@@ -240,11 +246,11 @@ def table_check_dec(self, arithmetic_func, expected_result, node=None):
         with When(f"I check {arithmetic_func} with toDecimal256"):
             if arithmetic_func == "modulo" and check_clickhouse_version(">=23.8")(self):
                 node.query(
-                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0)) FORMAT TabSeparated",
                 )
             else:
                 node.query(
-                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0)) FORMAT TabSeparated",
                     exitcode=43,
                     message="Exception:",
                 )
@@ -252,11 +258,13 @@ def table_check_dec(self, arithmetic_func, expected_result, node=None):
     else:
         with When(f"I insert {arithmetic_func} with toDecimal256 into the table"):
             node.query(
-                f"INSERT INTO {table_name} SELECT round({arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0)), {rounding_precision})"
+                f"INSERT INTO {table_name} SELECT round({arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0)), {rounding_precision}) FORMAT TabSeparated"
             )
 
         with Then("I check that the output matches the expected value"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert output == expected_result, error()
 
 

@@ -30,7 +30,9 @@ def null_int_inline(self, func, expected_result, int_type, min, max, node=None):
         node = self.context.node
 
     with When(f"I check {func} with {int_type}"):
-        output = node.query(f"SELECT {func} to{int_type}(1))").output
+        output = node.query(
+            f"SELECT {func} to{int_type}(1)) FORMAT TabSeparated"
+        ).output
         assert output == str(expected_result), error()
 
     with And(f"I check {func} with {int_type} using min and max"):
@@ -79,7 +81,9 @@ def null_dec_inline(self, func, expected_result, node=None):
         node = self.context.node
 
     with When(f"I check {func} with Decimal256"):
-        output = node.query(f"SELECT {func} toDecimal256(1,0))").output
+        output = node.query(
+            f"SELECT {func} toDecimal256(1,0)) FORMAT TabSeparated"
+        ).output
         assert output == str(expected_result), error()
 
     with And(f"I check {func} with Decimal256 using min and max"):

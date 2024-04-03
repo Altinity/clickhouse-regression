@@ -56,17 +56,22 @@ def math_int_inline(
     if node is None:
         node = self.context.node
 
+    if check_clickhouse_version(">=24.3")(self):
+        self.context.snapshot_id = f"tests.post24.3"
+
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
         with When(f"I check {func} with {int_type} using 1, max, and min"):
             node.query(
-                f"SELECT {func} to{int_type}(1)), {func} to{int_type}('{max}')), {func} to{int_type}('{min}'))",
+                f"SELECT {func} to{int_type}(1)), {func} to{int_type}('{max}')), {func} to{int_type}('{min}')) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message="Exception:",
             )
 
     else:
         with When(f"I check {func} with {int_type} using 1"):
-            output = node.query(f"SELECT {func} to{int_type}(1))").output
+            output = node.query(
+                f"SELECT {func} to{int_type}(1)) FORMAT TabSeparated"
+            ).output
             if output == "inf":
                 pass
             else:
@@ -100,7 +105,7 @@ def math_int_table(
                 f"I insert the output of {func} with {int_type} using {value} into a table"
             ):
                 node.query(
-                    f"INSERT INTO {table_name} SELECT {func} to{int_type}('{value}'))",
+                    f"INSERT INTO {table_name} SELECT {func} to{int_type}('{value}')) FORMAT TabSeparated",
                     exitcode=exitcode,
                     message="Exception:",
                 )
@@ -111,7 +116,7 @@ def math_int_table(
                 f"I insert the output of {func} with {int_type} using {value} into a table"
             ):
                 node.query(
-                    f"INSERT INTO {table_name} SELECT round(to{int_type}OrZero( toString({func} to{int_type}('{value}')))), {rounding_precision})"
+                    f"INSERT INTO {table_name} SELECT round(to{int_type}OrZero( toString({func} to{int_type}('{value}')))), {rounding_precision}) FORMAT TabSeparated"
                 )
 
         with Then(f"I check the outputs of {func} with {int_type}"):
@@ -132,17 +137,22 @@ def math_dec_inline(self, func, expected_result, exitcode, node=None):
     if node is None:
         node = self.context.node
 
+    if check_clickhouse_version(">=24.3")(self):
+        self.context.snapshot_id = f"tests.post24.3"
+
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
         with When(f"I check {func} with Decimal256 using 1, max, and min"):
             node.query(
-                f"SELECT {func} toDecimal256(1,0)), {func} toDecimal256('{max}',0)), {func} toDecimal256('{min}',0))",
+                f"SELECT {func} toDecimal256(1,0)), {func} toDecimal256('{max}',0)), {func} toDecimal256('{min}',0)) FORMAT TabSeparated",
                 exitcode=43,
                 message="Exception: Illegal type ",
             )
 
     else:
         with When(f"I check {func} with Decimal256 using 1"):
-            output = node.query(f"SELECT {func} toDecimal256(1,0))").output
+            output = node.query(
+                f"SELECT {func} toDecimal256(1,0)) FORMAT TabSeparated"
+            ).output
             if output == "inf":
                 pass
             else:
