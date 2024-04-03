@@ -5,7 +5,7 @@ from clickhouse_keeper_failover.tests.steps import *
 
 
 @TestFeature
-@Name("manual failover")
+@Name("manual failover --force-recovery")
 def feature(self):
     """Test keeper manual failover."""
 
@@ -29,9 +29,10 @@ def feature(self):
             restart=False,
         )
 
-    with When("I restart one node with --force-recovery"):
-        cluster = self.context.cluster
+    with When("I choose a node to perform the recovery"):
         recovery_node = dr_ensemble[0]
+
+    with When("I restart one node with --force-recovery"):
         recovery_node.stop_keeper()
         recovery_node.start_keeper(force_recovery=True)
 

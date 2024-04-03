@@ -12,7 +12,10 @@ from helpers.common import check_clickhouse_version
 from clickhouse_keeper_failover.tests.steps import *
 
 
-xfails = {"dynamic:":[(Fail, 'Not working')]}
+xfails = {
+    "dynamic:": [(Fail, "Not working")],
+    "manual failover rcvr": [(Fail, "Not working")],
+}
 
 ffails = {}
 
@@ -85,7 +88,11 @@ def regression(
     if check_clickhouse_version("<21.4")(self):
         skip(reason="only supported on ClickHouse version >= 21.4")
 
-    features = ["dynamic_reconfiguration_failover", "manual_failover"]
+    features = [
+        "dynamic_reconfiguration_failover",
+        "manual_failover_rcvr",
+        "manual_failover_force",
+    ]
 
     for feature in features:
         run_feature(
