@@ -296,7 +296,7 @@ def stale_replica(self):
         join()
 
     with Then("I check that the nodes are consistent"):
-        check_consistency(nodes=nodes, table_name=table_name)
+        check_consistency(nodes=nodes, table_name=table_name, sync_timeout=60)
 
 
 @TestScenario

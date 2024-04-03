@@ -11,8 +11,8 @@ from testflows.combinatorics import combinations
 from helpers.alter import *
 from helpers.common import KeyWithAttributes, create_xml_config_content, add_config
 from vfs.tests.steps import *
-from alter_stress.tests.tc_netem import *
-from alter_stress.tests.steps import *
+from alter.stress.tests.tc_netem import *
+from alter.stress.tests.steps import *
 from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
