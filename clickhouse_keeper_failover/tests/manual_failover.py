@@ -59,7 +59,9 @@ def feature(self):
         )()
 
     with And("I check that the cluster is healthy"):
-        r = keeper_query(node=recovery_node, query="srvr")
-        assert "Mode: leader" in r.output, error()
-        r = keeper_query(node=recovery_node, query="mntr")
-        assert "zk_synced_followers\t2" in r.output, error()
+        for attempt in retries(timeout=30, delay=5):
+            with attempt:
+                r = keeper_query(node=recovery_node, query="srvr")
+                assert "Mode: leader" in r.output, error()
+                r = keeper_query(node=recovery_node, query="mntr")
+                assert "zk_synced_followers\t2" in r.output, error()
