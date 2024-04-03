@@ -100,6 +100,11 @@ def feature(self):
             parallel=True,
             executor=pool,
         )
+        Feature(
+            run=load("alter.table.attach_partition.part_level", "feature"),
+            parallel=True,
+            executor=pool,
+        )
         join()
 
     Feature(
