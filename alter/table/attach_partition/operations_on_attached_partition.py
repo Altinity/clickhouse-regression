@@ -513,24 +513,27 @@ def check_update_in_partition(
             )
         )
 
-    with And("I update all partitions from the table"):
-        if "a" not in destination_partition_key:
-            update_column = "a"
-        elif "b" not in destination_partition_key:
-            update_column = "b"
-        elif "c" not in destination_partition_key:
-            update_column = "c"
-        else:
-            skip("No columns to update")
+    if "a" not in destination_partition_key:
+        update_column = "a"
+    elif "b" not in destination_partition_key:
+        update_column = "b"
+    elif "c" not in destination_partition_key:
+        update_column = "c"
+    else:
+        skip("No columns to update")
 
+    with And("I save the data from the table to compare it later"):
         expected_data = self.context.node_1.query(
             f"SELECT {update_column}+1 FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*)"
         ).output
+
+    with And("I update all partitions from the table"):
         for partition in destination_partition_ids:
             self.context.node_1.query(
-                f"ALTER TABLE {table_name} UPDATE {update_column}={update_column}+1 IN PARTITION {partition} WHERE {update_column} > 2"
+                f"ALTER TABLE {table_name} UPDATE {update_column}={update_column}+1 IN PARTITION {partition} WHERE {update_column} > 2 SETTINGS mutations_sync=2"
             )
 
+    with Then("I check that partitions were updated"):
         result_data = self.context.node_1.query(
             f"SELECT {update_column} FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*)"
         )
@@ -883,6 +886,6 @@ def feature(self):
             test=attach_partition_from,
             parallel=True,
             executor=executor,
-        )(test=check_update_in_partition, sample_size=200)
+        )(test=check_update_in_partition, sample_size=500)
 
         join()
