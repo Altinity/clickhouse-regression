@@ -231,7 +231,10 @@ def check_storage_policy(self, source_storage_policy, destination_storage_policy
     with Then(
         "I try to attach partition to the destination table from the source table"
     ):
-        if source_storage_policy == destination_storage_policy:
+        if (
+            source_storage_policy == destination_storage_policy
+            or check_clickhouse_version(">=23.3")(self)
+        ):
             exitcode, message = None, None
         else:
             exitcode, message = 36, "DB::Exception: Could not clone and load part"
