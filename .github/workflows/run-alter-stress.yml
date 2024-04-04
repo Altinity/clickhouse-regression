@@ -1,5 +1,5 @@
 name: Run CI/CD alter stress tests
-run-name: ${{ inputs.custom_run_name || format('{0} | Stress {1} | Arch {2}', inputs.version, inputs.scenario, inputs.architecture) }}
+run-name: ${{ inputs.custom_run_name || format('{0} | Stress {1} | Provider {2} | Arch {3}', inputs.version, inputs.scenario, inputs.storage_provider, inputs.architecture) }}
 on:
   workflow_dispatch:
     inputs:
@@ -35,7 +35,6 @@ on:
         options:
           - x86
           - ARM
-          - all
       artifacts:
         description: "Artifact S3 bucket"
         type: choice
@@ -107,7 +106,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /aws_x86
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && (inputs.architecture == 'all' || inputs.architecture == 'x86') }}
+    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'x86' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -145,7 +144,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /gcs_x86
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && (inputs.architecture == 'all' || inputs.architecture == 'x86') }}
+    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'x86' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -182,7 +181,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /minio_x86
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && (inputs.architecture == 'all' || inputs.architecture == 'x86') }}
+    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'x86' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -216,7 +215,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /aws_arm
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && (inputs.architecture == 'all' || inputs.architecture == 'ARM') }}
+    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'ARM' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -254,7 +253,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /gcs_arm
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && (inputs.architecture == 'all' || inputs.architecture == 'ARM') }}
+    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'ARM' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -291,7 +290,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /minio_arm
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && (inputs.architecture == 'all' || inputs.architecture == 'ARM') }}
+    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'ARM' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
