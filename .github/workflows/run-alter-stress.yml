@@ -106,7 +106,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /aws_x86
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'x86' }}
+    if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -144,7 +144,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /gcs_x86
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'x86' }}
+    if: ${{ contains('all gcs', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -181,7 +181,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /minio_x86
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'x86' }}
+    if: ${{ contains('all minio', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -215,7 +215,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /aws_arm
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'ARM' }}
+    if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -253,7 +253,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /gcs_arm
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'ARM' }}
+    if: ${{ contains('all gcs', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -290,7 +290,7 @@ jobs:
     env:
       SUITE: alter/stress
       STORAGE: /minio_arm
-    if: ${{ (inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3') && inputs.architecture == 'ARM' }}
+    if: ${{ contains('all minio', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
