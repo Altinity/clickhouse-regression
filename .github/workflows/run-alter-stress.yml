@@ -29,12 +29,6 @@ on:
           - aws_s3
           - gcs
           - all
-      storage_fs:
-        description: "Filesystem to use (default: normal)"
-        type: choice
-        options:
-          - normal
-          - vfs
       architecture:
         description: "Runner architecture to use (default: x86)"
         type: choice
@@ -95,8 +89,7 @@ env:
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)"
     --log raw.log ${{ inputs.extra_args }}
     --stress
-    --allow-vfs
-    --only ":/alter/${{ inputs.storage_fs }}/${{ inputs.scenario }}*"
+    --only ":/alter/:/${{ inputs.scenario }}*"
   artifact_paths: |
     ./report.html
     ./*.log.txt
