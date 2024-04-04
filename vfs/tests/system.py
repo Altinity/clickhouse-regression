@@ -3,7 +3,7 @@ import random
 
 from testflows.core import *
 
-from alter_stress.tests.steps import interrupt_network, interrupt_node
+from alter.stress.tests.steps import interrupt_network, interrupt_node
 from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 from vfs.tests.steps import *

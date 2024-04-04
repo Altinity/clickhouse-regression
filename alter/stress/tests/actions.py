@@ -11,8 +11,8 @@ from testflows.combinatorics import combinations
 from helpers.alter import *
 from helpers.common import KeyWithAttributes, create_xml_config_content, add_config
 from vfs.tests.steps import *
-from alter_stress.tests.tc_netem import *
-from alter_stress.tests.steps import *
+from alter.stress.tests.tc_netem import *
+from alter.stress.tests.steps import *
 from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
@@ -813,7 +813,7 @@ def restart_network(self):
     node = random.choice(self.context.zk_nodes + self.context.ch_nodes)
     delay = random.random() * 5 + 1
 
-    with interrupt_network(self.context.cluster, node, "alter_stress"):
+    with interrupt_network(self.context.cluster, node, "stress"):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 

@@ -435,12 +435,12 @@ def get_active_partition_ids(self, node, table_name, timeout=30):
 
 
 @TestStep(Then)
-def check_consistency(self, nodes, table_name):
+def check_consistency(self, nodes, table_name, sync_timeout=10):
     """SYNC the given nodes and check that they agree about the given table"""
 
     with When("I make sure all nodes are synced"):
         for node in nodes:
-            sync_replica(node=node, table_name=table_name, timeout=10, no_checks=True)
+            sync_replica(node=node, table_name=table_name, timeout=sync_timeout, no_checks=True)
 
     with When("I query all nodes for their row counts"):
         row_counts = {}

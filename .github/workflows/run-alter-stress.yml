@@ -1,5 +1,5 @@
 name: Run CI/CD alter stress tests
-run-name: ${{ inputs.custom_run_name || format('{0} is running stress tests', github.actor) }}
+run-name: ${{ inputs.custom_run_name || format('{0} | Stress {1} | Provider {2} | Arch {3}', inputs.version, inputs.scenario, inputs.storage_provider, inputs.architecture) }}
 on:
   workflow_dispatch:
     inputs:
@@ -7,9 +7,10 @@ on:
         description: "Package either 'docker://' or 'https://'. Example: 'https://s3.amazonaws.com/clickhouse-builds/23.3/.../package_release/clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
         required: true
         type: string
-        default: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
+        default: docker://altinity/clickhouse-server:23.8.8.21.altinitystable
       version:
         description: "Expected version. Example: 23.3.1.64"
+        required: true
         type: string
       scenario:
         description: "Stress scenario to run (default: safe)"
@@ -28,12 +29,13 @@ on:
           - aws_s3
           - gcs
           - all
-      storage_fs:
-        description: "Filesystem to use (default: normal)"
+      architecture:
+        description: "Runner architecture to use (default: x86)"
         type: choice
         options:
-          - normal
-          - vfs
+          - x86
+          - ARM
+          - all
       artifacts:
         description: "Artifact S3 bucket"
         type: choice
@@ -87,8 +89,7 @@ env:
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)"
     --log raw.log ${{ inputs.extra_args }}
     --stress
-    --allow-vfs
-    --only ":/alter/${{ inputs.storage_fs }}/${{ inputs.scenario }}*"
+    --only ":/alter/:/${{ inputs.scenario }}*"
   artifact_paths: |
     ./report.html
     ./*.log.txt
@@ -100,13 +101,13 @@ env:
     ./*/*/_instances/*.log
 
 jobs:
-  alter_stress_aws:
+  alter_stress_aws_x86:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 4000
+    timeout-minutes: 10000
     env:
-      SUITE: alter_stress
-      STORAGE: /aws
-    if: ${{ inputs.storage_provider == 'all' || inputs.storage_provider == 'aws_s3' }}
+      SUITE: alter/stress
+      STORAGE: /aws_x86
+    if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -138,13 +139,13 @@ jobs:
           name: ${{ env.SUITE }}-aws-artifacts
           path: ${{ env.artifact_paths}}
 
-  alter_stress_gcs:
+  alter_stress_gcs_x86:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 4000
+    timeout-minutes: 10000
     env:
-      SUITE: alter_stress
-      STORAGE: /gcs
-    if: ${{ inputs.storage_provider == 'all' || inputs.storage_provider == 'gcs' }}
+      SUITE: alter/stress
+      STORAGE: /gcs_x86
+    if: ${{ contains('all gcs', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -175,13 +176,122 @@ jobs:
           name: ${{ env.SUITE }}-gcs-artifacts
           path: ${{ env.artifact_paths}}
 
-  alter_stress_minio:
+  alter_stress_minio_x86:
     runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 4000
+    timeout-minutes: 10000
     env:
-      SUITE: alter_stress
-      STORAGE: /minio
-    if: ${{ inputs.storage_provider == 'all' || inputs.storage_provider == 'minio' }}
+      SUITE: alter/stress
+      STORAGE: /minio_x86
+    if: ${{ contains('all minio', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage minio
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-artifacts
+          path: ${{ env.artifact_paths}}
+
+  alter_stress_aws_arm:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 10000
+    env:
+      SUITE: alter/stress
+      STORAGE: /aws_arm
+    if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage aws_s3
+              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
+              --aws-s3-region ${{ secrets.AWS_REGION }}
+              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-aws-artifacts
+          path: ${{ env.artifact_paths}}
+
+  alter_stress_gcs_arm:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 10000
+    env:
+      SUITE: alter/stress
+      STORAGE: /gcs_arm
+    if: ${{ contains('all gcs', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage gcs
+              --gcs-uri ${{ secrets.GCS_URI }}
+              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
+              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-gcs-artifacts
+          path: ${{ env.artifact_paths}}
+
+  alter_stress_minio_arm:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 10000
+    env:
+      SUITE: alter/stress
+      STORAGE: /minio_arm
+    if: ${{ contains('all minio', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -7,8 +7,8 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
-from alter_stress.tests.actions import *
-from alter_stress.tests.steps import *
+from alter.stress.tests.actions import *
+from alter.stress.tests.steps import *
 
 
 @TestOutline
@@ -302,7 +302,7 @@ def feature(self):
     with Given("I have S3 disks configured"):
         s3_config()
 
-    for sub_feature in loads(current_module(), Feature):
-        if sub_feature is feature:
-            continue
-        Feature(run=sub_feature)
+    if self.context.allow_vfs:
+        Feature(run=vfs)
+    else:
+        Feature(run=normal)
