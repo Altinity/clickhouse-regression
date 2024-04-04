@@ -75,7 +75,9 @@ def add_config(
                 logsize = cmd.output.split(" ")[0].strip()
 
             with And("I start ClickHouse back up"):
-                node.start_clickhouse(user=user, wait_healthy=wait_healthy, timeout=timeout)
+                node.start_clickhouse(
+                    user=user, wait_healthy=wait_healthy, timeout=timeout
+                )
 
             with Then("I tail the log file from using previous log size as the offset"):
                 bash.prompt = bash.__class__.prompt
@@ -774,6 +776,76 @@ def check_bucket_size(
     assert abs(current_size - expected_size) <= tolerance, error()
 
 
+@TestStep(When)
+def get_stable_bucket_size(
+    self,
+    name,
+    prefix,
+    minio_enabled,
+    access_key,
+    key_id,
+    delay=10,
+    timeout=300,
+):
+    """Get the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
+
+    with By("Checking the current bucket size"):
+        size_previous = get_bucket_size(
+            name=name,
+            prefix=prefix,
+            minio_enabled=minio_enabled,
+            access_key=access_key,
+            key_id=key_id,
+        )
+
+    start_time = time.time()
+    while True:
+        with And(f"Waiting {delay}s"):
+            time.sleep(delay)
+        with And("Checking the current bucket size"):
+            size = get_bucket_size(
+                name=name,
+                prefix=prefix,
+                minio_enabled=minio_enabled,
+                access_key=access_key,
+                key_id=key_id,
+            )
+        with And(f"Checking if current={size} == previous={size_previous}"):
+            if size_previous == size:
+                break
+        size_previous = size
+
+        with And("Checking timeout"):
+            assert time.time() - start_time <= timeout, error(
+                f"Bucket size did not stabilize in {timeout}s"
+            )
+
+    return size
+
+
+@TestStep(Then)
+def check_stable_bucket_size(
+    self,
+    name,
+    prefix,
+    expected_size,
+    tolerance=0,
+    minio_enabled=False,
+    delay=10,
+):
+    """Assert the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
+
+    current_size = get_stable_bucket_size(
+        name=name,
+        prefix=prefix,
+        minio_enabled=minio_enabled,
+        access_key=self.context.secret_access_key,
+        key_id=self.context.access_key_id,
+        delay=delay,
+    )
+    assert abs(current_size - expected_size) <= tolerance, error()
+
+
 @TestStep(Given)
 def start_minio(
     self,
@@ -1203,9 +1275,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options[
-                "server_side_encryption_customer_key_base64"
-            ] = ssec_key
+            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
+                ssec_key
+            )
         yield
 
     finally:
