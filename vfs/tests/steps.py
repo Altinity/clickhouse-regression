@@ -10,7 +10,7 @@ from testflows.combinatorics import combinations
 from helpers.common import getuid, check_clickhouse_version
 from helpers.queries import *
 
-from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
+from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size, get_stable_bucket_size, check_stable_bucket_size
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
@@ -296,76 +296,6 @@ def enable_vfs(
         timeout=timeout,
         config_file=config_file,
     )
-
-
-@TestStep
-def get_stable_bucket_size(
-    self,
-    name,
-    prefix,
-    minio_enabled,
-    access_key,
-    key_id,
-    delay=10,
-    timeout=300,
-):
-    """Get the size of an s3 bucket, waiting until the size hasn't change for [delay] seconds."""
-
-    with By("Checking the current bucket size"):
-        size_previous = get_bucket_size(
-            name=name,
-            prefix=prefix,
-            minio_enabled=minio_enabled,
-            access_key=access_key,
-            key_id=key_id,
-        )
-
-    start_time = time.time()
-    while True:
-        with And(f"Waiting {delay}s"):
-            time.sleep(delay)
-        with And("Checking the current bucket size"):
-            size = get_bucket_size(
-                name=name,
-                prefix=prefix,
-                minio_enabled=minio_enabled,
-                access_key=access_key,
-                key_id=key_id,
-            )
-        with And(f"Checking if current={size} == previous={size_previous}"):
-            if size_previous == size:
-                break
-        size_previous = size
-
-        with And("Checking timeout"):
-            assert time.time() - start_time <= timeout, error(
-                f"Bucket size did not stabilize in {timeout}s"
-            )
-
-    return size
-
-
-@TestStep
-def check_stable_bucket_size(
-    self,
-    name,
-    prefix,
-    expected_size,
-    tolerance=0,
-    minio_enabled=False,
-    delay=10,
-):
-    """Assert the size of an s3 bucket, waiting until the size hasn't change for [delay] seconds."""
-
-    current_size = get_stable_bucket_size(
-        name=name,
-        prefix=prefix,
-        minio_enabled=minio_enabled,
-        access_key=self.context.secret_access_key,
-        key_id=self.context.access_key_id,
-        delay=delay,
-    )
-    assert abs(current_size - expected_size) <= tolerance, error()
 
 
 @TestStep(Then)
