@@ -14,10 +14,7 @@ def global_setting(self):
     <allow_s3_zero_copy_replication> setting is set to 1 as a global merge
     tree engine setting with correct syntax.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -27,13 +24,7 @@ def global_setting(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -106,13 +97,7 @@ def global_setting(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -123,11 +108,7 @@ def drop_replica(self):
     """Check that a ClickHouse instance with a replicated table can be dropped
     and started again with no changes to the data in the table.
     """
-
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -137,13 +118,7 @@ def drop_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -260,13 +235,7 @@ def drop_replica(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -278,8 +247,6 @@ def add_replica(self):
 
     cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -289,13 +256,7 @@ def add_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on the first node"):
@@ -321,13 +282,7 @@ def add_replica(self):
                 insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with And("I create a replicated table on the second node"):
             nodes[1].restart_clickhouse()
@@ -345,13 +300,7 @@ def add_replica(self):
             """The size of the s3 bucket should be 1 byte more
                     than previously because of the additional replica"""
         ):
-            size = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size = get_bucket_size()
             assert size - size_after == 1, error()
 
         with And("I check simple queries on the first node"):
@@ -439,13 +388,7 @@ def add_replica(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -460,8 +403,6 @@ def drop_alter_replica(self):
 
     cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -471,13 +412,7 @@ def drop_alter_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -555,13 +490,7 @@ def drop_alter_replica(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -685,8 +614,6 @@ def alter(self):
     """
     cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
@@ -712,13 +639,7 @@ def alter(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -740,13 +661,7 @@ def alter(self):
                 insert_data_pair(nodes[0], 1)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with Then("I check that the sign is 1 for the second table"):
             check_query_pair(
@@ -789,13 +704,7 @@ def alter(self):
         ):
             start_time = time.time()
             while True:
-                current_size = get_bucket_size(
-                    name=bucket_name,
-                    prefix=bucket_path,
-                    access_key=self.context.secret_access_key,
-                    key_id=self.context.access_key_id,
-                    minio_enabled=self.context.minio_enabled,
-                )
+                current_size = get_bucket_size()
                 if current_size < size_after * 1.5:
                     break
                 if time.time() - start_time < 60:
@@ -812,13 +721,7 @@ def alter(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -830,8 +733,6 @@ def alter_repeat(self):
     """Check for data duplication when repeated alter commands are used."""
     cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
@@ -887,13 +788,7 @@ def alter_repeat(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -915,13 +810,7 @@ def alter_repeat(self):
                 insert_data_pair(nodes[0], 1)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with Then("I check that the sign is 1 for the second table"):
             check_query_pair(
@@ -942,13 +831,7 @@ def alter_repeat(self):
                 ):
                     start_time = time.time()
                     while True:
-                        current_size = get_bucket_size(
-                            name=bucket_name,
-                            prefix=bucket_path,
-                            access_key=self.context.secret_access_key,
-                            key_id=self.context.access_key_id,
-                            minio_enabled=self.context.minio_enabled,
-                        )
+                        current_size = get_bucket_size()
                         if current_size < size_after * 1.5:
                             break
                         if time.time() - start_time < 60:
@@ -967,13 +850,7 @@ def alter_repeat(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -985,10 +862,7 @@ def insert_multiple_replicas(self):
     replicas of the same table. Check that each replica is updated correctly.
     """
 
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
     expected = 6306510
 
     with Given("I have a pair of clickhouse nodes"):
@@ -999,14 +873,7 @@ def insert_multiple_replicas(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
-
+        size_before = get_bucket_size()
     try:
         with When("I create a replicated table on each node"):
             for i, node in enumerate(nodes):
@@ -1105,13 +972,7 @@ def insert_multiple_replicas(self):
             )
 
         with And("I check that the data added is within 1% of expected amount"):
-            current_size = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            current_size = get_bucket_size()
             added_size = current_size - size_before
 
             assert added_size >= expected * 0.99, error()
@@ -1126,13 +987,7 @@ def insert_multiple_replicas(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -1141,10 +996,7 @@ def delete(self):
     """Check that when replicated tables are removed, they are not
     removed from S3 until all replicas are removed.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -1154,13 +1006,7 @@ def delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -1187,25 +1033,13 @@ def delete(self):
                 insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
 
         with When("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with And("I drop the table on one node"):
             nodes[0].query("DROP TABLE IF EXISTS zero_copy_replication")
 
         with Then("The size of the s3 bucket should be the same"):
-            check_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                expected_size=size_after,
-                tolerance=0,
-                minio_enabled=self.context.minio_enabled,
-            )
+            check_bucket_size(expected_size=size_before, tolerance=0)
 
         with When("I drop the table on the other node"):
             nodes[1].query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
@@ -1214,13 +1048,7 @@ def delete(self):
             """The size of the s3 bucket should be very close to the size
                     before adding any data"""
         ):
-            check_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                expected_size=size_before,
-                tolerance=5,
-                minio_enabled=self.context.minio_enabled,
-            )
+            check_bucket_size(expected_size=size_before, tolerance=5)
 
     finally:
         with Finally("I drop the table on each node"):
@@ -1234,10 +1062,7 @@ def delete_all(self):
     """Check that when all replicas of a table are dropped, the data is deleted
     from S3.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -1247,14 +1072,7 @@ def delete_all(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
-
+        size_before = get_bucket_size()
     try:
         with When("I create a replicated table on each node"):
             for i, node in enumerate(nodes):
@@ -1280,14 +1098,7 @@ def delete_all(self):
                 insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
 
         with Then("A nonzero amount of data should be added to S3"):
-            size_now = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                minio_enabled=self.context.minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-            )
-
+            size_now = get_bucket_size()
             assert size_now > size_before, error()
 
     finally:
@@ -1296,13 +1107,7 @@ def delete_all(self):
                 node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
 
     with Then("All data should be removed from S3"):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=0,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=0)
 
 
 @TestScenario
@@ -1311,10 +1116,7 @@ def ttl_move(self):
     """Check that TTL moves work properly when <allow_s3_zero_copy_replication>
     parameter is set to 1.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
@@ -1332,22 +1134,10 @@ def ttl_move(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before_base = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before_base = get_bucket_size()
 
     with And("I get the size of the other s3 bucket before adding data"):
-        size_before_tier = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path + "/tiered",
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before_tier = get_bucket_size(prefix=self.context.bucket_path + "/tiered")
 
     try:
         with When("I create a replicated table on each node"):
@@ -1441,23 +1231,16 @@ def ttl_move(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before_base,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before_base, tolerance=5)
+
     with And(
         """The size of the other s3 bucket should be very close to the size
                 before adding any data"""
     ):
         check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path + "/tiered",
+            prefix=self.context.bucket_path + "/tiered",
             expected_size=size_before_tier,
             tolerance=5,
-            minio_enabled=self.context.minio_enabled,
         )
 
 
@@ -1467,10 +1250,7 @@ def ttl_delete(self):
     """Check that TTL delete works properly when <allow_s3_zero_copy_replication>
     parameter is set to 1.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
@@ -1487,13 +1267,7 @@ def ttl_delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -1587,13 +1361,7 @@ def ttl_delete(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -2221,13 +1989,8 @@ def outline(self):
         s3_storage(disks=disks, policies=policies, restart=True)
 
     with Check("bucket should be empty before test begins"):
-        check_bucket_size(
-            name=self.context.bucket_name,
-            prefix=self.context.bucket_path,
-            expected_size=0,
-            tolerance=50,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=0, tolerance=50)
+
     for scenario in loads(current_module(), Scenario):
         scenario()
 
