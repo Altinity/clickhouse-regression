@@ -21,6 +21,7 @@ ffails = {
     "/stress/minio/alter/:/:/:move partition to tab:": (
         XFail,
         "Times out, needs investigation",
+        check_clickhouse_version(">=24"),
     )
 }
 
