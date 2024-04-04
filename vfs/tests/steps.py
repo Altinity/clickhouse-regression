@@ -5,10 +5,10 @@ from threading import Event
 
 from testflows.core import *
 from testflows.asserts import error
-from testflows.uexpect.uexpect import ExpectTimeoutError
 from testflows.combinatorics import combinations
 
 from helpers.common import getuid, check_clickhouse_version
+from helpers.queries import *
 
 from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
 
@@ -93,15 +93,6 @@ def check_vfs_state(
     else:
         r = node.command(c, exitcode=None)
         assert r.exitcode in [1, 2], error()
-
-
-@TestStep
-def get_row_count(self, node, table_name, timeout=30):
-    """Get the number of rows in the given table."""
-    r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSON", exitcode=0, timeout=timeout
-    )
-    return int(json.loads(r.output)["data"][0]["count()"])
 
 
 @TestStep(Then)
@@ -201,7 +192,7 @@ def insert_random(
     table_name,
     columns: str = None,
     rows: int = 1000000,
-    settings=None,
+    settings: str = None,
     **kwargs,
 ):
     """Insert random data to a table."""
@@ -266,23 +257,6 @@ def delete_one_replica(self, node, table_name, timeout=30):
         f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0, timeout=timeout
     )
     return r
-
-
-@TestStep(When)
-def sync_replica(self, node, table_name, raise_on_timeout=False, **kwargs):
-    """Call SYSTEM SYNC REPLICA on the given node and table"""
-    try:
-        node.query(f"SYSTEM SYNC REPLICA {table_name}", **kwargs)
-    except (ExpectTimeoutError, TimeoutError):
-        if raise_on_timeout:
-            raise
-
-
-@TestStep(When)
-def optimize(self, node, table_name, final=False, no_checks=False):
-    """Apply OPTIMIZE on the given table and node"""
-    q = f"OPTIMIZE TABLE {table_name}" + " FINAL" if final else ""
-    node.query(q, no_checks=no_checks, exitcode=0)
 
 
 @TestStep(Given)
@@ -396,42 +370,16 @@ def check_stable_bucket_size(
 
 @TestStep
 def get_column_string(self, node, table_name, timeout=30) -> str:
-    """Get a string with column names and types."""
+    """
+    Get a string with column names and types.
+    This converts the output from DESCRIBE TABLE to a string
+    that can be passed into CREATE or INSERT.
+    """
     r = node.query(
         f"DESCRIBE TABLE {table_name}",
         timeout=timeout,
     )
     return ",".join([l.strip() for l in r.output.splitlines()])
-
-
-@TestStep
-def get_column_names(self, node, table_name, timeout=30) -> list:
-    """Get a list of a table's column names."""
-    r = node.query(
-        f"DESCRIBE TABLE {table_name} FORMAT JSONColumns",
-        timeout=timeout,
-    )
-    return json.loads(r.output)["name"]
-
-
-@TestStep
-def get_active_parts(self, node, table_name, timeout=30):
-    """Get a list of active parts in a table."""
-    r = node.query(
-        f"SELECT name FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
-        timeout=timeout,
-    )
-    return json.loads(r.output)["name"]
-
-
-@TestStep
-def get_active_partition_ids(self, node, table_name, timeout=30):
-    """Get a list of active partitions in a table."""
-    r = node.query(
-        f"SELECT partition_id FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
-        timeout=timeout,
-    )
-    return json.loads(r.output)["partition_id"]
 
 
 @TestStep(Then)
@@ -440,7 +388,9 @@ def check_consistency(self, nodes, table_name, sync_timeout=10):
 
     with When("I make sure all nodes are synced"):
         for node in nodes:
-            sync_replica(node=node, table_name=table_name, timeout=sync_timeout, no_checks=True)
+            sync_replica(
+                node=node, table_name=table_name, timeout=sync_timeout, no_checks=True
+            )
 
     with When("I query all nodes for their row counts"):
         row_counts = {}
