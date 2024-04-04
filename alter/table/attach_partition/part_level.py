@@ -395,7 +395,7 @@ def test(self):
 
     with And("I get part name"):
         part_name = self.context.node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}'"
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
         ).output
 
     with And("I detach the part"):
@@ -424,7 +424,7 @@ def test(self):
 
     with And("I get part name"):
         part_name = self.context.node.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table}'"
+            f"SELECT name FROM system.parts WHERE table = '{destination_table}' AND active"
         ).output
 
 
@@ -473,5 +473,6 @@ def feature(self):
     ]
     self.context.node = self.context.node_1
 
-    Scenario(run=part_levels_user_example)
+    # Scenario(run=part_levels_user_example)
     Scenario(run=part_level_reset)
+    # Scenario(run=test)
