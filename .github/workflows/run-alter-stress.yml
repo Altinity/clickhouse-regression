@@ -35,6 +35,7 @@ on:
         options:
           - x86
           - ARM
+          - all
       artifacts:
         description: "Artifact S3 bucket"
         type: choice
