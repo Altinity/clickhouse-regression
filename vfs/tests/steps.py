@@ -368,20 +368,6 @@ def check_stable_bucket_size(
     assert abs(current_size - expected_size) <= tolerance, error()
 
 
-@TestStep
-def get_column_string(self, node, table_name, timeout=30) -> str:
-    """
-    Get a string with column names and types.
-    This converts the output from DESCRIBE TABLE to a string
-    that can be passed into CREATE or INSERT.
-    """
-    r = node.query(
-        f"DESCRIBE TABLE {table_name}",
-        timeout=timeout,
-    )
-    return ",".join([l.strip() for l in r.output.splitlines()])
-
-
 @TestStep(Then)
 def check_consistency(self, nodes, table_name, sync_timeout=10):
     """SYNC the given nodes and check that they agree about the given table"""

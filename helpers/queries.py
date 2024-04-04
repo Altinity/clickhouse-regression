@@ -89,3 +89,17 @@ def get_indexes(self, node: ClickHouseNode, table_name: str) -> list:
         exitcode=0,
     )
     return json.loads(r.output)["name"]
+
+
+@TestStep
+def get_column_string(self, node: ClickHouseNode, table_name: str, timeout=30) -> str:
+    """
+    Get a string with column names and types.
+    This converts the output from DESCRIBE TABLE to a string
+    that can be passed into CREATE or INSERT.
+    """
+    r = node.query(
+        f"DESCRIBE TABLE {table_name}",
+        timeout=timeout,
+    )
+    return ",".join([l.strip() for l in r.output.splitlines()])
