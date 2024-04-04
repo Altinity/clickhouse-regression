@@ -664,8 +664,9 @@ def get_random_string(cluster, length, steps=True, *args, **kwargs):
 
 
 @TestStep(When)
-def insert_data(self, name, number_of_mb, start=0):
-    node = current().context.node
+def insert_data(self, name, number_of_mb, start=0, node=None):
+    if node is None:
+        node = current().context.node
 
     values = ",".join(
         f"({x})"
