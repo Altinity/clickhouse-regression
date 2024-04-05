@@ -14,7 +14,7 @@ def measure_buckets_before_and_after(
     """Return the current bucket size and assert that it is the same after cleanup."""
 
     with When("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(prefix=bucket_prefix, name=bucket_name)
+        size_before = get_stable_bucket_size(prefix=bucket_prefix, name=bucket_name)
 
     yield size_before
 
@@ -22,7 +22,7 @@ def measure_buckets_before_and_after(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
+        check_stable_bucket_size(
             prefix=bucket_prefix,
             name=bucket_name,
             expected_size=size_before,
@@ -220,16 +220,18 @@ def drop_alter_replica(self):
             replicated_table(node=node, table_name=table_name)
 
     with And("I insert 1MB of data"):
-        insert_data_node(node=nodes[0], number_of_mb=1)
+        insert_data(node=nodes[0], number_of_mb=1, name=table_name)
 
     with And("I stop the other node"):
         nodes[1].stop()
 
     with And("another insert of 1MB of data"):
-        insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
+        insert_data(node=nodes[0], number_of_mb=1, start=1024 * 1024, name=table_name)
 
     with And("a large insert of 10Mb of data"):
-        insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+        insert_data(
+            node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2, name=table_name
+        )
 
     with And("I restart the other node"):
         nodes[1].start()
@@ -333,14 +335,14 @@ def alter(self):
     """Check that when replicated tables with allow zero copy are altered,
     the changes are reflected on all replicas.
     """
-    node = current().context.node
+    table_name = "zero_copy_replication_alter"
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
             f"({x},1)"
             for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
         )
-        node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
+        node.query(f"INSERT INTO {table_name} VALUES {values}")
 
     def check_query_pair(node, num, query, expected):
         node = current().context.node
@@ -362,7 +364,6 @@ def alter(self):
         measure_buckets_before_and_after()
 
     with When("I create a replicated table on each node"):
-        table_name = "zero_copy_replication_alter"
         for node in nodes:
             replicated_table(
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
@@ -554,13 +555,15 @@ def insert_multiple_replicas(self):
             replicated_table(node=node, table_name=table_name)
 
     with And("I insert 1MB of data"):
-        insert_data_node(node=nodes[0], number_of_mb=1)
+        insert_data(node=nodes[0], number_of_mb=1, name=table_name)
 
     with And("I insert of 1MB of data on the other node"):
-        insert_data_node(node=nodes[1], number_of_mb=1, start=1024 * 1024)
+        insert_data(node=nodes[1], number_of_mb=1, start=1024 * 1024, name=table_name)
 
     with And("a large insert of 10Mb of data on the first node"):
-        insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+        insert_data(
+            node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2, name=table_name
+        )
 
     with Then("I check simple queries on both nodes"):
         standard_selects(node=nodes[1], table_name=table_name)
@@ -615,7 +618,7 @@ def delete(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
+        check_stable_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -653,13 +656,14 @@ def ttl_move(self):
     """Check that TTL moves work properly when <allow_s3_zero_copy_replication>
     parameter is set to 1.
     """
+    table_name = "zero_copy_replication_ttl_move"
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
             f"({x},{time})"
             for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
         )
-        node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
+        node.query(f"INSERT INTO {table_name} VALUES {values}")
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -683,10 +687,10 @@ def ttl_move(self):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication_ttl_move (
+                    CREATE TABLE {table_name} (
                         d UInt64,
                         d1 DateTime
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_ttl_move', '{i + 1}')
+                    ) ENGINE = ReplicatedMergeTree('/clickhouse/{table_name}', '{i + 1}')
                     ORDER BY d
                     TTL d1 + interval 2 day to volume 'external'
                     SETTINGS storage_policy='tiered'
@@ -714,56 +718,56 @@ def ttl_move(self):
             check_query_node(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
+                query=f"SELECT COUNT() FROM {table_name}",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[0],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
                 expected="10",
             )
             check_query_node(
                 node=nodes[0],
                 num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[0],
                 num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
                 expected="0",
             )
             check_query_node(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
+                query=f"SELECT COUNT() FROM {table_name}",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[1],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
                 expected="10",
             )
             check_query_node(
                 node=nodes[1],
                 num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[1],
                 num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
                 expected="0",
             )
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestScenario
@@ -772,14 +776,14 @@ def ttl_delete(self):
     """Check that TTL delete works properly when <allow_s3_zero_copy_replication>
     parameter is set to 1.
     """
-    node = current().context.node
+    table_name = "zero_copy_replication_ttl_delete"
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
             f"({x},{time})"
             for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
         )
-        node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
+        node.query(f"INSERT INTO {table_name} VALUES {values}")
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -797,10 +801,10 @@ def ttl_delete(self):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication_ttl_delete (
+                    CREATE TABLE {table_name} (
                         d UInt64,
                         d1 DateTime
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_ttl_delete', '{i + 1}')
+                    ) ENGINE = ReplicatedMergeTree('/clickhouse/{table_name}', '{i + 1}')
                     ORDER BY d
                     TTL d1 + interval 2 day
                     SETTINGS storage_policy='tiered'
@@ -828,56 +832,56 @@ def ttl_delete(self):
             check_query_node(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
+                query=f"SELECT COUNT() FROM {table_name}",
                 expected="1310721",
             )
             check_query_node(
                 node=nodes[0],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
                 expected="0",
             )
             check_query_node(
                 node=nodes[0],
                 num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[0],
                 num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
                 expected="2097152",
             )
             check_query_node(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
+                query=f"SELECT COUNT() FROM {table_name}",
                 expected="1310721",
             )
             check_query_node(
                 node=nodes[1],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
                 expected="0",
             )
             check_query_node(
                 node=nodes[1],
                 num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[1],
                 num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
                 expected="2097152",
             )
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestScenario
