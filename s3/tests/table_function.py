@@ -20,22 +20,10 @@ def syntax(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with And(f"I store simple data in the first table {table1_name}"):
             node.query(f"INSERT INTO {table1_name} VALUES (427)")
@@ -68,13 +56,7 @@ def syntax(self):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} to S3 at the
@@ -86,12 +68,6 @@ def syntax(self):
                         s3('{uri}syntax.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {table1_name}"""
                 )
-
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -124,22 +100,10 @@ def wildcard(self, wildcard, expected):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with And(f"I store simple data in the first table {table1_name}"):
             node.query(f"INSERT INTO {table1_name} VALUES (427)")
@@ -201,13 +165,7 @@ def wildcard(self, wildcard, expected):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} to S3 at the
@@ -253,12 +211,6 @@ def wildcard(self, wildcard, expected):
                         SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
-
 
 @TestOutline(Scenario)
 @Examples(
@@ -290,22 +242,10 @@ def compression(self, compression_method):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with And(f"I store simple data in the first table {table1_name}"):
             node.query(f"INSERT INTO {table1_name} VALUES (427)")
@@ -344,13 +284,7 @@ def compression(self, compression_method):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} to S3 at the
@@ -362,12 +296,6 @@ def compression(self, compression_method):
                         s3('{uri}compression.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {table1_name}"""
                 )
-
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -401,22 +329,10 @@ def auto(self, compression_method):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with And(f"I store simple data in the first table {table1_name}"):
             node.query(f"INSERT INTO {table1_name} VALUES (427)")
@@ -455,13 +371,7 @@ def auto(self, compression_method):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} to S3 at the
@@ -473,12 +383,6 @@ def auto(self, compression_method):
                         s3('{uri}auto.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {table1_name}"""
                 )
-
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestScenario
@@ -497,22 +401,10 @@ def credentials(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with And(f"I store simple data in the first table {table1_name}"):
             for attempt in retries(timeout=600, delay=5):
@@ -547,13 +439,7 @@ def credentials(self):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} to S3 at the
@@ -566,17 +452,11 @@ def credentials(self):
                         SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
-
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Settings_PartitionBy("1.0"))
 def partition(self):
-    """Check that ClickHouse can export paritioned data."""
+    """Check that ClickHouse can export partitioned data."""
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -614,25 +494,19 @@ def multiple_columns(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64,
-                    a String,
-                    b Int8
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
+            simple_table(
+                node=node,
+                name=table1_name,
+                policy="default",
+                columns="d UInt64, a String, b Int8",
             )
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64,
-                    a String,
-                    b Int8
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
+            simple_table(
+                node=node,
+                name=table2_name,
+                policy="default",
+                columns="d UInt64, a String, b Int8",
             )
 
         with When("I add data to the table"):
@@ -675,13 +549,7 @@ def multiple_columns(self):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} at the
@@ -693,12 +561,6 @@ def multiple_columns(self):
                         s3('{uri}multiple_columns.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {table1_name}"""
                 )
-
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -717,22 +579,10 @@ def data_format(self, fmt):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with When("I add data to the table"):
             standard_inserts(node=node, table_name=table1_name)
@@ -765,13 +615,7 @@ def data_format(self, fmt):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} at the
@@ -783,13 +627,6 @@ def data_format(self, fmt):
                         s3('{uri}data_format.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {table1_name}"""
                 )
-
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
-
 
 @TestScenario
 @Requirements()
@@ -806,22 +643,10 @@ def multipart(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with When("I add data to the table"):
             standard_inserts(node=node, table_name=table1_name)
@@ -851,13 +676,7 @@ def multipart(self):
                 node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
             with And(f"I create the table again {table1_name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {table1_name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=table1_name, policy="default")
 
             with And(
                 f"""I export the empty table {table1_name} at the
@@ -869,13 +688,6 @@ def multipart(self):
                         s3('{uri}multipart.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {table1_name}"""
                 )
-
-        with Finally(f"I drop the first table {table1_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-        with And(f"I drop the second table {table2_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
-
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_RemoteHostFilter("1.0"))
@@ -897,22 +709,10 @@ def remote_host_filter(self):
 
     with remote_host_filter_config(urls=urls, restart=True):
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {table1_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table1_name, policy="default")
 
         with And("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {table2_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=table2_name, policy="default")
 
         with And(f"I store simple data in the first table {table1_name}"):
             node.query(f"INSERT INTO {table1_name} VALUES (427)")
