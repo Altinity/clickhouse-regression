@@ -738,7 +738,7 @@ def run_query(instance, query, stdin=None, settings=None):
     return result
 
 
-@TestStep
+@TestStep(Given)
 def get_bucket_size(
     self, name=None, prefix=None, key_id=None, access_key=None, minio_enabled=None
 ):
@@ -778,7 +778,7 @@ def get_bucket_size(
     return total_bytes
 
 
-@TestStep
+@TestStep(Then)
 def check_bucket_size(
     self, expected_size, tolerance=0, name=None, prefix=None, minio_enabled=None
 ):
