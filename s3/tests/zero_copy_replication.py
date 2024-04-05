@@ -285,6 +285,7 @@ def metadata(self):
     with When("I create a replicated table on each node"):
         table_name = "zero_copy_replication_metadata"
         for node in nodes:
+            node.restart()
             replicated_table(node=node, table_name=table_name)
 
     with And("I add data to the table"):
@@ -345,8 +346,6 @@ def alter(self):
         node.query(f"INSERT INTO {table_name} VALUES {values}")
 
     def check_query_pair(node, num, query, expected):
-        node = current().context.node
-
         with By(f"executing query {num}", description=query):
             r = node.query(query).output.strip()
             with Then(f"result should match the expected", description=expected):
@@ -365,6 +364,7 @@ def alter(self):
 
     with When("I create a replicated table on each node"):
         for node in nodes:
+            node.restart()
             replicated_table(
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
@@ -374,7 +374,7 @@ def alter(self):
             insert_data_pair(nodes[0], 1)
 
     with And("I get the size of the s3 bucket"):
-        size_after_inserts = get_bucket_size()
+        size_after_insert = get_bucket_size()
 
     with Then("I check that the sign is 1 for the second table"):
         check_query_pair(
@@ -416,7 +416,7 @@ def alter(self):
         start_time = time.time()
         while True:
             current_size = get_bucket_size()
-            if current_size < size_after_inserts * 1.5:
+            if current_size < size_after_insert * 1.5:
                 break
             if time.time() - start_time < 60:
                 time.sleep(2)
@@ -431,7 +431,6 @@ def alter(self):
 )
 def alter_repeat(self):
     """Check for data duplication when repeated alter commands are used."""
-    node = current().context.node
     table_name = "zero_copy_replication_alter_repeat"
 
     def insert_data_pair(node, number_of_mb, start=0):
@@ -442,8 +441,6 @@ def alter_repeat(self):
         node.query(f"INSERT INTO {table_name} VALUES {values}")
 
     def check_query_pair(node, num, query, expected):
-        node = current().context.node
-
         with By(f"executing query {num}", description=query):
             r = node.query(query).output.strip()
             with Then(f"result should match the expected", description=expected):
@@ -488,6 +485,7 @@ def alter_repeat(self):
 
     with When("I create a replicated table on each node"):
         for node in nodes:
+            node.restart()
             replicated_table(
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
@@ -497,7 +495,7 @@ def alter_repeat(self):
             insert_data_pair(nodes[0], 1)
 
     with And("I get the size of the s3 bucket"):
-        size_after = get_bucket_size()
+        size_after_insert = get_bucket_size()
 
     with Then("I check that the sign is 1 for the second table"):
         check_query_pair(
@@ -519,7 +517,7 @@ def alter_repeat(self):
                 start_time = time.time()
                 while True:
                     current_size = get_bucket_size()
-                    if current_size < size_after * 1.5:
+                    if current_size < size_after_insert * 1.5:
                         break
                     if time.time() - start_time < 60:
                         time.sleep(2)
@@ -537,6 +535,7 @@ def insert_multiple_replicas(self):
     """Check that data is not duplicated when data is inserted in multiple
     replicas of the same table. Check that each replica is updated correctly.
     """
+    node = current().context.node
     expected = 6306510
 
     with Given("I have a pair of clickhouse nodes"):
@@ -550,8 +549,9 @@ def insert_multiple_replicas(self):
         size_before = measure_buckets_before_and_after()
 
     with When("I create a replicated table on each node"):
-        table_name = "zero_copy_replication_insert_multiple"
+        table_name = "zero_copy_replication_drop_alter"
         for node in nodes:
+            node.restart()
             replicated_table(node=node, table_name=table_name)
 
     with And("I insert 1MB of data"):
