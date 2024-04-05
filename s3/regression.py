@@ -116,10 +116,7 @@ xfails = {
     "gcs/:/disk invalid/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
-    # ":/:/zero copy replication/alter": [
-    #     (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
-    # ],
-    ":/:/zero copy replication/alter repeat": [
+    ":/:/zero copy replication/alter/count=10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
     ],
     ":/:/zero copy replication/ttl move": [

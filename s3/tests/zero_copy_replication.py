@@ -329,107 +329,13 @@ def metadata(self):
 
         assert numBytes < 100, error()
 
-
-@TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"))
-def alter(self):
-    """Check that when replicated tables with allow zero copy are altered,
-    the changes are reflected on all replicas.
-    """
-    table_name = "zero_copy_replication_alter"
-
-    def insert_data_pair(node, number_of_mb, start=0):
-        values = ",".join(
-            f"({x},1)"
-            for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
-        )
-        node.query(f"INSERT INTO {table_name} VALUES {values}")
-
-    def check_query_pair(node, num, query, expected):
-        with By(f"executing query {num}", description=query):
-            r = node.query(query).output.strip()
-            with Then(f"result should match the expected", description=expected):
-                assert r == expected, error()
-
-    with Given("I have a pair of clickhouse nodes"):
-        nodes = self.context.ch_nodes[:2]
-
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings.copy()
-        settings["old_parts_lifetime"] = "1"
-        mergetree_config(settings=settings)
-
-    with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
-
-    with When("I create a replicated table on each node"):
-        for node in nodes:
-            node.restart()
-            replicated_table(
-                node=node, table_name=table_name, columns="d UInt64, sign Int8"
-            )
-
-    with And("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data_pair(nodes[0], 1)
-
-    with And("I get the size of the s3 bucket"):
-        size_after_insert = get_bucket_size()
-
-    with Then("I check that the sign is 1 for the second table"):
-        check_query_pair(
-            node=nodes[1],
-            num=0,
-            query=f"SELECT sign FROM {table_name} LIMIT 1",
-            expected="1",
-        )
-
-    with And("I change all signs to -1"):
-        nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = -1 WHERE 1")
-
-    with And("I sync the replicas"):
-        for node in nodes:
-            for attempt in retries(timeout=1200, delay=5):
-                with attempt:
-                    node.query(f"SYSTEM SYNC REPLICA {table_name}", timeout=600)
-
-    with And("I check that the sign is -1 for the second table"):
-        check_query_pair(
-            node=nodes[1],
-            num=0,
-            query=f"SELECT sign FROM {table_name} LIMIT 1",
-            expected="-1",
-        )
-
-    with And("I check that the sign is -1 for the first table"):
-        check_query_pair(
-            node=nodes[0],
-            num=0,
-            query=f"SELECT sign FROM {table_name} LIMIT 1",
-            expected="-1",
-        )
-
-    with And(
-        """I wait until the bucket size drops to within 50% of the
-                expected size"""
-    ):
-        start_time = time.time()
-        while True:
-            current_size = get_bucket_size()
-            if current_size < size_after_insert * 1.5:
-                break
-            if time.time() - start_time < 60:
-                time.sleep(2)
-                continue
-            assert False, "data in S3 has grown by more than 50%"
-
-
-@TestScenario
+@TestOutline(Scenario)
 @Requirements(
     RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"),
     RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication("1.0"),
 )
-def alter_repeat(self):
+@Examples("count", [[1], [10]])
+def alter(self, count=10):
     """Check for data duplication when repeated alter commands are used."""
     table_name = "zero_copy_replication_alter_repeat"
 
@@ -507,7 +413,7 @@ def alter_repeat(self):
 
     with And("I alter and check the size 10 times"):
         s = 1
-        for i in range(10):
+        for i in range(count):
             alter_table(s)
 
             with Then(
