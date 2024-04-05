@@ -7,6 +7,61 @@ import time
 import datetime
 
 
+@TestStep(Then)
+def standard_inserts(self, node, table_name):
+    """Standard inserts of a know amount of data"""
+
+    with By("first inserting 1MB of data"):
+        insert_data(node=node, number_of_mb=1, name=table_name)
+
+    with And("another insert of 1MB of data"):
+        insert_data(node=node, number_of_mb=1, start=1024 * 1024, name=table_name)
+
+    with And("a large insert of 10Mb of data"):
+        insert_data(node=node, number_of_mb=10, start=1024 * 1024 * 2, name=table_name)
+
+
+@TestStep(Then)
+def standard_selects(self, node, table_name):
+    """Validate the data inserted by standard_inserts to an empty table"""
+    check_query_node(
+        node=node,
+        num=0,
+        query=f"SELECT COUNT() FROM {table_name}",
+        expected="1572867",
+    )
+    check_query_node(
+        node=node,
+        num=1,
+        query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+        expected="10",
+    )
+    check_query_node(
+        node=node,
+        num=2,
+        query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+        expected="3407872",
+    )
+    check_query_node(
+        node=node,
+        num=3,
+        query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+        expected="0",
+    )
+    check_query_node(
+        node=node,
+        num=4,
+        query=f"SELECT * FROM {table_name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
+        expected="0\n1048578\n2097154",
+    )
+    check_query_node(
+        node=node,
+        num=5,
+        query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1)",
+        expected="1",
+    )
+
+
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global("1.0"))
 def global_setting(self):
@@ -14,10 +69,7 @@ def global_setting(self):
     <allow_s3_zero_copy_replication> setting is set to 1 as a global merge
     tree engine setting with correct syntax.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -27,21 +79,16 @@ def global_setting(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_global', '{i + 1}')
                     ORDER BY d
@@ -49,70 +96,22 @@ def global_setting(self):
                 """
                 )
 
-        with And("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
-
-            with And("a large insert of 10Mb of data"):
-                insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+        with When("I add data to the table"):
+            standard_inserts(node=nodes[0], table_name=table_name)
 
         with Then("I check simple queries on the other node"):
-            check_query_node(
-                node=nodes[1],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=nodes[1], table_name=table_name)
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -123,11 +122,7 @@ def drop_replica(self):
     """Check that a ClickHouse instance with a replicated table can be dropped
     and started again with no changes to the data in the table.
     """
-
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -137,21 +132,16 @@ def drop_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_drop', '{i + 1}')
                     ORDER BY d
@@ -160,113 +150,30 @@ def drop_replica(self):
                 )
 
         with And("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
-
-            with And("a large insert of 10Mb of data"):
-                insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=nodes[0], table_name=table_name)
 
         with And("I stop the second node"):
             nodes[1].stop()
 
         with Then("I check simple queries on the first node"):
-            check_query_node(
-                node=nodes[0],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=nodes[0], table_name=table_name)
 
         with And("I start the second node"):
             nodes[1].start()
 
         with Then("I check simple queries on the second node"):
-            check_query_node(
-                node=nodes[1],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=nodes[1], table_name=table_name)
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -275,11 +182,7 @@ def add_replica(self):
     """Check that additional replicas of a replicated table can be added with
     no changes to the data in the table.
     """
-
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -289,20 +192,15 @@ def add_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on the first node"):
+            table_name = "zero_copy_replication"
             nodes[0].restart_clickhouse()
             nodes[0].query(
                 f"""
-                CREATE TABLE zero_copy_replication (
+                CREATE TABLE {table_name} (
                     d UInt64
                 ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_add', '1')
                 ORDER BY d
@@ -311,29 +209,16 @@ def add_replica(self):
             )
 
         with And("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
-
-            with And("a large insert of 10Mb of data"):
-                insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=nodes[0], table_name=table_name)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with And("I create a replicated table on the second node"):
             nodes[1].restart_clickhouse()
             nodes[1].query(
                 f"""
-                CREATE TABLE zero_copy_replication (
+                CREATE TABLE {table_name} (
                     d UInt64
                 ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_add', '2')
                 ORDER BY d
@@ -345,107 +230,25 @@ def add_replica(self):
             """The size of the s3 bucket should be 1 byte more
                     than previously because of the additional replica"""
         ):
-            size = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size = get_bucket_size()
             assert size - size_after == 1, error()
 
         with And("I check simple queries on the first node"):
-            check_query_node(
-                node=nodes[0],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=nodes[0], table_name=table_name)
 
         with And("I check simple queries on the second node"):
-            check_query_node(
-                node=nodes[1],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=nodes[1], table_name=table_name)
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -457,11 +260,7 @@ def drop_alter_replica(self):
     the data in the table is changed, and then the instance is restarted, all
     data in its replicated table matches the updated data.
     """
-
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -471,21 +270,16 @@ def drop_alter_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_drop_alter', '{i + 1}')
                     ORDER BY d
@@ -509,59 +303,18 @@ def drop_alter_replica(self):
             nodes[1].start()
 
         with Then("I check simple queries on the other node"):
-            check_query_node(
-                node=nodes[1],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=nodes[1], table_name=table_name)
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -597,8 +350,6 @@ def metadata(self):
     will be performed by verifying that the second replica does not send any
     data to S3.
     """
-
-    cluster = self.context.cluster
     node = current().context.node
     expected = 6306515
 
@@ -611,11 +362,12 @@ def metadata(self):
 
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_metadata', '{i + 1}')
                     ORDER BY d
@@ -624,14 +376,7 @@ def metadata(self):
                 )
 
         with And("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
-
-            with And("a large insert of 10Mb of data"):
-                insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=nodes[0], table_name=table_name)
 
         with Then(
             """The number of bytes written to S3 by the first
@@ -674,7 +419,7 @@ def metadata(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestScenario
@@ -683,10 +428,7 @@ def alter(self):
     """Check that when replicated tables with allow zero copy are altered,
     the changes are reflected on all replicas.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
@@ -712,21 +454,16 @@ def alter(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64,
                         sign Int8
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_alter', '{i + 1}')
@@ -740,13 +477,7 @@ def alter(self):
                 insert_data_pair(nodes[0], 1)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with Then("I check that the sign is 1 for the second table"):
             check_query_pair(
@@ -789,13 +520,7 @@ def alter(self):
         ):
             start_time = time.time()
             while True:
-                current_size = get_bucket_size(
-                    name=bucket_name,
-                    prefix=bucket_path,
-                    access_key=self.context.secret_access_key,
-                    key_id=self.context.access_key_id,
-                    minio_enabled=self.context.minio_enabled,
-                )
+                current_size = get_bucket_size()
                 if current_size < size_after * 1.5:
                     break
                 if time.time() - start_time < 60:
@@ -806,19 +531,13 @@ def alter(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -828,17 +547,15 @@ def alter(self):
 )
 def alter_repeat(self):
     """Check for data duplication when repeated alter commands are used."""
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
+    table_name = "zero_copy_replication"
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
             f"({x},1)"
             for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
         )
-        node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
+        node.query(f"INSERT INTO {table_name} VALUES {values}")
 
     def check_query_pair(node, num, query, expected):
         node = current().context.node
@@ -851,7 +568,7 @@ def alter_repeat(self):
     def alter_table(sign):
         with Then(f"I change all signs to {sign}"):
             nodes[1].query(
-                f"ALTER TABLE zero_copy_replication UPDATE sign = {sign} WHERE 1"
+                f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1"
             )
 
         with And("I sync the replicas"):
@@ -859,14 +576,14 @@ def alter_repeat(self):
                 for attempt in retries(timeout=1200, delay=5):
                     with attempt:
                         node.query(
-                            "SYSTEM SYNC REPLICA zero_copy_replication", timeout=600
+                            f"SYSTEM SYNC REPLICA {table_name}", timeout=600
                         )
 
         with And("I check that the sign is -1 for the second table"):
             check_query_pair(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT sign FROM zero_copy_replication LIMIT 1",
+                query=f"SELECT sign FROM {table_name} LIMIT 1",
                 expected=f"{sign}",
             )
 
@@ -874,7 +591,7 @@ def alter_repeat(self):
             check_query_pair(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT sign FROM zero_copy_replication LIMIT 1",
+                query=f"SELECT sign FROM {table_name} LIMIT 1",
                 expected=f"{sign}",
             )
 
@@ -887,13 +604,7 @@ def alter_repeat(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -901,7 +612,7 @@ def alter_repeat(self):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64,
                         sign Int8
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_alter', '{i + 1}')
@@ -915,19 +626,13 @@ def alter_repeat(self):
                 insert_data_pair(nodes[0], 1)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with Then("I check that the sign is 1 for the second table"):
             check_query_pair(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT sign FROM zero_copy_replication LIMIT 1",
+                query=f"SELECT sign FROM {table_name} LIMIT 1",
                 expected="1",
             )
 
@@ -942,13 +647,7 @@ def alter_repeat(self):
                 ):
                     start_time = time.time()
                     while True:
-                        current_size = get_bucket_size(
-                            name=bucket_name,
-                            prefix=bucket_path,
-                            access_key=self.context.secret_access_key,
-                            key_id=self.context.access_key_id,
-                            minio_enabled=self.context.minio_enabled,
-                        )
+                        current_size = get_bucket_size()
                         if current_size < size_after * 1.5:
                             break
                         if time.time() - start_time < 60:
@@ -961,19 +660,13 @@ def alter_repeat(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -984,11 +677,7 @@ def insert_multiple_replicas(self):
     """Check that data is not duplicated when data is inserted in multiple
     replicas of the same table. Check that each replica is updated correctly.
     """
-
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
     expected = 6306510
 
     with Given("I have a pair of clickhouse nodes"):
@@ -999,21 +688,15 @@ def insert_multiple_replicas(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
-
+        size_before = get_bucket_size()
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_drop_alter', '{i + 1}')
                     ORDER BY d
@@ -1031,87 +714,11 @@ def insert_multiple_replicas(self):
             insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
 
         with Then("I check simple queries on both nodes"):
-            check_query_node(
-                node=nodes[1],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[1],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=0,
-                query=f"SELECT COUNT() FROM zero_copy_replication",
-                expected="1572867",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=1,
-                query=f"SELECT uniqExact(d) FROM zero_copy_replication WHERE d < 10",
-                expected="10",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=2,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=3,
-                query=f"SELECT d FROM zero_copy_replication ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=4,
-                query=f"SELECT * FROM zero_copy_replication WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query_node(
-                node=nodes[0],
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM zero_copy_replication WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=nodes[1], table_name=table_name)
+            standard_selects(node=nodes[0], table_name=table_name)
 
         with And("I check that the data added is within 1% of expected amount"):
-            current_size = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            current_size = get_bucket_size()
             added_size = current_size - size_before
 
             assert added_size >= expected * 0.99, error()
@@ -1120,19 +727,13 @@ def insert_multiple_replicas(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -1141,10 +742,7 @@ def delete(self):
     """Check that when replicated tables are removed, they are not
     removed from S3 until all replicas are removed.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -1154,21 +752,16 @@ def delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_delete', '{i + 1}')
                     ORDER BY d
@@ -1177,55 +770,30 @@ def delete(self):
                 )
 
         with And("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
-
-            with And("a large insert of 10Mb of data"):
-                insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=nodes[0], table_name=table_name)
 
         with When("I get the size of the s3 bucket"):
-            size_after = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-                minio_enabled=self.context.minio_enabled,
-            )
+            size_after = get_bucket_size()
 
         with And("I drop the table on one node"):
-            nodes[0].query("DROP TABLE IF EXISTS zero_copy_replication")
+            nodes[0].query(f"DROP TABLE IF EXISTS {table_name}")
 
         with Then("The size of the s3 bucket should be the same"):
-            check_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                expected_size=size_after,
-                tolerance=0,
-                minio_enabled=self.context.minio_enabled,
-            )
+            check_bucket_size(expected_size=size_before, tolerance=0)
 
         with When("I drop the table on the other node"):
-            nodes[1].query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+            nodes[1].query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
         with Then(
             """The size of the s3 bucket should be very close to the size
                     before adding any data"""
         ):
-            check_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                expected_size=size_before,
-                tolerance=5,
-                minio_enabled=self.context.minio_enabled,
-            )
+            check_bucket_size(expected_size=size_before, tolerance=5)
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestScenario
@@ -1234,10 +802,7 @@ def delete_all(self):
     """Check that when all replicas of a table are dropped, the data is deleted
     from S3.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -1247,21 +812,15 @@ def delete_all(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
-
+        size_before = get_bucket_size()
     try:
         with When("I create a replicated table on each node"):
+            table_name = "zero_copy_replication"
             for i, node in enumerate(nodes):
                 node.restart()
                 node.query(
                     f"""
-                    CREATE TABLE zero_copy_replication (
+                    CREATE TABLE {table_name} (
                         d UInt64
                     ) ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_global', '{i + 1}')
                     ORDER BY d
@@ -1270,39 +829,19 @@ def delete_all(self):
                 )
 
         with And("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data_node(node=nodes[0], number_of_mb=1, start=1024 * 1024)
-
-            with And("a large insert of 10Mb of data"):
-                insert_data_node(node=nodes[0], number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=nodes[0], table_name=table_name)
 
         with Then("A nonzero amount of data should be added to S3"):
-            size_now = get_bucket_size(
-                name=bucket_name,
-                prefix=bucket_path,
-                minio_enabled=self.context.minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-            )
-
+            size_now = get_bucket_size()
             assert size_now > size_before, error()
 
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then("All data should be removed from S3"):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=0,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=0)
 
 
 @TestScenario
@@ -1311,10 +850,7 @@ def ttl_move(self):
     """Check that TTL moves work properly when <allow_s3_zero_copy_replication>
     parameter is set to 1.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
@@ -1332,22 +868,10 @@ def ttl_move(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before_base = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before_base = get_bucket_size()
 
     with And("I get the size of the other s3 bucket before adding data"):
-        size_before_tier = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path + "/tiered",
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before_tier = get_bucket_size(prefix=self.context.bucket_path + "/tiered")
 
     try:
         with When("I create a replicated table on each node"):
@@ -1441,23 +965,16 @@ def ttl_move(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before_base,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before_base, tolerance=5)
+
     with And(
         """The size of the other s3 bucket should be very close to the size
                 before adding any data"""
     ):
         check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path + "/tiered",
+            prefix=self.context.bucket_path + "/tiered",
             expected_size=size_before_tier,
             tolerance=5,
-            minio_enabled=self.context.minio_enabled,
         )
 
 
@@ -1467,10 +984,7 @@ def ttl_delete(self):
     """Check that TTL delete works properly when <allow_s3_zero_copy_replication>
     parameter is set to 1.
     """
-    cluster = self.context.cluster
     node = current().context.node
-    bucket_name = self.context.bucket_name
-    bucket_path = self.context.bucket_path
 
     def insert_data_time(node, number_of_mb, time, start=0):
         values = ",".join(
@@ -1487,13 +1001,7 @@ def ttl_delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            access_key=self.context.secret_access_key,
-            key_id=self.context.access_key_id,
-            minio_enabled=self.context.minio_enabled,
-        )
+        size_before = get_bucket_size()
 
     try:
         with When("I create a replicated table on each node"):
@@ -1587,13 +1095,7 @@ def ttl_delete(self):
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_bucket_size(
-            name=bucket_name,
-            prefix=bucket_path,
-            expected_size=size_before,
-            tolerance=5,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -1986,7 +1488,6 @@ def performance_alter(self):
 )
 def check_refcount_after_mutation(self):
     """Check that clickhouse correctly updates ref_count when updating metadata across replicas."""
-    cluster = self.context.cluster
     node = current().context.node
     table_name = "table_" + getuid()
     try:
@@ -2036,7 +1537,6 @@ def check_refcount_after_mutation(self):
 )
 def consistency_during_double_mutation(self):
     """Check that clickhouse correctly handles simultaneous metadata updates on different replicas."""
-    cluster = self.context.cluster
     node = current().context.node
     table_name = "table_" + getuid()
 
@@ -2221,13 +1721,8 @@ def outline(self):
         s3_storage(disks=disks, policies=policies, restart=True)
 
     with Check("bucket should be empty before test begins"):
-        check_bucket_size(
-            name=self.context.bucket_name,
-            prefix=self.context.bucket_path,
-            expected_size=0,
-            tolerance=50,
-            minio_enabled=self.context.minio_enabled,
-        )
+        check_bucket_size(expected_size=0, tolerance=50)
+
     for scenario in loads(current_module(), Scenario):
         scenario()
 

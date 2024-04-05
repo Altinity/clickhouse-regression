@@ -664,8 +664,9 @@ def get_random_string(cluster, length, steps=True, *args, **kwargs):
 
 
 @TestStep(When)
-def insert_data(self, name, number_of_mb, start=0):
-    node = current().context.node
+def insert_data(self, name, number_of_mb, start=0, node=None):
+    if node is None:
+        node = current().context.node
 
     values = ",".join(
         f"({x})"
@@ -739,9 +740,24 @@ def run_query(instance, query, stdin=None, settings=None):
 
 @TestStep
 def get_bucket_size(
-    self, name, prefix, key_id=None, access_key=None, minio_enabled=False
+    self, name=None, prefix=None, key_id=None, access_key=None, minio_enabled=None
 ):
     """Get the size of an S3 bucket with the specified prefix."""
+
+    if name is None:
+        name = self.context.bucket_name
+
+    if prefix is None:
+        prefix = self.context.bucket_path
+
+    if key_id is None:
+        key_id = self.context.access_key_id
+
+    if access_key is None:
+        access_key = self.context.secret_access_key
+
+    if minio_enabled is None:
+        minio_enabled = self.context.minio_enabled
 
     if minio_enabled:
         minio_client = self.context.cluster.minio_client
@@ -764,7 +780,7 @@ def get_bucket_size(
 
 @TestStep
 def check_bucket_size(
-    self, name, prefix, expected_size, tolerance=0, minio_enabled=False
+    self, expected_size, tolerance=0, name=None, prefix=None, minio_enabled=None
 ):
     current_size = get_bucket_size(
         name=name,
