@@ -25,7 +25,7 @@
     * 8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts](#rqsrs-034clickhousealtertableattachpartitioncorruptedparts)
 * 9 [Part Names](#part-names)
     * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames](#rqsrs-034clickhousealtertableattachpartitionpartnames)
-    * 9.2 [Change of Chunck Level During Attach Partition From](#change-of-chunck-level-during-attach-partition-from)
+    * 9.2 [Change of Chunk Level During Attach Partition From](#change-of-chunk-level-during-attach-partition-from)
 * 10 [Table Names](#table-names)
     * 10.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName](#rqsrs-034clickhousealtertableattachpartitiontablename)
 * 11 [Attach Partition or Part From the Detached Folder](#attach-partition-or-part-from-the-detached-folder)
@@ -235,7 +235,7 @@ SELECT name, active FROM system.parts WHERE table='t' AND active;
 
 Parts that were DETACHED and ATTACHED back have 0 chunk level.
 
-### Change of Chunck Level During Attach Partition From
+### Change of Chunk Level During Attach Partition From
 
 [ClickHouse] SHALL increment chunk level by 1 from highest chunk level during `ATTACH PARTITION FROM` 
 when merging two or more parts in one part.
