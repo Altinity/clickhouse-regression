@@ -237,8 +237,13 @@ Parts that were DETACHED and ATTACHED back have 0 chunk level.
 
 ### Change of Chunk Level During Attach Partition From
 
-[ClickHouse] SHALL increment chunk level by 1 from highest chunk level during `ATTACH PARTITION FROM` 
+[ClickHouse] SHALL increment chunk level by 1 from highest chunk level of parts that are merged during `ATTACH PARTITION FROM` 
 when merging two or more parts in one part.
+
+[ClickHouse] SHALL set chunk level to MAX_LEVEL=999999999 when chunck level is LEGACY_MAX_LEVEL = 2^32.
+
+[ClickHouse] SHALL not attach partition from disk with chunk level greater than LEGACY_MAX_LEVEL = 2^32.
+
 
 **Possible Combinations:**   
 **Destination Table** (where partiton will be attached)
