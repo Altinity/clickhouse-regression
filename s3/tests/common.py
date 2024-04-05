@@ -1234,21 +1234,18 @@ def default_s3_disk_and_volume(
 
 
 @TestStep(Given)
-def simple_table(self, name, policy="external", node=None):
+def simple_table(self, name, policy="external", node=None, columns="d UInt64"):
     """Create a simple MergeTree table for s3 tests."""
     node = node or self.context.node
 
+    query = f"CREATE TABLE {name} ({columns}) ENGINE = MergeTree() ORDER BY {columns.split()[0]}"
+    if policy:
+        query += f" SETTINGS storage_policy='{policy}'"
+
     try:
         with Given(f"I have a table {name}"):
-            node.query(
-                f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='{policy}'
-                """
-            )
+            node.query(query)
+
         yield
 
     finally:
@@ -1270,7 +1267,7 @@ def replicated_table(
                 f"""
                 CREATE TABLE {table_name} ({columns})
                 ENGINE = ReplicatedMergeTree('{path}', '{{replica}}')
-                ORDER BY d
+                ORDER BY {columns.split()[0]}
                 SETTINGS storage_policy='{policy}'
                 """
             )
