@@ -5,12 +5,12 @@ from threading import Event
 
 from testflows.core import *
 from testflows.asserts import error
-from testflows.uexpect.uexpect import ExpectTimeoutError
 from testflows.combinatorics import combinations
 
 from helpers.common import getuid, check_clickhouse_version
+from helpers.queries import *
 
-from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size
+from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size, get_stable_bucket_size, check_stable_bucket_size
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
@@ -93,15 +93,6 @@ def check_vfs_state(
     else:
         r = node.command(c, exitcode=None)
         assert r.exitcode in [1, 2], error()
-
-
-@TestStep
-def get_row_count(self, node, table_name, timeout=30):
-    """Get the number of rows in the given table."""
-    r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSON", exitcode=0, timeout=timeout
-    )
-    return int(json.loads(r.output)["data"][0]["count()"])
 
 
 @TestStep(Then)
@@ -201,7 +192,7 @@ def insert_random(
     table_name,
     columns: str = None,
     rows: int = 1000000,
-    settings=None,
+    settings: str = None,
     **kwargs,
 ):
     """Insert random data to a table."""
@@ -268,23 +259,6 @@ def delete_one_replica(self, node, table_name, timeout=30):
     return r
 
 
-@TestStep(When)
-def sync_replica(self, node, table_name, raise_on_timeout=False, **kwargs):
-    """Call SYSTEM SYNC REPLICA on the given node and table"""
-    try:
-        node.query(f"SYSTEM SYNC REPLICA {table_name}", **kwargs)
-    except (ExpectTimeoutError, TimeoutError):
-        if raise_on_timeout:
-            raise
-
-
-@TestStep(When)
-def optimize(self, node, table_name, final=False, no_checks=False):
-    """Apply OPTIMIZE on the given table and node"""
-    q = f"OPTIMIZE TABLE {table_name}" + " FINAL" if final else ""
-    node.query(q, no_checks=no_checks, exitcode=0)
-
-
 @TestStep(Given)
 def enable_vfs(
     self,
@@ -324,123 +298,15 @@ def enable_vfs(
     )
 
 
-@TestStep
-def get_stable_bucket_size(
-    self,
-    name,
-    prefix,
-    minio_enabled,
-    access_key,
-    key_id,
-    delay=10,
-    timeout=300,
-):
-    """Get the size of an s3 bucket, waiting until the size hasn't change for [delay] seconds."""
-
-    with By("Checking the current bucket size"):
-        size_previous = get_bucket_size(
-            name=name,
-            prefix=prefix,
-            minio_enabled=minio_enabled,
-            access_key=access_key,
-            key_id=key_id,
-        )
-
-    start_time = time.time()
-    while True:
-        with And(f"Waiting {delay}s"):
-            time.sleep(delay)
-        with And("Checking the current bucket size"):
-            size = get_bucket_size(
-                name=name,
-                prefix=prefix,
-                minio_enabled=minio_enabled,
-                access_key=access_key,
-                key_id=key_id,
-            )
-        with And(f"Checking if current={size} == previous={size_previous}"):
-            if size_previous == size:
-                break
-        size_previous = size
-
-        with And("Checking timeout"):
-            assert time.time() - start_time <= timeout, error(
-                f"Bucket size did not stabilize in {timeout}s"
-            )
-
-    return size
-
-
-@TestStep
-def check_stable_bucket_size(
-    self,
-    name,
-    prefix,
-    expected_size,
-    tolerance=0,
-    minio_enabled=False,
-    delay=10,
-):
-    """Assert the size of an s3 bucket, waiting until the size hasn't change for [delay] seconds."""
-
-    current_size = get_stable_bucket_size(
-        name=name,
-        prefix=prefix,
-        minio_enabled=minio_enabled,
-        access_key=self.context.secret_access_key,
-        key_id=self.context.access_key_id,
-        delay=delay,
-    )
-    assert abs(current_size - expected_size) <= tolerance, error()
-
-
-@TestStep
-def get_column_string(self, node, table_name, timeout=30) -> str:
-    """Get a string with column names and types."""
-    r = node.query(
-        f"DESCRIBE TABLE {table_name}",
-        timeout=timeout,
-    )
-    return ",".join([l.strip() for l in r.output.splitlines()])
-
-
-@TestStep
-def get_column_names(self, node, table_name, timeout=30) -> list:
-    """Get a list of a table's column names."""
-    r = node.query(
-        f"DESCRIBE TABLE {table_name} FORMAT JSONColumns",
-        timeout=timeout,
-    )
-    return json.loads(r.output)["name"]
-
-
-@TestStep
-def get_active_parts(self, node, table_name, timeout=30):
-    """Get a list of active parts in a table."""
-    r = node.query(
-        f"SELECT name FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
-        timeout=timeout,
-    )
-    return json.loads(r.output)["name"]
-
-
-@TestStep
-def get_active_partition_ids(self, node, table_name, timeout=30):
-    """Get a list of active partitions in a table."""
-    r = node.query(
-        f"SELECT partition_id FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
-        timeout=timeout,
-    )
-    return json.loads(r.output)["partition_id"]
-
-
 @TestStep(Then)
 def check_consistency(self, nodes, table_name, sync_timeout=10):
     """SYNC the given nodes and check that they agree about the given table"""
 
     with When("I make sure all nodes are synced"):
         for node in nodes:
-            sync_replica(node=node, table_name=table_name, timeout=sync_timeout, no_checks=True)
+            sync_replica(
+                node=node, table_name=table_name, timeout=sync_timeout, no_checks=True
+            )
 
     with When("I query all nodes for their row counts"):
         row_counts = {}
