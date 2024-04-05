@@ -60,7 +60,7 @@ def bit_int_inline(self, func, supported, error, int_type, min, max, node=None):
     else:
         with When(f"I check {func} with {int_type}"):
             node.query(
-                f"SELECT {func}(to{int_type}(1), 1), {func}(to{int_type}('{max}'), 1), {func}(to{int_type}('{min}'), 1)",
+                f"SELECT {func}(to{int_type}(1), 1), {func}(to{int_type}('{max}'), 1), {func}(to{int_type}('{min}'), 1) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
             )
@@ -138,7 +138,7 @@ def bit_dec_inline(self, func, supported, error, node=None):
     if func in ["bitNot", "bitCount"]:
         with When(f"Check {func} with Decimal256"):
             node.query(
-                f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0))",
+                f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0)) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
             )
@@ -146,7 +146,7 @@ def bit_dec_inline(self, func, supported, error, node=None):
     else:
         with When(f"I check {func} with Decimal256"):
             node.query(
-                f"SELECT {func}(toDecimal256(1,0), 1), {func}(toDecimal256('{max}',0), 1), {func}(toDecimal256('{min}',0), 1)",
+                f"SELECT {func}(toDecimal256(1,0), 1), {func}(toDecimal256('{max}',0), 1), {func}(toDecimal256('{min}',0), 1) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
             )

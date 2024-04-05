@@ -32,7 +32,9 @@ def feature(self, node="clickhouse1", mysql_node="mysql1", stress=None, parallel
                 )
 
             with Then("I select from the table"):
-                output = node.query(f"SELECT * FROM {table_name}").output
+                output = node.query(
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated"
+                ).output
                 assert output == "1\t1\t1\t1\t1", error()
 
         finally:

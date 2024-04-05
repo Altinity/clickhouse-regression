@@ -3,7 +3,7 @@ import os
 import sys
 from testflows.core import *
 
-append_path(sys.path, "..")
+append_path(sys.path, "../..")
 
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version
@@ -21,6 +21,7 @@ ffails = {
     "/stress/minio/alter/:/:/:move partition to tab:": (
         XFail,
         "Times out, needs investigation",
+        check_clickhouse_version(">=24"),
     )
 }
 
@@ -70,7 +71,7 @@ def minio(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
         self.context.uri = uri_bucket_file
 
-    Feature(run=load("alter_stress.tests.stress_alter", "feature"))
+    Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
 @TestModule
@@ -135,7 +136,7 @@ def aws_s3(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
-    Feature(run=load("alter_stress.tests.stress_alter", "feature"))
+    Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
 @TestModule
@@ -186,7 +187,7 @@ def gcs(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
-    Feature(run=load("alter_stress.tests.stress_alter", "feature"))
+    Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
 @TestModule
