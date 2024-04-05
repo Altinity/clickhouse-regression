@@ -7,9 +7,32 @@ import time
 import datetime
 
 
-@TestStep(Then)
+@TestStep(Given)
+def measure_buckets_before_and_after(
+    self, bucket_prefix=None, bucket_name=None, tolerance=5
+):
+    """Check the current bucket size and assert that it is the same after cleanup."""
+
+    with When("I get the size of the s3 bucket before adding data"):
+        size_before = get_bucket_size(prefix=bucket_prefix, name=bucket_name)
+
+    yield size_before
+
+    with Then(
+        """The size of the s3 bucket should be very close to the size
+                before adding any data"""
+    ):
+        check_bucket_size(
+            prefix=bucket_prefix,
+            name=bucket_name,
+            expected_size=size_before,
+            tolerance=tolerance,
+        )
+
+
+@TestStep(When)
 def standard_inserts(self, node, table_name):
-    """Standard inserts of a know amount of data"""
+    """Standard inserts of a known amount of data."""
 
     with By("first inserting 1MB of data"):
         insert_data(node=node, number_of_mb=1, name=table_name)
@@ -23,7 +46,7 @@ def standard_inserts(self, node, table_name):
 
 @TestStep(Then)
 def standard_selects(self, node, table_name):
-    """Validate the data inserted by standard_inserts to an empty table"""
+    """Validate the data inserted by standard_inserts to an empty table."""
     check_query_node(
         node=node,
         num=0,
@@ -79,7 +102,7 @@ def global_setting(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on each node"):
@@ -107,12 +130,6 @@ def global_setting(self):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
-
 
 @TestScenario
 @Requirements(
@@ -132,7 +149,7 @@ def drop_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on each node"):
@@ -169,12 +186,6 @@ def drop_replica(self):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
-
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
@@ -192,7 +203,7 @@ def add_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on the first node"):
@@ -212,7 +223,7 @@ def add_replica(self):
             standard_inserts(node=nodes[0], table_name=table_name)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size()
+            size_after_inserts = get_bucket_size()
 
         with And("I create a replicated table on the second node"):
             nodes[1].restart_clickhouse()
@@ -230,8 +241,7 @@ def add_replica(self):
             """The size of the s3 bucket should be 1 byte more
                     than previously because of the additional replica"""
         ):
-            size = get_bucket_size()
-            assert size - size_after == 1, error()
+            check_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
 
         with And("I check simple queries on the first node"):
             standard_selects(node=nodes[0], table_name=table_name)
@@ -243,12 +253,6 @@ def add_replica(self):
         with Finally("I drop the table on each node"):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
-
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -270,7 +274,7 @@ def drop_alter_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on each node"):
@@ -309,12 +313,6 @@ def drop_alter_replica(self):
         with Finally("I drop the table on each node"):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
-
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -454,7 +452,7 @@ def alter(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on each node"):
@@ -477,7 +475,7 @@ def alter(self):
                 insert_data_pair(nodes[0], 1)
 
         with And("I get the size of the s3 bucket"):
-            size_after = get_bucket_size()
+            size_after_inserts = get_bucket_size()
 
         with Then("I check that the sign is 1 for the second table"):
             check_query_pair(
@@ -521,7 +519,7 @@ def alter(self):
             start_time = time.time()
             while True:
                 current_size = get_bucket_size()
-                if current_size < size_after * 1.5:
+                if current_size < size_after_inserts * 1.5:
                     break
                 if time.time() - start_time < 60:
                     time.sleep(2)
@@ -532,12 +530,6 @@ def alter(self):
         with Finally("I drop the table on each node"):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
-
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
@@ -567,17 +559,13 @@ def alter_repeat(self):
 
     def alter_table(sign):
         with Then(f"I change all signs to {sign}"):
-            nodes[1].query(
-                f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1"
-            )
+            nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1")
 
         with And("I sync the replicas"):
             for node in nodes:
                 for attempt in retries(timeout=1200, delay=5):
                     with attempt:
-                        node.query(
-                            f"SYSTEM SYNC REPLICA {table_name}", timeout=600
-                        )
+                        node.query(f"SYSTEM SYNC REPLICA {table_name}", timeout=600)
 
         with And("I check that the sign is -1 for the second table"):
             check_query_pair(
@@ -604,7 +592,7 @@ def alter_repeat(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on each node"):
@@ -662,12 +650,6 @@ def alter_repeat(self):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
-
 
 @TestScenario
 @Requirements(
@@ -688,7 +670,7 @@ def insert_multiple_replicas(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        size_before = measure_buckets_before_and_after()
     try:
         with When("I create a replicated table on each node"):
             table_name = "zero_copy_replication"
@@ -729,12 +711,6 @@ def insert_multiple_replicas(self):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
-
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete("1.1"))
@@ -752,7 +728,7 @@ def delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        size_before = measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on each node"):
@@ -772,10 +748,11 @@ def delete(self):
         with And("I add data to the table"):
             standard_inserts(node=nodes[0], table_name=table_name)
 
-        with When("I get the size of the s3 bucket"):
+        with Then("I check that data was added to the s3 bucket"):
             size_after = get_bucket_size()
+            assert size_after > size_before, error()
 
-        with And("I drop the table on one node"):
+        with When("I drop the table on one node"):
             nodes[0].query(f"DROP TABLE IF EXISTS {table_name}")
 
         with Then("The size of the s3 bucket should be the same"):
@@ -812,7 +789,7 @@ def delete_all(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        size_before = measure_buckets_before_and_after()
     try:
         with When("I create a replicated table on each node"):
             table_name = "zero_copy_replication"
@@ -840,10 +817,6 @@ def delete_all(self):
             for node in nodes:
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-    with Then("All data should be removed from S3"):
-        check_bucket_size(expected_size=size_before, tolerance=0)
-
-
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Move("1.0"))
 def ttl_move(self):
@@ -868,10 +841,10 @@ def ttl_move(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before_base = get_bucket_size()
+        measure_buckets_before_and_after()
 
     with And("I get the size of the other s3 bucket before adding data"):
-        size_before_tier = get_bucket_size(prefix=self.context.bucket_path + "/tiered")
+        measure_buckets_before_and_after(bucket_prefix=self.context.bucket_path + "/tiered")
 
     try:
         with When("I create a replicated table on each node"):
@@ -961,22 +934,6 @@ def ttl_move(self):
             for node in nodes:
                 node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before_base, tolerance=5)
-
-    with And(
-        """The size of the other s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(
-            prefix=self.context.bucket_path + "/tiered",
-            expected_size=size_before_tier,
-            tolerance=5,
-        )
-
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Delete("1.0"))
@@ -1001,7 +958,7 @@ def ttl_delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = get_bucket_size()
+        measure_buckets_before_and_after()
 
     try:
         with When("I create a replicated table on each node"):
@@ -1091,11 +1048,6 @@ def ttl_delete(self):
             for node in nodes:
                 node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
