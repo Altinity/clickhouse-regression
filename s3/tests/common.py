@@ -1256,6 +1256,31 @@ def simple_table(self, name, policy="external", node=None):
             node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
+@TestStep(Given)
+def replicated_table(
+    self, table_name, policy="external", node=None, columns="d UInt64", path=None
+):
+    """Create a ReplicatedMergeTree table for s3 tests."""
+    node = node or self.context.node
+    path = path or f"/clickhouse/tables/{table_name}"
+
+    try:
+        with Given(f"I have a table {table_name}"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name} ({columns})
+                ENGINE = ReplicatedMergeTree('{path}', '{{replica}}')
+                ORDER BY d
+                SETTINGS storage_policy='{policy}'
+                """
+            )
+        yield table_name
+
+    finally:
+        with Finally(f"I drop the table {table_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
 @TestStep(When)
 def standard_check(self):
     """Create a table on s3, insert data, check the data is correct."""
