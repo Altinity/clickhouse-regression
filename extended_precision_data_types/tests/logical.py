@@ -30,13 +30,13 @@ def log_int_inline(self, func, int_type, min, max, node=None):
     with When(f"Check {func} with {int_type}"):
         if func == "not" and check_clickhouse_version(">=23.12")(self):
             node.query(
-                f"SELECT {func}(to{int_type}(1)), {func}(to{int_type}('{max}')), {func}(to{int_type}('{min}'))",
+                f"SELECT {func}(to{int_type}(1)), {func}(to{int_type}('{max}')), {func}(to{int_type}('{min}')) FORMAT TabSeparated",
                 exitcode=43,
                 message="Exception: Illegal type ",
             )
         else:
             node.query(
-                f"SELECT {func}(to{int_type}(1), to{int_type}(1)), {func}(to{int_type}('{max}'), to{int_type}(1)), {func}(to{int_type}('{min}'), to{int_type}(1))",
+                f"SELECT {func}(to{int_type}(1), to{int_type}(1)), {func}(to{int_type}('{max}'), to{int_type}(1)), {func}(to{int_type}('{min}'), to{int_type}(1)) FORMAT TabSeparated",
                 exitcode=43,
                 message="Exception: Illegal type ",
             )
@@ -84,13 +84,13 @@ def log_dec_inline(self, func, node=None):
     with When(f"Check {func} with Decimal256"):
         if func == "not" and check_clickhouse_version(">=23.12")(self):
             node.query(
-                f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0))",
+                f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0)) FORMAT TabSeparated",
                 exitcode=43,
                 message="Exception: Illegal type ",
             )
         else:
             node.query(
-                f"SELECT {func}(toDecimal256(1,0), toDecimal256(1,0)), {func}(toDecimal256('{max}',0), toDecimal256(1)), {func}(toDecimal256('{min}',0), toDecimal256(1))",
+                f"SELECT {func}(toDecimal256(1,0), toDecimal256(1,0)), {func}(toDecimal256('{max}',0), toDecimal256(1)), {func}(toDecimal256('{min}',0), toDecimal256(1)) FORMAT TabSeparated",
                 exitcode=43,
                 message="Exception: Illegal type ",
             )

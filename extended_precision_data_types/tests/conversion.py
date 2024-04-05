@@ -240,19 +240,21 @@ def to_decimal256(self, node=None):
 
     with When(f"I check toDecimal256 with 0 scale with 1, {max}, and {min}"):
         for value in [1, min, max]:
-            output = node.query(f"SELECT toDecimal256('{value}',0)").output
+            output = node.query(
+                f"SELECT toDecimal256('{value}',0) FORMAT TabSeparated"
+            ).output
             assert output == str(value), error()
 
     for scale in range(1, 76):
         with When(f"I check toDecimal256 with {scale} scale with its max"):
             output = node.query(
-                f"SELECT toDecimal256('{10**(76-scale)-1}',{scale})"
+                f"SELECT toDecimal256('{10**(76-scale)-1}',{scale}) FORMAT TabSeparated"
             ).output
             assert float(output) == float(10 ** (76 - scale) - 1), error()
 
         with And(f"I check toDecimal256 with {scale} scale with its min"):
             output = node.query(
-                f"SELECT toDecimal256('{-10**(76-scale)+1}',{scale})"
+                f"SELECT toDecimal256('{-10**(76-scale)+1}',{scale}) FORMAT TabSeparated"
             ).output
             assert float(output) == float(-(10 ** (76 - scale)) + 1), error()
 
@@ -279,7 +281,11 @@ def MySQL_table(self, node=None):
             )
 
         with Then("I select from the table on top of the mysql table"):
-            node.query(f"SELECT * FROM {table_name}", exitcode=50, message="Exception:")
+            node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated",
+                exitcode=50,
+                message="Exception:",
+            )
 
 
 @TestScenario
@@ -312,10 +318,14 @@ def MySQL_func(self, node=None):
             )
 
         with And("I insert into the clickhouse table from the mysql table"):
-            node.query(f"INSERT INTO {table_name} SELECT * FROM {table_function}")
+            node.query(
+                f"INSERT INTO {table_name} SELECT * FROM {table_function} FORMAT TabSeparated"
+            )
 
         with Then("I select from the clickhouse table"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert output == "1\t1\t1\t1\t1\t1", error()
 
 
@@ -343,7 +353,9 @@ def MySQL_dict(self, node=None):
 
         with Then("I select from the table on top of the mysql table"):
             node.query(
-                f"SELECT * FROM dict_{table_name}", exitcode=50, message="Exception:"
+                f"SELECT * FROM dict_{table_name} FORMAT TabSeparated",
+                exitcode=50,
+                message="Exception:",
             )
 
 

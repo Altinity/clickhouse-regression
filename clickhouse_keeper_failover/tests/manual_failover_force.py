@@ -5,7 +5,7 @@ from clickhouse_keeper_failover.tests.steps import *
 
 
 @TestFeature
-@Name("manual failover")
+@Name("manual failover --force-recovery")
 def feature(self):
     """Test keeper manual failover."""
 
@@ -29,9 +29,10 @@ def feature(self):
             restart=False,
         )
 
-    with When("I restart one node with --force-recovery"):
-        cluster = self.context.cluster
+    with When("I choose a node to perform the recovery"):
         recovery_node = dr_ensemble[0]
+
+    with When("I restart one node with --force-recovery"):
         recovery_node.stop_keeper()
         recovery_node.start_keeper(force_recovery=True)
 
@@ -59,7 +60,9 @@ def feature(self):
         )()
 
     with And("I check that the cluster is healthy"):
-        r = keeper_query(node=recovery_node, query="srvr")
-        assert "Mode: leader" in r.output, error()
-        r = keeper_query(node=recovery_node, query="mntr")
-        assert "zk_synced_followers\t2" in r.output, error()
+        for attempt in retries(timeout=60, delay=10, initial_delay=10):
+            with attempt:
+                r = keeper_query(node=recovery_node, query="srvr")
+                assert "Mode: leader" in r.output, error()
+                r = keeper_query(node=recovery_node, query="mntr")
+                assert "zk_synced_followers\t2" in r.output, error()

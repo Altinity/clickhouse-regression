@@ -3,37 +3,95 @@ version: '2.3'
 volumes:
   data1-1:
 
+  var_lib_clickhouse-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=30G"
+      device: tmpfs
+      type: tmpfs
+
+  var_log_clickhouse-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+  
+  var_lib_clickhouse-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=30G"
+      device: tmpfs
+      type: tmpfs
+
+  var_log_clickhouse-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
+  var_lib_clickhouse-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=30G"
+      device: tmpfs
+      type: tmpfs
+
+  var_log_clickhouse-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_data-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_datalog-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_data-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_datalog-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_data-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  zookeeper_datalog-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=5G"
+      device: tmpfs
+      type: tmpfs
+
 services:
   minio1:
     extends:
       file: minio-service.yml
       service: minio1
-    depends_on:
-      - proxy1
-      - proxy2
-
-  proxy1:
-    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
-    ports:
-      - "8080"
-      - "80"
-      - "443"
-
-  proxy2:
-    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
-    ports:
-      - "8080"
-      - "80"
-      - "443"
-
-  resolver:
-    image: altinityinfra/python-bottle:265-ea7abf434d5f99618d1e188b8284cf43835724f3
-    ports:
-      - "8080"
-    tty: true
-    depends_on:
-      - proxy1
-      - proxy2
 
   minio-client:
     extends:
@@ -51,9 +109,10 @@ services:
     environment:
       ZOO_MY_ID: 1
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/datalog/:/datalog"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/logs/:/logs/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/datalog/:/datalog"
+      - zookeeper_data-limited-1:/data-limited
+      - zookeeper_datalog-limited-1:/datalog-limited
 
   zookeeper2:
     extends:
@@ -63,9 +122,10 @@ services:
     environment:
       ZOO_MY_ID: 2
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/datalog/:/datalog/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/logs/:/logs/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/datalog/:/datalog/"
+      - zookeeper_data-limited-2:/data-limited
+      - zookeeper_datalog-limited-2:/datalog-limited
 
   zookeeper3:
     extends:
@@ -75,9 +135,10 @@ services:
     environment:
       ZOO_MY_ID: 3
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/datalog/:/datalog/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/logs/:/logs/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/datalog/:/datalog/"
+      - zookeeper_data-limited-3:/data-limited
+      - zookeeper_datalog-limited-3:/datalog-limited
 
   clickhouse1:
     extends:
@@ -88,6 +149,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-1:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-1:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -101,6 +164,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-2:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-2:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper2:
         condition: service_healthy
@@ -114,6 +179,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-3:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-3:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper3:
         condition: service_healthy

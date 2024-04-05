@@ -6,7 +6,7 @@ from platform import processor
 
 from testflows.core import *
 
-from helpers.alter import *
+from helpers.queries import *
 from s3.tests.common import s3_storage
 
 
@@ -72,24 +72,6 @@ def get_random_node_for_table(self, table_name):
     return random.choice(
         get_nodes_for_table(nodes=self.context.ch_nodes, table_name=table_name)
     )
-
-
-@TestStep
-def get_projections(self, node, table_name):
-    r = node.query(
-        f"SELECT distinct(name) FROM system.projection_parts WHERE table='{table_name}' FORMAT JSONColumns",
-        exitcode=0,
-    )
-    return json.loads(r.output)["name"]
-
-
-@TestStep
-def get_indexes(self, node, table_name):
-    r = node.query(
-        f"SELECT name FROM system.data_skipping_indices WHERE table='{table_name}' FORMAT JSONColumns",
-        exitcode=0,
-    )
-    return json.loads(r.output)["name"]
 
 
 @TestStep
