@@ -795,11 +795,11 @@ def check_bucket_size(
 @TestStep(When)
 def get_stable_bucket_size(
     self,
-    name,
-    prefix,
-    minio_enabled,
-    access_key,
-    key_id,
+    name=None,
+    prefix=None,
+    minio_enabled=None,
+    access_key=None,
+    key_id=None,
     delay=10,
     timeout=300,
 ):
@@ -842,11 +842,11 @@ def get_stable_bucket_size(
 @TestStep(Then)
 def check_stable_bucket_size(
     self,
-    name,
-    prefix,
     expected_size,
+    name=None,
+    prefix=None,
     tolerance=0,
-    minio_enabled=False,
+    minio_enabled=None,
     delay=10,
 ):
     """Assert the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
