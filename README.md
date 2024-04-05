@@ -91,6 +91,10 @@ Specify `suite` variable to select running only specific suites
 | `suite` | `aes_encryption`                | AES Encryption suite                                    |
 | `suite` | `aggregate_functions`           | Aggregate Functions suite                               |
 | `suite` | `atomic_insert`                 | Atomic Insert suite                                     |
+| `suite` | `alter_all`                     | Full Alter suite                                        |
+| `suite` | `alter_replace_partition`       | Alter Replace Partition suite                           |
+| `suite` | `alter_attach_partition`        | Alter Replace Attach suite                              |
+| `suite` | `alter_move_partition`          | Alter Move Attach suite                                 |
 | `suite` | `base_58`                       | Base58 suite                                            |
 | `suite` | `benchmark_all`                 | All Ontime Benchmark (MinIO, AWS, GCS) suite            |
 | `suite` | `benchmark_aws`                 | Ontime Benchmark AWS suite                              |
@@ -126,6 +130,10 @@ Specify `suite` variable to select running only specific suites
 | `suite` | `tiered_storage_gcs`            | Tiered Storage GCS suite                                |
 | `suite` | `tiered_storage_local`          | Tiered Storage Local suite                              |
 | `suite` | `tiered_storage_minio`          | Tiered Storage MinIO suite                              |
+| `suite` | `vfs_all`                       | Full VFS (MinIO, AWS, GCS) suite                        |
+| `suite` | `vfs_aws`                       | VFS AWS suite                                           |
+| `suite` | `vfs_gcs`                       | VFS GCS suite                                           |
+| `suite` | `vfs_minio`                     | VFS MinIO suite                                         |
 | `suite` | `window_functions`              | Window Functions suite                                  |
 
 ### [Running From Docker Image](#table-of-contents)
