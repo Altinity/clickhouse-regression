@@ -10,8 +10,8 @@ def syntax(self):
     """Check that S3 storage works correctly for both imports and exports
     when accessed using a table function.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -22,7 +22,7 @@ def syntax(self):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -31,67 +31,67 @@ def syntax(self):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES (427)")
+        with And(f"I store simple data in the first table {table1_name}"):
+            node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
         with When(f"I export the data to S3 using the table function"):
             node.query(
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}syntax.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
-        with And(f"I import the data from S3 into the second table {name_table2}"):
+        with And(f"I import the data from S3 into the second table {table2_name}"):
             node.query(
                 f"""
-                INSERT INTO {name_table2} SELECT * FROM
+                INSERT INTO {table2_name} SELECT * FROM
                 s3('{uri}syntax.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
             )
 
         with Then(
             f"""I check that a simple SELECT * query on the second table
-                   {name_table2} returns matching data"""
+                   {table2_name} returns matching data"""
         ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
             assert r == expected, error()
 
     finally:
         with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}syntax.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -109,8 +109,8 @@ def wildcard(self, wildcard, expected):
     """Check that imports from S3 storage using the S3 table function work
     correctly when wildcard paths with the '{wildcard}' wildcard are provided.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -126,7 +126,7 @@ def wildcard(self, wildcard, expected):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -135,21 +135,21 @@ def wildcard(self, wildcard, expected):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES (427)")
+        with And(f"I store simple data in the first table {table1_name}"):
+            node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
         with When("I export the data to S3 using the table function"):
             node.query(
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}subdata', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
         with And("I export the data to a different path in my bucket"):
@@ -157,7 +157,7 @@ def wildcard(self, wildcard, expected):
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}subdata1', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
         with And("I export the data to a different path in my bucket"):
@@ -165,7 +165,7 @@ def wildcard(self, wildcard, expected):
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}subdata2', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
         with And("I export the data to yet another path in my bucket"):
@@ -173,91 +173,91 @@ def wildcard(self, wildcard, expected):
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}subdata3', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
         with And(
             f"""I import the data from external storage into the second
-                 table {name_table2} using the wildcard '{wildcard}'"""
+                 table {table2_name} using the wildcard '{wildcard}'"""
         ):
             node.query(
                 f"""
-                INSERT INTO {name_table2} SELECT * FROM
+                INSERT INTO {table2_name} SELECT * FROM
                 s3('{uri}subdata{wildcard}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
             )
 
         with Then(
             f"""I check that a simple SELECT * query on the second table
-                   {name_table2} returns expected data"""
+                   {table2_name} returns expected data"""
         ):
             for retry in retries(timeout=600, delay=5):
                 with retry:
-                    r = node.query(f"SELECT * FROM {name_table2}").output.strip()
+                    r = node.query(f"SELECT * FROM {table2_name}").output.strip()
                     assert r == expected, error()
 
     finally:
         with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}subdata', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}subdata1', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}subdata2', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}subdata3', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -280,8 +280,8 @@ def compression(self, compression_method):
     """Check that ClickHouse can successfully use all supported compression
     methods for the S3 table function.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -292,7 +292,7 @@ def compression(self, compression_method):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -301,14 +301,14 @@ def compression(self, compression_method):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES (427)")
+        with And(f"I store simple data in the first table {table1_name}"):
+            node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
         with When(
             f"""I export the data to S3 using the table function with compression
@@ -318,56 +318,56 @@ def compression(self, compression_method):
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}compression.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64', '{compression_method}')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
         with And(
-            f"""I import the data from S3 into the second table {name_table2}
+            f"""I import the data from S3 into the second table {table2_name}
                   using the table function with compression parameter set to '{compression_method}'"""
         ):
             node.query(
                 f"""
-                INSERT INTO {name_table2} SELECT * FROM
+                INSERT INTO {table2_name} SELECT * FROM
                 s3('{uri}compression.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64', '{compression_method}')"""
             )
 
         with Then(
             f"""I check that a simple SELECT * query on the second table
-                   {name_table2} returns matching data"""
+                   {table2_name} returns matching data"""
         ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
             assert r == expected, error()
 
     finally:
         with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}compression.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -391,8 +391,8 @@ def auto(self, compression_method):
     compression parameter of the S3 table function to interpret files compressed
     using the supported compression methods.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -403,7 +403,7 @@ def auto(self, compression_method):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -412,14 +412,14 @@ def auto(self, compression_method):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES (427)")
+        with And(f"I store simple data in the first table {table1_name}"):
+            node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
         with When(
             f"""I export the data to S3 using the table function with compression
@@ -429,56 +429,56 @@ def auto(self, compression_method):
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}auto.{compression_method}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64', '{compression_method}')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
         with And(
-            f"""I import the data from S3 into the second table {name_table2}
+            f"""I import the data from S3 into the second table {table2_name}
                   using the table function with compression parameter set to 'auto'"""
         ):
             node.query(
                 f"""
-                INSERT INTO {name_table2} SELECT * FROM
+                INSERT INTO {table2_name} SELECT * FROM
                 s3('{uri}auto.{compression_method}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64', 'auto')""",
             )
 
         with Then(
             f"""I check that a simple SELECT * query on the second table
-                   {name_table2} returns matching data"""
+                   {table2_name} returns matching data"""
         ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
             assert r == expected, error()
 
     finally:
         with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}auto.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestScenario
@@ -487,8 +487,8 @@ def credentials(self):
     """Check that ClickHouse can import and export data from an S3 bucket
     when proper authentication credentials are provided.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -499,7 +499,7 @@ def credentials(self):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -508,69 +508,69 @@ def credentials(self):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
-        with And(f"I store simple data in the first table {name_table1}"):
+        with And(f"I store simple data in the first table {table1_name}"):
             for attempt in retries(timeout=600, delay=5):
                 with attempt:
-                    node.query(f"INSERT INTO {name_table1} VALUES (427)")
+                    node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
         with When("I export the data to S3 using the table function"):
             node.query(
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}credentials.csv', '{access_key_id}', '{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
-        with And(f"I import the data from S3 into the second table {name_table2}"):
+        with And(f"I import the data from S3 into the second table {table2_name}"):
             node.query(
                 f"""
-                INSERT INTO {name_table2} SELECT * FROM
+                INSERT INTO {table2_name} SELECT * FROM
                 s3('{uri}credentials.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
             )
 
         with Then(
             f"""I check that a simple SELECT * query on the second table
-                   {name_table2} returns matching data"""
+                   {table2_name} returns matching data"""
         ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
             assert r == expected, error()
 
     finally:
         with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} to S3 at the
+                f"""I export the empty table {table1_name} to S3 at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}credentials.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestScenario
@@ -605,8 +605,8 @@ def multiple_columns(self):
     """Check that storage works properly when a table with multiple columns
     is imported and exported.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -616,7 +616,7 @@ def multiple_columns(self):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64,
                     a String,
                     b Int8
@@ -627,7 +627,7 @@ def multiple_columns(self):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64,
                     a String,
                     b Int8
@@ -636,69 +636,69 @@ def multiple_columns(self):
             )
 
         with When("I add data to the table"):
-            node.query(f"INSERT INTO {name_table1} (d,a,b) VALUES (1,'Dog',0)")
-            node.query(f"INSERT INTO {name_table1} (d,a,b) VALUES (2,'Cat',7)")
-            node.query(f"INSERT INTO {name_table1} (d,a,b) VALUES (3,'Horse',12)")
+            node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (1,'Dog',0)")
+            node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (2,'Cat',7)")
+            node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (3,'Horse',12)")
 
         with When("I export the data to external storage using the table function"):
             node.query(
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}multiple_columns.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64, a String, b Int8')
-                SELECT * FROM {name_table1}"""
+                SELECT * FROM {table1_name}"""
             )
 
         with And(
-            f"I import the data from external storage into the second table {name_table2}"
+            f"I import the data from external storage into the second table {table2_name}"
         ):
             node.query(
                 f"""
-                INSERT INTO {name_table2} SELECT * FROM
+                INSERT INTO {table2_name} SELECT * FROM
                 s3('{uri}multiple_columns.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64, a String, b Int8')"""
             )
 
         with Then("I check a count query"):
-            r = node.query(f"SELECT COUNT(*) FROM {name_table2}").output.strip()
+            r = node.query(f"SELECT COUNT(*) FROM {table2_name}").output.strip()
             assert r == "3", error()
 
         with And("I check a select * query"):
-            r = node.query(f"SELECT * FROM {name_table2}").output.strip()
+            r = node.query(f"SELECT * FROM {table2_name}").output.strip()
             assert r == "1\tDog\t0\n2\tCat\t7\n3\tHorse\t12", error()
 
         with And("I check a query selecting one row"):
-            r = node.query(f"SELECT d,a,b FROM {name_table2} WHERE d=3").output.strip()
+            r = node.query(f"SELECT d,a,b FROM {table2_name} WHERE d=3").output.strip()
             assert r == "3\tHorse\t12", error()
 
     finally:
         with Finally("I overwrite the data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} at the
+                f"""I export the empty table {table1_name} at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}multiple_columns.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestOutline(Scenario)
@@ -708,8 +708,8 @@ def data_format(self, fmt):
     """Check that ClickHouse can import and export data with ORC and Parquet
     data formats.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -719,7 +719,7 @@ def data_format(self, fmt):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -728,21 +728,14 @@ def data_format(self, fmt):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
         with When("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data(name=name_table1, number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data(name=name_table1, number_of_mb=1, start=1024 * 1024)
-
-            with And("then doing a large insert of 10Mb of data"):
-                insert_data(name=name_table1, number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=node, table_name=table1_name)
 
         with When(
             f"I export the data to external storage using the table function with {fmt} data format"
@@ -751,78 +744,51 @@ def data_format(self, fmt):
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}data_format.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1} FORMAT {fmt}"""
+                SELECT * FROM {table1_name} FORMAT {fmt}"""
             )
 
         with And(
-            f"I import the data from external storage into the second table {name_table2} with {fmt} data format"
+            f"I import the data from external storage into the second table {table2_name} with {fmt} data format"
         ):
             node.query(
                 f"""
-                INSERT INTO {name_table2} SELECT * FROM
+                INSERT INTO {table2_name} SELECT * FROM
                 s3('{uri}data_format.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64') FORMAT {fmt}"""
             )
 
         with Then("I check simple queries"):
-            check_query(
-                num=0, query=f"SELECT COUNT() FROM {name_table2}", expected="1572867"
-            )
-            check_query(
-                num=1,
-                query=f"SELECT uniqExact(d) FROM {name_table2} WHERE d < 10",
-                expected="10",
-            )
-            check_query(
-                num=2,
-                query=f"SELECT d FROM {name_table2} ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query(
-                num=3,
-                query=f"SELECT d FROM {name_table2} ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query(
-                num=4,
-                query=f"SELECT * FROM {name_table2} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query(
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM {name_table2} WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=node, table_name=table2_name)
 
     finally:
         with Finally("I overwrite the data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} at the
+                f"""I export the empty table {table1_name} at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}data_format.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestScenario
@@ -831,8 +797,8 @@ def multipart(self):
     """Check that storage works correctly when uploads and downloads use
     multiple parts.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -842,7 +808,7 @@ def multipart(self):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -851,21 +817,14 @@ def multipart(self):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
         with When("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data(name=name_table1, number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data(name=name_table1, number_of_mb=1, start=1024 * 1024)
-
-            with And("then doing a large insert of 10Mb of data"):
-                insert_data(name=name_table1, number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=node, table_name=table1_name)
 
         with change_max_single_part_upload_size(node=node, size=5):
             with When("I export the data using the table function"):
@@ -873,76 +832,49 @@ def multipart(self):
                     f"""
                     INSERT INTO FUNCTION
                     s3('{uri}multipart.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                    SELECT * FROM {name_table1}"""
+                    SELECT * FROM {table1_name}"""
                 )
 
-            with And(f"I import the data into the second table {name_table2}"):
+            with And(f"I import the data into the second table {table2_name}"):
                 node.query(
                     f"""
-                    INSERT INTO {name_table2} SELECT * FROM
+                    INSERT INTO {table2_name} SELECT * FROM
                     s3('{uri}multipart.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
                 )
 
         with Then("I check simple queries"):
-            check_query(
-                num=0, query=f"SELECT COUNT() FROM {name_table2}", expected="1572867"
-            )
-            check_query(
-                num=1,
-                query=f"SELECT uniqExact(d) FROM {name_table2} WHERE d < 10",
-                expected="10",
-            )
-            check_query(
-                num=2,
-                query=f"SELECT d FROM {name_table2} ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query(
-                num=3,
-                query=f"SELECT d FROM {name_table2} ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query(
-                num=4,
-                query=f"SELECT * FROM {name_table2} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query(
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM {name_table2} WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=node, table_name=table2_name)
 
     finally:
         with Finally("I overwrite the data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+            with By(f"I drop the first table {table1_name}"):
+                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-            with And(f"I create the table again {name_table1}"):
+            with And(f"I create the table again {table1_name}"):
                 node.query(
                     f"""
-                    CREATE TABLE {name_table1} (
+                    CREATE TABLE {table1_name} (
                         d UInt64
                     ) ENGINE = MergeTree()
                     ORDER BY d"""
                 )
 
             with And(
-                f"""I export the empty table {name_table1} at the
+                f"""I export the empty table {table1_name} at the
                       location where I want to overwrite data"""
             ):
                 node.query(
                     f"""
                         INSERT INTO FUNCTION
                         s3('{uri}multipart.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
+                        SELECT * FROM {table1_name}"""
                 )
 
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+        with Finally(f"I drop the first table {table1_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And(f"I drop the second table {table2_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table2_name} SYNC")
 
 
 @TestScenario
@@ -951,8 +883,8 @@ def remote_host_filter(self):
     """Check that the remote host filter can be used to block access to
     bucket URLs provided in the S3 table function.
     """
-    name_table1 = "table_" + getuid()
-    name_table2 = "table_" + getuid()
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -967,7 +899,7 @@ def remote_host_filter(self):
         with Given("I create a table"):
             node.query(
                 f"""
-                CREATE TABLE {name_table1} (
+                CREATE TABLE {table1_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
@@ -976,14 +908,14 @@ def remote_host_filter(self):
         with And("I create a second table for comparison"):
             node.query(
                 f"""
-                CREATE TABLE {name_table2} (
+                CREATE TABLE {table2_name} (
                     d UInt64
                 ) ENGINE = MergeTree()
                 ORDER BY d"""
             )
 
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES (427)")
+        with And(f"I store simple data in the first table {table1_name}"):
+            node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
         with When(
             """I export the data to S3 using the table function,
@@ -993,7 +925,7 @@ def remote_host_filter(self):
                 f"""
                 INSERT INTO FUNCTION
                 s3('{uri}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}""",
+                SELECT * FROM {table1_name}""",
                 message=f'DB::Exception: URL "{uri}" is not allowed',
             )
 
