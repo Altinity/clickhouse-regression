@@ -4,7 +4,7 @@ from s3.tests.common import *
 from s3.requirements import *
 
 
-@TestStep(When)
+@TestStep(Given)
 def insert_to_s3_function(
     self, filename, table_name, columns="d UInt64", compression=None, fmt=None
 ):
@@ -13,17 +13,26 @@ def insert_to_s3_function(
     uri = self.context.uri
     node = current().context.node
 
-    query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+    try:
+        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
 
-    if compression:
-        query += f", '{compression}'"
+        if compression:
+            query += f", '{compression}'"
 
-    query += f") SELECT * FROM {table_name}"
+        query += f") SELECT * FROM {table_name}"
 
-    if fmt:
-        query += f" FORMAT {fmt}"
+        if fmt:
+            query += f" FORMAT {fmt}"
 
-    node.query(query)
+        node.query(query)
+
+        yield
+
+    finally:
+        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query += f") SELECT * FROM null('{columns}')"
+
+        node.query(query)
 
 
 @TestStep(When)
@@ -114,9 +123,6 @@ def wildcard(self, wildcard, expected):
     """
     table1_name = "table_" + getuid()
     table2_name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
     node = current().context.node
 
     if self.context.storage == "minio":
@@ -125,76 +131,41 @@ def wildcard(self, wildcard, expected):
                 self.context.cluster.minio_bucket, "data"
             )
 
-    try:
-        with Given("I create a table"):
-            simple_table(node=node, name=table1_name, policy="default")
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
 
-        with And("I create a second table for comparison"):
-            simple_table(node=node, name=table2_name, policy="default")
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
 
-        with And(f"I store simple data in the first table {table1_name}"):
-            node.query(f"INSERT INTO {table1_name} VALUES (427)")
+    with And(f"I store simple data in the first table {table1_name}"):
+        node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-        with When("I export the data to S3 using the table function"):
-            insert_to_s3_function(filename="subdata", table_name=table1_name)
+    with When("I export the data to S3 using the table function"):
+        insert_to_s3_function(filename="subdata", table_name=table1_name)
 
-        with And("I export the data to a different path in my bucket"):
-            insert_to_s3_function(filename="subdata1", table_name=table1_name)
+    with And("I export the data to a different path in my bucket"):
+        insert_to_s3_function(filename="subdata1", table_name=table1_name)
 
-        with And("I export the data to a different path in my bucket"):
-            insert_to_s3_function(filename="subdata2", table_name=table1_name)
+    with And("I export the data to a different path in my bucket"):
+        insert_to_s3_function(filename="subdata2", table_name=table1_name)
 
-        with And("I export the data to yet another path in my bucket"):
-            insert_to_s3_function(filename="subdata3", table_name=table1_name)
+    with And("I export the data to yet another path in my bucket"):
+        insert_to_s3_function(filename="subdata3", table_name=table1_name)
 
-        with And(
-            f"""I import the data from external storage into the second
-                 table {table2_name} using the wildcard '{wildcard}'"""
-        ):
-            insert_from_s3_function(
-                filename=f"subdata{wildcard}", table_name=table2_name
-            )
+    with And(
+        f"""I import the data from external storage into the second
+                table {table2_name} using the wildcard '{wildcard}'"""
+    ):
+        insert_from_s3_function(filename=f"subdata{wildcard}", table_name=table2_name)
 
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                   {table2_name} returns expected data"""
-        ):
-            for retry in retries(timeout=600, delay=5):
-                with retry:
-                    r = node.query(f"SELECT * FROM {table2_name}").output.strip()
-                    assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(filename="subdata", table_name=table1_name)
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(filename="subdata1", table_name=table1_name)
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(filename="subdata2", table_name=table1_name)
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(filename="subdata3", table_name=table1_name)
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {table2_name} returns expected data"""
+    ):
+        for retry in retries(timeout=600, delay=5):
+            with retry:
+                r = node.query(f"SELECT * FROM {table2_name}").output.strip()
+                assert r == expected, error()
 
 
 @TestOutline(Scenario)
@@ -222,58 +193,41 @@ def compression(self, compression_method):
     node = current().context.node
     expected = "427"
 
-    try:
-        with Given("I create a table"):
-            simple_table(node=node, name=table1_name, policy="default")
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
 
-        with And("I create a second table for comparison"):
-            simple_table(node=node, name=table2_name, policy="default")
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
 
-        with And(f"I store simple data in the first table {table1_name}"):
-            node.query(f"INSERT INTO {table1_name} VALUES (427)")
+    with And(f"I store simple data in the first table {table1_name}"):
+        node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-        with When(
-            f"""I export the data to S3 using the table function with compression
-                  parameter set to '{compression_method}'"""
-        ):
-            insert_to_s3_function(
-                filename="compression.csv",
-                table_name=table1_name,
-                compression=compression_method,
-            )
+    with When(
+        f"""I export the data to S3 using the table function with compression
+                parameter set to '{compression_method}'"""
+    ):
+        insert_to_s3_function(
+            filename="compression.csv",
+            table_name=table1_name,
+            compression=compression_method,
+        )
 
-        with And(
-            f"""I import the data from S3 into the second table {table2_name}
-                  using the table function with compression parameter set to '{compression_method}'"""
-        ):
-            insert_from_s3_function(
-                filename="compression.csv",
-                table_name=table2_name,
-                compression=compression_method,
-            )
+    with And(
+        f"""I import the data from S3 into the second table {table2_name}
+                using the table function with compression parameter set to '{compression_method}'"""
+    ):
+        insert_from_s3_function(
+            filename="compression.csv",
+            table_name=table2_name,
+            compression=compression_method,
+        )
 
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                   {table2_name} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(
-                    filename="compression.csv", table_name=table1_name
-                )
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {table2_name} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestOutline(Scenario)
@@ -302,58 +256,41 @@ def auto(self, compression_method):
     node = current().context.node
     expected = "427"
 
-    try:
-        with Given("I create a table"):
-            simple_table(node=node, name=table1_name, policy="default")
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
 
-        with And("I create a second table for comparison"):
-            simple_table(node=node, name=table2_name, policy="default")
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
 
-        with And(f"I store simple data in the first table {table1_name}"):
-            node.query(f"INSERT INTO {table1_name} VALUES (427)")
+    with And(f"I store simple data in the first table {table1_name}"):
+        node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-        with When(
-            f"""I export the data to S3 using the table function with compression
-                  parameter set to '{compression_method}'"""
-        ):
-            insert_to_s3_function(
-                filename=f"auto.{compression_method}",
-                table_name=table1_name,
-                compression=compression_method,
-            )
+    with When(
+        f"""I export the data to S3 using the table function with compression
+                parameter set to '{compression_method}'"""
+    ):
+        insert_to_s3_function(
+            filename=f"auto.{compression_method}",
+            table_name=table1_name,
+            compression=compression_method,
+        )
 
-        with And(
-            f"""I import the data from S3 into the second table {table2_name}
-                  using the table function with compression parameter set to 'auto'"""
-        ):
-            insert_from_s3_function(
-                filename=f"auto.{compression_method}",
-                table_name=table2_name,
-                compression="auto",
-            )
+    with And(
+        f"""I import the data from S3 into the second table {table2_name}
+                using the table function with compression parameter set to 'auto'"""
+    ):
+        insert_from_s3_function(
+            filename=f"auto.{compression_method}",
+            table_name=table2_name,
+            compression="auto",
+        )
 
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                   {table2_name} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(
-                    filename=f"auto.{compression_method}", table_name=table1_name
-                )
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {table2_name} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestScenario
@@ -367,46 +304,29 @@ def credentials(self):
     node = current().context.node
     expected = "427"
 
-    try:
-        with Given("I create a table"):
-            simple_table(node=node, name=table1_name, policy="default")
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
 
-        with And("I create a second table for comparison"):
-            simple_table(node=node, name=table2_name, policy="default")
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
 
-        with And(f"I store simple data in the first table {table1_name}"):
-            for attempt in retries(timeout=600, delay=5):
-                with attempt:
-                    node.query(f"INSERT INTO {table1_name} VALUES (427)")
+    with And(f"I store simple data in the first table {table1_name}"):
+        for attempt in retries(timeout=600, delay=5):
+            with attempt:
+                node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-        with When("I export the data to S3 using the table function"):
-            insert_to_s3_function(filename="credentials.csv", table_name=table1_name)
+    with When("I export the data to S3 using the table function"):
+        insert_to_s3_function(filename="credentials.csv", table_name=table1_name)
 
-        with And(f"I import the data from S3 into the second table {table2_name}"):
-            insert_from_s3_function(filename="credentials.csv", table_name=table2_name)
+    with And(f"I import the data from S3 into the second table {table2_name}"):
+        insert_from_s3_function(filename="credentials.csv", table_name=table2_name)
 
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                   {table2_name} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(
-                    filename="credentials.csv", table_name=table1_name
-                )
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {table2_name} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestScenario
@@ -445,71 +365,54 @@ def multiple_columns(self):
     table2_name = "table_" + getuid()
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            simple_table(
-                node=node,
-                name=table1_name,
-                policy="default",
-                columns="d UInt64, a String, b Int8",
-            )
+    with Given("I create a table"):
+        simple_table(
+            node=node,
+            name=table1_name,
+            policy="default",
+            columns="d UInt64, a String, b Int8",
+        )
 
-        with And("I create a second table for comparison"):
-            simple_table(
-                node=node,
-                name=table2_name,
-                policy="default",
-                columns="d UInt64, a String, b Int8",
-            )
+    with And("I create a second table for comparison"):
+        simple_table(
+            node=node,
+            name=table2_name,
+            policy="default",
+            columns="d UInt64, a String, b Int8",
+        )
 
-        with When("I add data to the table"):
-            node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (1,'Dog',0)")
-            node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (2,'Cat',7)")
-            node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (3,'Horse',12)")
+    with When("I add data to the table"):
+        node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (1,'Dog',0)")
+        node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (2,'Cat',7)")
+        node.query(f"INSERT INTO {table1_name} (d,a,b) VALUES (3,'Horse',12)")
 
-        with When("I export the data to external storage using the table function"):
-            insert_to_s3_function(
-                filename="multiple_columns.csv",
-                table_name=table1_name,
-                columns="d UInt64, a String, b Int8",
-            )
+    with When("I export the data to external storage using the table function"):
+        insert_to_s3_function(
+            filename="multiple_columns.csv",
+            table_name=table1_name,
+            columns="d UInt64, a String, b Int8",
+        )
 
-        with And(
-            f"I import the data from external storage into the second table {table2_name}"
-        ):
-            insert_from_s3_function(
-                filename="multiple_columns.csv",
-                table_name=table2_name,
-                columns="d UInt64, a String, b Int8",
-            )
+    with And(
+        f"I import the data from external storage into the second table {table2_name}"
+    ):
+        insert_from_s3_function(
+            filename="multiple_columns.csv",
+            table_name=table2_name,
+            columns="d UInt64, a String, b Int8",
+        )
 
-        with Then("I check a count query"):
-            r = node.query(f"SELECT COUNT(*) FROM {table2_name}").output.strip()
-            assert r == "3", error()
+    with Then("I check a count query"):
+        r = node.query(f"SELECT COUNT(*) FROM {table2_name}").output.strip()
+        assert r == "3", error()
 
-        with And("I check a select * query"):
-            r = node.query(f"SELECT * FROM {table2_name}").output.strip()
-            assert r == "1\tDog\t0\n2\tCat\t7\n3\tHorse\t12", error()
+    with And("I check a select * query"):
+        r = node.query(f"SELECT * FROM {table2_name}").output.strip()
+        assert r == "1\tDog\t0\n2\tCat\t7\n3\tHorse\t12", error()
 
-        with And("I check a query selecting one row"):
-            r = node.query(f"SELECT d,a,b FROM {table2_name} WHERE d=3").output.strip()
-            assert r == "3\tHorse\t12", error()
-
-    finally:
-        with Finally("I overwrite the data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(
-                    filename="multiple_columns.csv", table_name=table1_name
-                )
+    with And("I check a query selecting one row"):
+        r = node.query(f"SELECT d,a,b FROM {table2_name} WHERE d=3").output.strip()
+        assert r == "3\tHorse\t12", error()
 
 
 @TestOutline(Scenario)
@@ -523,48 +426,31 @@ def data_format(self, fmt):
     table2_name = "table_" + getuid()
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            simple_table(node=node, name=table1_name, policy="default")
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
 
-        with And("I create a second table for comparison"):
-            simple_table(node=node, name=table2_name, policy="default")
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
 
-        with When("I add data to the table"):
-            standard_inserts(node=node, table_name=table1_name)
+    with When("I add data to the table"):
+        standard_inserts(node=node, table_name=table1_name)
 
-        with When(
-            f"I export the data to external storage using the table function with {fmt} data format"
-        ):
-            insert_to_s3_function(
-                filename="data_format.csv", table_name=table1_name, fmt=fmt
-            )
+    with When(
+        f"I export the data to external storage using the table function with {fmt} data format"
+    ):
+        insert_to_s3_function(
+            filename="data_format.csv", table_name=table1_name, fmt=fmt
+        )
 
-        with And(
-            f"I import the data from external storage into the second table {table2_name} with {fmt} data format"
-        ):
-            insert_from_s3_function(
-                filename="data_format.csv", table_name=table2_name, fmt=fmt
-            )
+    with And(
+        f"I import the data from external storage into the second table {table2_name} with {fmt} data format"
+    ):
+        insert_from_s3_function(
+            filename="data_format.csv", table_name=table2_name, fmt=fmt
+        )
 
-        with Then("I check simple queries"):
-            standard_selects(node=node, table_name=table2_name)
-
-    finally:
-        with Finally("I overwrite the data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(
-                    filename="data_format.csv", table_name=table1_name
-                )
+    with Then("I check simple queries"):
+        standard_selects(node=node, table_name=table2_name)
 
 
 @TestScenario
@@ -575,46 +461,26 @@ def multipart(self):
     """
     table1_name = "table_" + getuid()
     table2_name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            simple_table(node=node, name=table1_name, policy="default")
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
 
-        with And("I create a second table for comparison"):
-            simple_table(node=node, name=table2_name, policy="default")
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
 
-        with When("I add data to the table"):
-            standard_inserts(node=node, table_name=table1_name)
+    with When("I add data to the table"):
+        standard_inserts(node=node, table_name=table1_name)
 
-        with change_max_single_part_upload_size(node=node, size=5):
-            with When("I export the data using the table function"):
-                insert_to_s3_function(filename="multipart.csv", table_name=table1_name)
+    with change_max_single_part_upload_size(node=node, size=5):
+        with When("I export the data using the table function"):
+            insert_to_s3_function(filename="multipart.csv", table_name=table1_name)
 
-            with And(f"I import the data into the second table {table2_name}"):
-                insert_from_s3_function(
-                    filename="multipart.csv", table_name=table2_name
-                )
+        with And(f"I import the data into the second table {table2_name}"):
+            insert_from_s3_function(filename="multipart.csv", table_name=table2_name)
 
-        with Then("I check simple queries"):
-            standard_selects(node=node, table_name=table2_name)
-
-    finally:
-        with Finally("I overwrite the data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(filename="multipart.csv", table_name=table1_name)
+    with Then("I check simple queries"):
+        standard_selects(node=node, table_name=table2_name)
 
 
 @TestScenario
@@ -662,6 +528,7 @@ def remote_host_filter(self):
 @Requirements(RQ_SRS_015_S3_TableFunction("1.0"))
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
+
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
             scenario()
