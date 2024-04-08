@@ -1234,21 +1234,18 @@ def default_s3_disk_and_volume(
 
 
 @TestStep(Given)
-def simple_table(self, name, policy="external", node=None):
+def simple_table(self, name, policy="external", node=None, columns="d UInt64"):
     """Create a simple MergeTree table for s3 tests."""
     node = node or self.context.node
 
+    query = f"CREATE TABLE {name} ({columns}) ENGINE = MergeTree() ORDER BY {columns.split()[0]}"
+    if policy:
+        query += f" SETTINGS storage_policy='{policy}'"
+
     try:
         with Given(f"I have a table {name}"):
-            node.query(
-                f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='{policy}'
-                """
-            )
+            node.query(query)
+
         yield
 
     finally:
@@ -1270,7 +1267,7 @@ def replicated_table(
                 f"""
                 CREATE TABLE {table_name} ({columns})
                 ENGINE = ReplicatedMergeTree('{path}', '{{replica}}')
-                ORDER BY d
+                ORDER BY {columns.split()[0]}
                 SETTINGS storage_policy='{policy}'
                 """
             )
@@ -1296,6 +1293,61 @@ def standard_check(self):
     with Then("I check that a simple SELECT * query returns matching data"):
         r = node.query(f"SELECT * FROM {name}").output.strip()
         assert r == "427", error()
+
+
+@TestStep(When)
+def standard_inserts(self, node, table_name):
+    """Standard inserts of a known amount of data."""
+
+    with By("first inserting 1MB of data"):
+        insert_data(node=node, number_of_mb=1, name=table_name)
+
+    with And("another insert of 1MB of data"):
+        insert_data(node=node, number_of_mb=1, start=1024 * 1024, name=table_name)
+
+    with And("a large insert of 10Mb of data"):
+        insert_data(node=node, number_of_mb=10, start=1024 * 1024 * 2, name=table_name)
+
+
+@TestStep(Then)
+def standard_selects(self, node, table_name):
+    """Validate the data inserted by standard_inserts to an empty table."""
+    check_query_node(
+        node=node,
+        num=0,
+        query=f"SELECT COUNT() FROM {table_name}",
+        expected="1572867",
+    )
+    check_query_node(
+        node=node,
+        num=1,
+        query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+        expected="10",
+    )
+    check_query_node(
+        node=node,
+        num=2,
+        query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+        expected="3407872",
+    )
+    check_query_node(
+        node=node,
+        num=3,
+        query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+        expected="0",
+    )
+    check_query_node(
+        node=node,
+        num=4,
+        query=f"SELECT * FROM {table_name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
+        expected="0\n1048578\n2097154",
+    )
+    check_query_node(
+        node=node,
+        num=5,
+        query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1)",
+        expected="1",
+    )
 
 
 @TestStep(Given)

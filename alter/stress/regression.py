@@ -12,17 +12,13 @@ from s3.tests.common import start_minio
 
 xfails = {
     "/stress/minio/alter/:/:/:move partition to tab:": [
-        (Fail, "Needs investigation"),
-        (Error, "Needs investigation"),
+        (Fail, "Move to self causes unresponsiveness"),
+        (Error, "Move to self causes unresponsiveness"),
     ]
 }
 
 ffails = {
-    "/stress/minio/alter/:/:/:move partition to tab:": (
-        XFail,
-        "Times out, needs investigation",
-        check_clickhouse_version(">=24"),
-    )
+
 }
 
 

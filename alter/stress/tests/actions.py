@@ -275,8 +275,15 @@ def move_random_partition_to_random_table(self):
 
     with table_schema_lock:
 
-        destination_table_name = get_random_table_name()
-        source_table_name = get_random_table_name()
+        if getattr(self.context, "disallow_move_partition_to_self", True):
+            destination_table_name, source_table_name = get_random_table_names(
+                choices=2, replacement=False
+            )
+            assert destination_table_name != source_table_name
+        else:
+            destination_table_name = get_random_table_name()
+            source_table_name = get_random_table_name()
+
         node = get_random_node_for_table(table_name=destination_table_name)
         partition = get_random_partition_id(node=node, table_name=source_table_name)
 
@@ -642,7 +649,7 @@ def check_consistency(self, tables=None, sync_timeout=None):
 
         row_counts = {}
         column_names = {}
-        with When(f"I sync and count rows on nodes for table {table_name}"):
+        with When(f"I sync nodes for table {table_name}"):
             for node in active_nodes:
                 By(f"running SYNC REPLICA", test=sync_replica, parallel=True)(
                     node=node,
@@ -653,22 +660,30 @@ def check_consistency(self, tables=None, sync_timeout=None):
                 )
                 join()
 
-            for node in active_nodes:
-                with By(f"querying the row count"):
-                    row_counts[node.name] = get_row_count(
-                        node=node,
-                        table_name=table_name,
-                        timeout=60,
-                    )
-                    column_names[node.name] = get_column_names(
-                        node=node, table_name=table_name
-                    )
-
         with Then("All replicas should have the same state"):
-            for n1, n2 in combinations(active_nodes, 2):
-                with By(f"Checking {n1.name} and {n2.name}"):
-                    assert row_counts[n1.name] == row_counts[n2.name], error()
-                    assert column_names[n1.name] == column_names[n2.name], error()
+            for attempt in retries(timeout=step_retry_timeout, delay=5):
+                with attempt:
+                    with When(f"I count rows and check columns for table {table_name}"):
+                        for node in active_nodes:
+                            with By(f"querying the row count"):
+                                row_counts[node.name] = get_row_count(
+                                    node=node,
+                                    table_name=table_name,
+                                    timeout=60,
+                                )
+                                column_names[node.name] = get_column_names(
+                                    node=node, table_name=table_name
+                                )
+
+                    with Then("I check that all states match"):
+                        for n1, n2 in combinations(active_nodes, 2):
+                            with By(f"Checking {n1.name} and {n2.name}"):
+                                assert (
+                                    row_counts[n1.name] == row_counts[n2.name]
+                                ), error()
+                                assert (
+                                    column_names[n1.name] == column_names[n2.name]
+                                ), error()
 
 
 @TestStep
