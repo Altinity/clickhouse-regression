@@ -117,6 +117,129 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_CorruptedParts = Requirement(
     num="8.1",
 )
 
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reset chunk level upon `ATTACH PART|PARTITION` to (Replicated-)MergeTree table. For MergeTree table engines it is supported from version 24.3.\n"
+        "\n"
+        "**Example**:\n"
+        "```sql\n"
+        "CREATE TABLE t (id Int32) engine=MergeTree ORDER BY id PARTITION BY id;\n"
+        "INSERT INTO t VALUES (1), (2), (3);\n"
+        "SELECT name, active FROM system.parts WHERE table='t' AND active;\n"
+        "```\n"
+        "|part_name| active|\n"
+        "|---------|-------|\n"
+        "|1_1_1_0  |\t1     |\n"
+        "|2_2_2_0  |\t1     |\n"
+        "|3_3_3_0  |\t1     |\n"
+        "\n"
+        "```sql\n"
+        "OPTIMIZE TABLE t FINAL; --increases chunk level\n"
+        "OPTIMIZE TABLE t FINAL; --increases chunk level\n"
+        "SELECT name, active FROM system.parts WHERE table='t' AND active;\n"
+        "```\n"
+        "|part_name| active|\n"
+        "|---------|-------|\n"
+        "|1_1_1_2  |\t1     |\n"
+        "|2_2_2_2  |\t1     |\n"
+        "|3_3_3_2  |\t1     |\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE t DETACH PART '1_1_1_2';\n"
+        "ALTER TABLE t DETACH PART '2_2_2_2';\n"
+        "\n"
+        "ALTER TABLE t ATTACH PART '1_1_1_2'; or ALTER TABLE t ATTACH PARTITION 1;\n"
+        "ALTER TABLE t ATTACH PART '2_2_2_2'; or ALTER TABLE t ATTACH PARTITION 2;\n"
+        "```\n"
+        "```sql\n"
+        "SELECT name, active FROM system.parts WHERE table='t' AND active;\n"
+        "```\n"
+        "|part_name| active|\n"
+        "|---------|-------|\n"
+        "|1_4_4_0  |\t1     |\n"
+        "|2_5_5_0  |\t1     |\n"
+        "|3_3_3_2  |\t1     |\n"
+        "\n"
+        "Parts that were DETACHED and ATTACHED back have 0 chunk level.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="9.1",
+)
+
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_MergeIncrement = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL increment chunk level by 1 from highest chunk level of parts that are merged after `ATTACH PARTITION FROM` \n"
+        "when merging two or more parts in one part. All engines in the MergeTree family should be supported. \n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="9.2.2",
+)
+
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_EqualToLegacyMaxLevel = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.EqualToLegacyMaxLevel",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL set chunk level to MAX_LEVEL=999999999 when chunck level is LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="9.2.3",
+)
+
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_GreaterThanLegacyMaxLevel = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not attach partition or partitiom from disk when part's chunk level is greater than LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="9.2.4",
+)
+
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_Replication = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.Replication",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL guarantee that all replicas of a given table contain identical data when replication_queue is empty.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="9.2.5",
+)
+
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_TableName = Requirement(
     name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName",
     version="1.0",
@@ -379,8 +502,8 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_IndicesAnd
     num="12.7.6.1",
 )
 
-RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey = Requirement(
-    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey",
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey_Different = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Different",
     version="1.0",
     priority=None,
     group=None,
@@ -389,15 +512,27 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKe
     description=(
         "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [destination table]. \n"
         "It is allowed to attach a partition from the table with different partition expression when the destination partition expression does not re-partition.\n"
-        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  \n"
-        "\n"
-        "The partition key can be any expression from the table columns.\n"
-        "List of the types of partition expressions that can be used in ClickHouse:\n"
         "\n"
     ),
     link=None,
-    level=4,
-    num="12.7.7.1",
+    level=5,
+    num="12.7.7.1.1",
+)
+
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey_Unpartitioned = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Unpartitioned",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  \n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="12.7.7.1.2",
 )
 
 RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_RBAC = Requirement(
@@ -500,7 +635,11 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
             level=2,
             num="9.2",
         ),
-        Heading(name="Possible Combinations:", level=3, num="9.2.1"),
+        Heading(
+            name="Variables that are used in `ATTACH PARTITION FROM` statement:",
+            level=3,
+            num="9.2.1",
+        ),
         Heading(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement",
             level=3,
@@ -515,6 +654,11 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel",
             level=3,
             num="9.2.4",
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.Replication",
+            level=3,
+            num="9.2.5",
         ),
         Heading(name="Table Names", level=1, num="10"),
         Heading(
@@ -623,35 +767,42 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
             num="12.7.6.1",
         ),
         Heading(name="Partition Key Conditions", level=3, num="12.7.7"),
+        Heading(name="Partition Key", level=4, num="12.7.7.1"),
         Heading(
-            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey",
-            level=4,
-            num="12.7.7.1",
-        ),
-        Heading(
-            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Column",
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Different",
             level=5,
             num="12.7.7.1.1",
         ),
         Heading(
-            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns",
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Unpartitioned",
             level=5,
             num="12.7.7.1.2",
+        ),
+        Heading(name="Possible Partition Expressions", level=4, num="12.7.7.2"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Column",
+            level=5,
+            num="12.7.7.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns",
+            level=5,
+            num="12.7.7.2.2",
         ),
         Heading(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.ExpressionsInvolvingMultipleColumns",
             level=5,
-            num="12.7.7.1.3",
+            num="12.7.7.2.3",
         ),
         Heading(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.TupleOfExpressions",
             level=5,
-            num="12.7.7.1.4",
+            num="12.7.7.2.4",
         ),
         Heading(
             name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.UDFs",
             level=5,
-            num="12.7.7.1.5",
+            num="12.7.7.2.5",
         ),
         Heading(
             name="Role-Based Access Control when Attach Partition From Another Table",
@@ -671,6 +822,11 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_TieredStorage,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartitionTypes,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_CorruptedParts,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_MergeIncrement,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_EqualToLegacyMaxLevel,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_GreaterThanLegacyMaxLevel,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_Replication,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_TableName,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionOrPart,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionOrPart_RBAC,
@@ -685,7 +841,8 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_Key_PrimaryKey,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_StoragePolicy,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Same_IndicesAndProjections,
-        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey_Different,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey_Unpartitioned,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_RBAC,
     ),
     content="""
@@ -717,10 +874,11 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
 * 9 [Part Names](#part-names)
     * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames](#rqsrs-034clickhousealtertableattachpartitionpartnames)
     * 9.2 [Change of Chunk Level During Attach Partition From](#change-of-chunk-level-during-attach-partition-from)
-        * 9.2.1 [Possible Combinations:](#possible-combinations)
+        * 9.2.1 [Variables that are used in `ATTACH PARTITION FROM` statement:](#variables-that-are-used-in-attach-partition-from-statement)
         * 9.2.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement](#rqsrs-034clickhousealtertableattachpartitionpartnamesmergeincrement)
         * 9.2.3 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.EqualToLegacyMaxLevel](#rqsrs-034clickhousealtertableattachpartitionpartnamesequaltolegacymaxlevel)
         * 9.2.4 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel](#rqsrs-034clickhousealtertableattachpartitionpartnamesgreaterthanlegacymaxlevel)
+        * 9.2.5 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.Replication](#rqsrs-034clickhousealtertableattachpartitionpartnamesreplication)
 * 10 [Table Names](#table-names)
     * 10.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName](#rqsrs-034clickhousealtertableattachpartitiontablename)
 * 11 [Attach Partition or Part From the Detached Folder](#attach-partition-or-part-from-the-detached-folder)
@@ -752,12 +910,15 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         * 12.7.6 [Tables With The Same Indices and Projections](#tables-with-the-same-indices-and-projections)
             * 12.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
         * 12.7.7 [Partition Key Conditions](#partition-key-conditions)
-            * 12.7.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkey)
-                * 12.7.7.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Column](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeycolumn)
-                * 12.7.7.1.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyfunctionsofcolumns)
-                * 12.7.7.1.3 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.ExpressionsInvolvingMultipleColumns](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyexpressionsinvolvingmultiplecolumns)
-                * 12.7.7.1.4 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.TupleOfExpressions](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeytupleofexpressions)
-                * 12.7.7.1.5 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.UDFs](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyudfs)
+            * 12.7.7.1 [Partition Key](#partition-key)
+                * 12.7.7.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Different](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeydifferent)
+                * 12.7.7.1.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Unpartitioned](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyunpartitioned)
+            * 12.7.7.2 [Possible Partition Expressions](#possible-partition-expressions)
+                * 12.7.7.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Column](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeycolumn)
+                * 12.7.7.2.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.FunctionsOfColumns](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyfunctionsofcolumns)
+                * 12.7.7.2.3 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.ExpressionsInvolvingMultipleColumns](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyexpressionsinvolvingmultiplecolumns)
+                * 12.7.7.2.4 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.TupleOfExpressions](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeytupleofexpressions)
+                * 12.7.7.2.5 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.UDFs](#rqsrs-034clickhousealtertableattachpartitionfromconditionskeypartitionkeyudfs)
     * 12.8 [Role-Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
         * 12.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC](#rqsrs-034clickhousealtertableattachpartitionfromrbac)
 * 13 [References](#references)
@@ -886,6 +1047,7 @@ The part name contains information about the partition name where the part is lo
 - 11 is the mutation version (if the part has mutated).
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames
+version: 1.0
 
 [ClickHouse] SHALL reset chunk level upon `ATTACH PART|PARTITION` to (Replicated-)MergeTree table. For MergeTree table engines it is supported from version 24.3.
 
@@ -932,7 +1094,7 @@ Parts that were DETACHED and ATTACHED back have 0 chunk level.
 
 ### Change of Chunk Level During Attach Partition From
 
-#### Possible Combinations:
+#### Variables that are used in `ATTACH PARTITION FROM` statement:
 ```yaml 
 Destination Table - where partiton will be attached:
     - empty destination table
@@ -970,17 +1132,25 @@ Chunck Levels:
 ```
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement
+version: 1.0
 
-[ClickHouse] SHALL increment chunk level by 1 from highest chunk level of parts that are merged during `ATTACH PARTITION FROM` 
-when merging two or more parts in one part.
+[ClickHouse] SHALL increment chunk level by 1 from highest chunk level of parts that are merged after `ATTACH PARTITION FROM` 
+when merging two or more parts in one part. All engines in the MergeTree family should be supported. 
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.EqualToLegacyMaxLevel
+version: 1.0
 
-[ClickHouse] SHALL set chunk level to MAX_LEVEL=999999999 when chunck level is LEGACY_MAX_LEVEL = 2^32.
+[ClickHouse] SHALL set chunk level to MAX_LEVEL=999999999 when chunck level is LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel
+version: 1.0
 
-[ClickHouse] SHALL not attach partition from disk with chunk level greater than LEGACY_MAX_LEVEL = 2^32.
+[ClickHouse] SHALL not attach partition or partitiom from disk when part's chunk level is greater than LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.
+
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.Replication
+version: 1.0
+
+[ClickHouse] SHALL guarantee that all replicas of a given table contain identical data when replication_queue is empty.
 
 
 ## Table Names
@@ -1131,15 +1301,20 @@ version: 1.0
 
 #### Partition Key Conditions
 
-##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey
+##### Partition Key
+
+###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Different
 version: 1.0
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [destination table]. 
 It is allowed to attach a partition from the table with different partition expression when the destination partition expression does not re-partition.
+
+###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Unpartitioned
+version: 1.0
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  
 
-The partition key can be any expression from the table columns.
-List of the types of partition expressions that can be used in ClickHouse:
+##### Possible Partition Expressions
+The partition key in ClickHouse can be any expression derived from the table columns, including various types of partition expressions that are listed below.
 
 ###### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Key.PartitionKey.Column
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` with a column (of any type) as the partition expression.
