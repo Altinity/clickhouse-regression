@@ -136,7 +136,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-aws-artifacts
+          name: alter-stress-aws-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_gcs_x86:
@@ -173,7 +173,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-gcs-artifacts
+          name: alter-stress-gcs-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_minio_x86:
@@ -207,7 +207,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-minio-artifacts
+          name: alter-stress-minio-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_aws_arm:
@@ -245,7 +245,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-aws-artifacts
+          name: alter-stress-aws-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_gcs_arm:
@@ -282,7 +282,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-gcs-artifacts
+          name: alter-stress-gcs-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_minio_arm:
@@ -316,5 +316,5 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-minio-artifacts
+          name: alter-stress-minio-artifacts
           path: ${{ env.artifact_paths}}
