@@ -30,61 +30,6 @@ def measure_buckets_before_and_after(
         )
 
 
-@TestStep(When)
-def standard_inserts(self, node, table_name):
-    """Standard inserts of a known amount of data."""
-
-    with By("first inserting 1MB of data"):
-        insert_data(node=node, number_of_mb=1, name=table_name)
-
-    with And("another insert of 1MB of data"):
-        insert_data(node=node, number_of_mb=1, start=1024 * 1024, name=table_name)
-
-    with And("a large insert of 10Mb of data"):
-        insert_data(node=node, number_of_mb=10, start=1024 * 1024 * 2, name=table_name)
-
-
-@TestStep(Then)
-def standard_selects(self, node, table_name):
-    """Validate the data inserted by standard_inserts to an empty table."""
-    check_query_node(
-        node=node,
-        num=0,
-        query=f"SELECT COUNT() FROM {table_name}",
-        expected="1572867",
-    )
-    check_query_node(
-        node=node,
-        num=1,
-        query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
-        expected="10",
-    )
-    check_query_node(
-        node=node,
-        num=2,
-        query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
-        expected="3407872",
-    )
-    check_query_node(
-        node=node,
-        num=3,
-        query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
-        expected="0",
-    )
-    check_query_node(
-        node=node,
-        num=4,
-        query=f"SELECT * FROM {table_name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-        expected="0\n1048578\n2097154",
-    )
-    check_query_node(
-        node=node,
-        num=5,
-        query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1)",
-        expected="1",
-    )
-
-
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global("1.0"))
 def global_setting(self):
@@ -328,6 +273,7 @@ def metadata(self):
         )
 
         assert numBytes < 100, error()
+
 
 @TestOutline(Scenario)
 @Requirements(

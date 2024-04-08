@@ -15,6 +15,8 @@ from clickhouse_keeper_failover.tests.steps import *
 xfails = {
     "dynamic:": [(Fail, "Not working")],
     "manual failover rcvr": [(Fail, "Not working")],
+    "manual failover --force-recovery": [(Fail, "Not working on runners")],
+
 }
 
 ffails = {}
