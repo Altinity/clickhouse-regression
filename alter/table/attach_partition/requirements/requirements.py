@@ -944,7 +944,6 @@ Part/Partition In Destination Table (if non-empty):
     Same partition as in source table but different chunk level:
         - source chunk level is greater than destination chunk level
         - source chunk level is lower than destination chunk level
-    
 
 Source And Destination Table Engines:  
     -MergeTree       
@@ -961,7 +960,6 @@ Partition Keys:
     - source and destination table are both unpartitioned
     - source and destination table have same partition key
     - source and destination table have different partition keys
-
 
 Chunck Levels:
     - equal to MAX_LEVEL = 999999999
