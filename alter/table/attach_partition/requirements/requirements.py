@@ -117,8 +117,8 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_CorruptedParts = Requirement(
     num="8.1",
 )
 
-RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames = Requirement(
-    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames",
+RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_ChunkLevelReset = Requirement(
+    name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.ChunkLevelReset",
     version="1.0",
     priority=None,
     group=None,
@@ -626,7 +626,7 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         ),
         Heading(name="Part Names", level=1, num="9"),
         Heading(
-            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames",
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.ChunkLevelReset",
             level=2,
             num="9.1",
         ),
@@ -822,7 +822,7 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_TieredStorage,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartitionTypes,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_CorruptedParts,
-        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames,
+        RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_ChunkLevelReset,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_MergeIncrement,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_EqualToLegacyMaxLevel,
         RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_GreaterThanLegacyMaxLevel,
@@ -872,7 +872,7 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
 * 8 [Corrupted Parts ](#corrupted-parts-)
     * 8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts](#rqsrs-034clickhousealtertableattachpartitioncorruptedparts)
 * 9 [Part Names](#part-names)
-    * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames](#rqsrs-034clickhousealtertableattachpartitionpartnames)
+    * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.ChunkLevelReset](#rqsrs-034clickhousealtertableattachpartitionpartnameschunklevelreset)
     * 9.2 [Change of Chunk Level During Attach Partition From](#change-of-chunk-level-during-attach-partition-from)
         * 9.2.1 [Variables that are used in `ATTACH PARTITION FROM` statement:](#variables-that-are-used-in-attach-partition-from-statement)
         * 9.2.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement](#rqsrs-034clickhousealtertableattachpartitionpartnamesmergeincrement)
@@ -1046,7 +1046,7 @@ The part name contains information about the partition name where the part is lo
 - 2 is the chunk level (the depth of the merge tree from which it is formed).
 - 11 is the mutation version (if the part has mutated).
 
-### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.ChunkLevelReset
 version: 1.0
 
 [ClickHouse] SHALL reset chunk level upon `ATTACH PART|PARTITION` to (Replicated-)MergeTree table. For MergeTree table engines it is supported from version 24.3.
