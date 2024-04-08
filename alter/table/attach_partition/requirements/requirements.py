@@ -496,9 +496,25 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
             num="9.1",
         ),
         Heading(
-            name="Change of Chunck Level During Attach Partition From",
+            name="Change of Chunk Level During Attach Partition From",
             level=2,
             num="9.2",
+        ),
+        Heading(name="Possible Combinations:", level=3, num="9.2.1"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement",
+            level=3,
+            num="9.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.EqualToLegacyMaxLevel",
+            level=3,
+            num="9.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel",
+            level=3,
+            num="9.2.4",
         ),
         Heading(name="Table Names", level=1, num="10"),
         Heading(
@@ -700,7 +716,11 @@ SRS034_ClickHouse_Alter_Table_Attach_Partition = Specification(
     * 8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts](#rqsrs-034clickhousealtertableattachpartitioncorruptedparts)
 * 9 [Part Names](#part-names)
     * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames](#rqsrs-034clickhousealtertableattachpartitionpartnames)
-    * 9.2 [Change of Chunck Level During Attach Partition From](#change-of-chunck-level-during-attach-partition-from)
+    * 9.2 [Change of Chunk Level During Attach Partition From](#change-of-chunk-level-during-attach-partition-from)
+        * 9.2.1 [Possible Combinations:](#possible-combinations)
+        * 9.2.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement](#rqsrs-034clickhousealtertableattachpartitionpartnamesmergeincrement)
+        * 9.2.3 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.EqualToLegacyMaxLevel](#rqsrs-034clickhousealtertableattachpartitionpartnamesequaltolegacymaxlevel)
+        * 9.2.4 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel](#rqsrs-034clickhousealtertableattachpartitionpartnamesgreaterthanlegacymaxlevel)
 * 10 [Table Names](#table-names)
     * 10.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName](#rqsrs-034clickhousealtertableattachpartitiontablename)
 * 11 [Attach Partition or Part From the Detached Folder](#attach-partition-or-part-from-the-detached-folder)
@@ -857,15 +877,15 @@ Possible partition types that can be corrupted are,
 
 ## Part Names
 
-### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames
-
-The part name contains information about the partition name where the part is located, the minimum and maximum number of data blocks, chunk level, and the mutation version. For example, let's break down the name of the part `201901_1_9_2_11`:
+The part name contains information about the partition name where the part is located, the minimum and maximum number of data blocks, chunk level (part level), and the mutation version. For example, let's break down the name of the part `201901_1_9_2_11`:
 
 - 201901 is the partition name.
 - 1 is the minimum number of the data block.
 - 9 is the maximum number of the data block.
 - 2 is the chunk level (the depth of the merge tree from which it is formed).
 - 11 is the mutation version (if the part has mutated).
+
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames
 
 [ClickHouse] SHALL reset chunk level upon `ATTACH PART|PARTITION` to (Replicated-)MergeTree table. For MergeTree table engines it is supported from version 24.3.
 
@@ -910,43 +930,59 @@ SELECT name, active FROM system.parts WHERE table='t' AND active;
 
 Parts that were DETACHED and ATTACHED back have 0 chunk level.
 
-### Change of Chunck Level During Attach Partition From
+### Change of Chunk Level During Attach Partition From
 
-[ClickHouse] SHALL increment chunk level by 1 from highest chunk level during `ATTACH PARTITION FROM` 
+#### Possible Combinations:
+```yaml 
+Destination Table - where partiton will be attached:
+    - empty destination table
+    - non-empty destination table
+    
+Part/Partition In Destination Table (if non-empty):
+    Same partition as in source table and the same chunk level:
+        - source chunk level equals to destination chunk level
+    Same partition as in source table but different chunk level:
+        - source chunk level is greater than destination chunk level
+        - source chunk level is lower than destination chunk level
+    
+
+Source And Destination Table Engines:  
+    -MergeTree       
+    -ReplacingMergeTree  
+    -AggregatingMergeTree     
+    -CollapsingMergeTree      
+    -VersionedCollapsingMergeTree
+    -GraphiteMergeTree
+    -SummingMergeTree        
+    and their Replicated- versions 
+    -SharedMergeTree
+
+Partition Keys:
+    - source and destination table are both unpartitioned
+    - source and destination table have same partition key
+    - source and destination table have different partition keys
+
+
+Chunck Levels:
+    - equal to MAX_LEVEL = 999999999
+    - greater than MAX_LEVEL
+    - less than MAX_LEVEL
+    - equal to LEGACY_MAX_LEVEL = 2^32
+    - greater than LEGACY_MAX_LEVEL = 2^32
+```
+
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.MergeIncrement
+
+[ClickHouse] SHALL increment chunk level by 1 from highest chunk level of parts that are merged during `ATTACH PARTITION FROM` 
 when merging two or more parts in one part.
 
-**Possible Combinations:**   
-**Destination Table** (where partiton will be attached)
-- empty destination table
-- non-empty destination table
-    
-**Part/Partition In Destination Table**:
-- same partition as in source table but different chunk level
-    - chunk level is greater
-    - chunk level is lower
-- same partition as in source table but the same chunk level
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.EqualToLegacyMaxLevel
 
-**Source And Destination Table Engines**:  
--`MergeTree`           
--`ReplacingMergeTree`      
--`AggregatingMergeTree`     
--`CollapsingMergeTree`      
--`VersionedCollapsingMergeTree` 
--`GraphiteMergeTree`       
--`SummingMergeTree`        
-and their `Replicated` versions.  
--`SharedMergeTree`
+[ClickHouse] SHALL set chunk level to MAX_LEVEL=999999999 when chunck level is LEGACY_MAX_LEVEL = 2^32.
 
-**Partition Keys**
-- source and destination table are both unpartitioned
-- source and destination table have same partition key
-- source and destination table have different partition keys
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel
 
-
-**Chunck Levels**
-- max number: 999999999
-- greater  than max number
-- less than max number
+[ClickHouse] SHALL not attach partition from disk with chunk level greater than LEGACY_MAX_LEVEL = 2^32.
 
 
 ## Table Names
