@@ -11,7 +11,7 @@ from alter.stress.tests.actions import *
 from alter.stress.tests.steps import *
 
 
-@TestOutline
+@TestOutline(Scenario)
 def alter_combinations(
     self,
     limit=10,
@@ -298,6 +298,9 @@ def normal(self):
 @Name("alter")
 def feature(self):
     """Stress test with many alters."""
+
+    # Workarounds
+    self.context.disallow_move_partition_to_self = True
 
     with Given("I have S3 disks configured"):
         s3_config()

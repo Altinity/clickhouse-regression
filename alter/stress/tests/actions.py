@@ -275,8 +275,12 @@ def move_random_partition_to_random_table(self):
 
     with table_schema_lock:
 
-        destination_table_name = get_random_table_name()
-        source_table_name = get_random_table_name()
+        if getattr(self.context, "disallow_move_partition_to_self", True):
+            destination_table_name, source_table_name = get_random_table_names(choices=2)
+        else:
+            destination_table_name = get_random_table_name()
+            source_table_name = get_random_table_name()
+
         node = get_random_node_for_table(table_name=destination_table_name)
         partition = get_random_partition_id(node=node, table_name=source_table_name)
 

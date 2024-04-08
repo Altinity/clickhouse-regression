@@ -66,6 +66,9 @@ def get_nodes_for_table(self, nodes, table_name):
 def get_random_table_name(self):
     return random.choice(self.context.table_names)
 
+@TestStep
+def get_random_table_names(self, choices: int):
+    return random.choices(self.context.table_names, k=choices)
 
 @TestStep
 def get_random_node_for_table(self, table_name):
