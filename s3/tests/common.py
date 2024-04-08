@@ -738,7 +738,7 @@ def run_query(instance, query, stdin=None, settings=None):
     return result
 
 
-@TestStep
+@TestStep(Given)
 def get_bucket_size(
     self, name=None, prefix=None, key_id=None, access_key=None, minio_enabled=None
 ):
@@ -778,7 +778,7 @@ def get_bucket_size(
     return total_bytes
 
 
-@TestStep
+@TestStep(Then)
 def check_bucket_size(
     self, expected_size, tolerance=0, name=None, prefix=None, minio_enabled=None
 ):
@@ -795,11 +795,11 @@ def check_bucket_size(
 @TestStep(When)
 def get_stable_bucket_size(
     self,
-    name,
-    prefix,
-    minio_enabled,
-    access_key,
-    key_id,
+    name=None,
+    prefix=None,
+    minio_enabled=None,
+    access_key=None,
+    key_id=None,
     delay=10,
     timeout=300,
 ):
@@ -842,11 +842,11 @@ def get_stable_bucket_size(
 @TestStep(Then)
 def check_stable_bucket_size(
     self,
-    name,
-    prefix,
     expected_size,
+    name=None,
+    prefix=None,
     tolerance=0,
-    minio_enabled=False,
+    minio_enabled=None,
     delay=10,
 ):
     """Assert the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
@@ -1254,6 +1254,31 @@ def simple_table(self, name, policy="external", node=None):
     finally:
         with Finally(f"I remove the table {name}"):
             node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+
+
+@TestStep(Given)
+def replicated_table(
+    self, table_name, policy="external", node=None, columns="d UInt64", path=None
+):
+    """Create a ReplicatedMergeTree table for s3 tests."""
+    node = node or self.context.node
+    path = path or f"/clickhouse/tables/{table_name}"
+
+    try:
+        with Given(f"I have a table {table_name}"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name} ({columns})
+                ENGINE = ReplicatedMergeTree('{path}', '{{replica}}')
+                ORDER BY d
+                SETTINGS storage_policy='{policy}'
+                """
+            )
+        yield table_name
+
+    finally:
+        with Finally(f"I drop the table {table_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestStep(When)
