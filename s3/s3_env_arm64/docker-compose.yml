@@ -157,6 +157,7 @@ services:
     ports:
       - "8080"
     tty: true
+    init: true
     depends_on:
       - proxy1
       - proxy2
