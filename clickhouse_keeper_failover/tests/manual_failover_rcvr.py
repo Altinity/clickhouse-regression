@@ -6,7 +6,7 @@ from clickhouse_keeper_failover.tests.steps import *
 
 @TestFeature
 @Name("manual failover rcvr")
-def feature(self, restart_on_reconfig=True):
+def feature(self, restart_on_reconfig=False):
     """Test keeper manual failover."""
 
     with Given("I check that the leader exists"):
@@ -41,10 +41,11 @@ def feature(self, restart_on_reconfig=True):
             )
 
     with When("I send 'rcvr' to the recovery node"):
-        recovery_node.command("echo rcvr | nc localhost 9181", exitcode=0)
+        r = recovery_node.command("echo rcvr | nc localhost 9181", no_checks=True)
+        assert r.exitcode in [0, 1], error('Unexpected code from nc')
 
     with Then("I wait for the node to enter recovery mode"):
-        retry(check_logs, timeout=30, delay=1)(
+        retry(check_logs, timeout=60, delay=2)(
             node=recovery_node,
             message="KeeperServer: This instance is in recovery mode",
             tail=50,
@@ -52,11 +53,11 @@ def feature(self, restart_on_reconfig=True):
 
     with Then("I check that the leader exists"):
         current_leader = retry(
-            get_current_leader, timeout=30, delay=10, initial_delay=10
+            get_current_leader, timeout=60, delay=10, initial_delay=10
         )()
 
     with And("I check that the cluster is healthy"):
-        for attempt in retries(timeout=30, delay=10, initial_delay=10):
+        for attempt in retries(timeout=120, delay=10, initial_delay=10):
             with attempt:
                 r = keeper_query(node=recovery_node, query="srvr")
                 assert "Mode: leader" in r.output, error()

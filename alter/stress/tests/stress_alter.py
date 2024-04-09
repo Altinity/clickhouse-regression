@@ -300,6 +300,7 @@ def feature(self):
     """Stress test with many alters."""
 
     # Workarounds
+    # https://github.com/ClickHouse/ClickHouse/issues/62459
     self.context.disallow_move_partition_to_self = True
 
     with Given("I have S3 disks configured"):
