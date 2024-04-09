@@ -823,9 +823,6 @@ def attach_partition_from(self, test, sample_size=100):
 
 @TestFeature
 @Requirements(
-    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey(
-        "1.0"
-    ),
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_SupportedTableEngines("1.0"),
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Replicas("1.0"),
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom("1.0"),
