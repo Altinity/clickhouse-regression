@@ -101,6 +101,7 @@ ffails = {
         "Crashes before 24.3",
         check_clickhouse_version("<24.3"),
     ),
+    "/alter/move partition/move to self": (XFail, "https://github.com/ClickHouse/ClickHouse/issues/62459"),
 }
 
 
