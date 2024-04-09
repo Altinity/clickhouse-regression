@@ -22,3 +22,7 @@ def feature(self):
             executor=pool,
         )
         join()
+
+    Feature(
+        run=load("alter.table.move_partition.move_to_self", "feature"),
+    )
