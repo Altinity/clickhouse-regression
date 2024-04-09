@@ -188,20 +188,14 @@ def merge_increment(self):
         "ReplicatedAggregatingMergeTree",
     ]
 
-    with Pool(2) as executor:
-        for engine in engines:
-            Scenario(
-                f"{engine}",
-                test=check_merge_increment,
-                parallel=True,
-                executor=executor,
-            )(engine=engine)
+    for engine in engines:
+        Scenario(
+            f"{engine}",
+            test=check_merge_increment,
+        )(engine=engine)
 
-    with Pool(2) as executor:
-        for engine in replicated_engines:
-            Scenario(
-                f"{engine}",
-                test=check_merge_increment_replicated,
-                parallel=True,
-                executor=executor,
-            )(engine=engine)
+    for engine in replicated_engines:
+        Scenario(
+            f"{engine}",
+            test=check_merge_increment_replicated,
+        )(engine=engine)
