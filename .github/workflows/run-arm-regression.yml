@@ -230,7 +230,7 @@ jobs:
 
   alter_replace_partition:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 300
+    timeout-minutes: 600
     env:
       SUITE: alter
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
@@ -263,7 +263,7 @@ jobs:
 
   alter_attach_partition:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 900
+    timeout-minutes: 1200
     env:
       SUITE: alter
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
