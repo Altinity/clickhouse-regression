@@ -103,7 +103,7 @@ def check_attach_partition_on_different_types_of_disks(
                 exitcode, message = None, None
             else:
                 exitcode, message = 36, "Exception: Could not clone and load part"
-                
+
             attach_partition_from(
                 destination_table=destination_table_name,
                 source_table=source_table_name,

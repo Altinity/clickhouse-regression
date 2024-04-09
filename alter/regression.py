@@ -99,6 +99,11 @@ ffails = {
         "Not implemented before 23.5",
         check_clickhouse_version("<23.5"),
     ),
+    "/alter/attach partition/part level/part levels user example/*": (
+        Skip,
+        "Crashes before 24.3",
+        check_clickhouse_version("<24.3"),
+    ),
 }
 
 
