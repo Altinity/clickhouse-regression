@@ -44,6 +44,11 @@ def check_part_level_reset(self, engine="MergeTree"):
         )
 
     with And("I get part name and check if it is renamed"):
+        if check_clickhouse_version("<24.3")(self):
+            expected_part_name = "all_2_2_2"
+        else:
+            expected_part_name = "all_2_2_0"
+
         part_name = node.query(
             f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
         )
@@ -51,7 +56,7 @@ def check_part_level_reset(self, engine="MergeTree"):
         for attempt in retries(timeout=30, delay=2):
             with attempt:
                 assert (
-                    part_name.output == "all_2_2_0"
+                    part_name.output == expected_part_name
                 ), f"Unexpected part name: {part_name.output}"
 
 
@@ -90,6 +95,8 @@ def check_part_level_reset_replicated(self, engine):
         attach_part(table_name=source_table, part_name=part_name, node=node)
 
     with Then("I get part name and check it is renamed"):
+        expected_part_name = "all_1_1_0"
+
         for node in self.context.nodes:
             part_name = node.query(
                 f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
@@ -97,11 +104,12 @@ def check_part_level_reset_replicated(self, engine):
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
                     assert (
-                        part_name.output == "all_1_1_0"
-                    ), f"Unexpected part name: {part_name.output}"
+                        part_name.output == expected_part_name
+                    ), f"Unexpected part name: {part_name.output}, expected: {expected_part_name}"
 
 
 @TestScenario
+@Repeat(20)
 @Requirements(
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_ChunkLevelReset("1.0")
 )
