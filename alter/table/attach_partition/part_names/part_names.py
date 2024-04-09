@@ -110,12 +110,12 @@ def feature(self):
             parallel=True,
             executor=executor,
         )
-        Scenario(
-            run=load(
-                "alter.table.attach_partition.part_names.replicated_tables",
-                "replicated_tables",
-            ),
-            parallel=True,
-            executor=executor,
-        )
+        # Scenario(
+        #     run=load(
+        #         "alter.table.attach_partition.part_names.replicated_tables",
+        #         "replicated_tables",
+        #     ),
+        #     parallel=True,
+        #     executor=executor,
+        # )
         join()

@@ -136,6 +136,17 @@ def update_table(self, table_name, update_column="a", node=None):
 
 
 @TestStep
+def insert_data(self, table_name, number_of_rows, node=None):
+    """Insert data into a table."""
+    if node is None:
+        node = self.context.node
+
+    node.query(
+        f"INSERT INTO {table_name} (id, a) SELECT number, number FROM numbers({number_of_rows})"
+    )
+
+
+@TestStep
 def attach_partition_from(self, source_table, destination_table, partition, node=None):
     """Attach a partition from a source table to a destination table."""
     if node is None:

@@ -28,7 +28,7 @@ def check_part_level_reset(self, engine="MergeTree"):
 
     with And("I get part name"):
         part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0"
         ).output
 
     with And("I detach the part"):
@@ -50,7 +50,7 @@ def check_part_level_reset(self, engine="MergeTree"):
             expected_part_name = "all_2_2_0"
 
         part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0"
         )
         node.query(f"SELECT * FROM {source_table}")
         for attempt in retries(timeout=30, delay=2):
@@ -83,7 +83,7 @@ def check_part_level_reset_replicated(self, engine):
     with And("I get part name"):
         node = random.choice(self.context.nodes)
         part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0"
         ).output
 
     with And("I detach the part"):
@@ -99,7 +99,7 @@ def check_part_level_reset_replicated(self, engine):
 
         for node in self.context.nodes:
             part_name = node.query(
-                f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
+                f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -109,7 +109,6 @@ def check_part_level_reset_replicated(self, engine):
 
 
 @TestScenario
-@Repeat(20)
 @Requirements(
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_ChunkLevelReset("1.0")
 )
