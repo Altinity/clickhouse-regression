@@ -598,7 +598,10 @@ def attach_partition_from(self):
 @TestFeature
 @Requirements(
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom("1.0"),
-    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey(
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey_Different(
+        "1.0"
+    ),
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Conditions_Key_PartitionKey_Unpartitioned(
         "1.0"
     ),
     RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Replicas("1.0"),
