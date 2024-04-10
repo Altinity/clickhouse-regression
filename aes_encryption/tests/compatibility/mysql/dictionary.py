@@ -185,7 +185,7 @@ def parameter_values(self):
                             ),
                             dictGet('default.{dict_name}', 'key', toUInt64(1)),
                             dictGet('default.{dict_name}', 'iv', toUInt64(1))
-                        )
+                        ) FORMAT TabSeparated
                         """
                     output = node.query(textwrap.dedent(sql)).output.strip()
 
@@ -264,7 +264,7 @@ def decrypt(self, mysql_datatype):
 
                     with And("I read raw data using MySQL dictionary"):
                         output = node.query(
-                            f"SELECT hex(dictGet('default.{dict_name}', 'secret', toUInt64(1))) AS secret"
+                            f"SELECT hex(dictGet('default.{dict_name}', 'secret', toUInt64(1))) AS secret FORMAT TabSeparated"
                         )
 
                     with And("I read decrypted data using MySQL dictionary"):
@@ -277,7 +277,7 @@ def decrypt(self, mysql_datatype):
                                     dictGet('default.{dict_name}', 'secret', toUInt64(1)),
                                     {example_key}{(", " + example_iv) if example_iv else ""}
                                 )
-                            )
+                            ) FORMAT TabSeparated
                             """
                             )
                         ).output.strip()
