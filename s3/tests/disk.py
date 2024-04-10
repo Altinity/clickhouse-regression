@@ -160,15 +160,7 @@ def imports(self):
 
     try:
         with Given(f"I create table using S3 storage policy external"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table1} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external'
-            """
-            )
+            simple_table(node=node, name=name_table1)
 
         with And("I store simple data in S3 to check import"):
             node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
@@ -178,27 +170,14 @@ def imports(self):
             assert r == expected, error()
 
         with Given("I create a second table for table function comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table2} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name_table2)
 
         with And("I delete the data from the first table"):
             with By("I drop the first table"):
                 node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
 
             with And("I create the first table again"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                """
-                )
+                simple_table(node=node, name=name_table1)
 
         with And(f"I store simple data in the first table {name_table1}"):
             node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
@@ -235,13 +214,7 @@ def imports(self):
                 node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
 
             with And(f"I create the table again {name_table1}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=name_table1)
 
             with And(
                 f"""I export the empty table {name_table1} to S3 at the
@@ -253,12 +226,6 @@ def imports(self):
                         s3('{uri}imports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {name_table1}"""
                 )
-
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
 
 
 @TestScenario
@@ -280,15 +247,7 @@ def exports(self):
 
     try:
         with Given(f"I create table using S3 storage policy external"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table1} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external'
-            """
-            )
+            simple_table(node=node, name=name_table1)
 
         with And("I export simple data to S3 to check export functionality"):
             node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
@@ -298,27 +257,14 @@ def exports(self):
             assert r == expected, error()
 
         with Given("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table2} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name_table2)
 
         with And("I delete the data from the first table"):
             with By("I drop the first table"):
                 node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
 
             with And("I create the first table again"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                """
-                )
+                simple_table(node=node, name=name_table1)
 
         with And(f"I store simple data in the first table {name_table1}"):
             node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
@@ -355,13 +301,7 @@ def exports(self):
                 node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
 
             with And(f"I create the table again {name_table1}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
+                simple_table(node=node, name=name_table1)
 
             with And(
                 f"""I export the empty table {name_table1} to S3 at the
@@ -373,12 +313,6 @@ def exports(self):
                         s3('{uri}exports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
                         SELECT * FROM {name_table1}"""
                 )
-
-        with Finally(f"I drop the first table {name_table1}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
 
 
 @TestScenario
@@ -815,28 +749,15 @@ def add_storage(self):
         with And("I enable the disk and policy config"):
             s3_storage(disks=disks, policies=policies, restart=True)
 
-        try:
-            with Given(f"I create table using S3 storage policy external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+        with Given(f"I create table using S3 storage policy external"):
+            simple_table(node=node, name=name)
 
-            with When("I store simple data in the table"):
-                node.query(f"INSERT INTO {name} VALUES ({expected})")
+        with When("I store simple data in the table"):
+            node.query(f"INSERT INTO {name} VALUES ({expected})")
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT * FROM {name}").output.strip()
-                assert r == expected, error()
-
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT * FROM {name}").output.strip()
+            assert r == expected, error()
 
     with Check("two disks"):
         with Given("I add a disk to the disk configuration"):
@@ -869,28 +790,15 @@ def add_storage(self):
         with And("I enable the disk and policy config"):
             s3_storage(disks=disks, policies=policies, restart=True)
 
-        try:
-            with Given(f"I create table using S3 storage policy external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+        with Given(f"I create table using S3 storage policy external"):
+            simple_table(node=node, name=name)
 
-            with When("I store simple data in the table"):
-                node.query(f"INSERT INTO {name} VALUES ({expected})")
+        with When("I store simple data in the table"):
+            node.query(f"INSERT INTO {name} VALUES ({expected})")
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT * FROM {name}").output.strip()
-                assert r == expected, error()
-
-        finally:
-            with Finally("I drop the table if exists"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT * FROM {name}").output.strip()
+            assert r == expected, error()
 
 
 @TestScenario
@@ -1256,28 +1164,19 @@ def generic_url(self):
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
-    try:
-        with Given(f"I create table using S3 storage policy aws_external"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='aws_external'
-            """
-            )
 
-        with When("I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with Given(f"I create table using S3 storage policy aws_external"):
+        simple_table(node=node, name=name, policy='aws_external')
 
-        with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT * FROM {name}").output.strip()
-            assert r == expected, error()
 
-    finally:
-        with Finally("I drop the table"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with When("I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
+
+    with Then("I check that a simple SELECT * query returns matching data"):
+        r = node.query(f"SELECT * FROM {name}").output.strip()
+        assert r == expected, error()
+
+
 
 
 @TestScenario
@@ -1350,28 +1249,16 @@ def environment_credentials(self):
         with And("I enable the disk and policy config"):
             s3_storage(disks=disks, policies=policies, restart=True)
 
-        try:
-            with Given(f"I create table using S3 storage policy s3_external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='s3_external'
-                """
-                )
+        with Given(f"I create table using S3 storage policy s3_external"):
+            simple_table(node=node, name=name, policy='s3_external')
 
-            with When("I store simple data in the table"):
-                node.query(f"INSERT INTO {name} VALUES ({expected})")
+        with When("I store simple data in the table"):
+            node.query(f"INSERT INTO {name} VALUES ({expected})")
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT * FROM {name}").output.strip()
-                assert r == expected, error()
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT * FROM {name}").output.strip()
+            assert r == expected, error()
 
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
 
 
 @TestOutline(Scenario)
