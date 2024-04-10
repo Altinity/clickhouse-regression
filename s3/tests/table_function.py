@@ -8,6 +8,8 @@ from s3.requirements import *
 def insert_to_s3_function(
     self, filename, table_name, columns="d UInt64", compression=None, fmt=None
 ):
+    """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
+
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -39,6 +41,7 @@ def insert_to_s3_function(
 def insert_from_s3_function(
     self, filename, table_name, columns="d UInt64", compression=None, fmt=None
 ):
+    """Import data from a file in s3 to a table."""
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
