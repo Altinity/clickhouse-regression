@@ -118,7 +118,7 @@ def distributed_tables(
                     for node_name in self.context.cluster.nodes["clickhouse"]:
                         with When(f"on {node_name} "):
                             output = self.context.cluster.node(node_name).query(
-                                f"SELECT count() FROM {core_table_d}",
+                                f"SELECT count() FROM {core_table_d} FORMAT TabSeparated",
                                 exitcode=0,
                             )
                             for attempt in retries(timeout=30, delay=2):
@@ -133,7 +133,7 @@ def distributed_tables(
                                 timeout=100,
                                 delay=1,
                             )(
-                                f"SELECT count() FROM {core_table_d}",
+                                f"SELECT count() FROM {core_table_d} FORMAT TabSeparated",
                                 message=f"5",
                                 exitcode=0,
                             )
