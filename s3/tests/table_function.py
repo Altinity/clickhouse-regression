@@ -6,13 +6,13 @@ from s3.requirements import *
 
 @TestStep(Given)
 def insert_to_s3_function(
-    self, filename, table_name, columns="d UInt64", compression=None, fmt=None
+    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None,
 ):
     """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
 
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
+    uri = uri or self.context.uri
     node = current().context.node
 
     try:
@@ -39,12 +39,12 @@ def insert_to_s3_function(
 
 @TestStep(When)
 def insert_from_s3_function(
-    self, filename, table_name, columns="d UInt64", compression=None, fmt=None
+    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None
 ):
     """Import data from a file in s3 to a table."""
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
+    uri = uri or self.context.uri
     node = current().context.node
 
     query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
