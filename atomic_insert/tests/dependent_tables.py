@@ -103,7 +103,7 @@ def table_with_materialized_view(self, table_engine, failure_mode):
             for table_name in tables:
                 with When(f"table {table_name}"):
                     node.query(
-                        f"SELECT count()+737 FROM {table_name}",
+                        f"SELECT count()+737 FROM {table_name} FORMAT TabSeparated",
                         message="737",
                         exitcode=0,
                     )
@@ -269,7 +269,7 @@ def table_with_materialized_view_cascading(self, table_engine, failure_mode):
             for table_name in tables:
                 with When(f"table {table_name}"):
                     retry(node.query, timeout=100, delay=1)(
-                        f"SELECT count()+737 FROM {table_name}",
+                        f"SELECT count()+737 FROM {table_name} FORMAT TabSeparated",
                         message="737",
                         exitcode=0,
                     )
@@ -322,7 +322,9 @@ def materialized_view_some_view(self, table_engine, view_type, failure_mode):
         for table_name in tables:
             with When(f"table {table_name}"):
                 retry(node.query, timeout=100, delay=1)(
-                    f"SELECT count()+737 FROM {table_name}", message="737", exitcode=0
+                    f"SELECT count()+737 FROM {table_name} FORMAT TabSeparated",
+                    message="737",
+                    exitcode=0,
                 )
 
 
@@ -400,7 +402,7 @@ def table_with_circle_materialized_view(self, table_engine, failure_mode):
             for table_name in tables:
                 with When(f"table {table_name}"):
                     retry(node.query, timeout=100, delay=1)(
-                        f"SELECT count() FROM {table_name}",
+                        f"SELECT count() FROM {table_name} FORMAT TabSeparated",
                         message="0",
                         exitcode=0,
                     )
