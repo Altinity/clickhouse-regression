@@ -1,6 +1,4 @@
-import random
 from testflows.combinatorics import product
-from testflows.asserts import error
 
 from alter.table.attach_partition.part_names.common_steps import *
 from alter.table.attach_partition.requirements.requirements import *
