@@ -15,13 +15,11 @@ import os
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Invalid("1.0"))
 def invalid_type(self, invalid_type):
     """Check that invalid S3 disk types are not allowed."""
-    name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     disks = None
     policies = None
-    node = current().context.node
     disk_name = "external"
 
     with Given(
@@ -58,10 +56,8 @@ def invalid_type(self, invalid_type):
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Invalid("1.0"))
 def empty_endpoint(self):
     """Check that empty string as a S3 disk endpoint is not allowed."""
-    name = "table_" + getuid()
     disks = None
     policies = None
-    node = current().context.node
 
     with Given(
         """I have a disk configuration with a S3 storage disk with empty
@@ -89,12 +85,10 @@ def empty_endpoint(self):
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Invalid("1.0"))
 def invalid_endpoint(self):
     """Check that an invalid URI for the S3 disk endpoint is not allowed."""
-    name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     disks = None
     policies = None
-    node = current().context.node
 
     with Given(
         "I have a disk configuration with a S3 storage disk with invalid endpoint URI"
@@ -132,11 +126,8 @@ def access_failed(self):
     skip_access_check parameter set to 0 when ClickHouse does not have access
     to the corresponding endpoint.
     """
-    name = "table_" + getuid()
     disks = None
     policies = None
-    node = current().context.node
-    expected = "427"
 
     with Given(
         """I have a disk configuration with a S3 storage disk with
@@ -223,15 +214,7 @@ def access_failed_skip_check(self):
                     expecting success because there is no access check to this
                     disk"""
             ):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+                simple_table(node=node, name=name)
 
             with Then(
                 """I store simple data in the table, expecting failure
@@ -261,11 +244,8 @@ def access_default(self):
     the access check is performed by default without explicitly setting
     skip_access_check to 0.
     """
-    name = "table_" + getuid()
     disks = None
     policies = None
-    node = current().context.node
-    expected = "427"
 
     with Given(
         """I have a disk configuration with a S3 storage disk with
@@ -296,14 +276,12 @@ def cache_path_conflict(self):
     """Check that ClickHouse returns an error when the disk cache path is changed
     to the same path as the metadata path.
     """
-    name = "table_" + getuid()
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     disk_name = "external_" + getuid()
     disks = None
     policies = None
-    node = current().context.node
 
     with Given(
         """I have a disk configuration with a S3 storage disk, access id

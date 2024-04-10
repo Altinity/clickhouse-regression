@@ -8,6 +8,7 @@ import time
 import datetime
 
 import lightweight_delete.tests.basic_checks as delete_basic_checks
+from s3.tests.table_function import insert_to_s3_function, insert_from_s3_function
 
 
 @TestStep(Given)
@@ -158,107 +159,45 @@ def imports(self):
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
 
-    try:
-        with Given(f"I create table using S3 storage policy external"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table1} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external'
-            """
-            )
+    with Given(f"I create table using S3 storage policy external"):
+        simple_table(node=node, name=name_table1)
 
-        with And("I store simple data in S3 to check import"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+    with And("I store simple data in S3 to check import"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
 
-        with Then("I check that a simple import from S3 returns matching data"):
-            r = node.query(f"SELECT * FROM {name_table1}").output.strip()
-            assert r == expected, error()
+    with Then("I check that a simple import from S3 returns matching data"):
+        r = node.query(f"SELECT * FROM {name_table1}").output.strip()
+        assert r == expected, error()
 
-        with Given("I create a second table for table function comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table2} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a second table for table function comparison"):
+        simple_table(node=node, name=name_table2)
 
-        with And("I delete the data from the first table"):
-            with By("I drop the first table"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-            with And("I create the first table again"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                """
-                )
-
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
-
-        if self.context.storage == "minio":
-            with Given("I alter the URL for MinIO table function path restrictions"):
-                uri = uri[: len(uri) - 5] + "/imports"
-
-        with When("I export the data to S3 using the table function"):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}imports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
-            )
-
-        with And(f"I import the data from S3 into the second table {name_table2}"):
-            node.query(
-                f"""
-                INSERT INTO {name_table2} SELECT * FROM
-                s3('{uri}imports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
-            )
-
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                    {name_table2} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-            with And(f"I create the table again {name_table1}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
-
-            with And(
-                f"""I export the empty table {name_table1} to S3 at the
-                        location where I want to overwrite data"""
-            ):
-                node.query(
-                    f"""
-                        INSERT INTO FUNCTION
-                        s3('{uri}imports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
-                )
-
-        with Finally(f"I drop the first table {name_table1}"):
+    with And("I delete the data from the first table"):
+        with By("I drop the first table"):
             node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And("I create the first table again"):
+            simple_table(node=node, name=name_table1)
+
+    with And(f"I store simple data in the first table {name_table1}"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+
+    if self.context.storage == "minio":
+        with Given("I alter the URL for MinIO table function path restrictions"):
+            uri = uri[: len(uri) - 5] + "/imports"
+
+    with When("I export the data to S3 using the table function"):
+        insert_to_s3_function(uri=uri, filename="imports.csv", table_name=name_table1)
+
+    with And(f"I import the data from S3 into the second table {name_table2}"):
+        insert_from_s3_function(uri=uri, filename="imports.csv", table_name=name_table2)
+
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {name_table2} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestScenario
@@ -278,107 +217,45 @@ def exports(self):
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
 
-    try:
-        with Given(f"I create table using S3 storage policy external"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table1} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external'
-            """
-            )
+    with Given(f"I create table using S3 storage policy external"):
+        simple_table(node=node, name=name_table1)
 
-        with And("I export simple data to S3 to check export functionality"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+    with And("I export simple data to S3 to check export functionality"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
 
-        with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT * FROM {name_table1}").output.strip()
-            assert r == expected, error()
+    with Then("I check that a simple SELECT * query returns matching data"):
+        r = node.query(f"SELECT * FROM {name_table1}").output.strip()
+        assert r == expected, error()
 
-        with Given("I create a second table for comparison"):
-            node.query(
-                f"""
-                CREATE TABLE {name_table2} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a second table for comparison"):
+        simple_table(node=node, name=name_table2)
 
-        with And("I delete the data from the first table"):
-            with By("I drop the first table"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-            with And("I create the first table again"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                """
-                )
-
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
-
-        if self.context.storage == "minio":
-            with Given("I alter the URL for MinIO table function path restrictions"):
-                uri = uri[: len(uri) - 5] + "exports"
-
-        with When("I export the data to S3 using the table function"):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}exports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
-            )
-
-        with And(f"I import the data from S3 into the second table {name_table2}"):
-            node.query(
-                f"""
-                INSERT INTO {name_table2} SELECT * FROM
-                s3('{uri}exports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
-            )
-
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                    {name_table2} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-            with And(f"I create the table again {name_table1}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name_table1} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d"""
-                )
-
-            with And(
-                f"""I export the empty table {name_table1} to S3 at the
-                        location where I want to overwrite data"""
-            ):
-                node.query(
-                    f"""
-                        INSERT INTO FUNCTION
-                        s3('{uri}exports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
-                )
-
-        with Finally(f"I drop the first table {name_table1}"):
+    with And("I delete the data from the first table"):
+        with By("I drop the first table"):
             node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
 
-        with And(f"I drop the second table {name_table2}"):
-            node.query(f"DROP TABLE IF EXISTS {name_table2} SYNC")
+        with And("I create the first table again"):
+            simple_table(node=node, name=name_table1)
+
+    with And(f"I store simple data in the first table {name_table1}"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+
+    if self.context.storage == "minio":
+        with Given("I alter the URL for MinIO table function path restrictions"):
+            uri = uri[: len(uri) - 5] + "exports"
+
+    with When("I export the data to S3 using the table function"):
+        insert_to_s3_function(uri=uri, filename="imports.csv", table_name=name_table1)
+
+    with And(f"I import the data from S3 into the second table {name_table2}"):
+        insert_from_s3_function(uri=uri, filename="imports.csv", table_name=name_table2)
+
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {name_table2} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestScenario
@@ -506,14 +383,7 @@ def metadata(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with And("I get the disk name for the parts added in this table"):
         disk_names = node.query(
@@ -815,28 +685,15 @@ def add_storage(self):
         with And("I enable the disk and policy config"):
             s3_storage(disks=disks, policies=policies, restart=True)
 
-        try:
-            with Given(f"I create table using S3 storage policy external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+        with Given(f"I create table using S3 storage policy external"):
+            simple_table(node=node, name=name)
 
-            with When("I store simple data in the table"):
-                node.query(f"INSERT INTO {name} VALUES ({expected})")
+        with When("I store simple data in the table"):
+            node.query(f"INSERT INTO {name} VALUES ({expected})")
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT * FROM {name}").output.strip()
-                assert r == expected, error()
-
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT * FROM {name}").output.strip()
+            assert r == expected, error()
 
     with Check("two disks"):
         with Given("I add a disk to the disk configuration"):
@@ -869,28 +726,15 @@ def add_storage(self):
         with And("I enable the disk and policy config"):
             s3_storage(disks=disks, policies=policies, restart=True)
 
-        try:
-            with Given(f"I create table using S3 storage policy external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+        with Given(f"I create table using S3 storage policy external"):
+            simple_table(node=node, name=name)
 
-            with When("I store simple data in the table"):
-                node.query(f"INSERT INTO {name} VALUES ({expected})")
+        with When("I store simple data in the table"):
+            node.query(f"INSERT INTO {name} VALUES ({expected})")
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT * FROM {name}").output.strip()
-                assert r == expected, error()
-
-        finally:
-            with Finally("I drop the table if exists"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT * FROM {name}").output.strip()
+            assert r == expected, error()
 
 
 @TestScenario
@@ -922,6 +766,7 @@ def syntax(self):
     using a storage policy with valid syntax.
     """
     name = "table_" + getuid()
+    node = current().context.node
 
     with Given(
         """I have a disk configuration with a S3 storage disk, access id and key"""
@@ -932,42 +777,10 @@ def syntax(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with Then("I check simple queries"):
-        check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-        check_query(
-            num=1,
-            query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-            expected="10",
-        )
-        check_query(
-            num=2,
-            query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-            expected="3407872",
-        )
-        check_query(
-            num=3,
-            query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-            expected="0",
-        )
-        check_query(
-            num=4,
-            query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-            expected="0\n1048578\n2097154",
-        )
-        check_query(
-            num=5,
-            query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-            expected="1",
-        )
+        standard_selects(node=node, table_name=name)
 
 
 @TestScenario
@@ -1024,14 +837,7 @@ def cache(self, cache):
             simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
@@ -1080,14 +886,7 @@ def cache_default(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
@@ -1140,14 +939,7 @@ def cache_path(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
@@ -1256,28 +1048,15 @@ def generic_url(self):
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
-    try:
-        with Given(f"I create table using S3 storage policy aws_external"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='aws_external'
-            """
-            )
+    with Given(f"I create table using S3 storage policy aws_external"):
+        simple_table(node=node, name=name, policy="aws_external")
 
-        with When("I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with When("I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
 
-        with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT * FROM {name}").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I drop the table"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then("I check that a simple SELECT * query returns matching data"):
+        r = node.query(f"SELECT * FROM {name}").output.strip()
+        assert r == expected, error()
 
 
 @TestScenario
@@ -1350,28 +1129,15 @@ def environment_credentials(self):
         with And("I enable the disk and policy config"):
             s3_storage(disks=disks, policies=policies, restart=True)
 
-        try:
-            with Given(f"I create table using S3 storage policy s3_external"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='s3_external'
-                """
-                )
+        with Given(f"I create table using S3 storage policy s3_external"):
+            simple_table(node=node, name=name, policy="s3_external")
 
-            with When("I store simple data in the table"):
-                node.query(f"INSERT INTO {name} VALUES ({expected})")
+        with When("I store simple data in the table"):
+            node.query(f"INSERT INTO {name} VALUES ({expected})")
 
-            with Then("I check that a simple SELECT * query returns matching data"):
-                r = node.query(f"SELECT * FROM {name}").output.strip()
-                assert r == expected, error()
-
-        finally:
-            with Finally("I drop the table"):
-                node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("I check that a simple SELECT * query returns matching data"):
+            r = node.query(f"SELECT * FROM {name}").output.strip()
+            assert r == expected, error()
 
 
 @TestOutline(Scenario)
@@ -1417,42 +1183,10 @@ def mergetree(self, engine):
             )
 
         with When("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data(name=name, number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-            with And("then doing a large insert of 10Mb of data"):
-                insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=node, table_name=name)
 
         with Then("I check simple queries"):
-            check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-            check_query(
-                num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                expected="10",
-            )
-            check_query(
-                num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query(
-                num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query(
-                num=4,
-                query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query(
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=node, table_name=name)
 
     finally:
         with Finally("I drop the table if exists"):
@@ -2594,42 +2328,10 @@ def config_over_restart(self):
         node.query(f"SYSTEM STOP MERGES {name}")
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with Then("I check simple queries"):
-        check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-        check_query(
-            num=1,
-            query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-            expected="10",
-        )
-        check_query(
-            num=2,
-            query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-            expected="3407872",
-        )
-        check_query(
-            num=3,
-            query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-            expected="0",
-        )
-        check_query(
-            num=4,
-            query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-            expected="0\n1048578\n2097154",
-        )
-        check_query(
-            num=5,
-            query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-            expected="1",
-        )
+        standard_selects(node=node, table_name=name)
 
     with When("I restart clickhouse"):
         node.restart_clickhouse()
@@ -2638,32 +2340,7 @@ def config_over_restart(self):
         node.query(f"OPTIMIZE TABLE {name} FINAL")
 
     with Then("I check simple queries"):
-        check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-        check_query(
-            num=1,
-            query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-            expected="10",
-        )
-        check_query(
-            num=2,
-            query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-            expected="3407872",
-        )
-        check_query(
-            num=3,
-            query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-            expected="0",
-        )
-        check_query(
-            num=4,
-            query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-            expected="0\n1048578\n2097154",
-        )
-        check_query(
-            num=5,
-            query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-            expected="1",
-        )
+        standard_selects(node=node, table_name=name)
 
 
 @TestScenario
