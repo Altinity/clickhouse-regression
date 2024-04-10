@@ -159,74 +159,45 @@ def imports(self):
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
 
-    try:
-        with Given(f"I create table using S3 storage policy external"):
+    with Given(f"I create table using S3 storage policy external"):
+        simple_table(node=node, name=name_table1)
+
+    with And("I store simple data in S3 to check import"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+
+    with Then("I check that a simple import from S3 returns matching data"):
+        r = node.query(f"SELECT * FROM {name_table1}").output.strip()
+        assert r == expected, error()
+
+    with Given("I create a second table for table function comparison"):
+        simple_table(node=node, name=name_table2)
+
+    with And("I delete the data from the first table"):
+        with By("I drop the first table"):
+            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+
+        with And("I create the first table again"):
             simple_table(node=node, name=name_table1)
 
-        with And("I store simple data in S3 to check import"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+    with And(f"I store simple data in the first table {name_table1}"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
 
-        with Then("I check that a simple import from S3 returns matching data"):
-            r = node.query(f"SELECT * FROM {name_table1}").output.strip()
-            assert r == expected, error()
+    if self.context.storage == "minio":
+        with Given("I alter the URL for MinIO table function path restrictions"):
+            uri = uri[: len(uri) - 5] + "/imports"
 
-        with Given("I create a second table for table function comparison"):
-            simple_table(node=node, name=name_table2)
+    with When("I export the data to S3 using the table function"):
+        insert_to_s3_function(uri=uri, filename="imports.csv", table_name=name_table1)
 
-        with And("I delete the data from the first table"):
-            with By("I drop the first table"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+    with And(f"I import the data from S3 into the second table {name_table2}"):
+        insert_from_s3_function(uri=uri, filename="imports.csv", table_name=name_table2)
 
-            with And("I create the first table again"):
-                simple_table(node=node, name=name_table1)
-
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
-
-        if self.context.storage == "minio":
-            with Given("I alter the URL for MinIO table function path restrictions"):
-                uri = uri[: len(uri) - 5] + "/imports"
-
-        with When("I export the data to S3 using the table function"):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}imports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
-            )
-
-        with And(f"I import the data from S3 into the second table {name_table2}"):
-            node.query(
-                f"""
-                INSERT INTO {name_table2} SELECT * FROM
-                s3('{uri}imports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
-            )
-
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                    {name_table2} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-            with And(f"I create the table again {name_table1}"):
-                simple_table(node=node, name=name_table1)
-
-            with And(
-                f"""I export the empty table {name_table1} to S3 at the
-                        location where I want to overwrite data"""
-            ):
-                node.query(
-                    f"""
-                        INSERT INTO FUNCTION
-                        s3('{uri}imports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
-                )
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {name_table2} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestScenario
@@ -246,74 +217,45 @@ def exports(self):
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
 
-    try:
-        with Given(f"I create table using S3 storage policy external"):
+    with Given(f"I create table using S3 storage policy external"):
+        simple_table(node=node, name=name_table1)
+
+    with And("I export simple data to S3 to check export functionality"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+
+    with Then("I check that a simple SELECT * query returns matching data"):
+        r = node.query(f"SELECT * FROM {name_table1}").output.strip()
+        assert r == expected, error()
+
+    with Given("I create a second table for comparison"):
+        simple_table(node=node, name=name_table2)
+
+    with And("I delete the data from the first table"):
+        with By("I drop the first table"):
+            node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+
+        with And("I create the first table again"):
             simple_table(node=node, name=name_table1)
 
-        with And("I export simple data to S3 to check export functionality"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
+    with And(f"I store simple data in the first table {name_table1}"):
+        node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
 
-        with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT * FROM {name_table1}").output.strip()
-            assert r == expected, error()
+    if self.context.storage == "minio":
+        with Given("I alter the URL for MinIO table function path restrictions"):
+            uri = uri[: len(uri) - 5] + "exports"
 
-        with Given("I create a second table for comparison"):
-            simple_table(node=node, name=name_table2)
+    with When("I export the data to S3 using the table function"):
+        insert_to_s3_function(uri=uri, filename="imports.csv", table_name=name_table1)
 
-        with And("I delete the data from the first table"):
-            with By("I drop the first table"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
+    with And(f"I import the data from S3 into the second table {name_table2}"):
+        insert_from_s3_function(uri=uri, filename="imports.csv", table_name=name_table2)
 
-            with And("I create the first table again"):
-                simple_table(node=node, name=name_table1)
-
-        with And(f"I store simple data in the first table {name_table1}"):
-            node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
-
-        if self.context.storage == "minio":
-            with Given("I alter the URL for MinIO table function path restrictions"):
-                uri = uri[: len(uri) - 5] + "exports"
-
-        with When("I export the data to S3 using the table function"):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}exports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name_table1}"""
-            )
-
-        with And(f"I import the data from S3 into the second table {name_table2}"):
-            node.query(
-                f"""
-                INSERT INTO {name_table2} SELECT * FROM
-                s3('{uri}exports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')"""
-            )
-
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                    {name_table2} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {name_table1}"):
-                node.query(f"DROP TABLE IF EXISTS {name_table1} SYNC")
-
-            with And(f"I create the table again {name_table1}"):
-                simple_table(node=node, name=name_table1)
-
-            with And(
-                f"""I export the empty table {name_table1} to S3 at the
-                        location where I want to overwrite data"""
-            ):
-                node.query(
-                    f"""
-                        INSERT INTO FUNCTION
-                        s3('{uri}exports.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                        SELECT * FROM {name_table1}"""
-                )
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {name_table2} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {name_table2} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestScenario
@@ -840,6 +782,7 @@ def syntax(self):
     with Then("I check simple queries"):
         standard_selects(node=node, table_name=name)
 
+
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.1"))
 def access(self):
@@ -1105,10 +1048,8 @@ def generic_url(self):
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
-
     with Given(f"I create table using S3 storage policy aws_external"):
-        simple_table(node=node, name=name, policy='aws_external')
-
+        simple_table(node=node, name=name, policy="aws_external")
 
     with When("I store simple data in the table"):
         node.query(f"INSERT INTO {name} VALUES (427)")
@@ -1116,8 +1057,6 @@ def generic_url(self):
     with Then("I check that a simple SELECT * query returns matching data"):
         r = node.query(f"SELECT * FROM {name}").output.strip()
         assert r == expected, error()
-
-
 
 
 @TestScenario
@@ -1191,7 +1130,7 @@ def environment_credentials(self):
             s3_storage(disks=disks, policies=policies, restart=True)
 
         with Given(f"I create table using S3 storage policy s3_external"):
-            simple_table(node=node, name=name, policy='s3_external')
+            simple_table(node=node, name=name, policy="s3_external")
 
         with When("I store simple data in the table"):
             node.query(f"INSERT INTO {name} VALUES ({expected})")
@@ -1199,7 +1138,6 @@ def environment_credentials(self):
         with Then("I check that a simple SELECT * query returns matching data"):
             r = node.query(f"SELECT * FROM {name}").output.strip()
             assert r == expected, error()
-
 
 
 @TestOutline(Scenario)
@@ -2403,6 +2341,7 @@ def config_over_restart(self):
 
     with Then("I check simple queries"):
         standard_selects(node=node, table_name=name)
+
 
 @TestScenario
 @Requirements()
