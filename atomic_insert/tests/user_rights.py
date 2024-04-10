@@ -53,7 +53,7 @@ def user_rights(
                 for table_name in tables:
                     with When(f"table {table_name}"):
                         output = self.context.cluster.node(node_name).query(
-                            f"select count() from {table_name}",
+                            f"select count() from {table_name} FORMAT TabSeparated",
                             exitcode=0,
                         )
                         assert int(output.output) == 0
