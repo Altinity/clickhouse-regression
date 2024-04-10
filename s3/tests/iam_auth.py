@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 
-from s3.tests.common import getuid, s3_storage
+from s3.tests.common import getuid, s3_storage, simple_table
 from s3.requirements import *
 
 
@@ -89,27 +89,15 @@ def iam_mode_auth(self):
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
-    try:
-        with Given(f"I create table using S3 storage policy external"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='aws_external'
-            """
-            )
+    with Given(f"I create table using S3 storage policy external"):
+        simple_table(node=node, table_name=table_name, policy="aws_external")
 
-        with And("I store simple data in S3 to check import"):
-            node.query(f"INSERT INTO {table_name} VALUES ({expected})")
+    with And("I store simple data in S3 to check import"):
+        node.query(f"INSERT INTO {table_name} VALUES ({expected})")
 
-        with Then("I check that select returns matching data"):
-            r = node.query(f"SELECT * FROM {table_name}").output.strip()
-            assert r == expected, error()
-    finally:
-        with Finally("I drip table that uses S3"):
-            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+    with Then("I check that select returns matching data"):
+        r = node.query(f"SELECT * FROM {table_name}").output.strip()
+        assert r == expected, error()
 
 
 @TestFeature
