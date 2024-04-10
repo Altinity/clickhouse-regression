@@ -54,9 +54,11 @@ def supported_types(self, column_type="String", nullable=False, node=None):
 
     with Then("I check data in the table can be correctly decoded"):
         r1 = node.query(
-            f"SELECT id, base58Decode(x) FROM {table_name_e58} ORDER BY id, base58Decode(x)"
+            f"SELECT id, base58Decode(x) FROM {table_name_e58} ORDER BY id, base58Decode(x) FORMAT TabSeparated"
         )
-        r2 = node.query(f"SELECT id, x FROM {table_name} ORDER BY id, x")
+        r2 = node.query(
+            f"SELECT id, x FROM {table_name} ORDER BY id, x FORMAT TabSeparated"
+        )
         assert r1.output == r2.output, error()
 
 

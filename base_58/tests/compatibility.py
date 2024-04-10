@@ -18,7 +18,7 @@ def compatibility(self, shift_on=0, node=None):
         "I check base58Encode function and function from base58 library return the same string"
     ):
         r = node.query(
-            f"SELECT base58Encode('{shift(string_of_all_askii_symbols(), shift_on)*30}')"
+            f"SELECT base58Encode('{shift(string_of_all_askii_symbols(), shift_on)*30}') FORMAT TabSeparated"
         )
         encoded_string = r.output
         assert encoded_string == b58encode(
@@ -28,7 +28,7 @@ def compatibility(self, shift_on=0, node=None):
     with Then(
         "I check base58Encode function and function from base58 library return the same string"
     ):
-        r = node.query(f"SELECT base58Decode('{encoded_string}')")
+        r = node.query(f"SELECT base58Decode('{encoded_string}') FORMAT TabSeparated")
         decoded_string = r.output
         assert decoded_string == b58decode(encoded_string).decode("ascii"), error()
 

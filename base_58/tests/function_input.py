@@ -20,7 +20,7 @@ def function_input_column(self, node=None):
 
     with Then("I check data is correctly inserted"):
         r = node.query(
-            f"select base58Decode(reverse(reverse(x))) from {table_name_e58}"
+            f"select base58Decode(reverse(reverse(x))) from {table_name_e58} FORMAT TabSeparated"
         )
         assert r.output == string_of_all_askii_symbols() * 30
 
@@ -34,14 +34,16 @@ def function_input_constant(self, node=None):
 
     with When("I check I can encode string returned as function result"):
         r = node.query(
-            f"SELECT base58Encode(reverse(reverse('{string_of_all_askii_symbols()*30}')))"
+            f"SELECT base58Encode(reverse(reverse('{string_of_all_askii_symbols()*30}'))) FORMAT TabSeparated"
         )
         encoded_string = r.output
 
     with Then(
         "I check decode value is right even if input of the base58Decode, base58Encode is function result"
     ):
-        r = node.query(f"SELECT base58Decode(reverse(reverse('{encoded_string}')))")
+        r = node.query(
+            f"SELECT base58Decode(reverse(reverse('{encoded_string}'))) FORMAT TabSeparated"
+        )
         assert string_of_all_askii_symbols() * 30 == r.output, error()
 
 

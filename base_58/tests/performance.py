@@ -50,22 +50,22 @@ def performance(self, node=None):
         execution_times_decode = []
         start_time = time.time()
         node.query(
-            f"select count(b64) from (select base64Encode(x) as b64 from {table_name})"
+            f"select count(b64) from (select base64Encode(x) as b64 from {table_name}) FORMAT TabSeparated"
         )
         execution_times_encode.append(time.time() - start_time)
         start_time = time.time()
         node.query(
-            f"select count(b58) from (select base58Encode(x) as b58 from {table_name})"
+            f"select count(b58) from (select base58Encode(x) as b58 from {table_name}) FORMAT TabSeparated"
         )
         execution_times_encode.append(time.time() - start_time)
         start_time = time.time()
         node.query(
-            f"select count(*) from (select base64Decode(x) from {table_name_e64})"
+            f"select count(*) from (select base64Decode(x) from {table_name_e64}) FORMAT TabSeparated"
         )
         execution_times_decode.append(time.time() - start_time)
         start_time = time.time()
         node.query(
-            f"select count(*) from (select base58Decode(x) from {table_name_e58})"
+            f"select count(*) from (select base58Decode(x) from {table_name_e58}) FORMAT TabSeparated"
         )
         execution_times_decode.append(time.time() - start_time)
 

@@ -21,7 +21,7 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I compute expected result"):
         expected_result = node.query(
-            f"select count(*) from (select * from {table_name_random} limit 1000000)"
+            f"select count(*) from (select * from {table_name_random} limit 1000000) FORMAT TabSeparated"
         ).output
 
     with When("I create a table with MergeTree engine"):
@@ -44,14 +44,14 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I decode data from table with base64 encoding"):
         r = node.query(
-            f"select count(*) from (select base64Decode(x) as b64 from {table_name_e64})",
+            f"select count(*) from (select base64Decode(x) as b64 from {table_name_e64}) FORMAT TabSeparated",
             query_id=2002,
         )
         base64_decoded = r.output
 
     with When("I decode data from table with base58 encoding"):
         r = node.query(
-            f"select count(*) from (select base58Decode(x) from {table_name_e58})",
+            f"select count(*) from (select base58Decode(x) from {table_name_e58}) FORMAT TabSeparated",
             query_id=2003,
         )
         base58_decoded = r.output
@@ -62,19 +62,19 @@ def memory_usage_for_column_input(self, node=None):
         with attempt:
             with Then("I check memory usage is simular"):
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2000'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2000' FORMAT TabSeparated"
                 )
                 b64_encode_memory_usage = int(r.output)
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2001'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2001' FORMAT TabSeparated"
                 )
                 b58_encode_memory_usage = int(r.output)
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2002'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2002' FORMAT TabSeparated"
                 )
                 b64_decode_memory_usage = int(r.output)
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2003'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2003' FORMAT TabSeparated"
                 )
                 b58_decode_memory_usage = int(r.output)
                 assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
@@ -90,24 +90,30 @@ def memory_usage_for_constant_input(self, node=None):
 
     with When("I run base58 encode function"):
         r = node.query(
-            f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}')",
+            f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}') FORMAT TabSeparated",
             query_id=1000,
         )
         b58_encoded_string = r.output
 
     with When("I run base64 encode function"):
         r = node.query(
-            f"SELECT base64Encode('{string_of_all_askii_symbols()*1000}')",
+            f"SELECT base64Encode('{string_of_all_askii_symbols()*1000}') FORMAT TabSeparated",
             query_id=1001,
         )
         b64_encoded_string = r.output
 
     with When("I run base58 decode function"):
-        r = node.query(f"SELECT base58Decode('{b58_encoded_string}')", query_id=1002)
+        r = node.query(
+            f"SELECT base58Decode('{b58_encoded_string}') FORMAT TabSeparated",
+            query_id=1002,
+        )
         b58_decoded_string = r.output
 
     with When("I run base64 decode function"):
-        r = node.query(f"SELECT base64Decode('{b64_encoded_string}')", query_id=1003)
+        r = node.query(
+            f"SELECT base64Decode('{b64_encoded_string}') FORMAT TabSeparated",
+            query_id=1003,
+        )
         b64_decoded_string = r.output
 
     with Then("I check strings are not changed after encode, decode"):
@@ -118,22 +124,22 @@ def memory_usage_for_constant_input(self, node=None):
         with attempt:
             with When("I remember memory usages"):
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1000'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1000' FORMAT TabSeparated"
                 )
                 b58_encode_memory_usage = int(r.output)
 
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1001'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1001' FORMAT TabSeparated"
                 )
                 b64_encode_memory_usage = int(r.output)
 
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1002'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1002' FORMAT TabSeparated"
                 )
                 b58_decode_memory_usage = int(r.output)
 
                 r = node.query(
-                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1003'"
+                    f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1003' FORMAT TabSeparated"
                 )
                 b64_decode_memory_usage = int(r.output)
 

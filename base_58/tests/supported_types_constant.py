@@ -27,11 +27,11 @@ def supported_types(self, constant_type="String", nullable=False, node=None):
 
     with When(f"I check base58Encode support {constant_type}"):
         r = node.query(
-            f"SELECT base58Encode({to_nullable_start}to{constant_type}('100'{extra_args}){to_nullable_end})"
+            f"SELECT base58Encode({to_nullable_start}to{constant_type}('100'{extra_args}){to_nullable_end}) FORMAT TabSeparated"
         )
     with When(f"I check base58Decode support {constant_type}"):
         r = node.query(
-            f"SELECT base58Decode({to_nullable_start}to{constant_type}('123'{extra_args}){to_nullable_end})"
+            f"SELECT base58Decode({to_nullable_start}to{constant_type}('123'{extra_args}){to_nullable_end}) FORMAT TabSeparated"
         )
 
 
