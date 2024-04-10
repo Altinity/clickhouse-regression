@@ -12,62 +12,14 @@ def sanity(self, policy, server="clickhouse1"):
     name = "table_" + getuid()
     node = self.context.node
 
-    def insert_data(number_of_mb, start=0):
-        values = ",".join(
-            f"({x})"
-            for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
-        )
-        node.query(f"INSERT INTO {name} VALUES {values}")
+    with Given(f"I create table using storage policy {policy}"):
+        simple_table(node=node, name=name, policy=policy)
 
-    def check_query(num, query, expected):
-        with By(f"executing query {num}", description=query):
-            r = node.query(query).output.strip()
-            with Then(f"result should match the expected", description=expected):
-                assert r == expected, error()
+    with When("I add data to the table"):
+        standard_inserts(node=node, table_name=name)
 
-    try:
-        with Given(f"I create table using storage policy {policy}"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='{policy}'
-            """
-            )
-
-        with When("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data(1, 0)
-
-            with And("another insert of 1MB of data"):
-                insert_data(1, 1024 * 1024)
-
-            with And("then doing a large insert of 10Mb of data"):
-                insert_data(10, 1024 * 1024 * 2)
-
-        with Then("I check simple queries"):
-            check_query(0, f"SELECT COUNT() FROM {name}", expected="1572867")
-            check_query(
-                1, f"SELECT uniqExact(d) FROM {name} WHERE d < 10", expected="10"
-            )
-            check_query(
-                2, f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1", expected="3407872"
-            )
-            check_query(3, f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1", expected="0")
-            check_query(
-                4,
-                f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query(
-                5, f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)", expected="1"
-            )
-
-    finally:
-        with Finally("I drop the table if exists"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then("I check simple queries"):
+        standard_selects(node=node, table_name=name)
 
 
 @TestFeature

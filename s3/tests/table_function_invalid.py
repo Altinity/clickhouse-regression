@@ -4,6 +4,35 @@ from s3.tests.common import *
 from s3.requirements import *
 
 
+@TestStep(Given)
+def insert_to_s3_function_invalid(
+    self,
+    path,
+    table_name,
+    columns="d UInt64",
+    compression=None,
+    file_format="CSVWithNames",
+    access_key_id=None,
+    secret_access_key=None,
+    message=None,
+    exitcode=None,
+):
+    """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
+
+    access_key_id = access_key_id or self.context.access_key_id
+    secret_access_key = secret_access_key or self.context.secret_access_key
+    node = current().context.node
+
+    query = f"INSERT INTO FUNCTION s3('{path}', '{access_key_id}','{secret_access_key}', '{file_format}', '{columns}'"
+
+    if compression:
+        query += f", '{compression}'"
+
+    query += f") SELECT * FROM {table_name}"
+
+    node.query(query, message=message, exitcode=exitcode)
+
+
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Path("1.0"))
 def empty_path(self):
@@ -11,39 +40,21 @@ def empty_path(self):
     parameter is empty.
     """
     name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a table"):
+        simple_table(node=node, name=name, policy="default")
 
-        with And(f"I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with And(f"I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
 
-        with Then(
-            """When I export the data to S3 using the table function with
-                  empty path parameter it should fail"""
-        ):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name}""",
-                message="DB::Exception: Host is empty in S3 URI",
-                exitcode=36,
-            )
-
-    finally:
-        with Finally("I drop the table"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then(
+        """When I export the data to S3 using the table function with
+                empty path parameter it should fail"""
+    ):
+        insert_to_s3_function_invalid(
+            path="", message="DB::Exception: Host is empty in S3 URI", exitcode=36
+        )
 
 
 @TestScenario
@@ -53,40 +64,24 @@ def invalid_path(self):
     parameter is invalid.
     """
     name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     node = current().context.node
     invalid_path = "https://invalid/path"
 
-    try:
-        with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a table"):
+        simple_table(node=node, name=name, policy="default")
 
-        with And(f"I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with And(f"I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
 
-        with Then(
-            """When I export the data to S3 using the table function with
-                  invalid path parameter it should fail"""
-        ):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{invalid_path}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-                SELECT * FROM {name}""",
-                message=f"DB::Exception: Bucket or key name are invalid in S3 URI",
-                exitcode=36,
-            )
-
-    finally:
-        with Finally("I drop the first table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then(
+        """When I export the data to S3 using the table function with
+                invalid path parameter it should fail"""
+    ):
+        insert_to_s3_function_invalid(
+            path=invalid_path,
+            message="DB::Exception: Bucket or key name are invalid in S3 URI",
+            exitcode=36,
+        )
 
 
 @TestOutline(Scenario)
@@ -100,40 +95,25 @@ def invalid_format(self, invalid_format):
     parameter is invalid.
     """
     name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a table"):
+        simple_table(node=node, name=name, policy="default")
 
-        with And(f"I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with And(f"I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
 
-        with Then(
-            """When I export the data to S3 using the table function with
-                  invalid format parameter it should fail"""
-        ):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}invalid.csv', '{access_key_id}','{secret_access_key}', '{invalid_format}', 'd UInt64')
-                SELECT * FROM {name}""",
-                message="DB::Exception: Unknown format",
-                exitcode=73,
-            )
-
-    finally:
-        with Finally("I drop the first table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then(
+        """When I export the data to S3 using the table function with
+                invalid format parameter it should fail"""
+    ):
+        insert_to_s3_function_invalid(
+            path=f"{uri}invalid.csv",
+            file_format=invalid_format,
+            message="DB::Exception: Unknown format",
+            exitcode=36,
+        )
 
 
 @TestScenario
@@ -143,40 +123,25 @@ def empty_structure(self):
     parameter is empty.
     """
     name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a table"):
+        simple_table(node=node, name=name, policy="default")
 
-        with And(f"I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with And(f"I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
 
-        with Then(
-            """When I export the data to S3 using the table function with
-                  empty structure parameter it should fail"""
-        ):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}invalid.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '')
-                SELECT * FROM {name}""",
-                message="DB::Exception: Empty query",
-                exitcode=62,
-            )
-
-    finally:
-        with Finally("I drop the first table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then(
+        """When I export the data to S3 using the table function with
+                empty structure parameter it should fail"""
+    ):
+        insert_to_s3_function_invalid(
+            path=f"{uri}invalid.csv",
+            columns="",
+            message="DB::Exception: Empty query",
+            exitcode=62,
+        )
 
 
 @TestScenario
@@ -191,35 +156,22 @@ def invalid_structure(self):
     uri = self.context.uri
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a table"):
+        simple_table(node=node, name=name, policy="default")
 
-        with And(f"I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with And(f"I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
 
-        with Then(
-            """When I export the data to S3 using the table function with
-                  invalid structure parameter it should fail"""
-        ):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}invalid.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'not_a_structure')
-                SELECT * FROM {name}""",
-                message="DB::Exception: Syntax error",
-                exitcode=62,
-            )
-
-    finally:
-        with Finally("I drop the first table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then(
+        """When I export the data to S3 using the table function with
+                invalid structure parameter it should fail"""
+    ):
+        insert_to_s3_function_invalid(
+            path=f"{uri}invalid.csv",
+            columns="not_a_structure",
+            message="DB::Exception: Syntax error",
+            exitcode=62,
+        )
 
 
 @TestScenario
@@ -234,35 +186,22 @@ def invalid_compression(self):
     uri = self.context.uri
     node = current().context.node
 
-    try:
-        with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+    with Given("I create a table"):
+        simple_table(node=node, name=name, policy="default")
 
-        with And(f"I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES (427)")
+    with And(f"I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES (427)")
 
-        with Then(
-            """When I export the data to S3 using the table function with
-                  invalid compression parameter it should fail"""
-        ):
-            node.query(
-                f"""
-                INSERT INTO FUNCTION
-                s3('{uri}invalid.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64', 'invalid_compression')
-                SELECT * FROM {name}""",
-                message="DB::Exception: Unknown compression method",
-                exitcode=48,
-            )
-
-    finally:
-        with Finally("I drop the first table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then(
+        """When I export the data to S3 using the table function with
+                invalid compression parameter it should fail"""
+    ):
+        insert_to_s3_function_invalid(
+            path=f"{uri}invalid.csv",
+            compression="invalid_compression",
+            message="DB::Exception: Unknown compression method",
+            exitcode=48,
+        )
 
 
 @TestScenario
@@ -280,22 +219,10 @@ def invalid_credentials(self):
     expected = "DB::Exception:"
 
     with Given("I create a table"):
-        node.query(
-            f"""
-            CREATE TABLE {name_table1} (
-                d UInt64
-            ) ENGINE = MergeTree()
-            ORDER BY d"""
-        )
+        simple_table(node=node, name=name_table1, policy="default")
 
     with And("I create a second table for comparison"):
-        node.query(
-            f"""
-            CREATE TABLE {name_table2} (
-                d UInt64
-            ) ENGINE = MergeTree()
-            ORDER BY d"""
-        )
+        simple_table(node=node, name=name_table2, policy="default")
 
     with And(f"I store simple data in the first table {name_table1}"):
         node.query(f"INSERT INTO {name_table1} VALUES (427)")
@@ -304,11 +231,10 @@ def invalid_credentials(self):
         """I export the data to S3 using the table function with invalid
                credentials, expecting failure"""
     ):
-        node.query(
-            f"""
-            INSERT INTO FUNCTION
-            s3('{uri}invalid.csv', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
-            SELECT * FROM {name_table1}""",
+        insert_to_s3_function_invalid(
+            path=f"{uri}invalid.csv",
+            access_key_id=access_key_id,
+            secret_access_key=secret_access_key,
             message=expected,
             exitcode=243,
         )
