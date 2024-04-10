@@ -80,13 +80,19 @@ def unsupported_types(self, column_type="Int64", nullable=False, node=None):
     with When(
         "I check base58Encode function returns an error if data type is not supported"
     ):
-        r = node.query(f"SELECT id, base58Encode(x) FROM {table_name}", no_checks=True)
+        r = node.query(
+            f"SELECT id, base58Encode(x) FROM {table_name} FORMAT TabSeparated",
+            no_checks=True,
+        )
         assert r.exitcode in (43, 27)
 
     with When(
         "I check base58Decode function returns an error if data type is not supported"
     ):
-        r = node.query(f"SELECT id, base58Decode(x) FROM {table_name}", no_checks=True)
+        r = node.query(
+            f"SELECT id, base58Decode(x) FROM {table_name} FORMAT TabSeparated",
+            no_checks=True,
+        )
         assert r.exitcode in (43, 27)
 
 
