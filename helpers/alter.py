@@ -249,27 +249,37 @@ def alter_table_freeze_partition(
 
 @TestStep(Given)
 def alter_table_freeze_partition_with_name(
-    self, table_name, backup_name, node=None, **query_kwargs
+    self, table_name, backup_name, partition_name=None, node=None, **query_kwargs
 ):
     """Freeze partition with a name using alter."""
     if node is None:
         node = self.context.node
 
+    partition = ""
+    if partition_name:
+        partition = f"PARTITION {partition_name} "
+
     with By("freezing partition with a name"):
-        query = f"ALTER TABLE {table_name} FREEZE WITH NAME '{backup_name}'"
+        query = f"ALTER TABLE {table_name} FREEZE {partition}WITH NAME '{backup_name}'"
         node.query(query, **query_kwargs)
 
 
 @TestStep(Given)
 def alter_table_unfreeze_partition_with_name(
-    self, table_name, backup_name, node=None, **query_kwargs
+    self, table_name, backup_name, partition_name=None, node=None, **query_kwargs
 ):
     """Unfreeze partition with a name using alter."""
     if node is None:
         node = self.context.node
 
+    partition = ""
+    if partition_name:
+        partition = f"PARTITION {partition_name} "
+
     with By("unfreezing partition with a name"):
-        query = f"ALTER TABLE {table_name} UNFREEZE WITH NAME '{backup_name}'"
+        query = (
+            f"ALTER TABLE {table_name} UNFREEZE {partition}WITH NAME '{backup_name}'"
+        )
         node.query(query, **query_kwargs)
 
 

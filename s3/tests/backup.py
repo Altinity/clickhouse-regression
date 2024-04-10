@@ -1,3 +1,5 @@
+from helpers.alter import *
+
 from s3.tests.common import *
 from s3.requirements import *
 
@@ -17,13 +19,13 @@ def alter_freeze(self, policy_name):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with Then("I freeze the table"):
-        node.query(
-            f"ALTER TABLE {table_name} FREEZE WITH NAME '{backup_name}'", exitcode=0
+        alter_table_freeze_partition_with_name(
+            node=node, table_name=table_name, backup_name=backup_name, exitcode=0
         )
 
     with Finally("I unfreeze the table"):
-        node.query(
-            f"ALTER TABLE {table_name} UNFREEZE WITH NAME '{backup_name}'", exitcode=0
+        alter_table_unfreeze_partition_with_name(
+            node=node, table_name=table_name, backup_name=backup_name, exitcode=0
         )
 
 
@@ -42,14 +44,20 @@ def alter_freeze_partition(self, policy_name):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with Then("I freeze the table"):
-        node.query(
-            f"ALTER TABLE {table_name} FREEZE PARTITION 1 WITH NAME '{backup_name}'",
+        alter_table_freeze_partition_with_name(
+            node=node,
+            table_name=table_name,
+            backup_name=backup_name,
+            partition_name="1",
             exitcode=0,
         )
 
     with Finally("I unfreeze the table"):
-        node.query(
-            f"ALTER TABLE {table_name} UNFREEZE PARTITION 1 WITH NAME '{backup_name}'",
+        alter_table_unfreeze_partition_with_name(
+            node=node,
+            table_name=table_name,
+            backup_name=backup_name,
+            partition_name="1",
             exitcode=0,
         )
 
@@ -68,7 +76,9 @@ def detach_partition(self, policy_name):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with Then("I detach the partition"):
-        node.query(f"ALTER TABLE {table_name} DETACH PARTITION 1")
+        alter_table_detach_partition(
+            node=node, table_name=table_name, partition_name="1"
+        )
 
     with Finally("I check the data is gone from the table"):
         output = node.query(f"SELECT * FROM {table_name}").output
@@ -89,7 +99,9 @@ def attach_partition(self, policy_name):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with And("I detach the partition"):
-        node.query(f"ALTER TABLE {table_name} DETACH PARTITION 1")
+        alter_table_detach_partition(
+            node=node, table_name=table_name, partition_name="1"
+        )
 
     with And("I check the data is gone from the table"):
         output = node.query(f"SELECT * FROM {table_name}").output
@@ -99,7 +111,9 @@ def attach_partition(self, policy_name):
         node.restart_clickhouse()
 
     with Then("I attach the partition"):
-        node.query(f"ALTER TABLE {table_name} ATTACH PARTITION 1")
+        alter_table_attach_partition(
+            node=node, table_name=table_name, partition_name="1"
+        )
 
     with Finally("I check the data is restored"):
         output = node.query(
@@ -982,7 +996,6 @@ def local_and_s3_disk(self):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def local_and_s3_volumes(self):
     """Test backup with a storage policy that has both local and s3 volume."""
-    node = current().context.node
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
@@ -1027,7 +1040,6 @@ def local_and_s3_volumes(self):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def s3_disk(self):
     """Test backup with s3 disk."""
-    node = current().context.node
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
