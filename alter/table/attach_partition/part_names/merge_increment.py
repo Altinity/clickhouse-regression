@@ -75,9 +75,9 @@ def check_merge_increment(self, engine):
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
-                assert (
-                    part_name.output == expected_part_name
-                ), f"Unexpected part name: {part_name.output}"
+                assert part_name.output == expected_part_name, error(
+                    f"Unexpected part name: {part_name.output}"
+                )
 
 
 @TestScenario
@@ -156,9 +156,9 @@ def check_merge_increment_replicated(self, engine):
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
-                assert (
-                    part_name.output in expected_part_name
-                ), f"Unexpected part name: {part_name.output}"
+                assert part_name.output in expected_part_name, error(
+                    f"Unexpected part name: {part_name.output}"
+                )
 
 
 @TestScenario
