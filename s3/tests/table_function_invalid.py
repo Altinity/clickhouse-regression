@@ -17,13 +17,7 @@ def empty_path(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name, policy="default")
 
         with And(f"I store simple data in the table"):
             node.query(f"INSERT INTO {name} VALUES (427)")
@@ -60,13 +54,7 @@ def invalid_path(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name, policy="default")
 
         with And(f"I store simple data in the table"):
             node.query(f"INSERT INTO {name} VALUES (427)")
@@ -107,13 +95,7 @@ def invalid_format(self, invalid_format):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name, policy="default")
 
         with And(f"I store simple data in the table"):
             node.query(f"INSERT INTO {name} VALUES (427)")
@@ -150,13 +132,7 @@ def empty_structure(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name, policy="default")
 
         with And(f"I store simple data in the table"):
             node.query(f"INSERT INTO {name} VALUES (427)")
@@ -193,13 +169,7 @@ def invalid_structure(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name, policy="default")
 
         with And(f"I store simple data in the table"):
             node.query(f"INSERT INTO {name} VALUES (427)")
@@ -236,13 +206,7 @@ def invalid_compression(self):
 
     try:
         with Given("I create a table"):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d"""
-            )
+            simple_table(node=node, name=name, policy="default")
 
         with And(f"I store simple data in the table"):
             node.query(f"INSERT INTO {name} VALUES (427)")
@@ -280,22 +244,10 @@ def invalid_credentials(self):
     expected = "DB::Exception:"
 
     with Given("I create a table"):
-        node.query(
-            f"""
-            CREATE TABLE {name_table1} (
-                d UInt64
-            ) ENGINE = MergeTree()
-            ORDER BY d"""
-        )
+        simple_table(node=node, name=name_table1, policy="default")
 
     with And("I create a second table for comparison"):
-        node.query(
-            f"""
-            CREATE TABLE {name_table2} (
-                d UInt64
-            ) ENGINE = MergeTree()
-            ORDER BY d"""
-        )
+        simple_table(node=node, name=name_table2, policy="default")
 
     with And(f"I store simple data in the first table {name_table1}"):
         node.query(f"INSERT INTO {name_table1} VALUES (427)")
