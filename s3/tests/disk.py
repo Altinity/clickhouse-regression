@@ -8,6 +8,7 @@ import time
 import datetime
 
 import lightweight_delete.tests.basic_checks as delete_basic_checks
+from s3.tests.table_function import insert_to_s3_function, insert_from_s3_function
 
 
 @TestStep(Given)
@@ -440,14 +441,7 @@ def metadata(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with And("I get the disk name for the parts added in this table"):
         disk_names = node.query(
@@ -830,6 +824,7 @@ def syntax(self):
     using a storage policy with valid syntax.
     """
     name = "table_" + getuid()
+    node = current().context.node
 
     with Given(
         """I have a disk configuration with a S3 storage disk, access id and key"""
@@ -840,43 +835,10 @@ def syntax(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with Then("I check simple queries"):
-        check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-        check_query(
-            num=1,
-            query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-            expected="10",
-        )
-        check_query(
-            num=2,
-            query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-            expected="3407872",
-        )
-        check_query(
-            num=3,
-            query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-            expected="0",
-        )
-        check_query(
-            num=4,
-            query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-            expected="0\n1048578\n2097154",
-        )
-        check_query(
-            num=5,
-            query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-            expected="1",
-        )
-
+        standard_selects(node=node, table_name=name)
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.1"))
@@ -932,14 +894,7 @@ def cache(self, cache):
             simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
@@ -988,14 +943,7 @@ def cache_default(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
@@ -1048,14 +996,7 @@ def cache_path(self):
         simple_table(name=name)
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
@@ -1304,42 +1245,10 @@ def mergetree(self, engine):
             )
 
         with When("I add data to the table"):
-            with By("first inserting 1MB of data"):
-                insert_data(name=name, number_of_mb=1)
-
-            with And("another insert of 1MB of data"):
-                insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-            with And("then doing a large insert of 10Mb of data"):
-                insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+            standard_inserts(node=node, table_name=name)
 
         with Then("I check simple queries"):
-            check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-            check_query(
-                num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-                expected="10",
-            )
-            check_query(
-                num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-                expected="3407872",
-            )
-            check_query(
-                num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-                expected="0",
-            )
-            check_query(
-                num=4,
-                query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-                expected="0\n1048578\n2097154",
-            )
-            check_query(
-                num=5,
-                query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-                expected="1",
-            )
+            standard_selects(node=node, table_name=name)
 
     finally:
         with Finally("I drop the table if exists"):
@@ -2481,42 +2390,10 @@ def config_over_restart(self):
         node.query(f"SYSTEM STOP MERGES {name}")
 
     with When("I add data to the table"):
-        with By("first inserting 1MB of data"):
-            insert_data(name=name, number_of_mb=1)
-
-        with And("another insert of 1MB of data"):
-            insert_data(name=name, number_of_mb=1, start=1024 * 1024)
-
-        with And("then doing a large insert of 10Mb of data"):
-            insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
+        standard_inserts(node=node, table_name=name)
 
     with Then("I check simple queries"):
-        check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-        check_query(
-            num=1,
-            query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-            expected="10",
-        )
-        check_query(
-            num=2,
-            query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-            expected="3407872",
-        )
-        check_query(
-            num=3,
-            query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-            expected="0",
-        )
-        check_query(
-            num=4,
-            query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-            expected="0\n1048578\n2097154",
-        )
-        check_query(
-            num=5,
-            query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-            expected="1",
-        )
+        standard_selects(node=node, table_name=name)
 
     with When("I restart clickhouse"):
         node.restart_clickhouse()
@@ -2525,33 +2402,7 @@ def config_over_restart(self):
         node.query(f"OPTIMIZE TABLE {name} FINAL")
 
     with Then("I check simple queries"):
-        check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
-        check_query(
-            num=1,
-            query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
-            expected="10",
-        )
-        check_query(
-            num=2,
-            query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
-            expected="3407872",
-        )
-        check_query(
-            num=3,
-            query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
-            expected="0",
-        )
-        check_query(
-            num=4,
-            query=f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
-            expected="0\n1048578\n2097154",
-        )
-        check_query(
-            num=5,
-            query=f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
-            expected="1",
-        )
-
+        standard_selects(node=node, table_name=name)
 
 @TestScenario
 @Requirements()
