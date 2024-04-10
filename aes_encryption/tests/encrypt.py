@@ -32,7 +32,7 @@ def encrypt(
     if aad is not None:
         params.append(aad)
 
-    sql = "SELECT hex(encrypt(" + ", ".join(params) + "))"
+    sql = "SELECT hex(encrypt(" + ", ".join(params) + ")) FORMAT TabSeparated"
 
     return current().context.node.query(
         sql, step=step, exitcode=exitcode, message=message
@@ -76,12 +76,21 @@ def invalid_parameters(self):
         )
 
     with Example("bad mode type - forgot quotes"):
+        if check_clickhouse_version("<24.3")(self):
+            exitcode = 47
+            message = (
+                "DB::Exception: Missing columns: 'ecb' 'aes' while processing query"
+            )
+        else:
+            exitcode = 47
+            message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
+
         encrypt(
             plaintext="'hello there'",
             key="'0123456789123456'",
             mode="aes-128-ecb",
-            exitcode=47,
-            message="DB::Exception: Missing columns: 'ecb' 'aes' while processing query",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad mode type - UInt8"):
