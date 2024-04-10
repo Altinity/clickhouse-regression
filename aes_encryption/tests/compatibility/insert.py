@@ -110,7 +110,7 @@ def encrypt_using_materialized_view(self):
 
                     with And("I read inserted data back"):
                         node.query(
-                            "SELECT date, name, hex(secret) FROM user_data ORDER BY date"
+                            "SELECT date, name, hex(secret) FROM user_data ORDER BY date FORMAT TabSeparated"
                         )
 
                     with Then("output must match the snapshot"):
@@ -162,7 +162,7 @@ def aes_encrypt_mysql_using_materialized_view(self):
 
                     with And("I read inserted data back"):
                         node.query(
-                            "SELECT date, name, hex(secret) FROM user_data ORDER BY date"
+                            "SELECT date, name, hex(secret) FROM user_data ORDER BY date FORMAT TabSeparated"
                         )
 
                     with Then("output must match the snapshot"):
@@ -213,7 +213,7 @@ def encrypt_using_input_table_function(self):
 
                 with And("I read inserted data back"):
                     r = node.query(
-                        "SELECT date, name, hex(secret) FROM user_data ORDER BY date"
+                        "SELECT date, name, hex(secret) FROM user_data ORDER BY date FORMAT TabSeparated"
                     )
 
                 with Then("output must match the snapshot"):
@@ -263,7 +263,7 @@ def aes_encrypt_mysql_using_input_table_function(self):
 
                 with And("I read inserted data back"):
                     r = node.query(
-                        "SELECT date, name, hex(secret) FROM user_data ORDER BY date"
+                        "SELECT date, name, hex(secret) FROM user_data ORDER BY date FORMAT TabSeparated"
                     )
 
                 with Then("output must match the snapshot"):
@@ -330,7 +330,7 @@ def decrypt_using_materialized_view(self):
 
                     with And("I read inserted data back"):
                         r = node.query(
-                            "SELECT date, name, secret FROM user_data ORDER BY date"
+                            "SELECT date, name, secret FROM user_data ORDER BY date FORMAT TabSeparated"
                         )
 
                     with Then("output must match the expected"):
@@ -394,7 +394,7 @@ def aes_decrypt_mysql_using_materialized_view(self):
 
                     with And("I read inserted data back"):
                         r = node.query(
-                            "SELECT date, name, secret FROM user_data ORDER BY date"
+                            "SELECT date, name, secret FROM user_data ORDER BY date FORMAT TabSeparated"
                         )
 
                     with Then("output must match the expected"):
@@ -456,7 +456,7 @@ def decrypt_using_input_table_function(self):
 
                 with And("I read inserted data back"):
                     r = node.query(
-                        "SELECT date, name, secret FROM user_data ORDER BY date"
+                        "SELECT date, name, secret FROM user_data ORDER BY date FORMAT TabSeparated"
                     )
 
                 expected = """2020-01-01\tuser0\tuser0_secret\n2020-01-02\tuser1\tuser1_secret\n2020-01-03\tuser2\tuser2_secret"""
@@ -518,7 +518,7 @@ def aes_decrypt_mysql_using_input_table_function(self):
 
                 with And("I read inserted data back"):
                     r = node.query(
-                        "SELECT date, name, secret FROM user_data ORDER BY date"
+                        "SELECT date, name, secret FROM user_data ORDER BY date FORMAT TabSeparated"
                     )
 
                 expected = """2020-01-01\tuser0\tuser0_secret\n2020-01-02\tuser1\tuser1_secret\n2020-01-03\tuser2\tuser2_secret"""

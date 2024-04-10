@@ -54,7 +54,7 @@ def decrypt(self):
 
                 with When("I insert encrypted data"):
                     encrypted_secret = node.query(
-                        f"""SELECT hex(encrypt({example_mode}, 'secret', {example_key}{(", " + example_iv) if example_iv else ""}{(", " + example_aad) if example_aad else ""}))"""
+                        f"""SELECT hex(encrypt({example_mode}, 'secret', {example_key}{(", " + example_iv) if example_iv else ""}{(", " + example_aad) if example_aad else ""})) FORMAT TabSeparated"""
                     ).output.strip()
                     node.query(
                         textwrap.dedent(
@@ -110,7 +110,7 @@ def decrypt_multiple(self, count=1000):
 
                 with When("I insert encrypted data"):
                     encrypted_secret = node.query(
-                        f"""SELECT hex(encrypt({example_mode}, 'secret', {example_key}{(", " + example_iv) if example_iv else ""}{(", " + example_aad) if example_aad else ""}))"""
+                        f"""SELECT hex(encrypt({example_mode}, 'secret', {example_key}{(", " + example_iv) if example_iv else ""}{(", " + example_aad) if example_aad else ""})) FORMAT TabSeparated"""
                     ).output.strip()
                     values = [
                         f"('2020-01-01', 'user0', unhex('{encrypted_secret}'))"
@@ -174,7 +174,7 @@ def decrypt_unique(self):
 
                 with When(f"I get encrypted data for user {user_id}"):
                     encrypted_secret = node.query(
-                        f"""SELECT hex(encrypt({user_modes[-1]}, 'secret', {user_keys[-1]}))"""
+                        f"""SELECT hex(encrypt({user_modes[-1]}, 'secret', {user_keys[-1]})) FORMAT TabSeparated"""
                     ).output.strip()
                     values.append(
                         f"({user_id}, '2020-01-01', 'user{user_id}', unhex('{encrypted_secret}'))"

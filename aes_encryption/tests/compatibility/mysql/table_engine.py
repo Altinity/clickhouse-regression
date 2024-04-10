@@ -130,12 +130,12 @@ def decrypt(self, mysql_datatype):
 
                     with And("I read raw data using MySQL table engine"):
                         output = node.query(
-                            "SELECT id, date, name, hex(secret) AS secret FROM mysql_user_data"
+                            "SELECT id, date, name, hex(secret) AS secret FROM mysql_user_data FORMAT TabSeparated"
                         )
 
                     with And("I read decrypted data via MySQL table engine"):
                         output = node.query(
-                            f"""SELECT hex({func}({example_mode}, secret, {example_key}{(", " + example_iv) if example_iv else ""})) FROM mysql_user_data"""
+                            f"""SELECT hex({func}({example_mode}, secret, {example_key}{(", " + example_iv) if example_iv else ""})) FROM mysql_user_data FORMAT TabSeparated"""
                         ).output.strip()
 
                     with Then("the output should match the original plain text"):
@@ -198,7 +198,7 @@ def encrypt(self, mysql_datatype):
 
                     with And("I read decrypted data via MySQL table engine"):
                         output = node.query(
-                            f"""SELECT hex(aes_decrypt_mysql({example_mode}, secret, {example_key}{(", " + example_iv) if example_iv else ""})) FROM mysql_user_data"""
+                            f"""SELECT hex(aes_decrypt_mysql({example_mode}, secret, {example_key}{(", " + example_iv) if example_iv else ""})) FROM mysql_user_data FORMAT TabSeparated"""
                         ).output.strip()
 
                     with Then(
@@ -210,7 +210,7 @@ def encrypt(self, mysql_datatype):
                         "I read raw data using MySQL table engine to get expected raw data"
                     ):
                         expected_raw_data = node.query(
-                            "SELECT hex(secret) AS secret FROM mysql_user_data"
+                            "SELECT hex(secret) AS secret FROM mysql_user_data FORMAT TabSeparated"
                         ).output.strip()
 
                     with And("I read raw encrypted data in MySQL"):

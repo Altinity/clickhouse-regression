@@ -745,6 +745,7 @@ def return_value(self):
             + ","
             + iv
             + "))"
+            + " FORMAT TabSeparated"
         )
         r = self.context.node.query(sql)
 
@@ -772,7 +773,7 @@ def syntax(self):
     encrypt(plaintext, key, mode, [iv, aad])
     ```
     """
-    sql = "SELECT hex(encrypt('aes-128-gcm', 'hello there', '0123456789123456', '012345678912', 'AAD'))"
+    sql = "SELECT hex(encrypt('aes-128-gcm', 'hello there', '0123456789123456', '012345678912', 'AAD')) FORMAT TabSeparated"
     self.context.node.query(
         sql, step=When, message="19A1183335B374C626B242A6F6E8712E2B64DCDC6A468B2F654614"
     )
