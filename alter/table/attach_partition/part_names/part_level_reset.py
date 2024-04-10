@@ -55,9 +55,9 @@ def check_part_level_reset(self, engine="MergeTree"):
         node.query(f"SELECT * FROM {source_table}")
         for attempt in retries(timeout=30, delay=2):
             with attempt:
-                assert (
-                    part_name.output == expected_part_name
-                ), f"Unexpected part name: {part_name.output}"
+                assert part_name.output == expected_part_name, error(
+                    f"Unexpected part name: {part_name.output}, expected: {expected_part_name}"
+                )
 
 
 @TestScenario
@@ -103,9 +103,9 @@ def check_part_level_reset_replicated(self, engine):
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
-                    assert (
-                        part_name.output == expected_part_name
-                    ), f"Unexpected part name: {part_name.output}, expected: {expected_part_name}"
+                    assert part_name.output == expected_part_name, error(
+                        f"Unexpected part name: {part_name.output}, expected: {expected_part_name}"
+                    )
 
 
 @TestScenario

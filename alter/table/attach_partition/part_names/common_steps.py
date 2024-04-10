@@ -1,5 +1,6 @@
 from testflows.core import *
 from helpers.tables import *
+from testflows.asserts import error
 
 
 @TestStep

@@ -111,13 +111,13 @@ def replicated_tables(self):
                             "SELECT count() FROM system.mutations WHERE is_done = 0"
                         ).output
                         == "0"
-                    )
+                    ), error()
                     assert (
                         node.query(
                             "SELECT count() FROM system.replication_queue"
                         ).output
                         == "0"
-                    )
+                    ), error()
 
     with Then("I check that part names are the same on all replicas"):
         part_names_1 = self.context.node_1.query(
@@ -135,4 +135,4 @@ def replicated_tables(self):
                     part_names_1.output.split("/n")
                     == part_names_2.output.split("/n")
                     == part_names_3.output.split("/n")
-                )
+                ), error()
