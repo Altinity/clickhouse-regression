@@ -215,7 +215,7 @@ RQ_SRS_034_ClickHouse_Alter_Table_AttachPartition_PartNames_GreaterThanLegacyMax
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not attach partition or partitiom from disk when part's chunk level is greater than LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.\n"
+        "[ClickHouse] SHALL not attach partition or part from disk when part's chunk level is greater than LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.\n"
         "\n"
     ),
     link=None,
@@ -1123,7 +1123,7 @@ Partition Keys:
     - source and destination table have same partition key
     - source and destination table have different partition keys
 
-Chunck Levels:
+Chunk Levels:
     - equal to MAX_LEVEL = 999999999
     - greater than MAX_LEVEL
     - less than MAX_LEVEL
@@ -1145,7 +1145,7 @@ version: 1.0
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.GreaterThanLegacyMaxLevel
 version: 1.0
 
-[ClickHouse] SHALL not attach partition or partitiom from disk when part's chunk level is greater than LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.
+[ClickHouse] SHALL not attach partition or part from disk when part's chunk level is greater than LEGACY_MAX_LEVEL = 2^32. All engines in the MergeTree family should be supported.
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartNames.Replication
 version: 1.0
