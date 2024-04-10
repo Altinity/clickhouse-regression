@@ -88,7 +88,9 @@ def hard_restart(
     with Then("I check that either rows are deleted completely or data is unchanged"):
         for attempt in retries(timeout=100, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) + 737 FROM {tables[0]}")
+                r = node.query(
+                    f"SELECT count(*) + 737 FROM {tables[0]} FORMAT TabSeparated"
+                )
                 assert r.output in (output1, output2), error()
 
 

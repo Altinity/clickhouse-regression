@@ -51,7 +51,7 @@ def block_data_fail(
     with And("I check data is not inserted to core and any of its dependent tables"):
         with When(f"table {core_table}"):
             node.query(
-                f"SELECT count()+1 FROM {core_table}",
+                f"SELECT count()+1 FROM {core_table} FORMAT TabSeparated",
                 message=f"1",
                 exitcode=0,
             )
@@ -99,13 +99,13 @@ def block_data_fail_in_replicated_table_on_cluster(
                 with When(f"on {node_name} table {core_table}"):
                     if failure_mode == "dummy":
                         node.query(
-                            f"SELECT count() FROM {core_table}",
+                            f"SELECT count() FROM {core_table} FORMAT TabSeparated",
                             message=f"{fail_block_number}",
                             exitcode=0,
                         )
                     else:
                         node.query(
-                            f"SELECT count()+1 FROM {core_table}",
+                            f"SELECT count()+1 FROM {core_table} FORMAT TabSeparated",
                             message=f"1",
                             exitcode=0,
                         )

@@ -100,7 +100,7 @@ def user_rights(
             for table_name in tables:
                 with When(f"table {table_name}"):
                     node.query(
-                        f"SELECT count()+737 FROM {table_name}",
+                        f"SELECT count()+737 FROM {table_name} FORMAT TabSeparated",
                         message="737",
                         exitcode=0,
                     )

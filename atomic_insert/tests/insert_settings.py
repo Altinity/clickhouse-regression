@@ -42,7 +42,9 @@ def insert_setting(self, table_engine, insert_setting="max_block_size=1"):
         "I check data is inserted to the core table and any of its dependent tables"
     ):
         with When(f"table {core_table}"):
-            output = node.query(f"SELECT count() FROM {core_table}", exitcode=0).output
+            output = node.query(
+                f"SELECT count() FROM {core_table} FORMAT TabSeparated", exitcode=0
+            ).output
             assert int(output) > 0
 
 
@@ -81,7 +83,7 @@ def insert_setting_in_replicated_table_on_cluster(
         for node_name in self.context.cluster.nodes["clickhouse"]:
             with When(f"on {node_name} table {core_table}"):
                 output = node.query(
-                    f"SELECT count() FROM {core_table}", exitcode=0
+                    f"SELECT count() FROM {core_table} FORMAT TabSeparated", exitcode=0
                 ).output
                 assert int(output) > 0
 
