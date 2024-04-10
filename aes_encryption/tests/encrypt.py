@@ -78,9 +78,7 @@ def invalid_parameters(self):
     with Example("bad mode type - forgot quotes"):
         if check_clickhouse_version("<24.3")(self):
             exitcode = 47
-            message = (
-                "DB::Exception: Missing columns: 'ecb' 'aes' while processing query"
-            )
+            message = "DB::Exception: Missing columns: 'ecb' 'aes' while processing query" 
         else:
             exitcode = 47
             message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
