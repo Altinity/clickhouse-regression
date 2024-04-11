@@ -144,7 +144,7 @@ def interrupt_network(cluster, node, cluster_prefix):
     DOCKER_NETWORK = (
         f"{cluster_prefix}_env_default"
         if processor() == "x86_64"
-        else f"{cluster_prefix}_env_arm64"
+        else f"{cluster_prefix}_env_arm64_default"
     )
 
     try:
