@@ -685,15 +685,6 @@ def check_query(self, num, query, expected):
             assert r == expected, error()
 
 
-@TestStep(When)
-def insert_data_node(self, node, number_of_mb, start=0):
-    values = ",".join(
-        f"({x})"
-        for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
-    )
-    node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
-
-
 @TestStep(Then)
 def check_query_node(self, node, num, query, expected):
     node = current().context.node

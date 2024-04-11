@@ -1,5 +1,7 @@
 from testflows.core import *
 
+from helpers.queries import sync_replica
+
 from s3.tests.common import *
 from s3.requirements import *
 
@@ -816,69 +818,42 @@ def performance_insert(self):
     zero copy replication.
     """
 
-    def insert_data_time(node, number_of_mb, start=0):
+    def insert_data_time(node, number_of_mb, table_name, start=0):
         values = ",".join(
             f"({x})"
             for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
         )
         start_time = time.time()
-        node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
+        node.query(f"INSERT INTO {table_name} VALUES {values}")
         end_time = time.time()
         return end_time - start_time
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    try:
-        with When("I create a replicated table on each node"):
+    with When("I create a replicated table on each node"):
+        table_name = "no_zero_copy_replication_insert"
+        for node in nodes:
+            node.restart()
+            replicated_table(node=node, table_name=table_name)
 
-            for i, node in enumerate(nodes):
-                node.restart()
-                node.query(
-                    f"""
-                    CREATE TABLE zero_copy_replication (
-                        d UInt64
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/no_zero_copy_replication_insert', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
-
-        with And("I add data to the table and save the time taken"):
-            no_zero_copy_time = insert_data_time(nodes[0], 20)
-            metric("no_zero_copy", units="seconds", value=str(no_zero_copy_time))
-
-    finally:
-        with Finally("I drop the table on each node"):
-            for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+    with And("I add data to the table and save the time taken"):
+        no_zero_copy_time = insert_data_time(nodes[0], 20, table_name)
+        metric("no_zero_copy", units="seconds", value=str(no_zero_copy_time))
 
     with Given("I have merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
 
-    try:
-        with When("I create a replicated table on each node"):
-            for i, node in enumerate(nodes):
-                node.restart()
-                node.query(
-                    f"""
-                    CREATE TABLE zero_copy_replication (
-                        d UInt64
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/allow_zero_copy_replication_insert', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+    with When("I create a replicated table on each node"):
+        table_name = "allow_zero_copy_replication_insert"
+        for node in nodes:
+            node.restart()
+            replicated_table(node=node, table_name=table_name)
 
-        with And("I add data to the table and save the time taken"):
-            allow_zero_copy_time = insert_data_time(nodes[0], 20)
-            metric("with_zero_copy", units="seconds", value=str(allow_zero_copy_time))
-
-    finally:
-        with Finally("I drop the table on each node"):
-            for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
+    with And("I add data to the table and save the time taken"):
+        allow_zero_copy_time = insert_data_time(nodes[0], 20, table_name)
+        metric("with_zero_copy", units="seconds", value=str(allow_zero_copy_time))
 
     with Finally("I print the difference in time taken"):
         metric(
@@ -896,7 +871,6 @@ def performance_select(self):
     """Compare select performance using S3 zero copy replication and not using
     zero copy replication.
     """
-    cluster = self.context.cluster
     node = current().context.node
 
     with Given("I have a pair of clickhouse nodes"):
@@ -904,33 +878,25 @@ def performance_select(self):
 
     try:
         with When("I create a replicated table on each node"):
-            for i, node in enumerate(nodes):
+            table_name = "no_zero_copy_replication_select"
+            for node in nodes:
                 node.restart()
-                node.query(
-                    f"""
-                    CREATE TABLE zero_copy_replication (
-                        d UInt64
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/no_zero_copy_replication_select', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+                replicated_table(node=node, table_name=table_name)
 
         with And("I add 20 Mb of data to the table"):
-            insert_data_node(node=nodes[0], number_of_mb=20)
+            insert_data(node=nodes[0], name=table_name, number_of_mb=20)
 
         with Then("I sync the replicas"):
-            for attempt in retries(timeout=600, delay=5):
-                with attempt:
-                    nodes[1].query(
-                        "SYSTEM SYNC REPLICA zero_copy_replication",
-                        settings=[("receive_timeout", 600)],
-                    )
+            retry(sync_replica, timeout=600, delay=5)(
+                node=nodes[1],
+                table_name=table_name,
+                settings=[("receive_timeout", 600)],
+            )
 
         with Then("I select from the table and save the time taken"):
             start_time = time.time()
             nodes[1].query(
-                "CREATE TABLE zcrSelect Engine = MergeTree() ORDER BY d AS SELECT * FROM zero_copy_replication"
+                f"CREATE TABLE zcrSelect Engine = MergeTree() ORDER BY d AS SELECT * FROM {table_name}"
             )
             end_time = time.time()
             no_zero_copy_time = end_time - start_time
@@ -939,7 +905,6 @@ def performance_select(self):
     finally:
         with Finally("I drop the tables on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
                 node.query("DROP TABLE IF EXISTS zcrSelect SYNC")
 
     with Given("I have merge tree configuration set to use zero copy replication"):
@@ -948,34 +913,26 @@ def performance_select(self):
 
     try:
         with When("I create a replicated table on each node"):
-            for i, node in enumerate(nodes):
+            table_name = "allow_zero_copy_replication_select"
+            for node in nodes:
                 node.restart()
-                node.query(
-                    f"""
-                    CREATE TABLE zero_copy_replication (
-                        d UInt64
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/allow_zero_copy_replication_select', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+                replicated_table(node=node, table_name=table_name)
 
         with And("I add 20 Mb of data to the table"):
-            insert_data_node(node=nodes[0], number_of_mb=20)
+            insert_data(node=nodes[0], name=table_name, number_of_mb=20)
 
         with Then("I sync the replicas"):
-            for attempt in retries(timeout=1200, delay=5):
-                with attempt:
-                    nodes[1].query(
-                        "SYSTEM SYNC REPLICA zero_copy_replication",
-                        settings=[("receive_timeout", 600)],
-                        timeout=600,
-                    )
+            retry(sync_replica, timeout=600, delay=5)(
+                node=nodes[1],
+                table_name=table_name,
+                settings=[("receive_timeout", 600)],
+                timeout=600,
+            )
 
         with Then("I select from the table and save the time taken"):
             start_time = time.time()
             nodes[1].query(
-                "CREATE TABLE zcrSelect Engine = MergeTree() ORDER BY d AS SELECT * FROM zero_copy_replication"
+                f"CREATE TABLE zcrSelect Engine = MergeTree() ORDER BY d AS SELECT * FROM {table_name}"
             )
             end_time = time.time()
             allow_zero_copy_time = end_time - start_time
@@ -984,7 +941,6 @@ def performance_select(self):
     finally:
         with Finally("I drop the table on each node"):
             for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
                 node.query("DROP TABLE IF EXISTS zcrSelect SYNC")
 
     with Finally("I print the difference in time taken"):
@@ -1003,15 +959,14 @@ def performance_alter(self):
     """Compare alter table performance using S3 zero copy replication and not
     using zero copy replication.
     """
-    cluster = self.context.cluster
     node = current().context.node
 
-    def insert_data_pair(node, number_of_mb, start=0):
+    def insert_data_pair(node, number_of_mb, table_name, start=0):
         values = ",".join(
             f"({x},1)"
             for x in range(start, int((1024 * 1024 * number_of_mb) / 8) + start + 1)
         )
-        node.query(f"INSERT INTO zero_copy_replication VALUES {values}")
+        node.query(f"INSERT INTO {table_name} VALUES {values}")
 
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -1019,92 +974,59 @@ def performance_alter(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings
 
-    try:
-        with When("I create a replicated table on each node"):
-            for i, node in enumerate(nodes):
-                node.restart()
-                node.query(
-                    f"""
-                    CREATE TABLE zero_copy_replication (
-                        d UInt64,
-                        sign Int8
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/no_zero_copy_replication_alter', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+    with When("I create a replicated table on each node"):
+        table_name = "no_zero_copy_replication_alter"
+        for node in nodes:
+            node.restart()
+            replicated_table(
+                node=node, table_name=table_name, columns="d UInt64, sign Int8"
+            )
 
-        with And("I add 20 Mb of data to the table"):
-            insert_data_pair(nodes[0], 20)
+    with And("I add 20 Mb of data to the table"):
+        insert_data_pair(nodes[0], 20, table_name)
 
-        with Then("I sync the replicas"):
-            for attempt in retries(timeout=1200, delay=5):
-                with attempt:
-                    nodes[1].query(
-                        "SYSTEM SYNC REPLICA zero_copy_replication",
-                        settings=[("receive_timeout", 600)],
-                        timeout=600,
-                    )
+    with Then("I sync the replicas"):
+        retry(sync_replica, timeout=1200, delay=5)(
+            node=nodes[1],
+            table_name=table_name,
+            settings=[("receive_timeout", 600)],
+        )
 
-        with Then("I alter the table and save the time taken"):
-            start_time = time.time()
-            nodes[1].query("ALTER TABLE zero_copy_replication UPDATE sign = -1 WHERE 1")
-            end_time = time.time()
-            no_zero_copy_time = end_time - start_time
-            metric("no_zero_copy", units="seconds", value=str(no_zero_copy_time))
-
-    finally:
-        with Finally("I drop the tables on each node"):
-            for node in nodes:
-                node.query(
-                    "DROP TABLE IF EXISTS zero_copy_replication SYNC", retry_count=15
-                )
-                node.query("DROP TABLE IF EXISTS zcrSelect SYNC")
+    with Then("I alter the table and save the time taken"):
+        start_time = time.time()
+        nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = -1 WHERE 1")
+        end_time = time.time()
+        no_zero_copy_time = end_time - start_time
+        metric("no_zero_copy", units="seconds", value=str(no_zero_copy_time))
 
     with Given("I have merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
 
-    try:
-        with When("I create a replicated table on each node"):
-            for i, node in enumerate(nodes):
-                node.restart()
-                node.query(
-                    f"""
-                    CREATE TABLE zero_copy_replication (
-                        d UInt64,
-                        sign Int8
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/allow_zero_copy_replication_alter', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
-
-        with And("I add 20 Mb of data to the table"):
-            insert_data_pair(nodes[0], 20)
-
-        with Then("I sync the replicas"):
-            for attempt in retries(timeout=600, delay=5):
-                with attempt:
-                    nodes[1].query(
-                        "SYSTEM SYNC REPLICA zero_copy_replication",
-                        settings=[("receive_timeout", 600)],
-                    )
-
-        with Then("I alter the table and save the time taken"):
-            start_time = time.time()
-            nodes[1].query(
-                "ALTER TABLE zero_copy_replication UPDATE sign = -1 WHERE sign = 1"
+    with When("I create a replicated table on each node"):
+        table_name = "allow_zero_copy_replication_alter"
+        for node in nodes:
+            node.restart()
+            replicated_table(
+                node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
-            end_time = time.time()
-            allow_zero_copy_time = end_time - start_time
-            metric("with_zero_copy", units="seconds", value=str(allow_zero_copy_time))
 
-    finally:
-        with Finally("I drop the table on each node"):
-            for node in nodes:
-                node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
-                node.query("DROP TABLE IF EXISTS zcrSelect SYNC")
+    with And("I add 20 Mb of data to the table"):
+        insert_data_pair(nodes[0], 20, table_name)
+
+    with Then("I sync the replicas"):
+        retry(sync_replica, timeout=600, delay=5)(
+            node=nodes[1],
+            table_name=table_name,
+            settings=[("receive_timeout", 600)],
+        )
+
+    with Then("I alter the table and save the time taken"):
+        start_time = time.time()
+        nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = -1 WHERE sign = 1")
+        end_time = time.time()
+        allow_zero_copy_time = end_time - start_time
+        metric("with_zero_copy", units="seconds", value=str(allow_zero_copy_time))
 
     with Finally("I print the difference in time taken"):
         metric(
@@ -1237,7 +1159,6 @@ def consistency_during_double_mutation(self):
 )
 def consistency_during_conflicting_mutation(self):
     """Check that clickhouse correctly handles simultaneous metadata updates on different replicas."""
-    cluster = self.context.cluster
     node = current().context.node
     table_name = "table_" + getuid()
 
