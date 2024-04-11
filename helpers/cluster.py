@@ -1441,7 +1441,10 @@ class Cluster(object):
         # Edit permissions on server files for external manipulation
         for node_type in ["clickhouse", "zookeeper", "keeper"]:
             for node in self.nodes.get(node_type, []):
-                self.open_instances_permissions(node=node)
+                try:
+                    self.open_instances_permissions(node=node)
+                except:
+                    pass
 
         try:
             bash = self.bash(None)
