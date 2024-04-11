@@ -6,7 +6,13 @@ from s3.requirements import *
 
 @TestStep(Given)
 def insert_to_s3_function(
-    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None,
+    self,
+    filename,
+    table_name,
+    columns="d UInt64",
+    compression=None,
+    fmt=None,
+    uri=None,
 ):
     """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
 

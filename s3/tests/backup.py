@@ -187,7 +187,9 @@ def config_find_and_replace(
             with Given("ClickHouse is restarted"):
                 node.restart_clickhouse()
     finally:
-        with Finally(f"{replace} is replaced by {find} in {config_path} on {node.name}", flags=TE):
+        with Finally(
+            f"{replace} is replaced by {find} in {config_path} on {node.name}", flags=TE
+        ):
             node.command(f"sed -i -e 's/{replace}\//{find}\//' {config_path}")
 
         if restart:
@@ -226,9 +228,7 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with And("I check the data"):
-        assert (
-            node.query(f"SELECT count(*) FROM {table_name}").output == "1"
-        ), error()
+        assert node.query(f"SELECT count(*) FROM {table_name}").output == "1", error()
 
     with Then("I create a restore file on clickhouse2"):
         create_restore_file(node=node2, bucket=self.context.bucket, disk=disk)
@@ -246,8 +246,7 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("0", "1")
                 assert (
-                    node2.query(f"SELECT count(*) FROM {table_name}").output
-                    in expected
+                    node2.query(f"SELECT count(*) FROM {table_name}").output in expected
                 ), error()
 
     with And("I create a restore file on clickhouse3"):
@@ -268,8 +267,7 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("0", "1")
                 assert (
-                    node3.query(f"SELECT count(*) FROM {table_name}").output
-                    in expected
+                    node3.query(f"SELECT count(*) FROM {table_name}").output in expected
                 ), error()
 
 
@@ -622,7 +620,6 @@ def metadata_non_restorable_schema(self, policy_name, disk="external"):
     node2 = self.context.cluster.node("clickhouse2")
     table_name = f"s3.table_{getuid()}"
 
-
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
@@ -660,8 +657,6 @@ def metadata_non_restorable_schema(self, policy_name, disk="external"):
                 ), error()
 
 
-
-
 @TestOutline
 @Requirements(RQ_SRS_0_5_S3_MetadataRestore_BadRestoreFile("1.0"))
 def metadata_garbage_restore_file(self, policy_name, disk="external"):
@@ -669,7 +664,6 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
     node = self.context.node
     node2 = self.context.cluster.node("clickhouse2")
     table_name = f"s3.table_{getuid()}"
-
 
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
@@ -714,9 +708,7 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
             message="DB::Exception: Source bucket doesn't have restorable schema..",
         )
 
-    with When(
-        "I create a restore file with no path, and a negative revision version"
-    ):
+    with When("I create a restore file with no path, and a negative revision version"):
         node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
         create_restore_file(
             disk=disk, node=node2, bucket=self.context.bucket, revision=-1
@@ -751,10 +743,8 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = "1"
                 assert (
-                    node2.query(f"SELECT count(*) FROM {table_name}").output
-                    == expected
+                    node2.query(f"SELECT count(*) FROM {table_name}").output == expected
                 ), error()
-
 
 
 @TestOutline
@@ -795,15 +785,13 @@ def metadata_change_configs(self, policy_name, disk="external"):
 
     table_name = f"s3.table_{getuid()}"
 
-
     with Given("I have a different config on clickhouse1"):
         config_find_and_replace(
-        node=node,
-        find=self.context.bucket,
-        replace=self.context.bucket2,
-        config_name="storage.xml",
-    )
-
+            node=node,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
+        )
 
     with And(f"I have a table {table_name}"):
         s3_table(table_name=table_name, policy=policy_name)
@@ -852,17 +840,11 @@ def metadata_change_configs(self, policy_name, disk="external"):
         for attempt in retries(timeout=10, delay=1):
             with attempt:
                 assert (
-                    int(
-                        node.query(
-                            f"SELECT count(*) FROM {table_name}"
-                        ).output.strip()
-                    )
+                    int(node.query(f"SELECT count(*) FROM {table_name}").output.strip())
                     < 3
                 ), error()
 
     node.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
-
-
 
 
 @TestOutline
@@ -874,14 +856,13 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
 
     table_name = f"s3.table_{getuid()}"
 
-
     with Given("I have a different config on clickhouse2"):
         config_find_and_replace(
-        node=node2,
-        find=self.context.bucket,
-        replace=self.context.bucket2,
-        config_name="storage.xml",
-    )
+            node=node2,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
+        )
 
     with Given(f"I have a table {table_name}"):
         s3_table(table_name=table_name, policy=policy_name)
@@ -934,9 +915,7 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with And("I check the data"):
-        assert (
-            node.query(f"SELECT count(*) FROM {table_name}").output == "1"
-        ), error()
+        assert node.query(f"SELECT count(*) FROM {table_name}").output == "1", error()
 
     with And("I detach the table"):
         node.query(f"DETACH TABLE {table_name}")
