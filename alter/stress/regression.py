@@ -210,6 +210,7 @@ def regression(
     gcs_key_id,
     stress,
     allow_vfs,
+    allow_experimental_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
 
