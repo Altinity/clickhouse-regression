@@ -162,6 +162,39 @@ def metadata_full_restore(self, policy_name, disk="external"):
                     fail("data not restored")
 
 
+@TestStep(Given)
+def config_find_and_replace(
+    self,
+    node,
+    find,
+    replace,
+    config_dir="/etc/clickhouse-server/config.d",
+    config_name="storage.xml",
+    restart=True,
+):
+    """
+    Replace occurrences of {find} with {replace} in the given file with sed.
+    Cleanup by doing the opposite.
+    """
+
+    config_path = os.path.join(config_dir, config_name)
+
+    try:
+        with Given(f"{find} is replaced by {replace} in {config_path} on {node.name}"):
+            node.command(f"sed -i -e 's/{find}\//{replace}\//' {config_path}")
+
+        if restart:
+            with Given("ClickHouse is restarted"):
+                node.restart_clickhouse()
+    finally:
+        with Finally(f"{replace} is replaced by {find} in {config_path} on {node.name}", flags=TE):
+            node.command(f"sed -i -e 's/{replace}\//{find}\//' {config_path}")
+
+        if restart:
+            with Finally("ClickHouse is restarted"):
+                node.restart_clickhouse()
+
+
 @TestOutline
 @Requirements(RQ_SRS_015_S3_MetadataRestore_BucketPath("1.0"))
 def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
@@ -172,80 +205,72 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
 
     table_name = f"s3.table_{getuid()}"
 
-    try:
-        with Given("I have different storage.xml on another nodes"):
-            node2.command(
-                f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node2.restart_clickhouse()
-            node3.command(
-                f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node3.restart_clickhouse()
+    with Given("I have different storage.xml on another nodes"):
+        config_find_and_replace(
+            node=node2,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
+        )
+        config_find_and_replace(
+            node=node3,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
+        )
 
-        with And(f"I have a table {table_name}"):
-            s3_table(table_name=table_name, policy=policy_name)
+    with And(f"I have a table {table_name}"):
+        s3_table(table_name=table_name, policy=policy_name)
 
-        with When("I insert some data into the table"):
-            node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
+    with When("I insert some data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
-        with And("I check the data"):
-            assert (
-                node.query(f"SELECT count(*) FROM {table_name}").output == "1"
-            ), error()
+    with And("I check the data"):
+        assert (
+            node.query(f"SELECT count(*) FROM {table_name}").output == "1"
+        ), error()
 
-        with Then("I create a restore file on clickhouse2"):
-            create_restore_file(node=node2, bucket=self.context.bucket, disk=disk)
+    with Then("I create a restore file on clickhouse2"):
+        create_restore_file(node=node2, bucket=self.context.bucket, disk=disk)
 
-        with And("I restart the disk"):
-            node2.query(f"SYSTEM RESTART DISK {disk}")
+    with And("I restart the disk"):
+        node2.query(f"SYSTEM RESTART DISK {disk}")
 
-        with And("I attach the table on a different node than where it was created"):
-            attach_table(table_name=table_name, policy=policy_name, node=node2)
+    with And("I attach the table on a different node than where it was created"):
+        attach_table(table_name=table_name, policy=policy_name, node=node2)
 
-        with And("I check that the data on the table is correct"):
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    expected = ("1",)
-                    if policy_name == "local_and_s3_disk":
-                        expected = ("0", "1")
-                    assert (
-                        node2.query(f"SELECT count(*) FROM {table_name}").output
-                        in expected
-                    ), error()
+    with And("I check that the data on the table is correct"):
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                expected = ("1",)
+                if policy_name == "local_and_s3_disk":
+                    expected = ("0", "1")
+                assert (
+                    node2.query(f"SELECT count(*) FROM {table_name}").output
+                    in expected
+                ), error()
 
-        with And("I create a restore file on clickhouse3"):
-            create_restore_file(
-                node=node3, bucket=self.context.bucket2, path="data", disk=disk
-            )
+    with And("I create a restore file on clickhouse3"):
+        create_restore_file(
+            node=node3, bucket=self.context.bucket2, path="data", disk=disk
+        )
 
-        with And("I restart the disk"):
-            node3.query(f"SYSTEM RESTART DISK {disk}")
+    with And("I restart the disk"):
+        node3.query(f"SYSTEM RESTART DISK {disk}")
 
-        with And("I attach the table on clickhouse3"):
-            attach_table(table_name=table_name, policy=policy_name, node=node3)
+    with And("I attach the table on clickhouse3"):
+        attach_table(table_name=table_name, policy=policy_name, node=node3)
 
-        with And("I check that the data on the table is correct"):
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    expected = ("1",)
-                    if policy_name == "local_and_s3_disk":
-                        expected = ("0", "1")
-                    assert (
-                        node3.query(f"SELECT count(*) FROM {table_name}").output
-                        in expected
-                    ), error()
-
-    finally:
-        with Finally("I change the storage.xml back", flags=TE):
-            node2.command(
-                f"sed -i -e 's/{self.context.bucket2}\//{self.context.bucket}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node2.restart_clickhouse()
-            node3.command(
-                f"sed -i -e 's/{self.context.bucket2}\//{self.context.bucket}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node3.restart_clickhouse()
+    with And("I check that the data on the table is correct"):
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                expected = ("1",)
+                if policy_name == "local_and_s3_disk":
+                    expected = ("0", "1")
+                assert (
+                    node3.query(f"SELECT count(*) FROM {table_name}").output
+                    in expected
+                ), error()
 
 
 @TestOutline
@@ -258,10 +283,12 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
     table_name = f"table_{getuid()}"
 
     with Given("I have different storage.xml on another node"):
-        node2.command(
-            f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
+        config_find_and_replace(
+            node=node2,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
         )
-        node2.restart_clickhouse()
 
     with And(f"I have a table {table_name}"):
         s3_table(table_name=f"s3.{table_name}", policy=policy_name)
@@ -410,10 +437,12 @@ def metadata_mutations(self, policy_name, disk="external"):
     table_name = f"s3.table_{getuid()}"
 
     with Given("I have different storage.xml on another node"):
-        node2.command(
-            f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
+        config_find_and_replace(
+            node=node2,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
         )
-        node2.restart_clickhouse()
 
     with And(f"I have a table {table_name}"):
         s3_table(table_name=table_name, policy=policy_name)
@@ -516,10 +545,12 @@ def metadata_detached(self, policy_name, disk="external"):
     table_name = f"s3.table_{getuid()}"
 
     with Given("I have different storage.xml on another node"):
-        node2.command(
-            f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
+        config_find_and_replace(
+            node=node2,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
         )
-        node2.restart_clickhouse()
 
     with And(f"I have a table {table_name}"):
         s3_table(table_name=table_name, policy=policy_name)
@@ -591,47 +622,44 @@ def metadata_non_restorable_schema(self, policy_name, disk="external"):
     node2 = self.context.cluster.node("clickhouse2")
     table_name = f"s3.table_{getuid()}"
 
-    try:
-        with Given("I have different storage.xml on another node"):
-            node.command(
-                "sed -i -e 's/<send_metadata>true<\/send_metadata>/<send_metadata>false<\/send_metadata>/' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node.restart_clickhouse()
 
-        with And(f"I have a table {table_name}"):
-            s3_table(table_name=table_name, policy=policy_name)
+    with Given("I have different storage.xml on another node"):
+        config_find_and_replace(
+            node=node2,
+            find="<send_metadata>true<\/send_metadata>",
+            replace="<send_metadata>false<\/send_metadata>",
+            config_name="storage.xml",
+        )
 
-        with When("I insert some data into the table"):
-            node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
+    with And(f"I have a table {table_name}"):
+        s3_table(table_name=table_name, policy=policy_name)
 
-        with And("I detach the table"):
-            node.query(f"DETACH TABLE {table_name}")
+    with When("I insert some data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
-        with And("I drop metadata"):
-            drop_s3_metadata(disk=disk)
+    with And("I detach the table"):
+        node.query(f"DETACH TABLE {table_name}")
 
-        with And("I create a restore file"):
-            create_restore_file(node=node, disk=disk)
+    with And("I drop metadata"):
+        drop_s3_metadata(disk=disk)
 
-        with Then("I try to restart the disk"):
-            node.query(f"SYSTEM RESTART DISK {disk}")
+    with And("I create a restore file"):
+        create_restore_file(node=node, disk=disk)
 
-        with And("I attach the table on a different node than where it was created"):
-            attach_table(table_name=table_name, policy=policy_name, node=node2)
+    with Then("I try to restart the disk"):
+        node.query(f"SYSTEM RESTART DISK {disk}")
 
-        with And("I check the data"):
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    assert (
-                        node2.query(f"SELECT count(*) FROM {table_name}").output == "0"
-                    ), error()
+    with And("I attach the table on a different node than where it was created"):
+        attach_table(table_name=table_name, policy=policy_name, node=node2)
 
-    finally:
-        with Finally("I change the storage configs back"):
-            node.command(
-                "sed -i -e 's/<send_metadata>false<\/send_metadata>/<send_metadata>true<\/send_metadata>/' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node.restart_clickhouse()
+    with And("I check the data"):
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                assert (
+                    node2.query(f"SELECT count(*) FROM {table_name}").output == "0"
+                ), error()
+
+
 
 
 @TestOutline
@@ -642,95 +670,91 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
     node2 = self.context.cluster.node("clickhouse2")
     table_name = f"s3.table_{getuid()}"
 
-    try:
-        with Given("I have different storage.xml on another node"):
-            node2.command(
-                f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node2.restart_clickhouse()
 
-        with And(f"I have a table {table_name}"):
-            s3_table(table_name=table_name, policy=policy_name)
+    with Given("I have different storage.xml on another node"):
+        config_find_and_replace(
+            node=node2,
+            find=self.context.bucket,
+            replace=self.context.bucket2,
+            config_name="storage.xml",
+        )
 
-        with When("I insert some data into the table"):
-            node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
+    with And(f"I have a table {table_name}"):
+        s3_table(table_name=table_name, policy=policy_name)
 
-        with And("I save the revision counter"):
-            revision = get_revision_counter(
-                table_name=table_name, backup_number=1, disk=disk
-            )
+    with When("I insert some data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
-        with And("I insert some more data into the table"):
-            node.query(f"INSERT INTO {table_name} VALUES (2, 4)")
+    with And("I save the revision counter"):
+        revision = get_revision_counter(
+            table_name=table_name, backup_number=1, disk=disk
+        )
 
-        with And("I create a restore file with a bucket that doesn't exist"):
-            create_restore_file(disk=disk, node=node2, bucket="aaa")
+    with And("I insert some more data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (2, 4)")
 
-        with Then("I try to restart the disk"):
-            node2.query(
-                f"SYSTEM RESTART DISK {disk}",
-                exitcode=243,
-                message="DB::Exception: 132: The specified bucket does not exist.",
-            )
+    with And("I create a restore file with a bucket that doesn't exist"):
+        create_restore_file(disk=disk, node=node2, bucket="aaa")
 
-        with When("I create a restore file with no bucket and a path"):
-            node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
-            create_restore_file(disk=disk, node=node2, path="aaa")
+    with Then("I try to restart the disk"):
+        node2.query(
+            f"SYSTEM RESTART DISK {disk}",
+            exitcode=243,
+            message="DB::Exception: 132: The specified bucket does not exist.",
+        )
 
-        with Then("I try to restart the disk"):
-            node2.query(
-                f"SYSTEM RESTART DISK {disk}",
-                exitcode=36,
-                message="DB::Exception: Source bucket doesn't have restorable schema..",
-            )
+    with When("I create a restore file with no bucket and a path"):
+        node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
+        create_restore_file(disk=disk, node=node2, path="aaa")
 
-        with When(
-            "I create a restore file with no path, and a negative revision version"
-        ):
-            node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
-            create_restore_file(
-                disk=disk, node=node2, bucket=self.context.bucket, revision=-1
-            )
+    with Then("I try to restart the disk"):
+        node2.query(
+            f"SYSTEM RESTART DISK {disk}",
+            exitcode=36,
+            message="DB::Exception: Source bucket doesn't have restorable schema..",
+        )
 
-        with Then("I try to restart the disk"):
-            node2.query(
-                f"SYSTEM RESTART DISK {disk}",
-                exitcode=72,
-                message="DB::Exception: Unsigned type must not contain '-' symbol.",
-            )
+    with When(
+        "I create a restore file with no path, and a negative revision version"
+    ):
+        node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
+        create_restore_file(
+            disk=disk, node=node2, bucket=self.context.bucket, revision=-1
+        )
 
-        with When("I create a restore file with no path, and a revision version"):
-            node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
-            create_restore_file(
-                disk=disk,
-                node=node2,
-                bucket=self.context.bucket,
-                revision=revision + 99999999,
-            )
+    with Then("I try to restart the disk"):
+        node2.query(
+            f"SYSTEM RESTART DISK {disk}",
+            exitcode=72,
+            message="DB::Exception: Unsigned type must not contain '-' symbol.",
+        )
 
-        with Then("I try to restart the disk"):
-            node2.query(f"SYSTEM RESTART DISK {disk}")
+    with When("I create a restore file with no path, and a revision version"):
+        node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
+        create_restore_file(
+            disk=disk,
+            node=node2,
+            bucket=self.context.bucket,
+            revision=revision + 99999999,
+        )
 
-        with And("I attach the table on a different node than where it was created"):
-            attach_table(table_name=table_name, policy=policy_name, node=node2)
+    with Then("I try to restart the disk"):
+        node2.query(f"SYSTEM RESTART DISK {disk}")
 
-        with And("I check the data"):
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    expected = "2"
-                    if policy_name == "local_and_s3_disk":
-                        expected = "1"
-                    assert (
-                        node2.query(f"SELECT count(*) FROM {table_name}").output
-                        == expected
-                    ), error()
+    with And("I attach the table on a different node than where it was created"):
+        attach_table(table_name=table_name, policy=policy_name, node=node2)
 
-    finally:
-        with Finally("I change the storage configs back"):
-            node.command(
-                f"sed -i -e 's/{self.context.bucket2}\//{self.context.bucket}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node.restart_clickhouse()
+    with And("I check the data"):
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                expected = "2"
+                if policy_name == "local_and_s3_disk":
+                    expected = "1"
+                assert (
+                    node2.query(f"SELECT count(*) FROM {table_name}").output
+                    == expected
+                ), error()
+
 
 
 @TestOutline
@@ -771,76 +795,74 @@ def metadata_change_configs(self, policy_name, disk="external"):
 
     table_name = f"s3.table_{getuid()}"
 
-    try:
-        with Given("I have a different config on clickhouse1"):
-            node.command(
-                f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node.restart_clickhouse()
 
-        with And(f"I have a table {table_name}"):
-            s3_table(table_name=table_name, policy=policy_name)
+    with Given("I have a different config on clickhouse1"):
+        config_find_and_replace(
+        node=node,
+        find=self.context.bucket,
+        replace=self.context.bucket2,
+        config_name="storage.xml",
+    )
 
-        with When("I insert some data into the table"):
-            node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
-            node.query(f"INSERT INTO {table_name} VALUES (2, 2)")
-            node.query(f"INSERT INTO {table_name} VALUES (3, 2)")
 
-        with And("I save the revision counter"):
-            revision_before_mutation = get_revision_counter(
-                table_name=table_name, backup_number=1, disk=disk
-            )
+    with And(f"I have a table {table_name}"):
+        s3_table(table_name=table_name, policy=policy_name)
 
-        with And("I generate a mutation"):
-            node.query(
-                f"ALTER TABLE {table_name} UPDATE x = 1 WHERE 1",
-                settings=[("mutations_sync", 2)],
-            )
+    with When("I insert some data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
+        node.query(f"INSERT INTO {table_name} VALUES (2, 2)")
+        node.query(f"INSERT INTO {table_name} VALUES (3, 2)")
 
-        with And("I detach the table"):
-            node.query(f"DETACH TABLE {table_name}")
+    with And("I save the revision counter"):
+        revision_before_mutation = get_revision_counter(
+            table_name=table_name, backup_number=1, disk=disk
+        )
 
-        with And("I drop metadata"):
-            drop_s3_metadata(disk=disk)
+    with And("I generate a mutation"):
+        node.query(
+            f"ALTER TABLE {table_name} UPDATE x = 1 WHERE 1",
+            settings=[("mutations_sync", 2)],
+        )
 
-        with Then("I restore revision before mutation"):
-            create_restore_file(
-                node=node,
-                revision=revision_before_mutation,
-                bucket=self.context.bucket2,
-                disk=disk,
-            )
+    with And("I detach the table"):
+        node.query(f"DETACH TABLE {table_name}")
 
-        with And("I restart the disk"):
-            node.query(
-                f"SYSTEM RESTART DISK {disk}",
-                exitcode=36,
-                message="DB::Exception: Restoring to the same bucket and path is allowed if revision is latest",
-            )
+    with And("I drop metadata"):
+        drop_s3_metadata(disk=disk)
 
-        with And("I attach the table on a different node than where it was created"):
-            attach_table(table_name=table_name, policy=policy_name, node=node)
+    with Then("I restore revision before mutation"):
+        create_restore_file(
+            node=node,
+            revision=revision_before_mutation,
+            bucket=self.context.bucket2,
+            disk=disk,
+        )
 
-        with And("I check the data"):
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    assert (
-                        int(
-                            node.query(
-                                f"SELECT count(*) FROM {table_name}"
-                            ).output.strip()
-                        )
-                        < 3
-                    ), error()
+    with And("I restart the disk"):
+        node.query(
+            f"SYSTEM RESTART DISK {disk}",
+            exitcode=36,
+            message="DB::Exception: Restoring to the same bucket and path is allowed if revision is latest",
+        )
 
-        node.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
+    with And("I attach the table on a different node than where it was created"):
+        attach_table(table_name=table_name, policy=policy_name, node=node)
 
-    finally:
-        with Finally("I change the storage.xml back"):
-            node.command(
-                f"sed -i -e 's/{self.context.bucket2}\//{self.context.bucket}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node.restart_clickhouse()
+    with And("I check the data"):
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                assert (
+                    int(
+                        node.query(
+                            f"SELECT count(*) FROM {table_name}"
+                        ).output.strip()
+                    )
+                    < 3
+                ), error()
+
+    node.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
+
+
 
 
 @TestOutline
@@ -852,95 +874,90 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
 
     table_name = f"s3.table_{getuid()}"
 
-    try:
-        with Given("I have a different config on clickhouse2"):
-            node2.command(
-                f"sed -i -e 's/{self.context.bucket}\//{self.context.bucket2}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node2.restart_clickhouse()
 
-        with Given(f"I have a table {table_name}"):
-            s3_table(table_name=table_name, policy=policy_name)
+    with Given("I have a different config on clickhouse2"):
+        config_find_and_replace(
+        node=node2,
+        find=self.context.bucket,
+        replace=self.context.bucket2,
+        config_name="storage.xml",
+    )
 
-        with When("I insert some data into the table"):
-            node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
+    with Given(f"I have a table {table_name}"):
+        s3_table(table_name=table_name, policy=policy_name)
 
-        with And("I save the revision counter"):
-            revision_before_mutation = get_revision_counter(
-                table_name=table_name, backup_number=1, disk=disk
-            )
+    with When("I insert some data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
-        with And("I generate a mutation"):
-            node.query(
-                f"ALTER TABLE {table_name} UPDATE x = 1 WHERE 1",
-                settings=[("mutations_sync", 2)],
-            )
+    with And("I save the revision counter"):
+        revision_before_mutation = get_revision_counter(
+            table_name=table_name, backup_number=1, disk=disk
+        )
 
-        with Then("I restore revision before mutation"):
-            create_restore_file(
-                node=node2,
-                revision=revision_before_mutation,
-                bucket=self.context.bucket,
-                disk=disk,
-            )
+    with And("I generate a mutation"):
+        node.query(
+            f"ALTER TABLE {table_name} UPDATE x = 1 WHERE 1",
+            settings=[("mutations_sync", 2)],
+        )
 
-        with And("I restart the disk"):
-            node2.query(f"SYSTEM RESTART DISK {disk}")
+    with Then("I restore revision before mutation"):
+        create_restore_file(
+            node=node2,
+            revision=revision_before_mutation,
+            bucket=self.context.bucket,
+            disk=disk,
+        )
 
-        with And("I attach the table on a different node than where it was created"):
-            attach_table(table_name=table_name, policy=policy_name, node=node2)
+    with And("I restart the disk"):
+        node2.query(f"SYSTEM RESTART DISK {disk}")
 
-        with And("I check the data"):
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    if node2.query(f"SELECT sum(x) FROM {table_name}").output != "2":
-                        fail("data has not been restored yet")
+    with And("I attach the table on a different node than where it was created"):
+        attach_table(table_name=table_name, policy=policy_name, node=node2)
 
-        node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
-        node2.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+    with And("I check the data"):
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                if node2.query(f"SELECT sum(x) FROM {table_name}").output != "2":
+                    fail("data has not been restored yet")
 
-        table_name = f"s3.table_{getuid()}"
+    node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+    node2.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-        cleanup(storage=self.context.storage)
+    table_name = f"s3.table_{getuid()}"
 
-        with Given(f"I have a table {table_name}"):
-            s3_table(table_name=table_name, policy=policy_name)
+    cleanup(storage=self.context.storage)
 
-        with When("I insert some data into the table"):
-            node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
+    with Given(f"I have a table {table_name}"):
+        s3_table(table_name=table_name, policy=policy_name)
 
-        with And("I check the data"):
-            assert (
-                node.query(f"SELECT count(*) FROM {table_name}").output == "1"
-            ), error()
+    with When("I insert some data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
-        with And("I detach the table"):
-            node.query(f"DETACH TABLE {table_name}")
+    with And("I check the data"):
+        assert (
+            node.query(f"SELECT count(*) FROM {table_name}").output == "1"
+        ), error()
 
-        with And("I drop metadata"):
-            drop_s3_metadata(disk=disk)
+    with And("I detach the table"):
+        node.query(f"DETACH TABLE {table_name}")
 
-        with Then("I create a restore file on clickhouse"):
-            create_restore_file(node=node, disk=disk)
+    with And("I drop metadata"):
+        drop_s3_metadata(disk=disk)
 
-        with And("I restart the disk"):
-            node.query(f"SYSTEM RESTART DISK {disk}")
+    with Then("I create a restore file on clickhouse"):
+        create_restore_file(node=node, disk=disk)
 
-        with And("I attach the table"):
-            attach_table(table_name=table_name, policy=policy_name, node=node)
+    with And("I restart the disk"):
+        node.query(f"SYSTEM RESTART DISK {disk}")
 
-        with And("I check that the data on the table is correct"):
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    if node.query(f"SELECT count(*) FROM {table_name}").output != "1":
-                        fail("data has not been restored yet")
+    with And("I attach the table"):
+        attach_table(table_name=table_name, policy=policy_name, node=node)
 
-    finally:
-        with Finally("I change the storage.xml back"):
-            node2.command(
-                f"sed -i -e 's/{self.context.bucket2}\//{self.context.bucket}\//' /etc/clickhouse-server/config.d/storage.xml"
-            )
-            node2.restart_clickhouse()
+    with And("I check that the data on the table is correct"):
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                if node.query(f"SELECT count(*) FROM {table_name}").output != "1":
+                    fail("data has not been restored yet")
 
 
 @TestScenario
