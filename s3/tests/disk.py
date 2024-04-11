@@ -114,7 +114,6 @@ def delete(self, use_alter_delete=True):
     name = "table_" + getuid()
     self.context.use_alter_delete = use_alter_delete
     self.context.table_engine = "MergeTree"
-    node = self.context.node
 
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
@@ -152,8 +151,6 @@ def imports(self):
     name_table2 = "table_" + getuid()
     node = current().context.node
     uri = self.context.uri
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     expected = "123456"
 
     with Given("I update the config to have s3 and local disks"):
@@ -208,8 +205,6 @@ def exports(self):
     """
     name_table1 = "table_" + getuid()
     name_table2 = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     node = current().context.node
     expected = "654321"
@@ -270,37 +265,23 @@ def wide_parts(self):
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
 
-    try:
-        with Given(
-            f"""I create table using S3 storage policy external,
-                    min_bytes_for_wide_parts set to 0"""
-        ):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external',
-                min_bytes_for_wide_part=0
-            """
-            )
+    with Given(
+        f"""I create table using S3 storage policy external,
+                min_bytes_for_wide_parts set to 0"""
+    ):
+        simple_table(node=node, name=name, settings="min_bytes_for_wide_part=0")
 
-        with When("I store simple data in the table"):
-            node.query(f"INSERT INTO {name} VALUES ({value})")
+    with When("I store simple data in the table"):
+        node.query(f"INSERT INTO {name} VALUES ({value})")
 
-        with And("I get the part types for the data added in this table"):
-            part_types = node.query(
-                f"SELECT part_type FROM system.parts WHERE table = '{name}'"
-            ).output.splitlines()
+    with And("I get the part types for the data added in this table"):
+        part_types = node.query(
+            f"SELECT part_type FROM system.parts WHERE table = '{name}'"
+        ).output.splitlines()
 
-        with Then("The part type should be Wide"):
-            for _type in part_types:
-                assert _type == "Wide", error()
-
-    finally:
-        with Finally("I drop the table"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then("The part type should be Wide"):
+        for _type in part_types:
+            assert _type == "Wide", error()
 
 
 @TestScenario
@@ -315,37 +296,23 @@ def compact_parts(self):
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
 
-    try:
-        with Given(
-            f"""I create table using S3 storage policy external,
-                    min_bytes_for_wide_parts set to a very large value"""
-        ):
-            node.query(
-                f"""
-                CREATE TABLE {name} (
-                    d UInt64
-                ) ENGINE = MergeTree()
-                ORDER BY d
-                SETTINGS storage_policy='external',
-                min_bytes_for_wide_part=100000
-            """
-            )
+    with Given(
+        f"""I create table using S3 storage policy external,
+                min_bytes_for_wide_parts set to a very large value"""
+    ):
+        simple_table(node=node, name=name, settings="min_bytes_for_wide_part=100000")
 
-        with When("I store simple data in the table, stored as compact parts"):
-            node.query(f"INSERT INTO {name} VALUES ({value})")
+    with When("I store simple data in the table, stored as compact parts"):
+        node.query(f"INSERT INTO {name} VALUES ({value})")
 
-        with And("I get the part types for the data added in this table"):
-            part_types = node.query(
-                f"SELECT part_type FROM system.parts WHERE table = '{name}'"
-            ).output.splitlines()
+    with And("I get the part types for the data added in this table"):
+        part_types = node.query(
+            f"SELECT part_type FROM system.parts WHERE table = '{name}'"
+        ).output.splitlines()
 
-        with Then("The part type should be Compact"):
-            for _type in part_types:
-                assert _type == "Compact", error()
-
-    finally:
-        with Finally("I drop the table"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then("The part type should be Compact"):
+        for _type in part_types:
+            assert _type == "Compact", error()
 
 
 @TestScenario
@@ -2354,46 +2321,36 @@ def low_cardinality_offset(self, use_alter_delete=True):
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume()
 
-    try:
-        with And(f"I have a table {name}"):
-            node.query(
-                f"""
-                    CREATE TABLE {name} (
-                        d LowCardinality(String)
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external',
-                    min_bytes_for_wide_part=0,
-                    max_compress_block_size=10000
-                """
-            )
+    with And(f"I have a table {name}"):
+        simple_table(
+            node=node,
+            name=name,
+            columns="d LowCardinality(String)",
+            settings="min_bytes_for_wide_part=0, max_compress_block_size=10000",
+        )
 
-        with When("I insert data into the table"):
-            node.query(
-                f"INSERT INTO {name} SELECT toString(number % 8000) \
-                || if(number < 8192 * 3, 'aaaaaaaaaaaaaaaa', if(number < 8192 * 6, 'bbbbbbbbbbbbbbbbbbbbbbbb', 'ccccccccccccccccccc')) from numbers(8192 * 9)"
-            )
+    with When("I insert data into the table"):
+        node.query(
+            f"INSERT INTO {name} SELECT toString(number % 8000) \
+            || if(number < 8192 * 3, 'aaaaaaaaaaaaaaaa', if(number < 8192 * 6, 'bbbbbbbbbbbbbbbbbbbbbbbb', 'ccccccccccccccccccc')) from numbers(8192 * 9)"
+        )
 
-        with Then("I select data from the table"):
-            output = node.query(
-                f"SELECT uniq(d) FROM {name}",
-                settings=[
-                    ("max_threads", "2"),
-                    (
-                        "merge_tree_min_rows_for_concurrent_read_for_remote_filesystem",
-                        "1",
-                    ),
-                    (
-                        "merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem",
-                        "1",
-                    ),
-                ],
-            ).output
-            assert output == "23999\n", error()
-
-    finally:
-        with Finally(f"I remove the table {name}"):
-            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+    with Then("I select data from the table"):
+        output = node.query(
+            f"SELECT uniq(d) FROM {name}",
+            settings=[
+                ("max_threads", "2"),
+                (
+                    "merge_tree_min_rows_for_concurrent_read_for_remote_filesystem",
+                    "1",
+                ),
+                (
+                    "merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem",
+                    "1",
+                ),
+            ],
+        ).output
+        assert output == "23999\n", error()
 
 
 @TestFeature
