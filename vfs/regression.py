@@ -45,6 +45,7 @@ def minio(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    allow_experimental_analyzer=False,
 ):
     """Setup and run minio tests."""
     nodes = {
