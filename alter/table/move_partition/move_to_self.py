@@ -157,8 +157,6 @@ def check_move_partition(
             with attempt:
                 assert destination_partition_data.output == source_before, error()
 
-
-
     with And(f"I check that all replicas of destination table have same data:"):
         if "Replicated" in self.context.destination_engine:
             destination_partition_data_1 = self.context.node_1.query(
