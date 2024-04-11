@@ -32,6 +32,7 @@ def regression(
     clickhouse_version=None,
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """DNS regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2")}

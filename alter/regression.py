@@ -121,6 +121,7 @@ def regression(
     use_specific_version,
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Alter regression."""
     nodes = {

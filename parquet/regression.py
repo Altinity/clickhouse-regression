@@ -358,6 +358,7 @@ def regression(
     gcs_key_id,
     node="clickhouse1",
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Parquet regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}

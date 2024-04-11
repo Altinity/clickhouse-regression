@@ -98,6 +98,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """ClickHouse AES encryption functions regression module."""
     nodes = {

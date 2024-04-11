@@ -62,6 +62,7 @@ def regression(
     gcs_key_id,
     format,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
     node="clickhouse1",
 ):
     """Storage Benchmark."""

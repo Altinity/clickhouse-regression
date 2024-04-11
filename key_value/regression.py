@@ -36,6 +36,7 @@ def regression(
     stress=None,
     parallel=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Key Value regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}

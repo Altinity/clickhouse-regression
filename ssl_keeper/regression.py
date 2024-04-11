@@ -48,6 +48,7 @@ def regression(
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """ClickHouse ssl ClickHouse Keeper regression."""
     nodes = {
