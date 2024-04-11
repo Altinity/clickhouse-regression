@@ -759,7 +759,7 @@ def bad_detached_part(self):
     with When("I create a replicated table on each node"):
         for node in nodes:
             node.restart()
-            replicated_table(node=node, name=name, settings="min_bytes_for_wide_part=0")
+            replicated_table(node=node, table_name=table_name, settings="min_bytes_for_wide_part=0")
 
     with And("I insert data on the second node"):
         nodes[1].query(f"INSERT INTO {table_name} VALUES (123)")
