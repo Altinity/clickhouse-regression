@@ -504,7 +504,8 @@ def regression(
         self.context.table = create_table(
             engine="MergeTree",
             columns=generate_all_column_types(),
-            order_by_all_columns=True,
+            order_by_all_columns=False,
+            order_by="tuple()",
         )
 
     with And("I populate table with test data"):
