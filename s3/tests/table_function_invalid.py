@@ -53,7 +53,10 @@ def empty_path(self):
                 empty path parameter it should fail"""
     ):
         insert_to_s3_function_invalid(
-            path="", message="DB::Exception: Host is empty in S3 URI", exitcode=36
+            table_name=name,
+            path="",
+            message="DB::Exception: Host is empty in S3 URI",
+            exitcode=36,
         )
 
 
@@ -78,6 +81,7 @@ def invalid_path(self):
                 invalid path parameter it should fail"""
     ):
         insert_to_s3_function_invalid(
+            table_name=name,
             path=invalid_path,
             message="DB::Exception: Bucket or key name are invalid in S3 URI",
             exitcode=36,
@@ -109,10 +113,11 @@ def invalid_format(self, invalid_format):
                 invalid format parameter it should fail"""
     ):
         insert_to_s3_function_invalid(
+            table_name=name,
             path=f"{uri}invalid.csv",
             file_format=invalid_format,
             message="DB::Exception: Unknown format",
-            exitcode=36,
+            exitcode=73,
         )
 
 
@@ -137,6 +142,7 @@ def empty_structure(self):
                 empty structure parameter it should fail"""
     ):
         insert_to_s3_function_invalid(
+            table_name=name,
             path=f"{uri}invalid.csv",
             columns="",
             message="DB::Exception: Empty query",
@@ -167,6 +173,7 @@ def invalid_structure(self):
                 invalid structure parameter it should fail"""
     ):
         insert_to_s3_function_invalid(
+            table_name=name,
             path=f"{uri}invalid.csv",
             columns="not_a_structure",
             message="DB::Exception: Syntax error",
@@ -197,6 +204,7 @@ def invalid_compression(self):
                 invalid compression parameter it should fail"""
     ):
         insert_to_s3_function_invalid(
+            table_name=name,
             path=f"{uri}invalid.csv",
             compression="invalid_compression",
             message="DB::Exception: Unknown compression method",
@@ -232,6 +240,7 @@ def invalid_credentials(self):
                credentials, expecting failure"""
     ):
         insert_to_s3_function_invalid(
+            table_name=name_table1,
             path=f"{uri}invalid.csv",
             access_key_id=access_key_id,
             secret_access_key=secret_access_key,
