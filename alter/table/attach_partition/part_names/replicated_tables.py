@@ -106,33 +106,24 @@ def replicated_tables(self):
         for attempt in retries(timeout=60 * 15, delay=10):
             with attempt:
                 for node in self.context.nodes:
-                    assert (
-                        node.query(
-                            "SELECT count() FROM system.mutations WHERE is_done = 0"
-                        ).output
-                        == "0"
+                    assert is_all_mutations_applied(
+                        node=node, table_name=destination_table
                     ), error()
-                    assert (
-                        node.query(
-                            "SELECT count() FROM system.replication_queue"
-                        ).output
-                        == "0"
+                    assert is_replication_queue_empty(
+                        node=node, table_name=destination_table
                     ), error()
 
     with Then("I check that part names are the same on all replicas"):
-        part_names_1 = self.context.node_1.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table}' AND active ORDER BY name"
-        )
-        part_names_2 = self.context.node_2.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table}' AND active ORDER BY name"
-        )
-        part_names_3 = self.context.node_3.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table}' AND active ORDER BY name"
-        )
         for attempt in retries(timeout=60, delay=2):
             with attempt:
                 assert (
-                    part_names_1.output.split("/n")
-                    == part_names_2.output.split("/n")
-                    == part_names_3.output.split("/n")
+                    select_active_parts(
+                        node=self.context.node_1, table_name=destination_table
+                    )
+                    == select_active_parts(
+                        node=self.context.node_2, table_name=destination_table
+                    )
+                    == select_active_parts(
+                        node=self.context.node_3, table_name=destination_table
+                    )
                 ), error()

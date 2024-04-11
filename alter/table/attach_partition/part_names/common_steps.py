@@ -192,3 +192,42 @@ def detach_part(self, table_name, part_name, node=None):
         node = self.context.node
 
     node.query(f"ALTER TABLE {table_name} DETACH PART '{part_name}'")
+
+
+@TestStep
+def select_active_parts(self, table_name, node=None):
+    """Select active parts from a table."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active FORMAT TabSeparated"
+    ).output.split("\n")
+
+
+@TestStep
+def is_all_mutations_applied(self, table_name, node=None):
+    """Check if all mutations are applied."""
+    if node is None:
+        node = self.context.node
+
+    return (
+        node.query(
+            f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0"
+        ).output
+        == "0"
+    )
+
+
+@TestStep
+def is_replication_queue_empty(self, table_name, node=None):
+    """Check if the replication queue is empty."""
+    if node is None:
+        node = self.context.node
+
+    return (
+        node.query(
+            f"SELECT count() FROM system.replication_queue WHERE table = '{table_name}'"
+        ).output
+        == "0"
+    )
