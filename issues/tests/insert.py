@@ -7,7 +7,7 @@ def insert(self):
     with Given("I create table"):
         table_name = "tbl" + getuid()
         replica_path_suffix = table_name
-        replica_name="{replica}"
+        replica_name = "{replica}"
         create_table_query = f"""           
                 CREATE TABLE default.{table_name} (ev_time DateTime DEFAULT now(), a DateTime, b String) 
                 ENGINE = ReplicatedMergeTree('/clickhouse/tables/sharded_cluster/{replica_path_suffix}', '{replica_name}')
@@ -16,7 +16,6 @@ def insert(self):
                 """
         for node in self.context.nodes:
             node.query(create_table_query)
-            
 
     with And("I create second table"):
         second_table_name = "tbl_hourly" + getuid()
@@ -94,7 +93,9 @@ def insert(self):
                 """
         result_without_with = self.context.node_1.query(select_query).output
 
-    with And("I insert the same data to third table but using `with` and expect same results"):
+    with And(
+        "I insert the same data to third table but using `with` and expect same results"
+    ):
         insert_from_with = f"""
                 INSERT INTO default.{third_table_name} (ev_time_hour, a, b)
                 WITH ev_time >= '2024-02-01 00:00:00' AS time_step
@@ -108,11 +109,9 @@ def insert(self):
                 ORDER BY ev_time_hour, a 
                 FORMAT PrettyCompactMonoBlock
                 """
-        result_with_with =self.context.node_1.query(select_query).output
+        result_with_with = self.context.node_1.query(select_query).output
 
         assert result_with_with == result_without_with == result
-
-   
 
 
 @TestFeature

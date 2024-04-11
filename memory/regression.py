@@ -12,7 +12,9 @@ from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, check_current_cpu
 
 xfails = {
-    "/memory/memory leak/*": [(Fail, "should be fixed", check_clickhouse_version("<24"))],
+    "/memory/memory leak/*": [
+        (Fail, "should be fixed", check_clickhouse_version("<24"))
+    ],
 }
 
 
@@ -27,7 +29,8 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
-    allow_vfs=None,
+    allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Memory regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
