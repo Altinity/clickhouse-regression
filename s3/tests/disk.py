@@ -15,16 +15,22 @@ from s3.tests.table_function import insert_to_s3_function, insert_from_s3_functi
 def define_s3_disk_storage_configuration(
     self,
     uri=None,
+    buckets=None,
     access_key_id=None,
     secret_access_key=None,
     options=None,
-    disk_name="external",
+    disk_names=None,
 ):
-    """Define S3 disk storage configuration with one
-    S3 external disk.
-    """
+    """Define S3 disk storage configuration with S3 external disks."""
     if uri is None:
         uri = self.context.uri
+    if disk_names is None:
+        disk_names = ["external"]
+    if buckets is None:
+        buckets = [f"disk_{name}" for name in disk_names]
+
+    assert len(disk_names) == len(buckets)
+
     if access_key_id is None:
         access_key_id = self.context.access_key_id
     if secret_access_key is None:
@@ -33,24 +39,26 @@ def define_s3_disk_storage_configuration(
         options = {}
 
     try:
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            disk_name: {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-        }
+        disks = {"default": {"keep_free_space_bytes": "1024"}}
 
-        if self.context.object_storage_mode == "vfs":
-            disks[disk_name]["allow_vfs"] = "1"
+        for disk_name, bucket in zip(disk_names, buckets):
+            disks[disk_name] = (
+                {
+                    "type": "s3",
+                    "endpoint": f"{uri}{bucket}/",
+                    "access_key_id": f"{access_key_id}",
+                    "secret_access_key": f"{secret_access_key}",
+                },
+            )
 
-        if hasattr(self.context, "s3_options"):
-            disks[disk_name].update(self.context.s3_options)
+            if self.context.object_storage_mode == "vfs":
+                disks[disk_name]["allow_vfs"] = "1"
 
-        if options:
-            disks[disk_name].update(options)
+            if hasattr(self.context, "s3_options"):
+                disks[disk_name].update(self.context.s3_options)
+
+            if options:
+                disks[disk_name].update(options)
 
         yield disks
 
@@ -382,10 +390,7 @@ def multiple_storage(self):
     a policy can use multiple S3 disks at the same time.
     """
     name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
-    disks = None
     policies = None
     node = current().context.node
 
@@ -401,25 +406,9 @@ def multiple_storage(self):
             uri = uri[: len(uri) - 5] + "multiple-storage/"
 
     with Given("I have a disk configuration with two S3 storage disks"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "first_external": {
-                "type": "s3",
-                "endpoint": f"{uri}subdata1/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-            "second_external": {
-                "type": "s3",
-                "endpoint": f"{uri}subdata2/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-        }
-
-        if hasattr(self.context, "s3_options"):
-            disks["first_external"].update(self.context.s3_options)
-            disks["second_external"].update(self.context.s3_options)
+        disks = define_s3_disk_storage_configuration(
+            disk_names=["first_external", "second_external"]
+        )
 
     with And("I have a storage policy configured to use both S3 disks at once"):
         policies = {
@@ -492,10 +481,7 @@ def multiple_storage_query(self):
     same way as queries using any other policy.
     """
     name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
-    disks = None
     policies = None
     node = current().context.node
 
@@ -511,25 +497,9 @@ def multiple_storage_query(self):
             uri = uri[: len(uri) - 5] + "multiple-storage/"
 
     with Given("I have a disk configuration with two S3 storage disks"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "first_external": {
-                "type": "s3",
-                "endpoint": f"{uri}subdata1/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-            "second_external": {
-                "type": "s3",
-                "endpoint": f"{uri}subdata2/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-        }
-
-        if hasattr(self.context, "s3_options"):
-            disks["first_external"].update(self.context.s3_options)
-            disks["second_external"].update(self.context.s3_options)
+        disks = define_s3_disk_storage_configuration(
+            disk_names=["first_external", "second_external"]
+        )
 
     with And("I have a storage policy configured to use both S3 disks at once"):
         policies = {
@@ -616,10 +586,7 @@ def multiple_storage_query(self):
 def add_storage(self):
     """Check that the user can add S3 storage devices to ClickHouse."""
     name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
-    disks = None
     policies = None
     node = current().context.node
     expected = "212"
@@ -630,18 +597,7 @@ def add_storage(self):
 
     with Check("one disk"):
         with Given("I have a disk configuration with one S3 storage disk"):
-            disks = {
-                "default": {"keep_free_space_bytes": "1024"},
-                "first_external": {
-                    "type": "s3",
-                    "endpoint": f"{uri}subdata1/",
-                    "access_key_id": f"{access_key_id}",
-                    "secret_access_key": f"{secret_access_key}",
-                },
-            }
-
-            if hasattr(self.context, "s3_options"):
-                disks["first_external"].update(self.context.s3_options)
+            disks = define_s3_disk_storage_configuration(disk_names=["first_external"])
 
         with And("I have a storage policy configured to use the S3 disk"):
             policies = {
@@ -664,25 +620,9 @@ def add_storage(self):
 
     with Check("two disks"):
         with Given("I add a disk to the disk configuration"):
-            disks = {
-                "default": {"keep_free_space_bytes": "1024"},
-                "first_external": {
-                    "type": "s3",
-                    "endpoint": f"{uri}subdata1/",
-                    "access_key_id": f"{access_key_id}",
-                    "secret_access_key": f"{secret_access_key}",
-                },
-                "second_external": {
-                    "type": "s3",
-                    "endpoint": f"{uri}subdata2/",
-                    "access_key_id": f"{access_key_id}",
-                    "secret_access_key": f"{secret_access_key}",
-                },
-            }
-
-            if hasattr(self.context, "s3_options"):
-                disks["first_external"].update(self.context.s3_options)
-                disks["second_external"].update(self.context.s3_options)
+            disks = define_s3_disk_storage_configuration(
+                disk_names=["first_external", "second_external"]
+            )
 
         with And("I have a storage policy configured to use the new S3 disk"):
             policies = {
@@ -1305,7 +1245,6 @@ def performance_ttl_move(self):
     when perform ttl move on insert parameter is turned off.
     """
     name = "table_" + getuid()
-    disks = None
     policies = None
     ttl_time = None
     no_ttl_time = None
@@ -1409,7 +1348,6 @@ def perform_ttl_move_on_insert(self, bool_value):
     background, otherwise, ClickHouse shall perform ttl moves upon insert.
     """
     name = "table_" + getuid()
-    disks = None
     policies = None
     node = current().context.node
     expected = "427"
@@ -1473,7 +1411,6 @@ def perform_ttl_move_on_insert_default(self):
     """
     name = "table_" + getuid()
     disk_name = "external"
-    disks = None
     policies = None
     node = current().context.node
 
@@ -1486,7 +1423,7 @@ def perform_ttl_move_on_insert_default(self):
         node.query(f"INSERT INTO {name} VALUES {values}")
 
     with Given("I have a disk configuration with a S3 storage disk"):
-        disks = define_s3_disk_storage_configuration(disk_name=disk_name)
+        disks = define_s3_disk_storage_configuration(disk_names=[disk_name])
 
     with And("I have a tiered S3 storage policy"):
         policies = {
@@ -1562,7 +1499,6 @@ def alter_move(self, node="clickhouse1"):
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
-    disks = None
     policies = None
 
     with Given("cluster node"):
@@ -1783,7 +1719,6 @@ def default_move_factor(self, node="clickhouse1"):
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
-    disks = None
     policies = None
 
     with Given("cluster"):
@@ -1931,7 +1866,6 @@ def download_appropriate_disk(self, nodes=None):
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
-    disks = None
     policies = None
 
     if nodes is None:
@@ -2038,7 +1972,6 @@ def download_appropriate_disk(self, nodes=None):
 def alter_on_cluster_modify_ttl(self):
     """Check that ALTER TABLE ON CLUSTER MODIFY TTL works correctly with S3 storage."""
     name = "table_" + getuid()
-    disks = None
     policies = None
     node = current().context.node
     cluster = self.context.cluster
@@ -2281,8 +2214,6 @@ def alter_on_cluster_modify_ttl(self):
 def config_over_restart(self):
     """Check S3 configuration over server restarts."""
     name = "table_" + getuid()
-    disks = None
-    policies = None
     node = current().context.node
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
