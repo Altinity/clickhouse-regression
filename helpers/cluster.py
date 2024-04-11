@@ -1056,7 +1056,10 @@ class Cluster(object):
             )
 
         if rm_instances_files:
-            shutil.rmtree(os.path.join(docker_compose_project_dir,"..","_instances"), ignore_errors=True)
+            shutil.rmtree(
+                os.path.join(docker_compose_project_dir, "..", "_instances"),
+                ignore_errors=True,
+            )
 
         if self.clickhouse_binary_path:
             if self.use_specific_version:
@@ -1067,13 +1070,13 @@ class Cluster(object):
                     self.use_specific_version
                 )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
+                    self.specific_clickhouse_binary_path
+                )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
+                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
+                    self.clickhouse_specific_odbc_binary
+                )
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
@@ -1436,22 +1439,9 @@ class Cluster(object):
                 )
 
         # Edit permissions on server files for external manipulation
-        for node in self.nodes["clickhouse"]:
-            with self.lock:
-                container_id = self.node_container_id(node)
-
-            r = self.command(
-                node=None, command=f"docker inspect {container_id}", exitcode=0
-            )
-            mounts = json.loads(r.output)[0]["Mounts"]
-            docker_exposed_dirs = [
-                m["Destination"] for m in mounts if "_instances" in m["Source"]
-            ]
-
-            for exposed_dir in docker_exposed_dirs:
-                self.command(
-                    node=node, command=f"chmod a+rwX -R {exposed_dir}", no_checks=True
-                )
+        for node_type in ["clickhouse", "zookeeper", "keeper"]:
+            for node in self.nodes.get(node_type, []):
+                self.open_instances_permissions(node=node)
 
         try:
             bash = self.bash(None)
@@ -1475,6 +1465,24 @@ class Cluster(object):
                     self._control_shell.__exit__(None, None, None)
                     self._control_shell = None
             return cmd
+
+    def open_instances_permissions(self, node):
+        """Add open permissions on all files and folders in _instances"""
+        with self.lock:
+            container_id = self.node_container_id(node)
+
+        r = self.command(
+            node=None, command=f"docker inspect {container_id}", exitcode=0
+        )
+        mounts = json.loads(r.output)[0]["Mounts"]
+        docker_exposed_dirs = [
+            m["Destination"] for m in mounts if "_instances" in m["Source"]
+        ]
+
+        for exposed_dir in docker_exposed_dirs:
+            self.command(
+                node=node, command=f"chmod a+rwX -R {exposed_dir}", no_checks=True
+            )
 
     def temp_path(self):
         """Return temporary folder path."""
@@ -1500,14 +1508,15 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
+                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
+                    self.clickhouse_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
+                    self.clickhouse_odbc_bridge_binary_path
+                    or os.path.join(
+                        os.path.dirname(self.clickhouse_binary_path),
+                        "clickhouse-odbc-bridge",
+                    )
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
