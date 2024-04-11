@@ -24,6 +24,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Simple example of how you can use TestFlows to test ClickHouse."""
     nodes = {

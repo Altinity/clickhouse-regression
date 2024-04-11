@@ -44,6 +44,7 @@ def regression(
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """ClickHouse different ENGINES regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}

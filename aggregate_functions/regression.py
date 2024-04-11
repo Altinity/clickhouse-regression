@@ -476,6 +476,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Aggregate functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -501,11 +502,27 @@ def regression(
 
     with And("table with all data types"):
         self.context.table = create_table(
-            engine="MergeTree() ORDER BY tuple()", columns=generate_all_column_types()
+            engine="MergeTree",
+            columns=generate_all_column_types(),
+            order_by_all_columns=True,
         )
 
     with And("I populate table with test data"):
         self.context.table.insert_test_data()
+
+    with And("I disable experimental analyzer if needed"):
+        if check_clickhouse_version(">=24.3")(self):
+            if not allow_experimental_analyzer:
+                default_query_settings = getsattr(
+                    current().context, "default_query_settings", []
+                )
+                default_query_settings.append(("allow_experimental_analyzer", 0))
+        else:
+            if allow_experimental_analyzer:
+                default_query_settings = getsattr(
+                    current().context, "default_query_settings", []
+                )
+                default_query_settings.append(("allow_experimental_analyzer", 1))
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 

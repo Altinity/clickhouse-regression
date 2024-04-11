@@ -39,6 +39,7 @@ def regression(
     node="clickhouse1",
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """ClickHouse regression."""
     args = {

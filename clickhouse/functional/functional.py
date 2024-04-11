@@ -30,6 +30,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Run the ClickHouse functional (stateless and stateful) tests."""
     nodes = {"clickhouse": ("clickhouse1",)}

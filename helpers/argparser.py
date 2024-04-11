@@ -47,3 +47,12 @@ def argparser(parser):
         default=False,
         help="enable docker log collection. for ci/cd use, does not work locally.",
     )
+
+    parser.add_argument(
+        "--allow_experimental_analyzer",
+        action="store_true",
+        default=False,
+        help="Allow to use experimental analyzer.",
+    )
+
+

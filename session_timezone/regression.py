@@ -31,6 +31,7 @@ def regression(
     collect_service_logs,
     stress=False,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """ClickHouse Session Timezone regression module."""
     nodes = {

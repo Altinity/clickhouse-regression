@@ -167,6 +167,7 @@ def regression(
     ssl=None,
     stress=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """ClickHouse regression when using clickhouse-keeper."""
     nodes = {

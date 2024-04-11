@@ -151,6 +151,7 @@ def feature(
     with_s3amazon=False,
     with_s3gcs=False,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
     environ=None,
 ):
     """Execute tests for tiered storage feature."""
@@ -355,6 +356,7 @@ def regression(
     gcs_key_id=None,
     gcs_uri=None,
     allow_vfs=False,
+    allow_experimental_analyzer=False,
 ):
     """Tiered Storage regression."""
     environ = {}
