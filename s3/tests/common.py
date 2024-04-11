@@ -1225,13 +1225,17 @@ def default_s3_disk_and_volume(
 
 
 @TestStep(Given)
-def simple_table(self, name, policy="external", node=None, columns="d UInt64"):
+def simple_table(
+    self, name, policy="external", node=None, columns="d UInt64", settings: str = ""
+):
     """Create a simple MergeTree table for s3 tests."""
     node = node or self.context.node
 
     query = f"CREATE TABLE {name} ({columns}) ENGINE = MergeTree() ORDER BY {columns.split()[0]}"
     if policy:
         query += f" SETTINGS storage_policy='{policy}'"
+    if settings:
+        query += ", " + settings
 
     try:
         with Given(f"I have a table {name}"):
@@ -1246,22 +1250,29 @@ def simple_table(self, name, policy="external", node=None, columns="d UInt64"):
 
 @TestStep(Given)
 def replicated_table(
-    self, table_name, policy="external", node=None, columns="d UInt64", path=None
+    self,
+    table_name,
+    policy="external",
+    node=None,
+    columns="d UInt64",
+    path=None,
+    settings: str = "",
 ):
     """Create a ReplicatedMergeTree table for s3 tests."""
     node = node or self.context.node
     path = path or f"/clickhouse/tables/{table_name}"
+    query = f"""
+        CREATE TABLE {table_name} ({columns})
+        ENGINE = ReplicatedMergeTree('{path}', '{{replica}}')
+        ORDER BY {columns.split()[0]}
+        SETTINGS storage_policy='{policy}'"""
+
+    if settings:
+        query += ", " + settings
 
     try:
         with Given(f"I have a table {table_name}"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name} ({columns})
-                ENGINE = ReplicatedMergeTree('{path}', '{{replica}}')
-                ORDER BY {columns.split()[0]}
-                SETTINGS storage_policy='{policy}'
-                """
-            )
+            node.query(query)
         yield table_name
 
     finally:
@@ -1359,9 +1370,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options[
-                "server_side_encryption_customer_key_base64"
-            ] = ssec_key
+            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
+                ssec_key
+            )
         yield
 
     finally:
