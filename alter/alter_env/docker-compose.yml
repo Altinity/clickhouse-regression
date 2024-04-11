@@ -8,6 +8,9 @@ services:
     extends:
       file: zookeeper-service.yml
       service: zookeeper
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper/datalog/:/datalog"
 
   clickhouse1:
     extends:
