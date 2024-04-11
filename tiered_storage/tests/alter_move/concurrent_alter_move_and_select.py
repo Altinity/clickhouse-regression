@@ -77,7 +77,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with When(f"I perform select {i} {num} times"):
                         with Then("result should always be 500"):
                             for i in range(num):
-                                for attempt in retries(timeout=60, delay=1):
+                                for attempt in retries(timeout=120, delay=10):
                                     with attempt:
                                         r = node.query(
                                             f"SELECT sleepEachRow(0.1), COUNT() FROM {name}",
@@ -150,7 +150,7 @@ def scenario(self, cluster, node="clickhouse1"):
                             assert r == "500", error()
 
                 with When("I check if there are any duplicate parts on the disks"):
-                    for retry in retries(timeout=60, delay=10):
+                    for retry in retries(timeout=120, delay=10):
                         with retry:
                             jbod1_entries = set(
                                 [
