@@ -127,6 +127,11 @@ def regression(
                 executor=pool,
             )(**args)
             Feature(
+                test=load("functions.regression", "regression"),
+                parallel=True,
+                executor=pool,
+            )(**args)
+            Feature(
                 test=load("kafka.regression", "regression"),
                 parallel=True,
                 executor=pool,

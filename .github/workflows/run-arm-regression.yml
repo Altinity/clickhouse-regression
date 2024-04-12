@@ -39,7 +39,7 @@ on:
           - engines
           - example
           - extended_precision_data_types
-          - issues
+          - functions
           - kafka
           - kerberos
           - key_value
@@ -792,12 +792,12 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  issues:
+  functions:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
-      SUITE: issues
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'issues' }}
+      SUITE: functions
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'functions' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
