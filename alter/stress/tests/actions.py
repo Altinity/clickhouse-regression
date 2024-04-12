@@ -225,14 +225,14 @@ def freeze_unfreeze_random_part(self):
 
     with When("I freeze the part"):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
-        node.query(query, exitcode=0)
+        node.query(query, exitcode=0, **alter_query_args)
 
     with And(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I unfreeze the part"):
         query = f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition} WITH NAME '{backup_name}'"
-        node.query(query, exitcode=0)
+        node.query(query, exitcode=0, **alter_query_args)
 
 
 @TestStep
@@ -248,7 +248,11 @@ def drop_random_part(self):
 
     if detach_first:
         with When("I detach a partition from the first table"):
-            node.query(f"ALTER TABLE {table_name} DETACH PART '{part_id}'", exitcode=0)
+            node.query(
+                f"ALTER TABLE {table_name} DETACH PART '{part_id}'",
+                exitcode=0,
+                **alter_query_args,
+            )
 
         with And("I drop the detached partition"):
             node.query(
@@ -257,7 +261,11 @@ def drop_random_part(self):
             )
     else:
         with When("I drop the part"):
-            node.query(f"ALTER TABLE {table_name} DROP PART '{part_id}'", exitcode=0)
+            node.query(
+                f"ALTER TABLE {table_name} DROP PART '{part_id}'",
+                exitcode=0,
+                **alter_query_args,
+            )
 
 
 @TestStep
@@ -406,12 +414,14 @@ def fetch_random_part_from_table(self):
             node.query(
                 f"ALTER TABLE {destination_table_name} FETCH PART '{part_id}' FROM '/clickhouse/tables/{source_table_name}'",
                 exitcode=0,
+                **alter_query_args,
             )
 
         with And("I attach the part to the second table"):
             node.query(
                 f"ALTER TABLE {destination_table_name} ATTACH PART '{part_id}'",
                 exitcode=0,
+                **alter_query_args,
             )
 
 
@@ -480,6 +490,7 @@ def delete_random_rows_lightweight(self):
         node.query(
             f"ALTER TABLE {table_name} APPLY DELETED MASK",
             no_checks=True,
+            **alter_query_args,
         )
 
 
@@ -500,10 +511,12 @@ def add_random_projection(self):
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
                 exitcode=0,
+                **alter_query_args,
             )
             node.query(
                 f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
                 exitcode=0,
+                **alter_query_args,
             )
 
 
@@ -527,6 +540,7 @@ def clear_random_projection(self):
             node.query(
                 f"ALTER TABLE {table_name} CLEAR PROJECTION {projection_name} IN PARTITION {partition_name}",
                 exitcode=0,
+                **alter_query_args,
             )
             return
 
@@ -583,9 +597,14 @@ def add_random_index(self):
             node.query(
                 f"ALTER TABLE {table_name} ADD INDEX {index_name} {column_name} TYPE bloom_filter",
                 exitcode=0,
+                **alter_query_args,
             )
 
-    node.query(f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}", exitcode=0)
+    node.query(
+        f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
+        exitcode=0,
+        **alter_query_args,
+    )
 
 
 @TestStep
@@ -608,6 +627,7 @@ def clear_random_index(self):
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
             exitcode=0,
+            **alter_query_args,
         )
         return
 
@@ -658,7 +678,11 @@ def modify_random_ttl(self):
     if random.randint(0, 1):
         ttl_expression += " to volume 'external'"
 
-    node.query(f"ALTER TABLE {table_name} MODIFY TTL {ttl_expression}", exitcode=0)
+    node.query(
+        f"ALTER TABLE {table_name} MODIFY TTL {ttl_expression}",
+        exitcode=0,
+        **alter_query_args,
+    )
 
 
 @TestStep
@@ -668,7 +692,9 @@ def remove_random_ttl(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
 
-    node.query(f"ALTER TABLE {table_name} REMOVE TTL", no_checks=True)
+    node.query(
+        f"ALTER TABLE {table_name} REMOVE TTL", no_checks=True, **alter_query_args
+    )
 
 
 @TestStep(Then)
