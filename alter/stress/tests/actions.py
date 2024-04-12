@@ -732,7 +732,7 @@ def check_tables_have_same_projections(self, tables):
                 node=node, table_name=table_name
             )
 
-    with Then("all tables should have the same columns"):
+    with Then("all tables should have the same projections"):
         for table1, table2 in combinations(tables, 2):
             assert table_projections[table1] == table_projections[table2], error()
 
@@ -750,7 +750,7 @@ def check_tables_have_same_indexes(self, tables):
             node = get_random_node_for_table(table_name=table_name)
             table_indexes[table_name] = get_indexes(node=node, table_name=table_name)
 
-    with Then("all tables should have the same columns"):
+    with Then("all tables should have the same indexes"):
         for table1, table2 in combinations(tables, 2):
             assert table_indexes[table1] == table_indexes[table2], error()
 
