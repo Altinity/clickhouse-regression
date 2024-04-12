@@ -549,11 +549,11 @@ def add_random_index(self):
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
             node.query(
-                f"ALTER TABLE {table_name} ADD index {index_name} {column_name} TYPE bloom_filter",
+                f"ALTER TABLE {table_name} ADD INDEX {index_name} {column_name} TYPE bloom_filter",
                 exitcode=0,
             )
 
-    node.query(f"ALTER TABLE {table_name} MATERIALIZE index {index_name}", exitcode=0)
+    node.query(f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}", exitcode=0)
 
 
 @TestStep
@@ -574,7 +574,7 @@ def clear_random_index(self):
         partition_name = get_random_partition_id(node=node, table_name=table_name)
 
         node.query(
-            f"ALTER TABLE {table_name} CLEAR index {index_name} IN PARTITION {partition_name}",
+            f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
             exitcode=0,
         )
         return
@@ -597,7 +597,7 @@ def drop_random_index(self):
         node = get_random_node_for_table(table_name=table_name)
 
         node.query(
-            f"ALTER TABLE {table_name} DROP index {index_name}",
+            f"ALTER TABLE {table_name} DROP INDEX {index_name}",
             exitcode=0,
         )
 
