@@ -1,0 +1,4 @@
+FROM zookeeper:3.6.2
+
+RUN apt update
+RUN apt install --yes iproute2 procps
