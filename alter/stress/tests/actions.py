@@ -568,6 +568,7 @@ def drop_random_projection(self):
                         node = get_random_node_for_table(table_name=table_name)
                         r = node.query(
                             f"ALTER TABLE {table_name} DROP PROJECTION {projection_name}",
+                            no_checks=True,
                             **alter_query_args,
                         )
                         exit_codes[table_name] = r.exitcode
@@ -575,7 +576,7 @@ def drop_random_projection(self):
                 with Then("all drops should have succeeded"):
                     # If a previous drop projection attempt failed halfway,
                     # it's possible that this projection does not exist on all tables
-                    unknown_proj_code = 36
+                    unknown_proj_code = 70
 
                     for table_name in tables:
                         assert exit_codes[table_name] in [0, unknown_proj_code], error()
@@ -653,7 +654,6 @@ def drop_random_index(self):
 
                     r = node.query(
                         f"ALTER TABLE {table_name} DROP INDEX {index_name}",
-                        no_checks=True,
                         **alter_query_args,
                     )
                     exit_codes[table_name] = r.exitcode
