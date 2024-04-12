@@ -187,7 +187,7 @@ def alter_combinations(
             for node in self.context.ch_nodes:
                 for table_name in self.context.table_names:
                     When(test=delete_one_replica, parallel=True)(
-                        node=node, table_name=table_name
+                        node=node, table_name=table_name, timeout=120
                     )
             join()
 
