@@ -756,59 +756,45 @@ def bad_detached_part(self):
         }
         mergetree_config(settings=settings)
 
-    try:
-        with When("I create a replicated table on each node"):
-            for i, node in enumerate(nodes):
-                node.restart()
-                node.query(
-                    f"""
-                    CREATE TABLE {table_name} (
-                        d UInt64,
-                    ) ENGINE = ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{i + 1}')
-                    ORDER BY d
-                    SETTINGS storage_policy='external', min_bytes_for_wide_part=0
-                """
-                )
+    with When("I create a replicated table on each node"):
+        for node in nodes:
+            node.restart()
+            replicated_table(node=node, table_name=table_name, settings="min_bytes_for_wide_part=0")
 
-        with And("I insert data on the second node"):
-            nodes[1].query(f"INSERT INTO {table_name} VALUES (123)")
+    with And("I insert data on the second node"):
+        nodes[1].query(f"INSERT INTO {table_name} VALUES (123)")
 
-        with And("I sync the first node"):
-            nodes[0].query(f"SYSTEM SYNC REPLICA {table_name}")
+    with And("I sync the first node"):
+        sync_replica(node=nodes[0], table_name=table_name)
 
-        with And("I get the path for the part"):
-            r = nodes[1].query(
-                f"SELECT path FROM system.parts where table='{table_name}' and name='all_0_0_0'"
-            )
-            part_path = r.output
-            assert part_path.startswith("/"), error("Expected absolute path!")
+    with And("I get the path for the part"):
+        r = nodes[1].query(
+            f"SELECT path FROM system.parts where table='{table_name}' and name='all_0_0_0'"
+        )
+        part_path = r.output
+        assert part_path.startswith("/"), error("Expected absolute path!")
 
-        with And("I delete the part's count.txt"):
-            nodes[1].command(f"rm {part_path}/count.txt")
+    with And("I delete the part's count.txt"):
+        nodes[1].command(f"rm {part_path}/count.txt")
 
-        with And("I detach the table on the second node"):
-            nodes[1].query(f"DETACH TABLE {table_name} SYNC")
+    with And("I detach the table on the second node"):
+        nodes[1].query(f"DETACH TABLE {table_name} SYNC")
 
-        with And("I reattach the table on the second node"):
-            nodes[1].query(f"ATTACH TABLE {table_name}")
+    with And("I reattach the table on the second node"):
+        nodes[1].query(f"ATTACH TABLE {table_name}")
 
-        with And("I check detached parts on the second node"):
-            r = nodes[1].query(
-                f"SELECT reason, name FROM system.detached_parts where table='{table_name}'"
-            )
-            assert r.output == "broken-on-start	broken-on-start_all_0_0_0", error()
+    with And("I check detached parts on the second node"):
+        r = nodes[1].query(
+            f"SELECT reason, name FROM system.detached_parts where table='{table_name}'"
+        )
+        assert r.output == "broken-on-start	broken-on-start_all_0_0_0", error()
 
-        with And("I drop the table on the second node"):
-            nodes[1].query(f"DROP TABLE {table_name} SYNC")
+    with And("I drop the table on the second node"):
+        nodes[1].query(f"DROP TABLE {table_name} SYNC")
 
-        with Then("The first node should still have the data"):
-            r = nodes[0].query(f"SELECT * FROM {table_name}")
-            assert r.output == "123", error()
-
-    finally:
-        with Finally("I drop the table on each node"):
-            for node in nodes:
-                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+    with Then("The first node should still have the data"):
+        r = nodes[0].query(f"SELECT * FROM {table_name}")
+        assert r.output == "123", error()
 
 
 @TestScenario
