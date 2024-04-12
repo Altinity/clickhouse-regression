@@ -714,7 +714,8 @@ def check_tables_have_same_columns(self, tables):
 
     with Then("all tables should have the same columns"):
         for table1, table2 in combinations(tables, 2):
-            assert table_columns[table1] == table_columns[table2], error()
+            with By(f"checking {table1} and {table2}"):
+                assert table_columns[table1] == table_columns[table2], error()
 
 
 @TestStep(Then)
@@ -734,7 +735,8 @@ def check_tables_have_same_projections(self, tables):
 
     with Then("all tables should have the same projections"):
         for table1, table2 in combinations(tables, 2):
-            assert table_projections[table1] == table_projections[table2], error()
+            with By(f"checking {table1} and {table2}"):
+                assert table_projections[table1] == table_projections[table2], error()
 
 
 @TestStep(Then)
@@ -754,7 +756,8 @@ def check_tables_have_same_indexes(self, tables):
 
     with Then("all tables should have the same indexes"):
         for table1, table2 in combinations(tables, 2):
-            assert table_indexes[table1] == table_indexes[table2], error()
+            with By(f"checking {table1} and {table2}"):
+                assert table_indexes[table1] == table_indexes[table2], error()
 
 
 @TestStep(Then)
