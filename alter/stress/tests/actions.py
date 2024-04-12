@@ -698,6 +698,64 @@ def remove_random_ttl(self):
 
 
 @TestStep(Then)
+def check_tables_have_same_columns(self, tables):
+    """
+    Asserts that the given tables have the same columns.
+    Smartly selects a node for each given replicated table.
+    Does not check that all replicas of a table agree.
+    """
+    with When("I get the columns for each table"):
+        table_columns = {}
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            table_columns[table_name] = get_column_names(
+                node=node, table_name=table_name
+            )
+
+    with Then("all tables should have the same columns"):
+        for table1, table2 in combinations(tables, 2):
+            assert table_columns[table1] == table_columns[table2], error()
+
+
+@TestStep(Then)
+def check_tables_have_same_projections(self, tables):
+    """
+    Asserts that the given tables have the same projections.
+    Smartly selects a node for each given replicated table.
+    Does not check that all replicas of a table agree.
+    """
+    with When("I get the projections for each table"):
+        table_projections = {}
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            table_projections[table_name] = get_projections(
+                node=node, table_name=table_name
+            )
+
+    with Then("all tables should have the same columns"):
+        for table1, table2 in combinations(tables, 2):
+            assert table_projections[table1] == table_projections[table2], error()
+
+
+@TestStep(Then)
+def check_tables_have_same_indexes(self, tables):
+    """
+    Asserts that the given tables have the same indexes.
+    Smartly selects a node for each given replicated table.
+    Does not check that all replicas of a table agree.
+    """
+    with When("I get the projections for each table"):
+        table_indexes = {}
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            table_indexes[table_name] = get_indexes(node=node, table_name=table_name)
+
+    with Then("all tables should have the same columns"):
+        for table1, table2 in combinations(tables, 2):
+            assert table_indexes[table1] == table_indexes[table2], error()
+
+
+@TestStep(Then)
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def check_consistency(self, tables=None, sync_timeout=None):
     """
@@ -760,19 +818,12 @@ def check_consistency(self, tables=None, sync_timeout=None):
 
     # The above check only checks that nodes agree on what should be in each table
     # The below check also asserts that all tables have the same structure
-    # Part move actions require matching columns
+    # Part move actions require matching structure
 
-    with When("I get the columns for each table"):
-        table_columns = {}
-        for table_name in tables:
-            node = get_random_node_for_table(table_name=table_name)
-            table_columns[table_name] = get_column_names(
-                node=node, table_name=table_name
-            )
-
-    with Then("all tables should have the same columns"):
-        for table1, table2 in combinations(tables, 2):
-            assert table_columns[table1] == table_columns[table2], error()
+    with Then("check that table structures are in sync"):
+        check_tables_have_same_columns(tables=tables)
+        check_tables_have_same_projections(tables=tables)
+        check_tables_have_same_indexes(tables=tables)
 
 
 @TestStep
