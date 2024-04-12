@@ -14,7 +14,7 @@ from helpers.cluster import create_cluster
 issue_59401 = "https://github.com/ClickHouse/ClickHouse/issues/59401"
 
 xfails = {
-    "/issues/merge/*": [
+    "/functions/merge/*": [
         (
             Fail,
             issue_59401,
@@ -26,7 +26,7 @@ xfails = {
 
 @TestModule
 @ArgumentParser(argparser)
-@Name("issues")
+@Name("functions")
 @XFails(xfails)
 def regression(
     self,
@@ -38,7 +38,7 @@ def regression(
     allow_vfs=False,
     allow_experimental_analyzer=False,
 ):
-    """Issues regression suite."""
+    """Functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
@@ -60,8 +60,8 @@ def regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-    Feature(run=load("issues.tests.merge", "feature"))
-    Feature(run=load("issues.tests.insert", "feature"))
+    Feature(run=load("functions.tests.merge", "feature"))
+    Feature(run=load("functions.tests.insert", "feature"))
 
 
 if main():
