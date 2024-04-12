@@ -73,6 +73,7 @@ def select_count_random(self, repeat_limit=10):
 @Name("add column")
 def add_random_column(self):
     """Add a column with a random name."""
+    column_name = f"c{random.randint(0, 99999)}"
     with table_schema_lock:
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
@@ -81,7 +82,7 @@ def add_random_column(self):
                 test=alter_table_add_column,
             )(
                 table_name=table_name,
-                column_name=f"c{random.randint(0, 99999)}",
+                column_name=column_name,
                 column_type="UInt16",
                 node=node,
                 exitcode=0,
@@ -308,9 +309,9 @@ def move_random_partition_to_random_table(self):
             sync_replica(node=node, table_name=source_table_name)
 
         with Then("I make sure the two tables have synced columns"):
-            assert get_column_names(
-                node=node, table_name=destination_table_name
-            ) == get_column_names(node=node, table_name=source_table_name), error()
+            dest_cols = get_column_names(node=node, table_name=destination_table_name)
+            src_cols = get_column_names(node=node, table_name=source_table_name)
+            assert dest_cols == src_cols, error()
 
         with When("I attach the partition to the second table"):
             alter_table_move_partition_to_table(
@@ -659,6 +660,7 @@ def check_consistency(self, tables=None, sync_timeout=None):
     nodes = self.context.ch_nodes
     if tables is None:
         tables = self.context.table_names
+
     for table_name in tables:
         with When("I check which nodes have the table"):
             active_nodes = [
@@ -681,7 +683,7 @@ def check_consistency(self, tables=None, sync_timeout=None):
                 )
                 join()
 
-        with Then("All replicas should have the same state"):
+        with Then("all replicas should have the same state"):
             for attempt in retries(timeout=step_retry_timeout, delay=5):
                 with attempt:
                     with When(f"I count rows and check columns for table {table_name}"):
@@ -698,13 +700,29 @@ def check_consistency(self, tables=None, sync_timeout=None):
 
                     with Then("I check that all states match"):
                         for n1, n2 in combinations(active_nodes, 2):
-                            with By(f"Checking {n1.name} and {n2.name}"):
+                            with By(f"checking {n1.name} and {n2.name}"):
                                 assert (
                                     row_counts[n1.name] == row_counts[n2.name]
                                 ), error()
                                 assert (
                                     column_names[n1.name] == column_names[n2.name]
                                 ), error()
+
+    # The above check only checks that nodes agree on what should be in each table
+    # The below check also asserts that all tables have the same structure
+    # Part move actions require matching columns
+
+    with When("I get the columns for each table"):
+        table_columns = {}
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            table_columns[table_name] = get_column_names(
+                node=node, table_name=table_name
+            )
+
+    with Then("all tables should have the same columns"):
+        for table1, table2 in combinations(tables, 2):
+            assert table_columns[table1] == table_columns[table2], error()
 
 
 @TestStep
