@@ -18,7 +18,9 @@ from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 table_schema_lock = RLock()
 
 step_retry_timeout = 600
-step_retry_delay = 15
+step_retry_delay = 30
+
+alter_query_args = {"retry_delay": 15, "retry_count": 5}
 
 
 @TestStep
@@ -84,6 +86,7 @@ def add_random_column(self):
                 node=node,
                 exitcode=0,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -108,6 +111,7 @@ def delete_random_column(self):
                 column_name=column_name,
                 exitcode=0,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -134,6 +138,7 @@ def rename_random_column(self):
                 column_name_new=new_name,
                 exitcode=0,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -156,6 +161,7 @@ def update_random_column(self):
         node=node,
         exitcode=0,
         timeout=30,
+        **alter_query_args,
     )
 
 
@@ -185,7 +191,11 @@ def detach_attach_random_partition(self):
 
     with When("I detach a part"):
         alter_table_detach_partition(
-            node=node, table_name=table_name, partition_name=partition, exitcode=0
+            node=node,
+            table_name=table_name,
+            partition_name=partition,
+            exitcode=0,
+            **alter_query_args,
         )
 
     with Then(f"I wait {delay:.2}s"):
@@ -193,7 +203,11 @@ def detach_attach_random_partition(self):
 
     with Finally("I reattach the part"):
         alter_table_attach_partition(
-            node=node, table_name=table_name, partition_name=partition, exitcode=0
+            node=node,
+            table_name=table_name,
+            partition_name=partition,
+            exitcode=0,
+            **alter_query_args,
         )
 
 
@@ -265,6 +279,7 @@ def replace_random_part(self):
                 path_to_backup=source_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
+                **alter_query_args,
             )
 
 
@@ -306,6 +321,7 @@ def move_random_partition_to_random_table(self):
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -345,6 +361,7 @@ def move_random_partition_to_random_disk(self):
             exitcode=0,
             no_checks=self.context.ignore_failed_part_moves,
             timeout=30,
+            **alter_query_args,
         )
 
 
@@ -368,6 +385,7 @@ def attach_random_part_from_table(self):
                 path_to_backup=source_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
+                **alter_query_args,
             )
 
 
@@ -413,6 +431,7 @@ def clear_random_column(self):
         column_name=column_name,
         partition_name=str(random.randint(0, 3)),
         no_checks=True,
+        **alter_query_args,
     )
 
 
@@ -435,6 +454,7 @@ def delete_random_rows(self):
         condition=f"({column_name} % {divisor} = {remainder})",
         node=node,
         no_checks=True,
+        **alter_query_args,
     )
 
 
