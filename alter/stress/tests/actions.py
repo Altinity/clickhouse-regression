@@ -111,9 +111,11 @@ def delete_random_column(self):
                 table_name=table_name,
                 column_name=column_name,
                 exitcode=0,
-                timeout=30,
+                timeout=120,
                 **alter_query_args,
             )
+
+        check_tables_have_same_columns(tables=self.context.table_names)
 
 
 @TestStep
@@ -473,7 +475,10 @@ def delete_random_rows(self):
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("light delete row")
 def delete_random_rows_lightweight(self):
-    """Lightweight delete a few rows at random."""
+    """
+    Lightweight delete a few rows at random.
+    Not supported with projections!
+    """
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     column_name = get_random_column_name(node=node, table_name=table_name)
@@ -518,6 +523,10 @@ def add_random_projection(self):
                 exitcode=0,
                 **alter_query_args,
             )
+
+        retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
 
 
 @TestStep
@@ -567,19 +576,15 @@ def drop_random_projection(self):
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
                         r = node.query(
-                            f"ALTER TABLE {table_name} DROP PROJECTION {projection_name}",
+                            f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
                             no_checks=True,
                             **alter_query_args,
                         )
                         exit_codes[table_name] = r.exitcode
 
                 with Then("all drops should have succeeded"):
-                    # If a previous drop projection attempt failed halfway,
-                    # it's possible that this projection does not exist on all tables
-                    unknown_proj_code = 70
-
                     for table_name in tables:
-                        assert exit_codes[table_name] in [0, unknown_proj_code], error()
+                        assert exit_codes[table_name] == 0, error()
 
 
 @TestStep
@@ -653,18 +658,14 @@ def drop_random_index(self):
                     node = get_random_node_for_table(table_name=table_name)
 
                     r = node.query(
-                        f"ALTER TABLE {table_name} DROP INDEX {index_name}",
+                        f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
                         **alter_query_args,
                     )
                     exit_codes[table_name] = r.exitcode
 
             with Then("all drops should have succeeded"):
-                # If a previous drop index attempt failed halfway,
-                # it's possible that this index does not exist on all tables
-                unknown_index_code = 36
-
                 for table_name in self.context.table_names:
-                    assert exit_codes[table_name] in [0, unknown_index_code], error()
+                    assert exit_codes[table_name] == 0, error()
 
 
 @TestStep
