@@ -172,7 +172,7 @@
     <!-- Configuration of clusters that could be used in Distributed tables.
          https://clickhouse.com/docs/en/table_engines/distributed/
       -->
-    <remote_servers incl="clickhouse_remote_servers" >
+    <remote_servers>
         <!-- Test only shard config for testing distributed storage -->
         <test_shard_localhost>
             <shard>
@@ -365,7 +365,7 @@
     <!-- Uncomment if you want data to be compressed 30-100% better.
          Don't do that if you just started using ClickHouse.
       -->
-    <compression incl="clickhouse_compression">
+    <compression>
     <!--
         <!- - Set of variants. Checked in order. Last matching case wins. If nothing matches, lz4 will be used. - ->
         <case>
