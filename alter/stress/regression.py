@@ -12,7 +12,6 @@ from s3.tests.common import start_minio
 
 xfails = {
     "/stress/minio/alter/:/:/:move partition to tab:": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/62459"),
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/62459"),
     ]
 }

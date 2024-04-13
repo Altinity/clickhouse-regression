@@ -82,7 +82,7 @@ def get_random_node_for_table(self, table_name):
     )
 
 
-@TestStep
+@TestStep(Given)
 def get_column_names(self, node, table_name, timeout=30) -> list:
     """Get a list of a table's column names."""
     r = node.query(
