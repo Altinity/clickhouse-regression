@@ -18,7 +18,9 @@ from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 table_schema_lock = RLock()
 
 step_retry_timeout = 600
-step_retry_delay = 15
+step_retry_delay = 30
+
+alter_query_args = {"retry_delay": 30, "retry_count": 10}
 
 
 @TestStep
@@ -71,6 +73,7 @@ def select_count_random(self, repeat_limit=10):
 @Name("add column")
 def add_random_column(self):
     """Add a column with a random name."""
+    column_name = f"c{random.randint(0, 99999)}"
     with table_schema_lock:
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
@@ -79,11 +82,12 @@ def add_random_column(self):
                 test=alter_table_add_column,
             )(
                 table_name=table_name,
-                column_name=f"c{random.randint(0, 99999)}",
+                column_name=column_name,
                 column_type="UInt16",
                 node=node,
                 exitcode=0,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -108,6 +112,7 @@ def delete_random_column(self):
                 column_name=column_name,
                 exitcode=0,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -134,6 +139,7 @@ def rename_random_column(self):
                 column_name_new=new_name,
                 exitcode=0,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -156,6 +162,7 @@ def update_random_column(self):
         node=node,
         exitcode=0,
         timeout=30,
+        **alter_query_args,
     )
 
 
@@ -185,7 +192,11 @@ def detach_attach_random_partition(self):
 
     with When("I detach a part"):
         alter_table_detach_partition(
-            node=node, table_name=table_name, partition_name=partition, exitcode=0
+            node=node,
+            table_name=table_name,
+            partition_name=partition,
+            exitcode=0,
+            **alter_query_args,
         )
 
     with Then(f"I wait {delay:.2}s"):
@@ -193,7 +204,11 @@ def detach_attach_random_partition(self):
 
     with Finally("I reattach the part"):
         alter_table_attach_partition(
-            node=node, table_name=table_name, partition_name=partition, exitcode=0
+            node=node,
+            table_name=table_name,
+            partition_name=partition,
+            exitcode=0,
+            **alter_query_args,
         )
 
 
@@ -210,14 +225,14 @@ def freeze_unfreeze_random_part(self):
 
     with When("I freeze the part"):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
-        node.query(query, exitcode=0)
+        node.query(query, exitcode=0, **alter_query_args)
 
     with And(f"I wait {delay:.2}s"):
         time.sleep(delay)
 
     with Finally("I unfreeze the part"):
         query = f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition} WITH NAME '{backup_name}'"
-        node.query(query, exitcode=0)
+        node.query(query, exitcode=0, **alter_query_args)
 
 
 @TestStep
@@ -233,7 +248,11 @@ def drop_random_part(self):
 
     if detach_first:
         with When("I detach a partition from the first table"):
-            node.query(f"ALTER TABLE {table_name} DETACH PART '{part_id}'", exitcode=0)
+            node.query(
+                f"ALTER TABLE {table_name} DETACH PART '{part_id}'",
+                exitcode=0,
+                **alter_query_args,
+            )
 
         with And("I drop the detached partition"):
             node.query(
@@ -242,7 +261,11 @@ def drop_random_part(self):
             )
     else:
         with When("I drop the part"):
-            node.query(f"ALTER TABLE {table_name} DROP PART '{part_id}'", exitcode=0)
+            node.query(
+                f"ALTER TABLE {table_name} DROP PART '{part_id}'",
+                exitcode=0,
+                **alter_query_args,
+            )
 
 
 @TestStep
@@ -265,6 +288,7 @@ def replace_random_part(self):
                 path_to_backup=source_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
+                **alter_query_args,
             )
 
 
@@ -293,9 +317,9 @@ def move_random_partition_to_random_table(self):
             sync_replica(node=node, table_name=source_table_name)
 
         with Then("I make sure the two tables have synced columns"):
-            assert get_column_names(
-                node=node, table_name=destination_table_name
-            ) == get_column_names(node=node, table_name=source_table_name), error()
+            dest_cols = get_column_names(node=node, table_name=destination_table_name)
+            src_cols = get_column_names(node=node, table_name=source_table_name)
+            assert dest_cols == src_cols, error()
 
         with When("I attach the partition to the second table"):
             alter_table_move_partition_to_table(
@@ -306,6 +330,7 @@ def move_random_partition_to_random_table(self):
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
                 timeout=30,
+                **alter_query_args,
             )
 
 
@@ -345,6 +370,7 @@ def move_random_partition_to_random_disk(self):
             exitcode=0,
             no_checks=self.context.ignore_failed_part_moves,
             timeout=30,
+            **alter_query_args,
         )
 
 
@@ -368,6 +394,7 @@ def attach_random_part_from_table(self):
                 path_to_backup=source_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
+                **alter_query_args,
             )
 
 
@@ -387,12 +414,14 @@ def fetch_random_part_from_table(self):
             node.query(
                 f"ALTER TABLE {destination_table_name} FETCH PART '{part_id}' FROM '/clickhouse/tables/{source_table_name}'",
                 exitcode=0,
+                **alter_query_args,
             )
 
         with And("I attach the part to the second table"):
             node.query(
                 f"ALTER TABLE {destination_table_name} ATTACH PART '{part_id}'",
                 exitcode=0,
+                **alter_query_args,
             )
 
 
@@ -413,6 +442,7 @@ def clear_random_column(self):
         column_name=column_name,
         partition_name=str(random.randint(0, 3)),
         no_checks=True,
+        **alter_query_args,
     )
 
 
@@ -435,6 +465,7 @@ def delete_random_rows(self):
         condition=f"({column_name} % {divisor} = {remainder})",
         node=node,
         no_checks=True,
+        **alter_query_args,
     )
 
 
@@ -459,6 +490,7 @@ def delete_random_rows_lightweight(self):
         node.query(
             f"ALTER TABLE {table_name} APPLY DELETED MASK",
             no_checks=True,
+            **alter_query_args,
         )
 
 
@@ -467,22 +499,24 @@ def delete_random_rows_lightweight(self):
 @Name("add projection")
 def add_random_projection(self):
     """Add a random projection to all tables."""
-    projection_name = "projection_" + getuid()
 
     with table_schema_lock:
         table_name = get_random_table_name()
         node = get_random_node_for_table(table_name=table_name)
         column_name = get_random_column_name(node=node, table_name=table_name)
+        projection_name = f"projection_{getuid()[:8]}_{column_name}"
 
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
                 exitcode=0,
+                **alter_query_args,
             )
             node.query(
                 f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
                 exitcode=0,
+                **alter_query_args,
             )
 
 
@@ -506,12 +540,12 @@ def clear_random_projection(self):
             node.query(
                 f"ALTER TABLE {table_name} CLEAR PROJECTION {projection_name} IN PARTITION {partition_name}",
                 exitcode=0,
+                **alter_query_args,
             )
             return
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("drop projection")
 def drop_random_projection(self):
     """Delete a random projection from all tables."""
@@ -526,12 +560,26 @@ def drop_random_projection(self):
 
         projection_name = random.choice(projections)
 
-        for table_name in tables:
-            node = get_random_node_for_table(table_name=table_name)
-            node.query(
-                f"ALTER TABLE {table_name} DROP PROJECTION {projection_name}",
-                exitcode=0,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                with When(f"I drop {projection_name} on all tables"):
+                    exit_codes = {}
+                    for table_name in tables:
+                        node = get_random_node_for_table(table_name=table_name)
+                        r = node.query(
+                            f"ALTER TABLE {table_name} DROP PROJECTION {projection_name}",
+                            no_checks=True,
+                            **alter_query_args,
+                        )
+                        exit_codes[table_name] = r.exitcode
+
+                with Then("all drops should have succeeded"):
+                    # If a previous drop projection attempt failed halfway,
+                    # it's possible that this projection does not exist on all tables
+                    unknown_proj_code = 70
+
+                    for table_name in tables:
+                        assert exit_codes[table_name] in [0, unknown_proj_code], error()
 
 
 @TestStep
@@ -539,21 +587,25 @@ def drop_random_projection(self):
 @Name("add index")
 def add_random_index(self):
     """Add a random index to all tables"""
-    index_name = "index_" + getuid()
-
     with table_schema_lock:
         table_name = get_random_table_name()
         node = get_random_node_for_table(table_name=table_name)
         column_name = get_random_column_name(node=node, table_name=table_name)
+        index_name = f"index_{getuid()[:8]}_{column_name}"
 
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
             node.query(
                 f"ALTER TABLE {table_name} ADD INDEX {index_name} {column_name} TYPE bloom_filter",
                 exitcode=0,
+                **alter_query_args,
             )
 
-    node.query(f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}", exitcode=0)
+    node.query(
+        f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
+        exitcode=0,
+        **alter_query_args,
+    )
 
 
 @TestStep
@@ -576,12 +628,12 @@ def clear_random_index(self):
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
             exitcode=0,
+            **alter_query_args,
         )
         return
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("drop index")
 def drop_random_index(self):
     """Delete a random index to all tables"""
@@ -593,13 +645,26 @@ def drop_random_index(self):
 
     index_name = random.choice(indexes)
 
-    for table_name in self.context.table_names:
-        node = get_random_node_for_table(table_name=table_name)
+    for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+        with attempt:
+            exit_codes = {}
+            with When(f"I drop {index_name} on all tables"):
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
 
-        node.query(
-            f"ALTER TABLE {table_name} DROP INDEX {index_name}",
-            exitcode=0,
-        )
+                    r = node.query(
+                        f"ALTER TABLE {table_name} DROP INDEX {index_name}",
+                        **alter_query_args,
+                    )
+                    exit_codes[table_name] = r.exitcode
+
+            with Then("all drops should have succeeded"):
+                # If a previous drop index attempt failed halfway,
+                # it's possible that this index does not exist on all tables
+                unknown_index_code = 36
+
+                for table_name in self.context.table_names:
+                    assert exit_codes[table_name] in [0, unknown_index_code], error()
 
 
 @TestStep
@@ -613,7 +678,11 @@ def modify_random_ttl(self):
     if random.randint(0, 1):
         ttl_expression += " to volume 'external'"
 
-    node.query(f"ALTER TABLE {table_name} MODIFY TTL {ttl_expression}", exitcode=0)
+    node.query(
+        f"ALTER TABLE {table_name} MODIFY TTL {ttl_expression}",
+        exitcode=0,
+        **alter_query_args,
+    )
 
 
 @TestStep
@@ -623,7 +692,72 @@ def remove_random_ttl(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
 
-    node.query(f"ALTER TABLE {table_name} REMOVE TTL", no_checks=True)
+    node.query(
+        f"ALTER TABLE {table_name} REMOVE TTL", no_checks=True, **alter_query_args
+    )
+
+
+@TestStep(Then)
+def check_tables_have_same_columns(self, tables):
+    """
+    Asserts that the given tables have the same columns.
+    Smartly selects a node for each given replicated table.
+    Does not check that all replicas of a table agree.
+    """
+    with When("I get the columns for each table"):
+        table_columns = {}
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            table_columns[table_name] = set(
+                get_column_names(node=node, table_name=table_name)
+            )
+
+    with Then("all tables should have the same columns"):
+        for table1, table2 in combinations(tables, 2):
+            with By(f"checking {table1} and {table2}"):
+                assert table_columns[table1] == table_columns[table2], error()
+
+
+@TestStep(Then)
+def check_tables_have_same_projections(self, tables):
+    """
+    Asserts that the given tables have the same projections.
+    Smartly selects a node for each given replicated table.
+    Does not check that all replicas of a table agree.
+    """
+    with When("I get the projections for each table"):
+        table_projections = {}
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            table_projections[table_name] = set(
+                get_projections(node=node, table_name=table_name)
+            )
+
+    with Then("all tables should have the same projections"):
+        for table1, table2 in combinations(tables, 2):
+            with By(f"checking {table1} and {table2}"):
+                assert table_projections[table1] == table_projections[table2], error()
+
+
+@TestStep(Then)
+def check_tables_have_same_indexes(self, tables):
+    """
+    Asserts that the given tables have the same indexes.
+    Smartly selects a node for each given replicated table.
+    Does not check that all replicas of a table agree.
+    """
+    with When("I get the projections for each table"):
+        table_indexes = {}
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            table_indexes[table_name] = set(
+                get_indexes(node=node, table_name=table_name)
+            )
+
+    with Then("all tables should have the same indexes"):
+        for table1, table2 in combinations(tables, 2):
+            with By(f"checking {table1} and {table2}"):
+                assert table_indexes[table1] == table_indexes[table2], error()
 
 
 @TestStep(Then)
@@ -639,6 +773,7 @@ def check_consistency(self, tables=None, sync_timeout=None):
     nodes = self.context.ch_nodes
     if tables is None:
         tables = self.context.table_names
+
     for table_name in tables:
         with When("I check which nodes have the table"):
             active_nodes = [
@@ -661,7 +796,7 @@ def check_consistency(self, tables=None, sync_timeout=None):
                 )
                 join()
 
-        with Then("All replicas should have the same state"):
+        with Then("all replicas should have the same state"):
             for attempt in retries(timeout=step_retry_timeout, delay=5):
                 with attempt:
                     with When(f"I count rows and check columns for table {table_name}"):
@@ -678,13 +813,22 @@ def check_consistency(self, tables=None, sync_timeout=None):
 
                     with Then("I check that all states match"):
                         for n1, n2 in combinations(active_nodes, 2):
-                            with By(f"Checking {n1.name} and {n2.name}"):
+                            with By(f"checking {n1.name} and {n2.name}"):
                                 assert (
                                     row_counts[n1.name] == row_counts[n2.name]
                                 ), error()
                                 assert (
                                     column_names[n1.name] == column_names[n2.name]
                                 ), error()
+
+    # The above check only checks that nodes agree on what should be in each table
+    # The below check also asserts that all tables have the same structure
+    # Part move actions require matching structure
+
+    with Then("check that table structures are in sync"):
+        check_tables_have_same_columns(tables=tables)
+        check_tables_have_same_projections(tables=tables)
+        check_tables_have_same_indexes(tables=tables)
 
 
 @TestStep
