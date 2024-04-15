@@ -929,7 +929,7 @@ def rows_number(self, sleep=0.5, check_points=20, table_name="zookeeper_bench"):
             metric(
                 name="number_of_rows",
                 value=self.context.cluster.node("clickhouse1")
-                .query(f"select count() from {table_name}")
+                .query(f"select count() from {table_name} FORMAT TabSeparated")
                 .output.strip(),
                 units="rows",
             )
@@ -957,7 +957,9 @@ def system_zoo_check(
             metric(
                 name="",
                 value=self.context.cluster.node("clickhouse1")
-                .query("select * from system.events where event ilike '%ZooKeeper%';")
+                .query(
+                    "select * from system.events where event ilike '%ZooKeeper%' FORMAT TabSeparated;"
+                )
                 .output.strip(),
                 units="",
             )

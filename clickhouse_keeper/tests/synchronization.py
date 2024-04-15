@@ -225,7 +225,10 @@ def attach(self):
 
         with Then("I check that table attached"):
             retry(self.context.cluster.node("clickhouse1").query, timeout=100, delay=1)(
-                f"select * from test", exitcode=0, message="test\t42", steps=False
+                f"select * from test FORMAT TabSeparated",
+                exitcode=0,
+                message="test\t42",
+                steps=False,
             )
     finally:
         with Finally("I drop table"):
@@ -264,7 +267,7 @@ def detach(self):
 
         for name in self.context.cluster.nodes["clickhouse"][:9]:
             retry(self.context.cluster.node(name).query, timeout=100, delay=1)(
-                f"select * from {table_name}",
+                f"select * from {table_name} FORMAT TabSeparated",
                 message=message.format(table_name=table_name),
                 exitcode=60,
                 steps=False,

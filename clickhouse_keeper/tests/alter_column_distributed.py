@@ -69,7 +69,7 @@ def alter_drop_column(self):
         with Then("I check that column dropped on all shards"):
             for name in self.context.cluster.nodes["clickhouse"][:9]:
                 self.context.cluster.node(name).query(
-                    f"SELECT COLUMNS('Added1') FROM {table_name};",
+                    f"SELECT COLUMNS('Added1') FROM {table_name} FORMAT TabSeparated;",
                     exitcode=51,
                     message="DB::Exception: Empty list of columns in SELECT query.",
                 )
@@ -151,7 +151,7 @@ def alter_clear_column(self):
         with Then("I check data dropped from column 'partition'"):
             for name in self.context.cluster.nodes["clickhouse"][0:9]:
                 retry(self.context.cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT * FROM {table_name};",
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated;",
                     exitcode=0,
                     message="1\t0",
                     steps=False,

@@ -42,7 +42,7 @@ def alter_partition(
 
     with And("I check data on different shards"):
         cluster.node("clickhouse1").query(
-            f"select count() from {table_name}", message="2"
+            f"select count() from {table_name} FORMAT TabSeparated", message="2"
         )
 
 
@@ -70,12 +70,12 @@ def alter_detach_partition(self):
         with Then("I check part detached"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="1"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
                 )
         with And("I check part moved to system.detached_parts"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"select count() from system.detached_parts "
+                    f"select count() from system.detached_parts FORMAT TabSeparated"
                     f"where table ilike '{table_name}'",
                     message="1",
                 )
@@ -111,14 +111,14 @@ def alter_drop_partition(self):
         with Then("I check part dropped"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="1"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
                 )
 
         with And("I check part doesn't moved to system.detached_parts"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
                     f"select count() from system.detached_parts "
-                    f"where table ilike '{table_name}'",
+                    f"where table ilike '{table_name}' FORMAT TabSeparated",
                     message="0",
                 )
 
@@ -156,14 +156,14 @@ def alter_attach_partition(self):
         with Then("I check part detached"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="2"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="2"
                 )
 
         with And("I check part moved to system.detached_parts"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
                     f"select count() from system.detached_parts "
-                    f"where table ilike '{table_name}'",
+                    f"where table ilike '{table_name}' FORMAT TabSeparated",
                     message="0",
                 )
 
@@ -204,7 +204,7 @@ def alter_attach_partition_from(self):
         with Then("I check part attached"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"select count() from {table_name}", message="4"
+                    f"select count() from {table_name} FORMAT TabSeparated", message="4"
                 )
 
     finally:
@@ -247,10 +247,10 @@ def alter_replace_partition_from(self):
         with Then("I check part replaced"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"select count() from {table_name}", message="2"
+                    f"select count() from {table_name} FORMAT TabSeparated", message="2"
                 )
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"select * from {table_name}", message="4"
+                    f"select * from {table_name} FORMAT TabSeparated", message="4"
                 )
 
     finally:
@@ -293,10 +293,11 @@ def alter_move_partition_to_table(self):
         with Then("I check part moved"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"select count() from {table_name}", message="0"
+                    f"select count() from {table_name} FORMAT TabSeparated", message="0"
                 )
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"select count() from {table_name2}", message="4"
+                    f"select count() from {table_name2} FORMAT TabSeparated",
+                    message="4",
                 )
 
     finally:
@@ -355,7 +356,7 @@ def alter_clear_column_in_partition(self):
         with Then("I check partition in column 'v' cleared"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="1"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
                 )
 
     finally:
@@ -507,7 +508,7 @@ def alter_fetch_partition(self):
 
         with Then("I check the data added"):
             cluster.node("clickhouse4").query(
-                f"select * from {table_name}", message="1"
+                f"select * from {table_name} FORMAT TabSeparated", message="1"
             )
 
             node.query(f"SYSTEM START MERGES {table_name}")
@@ -564,7 +565,7 @@ def alter_update_in_partition(self):
         with Then("I check data is updated"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT * FROM {table_name}", message="4"
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated", message="4"
                 )
 
     finally:
@@ -616,10 +617,10 @@ def alter_delete_in_partition(self):
         with Then("I check partition 2 data is deleted"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT * FROM {table_name}", message="1"
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated", message="1"
                 )
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="1"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
                 )
 
     finally:

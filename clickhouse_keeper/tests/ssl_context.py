@@ -116,7 +116,7 @@ def enable_ssl(
         add_secure_ports_configuration_file(restart=restart, timeout=timeout, node=node)
 
     with When("I execute query using secure connection"):
-        r = node.query("SELECT 1", secure=True)
+        r = node.query("SELECT 1 FORMAT TabSeparated", secure=True)
 
     with Then("it should work"):
         assert r.output == "1", error()
