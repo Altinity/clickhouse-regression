@@ -91,7 +91,7 @@ def check_order_by(
     with And(
         "I try to attach partition to the destination table from the source table"
     ):
-        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id"
+        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT TabSeparated"
 
         partition_ids = sorted(
             list(set(node.query(partition_list_query).output.split()))
@@ -321,10 +321,10 @@ def indices(self):
 
     with And("I check that partition was attached"):
         partition_values_source = self.context.node.query(
-            f"SELECT * FROM {source_table} WHERE a == 1 ORDER BY tuple(*)"
+            f"SELECT * FROM {source_table} WHERE a == 1 ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         partition_values_destination = self.context.node.query(
-            f"SELECT * FROM {destination_table} WHERE a == 1 ORDER BY tuple(*)"
+            f"SELECT * FROM {destination_table} WHERE a == 1 ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
         assert partition_values_source == partition_values_destination
@@ -387,10 +387,10 @@ def projections(self):
 
     with And("I check that partition was attached"):
         partition_values_source = self.context.node.query(
-            f"SELECT * FROM {source_table} WHERE a == 1 ORDER BY tuple(*)"
+            f"SELECT * FROM {source_table} WHERE a == 1 ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         partition_values_destination = self.context.node.query(
-            f"SELECT * FROM {destination_table} WHERE a == 1 ORDER BY tuple(*)"
+            f"SELECT * FROM {destination_table} WHERE a == 1 ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
         assert partition_values_source == partition_values_destination

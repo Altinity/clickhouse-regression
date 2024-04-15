@@ -61,7 +61,7 @@ def check_merge_increment(self, engine):
 
     with And("I check part names"):
         part_names = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
         ).output.split("\n")
 
     with And(
@@ -71,7 +71,7 @@ def check_merge_increment(self, engine):
         expected_part_name = "all_1_5_11"
 
         part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -139,7 +139,7 @@ def check_merge_increment_replicated(self, engine):
     with And("I check part names"):
         node = random.choice(self.context.nodes)
         part_names = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
         ).output
 
     with And(
@@ -152,7 +152,7 @@ def check_merge_increment_replicated(self, engine):
             expected_part_name = ["all_0_2_11", "all_1_5_12"]
 
         part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:

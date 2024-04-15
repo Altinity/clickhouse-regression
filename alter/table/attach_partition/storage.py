@@ -87,10 +87,10 @@ def check_attach_partition_on_different_types_of_disks(
                     partition=partition,
                 )
             source_partition_data = self.context.node.query(
-                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             destination_partition_data = self.context.node.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -128,13 +128,13 @@ def check_attach_partition_detached_on_different_types_of_disks(self, table):
         table(table_name=table_name)
 
         table_before = self.context.node.query(
-            f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+            f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
         ).output
 
     with And("I detach partition from the table and check that partition was detached"):
         detach_partition(table=table_name)
         table_after_detach = self.context.node.query(
-            f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+            f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -145,7 +145,7 @@ def check_attach_partition_detached_on_different_types_of_disks(self, table):
 
     with Then("I check that data is the same as it was before attach detach"):
         table_after = self.context.node.query(
-            f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+            f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:

@@ -72,13 +72,17 @@ def check_partition_expression(
 
     with Then("I check if partition was attached to the destination table or not"):
         if valid:
-            result = node.query(f"SELECT * FROM {destination_table}")
+            result = node.query(
+                f"SELECT * FROM {destination_table} FORMAT TabSeparated"
+            )
             for attempt in retries(timeout=10, delay=1):
                 with attempt:
                     assert len(result.output) > 0, error()
             node.query(f"ALTER TABLE {destination_table} DETACH PARTITION {partition}")
         else:
-            result = node.query(f"SELECT * FROM {destination_table}")
+            result = node.query(
+                f"SELECT * FROM {destination_table} FORMAT TabSeparated"
+            )
             for attempt in retries(timeout=10, delay=1):
                 with attempt:
                     assert len(result.output) == 0, error()

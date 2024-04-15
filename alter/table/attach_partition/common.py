@@ -1025,14 +1025,14 @@ def check_partition_was_attached(
 
     with By("I check that there is no partition in detached folder"):
         partition_values = node.query(
-            f"SELECT partition_id FROM system.detached_parts WHERE table = '{table}' and partition_id = '{partition}' ORDER BY tuple(*)"
+            f"SELECT partition_id FROM system.detached_parts WHERE table = '{table}' and partition_id = '{partition}' ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
         assert len(partition_values) == 0
 
     with And("I check that data from the partition is on the table"):
         data = node.query(
-            f"SELECT partition FROM system.parts WHERE partition = '{partition}' and table = '{table}'"
+            f"SELECT partition FROM system.parts WHERE partition = '{partition}' and table = '{table}' FORMAT TabSeparated"
         ).output
 
         assert len(data) > 0
@@ -1054,7 +1054,7 @@ def check_part_was_attached(
 
     with By("I check that there is no part in the detached folder"):
         part_value = node.query(
-            f"SELECT name FROM system.detached_parts WHERE table = '{table}' and name = '{part}' ORDER BY tuple(*)"
+            f"SELECT name FROM system.detached_parts WHERE table = '{table}' and name = '{part}' ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
         assert len(part_value) == 0
@@ -1076,10 +1076,10 @@ def check_partition_was_attached_from(
         "I check that data in attached partition is the same in both the source and destination tables"
     ):
         source_data = node.query(
-            f"SELECT * FROM {source_table} WHERE p = {partition} ORDER BY p"
+            f"SELECT * FROM {source_table} WHERE p = {partition} ORDER BY p FORMAT TabSeparated"
         ).output
         destination_data = node.query(
-            f"SELECT * FROM {destination_table} WHERE p = {partition} ORDER BY p"
+            f"SELECT * FROM {destination_table} WHERE p = {partition} ORDER BY p FORMAT TabSeparated"
         ).output
 
         assert source_data == destination_data
@@ -1101,7 +1101,7 @@ def check_partition_was_detached(
 
     with By("selecting data from the table"):
         partition_values = node.query(
-            f"SELECT partition_id FROM system.detached_parts WHERE table = '{table}' and partition_id = '{partition}' ORDER BY tuple(*)"
+            f"SELECT partition_id FROM system.detached_parts WHERE table = '{table}' and partition_id = '{partition}' ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
         assert len(partition_values) > 0
@@ -1123,14 +1123,14 @@ def check_part_was_detached(
 
     with By("selecting data from the table"):
         partition_values = node.query(
-            f"SELECT name FROM system.detached_parts WHERE table = '{table}' and name = '{part}' ORDER BY tuple(*)"
+            f"SELECT name FROM system.detached_parts WHERE table = '{table}' and name = '{part}' ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
         assert len(partition_values) > 0
 
     with And("I check that data from the part is not on the table"):
         data = node.query(
-            f"SELECT name FROM system.parts WHERE name = '{part}' and table = '{table}'"
+            f"SELECT name FROM system.parts WHERE name = '{part}' and table = '{table}' FORMAT TabSeparated"
         ).output.strip()
 
         assert len(data) == 0

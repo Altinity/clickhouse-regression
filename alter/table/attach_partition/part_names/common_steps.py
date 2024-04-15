@@ -213,7 +213,7 @@ def is_all_mutations_applied(self, table_name, node=None):
 
     return (
         node.query(
-            f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0"
+            f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0 FORMAT TabSeparated"
         ).output
         == "0"
     )
@@ -227,7 +227,7 @@ def is_replication_queue_empty(self, table_name, node=None):
 
     return (
         node.query(
-            f"SELECT count() FROM system.replication_queue WHERE table = '{table_name}'"
+            f"SELECT count() FROM system.replication_queue WHERE table = '{table_name}' FORMAT TabSeparated"
         ).output
         == "0"
     )

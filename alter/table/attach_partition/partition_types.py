@@ -179,7 +179,7 @@ def check_attach_part(self, table):
         skip("No parts in table")
 
     parts = self.context.node.query(
-        f"SELECT name from system.parts where table='{table_name}'"
+        f"SELECT name from system.parts where table='{table_name}' FORMAT TabSeparated"
     ).output.split("\n")
 
     if len(parts) == 0:

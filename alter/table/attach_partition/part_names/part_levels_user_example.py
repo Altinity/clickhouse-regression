@@ -40,7 +40,7 @@ def part_levels_user_example(self):
 
     with And("I get part name and construct new part name with too high level"):
         part_names = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table}' and active"
+            f"SELECT name FROM system.parts WHERE table = '{destination_table}' and active FORMAT TabSeparated"
         ).output.split("\n")
         part_name = random.choice(part_names)
         new_part_name = "_".join(part_name.split("_")[:-1]) + "_4294967295"
@@ -64,7 +64,7 @@ def part_levels_user_example(self):
             partition="tuple()",
         )
         node.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table}' and active"
+            f"SELECT name FROM system.parts WHERE table = '{destination_table}' and active FORMAT TabSeparated"
         ).output
 
     with And("I attach partition from destination table to source table"):
@@ -74,13 +74,13 @@ def part_levels_user_example(self):
             partition="tuple()",
         )
         node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active FORMAT TabSeparated"
         ).output
         optimize_table(table_name=source_table)
 
     with And("I check current part names in source table"):
         part_names = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active FORMAT TabSeparated"
         ).output.split("\n")
 
     with And("I create second destination table"):
@@ -103,7 +103,7 @@ def part_levels_user_example(self):
 
     with And("I get part name and construct new part name"):
         part_names = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table_2}' AND active"
+            f"SELECT name FROM system.parts WHERE table = '{destination_table_2}' AND active FORMAT TabSeparated"
         ).output.split("\n")
         part_name = random.choice(part_names)
         new_part_name = "_".join(part_name.split("_")[:-1]) + "_4294967294"
@@ -127,7 +127,7 @@ def part_levels_user_example(self):
             partition="tuple()",
         )
         node.query(
-            f"SELECT name FROM system.parts WHERE table = '{destination_table_2}' and active"
+            f"SELECT name FROM system.parts WHERE table = '{destination_table_2}' and active FORMAT TabSeparated"
         ).output
 
     with And("I attach partition from second destination table to source table"):
@@ -137,6 +137,6 @@ def part_levels_user_example(self):
             partition="tuple()",
         )
         node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}' and active"
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' and active FORMAT TabSeparated"
         ).output
         optimize_table(table_name=source_table)
