@@ -54,7 +54,7 @@ def get_nodes_for_table(self, nodes, table_name):
     """Return all nodes that know about a given table."""
     active_nodes = []
     for node in nodes:
-        r = nodes[0].query("SELECT table from system.replicas FORMAT JSONColumns")
+        r = node.query("SELECT table from system.replicas FORMAT JSONColumns")
         tables = json.loads(r.output)["table"]
         if table_name in tables:
             active_nodes.append(node)
