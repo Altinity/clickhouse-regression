@@ -14606,6 +14606,10 @@ _aggregate_functions_argMax_string_that_ends_with__0_5 = r"""
 {"argMax(x, y)":"5","any(toTypeName(x))":"String","any(toTypeName(y))":"String"}
 """
 
+_aggregate_functions_argMax_user_example = r"""
+{"argMax(value, toNullable(time))":0,"any(toTypeName(value))":"Float64","any(toTypeName(toNullable(time)))":"Nullable(DateTime64(3))"}
+"""
+
 _aggregate_functions_argMax_with_group_by = r"""
 {"even":0,"argMax(number, modulo(number, 2))":"0","any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
 {"even":1,"argMax(number, modulo(number, 2))":"1","any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}

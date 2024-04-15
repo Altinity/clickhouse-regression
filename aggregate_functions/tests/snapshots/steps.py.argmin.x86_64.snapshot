@@ -14606,6 +14606,10 @@ _aggregate_functions_argMin_string_that_ends_with__0_1 = r"""
 {"argMin(x, y)":"1","any(toTypeName(x))":"String","any(toTypeName(y))":"String"}
 """
 
+_aggregate_functions_argMin_user_example = r"""
+{"argMin(value, toNullable(time))":0,"any(toTypeName(value))":"Float64","any(toTypeName(toNullable(time)))":"Nullable(DateTime64(3))"}
+"""
+
 _aggregate_functions_argMin_with_group_by = r"""
 {"even":0,"argMin(number, modulo(number, 2))":"0","any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
 {"even":1,"argMin(number, modulo(number, 2))":"1","any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
