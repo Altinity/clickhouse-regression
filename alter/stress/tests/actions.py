@@ -20,7 +20,7 @@ table_schema_lock = RLock()
 step_retry_timeout = 600
 step_retry_delay = 30
 
-alter_query_args = {"retry_delay": 30, "retry_count": 10}
+alter_query_args = {"retry_delay": 60, "retry_count": 10}
 
 
 @TestStep
@@ -524,6 +524,11 @@ def add_random_projection(self):
                 **alter_query_args,
             )
 
+        retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
+
+
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("clear projection")
@@ -580,6 +585,10 @@ def drop_random_projection(self):
                 with Then("all drops should have succeeded"):
                     for table_name in tables:
                         assert exit_codes[table_name] == 0, error()
+
+        retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
 
 
 @TestStep
