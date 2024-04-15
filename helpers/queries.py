@@ -76,7 +76,7 @@ def get_row_count(self, node: ClickHouseNode, table_name: str, timeout=30) -> in
 @TestStep
 def get_projections(self, node: ClickHouseNode, table_name: str) -> list:
     r = node.query(
-        f"SELECT distinct(name) FROM system.projection_parts WHERE table='{table_name}' FORMAT JSONColumns",
+        f"SELECT distinct(name) FROM system.projection_parts WHERE table='{table_name}' and active FORMAT JSONColumns",
         exitcode=0,
     )
     return json.loads(r.output)["name"]
