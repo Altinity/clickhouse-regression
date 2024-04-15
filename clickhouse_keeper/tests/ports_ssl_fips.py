@@ -29,7 +29,9 @@ def openssl_all_ports(self, node=None, message="New, TLSv1.2, Cipher is "):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
+    retry(node.query, timeout=300, delay=10)(
+        "SELECT 1 FORMAT TabSeparated", message="1", exitcode=0
+    )
 
     ports_list = ["9440", "9281", "9010", "9444", "8443"]
 
@@ -49,7 +51,9 @@ def openssl_all_ports_different_protocols_cyphers(self, node=None):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
+    retry(node.query, timeout=300, delay=10)(
+        "SELECT 1 FORMAT TabSeparated", message="1", exitcode=0
+    )
 
     ports_list = define("All ports for testing", ["9440", "9281", "9010", "8443"])
 
@@ -69,7 +73,9 @@ def tcp_connection_all_ports(self, node=None):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
+    retry(node.query, timeout=300, delay=10)(
+        "SELECT 1 FORMAT TabSeparated", message="1", exitcode=0
+    )
 
     ports_list = define("All ports for testing", ["9440"])
 
