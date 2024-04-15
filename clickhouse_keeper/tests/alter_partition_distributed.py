@@ -75,8 +75,8 @@ def alter_detach_partition(self):
         with And("I check part moved to system.detached_parts"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"select count() from system.detached_parts FORMAT TabSeparated"
-                    f"where table ilike '{table_name}'",
+                    f"select count() from system.detached_parts "
+                    f"where table ilike '{table_name}' FORMAT TabSeparated",
                     message="1",
                 )
 
