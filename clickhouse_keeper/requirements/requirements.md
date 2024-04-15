@@ -133,11 +133,11 @@
       * 3.21.9.1 [RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.TooMuchDiffersInData](#rqsrs-024clickhousekeeperrecoveryafterfailurestoomuchdiffersindata)
     * 3.21.10 [Recovery Procedure](#recovery-procedure)
       * 3.21.10.1 [RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.RecoveryProcedure](#rqsrs-024clickhousekeeperrecoveryafterfailuresrecoveryprocedure)
-    * 3.21.11 [Recovery Procedure After Complete Data Loss ](#recovery-procedure-after-complete-data-loss-)
+    * 3.21.11 [Recovery Procedure After Complete Data Loss](#recovery-procedure-after-complete-data-loss)
       * 3.21.11.1 [RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.RecoveryProcedureAfterCompleteDataLoss](#rqsrs-024clickhousekeeperrecoveryafterfailuresrecoveryprocedureaftercompletedataloss)
-    * 3.21.12 [Converting from MergeTree to ReplicatedMergeTree ](#converting-from-mergetree-to-replicatedmergetree-)
+    * 3.21.12 [Converting from MergeTree to ReplicatedMergeTree](#converting-from-mergetree-to-replicatedmergetree)
       * 3.21.12.1 [RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.ConvertingfromMergeTreetoReplicatedMergeTree](#rqsrs-024clickhousekeeperrecoveryafterfailuresconvertingfrommergetreetoreplicatedmergetree)
-    * 3.21.13 [Converting from ReplicatedMergeTree to MergeTree ](#converting-from-replicatedmergetree-to-mergetree-)
+    * 3.21.13 [Converting from ReplicatedMergeTree to MergeTree](#converting-from-replicatedmergetree-to-mergetree)
       * 3.21.13.1 [RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.ConvertingfromReplicatedMergeTreetoMergeTree](#rqsrs-024clickhousekeeperrecoveryafterfailuresconvertingfromreplicatedmergetreetomergetree)
     * 3.21.14 [Monitor Data Synchronicity](#monitor-data-synchronicity)
       * 3.21.14.1 [RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.MonitorDataSynchronicity](#rqsrs-024clickhousekeeperrecoveryafterfailuresmonitordatasynchronicity)
@@ -392,8 +392,15 @@
       * 3.37.5.1 [RQ.SRS-024.ClickHouse.Keeper.Converter.CommandLineOptions.MissingArgumentValues](#rqsrs-024clickhousekeeperconvertercommandlineoptionsmissingargumentvalues)
   * 3.38 [Four Letter Word Commands](#four-letter-word-commands)
     * 3.38.1 [RQ.SRS-024.ClickHouse.Keeper.4lwCommands](#rqsrs-024clickhousekeeper4lwcommands)
-
-
+  * 3.39 [Disaster Recovery](#disaster-recovery)
+    * 3.39.1 [Test Schema](#test-schema)
+    * 3.39.2 [Leader Node](#leader-node)
+    * 3.39.3 [Follower Node](#follower-node)
+    * 3.39.4 [Learner Node](#learner-node)
+    * 3.39.5 [Dynamic Recovery Process](#dynamic-recovery-process)
+    * 3.39.6 [Manual Recovery Process](#manual-recovery-process)
+    * 3.39.7 [RQ.SRS-024.ClickHouse.Keeper.Disaster Recovery.DynamicRecovery](#rqsrs-024clickhousekeeperdisaster-recoverydynamicrecovery)
+    * 3.39.8 [RQ.SRS-024.ClickHouse.Keeper.Disaster Recovery.ManualRecovery](#rqsrs-024clickhousekeeperdisaster-recoverymanualrecovery)
 
 ## Introduction
 
@@ -1024,14 +1031,14 @@ version: 1.0
 
 [ClickHouse]'s `clickhouse-keeper` utility SHALL have a recovery procedure as in [ZooKeeper].
 
-#### Recovery Procedure After Complete Data Loss 
+#### Recovery Procedure After Complete Data Loss
 
 ##### RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.RecoveryProcedureAfterCompleteDataLoss
 version: 1.0
 
 [ClickHouse]'s `clickhouse-keeper` utility SHALL have a recovery procedure if all data and metadata disappeared from one of the servers as in [ZooKeeper].
 
-#### Converting from MergeTree to ReplicatedMergeTree 
+#### Converting from MergeTree to ReplicatedMergeTree
 
 ##### RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.ConvertingfromMergeTreetoReplicatedMergeTree
 version: 1.0
@@ -1039,7 +1046,7 @@ version: 1.0
 [ClickHouse] SHALL support the conversion of the MergeTree table that was manually replicated 
 to a replicated table when `clickhouse-keeper` is used.
 
-#### Converting from ReplicatedMergeTree to MergeTree 
+#### Converting from ReplicatedMergeTree to MergeTree
 
 ##### RQ.SRS-024.ClickHouse.Keeper.RecoveryAfterFailures.ConvertingfromReplicatedMergeTreetoMergeTree
 version: 1.0
@@ -1240,7 +1247,7 @@ version: 1.0
 [ClickHouse] SHALL support the combination of abrupt disconnect and adding a new node
 with no data when `clickhouse-keeper` is used for [synchronization].
 
-#### Support Combination of Normal Disconnect and Adding Replica With Stale Data 
+#### Support Combination of Normal Disconnect and Adding Replica With Stale Data
 
 ##### RQ.SRS-024.ClickHouse.Keeper.OperationalErrors.SupportNdisconnectAndStaleNode
 version: 1.0
@@ -1465,7 +1472,7 @@ ORDER BY id
 PARTITION BY partition;
 ```
 
-### Non-distributed DDL Query 
+### Non-distributed DDL Query
 
 #### CREATE Replicated Table
 
@@ -2642,6 +2649,82 @@ version: 1.0
 The 4lw commands has a white list configuration `four_letter_word_white_list` which has default value 
 `conf,cons,crst,envi,ruok,srst,srvr,stat,wchc,wchs,dirs,mntr,isro`
 
+
+### Disaster Recovery
+
+Disaster Recovery is the process of transferring control from a failing primary availability zone, to a secondary availability zone.
+
+#### Test Schema
+
+```yml
+clickhouse-keeper:
+  Clusters:
+  - ClickHouse Keeper Cluster
+  PrimaryClusterSize: [1, 3, 5]
+  SecondaryClusterSize: [1, 3]
+  KeeperServerConfig:
+    coordination_settings:
+      operation_timeout_ms: 10000
+      min_session_timeout_ms: 10000
+      session_timeout_ms: 30000
+      dead_session_check_period_ms: 500
+      heart_beat_interval_ms: 500
+      election_timeout_lower_bound_ms: 1000
+      election_timeout_upper_bound_ms: 2000
+    enable_reconfiguration: [True, False]
+    raft_configuration:
+      can_become_leader: [True, False]
+  StartUpOptions:
+  - --force-recovery
+  Actions:
+    Kill nodes: [leader, follower, learner]
+    Reconfigure can_become_leader: [leader, follower, learner]
+    Snapshot recovery (all nodes lost): [leader, follower, learner]
+    Signals: [rcvr, rqld]
+```
+
+#### Leader Node
+The currently elected cluster leader. The leader handles write requests.
+
+#### Follower Node
+A cluster member that records events, is capable of voting for leader nodes
+and being elected to leader. Also known as a participant node.
+
+#### Learner Node
+A cluster member that records events but does not participate in elections.
+Usually located in an alternate availability zone. Also known as a standalone node.
+
+This is controlled by the `<can_become_leader>` attribute in the `<raft_configuration>` section of `keeper_config.xml`.
+In disaster recovery, learner nodes from a secondary availability zone are
+reconfigured into follower nodes.
+
+#### Dynamic Recovery Process
+After enabling `<can_become_leader>` in the configs of the secondary nodes,
+the dynamic recovery process uses the `reconfig` command to switch secondary nodes
+from learner to participant.
+Then moves leadership to the secondary cluster with the `rqld` command.
+
+The dynamic recovery process requires `<enable_reconfiguration>`
+set to `true` in`keeper_config.xml`.
+
+#### Manual Recovery Process
+After enabling `<can_become_leader>` in the configs of the secondary nodes,
+the manual recovery process removes the failing nodes from the
+`<raft_configuration>` section of `keeper_config.xml`. Then uses the `rcvr`
+command or `--force-recovery` startup flag on one of the secondary nodes.
+
+#### RQ.SRS-024.ClickHouse.Keeper.Disaster Recovery.DynamicRecovery
+version: 1.0
+
+[ClickHouse] SHALL support transferring leadership to a secondary availability zone
+using the dynamic recovery procedure for all valid test schema combinations.
+
+#### RQ.SRS-024.ClickHouse.Keeper.Disaster Recovery.ManualRecovery
+version: 1.0
+
+[ClickHouse] SHALL support transferring leadership to a secondary availability zone
+using the manual recovery procedure via both `rcvr` and `--force-recovery`
+for all valid test schema combinations.
 
 [expected execution of operation]: #expected-execution-of-operation
 [all-or-nothing exectution]: #all-or-nothing-execution
