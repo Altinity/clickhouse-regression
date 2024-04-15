@@ -1,4 +1,5 @@
 import itertools
+import json
 
 from testflows.core import *
 from testflows.asserts import values, error, snapshot
@@ -19,6 +20,7 @@ aggregate_functions = [
     "any_respect_nulls",
     "anyHeavy",
     "anyLast",
+    "approx_top_k",
     "argMax",
     "argMin",
     "avg",
@@ -209,6 +211,7 @@ def execute_query(
     hash_output=False,
     timeout=None,
     settings=None,
+    use_result_in_snapshot_name=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if settings is None:
@@ -243,6 +246,11 @@ def execute_query(
         )
         if no_checks:
             return r
+
+    if use_result_in_snapshot_name:
+        result = json.loads(r.output)
+        result_value = list(result.values())[0]
+        snapshot_name += f"_{result_value}"
 
     if message is None:
         if expected is not None:
