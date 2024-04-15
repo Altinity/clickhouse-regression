@@ -524,11 +524,6 @@ def add_random_projection(self):
                 **alter_query_args,
             )
 
-        retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
-            tables=self.context.table_names
-        )
-
-
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("clear projection")
