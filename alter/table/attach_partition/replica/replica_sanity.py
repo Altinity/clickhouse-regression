@@ -35,7 +35,7 @@ def parallel_add_remove_sanity(self):
             rows=rows_per_insert,
         )
         insert_sets = 1
-        nodes[0].query(f"SELECT count() from {table_name}")
+        nodes[0].query(f"SELECT count() from {table_name} FORMAT TabSeparated")
 
         And(
             "I replicate the table on the second node in parallel",
@@ -60,7 +60,7 @@ def parallel_add_remove_sanity(self):
             rows=rows_per_insert,
         )
         insert_sets += 1
-        nodes[1].query(f"SELECT count() from {table_name}")
+        nodes[1].query(f"SELECT count() from {table_name} FORMAT TabSeparated")
 
         And(
             "I delete the replica on the first node",
@@ -84,7 +84,7 @@ def parallel_add_remove_sanity(self):
             rows=rows_per_insert,
         )
         insert_sets += 1
-        nodes[1].query(f"SELECT count() from {table_name}")
+        nodes[1].query(f"SELECT count() from {table_name} FORMAT TabSeparated")
 
         join()
 
@@ -108,7 +108,7 @@ def parallel_add_remove_sanity(self):
             rows=rows_per_insert,
         )
         insert_sets += 1
-        nodes[1].query(f"SELECT count() from {table_name}")
+        nodes[1].query(f"SELECT count() from {table_name} FORMAT TabSeparated")
 
         And(
             "I start parallel inserts on the third node in parallel",
@@ -120,7 +120,7 @@ def parallel_add_remove_sanity(self):
             rows=rows_per_insert,
         )
         insert_sets += 1
-        nodes[2].query(f"SELECT count() from {table_name}")
+        nodes[2].query(f"SELECT count() from {table_name} FORMAT TabSeparated")
 
         And(
             "I replicate the table on the first node again in parallel",

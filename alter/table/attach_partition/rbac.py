@@ -59,10 +59,10 @@ def check_if_partition_values_on_destination_changed(
 
     with And("checking if the data on the specific partition was attached or not"):
         partition_values_source = node.query(
-            f"SELECT * FROM {source_table} WHERE p == 1 ORDER BY tuple(*)"
+            f"SELECT * FROM {source_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
         )
         partition_values_destination = node.query(
-            f"SELECT * FROM {destination_table} WHERE p == 1 ORDER BY tuple(*)"
+            f"SELECT * FROM {destination_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
         if changed:
@@ -192,7 +192,9 @@ def user_attach_partition_with_privileges(
 
     with And("I insert data into the table"):
         create_partitions_with_random_uint64(table_name=table, number_of_values=10)
-        data_before_attach = node.query(f"SELECT * FROM {table} ORDER BY p,i,extra")
+        data_before_attach = node.query(
+            f"SELECT * FROM {table} ORDER BY p,i,extra FORMAT TabSeparated"
+        )
 
     with And("I detach a partition from the table"):
         detach_partition(table=table)
@@ -215,7 +217,7 @@ def user_attach_partition_with_privileges(
 
             with Then("I check that data was attached"):
                 data_after_attach = node.query(
-                    f"SELECT * FROM {table} ORDER BY p,i,extra"
+                    f"SELECT * FROM {table} ORDER BY p,i,extra FORMAT TabSeparated"
                 )
                 for retry in retries(timeout=10, delay=2):
                     with retry:
@@ -257,7 +259,9 @@ def user_attach_part_with_privileges(
 
     with And("I insert data into the table"):
         create_partitions_with_random_uint64(table_name=table, number_of_values=10)
-        data_before_attach = node.query(f"SELECT * FROM {table} ORDER BY p,i,extra")
+        data_before_attach = node.query(
+            f"SELECT * FROM {table} ORDER BY p,i,extra FORMAT TabSeparated"
+        )
 
     with And("I detach a part from the table"):
         detach_part(table=table, part="1_1_1_0")
@@ -280,7 +284,7 @@ def user_attach_part_with_privileges(
 
             with Then("I check that data was attached"):
                 data_after_attach = node.query(
-                    f"SELECT * FROM {table} ORDER BY p,i,extra"
+                    f"SELECT * FROM {table} ORDER BY p,i,extra FORMAT TabSeparated"
                 )
                 for retry in retries(timeout=10, delay=2):
                     with retry:

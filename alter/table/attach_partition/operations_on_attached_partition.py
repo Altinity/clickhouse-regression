@@ -98,7 +98,7 @@ def get_valid_partition_key(self, source_partition_key):
 
 def get_partition_ids(self, table_name, node):
     """Return list of partition ids for specified table."""
-    partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+    partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
     return sorted(list(set(node.query(partition_list_query).output.split())))
 
 
@@ -202,7 +202,7 @@ def attach_partition_from_table(
                 )
 
     with And("I get the list of partitions and validate partition keys pair"):
-        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id"
+        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT TabSeparated"
 
         partition_ids = sorted(
             list(
@@ -227,10 +227,10 @@ def attach_partition_from_table(
             f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {self.context.source_engine}, destination table engine - {self.context.destination_engine}:"
         ):
             source_partition_data = get_node(self, "source").query(
-                f"SELECT * FROM {source_table_name} ORDER BY tuple(*)"
+                f"SELECT * FROM {source_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
             )
             destination_partition_data = get_node(self, "destination").query(
-                f"SELECT * FROM {destination_table_name} ORDER BY tuple(*)"
+                f"SELECT * FROM {destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -267,7 +267,7 @@ def check_detach_attach_partition(
         skip("Table was not created")
 
     with And("I get the list of partitions"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
         destination_partition_ids = sorted(
             list(
                 set(
@@ -281,13 +281,13 @@ def check_detach_attach_partition(
     with And("I detach partition from the table"):
         partition = random.choice(destination_partition_ids)
         data_before = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         self.context.node_1.query(
             f"ALTER TABLE {table_name} DETACH PARTITION {partition}"
         )
         data_after = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -298,7 +298,7 @@ def check_detach_attach_partition(
             f"ALTER TABLE {table_name} ATTACH PARTITION {partition}"
         )
         data_after = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with Then("I check that partitions were attached"):
@@ -331,7 +331,7 @@ def check_drop_partition(
         skip("Table was not created")
 
     with And("I get the list of partitions"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
         destination_partition_ids = sorted(
             list(
                 set(
@@ -350,7 +350,9 @@ def check_drop_partition(
 
     with And("I check that partitions were dropped"):
         for partition in destination_partition_ids:
-            data = self.context.node_1.query(f"SELECT count() FROM {table_name}")
+            data = self.context.node_1.query(
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated"
+            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
                     assert int(data.output) == 0, error()
@@ -393,11 +395,11 @@ def check_replace_partition(
         )
 
     with And("I get the list of partitions"):
-        replace_partition_list = f"SELECT partition FROM system.parts WHERE table='{replace_table_name}' ORDER BY partition_id"
+        replace_partition_list = f"SELECT partition FROM system.parts WHERE table='{replace_table_name}' ORDER BY partition_id FORMAT TabSeparated"
         replace_partition_ids = sorted(
             list(set(self.context.node_1.query(replace_partition_list).output.split()))
         )
-        source_partition_list = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        source_partition_list = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
         source_partition_ids = sorted(
             list(set(self.context.node_1.query(source_partition_list).output.split()))
         )
@@ -423,10 +425,10 @@ def check_replace_partition(
 
     with Then("I check that partitions were replaced"):
         source_data = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         replace_data = self.context.node_1.query(
-            f"SELECT * FROM {replace_table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {replace_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -457,7 +459,7 @@ def check_freeze_partition(
         skip("Table was not created")
 
     with And("I get the list of partitions and validate partition keys pair"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
         destination_partition_ids = sorted(
             list(
                 set(
@@ -502,7 +504,7 @@ def check_update_in_partition(
         skip("Table was not created")
 
     with And("I get the list of partitions and validate partition keys pair"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
         destination_partition_ids = sorted(
             list(
                 set(
@@ -524,7 +526,7 @@ def check_update_in_partition(
 
     with And("I save the data from the table to compare it later"):
         expected_data = self.context.node_1.query(
-            f"SELECT {update_column}+1 FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*)"
+            f"SELECT {update_column}+1 FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
     with And("I update all partitions from the table"):
@@ -535,7 +537,7 @@ def check_update_in_partition(
 
     with Then("I check that partitions were updated"):
         result_data = self.context.node_1.query(
-            f"SELECT {update_column} FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*)"
+            f"SELECT {update_column} FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*) FORMAT TabSeparated"
         )
         for attempt in retries(timeout=120, delay=2):
             with attempt:
@@ -579,7 +581,7 @@ def check_move_partition(
             )
 
     with And("I get the list of partitions"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id"
+        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
         destination_partition_ids = sorted(
             list(
                 set(
@@ -592,7 +594,7 @@ def check_move_partition(
 
     with And("I move partition to another table"):
         data_before = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         for partition in destination_partition_ids:
             query = f"ALTER TABLE {table_name} MOVE PARTITION {partition} TO TABLE {move_table_name}"
@@ -603,7 +605,7 @@ def check_move_partition(
 
     with Then("I check that partitions were moved"):
         data_after = self.context.node_1.query(
-            f"SELECT * FROM {move_table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {move_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -637,7 +639,7 @@ def check_multiple_attach_move_partition(
 
     with And("I save the data from the table to compare it later"):
         data_before = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
     with Then("I perform attach/move operations from specified sequence"):
@@ -669,7 +671,7 @@ def check_multiple_attach_move_partition(
 
             with Then("I check that all partitions were attached or moved"):
                 data_after = self.context.node_1.query(
-                    f"SELECT * FROM {new_destination_table_name} ORDER BY tuple(*)"
+                    f"SELECT * FROM {new_destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
                 )
                 for attempt in retries(timeout=30, delay=2):
                     with attempt:

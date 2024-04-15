@@ -49,7 +49,7 @@ def check_restart_clickhouse_server(
             )
 
     with And("I get the list of partitions and validate partition keys pair"):
-        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table}' ORDER BY partition_id"
+        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table}' ORDER BY partition_id FORMAT TabSeparated"
 
         partition_ids = sorted(
             list(set(node.query(partition_list_query).output.split()))
@@ -70,7 +70,7 @@ def check_restart_clickhouse_server(
 
     with And("I save the data from the destination table"):
         destination_data_before = node.query(
-            f"SELECT * FROM {destination_table} ORDER BY tuple(*)"
+            f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
     with And("restarting the server"):
@@ -78,25 +78,25 @@ def check_restart_clickhouse_server(
 
     with Then("I check that the data is still on the destination table"):
         destination_data_after = node.query(
-            f"SELECT * FROM {destination_table} ORDER BY tuple(*)"
+            f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
         assert destination_data_before == destination_data_after
 
     with And("I check that I can use other ALTERs on the table after restart"):
         if valid:
-            destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{destination_table}' ORDER BY partition_id"
+            destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{destination_table}' ORDER BY partition_id FORMAT TabSeparated"
             destination_partition_ids = sorted(
                 list(set(node.query(destination_partition_list_query).output.split()))
             )
             partition = random.choice(destination_partition_ids)
 
             data_before = node.query(
-                f"SELECT * FROM {destination_table} ORDER BY tuple(*)"
+                f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
             ).output
             node.query(f"ALTER TABLE {destination_table} DETACH PARTITION {partition}")
             data_after = node.query(
-                f"SELECT * FROM {destination_table} ORDER BY tuple(*)"
+                f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -104,7 +104,7 @@ def check_restart_clickhouse_server(
 
             node.query(f"ALTER TABLE {destination_table} ATTACH PARTITION {partition}")
             data_after = node.query(
-                f"SELECT * FROM {destination_table} ORDER BY tuple(*)"
+                f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:

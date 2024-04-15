@@ -100,7 +100,7 @@ def check_attach_partition_from_with_corrupted_parts(
         "I attach partition from the source table to the destination table and validate data"
     ):
         parts_before_attach = node.query(
-            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
         attach_partition_from(
@@ -110,7 +110,7 @@ def check_attach_partition_from_with_corrupted_parts(
         )
 
         parts_after_attach = node.query(
-            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with And("I try to read data from the destination table"):
@@ -123,7 +123,7 @@ def check_attach_partition_from_with_corrupted_parts(
             message = "DB::Exception:"
 
         node.query(
-            f"SELECT * FROM {destination_table}",
+            f"SELECT * FROM {destination_table} FORMAT TabSeparated",
             message=message,
         )
 
@@ -151,7 +151,7 @@ def check_attach_partition_from_with_corrupted_parts(
         for retry in retries(timeout=10):
             with retry:
                 node.query(
-                    f"SELECT * FROM {destination_table}",
+                    f"SELECT * FROM {destination_table} FORMAT TabSeparated",
                 )
 
 
@@ -188,16 +188,16 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
             )
 
     node.query(
-        f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+        f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
     )
 
     with And("I detach partition from table"):
         detach_partition(table=table, partition="1")
         node.query(
-            f"SELECT * FROM {table}",
+            f"SELECT * FROM {table} FORMAT TabSeparated",
         )
         node.query(
-            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with When("I change some bit values of the partition"):
@@ -205,7 +205,7 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
 
     with Then("I attach part from the detached folder"):
         parts_before_attach = node.query(
-            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
         attach_partition(
@@ -214,7 +214,7 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
         )
 
         parts_after_attach = node.query(
-            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
         parts = [i.split("\t") for i in parts_after_attach.output.split("\n")]
         after_attach_detached = {}
@@ -236,7 +236,7 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
             message = "DB::Exception:"
 
         node.query(
-            f"SELECT * FROM {table}",
+            f"SELECT * FROM {table} FORMAT TabSeparated",
             message=message,
         )
 
@@ -262,7 +262,7 @@ def check_attach_partition_detached_with_corrupted_parts(self, corrupt):
         for retry in retries(timeout=10):
             with retry:
                 node.query(
-                    f"SELECT * FROM {table}",
+                    f"SELECT * FROM {table} FORMAT TabSeparated",
                 )
 
 
@@ -299,15 +299,15 @@ def check_attach_corrupted_part(self, corrupt):
             )
 
     node.query(
-        f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+        f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
     )
     with And("I detach part from table"):
         detach_part(table=table, part="1_1_1_0")
         node.query(
-            f"SELECT * FROM {table}",
+            f"SELECT * FROM {table} FORMAT TabSeparated",
         )
         node.query(
-            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with When("I change some bit values of the parts"):
@@ -315,7 +315,7 @@ def check_attach_corrupted_part(self, corrupt):
 
     with Then("I attach part from the detached folder"):
         parts_before_attach = node.query(
-            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
         attach_part(
@@ -324,7 +324,7 @@ def check_attach_corrupted_part(self, corrupt):
         )
 
         parts_after_attach = node.query(
-            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name, active, rows FROM system.parts WHERE table = '{table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with And("I try to read data from the table"):
@@ -336,7 +336,7 @@ def check_attach_corrupted_part(self, corrupt):
             message = "DB::Exception:"
 
         node.query(
-            f"SELECT * FROM {table}",
+            f"SELECT * FROM {table} FORMAT TabSeparated",
             message=message,
         )
 
@@ -360,7 +360,7 @@ def check_attach_corrupted_part(self, corrupt):
         for retry in retries(timeout=10, delay=2):
             with retry:
                 node.query(
-                    f"SELECT * FROM {table}",
+                    f"SELECT * FROM {table} FORMAT TabSeparated",
                 )
 
 

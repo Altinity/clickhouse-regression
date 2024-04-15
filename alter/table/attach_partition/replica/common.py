@@ -425,9 +425,7 @@ def add_remove_replica_on_third_node(
 @TestStep
 def get_partition_list(self, table_name, node, exitcode=None, message=None):
     "Get list of partitions from system.parts table."
-    partition_list_query = (
-        f"SELECT partition FROM system.parts WHERE table='{table_name}'"
-    )
+    partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' FORMAT TabSeparated"
     partition_ids = sorted(
         list(
             set(
@@ -480,7 +478,9 @@ def attach_partition_from_on_node(
     try:
         query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION 1 FROM {source_table_name}"
         node.query(query)
-        num_rows = node.query(f"SELECT count() from {destination_table_name}")
+        num_rows = node.query(
+            f"SELECT count() from {destination_table_name} FORMAT TabSeparated"
+        )
 
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -525,13 +525,15 @@ def check_partition_was_attached(self, table_name, expected):
     data = None
     for node in self.context.nodes:
         if data is None:
-            data = node.query(f"SELECT * FROM {table_name} ORDER BY a,b,c,extra")
+            data = node.query(
+                f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
                     assert data.output == expected
         else:
             current_data = node.query(
-                f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:

@@ -35,7 +35,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                 )
 
                 table_before = client.query(
-                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                 )
 
             with And(
@@ -54,7 +54,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     table=table_name, partition=1, node=client, exitcode=exitcode
                 )
                 table_after_detach = client.query(
-                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra",
+                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
                     exitcode=exitcode,
                 )
 
@@ -79,7 +79,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     "I check that data is the same as it was before attach detach"
                 ):
                     table_after = client.query(
-                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra"
+                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                     )
                     for attempt in retries(timeout=timeout, delay=delay):
                         with attempt:
@@ -181,10 +181,10 @@ def check_attach_partition_from_with_temporary_tables(
                     for attempt in retries(timeout=30, delay=2):
                         with attempt:
                             source_partition_data = client.query(
-                                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra"
+                                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                             )
                             destination_partition_data = client.query(
-                                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                             )
                             assert (
                                 source_partition_data == destination_partition_data
@@ -193,13 +193,13 @@ def check_attach_partition_from_with_temporary_tables(
     with And(f"I check that all replicas of destination table have same data:"):
         if "replicated" in destination_table.__name__:
             destination_partition_data_1 = self.context.node_1.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             destination_partition_data_2 = self.context.node_2.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             destination_partition_data_3 = self.context.node_3.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:

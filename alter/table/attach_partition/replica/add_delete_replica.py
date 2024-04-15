@@ -161,7 +161,7 @@ def replica(self):
             "I save the state of source table to later compare it with the destination table"
         ):
             source_data = self.context.node_1.query(
-                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             ).output
 
         with And(

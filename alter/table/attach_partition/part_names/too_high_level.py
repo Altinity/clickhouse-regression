@@ -22,7 +22,7 @@ def check_too_high_level_attach_partition(self, engine, partition_key):
     with When("I get part name"):
         part_name, partition = (
             self.context.node.query(
-                f"SELECT name, partition FROM system.parts WHERE table = '{table_name}' AND active"
+                f"SELECT name, partition FROM system.parts WHERE table = '{table_name}' AND active FORMAT TabSeparated"
             )
             .output.split("\n")[0]
             .split("\t")
@@ -30,10 +30,10 @@ def check_too_high_level_attach_partition(self, engine, partition_key):
 
     with And("I save table state to compare later"):
         table_before = self.context.node.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         parts_before = self.context.node.query(
-            f"SELECT name FROM system.parts WHERE table = '{table_name}' ORDER BY name"
+            f"SELECT name FROM system.parts WHERE table = '{table_name}' ORDER BY name FORMAT TabSeparated"
         ).output
 
     with Then("I detach and rename the part"):
@@ -57,11 +57,11 @@ def check_too_high_level_attach_partition(self, engine, partition_key):
 
     with And("I check that part was not attached"):
         table_after = self.context.node.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         assert table_before != table_after, error()
         parts_after = self.context.node.query(
-            f"SELECT name FROM system.parts WHERE table = '{table_name}' ORDER BY name"
+            f"SELECT name FROM system.parts WHERE table = '{table_name}' ORDER BY name FORMAT TabSeparated"
         ).output
         assert parts_before != parts_after, error()
 
@@ -82,7 +82,7 @@ def check_too_high_level_attach_part(self, engine, partition_key):
     with When("I get part name"):
         part_name, partition = (
             self.context.node.query(
-                f"SELECT name, partition FROM system.parts WHERE table = '{table_name}' AND active"
+                f"SELECT name, partition FROM system.parts WHERE table = '{table_name}' AND active FORMAT TabSeparated"
             )
             .output.split("\n")[0]
             .split("\t")
@@ -165,7 +165,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
     with When("I get part name"):
         part_name, partition = (
             self.context.node.query(
-                f"SELECT name, partition FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name"
+                f"SELECT name, partition FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name FORMAT TabSeparated"
             )
             .output.split("\n")[0]
             .split("\t")
@@ -173,7 +173,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
 
     with And("I save table state to compare later"):
         table_before = self.context.node.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
 
     with Then("I detach and rename the part"):
@@ -197,19 +197,19 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
 
     with And("I save parts state to compare later and optimize table"):
         parts_before = self.context.node.query(
-            f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name"
+            f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name FORMAT TabSeparated"
         ).output
         optimize_table(table_name=table_name)
 
     with And("I check that part was attached"):
         table_after = self.context.node.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         assert table_before == table_after, error()
 
     with And("I check that part level was reseted"):
         parts_after = self.context.node.query(
-            f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name"
+            f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name FORMAT TabSeparated"
         ).output
         assert parts_before != parts_after, error()
 
