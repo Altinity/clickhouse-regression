@@ -16,7 +16,8 @@ def execute_multi_query(self, query):
 def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
     execute_query(
-        f"SELECT {func.format(params=col1_name+','+col2_name)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name} FORMAT JSONEachRow"
+        f"SELECT {func.format(params=col1_name+','+col2_name)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name}",
+        use_result_in_snapshot_name=True,
     )
 
 
@@ -74,11 +75,24 @@ def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
 
     with Check("string that ends with \\0"):
         execute_query(
-            f"SELECT {func.format(params='x, y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x String, y String', ('1', 'hello\0\0'), ('hello\0\0', 'hello'), ('3', 'there'), ('hello\0\0', 'there\0\0'), ('5', 'you'))"
+            f"SELECT {func.format(params='x, y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x String, y String', ('1', 'hello\0\0'), ('hello\0\0', 'hello'), ('3', 'there'), ('hello\0\0', 'there\0\0'), ('5', 'you'))",
+            use_result_in_snapshot_name=True,
+        )
+
+    with Check("user example"):
+        execute_query(
+            f"""
+            SELECT {func.format(params='value, toNullable(time)')}, any(toTypeName(value)), any(toTypeName(toNullable(time)))
+            FROM VALUES ('uuid LowCardinality(String), time Nullable(DateTime64(3)), value Float64', 
+            ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:00:00.000',0), 
+            ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:00:39.000',-1),
+            ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:00:59.000',-1),
+            ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:01:00.000',0))
+            """
         )
 
     with Feature("datatypes"):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table.columns:
                 col_name, col_type = column.name, column.datatype.name
                 Check(
@@ -100,7 +114,7 @@ def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
             "permutations",
             description="sanity check most common column type permutations",
         ):
-            with Pool(3) as executor:
+            with Pool(6) as executor:
                 columns = [col for col in table.columns if col in common_columns()]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
