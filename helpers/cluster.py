@@ -23,6 +23,7 @@ MESSAGES_TO_RETRY = [
     "DB::Exception: Connection loss",
     "Coordination::Exception: Session expired",
     "Coordination::Exception: Connection loss",
+    "Coordination::Exception: Coordination error: Connection loss."
     "Coordination::Exception: Operation timeout",
     "DB::Exception: Operation timeout",
     "Operation timed out",
@@ -817,6 +818,7 @@ class ClickHouseNode(Node):
                     settings=settings,
                     retry_count=retry_count - 1,
                     messages_to_retry=messages_to_retry,
+                    retry_delay=retry_delay,
                     *args,
                     **kwargs,
                 )
