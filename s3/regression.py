@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base
 from s3.tests.common import *
-from vfs.tests.steps import enable_vfs
 
 from s3.requirements import SRS_015_ClickHouse_S3_External_Storage
 

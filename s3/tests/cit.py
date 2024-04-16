@@ -1,12 +1,13 @@
 import json
 import tempfile
 import random
+
 from testflows.core import *
+
+import helpers.cluster
 
 from s3.tests.common import *
 from s3.requirements import *
-
-import helpers.cluster
 
 
 @TestOutline(Scenario)
