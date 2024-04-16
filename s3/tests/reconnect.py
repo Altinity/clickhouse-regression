@@ -1,3 +1,5 @@
+from platform import processor
+
 from s3.tests.common import *
 from s3.requirements import *
 from lightweight_delete.tests.steps import *
