@@ -71,7 +71,7 @@ def check_parquet_file(self, table, compression, format, settings):
         "I check that it is possible to select from the parquet file and the values are preserved"
     ):
         node.query(
-            f"SELECT * FROM file('{self.context.path_to_export}{table_name}.Parquet') ORDER BY p",
+            f"SELECT * FROM file('{self.context.path_to_export}{table_name}.Parquet') ORDER BY p FORMAT TabSeparated",
             exitcode=0,
         )
 
@@ -86,7 +86,7 @@ def check_parquet_file(self, table, compression, format, settings):
         )
 
         reference_table_values = node.query(
-            f"SELECT * FROM {reference_table_name} ORDER BY p"
+            f"SELECT * FROM {reference_table_name} ORDER BY p FORMAT TabSeparated"
         )
 
         assert (
