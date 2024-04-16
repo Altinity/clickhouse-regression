@@ -1,14 +1,13 @@
+import time
+import datetime
+
 from testflows.core import *
 
 from s3.tests.common import *
 from s3.requirements import *
+
 from lightweight_delete.tests.steps import insert
-
-import time
-import datetime
-
 import lightweight_delete.tests.basic_checks as delete_basic_checks
-from s3.tests.table_function import insert_to_s3_function, insert_from_s3_function
 
 
 @TestStep(Given)

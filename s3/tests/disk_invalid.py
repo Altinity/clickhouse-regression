@@ -3,10 +3,6 @@ from testflows.core import *
 from s3.tests.common import *
 from s3.requirements import *
 
-import time
-import datetime
-import os
-
 
 @TestOutline(Scenario)
 @Examples(
