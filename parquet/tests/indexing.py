@@ -19,6 +19,16 @@ def bigtuplewithnulls(self):
         snapshot_name="min_max_zero_offset_structure", import_file=import_file
     )
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter("1.0"))
+def bloom_filter(self):
+    """Checking importing and exporting a parquet file with bloom filters applied to it."""
+    with Given("I have a Parquet file with the bloom filter"):
+        import_file = os.path.join("filters", "data_index_bloom_encoding_with_length.parquet")
+
+    import_export(
+        snapshot_name="bloom_filter_structure", import_file=import_file
+    )
 
 @TestFeature
 @Name("indexing")
