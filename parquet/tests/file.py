@@ -412,7 +412,7 @@ def select_from_function_manual_cast_types(self):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet', '{table_def}')"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet', '{table_def}') FORMAT TabSeparated"
                 )
             join()
 

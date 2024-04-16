@@ -27,7 +27,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
 
     with Given("I save file structure"):
         import_column_structure = node.query(
-            f"DESCRIBE TABLE file('{import_file}', Parquet)"
+            f"DESCRIBE TABLE file('{import_file}', Parquet) FORMAT TabSeparated"
         )
 
     with And("I try to import the binary Parquet file into the table"):
@@ -35,7 +35,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
             f"""
             CREATE TABLE {table_name}
             ENGINE = MergeTree
-            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) LIMIT {limit}
+            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) LIMIT {limit} FORMAT TabSeparated
             """,
             file_output="output" + getuid(),
             use_file=True,
@@ -43,7 +43,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
 
     with And("I read the contents of the created table"):
         node.query(
-            f"SELECT * FROM {table_name}",
+            f"SELECT * FROM {table_name} FORMAT TabSeparated",
             file_output=file_import,
             use_file=True,
         )
@@ -69,7 +69,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
 
         with And("I check the exported Parquet file's contents"):
             node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)",
+                f"SELECT * FROM file('{path_to_export}', Parquet) FORMAT TabSeparated",
                 file_output=file_export,
                 use_file=True,
             )
@@ -79,7 +79,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
 
         with And("I check that table structure matches ..."):
             export_columns_structure = node.query(
-                f"DESCRIBE TABLE file('{path_to_export}')"
+                f"DESCRIBE TABLE file('{path_to_export}') FORMAT TabSeparated"
             )
             assert (
                 import_column_structure.output.strip()
