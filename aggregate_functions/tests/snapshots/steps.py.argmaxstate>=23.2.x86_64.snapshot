@@ -14606,6 +14606,10 @@ _aggregate_functions_state_argMaxState_string_that_ends_with__0_0200000035000400
 {"hex(argMaxState(x, y))":"02000000350004000000796F7500","any(toTypeName(x))":"String","any(toTypeName(y))":"String"}
 """
 
+_aggregate_functions_state_argMaxState_user_example = r"""
+{"hex(argMaxState(value, toNullable(time)))":"0101000000000000000001E06B08BB76010000","any(toTypeName(value))":"Float64","any(toTypeName(toNullable(time)))":"Nullable(DateTime64(3))"}
+"""
+
 _aggregate_functions_state_argMaxState_with_group_by = r"""
 {"even":0,"hex(argMaxState(number, modulo(number, 2)))":"0100000000000000000100","any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
 {"even":1,"hex(argMaxState(number, modulo(number, 2)))":"0101000000000000000101","any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}

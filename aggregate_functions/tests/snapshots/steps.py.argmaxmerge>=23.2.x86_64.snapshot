@@ -14606,6 +14606,10 @@ _aggregate_functions_merge_argMaxMerge_string_that_ends_with__0_0200000035000400
 {"argMaxMerge(CAST(unhex('02000000350004000000796F7500'), 'AggregateFunction(argMax, String ,String)'))":"5"}
 """
 
+_aggregate_functions_merge_argMaxMerge_user_example_0 = r"""
+{"argMaxMerge(CAST(unhex('0101000000000000000001E06B08BB76010000'), 'AggregateFunction(argMax, Float64 ,Nullable(DateTime64(3)))'))":0}
+"""
+
 _aggregate_functions_merge_argMaxMerge_with_group_by_0 = r"""
 {"argMaxMerge(CAST(unhex('0100000000000000000100'), 'AggregateFunction(argMax, UInt64 ,UInt8)'))":"0"}
 """
