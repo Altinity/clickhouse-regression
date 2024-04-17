@@ -1,3 +1,141 @@
+# These requirements were auto generated
+# from software requirements specification (SRS)
+# document by TestFlows v2.0.240111.1210833.
+# Do not edit by hand but re-generate instead
+# using 'tfs requirements generate' command.
+from testflows.core import Specification
+from testflows.core import Requirement
+
+Heading = Specification.Heading
+
+RQ_SRS_039_ClickHouse_Attach_AttachExistingTable = Requirement(
+    name="RQ.SRS-039.ClickHouse.Attach.AttachExistingTable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support [ATTACH TABLE] statement to attach an existing table.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.1.1",
+)
+
+RQ_SRS_039_ClickHouse_Attach_CreateNewTableAndAttach_DataWithUUID = Requirement(
+    name="RQ.SRS-039.ClickHouse.Attach.CreateNewTableAndAttach.DataWithUUID",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support [ATTACH TABLE UUID] statement to create a new table and attach data with specified table UUID.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="3.2.2.1",
+)
+
+RQ_SRS_039_ClickHouse_Attach_AttachExistingDictionary = Requirement(
+    name="RQ.SRS-039.ClickHouse.Attach.AttachExistingDictionary",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support [ATTACH DICTIONARY] statement to attach an existing dictionary.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.3.1",
+)
+
+RQ_SRS_039_ClickHouse_Attach_AttachExistingDatabase = Requirement(
+    name="RQ.SRS-039.ClickHouse.Attach.AttachExistingDatabase",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support [ATTACH DATABASE] statement to attach previously detached database.[]\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.4.1",
+)
+
+SRS_039_ClickHouse_Attach_Statement = Specification(
+    name="SRS-039 ClickHouse Attach Statement",
+    description=None,
+    author=None,
+    date=None,
+    status=None,
+    approved_by=None,
+    approved_date=None,
+    approved_version=None,
+    version=None,
+    group=None,
+    type=None,
+    link=None,
+    uid=None,
+    parent=None,
+    children=None,
+    headings=(
+        Heading(name="Revision History", level=1, num="1"),
+        Heading(name="Introduction", level=1, num="2"),
+        Heading(name="Requirements", level=1, num="3"),
+        Heading(name="Attach Existing Table", level=2, num="3.1"),
+        Heading(
+            name="RQ.SRS-039.ClickHouse.Attach.AttachExistingTable",
+            level=3,
+            num="3.1.1",
+        ),
+        Heading(name="Create New Table And Attach Data", level=2, num="3.2"),
+        Heading(name="With Specified Path to Table Data", level=3, num="3.2.1"),
+        Heading(
+            name="SR.SRS-039.ClickHouse.Attach.CreateNewTableAndAttach.DataWithPath",
+            level=4,
+            num="3.2.1.1",
+        ),
+        Heading(name="With Specified Table UUID", level=3, num="3.2.2"),
+        Heading(
+            name="RQ.SRS-039.ClickHouse.Attach.CreateNewTableAndAttach.DataWithUUID",
+            level=4,
+            num="3.2.2.1",
+        ),
+        Heading(name="Attach Existing Dictionary", level=2, num="3.3"),
+        Heading(
+            name="RQ.SRS-039.ClickHouse.Attach.AttachExistingDictionary",
+            level=3,
+            num="3.3.1",
+        ),
+        Heading(name="Attach Existing Database", level=2, num="3.4"),
+        Heading(
+            name="RQ.SRS-039.ClickHouse.Attach.AttachExistingDatabase",
+            level=3,
+            num="3.4.1",
+        ),
+        Heading(name="Attach Replicated Tables", level=2, num="3.5"),
+        Heading(
+            name="RQ.SRS-039.ClickHouse.ReplicaPath.AttachTable", level=2, num="3.6"
+        ),
+        Heading(name="References", level=1, num="4"),
+    ),
+    requirements=(
+        RQ_SRS_039_ClickHouse_Attach_AttachExistingTable,
+        RQ_SRS_039_ClickHouse_Attach_CreateNewTableAndAttach_DataWithUUID,
+        RQ_SRS_039_ClickHouse_Attach_AttachExistingDictionary,
+        RQ_SRS_039_ClickHouse_Attach_AttachExistingDatabase,
+    ),
+    content="""
 # SRS-039 ClickHouse Attach Statement
 # Software Requirements Specification
 
@@ -156,3 +294,5 @@ version 1.0
 [Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/attach/requirements/requirements.md
 [attach]: https://clickhouse.com/docs/en/sql-reference/statements/attach/
 [ClickHouse]: https://clickhouse.com
+""",
+)
