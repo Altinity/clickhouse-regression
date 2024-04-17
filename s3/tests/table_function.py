@@ -4,68 +4,6 @@ from s3.tests.common import *
 from s3.requirements import *
 
 
-@TestStep(Given)
-def insert_to_s3_function(
-    self,
-    filename,
-    table_name,
-    columns="d UInt64",
-    compression=None,
-    fmt=None,
-    uri=None,
-):
-    """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
-
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = uri or self.context.uri
-    node = current().context.node
-
-    try:
-        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
-
-        if compression:
-            query += f", '{compression}'"
-
-        query += f") SELECT * FROM {table_name}"
-
-        if fmt:
-            query += f" FORMAT {fmt}"
-
-        node.query(query)
-
-        yield
-
-    finally:
-        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
-        query += f") SELECT * FROM null('{columns}')"
-
-        node.query(query)
-
-
-@TestStep(When)
-def insert_from_s3_function(
-    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None
-):
-    """Import data from a file in s3 to a table."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = uri or self.context.uri
-    node = current().context.node
-
-    query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
-
-    if compression:
-        query += f", '{compression}'"
-
-    query += ")"
-
-    if fmt:
-        query += f" FORMAT {fmt}"
-
-    node.query(query)
-
-
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Syntax("1.0"))
 def syntax(self):
