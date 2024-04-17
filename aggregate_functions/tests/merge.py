@@ -151,6 +151,8 @@ def feature(self):
         "sequenceMatch",
     ]
     parametric = [
+        "approx_top_k",
+        "approx_top_sum",
         "exponentialMovingAverage",
         "groupArrayLast",
         "groupArraySample",
