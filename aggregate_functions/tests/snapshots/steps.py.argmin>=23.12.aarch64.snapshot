@@ -14619,3 +14619,11 @@ _aggregate_functions_argMin_zero_rows = r"""
 {"argMin(number, plus(number, 1))":"0","any(toTypeName(number))":"","any(toTypeName(number))":""}
 """
 
+_aggregate_functions_argMin_string_that_ends_with__0_1 = r"""
+{"argMin(x, y)":"1","any(toTypeName(x))":"String","any(toTypeName(y))":"String"}
+"""
+
+_aggregate_functions_argMin_datatypes_String_Bool_ = r"""
+{"argMin(string, bool)":"","any(toTypeName(string))":"String","any(toTypeName(bool))":"Bool"}
+"""
+
