@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231001.1175523.
+# document by TestFlows v2.0.240111.1210833.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -20,7 +20,9 @@ RQ_SRS_032_ClickHouse_Alter = Requirement(
         "\n"
         "* [REPLACE PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/replace_partition/requirements/requirements.md)\n"
         "\n"
+        "* [ATTACH PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/attach_partition/requirements/requirements.md)\n"
         "\n"
+        "* [MOVE PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/move_partition/requirements/requirements.md)\n"
         "\n"
         "\n"
         "\n"
@@ -100,7 +102,9 @@ The list of `ALTER` statements that are currently covered by the `ALTER` regress
 
 * [REPLACE PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/replace_partition/requirements/requirements.md)
 
+* [ATTACH PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/attach_partition/requirements/requirements.md)
 
+* [MOVE PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/move_partition/requirements/requirements.md)
 
 
 

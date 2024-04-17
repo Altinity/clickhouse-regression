@@ -37,7 +37,9 @@ The list of `ALTER` statements that are currently covered by the `ALTER` regress
 
 * [REPLACE PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/replace_partition/requirements/requirements.md)
 
+* [ATTACH PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/attach_partition/requirements/requirements.md)
 
+* [MOVE PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/move_partition/requirements/requirements.md)
 
 
 
