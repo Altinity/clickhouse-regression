@@ -1470,9 +1470,16 @@ class Cluster(object):
             return cmd
 
     def open_instances_permissions(self, node):
-        """Add open permissions on all files and folders in _instances"""
+        """
+        Add open permissions on all files and folders in _instances.
+        
+        Will not do anything if cluster is already down.
+        """
         with self.lock:
-            container_id = self.node_container_id(node)
+            try:
+                container_id = self.node_container_id(node, timeout=1)
+            except RuntimeError:
+                return
 
         r = self.command(
             node=None, command=f"docker inspect {container_id}", exitcode=0
