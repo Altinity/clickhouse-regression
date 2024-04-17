@@ -1435,7 +1435,7 @@ def insert_to_s3_function(
         yield
 
     finally:
-        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSV', '{columns}'"
         query += f") SELECT * FROM null('{columns}')"
 
         node.query(query)
