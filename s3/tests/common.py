@@ -1,13 +1,12 @@
 import os
-import boto3
 import base64
 import tempfile
-
 from contextlib import contextmanager
-from minio import Minio
-from platform import processor
 
+import boto3
+from minio import Minio
 from testflows.connect import Shell
+
 from helpers.common import *
 
 Config = namedtuple("Config", "content path name uid preprocessed_name")
@@ -1370,9 +1369,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
-                ssec_key
-            )
+            self.context.s3_options[
+                "server_side_encryption_customer_key_base64"
+            ] = ssec_key
         yield
 
     finally:
@@ -1401,3 +1400,65 @@ def add_batch_delete_option(self, batch_delete="false"):
         with Finally("I remove 'support_batch_delete' S3 option"):
             if hasattr(self.context, "s3_options"):
                 self.context.s3_options.pop("support_batch_delete")
+
+
+@TestStep(Given)
+def insert_to_s3_function(
+    self,
+    filename,
+    table_name,
+    columns="d UInt64",
+    compression=None,
+    fmt=None,
+    uri=None,
+):
+    """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
+
+    access_key_id = self.context.access_key_id
+    secret_access_key = self.context.secret_access_key
+    uri = uri or self.context.uri
+    node = current().context.node
+
+    try:
+        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+
+        if compression:
+            query += f", '{compression}'"
+
+        query += f") SELECT * FROM {table_name}"
+
+        if fmt:
+            query += f" FORMAT {fmt}"
+
+        node.query(query)
+
+        yield
+
+    finally:
+        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query += f") SELECT * FROM null('{columns}')"
+
+        node.query(query)
+
+
+@TestStep(When)
+def insert_from_s3_function(
+    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None
+):
+    """Import data from a file in s3 to a table."""
+    access_key_id = self.context.access_key_id
+    secret_access_key = self.context.secret_access_key
+    uri = uri or self.context.uri
+    node = current().context.node
+
+    query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+
+    if compression:
+        query += f", '{compression}'"
+
+    query += ")"
+
+    if fmt:
+        query += f" FORMAT {fmt}"
+
+    node.query(query)

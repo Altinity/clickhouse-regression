@@ -1,5 +1,4 @@
 from testflows.core import *
-from testflows.asserts import error
 
 from s3.tests.common import *
 

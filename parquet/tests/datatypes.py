@@ -777,7 +777,9 @@ def selectdatewithfilter(self):
         import_file = os.path.join("datatypes", "filter_bug1391.parquet")
 
     with And("I save file structure"):
-        import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+        import_column_structure = node.query(
+            f"DESCRIBE TABLE file('{import_file}') FORMAT TabSeparated"
+        )
 
     with Check("import"):
         with When("I try to import the binary Parquet file into the table"):
@@ -790,7 +792,7 @@ def selectdatewithfilter(self):
             )
 
         with And("I read the contents of the created table"):
-            import_read = node.query(f"SELECT * FROM {table_name}")
+            import_read = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -808,14 +810,16 @@ def selectdatewithfilter(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
+            read = node.query(
+                f"SELECT * FROM file('{path_to_export}', Parquet) FORMAT TabSeparated"
+            )
 
         with Then("output must match the snapshot"):
             assert read.output.strip() == import_read.output.strip(), error()
 
         with And("I check that table structure matches ..."):
             export_columns_structure = node.query(
-                f"DESCRIBE TABLE file('{path_to_export}')"
+                f"DESCRIBE TABLE file('{path_to_export}') FORMAT TabSeparated"
             )
             assert (
                 import_column_structure.output.strip()

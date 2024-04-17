@@ -25,7 +25,7 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
 
             select_file = node.query(
                 f"""
-            SELECT * FROM {query} ORDER BY {order_by}
+            SELECT * FROM {query} ORDER BY {order_by} FORMAT TabSeparated
             """
             )
 
@@ -51,7 +51,9 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                 """
             )
 
-            table_values = node.query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+            table_values = node.query(
+                f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+            )
 
         with Then("I check that the output is correct"):
             with values() as that:

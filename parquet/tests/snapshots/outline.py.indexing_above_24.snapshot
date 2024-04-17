@@ -1,2 +1,4 @@
 min_max_zero_offset_structure = r"""'l_partkey\tNullable(Int32)'"""
 
+bloom_filter_structure = r"""'String\tNullable(String)'"""
+
