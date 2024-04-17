@@ -21,7 +21,7 @@ aggregate_functions = [
     "anyHeavy",
     "anyLast",
     "approx_top_k",
-    # "approx_top_sum",
+    "approx_top_sum",
     "argMax",
     "argMin",
     "avg",
