@@ -152,7 +152,7 @@ version 1.0
 
 
 [Git]: https://git-scm.com/
-[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/aggregate_functions/requirements/requirements.md
-[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/aggregate_functions/requirements/requirements.md
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/attach/requirements/requirements.md
+[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/attach/requirements/requirements.md
 [attach]: https://clickhouse.com/docs/en/sql-reference/statements/attach/
 [ClickHouse]: https://clickhouse.com
