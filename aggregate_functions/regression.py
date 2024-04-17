@@ -459,6 +459,26 @@ ffails = {
         "need to investigate (something with zero representation)",
         check_clickhouse_version(">=23.11"),
     ),
+    "/aggregate functions/approx_top_k/*": (
+        Skip,
+        "approx_top_k works from 24.3",
+        check_clickhouse_version("<24.3"),
+    ),
+    "/aggregate functions/*/*approx_top_k*/*": (
+        Skip,
+        "approx_top_k works from 24.3",
+        check_clickhouse_version("<24.3"),
+    ),
+    "/aggregate functions/approx_top_sum/*": (
+        Skip,
+        "approx_top_sum works from 24.3",
+        check_clickhouse_version("<24.3"),
+    ),
+    "/aggregate functions/*/*approx_top_sum*/*": (
+        Skip,
+        "approx_top_sum works from 24.3",
+        check_clickhouse_version("<24.3"),
+    ),
 }
 
 
@@ -543,9 +563,24 @@ def regression(
         join()
 
     Feature(run=load("aggregate_functions.tests.state", "feature"))
-    Feature(run=load("aggregate_functions.tests.merge", "feature"))
-    Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
-    Feature(run=load("aggregate_functions.tests.window_functions", "feature"))
+
+    with Pool(3) as executor:
+        Feature(
+            test=load("aggregate_functions.tests.merge", "feature"),
+            parallel=True,
+            executor=executor,
+        )()
+        Feature(
+            test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
+            parallel=True,
+            executor=executor,
+        )()
+        Feature(
+            test=load("aggregate_functions.tests.window_functions", "feature"),
+            parallel=True,
+            executor=executor,
+        )()
+        join()
 
 
 if main():
