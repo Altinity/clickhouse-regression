@@ -41,14 +41,12 @@ def define_s3_disk_storage_configuration(
         disks = {"default": {"keep_free_space_bytes": "1024"}}
 
         for disk_name, bucket in zip(disk_names, buckets):
-            disks[disk_name] = (
-                {
-                    "type": "s3",
-                    "endpoint": f"{uri}{bucket}/",
-                    "access_key_id": f"{access_key_id}",
-                    "secret_access_key": f"{secret_access_key}",
-                },
-            )
+            disks[disk_name] = {
+                "type": "s3",
+                "endpoint": f"{uri}{bucket}/",
+                "access_key_id": f"{access_key_id}",
+                "secret_access_key": f"{secret_access_key}",
+            }
 
             if self.context.object_storage_mode == "vfs":
                 disks[disk_name]["allow_vfs"] = "1"
