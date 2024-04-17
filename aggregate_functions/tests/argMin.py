@@ -80,15 +80,25 @@ def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
         )
 
     with Check("user example"):
+        use_result_in_snapshot_name = False
+        # different representation of state
+        if (
+            check_clickhouse_version(">=23.12")(self)
+            and check_clickhouse_version("<24.3")(self)
+            and "argMaxState" in self.name
+        ):
+            use_result_in_snapshot_name = True
+
         execute_query(
             f"""
             SELECT {func.format(params='value, toNullable(time)')}, any(toTypeName(value)), any(toTypeName(toNullable(time)))
-            FROM VALUES ('uuid LowCardinality(String), time Nullable(DateTime64(3)), value Float64', 
-            ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:00:00.000',0), 
+            FROM VALUES ('uuid LowCardinality(String), time Nullable(DateTime64(3)), value Float64',
+            ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:00:00.000',0),
             ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:00:39.000',-1),
             ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:00:59.000',-1),
             ('a1000000-0000-0000-0000-0000000000a1','2021-01-01 00:01:00.000',0))
-            """
+            """,
+            use_result_in_snapshot_name=use_result_in_snapshot_name,
         )
 
     with Feature("datatypes"):
