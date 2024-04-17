@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 from testflows.core import *
 
-from clickhouse_keeper.requirements import RQ_SRS_024_ClickHouse_Keeper_Disaster_Recovery_ManualRecovery
+from clickhouse_keeper.requirements import (
+    RQ_SRS_024_ClickHouse_Keeper_Disaster_Recovery_ManualRecovery,
+)
 
 from clickhouse_keeper_failover.tests.steps import *
 
