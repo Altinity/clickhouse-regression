@@ -217,7 +217,7 @@ ffails = {
     "/aggregate functions/window_functions/ntile/*": (
         Skip,
         "ntile works from 23.5",
-        check_clickhouse_version("<23"),
+        check_clickhouse_version("<23.5"),
     ),
     "/aggregate functions/analysisOfVariance/*": (
         Skip,
