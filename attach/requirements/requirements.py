@@ -16,7 +16,7 @@ RQ_SRS_039_ClickHouse_Attach_AttachExistingTable = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [ATTACH TABLE] statement to attach an existing table.\n"
+        "[ClickHouse] SHALL support 'ATTACH TABLE' statement to attach an existing table.\n"
         "\n"
     ),
     link=None,
@@ -32,7 +32,7 @@ RQ_SRS_039_ClickHouse_Attach_CreateNewTableAndAttach_DataWithUUID = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [ATTACH TABLE UUID] statement to create a new table and attach data with specified table UUID.\n"
+        "[ClickHouse] SHALL support 'ATTACH TABLE UUID' statement to create a new table and attach data with specified table UUID.\n"
         "\n"
     ),
     link=None,
@@ -48,7 +48,7 @@ RQ_SRS_039_ClickHouse_Attach_AttachExistingDictionary = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [ATTACH DICTIONARY] statement to attach an existing dictionary.\n"
+        "[ClickHouse] SHALL support 'ATTACH DICTIONARY' statement to attach an existing dictionary.\n"
         "\n"
     ),
     link=None,
@@ -64,12 +64,28 @@ RQ_SRS_039_ClickHouse_Attach_AttachExistingDatabase = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [ATTACH DATABASE] statement to attach previously detached database.[]\n"
+        "[ClickHouse] SHALL support 'ATTACH DATABASE' statement to attach previously detached database.\n"
         "\n"
     ),
     link=None,
     level=3,
     num="3.4.1",
+)
+
+RQ_SRS_039_ClickHouse_Attach_ReplicaPath_ActivePath = Requirement(
+    name="RQ.SRS-039.ClickHouse.Attach.ReplicaPath.ActivePath",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not allow attach table with path that is already active.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.5.4",
 )
 
 SRS_039_ClickHouse_Attach_Statement = Specification(
@@ -124,8 +140,17 @@ SRS_039_ClickHouse_Attach_Statement = Specification(
             num="3.4.1",
         ),
         Heading(name="Attach Replicated Tables", level=2, num="3.5"),
+        Heading(name="Supported table engines", level=3, num="3.5.1"),
+        Heading(name="Replicated*MergeTree parameters", level=3, num="3.5.2"),
         Heading(
-            name="RQ.SRS-039.ClickHouse.ReplicaPath.AttachTable", level=2, num="3.6"
+            name="Converting from MergeTree to ReplicatedMergeTree",
+            level=3,
+            num="3.5.3",
+        ),
+        Heading(
+            name="RQ.SRS-039.ClickHouse.Attach.ReplicaPath.ActivePath",
+            level=3,
+            num="3.5.4",
         ),
         Heading(name="References", level=1, num="4"),
     ),
@@ -134,6 +159,7 @@ SRS_039_ClickHouse_Attach_Statement = Specification(
         RQ_SRS_039_ClickHouse_Attach_CreateNewTableAndAttach_DataWithUUID,
         RQ_SRS_039_ClickHouse_Attach_AttachExistingDictionary,
         RQ_SRS_039_ClickHouse_Attach_AttachExistingDatabase,
+        RQ_SRS_039_ClickHouse_Attach_ReplicaPath_ActivePath,
     ),
     content="""
 # SRS-039 ClickHouse Attach Statement
@@ -156,7 +182,10 @@ SRS_039_ClickHouse_Attach_Statement = Specification(
     * 3.4 [Attach Existing Database](#attach-existing-database)
         * 3.4.1 [RQ.SRS-039.ClickHouse.Attach.AttachExistingDatabase](#rqsrs-039clickhouseattachattachexistingdatabase)
     * 3.5 [Attach Replicated Tables](#attach-replicated-tables)
-    * 3.6 [RQ.SRS-039.ClickHouse.ReplicaPath.AttachTable](#rqsrs-039clickhousereplicapathattachtable)
+        * 3.5.1 [Supported table engines](#supported-table-engines)
+        * 3.5.2 [Replicated*MergeTree parameters](#replicatedmergetree-parameters)
+        * 3.5.3 [Converting from MergeTree to ReplicatedMergeTree](#converting-from-mergetree-to-replicatedmergetree)
+        * 3.5.4 [RQ.SRS-039.ClickHouse.Attach.ReplicaPath.ActivePath](#rqsrs-039clickhouseattachreplicapathactivepath)
 * 4 [References](#references)
 
 ## Revision History
@@ -195,7 +224,7 @@ If the table was detached permanently, it won't be reattached at the server star
 #### RQ.SRS-039.ClickHouse.Attach.AttachExistingTable
 version: 1.0
 
-[ClickHouse] SHALL support [ATTACH TABLE] statement to attach an existing table.
+[ClickHouse] SHALL support 'ATTACH TABLE' statement to attach an existing table.
 
 ### Create New Table And Attach Data
 
@@ -225,7 +254,7 @@ Result:
 ##### SR.SRS-039.ClickHouse.Attach.CreateNewTableAndAttach.DataWithPath
 version: 1.0
 
-[ClickHouse] SHALL support [ATTACH TABLE FROM] statement to create a new table and attach data with specified path to table data.
+[ClickHouse] SHALL support 'ATTACH TABLE FROM' statement to create a new table and attach data with specified path to table data.
 
 #### With Specified Table UUID
 
@@ -239,7 +268,7 @@ ATTACH TABLE name UUID '<uuid>' (col1 Type1, ...)
 ##### RQ.SRS-039.ClickHouse.Attach.CreateNewTableAndAttach.DataWithUUID
 version: 1.0
 
-[ClickHouse] SHALL support [ATTACH TABLE UUID] statement to create a new table and attach data with specified table UUID.
+[ClickHouse] SHALL support 'ATTACH TABLE UUID' statement to create a new table and attach data with specified table UUID.
 
 ### Attach Existing Dictionary
 Attaches a previously detached dictionary.
@@ -251,7 +280,7 @@ ATTACH DICTIONARY [IF NOT EXISTS] [db.]name [ON CLUSTER cluster]
 
 #### RQ.SRS-039.ClickHouse.Attach.AttachExistingDictionary
 version: 1.0
-[ClickHouse] SHALL support [ATTACH DICTIONARY] statement to attach an existing dictionary.
+[ClickHouse] SHALL support 'ATTACH DICTIONARY' statement to attach an existing dictionary.
 
 ### Attach Existing Database
 Attaches a previously detached database.  
@@ -262,11 +291,11 @@ ATTACH DATABASE [IF NOT EXISTS] name [ENGINE=<database engine>] [ON CLUSTER clus
 
 #### RQ.SRS-039.ClickHouse.Attach.AttachExistingDatabase
 version: 1.0
-[ClickHouse] SHALL support [ATTACH DATABASE] statement to attach previously detached database.[]
+[ClickHouse] SHALL support 'ATTACH DATABASE' statement to attach previously detached database.
 
 ### Attach Replicated Tables
 
-Possible table engines:
+#### Supported table engines
 - ReplicatedMergeTree
 - ReplicatedReplacingMergeTree
 - ReplicatedAggregatingMergeTree
@@ -275,9 +304,33 @@ Possible table engines:
 - ReplicatedCollapsingMergeTree
 - ReplicatedVersionedCollapsingMergeTree
 
-### RQ.SRS-039.ClickHouse.ReplicaPath.AttachTable
-version 1.0  
+#### Replicated*MergeTree parameters
+**zoo_path** — The path to the table in ClickHouse Keeper.
+**replica_name** — The replica name in ClickHouse Keeper.
 
+These parameters can contain substitutions in curly brackets. The substituted values are taken from the macros section of the configuration file.
+
+Example:
+```sql
+...
+ENGINE = ReplicatedReplacingMergeTree('/clickhouse/tables/{shard}/table_name', '{replica}')
+...
+```
+The path to the table in ClickHouse Keeper should be unique for each replicated table. 
+Tables on different shards should have different paths. 
+In this case, the path consists of the following parts:
+- /clickhouse/tables/ is the common prefix
+- {shard} will be expanded to the shard identifier.
+- table_name is the name of the node for the table in ClickHouse Keeper; it is a good idea to make it the same as the table name; it does not change after a RENAME query
+- two built-in substitutions {database} and {table} can be used, they expand into the table name and the database name respectively (unless these macros are defined in the macros section)
+
+So the zookeeper path can be specified as '/clickhouse/tables/{shard}/{database}/{table}'.
+
+#### Converting from MergeTree to ReplicatedMergeTree
+MergeTree table can be converted to ReplicatedMergeTree table.
+
+#### RQ.SRS-039.ClickHouse.Attach.ReplicaPath.ActivePath
+version: 1.0
 [ClickHouse] SHALL not allow attach table with path that is already active.
 
 ## References
