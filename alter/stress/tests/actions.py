@@ -18,9 +18,9 @@ from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 table_schema_lock = RLock()
 
 step_retry_timeout = 600
-step_retry_delay = 30
+step_retry_delay = 15
 
-alter_query_args = {"retry_delay": 60, "retry_count": 10}
+alter_query_args = {"retry_delay": 30, "retry_count": 5}
 
 
 @TestStep
@@ -600,7 +600,6 @@ def drop_random_projection(self):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add index")
 def add_random_index(self):
     """Add a random index to all tables"""
@@ -610,13 +609,19 @@ def add_random_index(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         index_name = f"index_{getuid()[:8]}_{column_name}"
 
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            node.query(
-                f"ALTER TABLE {table_name} ADD INDEX {index_name} {column_name} TYPE bloom_filter",
-                exitcode=0,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    node.query(
+                        f"ALTER TABLE {table_name} ADD INDEX IF NOT EXISTS {index_name} {column_name} TYPE bloom_filter",
+                        exitcode=0,
+                        **alter_query_args,
+                    )
+
+        retry(check_tables_have_same_indexes, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
 
     node.query(
         f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
@@ -678,6 +683,10 @@ def drop_random_index(self):
             with Then("all drops should have succeeded"):
                 for table_name in self.context.table_names:
                     assert exit_codes[table_name] == 0, error()
+
+    retry(check_tables_have_same_indexes, timeout=120, delay=step_retry_delay)(
+        tables=self.context.table_names
+    )
 
 
 @TestStep
@@ -759,7 +768,7 @@ def check_tables_have_same_indexes(self, tables):
     Smartly selects a node for each given replicated table.
     Does not check that all replicas of a table agree.
     """
-    with When("I get the projections for each table"):
+    with When("I get the indexes for each table"):
         table_indexes = {}
         for table_name in tables:
             node = get_random_node_for_table(table_name=table_name)
