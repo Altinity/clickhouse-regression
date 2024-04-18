@@ -99,10 +99,7 @@ def check_attach_partition_on_different_types_of_disks(
                         == source_partition_data.output
                     ), error()
         else:
-            if check_clickhouse_version(">=24.3")(self):
-                exitcode, message = None, None
-            else:
-                exitcode, message = 36, "Exception: Could not clone and load part"
+            exitcode, message = 36, "Exception: Could not clone and load part"
 
             attach_partition_from(
                 destination_table=destination_table_name,
