@@ -47,7 +47,11 @@ join_types = [
 def allow_experimental_analyzer(self):
     """Add allow_experimental_analyzer to the default query settings."""
     default_query_settings = getsattr(current().context, "default_query_settings", [])
-    default_query_settings.append(("allow_experimental_analyzer", 1))
+    if ("allow_experimental_analyzer", 0) in default_query_settings:
+        default_query_settings.remove(("allow_experimental_analyzer", 0))
+        default_query_settings.append(("allow_experimental_analyzer", 1))
+    elif ("allow_experimental_analyzer", 1) not in default_query_settings:
+        default_query_settings.append(("allow_experimental_analyzer", 1))
 
 
 @TestStep(Given)
