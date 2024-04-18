@@ -87,7 +87,7 @@ def check_move_partition(
             node=self.context.node_1,
         )
 
-    if check_clickhouse_version(">=24.3")(self):
+    if check_clickhouse_version(">=24.4")(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):
@@ -248,19 +248,17 @@ def move_partition(self):
             source_partition_key = destination_partition_key = partition_key
             source_table = destination_table = table
 
-            source_partition_key_str = source_partition_key.replace("(", "_")
-            source_partition_key_str = source_partition_key_str.replace(")", "_")
-            source_partition_key_str = source_partition_key_str.replace(",", "_")
-            source_partition_key_str = source_partition_key_str.replace("%", "mod")
-            destination_partition_key_str = destination_partition_key.replace("(", "_")
-            destination_partition_key_str = destination_partition_key_str.replace(
-                ")", "_"
+            source_partition_key_str = (
+                source_partition_key.replace("(", "_")
+                .replace(")", "_")
+                .replace(",", "_")
+                .replace("%", "mod")
             )
-            destination_partition_key_str = destination_partition_key_str.replace(
-                ",", "_"
-            )
-            destination_partition_key_str = destination_partition_key_str.replace(
-                "%", "mod"
+            destination_partition_key_str = (
+                destination_partition_key.replace("(", "_")
+                .replace(")", "_")
+                .replace(",", "_")
+                .replace("%", "mod")
             )
 
             Scenario(
