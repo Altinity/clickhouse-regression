@@ -3,7 +3,7 @@ import os
 import sys
 from testflows.core import *
 
-append_path(sys.path, "../")
+append_path(sys.path, "..")
 
 from attach.requirements.requirements import SRS_039_ClickHouse_Attach_Statement
 
@@ -63,7 +63,8 @@ def regression(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
-    Feature(run=load("replica_path", "feature"))
+    Feature(run=load("attach.tests.replica_path", "feature"), flags=TE)
+    Feature(run=load("attach.tests.active_path", "feature"), flags=TE)
 
 
 if main():
