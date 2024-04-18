@@ -297,7 +297,6 @@ def minio_regression(
             )
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
 
-
 @TestModule
 @Name("aws s3")
 def aws_s3_regression(
@@ -375,6 +374,9 @@ def aws_s3_regression(
                 access_key=access_key,
                 region=region,
                 bucket=bucket,
+            )
+            Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(
+                uri=uri, key_id=key_id, access_key=access_key
             )
 
 

@@ -1,50 +1,80 @@
+import random
+
 from testflows.core import *
 
 from s3.tests.common import *
 from s3.requirements import *
+
+many_files_uri = (
+    "https://s3.us-west-2.amazonaws.com/altinity-qa-test/data/many_files_benchmark/"
+)
+
+
+@TestStep(Given)
+def s3_create_many_files(self):
+    """Create a folder with many folders and files in S3"""
+
+    assert self.context.storage == "aws_s3", error(
+        "Must be in s3 mode to insert new data"
+    )
+
+    num_folders = 50_000
+    start_offset = 0
+    folder_size_mb = 4
+    num_files_per_folder = 5
+
+    node = current().context.node
+    access_key_id = self.context.access_key_id
+    secret_access_key = self.context.secret_access_key
+    table_name = "table_" + getuid()
+    random.seed("many_files")
+
+
+    with Given("I have a table with data"):
+        simple_table(node=node, name=table_name, policy="default")
+        insert_data(node=node, number_of_mb=folder_size_mb, name=table_name)
+
+    with Given("I have a folder with many files in S3"):
+        for j in range(num_folders):
+            i = random.randint(100_000, 999_999)
+
+            # skip ahead through random number generation
+            if j < start_offset:
+                continue
+
+            note(f"{j}/{num_folders}")
+            node.query(
+                f"""INSERT INTO TABLE FUNCTION 
+                s3('{many_files_uri}id={i}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
+                PARTITION BY (d % {num_files_per_folder})
+                SELECT * FROM {table_name}"""
+            )
 
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Path_Wildcard("1.0"))
 def wildcard_performance(self):
     """Check the performance of using wildcards in s3 paths."""
+    
     node = current().context.node
-    uri = self.context.uri + "many_files/"
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
 
     examples = [
-        ("100", "one_file"),
-        ("*", "star"),
-        ("%3F", "question"),
-        ("{220..250}", "range"),
-        ("{1234,456,1982,200}", "nums"),
-        ("{1234,456,1982,200,abc}", "nums_one_missing"),
+        ("522029", "one_file"),
+        ("{249278..283359}", "range"),
+        ("{759040,547776,167687,283359}", "nums"),
+        ("{759040,547776,167687,283359,abc}", "nums_one_missing"),
+        # ("*", "star"),
+        # ("%3F", "question"),
     ]
-
-    if self.context.storage == "minio":
-        with Given("If using MinIO, clear objects on directory path to avoid error"):
-            self.context.cluster.minio_client.remove_object(
-                self.context.cluster.minio_bucket, "data"
-            )
-
-    with Given("I export to many S3 files"):
-        for i in range(50):
-            for j in range(5):
-                node.query(
-                    f"""INSERT INTO TABLE FUNCTION 
-                    s3('{uri}partition_{{_partition_id}}/file_{j}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
-                    PARTITION BY d
-                    SELECT * FROM numbers({i*1000}, 1000)"""
-                )
-        # pause('check minio')
 
     for wildcard, name in examples:
         with Example(name):
-             with Then(f"""I query the data using the wildcard '{wildcard}'"""):
+            with Then(f"""I query the data using the wildcard '{wildcard}'"""):
                 t_start = time.time()
                 r = node.query(
-                    f"""SELECT * FROM s3('{uri}partition_{wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64')"""
+                    f"""SELECT median(d) FROM s3('{many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64')"""
                 )
                 metric(f"wildcard {name} ({wildcard})", time.time() - t_start, "s")
                 assert r.output.strip() != "", error()
@@ -60,11 +90,9 @@ def outline(self):
             scenario()
 
 
-
-
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_TableFunction("1.0"))
-@Name("table function")
+@Name("table function performance")
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
@@ -72,11 +100,16 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
 
+    # with Given("I create many S3 files"):
+    #     s3_create_many_files()
+    #     return
+
     outline()
+
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_TableFunction("1.0"))
-@Name("table function")
+@Name("table function performance")
 def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "gcs"
@@ -89,7 +122,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_TableFunction("1.0"))
-@Name("table function")
+@Name("table function performance")
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"
