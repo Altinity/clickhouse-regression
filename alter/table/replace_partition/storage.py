@@ -28,10 +28,7 @@ def different_disks(self):
         )
 
     with Then("I try to replace partition on the destination table"):
-        if check_clickhouse_version(">=24.3")(self):
-            exitcode, message = None, None
-        else:
-            exitcode, message = 36, "DB::Exception: Could not clone and load part"
+        exitcode, message = 36, "DB::Exception: Could not clone and load part"
 
         replace_partition(
             destination_table=destination_table,

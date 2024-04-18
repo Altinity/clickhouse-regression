@@ -18,10 +18,10 @@ def check_restart_clickhouse_server(
     self, node=None, source_partition_key="a", destination_partition_key="a"
 ):
     """Check that I can use newly attached data after restart ClickHouse server."""
-    if check_clickhouse_version("<24.3")(self):
+    if check_clickhouse_version("<24.4")(self):
         if source_partition_key != destination_partition_key:
             skip(
-                "`attach partition from` with tables that have different partition keys are not supported before 24.3"
+                "`attach partition from` with tables that have different partition keys are not supported before 24.4"
             )
 
     if node is None:
@@ -40,7 +40,7 @@ def check_restart_clickhouse_server(
             partition_by=source_partition_key,
         )
 
-    if check_clickhouse_version(">=24.3")(self):
+    if check_clickhouse_version(">=24.4")(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):
