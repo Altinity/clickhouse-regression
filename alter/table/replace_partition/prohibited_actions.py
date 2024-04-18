@@ -255,12 +255,9 @@ def storage_policy(self):
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
-    if check_clickhouse_version(">=24.3")(self):
-        exitcode, message = None, None
-    else:
-        exitcode, message = io_error_message(
-            exitcode=36, message="Could not clone and load part"
-        )
+    exitcode, message = io_error_message(
+        exitcode=36, message="Could not clone and load part"
+    )
 
     with Given("I have a partitioned destination table with a policy1"):
         create_table_partitioned_by_column_with_data(
