@@ -17,6 +17,10 @@ from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
 
+# There's an important tradeoff between these two sets of timeouts.
+# If the query runs for longer than the step timeout, the step will not
+# get retried using a different node and table.
+
 step_retry_timeout = 600
 step_retry_delay = 15
 
@@ -59,13 +63,42 @@ def insert_to_random(self):
 
 @TestStep
 @Retry(timeout=10, delay=1)
-def select_count_random(self, repeat_limit=10):
+def select_count_random(self, repeat_limit=5):
     """Perform select count() queries on a random node and table."""
-    table_name = get_random_table_name()
-    node = get_random_node_for_table(table_name=table_name)
     for _ in range(random.randint(1, repeat_limit)):
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+
         with By(f"count rows in {table_name} on {node.name}"):
             node.query(f"SELECT count() FROM {table_name}", no_checks=True)
+
+
+@TestStep(When)
+def select_sum_random(self, repeat_limit=5):
+    """Perform select sum() queries on a random node, column and table."""
+    for _ in range(random.randint(1, repeat_limit)):
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        column_name = get_random_column_name(node=node, table_name=table_name)
+
+        with By(f"sum rows in {table_name} on {node.name}"):
+            node.query(f"SELECT sum({column_name}) FROM {table_name}", no_checks=True)
+
+
+@TestStep(When)
+def select_max_min_random(self, repeat_limit=5):
+    """Perform select max() min() queries on a random node, columns and table."""
+    for _ in range(random.randint(1, repeat_limit)):
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        column1_name = get_random_column_name(node=node, table_name=table_name)
+        column2_name = get_random_column_name(node=node, table_name=table_name)
+
+        with By(f"max and min rows in {table_name} on {node.name}"):
+            node.query(
+                f"SELECT max({column1_name}), min({column2_name}) FROM {table_name}",
+                no_checks=True,
+            )
 
 
 @TestStep
