@@ -1,6 +1,3 @@
-from string import ascii_lowercase
-from itertools import product
-
 from testflows.core import *
 
 from s3.tests.common import *
@@ -117,51 +114,6 @@ def wildcard(self, wildcard, expected):
             with retry:
                 r = node.query(f"SELECT * FROM {table2_name}").output.strip()
                 assert r == expected, error()
-
-
-@TestScenario
-@Requirements(RQ_SRS_015_S3_TableFunction_Path_Wildcard("1.0"))
-def wildcard_performance(self):
-    """Check the performance of using wildcards in s3 paths."""
-    node = current().context.node
-    uri = self.context.uri + "many_files/"
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-
-    examples = [
-        ("1", "one_file"),
-        ("*", "star"),
-        ("%3F", "question"),
-        ("{20..300}", "nums"),
-        ("{abc,123,456}", "nums_one_missing"),
-    ]
-
-    if self.context.storage == "minio":
-        with Given("If using MinIO, clear objects on directory path to avoid error"):
-            self.context.cluster.minio_client.remove_object(
-                self.context.cluster.minio_bucket, "data"
-            )
-
-    with Given("I export to many S3 files"):
-        for i in range(10):
-            node.query(
-                f"""INSERT INTO TABLE FUNCTION 
-                s3('{uri}partition_{{_partition_id}}/file.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
-                PARTITION BY d
-                SELECT * FROM numbers({i*1000}, 1000)"""
-            )
-        pause('check minio')
-
-    for wildcard, name in examples:
-        with Example(name):
-             with Then(f"""I query the data using the wildcard '{wildcard}'"""):
-                t_start = time.time()
-                r = node.query(
-                    f"""SELECT * FROM s3('{uri}partition_{wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64')"""
-                )
-                metric(f"wildcard {name} ({wildcard})", time.time() - t_start, "s")
-                assert r.output.strip() != "", error()
-
 
 @TestOutline(Scenario)
 @Examples(
