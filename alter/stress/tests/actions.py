@@ -90,6 +90,10 @@ def add_random_column(self):
                 **alter_query_args,
             )
 
+        retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
+
 
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
@@ -143,6 +147,10 @@ def rename_random_column(self):
                 timeout=30,
                 **alter_query_args,
             )
+
+        retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
 
 
 @TestStep
