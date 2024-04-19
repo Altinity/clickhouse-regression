@@ -89,10 +89,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         used_disks = get_used_disks_for_table(node, name)
                         retry = 20
                         i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "jbod1") <= 7
-                            and i < retry
-                        ):
+                        while not used_disks.count("jbod1") <= 7 and i < retry:
                             with And("sleep 0.5 sec"):
                                 time.sleep(0.5)
                             used_disks = get_used_disks_for_table(node, name)
@@ -101,12 +98,12 @@ def scenario(self, cluster, node="clickhouse1"):
                     with Then(
                         "check that jbod1 disk is used less than or equal to 7 times"
                     ):
-                        assert sum(1 for x in used_disks if x == "jbod1") <= 7, error()
+                        assert used_disks.count("jbod1") <= 7, error()
 
                     with And("that some parts were moved to 'external'"):
                         assert "external" in used_disks, error()
 
-                    with When("We wait 5 sec for sytem.part_log to be present"):
+                    with When("We wait 5 sec for system.part_log to be present"):
                         time.sleep(5)
 
                     with When("I read path_on_disk from system.part_log"):

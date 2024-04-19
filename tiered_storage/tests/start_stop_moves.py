@@ -125,10 +125,7 @@ def scenario(self, cluster, node="clickhouse1"):
                             ):
                                 retry = 5
                                 i = 0
-                                while (
-                                    not sum(1 for x in used_disks if x == "jbod1") <= 2
-                                    and i < retry
-                                ):
+                                while not used_disks.count("jbod1") <= 2 and i < retry:
                                     time.sleep(0.1)
                                     used_disks = get_used_disks_for_table(node, name)
                                     i += 1
@@ -147,18 +144,13 @@ def scenario(self, cluster, node="clickhouse1"):
                         ):
                             retry = 30
                             i = 0
-                            while (
-                                not sum(1 for x in used_disks if x == "jbod1") <= 2
-                                and i < retry
-                            ):
+                            while not used_disks.count("jbod1") <= 2 and i < retry:
                                 time.sleep(1)
                                 used_disks = get_used_disks_for_table(node, name)
                                 i += 1
 
                         with Then("the number of disks using jbod1 should be <= 2"):
-                            assert (
-                                sum(1 for x in used_disks if x == "jbod1") <= 2
-                            ), error()
+                            assert used_disks.count("jbod1") <= 2, error()
 
                         with And("that some parts were moved to 'external'"):
                             assert "external" in used_disks, error()

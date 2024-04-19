@@ -86,17 +86,14 @@ def scenario(self, cluster, node="clickhouse1"):
                         used_disks = get_used_disks_for_table(node, name)
                         retry = 20
                         i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "jbod1") < 8
-                            and i < retry
-                        ):
+                        while not used_disks.count("jbod1") < 8 and i < retry:
                             with And("sleep 0.5 sec"):
                                 time.sleep(0.5)
                             used_disks = get_used_disks_for_table(node, name)
                             i += 1
 
                     with Then("check that jbod1 disk is used for all the parts"):
-                        assert sum(1 for x in used_disks if x == "jbod1") == 8, error()
+                        assert used_disks.count("jbod1") == 8, error()
 
                     with When("I read path_on_disk from system.part_log"):
                         path = (

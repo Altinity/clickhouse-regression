@@ -83,16 +83,13 @@ def scenario(self, cluster, node="clickhouse1"):
                         used_disks = get_used_disks_for_table(node, name)
                         retry = 20
                         i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "jbod1") == 1
-                            and i < retry
-                        ):
+                        while not used_disks.count("jbod1") == 1 and i < retry:
                             time.sleep(0.5)
                             used_disks = get_used_disks_for_table(node, name)
                             i += 1
 
                     with Then("check that jbod1 disk is used equals to 1 times"):
-                        assert sum(1 for x in used_disks if x == "jbod1") == 1, error()
+                        assert used_disks.count("jbod1") == 1, error()
 
                     with When(
                         "I change storage policy to contain another volume and restart"
@@ -112,16 +109,13 @@ def scenario(self, cluster, node="clickhouse1"):
                         used_disks = get_used_disks_for_table(node, name)
                         retry = 20
                         i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "external") == 1
-                            and i < retry
-                        ):
+                        while not used_disks.count("external") == 1 and i < retry:
                             time.sleep(0.5)
                             used_disks = get_used_disks_for_table(node, name)
                             i += 1
 
                     with Then("check that jbod1 disk is not used"):
-                        assert sum(1 for x in used_disks if x == "jbod1") == 0, error()
+                        assert used_disks.count("jbod1") == 0, error()
 
                     with And("that the part was moved to 'external'"):
                         assert used_disks[0] == "external", error()

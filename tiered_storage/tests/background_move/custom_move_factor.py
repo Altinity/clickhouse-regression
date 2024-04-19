@@ -72,10 +72,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         used_disks = get_used_disks_for_table(node, name)
                         retry = 40
                         i = 0
-                        while (
-                            not sum(1 for x in used_disks if x == "jbod1") <= 2
-                            and i < retry
-                        ):
+                        while not used_disks.count("jbod1") <= 2 and i < retry:
                             with And("sleep 0.5 sec"):
                                 time.sleep(0.5)
                             used_disks = get_used_disks_for_table(node, name)
@@ -84,12 +81,10 @@ def scenario(self, cluster, node="clickhouse1"):
                     with Then(
                         "check that jbod1 disk is used less than or equal to 2 times"
                     ):
-                        assert sum(1 for x in used_disks if x == "jbod1") <= 2, error()
+                        assert used_disks.count("jbod1") <= 2, error()
 
                     with And("that at least 3 parts were moved to 'external'"):
-                        assert (
-                            sum(1 for x in used_disks if x == "external") >= 3
-                        ), error()
+                        assert used_disks.count("external") >= 3, error()
 
                     with And("I flush all system logs"):
                         node.query("SYSTEM FLUSH LOGS")
