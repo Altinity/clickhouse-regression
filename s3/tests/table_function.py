@@ -61,6 +61,7 @@ def syntax(self):
         ("%3F", "427\n427\n427", Name("question")),
         ("{2..3}", "427\n427", Name("nums")),
         ("{1,3}", "427\n427", Name("strings")),
+        ("{1,3,4}", "427\n427", Name("strings_one_missing")),
     ],
 )
 @Requirements(RQ_SRS_015_S3_TableFunction_Path_Wildcard("1.0"))
@@ -113,7 +114,6 @@ def wildcard(self, wildcard, expected):
             with retry:
                 r = node.query(f"SELECT * FROM {table2_name}").output.strip()
                 assert r == expected, error()
-
 
 @TestOutline(Scenario)
 @Examples(

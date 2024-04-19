@@ -17,10 +17,14 @@ from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
 
-step_retry_timeout = 600
-step_retry_delay = 30
+# There's an important tradeoff between these two sets of timeouts.
+# If the query runs for longer than the step timeout, the step will not
+# get retried using a different node and table.
 
-alter_query_args = {"retry_delay": 60, "retry_count": 10}
+step_retry_timeout = 600
+step_retry_delay = 15
+
+alter_query_args = {"retry_delay": 30, "retry_count": 5}
 
 
 @TestStep
@@ -59,13 +63,42 @@ def insert_to_random(self):
 
 @TestStep
 @Retry(timeout=10, delay=1)
-def select_count_random(self, repeat_limit=10):
+def select_count_random(self, repeat_limit=5):
     """Perform select count() queries on a random node and table."""
-    table_name = get_random_table_name()
-    node = get_random_node_for_table(table_name=table_name)
     for _ in range(random.randint(1, repeat_limit)):
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+
         with By(f"count rows in {table_name} on {node.name}"):
             node.query(f"SELECT count() FROM {table_name}", no_checks=True)
+
+
+@TestStep(When)
+def select_sum_random(self, repeat_limit=5):
+    """Perform select sum() queries on a random node, column and table."""
+    for _ in range(random.randint(1, repeat_limit)):
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        column_name = get_random_column_name(node=node, table_name=table_name)
+
+        with By(f"sum rows in {table_name} on {node.name}"):
+            node.query(f"SELECT sum({column_name}) FROM {table_name}", no_checks=True)
+
+
+@TestStep(When)
+def select_max_min_random(self, repeat_limit=5):
+    """Perform select max() min() queries on a random node, columns and table."""
+    for _ in range(random.randint(1, repeat_limit)):
+        table_name = get_random_table_name()
+        node = get_random_node_for_table(table_name=table_name)
+        column1_name = get_random_column_name(node=node, table_name=table_name)
+        column2_name = get_random_column_name(node=node, table_name=table_name)
+
+        with By(f"max and min rows in {table_name} on {node.name}"):
+            node.query(
+                f"SELECT max({column1_name}), min({column2_name}) FROM {table_name}",
+                no_checks=True,
+            )
 
 
 @TestStep
@@ -89,6 +122,10 @@ def add_random_column(self):
                 timeout=30,
                 **alter_query_args,
             )
+
+        retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
 
 
 @TestStep
@@ -143,6 +180,10 @@ def rename_random_column(self):
                 timeout=30,
                 **alter_query_args,
             )
+
+        retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
 
 
 @TestStep
@@ -592,7 +633,6 @@ def drop_random_projection(self):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add index")
 def add_random_index(self):
     """Add a random index to all tables"""
@@ -602,13 +642,19 @@ def add_random_index(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         index_name = f"index_{getuid()[:8]}_{column_name}"
 
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            node.query(
-                f"ALTER TABLE {table_name} ADD INDEX {index_name} {column_name} TYPE bloom_filter",
-                exitcode=0,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    node.query(
+                        f"ALTER TABLE {table_name} ADD INDEX IF NOT EXISTS {index_name} {column_name} TYPE bloom_filter",
+                        exitcode=0,
+                        **alter_query_args,
+                    )
+
+        retry(check_tables_have_same_indexes, timeout=120, delay=step_retry_delay)(
+            tables=self.context.table_names
+        )
 
     node.query(
         f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
@@ -670,6 +716,10 @@ def drop_random_index(self):
             with Then("all drops should have succeeded"):
                 for table_name in self.context.table_names:
                     assert exit_codes[table_name] == 0, error()
+
+    retry(check_tables_have_same_indexes, timeout=120, delay=step_retry_delay)(
+        tables=self.context.table_names
+    )
 
 
 @TestStep
@@ -751,7 +801,7 @@ def check_tables_have_same_indexes(self, tables):
     Smartly selects a node for each given replicated table.
     Does not check that all replicas of a table agree.
     """
-    with When("I get the projections for each table"):
+    with When("I get the indexes for each table"):
         table_indexes = {}
         for table_name in tables:
             node = get_random_node_for_table(table_name=table_name)

@@ -35,6 +35,10 @@ def feature(self, restart_on_reconfig=False):
     with When("I choose a node to perform the recovery"):
         recovery_node = dr_ensemble[0]
 
+    # with And("I stop the other failover nodes"):
+    #     for node in dr_ensemble[1:]:
+    #         node.stop_keeper()
+
     if restart_on_reconfig:
         with Then("I wait for the server to finish starting"):
             retry(check_logs, timeout=30, delay=1)(
@@ -53,6 +57,15 @@ def feature(self, restart_on_reconfig=False):
             message="KeeperServer: This instance is in recovery mode",
             tail=50,
         )
+
+    # with When("I restart all other DR nodes"):
+    #     for node in dr_ensemble[1:]:
+    #         node.start_keeper()
+    #         retry(check_logs, timeout=30, delay=1)(
+    #             node=node,
+    #             message="INIT RAFT SERVER",
+    #             tail=30,
+    #         )
 
     with Then("I check that the leader exists"):
         current_leader = retry(
