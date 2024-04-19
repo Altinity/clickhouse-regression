@@ -98,9 +98,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 with Then(
                                     "check that jbod1 disk is used equals to 8 times"
                                 ):
-                                    assert (
-                                        sum(1 for x in used_disks if x == "jbod1") == 8
-                                    ), error()
+                                    assert used_disks.count("jbod1") == 8, error()
 
                     with When(
                         "I change storage policy to contain another volume and restart"
@@ -124,9 +122,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 with Then(
                                     "check that jbod1 disk is used is less than or equals to 7 times"
                                 ):
-                                    assert (
-                                        sum(1 for x in used_disks if x == "jbod1") <= 7
-                                    ), error()
+                                    assert used_disks.count("jbod1") <= 7, error()
 
                                 with And(
                                     "that the first two (oldest) parts were moved to 'external'"
