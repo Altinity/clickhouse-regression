@@ -15,14 +15,13 @@ from tiered_storage.tests.common import get_random_string
 
 @TestScenario
 @Name("opposing moves")
-def scenario(self, cluster, node="clickhouse1"):
+def scenario(self):
     """Check that moving the same partition in parallel to opposing disks
     does not cause any crashes or data duplication.
     """
     name = "mt_opposing_moves"
-
-    with Given("cluster node"):
-        node = cluster.node(node)
+    cluster = self.context.cluster
+    node = cluster.node("clickhouse1")
 
     table = """
         CREATE TABLE %(name)s (

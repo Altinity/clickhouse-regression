@@ -20,29 +20,24 @@ def feature(self, cluster):
     """Check manually moving parts and partitions with downtime using
     ALTER MOVE PART and ALTER MOVE PARTITION commands.
     """
-    args = {"cluster": cluster}
     Scenario(
         run=load("tiered_storage.tests.alter_move.alter_move", "scenario"),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load(
             "tiered_storage.tests.alter_move.alter_move_half_of_partition", "scenario"
         ),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load(
             "tiered_storage.tests.alter_move.alter_double_move_partition", "scenario"
         ),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load("tiered_storage.tests.alter_move.opposing_moves", "scenario"),
-        args=args,
         flags=TE,
     )
 
@@ -51,14 +46,12 @@ def feature(self, cluster):
             run=load(
                 "tiered_storage.tests.alter_move.concurrent_alter_modify", "scenario"
             ),
-            args=args,
             flags=TE,
         )
         Scenario(
             run=load(
                 "tiered_storage.tests.alter_move.concurrent_alter_move", "scenario"
             ),
-            args=args,
             flags=TE,
         )
         Scenario(
@@ -66,7 +59,6 @@ def feature(self, cluster):
                 "tiered_storage.tests.alter_move.concurrent_alter_move_and_drop",
                 "scenario",
             ),
-            args=args,
             flags=TE,
         )
         Scenario(
@@ -74,7 +66,6 @@ def feature(self, cluster):
                 "tiered_storage.tests.alter_move.concurrent_alter_move_and_select",
                 "scenario",
             ),
-            args=args,
             flags=TE,
         )
         Scenario(
@@ -82,6 +73,5 @@ def feature(self, cluster):
                 "tiered_storage.tests.alter_move.concurrent_alter_move_insert_and_select",
                 "scenario",
             ),
-            args=args,
             flags=TE,
         )
