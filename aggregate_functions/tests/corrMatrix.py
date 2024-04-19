@@ -2,8 +2,8 @@ from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CorrMatrix,
 )
-from helpers.tables import common_columns
-from helpers.tables import is_numeric, is_nullable, is_low_cardinality
+
+from helpers.tables import *
 
 
 @TestCheck
@@ -22,11 +22,16 @@ def scenario(
     func="corrMatrix({params})",
     table=None,
     snapshot_id=None,
-    extended_precision=True,
-    decimal=False,
+    extended_precision=False,
+    decimal=True,
 ):
     """Check corrMatrix aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+
+    if current_cpu() == "aarch64":
+        self.context.snapshot_id = get_snapshot_id(
+            snapshot_id=snapshot_id, clickhouse_version=">=24.3"
+        )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
@@ -107,13 +112,12 @@ def scenario(
                 columns = [
                     col
                     for col in table.columns
-                    if col in common_columns()
+                    if col in generate_all_column_types()
                     and is_numeric(
                         col.datatype,
                         decimal=decimal,
                         extended_precision=extended_precision,
                     )
-                    and not is_nullable(col.datatype)
                     and not is_low_cardinality(col.datatype)
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
