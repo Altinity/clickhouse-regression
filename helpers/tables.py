@@ -62,6 +62,10 @@ def is_numeric(
     """Return True if data type is numeric."""
     datatype = unwrap(datatype)
 
+    if not extended_precision:
+        if datatype.is_extended_precision:
+            return False
+
     if isinstance(datatype, Decimal):
         return decimal
 
@@ -76,10 +80,6 @@ def is_numeric(
 
     if isinstance(datatype, Date):
         return date
-
-    if not extended_precision:
-        if datatype.is_extended_precision:
-            return False
 
     return datatype.is_numeric
 
