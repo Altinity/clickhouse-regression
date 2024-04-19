@@ -4,6 +4,7 @@ from helpers.tables import *
 
 
 @TestScenario
+@Flags(TE)
 def check_replica_path_intersection(self):
     """Check that replica path intersection is not allowed."""
     first_table_name = "first_table_" + getuid()

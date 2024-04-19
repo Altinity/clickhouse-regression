@@ -70,7 +70,6 @@ Table of which suites rely on what docker images.
 | map_type | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 | ontime_benchmark | altinityinfra/clickhouse-regression-multiarch-ontime:1.0 |
-|| registry.gitlab.com/altinity-public/container-images/s3-tools:2.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.6.2 |

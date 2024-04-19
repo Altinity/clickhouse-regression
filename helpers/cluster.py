@@ -23,7 +23,7 @@ MESSAGES_TO_RETRY = [
     "DB::Exception: Connection loss",
     "Coordination::Exception: Session expired",
     "Coordination::Exception: Connection loss",
-    "Coordination::Exception: Coordination error: Connection loss."
+    "Coordination::Exception: Coordination error: Connection loss.",
     "Coordination::Exception: Operation timeout",
     "DB::Exception: Operation timeout",
     "Operation timed out",

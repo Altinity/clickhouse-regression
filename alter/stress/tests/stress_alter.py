@@ -25,6 +25,7 @@ def alter_combinations(
     minimum_replicas=1,
     maximum_replicas=3,
     n_tables=5,
+    n_columns=50,
     restarts=False,
     add_remove_replicas=False,
     fill_disks=False,
@@ -107,9 +108,11 @@ def alter_combinations(
             action_groups = action_groups[:limit]
 
     try:
-        with Given(f"I create {n_tables} tables with 50 columns and data"):
+        with Given(f"I create {n_tables} tables with {n_columns} columns and data"):
             self.context.table_names = []
-            columns = "key DateTime," + ",".join(f"value{i} UInt16" for i in range(50))
+            columns = "key DateTime," + ",".join(
+                f"value{i} UInt16" for i in range(n_columns)
+            )
             for i in range(n_tables):
                 table_name = f"table{i}_{self.context.storage_policy}"
                 replicated_table_cluster(
@@ -138,6 +141,13 @@ def alter_combinations(
         #     ]
         # ]
 
+        background_actions = [
+            insert_to_random,
+            select_count_random,
+            select_sum_random,
+            select_max_min_random,
+        ]
+
         t = time.time()
         total_combinations = len(action_groups)
         for i, chosen_actions in enumerate(action_groups):
@@ -155,9 +165,7 @@ def alter_combinations(
                         impaired_network(network_mode=net_mode)
 
                 with When("I perform a group of actions"):
-                    for action in chain(
-                        [insert_to_random, select_count_random], chosen_actions
-                    ):
+                    for action in chain(background_actions, chosen_actions):
                         By(
                             f"I {action.name}",
                             run=action,
