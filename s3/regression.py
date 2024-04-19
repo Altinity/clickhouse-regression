@@ -172,6 +172,13 @@ xfails = {
     "aws s3/:/table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
+    ":/:/table function performance/wildcard performance/:": [
+        (
+            Error,
+            "https://github.com/ClickHouse/ClickHouse/pull/62120",
+            check_clickhouse_version("<24.4"),
+        )
+    ],
     ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
@@ -296,6 +303,7 @@ def minio_regression(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+
 
 @TestModule
 @Name("aws s3")

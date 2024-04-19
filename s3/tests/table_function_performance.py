@@ -81,7 +81,8 @@ def wildcard_performance(self):
             with Then(f"""I query the data using the wildcard '{wildcard}'"""):
                 t_start = time.time()
                 r = node.query(
-                    f"""SELECT median(d) FROM s3('{many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64')"""
+                    f"""SELECT median(d) FROM s3('{many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64')""",
+                    timeout=60,
                 )
                 metric(f"wildcard {name} ({wildcard})", time.time() - t_start, "s")
                 assert r.output.strip() != "", error()
