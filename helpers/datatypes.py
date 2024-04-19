@@ -232,7 +232,11 @@ class Decimal128(Decimal):
         else:
             limit = "9" * (38 - scale) + "." + "9" * scale
         super().__init__(
-            f"Decimal128({scale})", max=limit, min="-" + limit, scale=scale
+            f"Decimal128({scale})", 
+            is_extended_precision=True,
+            max=limit, 
+            min="-" + limit, 
+            scale=scale
         )
 
 
