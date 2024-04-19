@@ -20,6 +20,16 @@ def scenario(self, cluster, node="clickhouse1"):
     """Check renaming table when storage policy for the table is specified."""
     count = "50"
 
+    table_not_exists_exitcode = 60
+    if check_clickhouse_version(">=24.3")(self):
+        table_not_exists_message = (
+            "Exception: Unknown table expression identifier '{table_name}'"
+        )
+    elif check_clickhouse_version("<23.8")(self):
+        table_not_exists_message = "Exception: Table {table_name} doesn't exist"
+    else:
+        table_not_exists_message = "Exception: Table {table_name} does not exist"
+
     with Given("cluster node"):
         node = cluster.node(node)
 
@@ -70,13 +80,12 @@ def scenario(self, cluster, node="clickhouse1"):
                     assert r == count
 
             with When("I get the number of rows for the old table"):
-                exitcode = 60
-                if check_clickhouse_version("<23.8")(self):
-                    message = "Exception: Table default.renaming_table doesn't exist"
-                else:
-                    message = "Exception: Table default.renaming_table does not exist"
                 node.query(
-                    "SELECT COUNT() FROM default.renaming_table", message, exitcode
+                    "SELECT COUNT() FROM default.renaming_table",
+                    table_not_exists_message.format(
+                        table_name="default.renaming_table"
+                    ),
+                    table_not_exists_exitcode,
                 )
 
         with When("I create new database"):
@@ -93,13 +102,12 @@ def scenario(self, cluster, node="clickhouse1"):
                     assert r == count
 
             with When("I get the number of rows for the old table"):
-                exitcode = 60
-                if check_clickhouse_version("<23.8")(self):
-                    message = "Exception: Table default.renaming_table1 doesn't exist"
-                else:
-                    message = "Exception: Table default.renaming_table1 does not exist"
                 node.query(
-                    "SELECT COUNT() FROM default.renaming_table1", message, exitcode
+                    "SELECT COUNT() FROM default.renaming_table1",
+                    table_not_exists_message.format(
+                        table_name="default.renaming_table1"
+                    ),
+                    table_not_exists_exitcode,
                 )
 
     finally:
