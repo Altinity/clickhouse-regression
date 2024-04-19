@@ -26,34 +26,28 @@ def feature(self, cluster):
     specified by the **move_factor** option
     then in the background the parts are moved to the next volume.
     """
-    args = {"cluster": cluster}
     Scenario(
         run=load("tiered_storage.tests.background_move.custom_move_factor", "scenario"),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load(
             "tiered_storage.tests.background_move.default_move_factor", "scenario"
         ),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load("tiered_storage.tests.background_move.max_move_factor", "scenario"),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load("tiered_storage.tests.background_move.min_move_factor", "scenario"),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load(
             "tiered_storage.tests.background_move.adding_another_volume", "scenario"
         ),
-        args=args,
         flags=TE,
     )
     Scenario(
@@ -61,11 +55,9 @@ def feature(self, cluster):
             "tiered_storage.tests.background_move.adding_another_volume_one_large_part",
             "scenario",
         ),
-        args=args,
         flags=TE,
     )
     Scenario(
         run=load("tiered_storage.tests.background_move.concurrent_read", "scenario"),
-        args=args,
         flags=TE,
     )

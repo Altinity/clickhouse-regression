@@ -103,7 +103,7 @@ xfails = {
     ":/:/ttl moves/materialize ttl": [(Error, "not yet supported")],
     ":/:/ttl moves/mutation update column in ttl": [(Error, "not yet supported")],
     ":/:/double move while select": [(Fail, "not yet supported")],
-    ":/:/background move/concurrent read": [(Fail, "known issue")],
+    ":/:/background move/concurrent read/:": [(Fail, "known issue")],
     ":/:/disk space bytes": [(Fail, "not yet supported")],
     ":/:/attach or replace partition different policies": [(Fail, "known issue")],
     ":/:/ttl moves/alter column in ttl/*": [
