@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CovarSampMatrix,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id
+from aggregate_functions.tests.steps import get_snapshot_id, current_cpu
 from aggregate_functions.tests.corrMatrix import scenario as checks
 
 
@@ -14,6 +14,11 @@ from aggregate_functions.tests.corrMatrix import scenario as checks
 def scenario(self, func="covarSampMatrix({params})", table=None, snapshot_id=None):
     """Check covarSampMatrix aggregate function by using the same checks as for corrMatrix."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+
+    if current_cpu() == "aarch64":
+        self.context.snapshot_id = get_snapshot_id(
+            snapshot_id=snapshot_id, clickhouse_version=">=24.3"
+        )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
