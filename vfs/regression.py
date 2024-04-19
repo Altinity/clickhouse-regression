@@ -45,7 +45,6 @@ def minio(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    allow_experimental_analyzer=False,
 ):
     """Setup and run minio tests."""
     nodes = {
@@ -267,6 +266,7 @@ def regression(
     gcs_key_id,
     stress,
     allow_vfs,
+    allow_experimental_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
 
