@@ -1,7 +1,7 @@
 import time
 import random
-from helpers.common import getuid
 from testflows.core import *
+from testflows.asserts import error
 from helpers.common import create_xml_config_content, add_config
 from helpers.common import getuid, instrument_clickhouse_server_log
 
@@ -52,6 +52,17 @@ def allow_experimental_analyzer(self):
         default_query_settings.append(("allow_experimental_analyzer", 1))
     elif ("allow_experimental_analyzer", 1) not in default_query_settings:
         default_query_settings.append(("allow_experimental_analyzer", 1))
+
+
+@TestStep(Given)
+def disable_experimental_analyzer(self):
+    """Disable allow_experimental_analyzer in the default query settings."""
+    default_query_settings = getsattr(current().context, "default_query_settings", [])
+    if ("allow_experimental_analyzer", 1) in default_query_settings:
+        default_query_settings.remove(("allow_experimental_analyzer", 1))
+        default_query_settings.append(("allow_experimental_analyzer", 0))
+    elif ("allow_experimental_analyzer", 0) not in default_query_settings:
+        default_query_settings.append(("allow_experimental_analyzer", 0))
 
 
 @TestStep(Given)

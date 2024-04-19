@@ -153,15 +153,16 @@ def join_result_check(self, table, tables_auxiliary, join_type="INNER JOIN", nod
         node = self.context.cluster.node("clickhouse1")
 
     with Then("I check that compare results are the same"):
-        assert (
-            node.query(
-                f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
-                f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id",
-                settings=[("final", 0), ("allow_experimental_analyzer", 1)],
-            ).output.strip()
-            == node.query(
-                f"SELECT count() FROM {table.name} {join_type}"
-                f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id",
-                settings=[("final", 1)],
-            ).output.strip()
-        )
+        allow_experimental_analyzer()
+        with_final_clause = node.query(
+            f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
+            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            settings=[("final", 0)],
+        ).output.strip()
+        disable_experimental_analyzer()
+        with_final_setting = node.query(
+            f"SELECT count() FROM {table.name} {join_type}"
+            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            settings=[("final", 1)],
+        ).output.strip()
+        assert with_final_clause == with_final_setting, error()
