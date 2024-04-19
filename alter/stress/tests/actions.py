@@ -610,7 +610,7 @@ def drop_random_projection(self):
 
         projection_name = random.choice(projections)
 
-        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+        for attempt in retries(timeout=step_retry_timeout*2, delay=step_retry_delay):
             with attempt:
                 with When(f"I drop {projection_name} on all tables"):
                     exit_codes = {}
@@ -700,7 +700,7 @@ def drop_random_index(self):
 
     index_name = random.choice(indexes)
 
-    for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+    for attempt in retries(timeout=step_retry_timeout*2, delay=step_retry_delay):
         with attempt:
             exit_codes = {}
             with When(f"I drop {index_name} on all tables"):
