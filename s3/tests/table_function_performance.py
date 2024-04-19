@@ -43,7 +43,7 @@ def s3_create_many_files(self):
         insert_data(node=node, number_of_mb=folder_size_mb, name=table_name)
 
     with Given("I have many folders with files in S3"):
-        executor = Pool(50, thread_name_prefix="s3_insert")
+        executor = Pool(100, thread_name_prefix="s3_insert")
         for j in range(num_folders):
             i = random.randint(100_000, 999_999)
 
