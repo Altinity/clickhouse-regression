@@ -546,7 +546,7 @@ def delete_random_rows_lightweight(self):
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add projection")
-def add_random_projection(self):
+def add_random_projection(self, safe=True):
     """Add a random projection to all tables."""
 
     with table_schema_lock:
@@ -557,7 +557,10 @@ def add_random_projection(self):
 
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
-            wait_for_all_mutations_to_finish(node=node)
+
+            if safe:
+                wait_for_all_mutations_to_finish(node=node)
+
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
                 exitcode=0,
@@ -569,9 +572,10 @@ def add_random_projection(self):
                 **alter_query_args,
             )
 
-        retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
-            tables=self.context.table_names
-        )
+        if safe:
+            retry(
+                check_tables_have_same_projections, timeout=120, delay=step_retry_delay
+            )(tables=self.context.table_names)
 
 
 @TestStep
@@ -639,7 +643,7 @@ def drop_random_projection(self):
 
 @TestStep
 @Name("add index")
-def add_random_index(self):
+def add_random_index(self, safe=True):
     """Add a random index to all tables"""
     with table_schema_lock:
         table_name = get_random_table_name()
@@ -651,15 +655,20 @@ def add_random_index(self):
             with attempt:
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
+
+                    if safe:
+                        wait_for_all_mutations_to_finish(node=node)
+
                     node.query(
                         f"ALTER TABLE {table_name} ADD INDEX IF NOT EXISTS {index_name} {column_name} TYPE bloom_filter",
                         exitcode=0,
                         **alter_query_args,
                     )
 
-        retry(check_tables_have_same_indexes, timeout=120, delay=step_retry_delay)(
-            tables=self.context.table_names
-        )
+        if safe:
+            retry(check_tables_have_same_indexes, timeout=120, delay=step_retry_delay)(
+                tables=self.context.table_names
+            )
 
     node.query(
         f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
