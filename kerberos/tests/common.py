@@ -277,7 +277,7 @@ def instrument_clickhouse_server_log(
 
     for node in all_nodes:
         if node.name != "kerberos":
-            with When(f"output stats for {node.repr()}"):
+            with When(f"output stats for {node}"):
                 node.command(
                     f'echo -e "\\n-- {current().name} -- top --\\n" && top -bn1'
                 )
