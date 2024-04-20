@@ -102,26 +102,27 @@ def select_max_min_random(self, repeat_limit=5):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add column")
 def add_random_column(self):
     """Add a column with a random name."""
     column_name = f"c{random.randint(0, 99999)}"
     with table_schema_lock:
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            By(
-                name=f"add column to {table_name} with {node.name}",
-                test=alter_table_add_column,
-            )(
-                table_name=table_name,
-                column_name=column_name,
-                column_type="UInt16",
-                node=node,
-                exitcode=0,
-                timeout=30,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    By(
+                        name=f"add column to {table_name} with {node.name}",
+                        test=alter_table_add_column,
+                    )(
+                        table_name=table_name,
+                        column_name=column_name,
+                        column_type="UInt16",
+                        node=node,
+                        exitcode=0,
+                        timeout=30,
+                        **alter_query_args,
+                    )
 
         retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
             tables=self.context.table_names
@@ -129,7 +130,6 @@ def add_random_column(self):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("delete column")
 def delete_random_column(self):
     """Delete a random column."""
@@ -138,19 +138,21 @@ def delete_random_column(self):
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            By(
-                name=f"delete column from {table_name} with {node.name}",
-                test=alter_table_drop_column,
-            )(
-                node=node,
-                table_name=table_name,
-                column_name=column_name,
-                exitcode=0,
-                timeout=120,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    By(
+                        name=f"delete column from {table_name} with {node.name}",
+                        test=alter_table_drop_column,
+                    )(
+                        node=node,
+                        table_name=table_name,
+                        column_name=column_name,
+                        exitcode=0,
+                        timeout=120,
+                        **alter_query_args,
+                    )
 
         check_tables_have_same_columns(tables=self.context.table_names)
 
@@ -166,20 +168,22 @@ def rename_random_column(self):
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            By(
-                name=f"rename column from {table_name} with {node.name}",
-                test=alter_table_rename_column,
-            )(
-                node=node,
-                table_name=table_name,
-                column_name_old=column_name,
-                column_name_new=new_name,
-                exitcode=0,
-                timeout=30,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    By(
+                        name=f"rename column from {table_name} with {node.name}",
+                        test=alter_table_rename_column,
+                    )(
+                        node=node,
+                        table_name=table_name,
+                        column_name_old=column_name,
+                        column_name_new=new_name,
+                        exitcode=0,
+                        timeout=30,
+                        **alter_query_args,
+                    )
 
         retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
             tables=self.context.table_names
@@ -610,7 +614,7 @@ def drop_random_projection(self):
 
         projection_name = random.choice(projections)
 
-        for attempt in retries(timeout=step_retry_timeout*2, delay=step_retry_delay):
+        for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
             with attempt:
                 with When(f"I drop {projection_name} on all tables"):
                     exit_codes = {}
@@ -700,7 +704,7 @@ def drop_random_index(self):
 
     index_name = random.choice(indexes)
 
-    for attempt in retries(timeout=step_retry_timeout*2, delay=step_retry_delay):
+    for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
         with attempt:
             exit_codes = {}
             with When(f"I drop {index_name} on all tables"):
