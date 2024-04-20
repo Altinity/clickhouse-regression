@@ -13,7 +13,7 @@ from testflows.asserts import error
 
 @TestOutline(Scenario)
 @Name("alter double move partition")
-@Examples("storage_type", [["DISK"], ["[VOLUME"]])
+@Examples("storage_type", [["DISK"], ["VOLUME"]])
 def scenario(self, storage_type):
     """Check moving of the partition to the same storage twice."""
 
