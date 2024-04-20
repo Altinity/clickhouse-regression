@@ -53,7 +53,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         data = []
                         for i in range(5):
                             data.append(
-                                get_random_string(cluster, 1024 * 1024, steps=False)
+                                get_random_string(cluster, 1024 * 512, steps=False)
                             )
                         values = ",".join(["('" + x + "')" for x in data])
                         node.query(f"INSERT INTO {name} VALUES {values}", steps=False)
