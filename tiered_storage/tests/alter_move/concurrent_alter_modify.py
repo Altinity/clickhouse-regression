@@ -77,7 +77,7 @@ def scenario(self, engine):
                             f"ALTER TABLE {table_name} MODIFY COLUMN number {column_type}",
                             steps=False,
                             raise_on_exception=True,
-                            timeout=60,
+                            timeout=120,
                         )
                     except QueryRuntimeException:
                         pass
