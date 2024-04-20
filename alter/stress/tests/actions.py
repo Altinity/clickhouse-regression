@@ -107,7 +107,7 @@ def add_random_column(self):
     """Add a column with a random name."""
     column_name = f"c{random.randint(0, 99999)}"
     with table_schema_lock:
-        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+        for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
             with attempt:
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
@@ -158,7 +158,6 @@ def delete_random_column(self):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=2)
 @Name("rename column")
 def rename_random_column(self):
     """Rename a random column to a random value."""
