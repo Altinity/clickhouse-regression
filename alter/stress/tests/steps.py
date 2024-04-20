@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import random
 import json
+import time
 from contextlib import contextmanager
 from platform import processor
 
@@ -161,3 +162,19 @@ def interrupt_network(cluster, node, cluster_prefix):
             cluster.command(
                 None, f"docker network connect {DOCKER_NETWORK} {container}"
             )
+
+
+@TestStep(When)
+def wait_for_all_mutations_to_finish(self, node, timeout=60, delay=5):
+    """Wait for all pending mutations to complete."""
+    query = "SELECT * FROM system.mutations WHERE is_done=0 FORMAT VERTICAL"
+
+    start_time = time.time()
+
+    with By("querying system.mutations until all are done"):
+        while time.time() - start_time < timeout:
+            r = node.query(query)
+            if r.output == "":
+                return
+
+            time.sleep(delay)
