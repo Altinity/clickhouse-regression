@@ -130,8 +130,9 @@ def alter_combinations(
 
         with And("I create 10 random projections and indexes"):
             for _ in range(10):
-                add_random_projection()
-                add_random_index()
+                # safe=False because we don't need to waste time on extra checks during setup
+                add_random_projection(safe=False)
+                add_random_index(safe=False)
 
         # To test a single combination, uncomment and edit as needed.
         # action_groups = [

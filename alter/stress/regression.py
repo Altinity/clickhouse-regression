@@ -16,9 +16,7 @@ xfails = {
     ]
 }
 
-ffails = {
-
-}
+ffails = {}
 
 
 @TestModule

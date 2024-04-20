@@ -67,6 +67,7 @@ def get_nodes_for_table(self, nodes, table_name):
 def get_random_table_name(self):
     return random.choice(self.context.table_names)
 
+
 @TestStep
 def get_random_table_names(self, choices: int, replacement=False):
     if replacement:
@@ -75,6 +76,7 @@ def get_random_table_names(self, choices: int, replacement=False):
         tables = self.context.table_names.copy()
         random.shuffle(tables)
         return tables[:choices]
+
 
 @TestStep(Given)
 def get_random_node_for_table(self, table_name):
