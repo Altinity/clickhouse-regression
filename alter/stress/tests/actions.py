@@ -110,6 +110,7 @@ def add_random_column(self):
     with table_schema_lock:
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
+            wait_for_all_mutations_to_finish(node=node)
             By(
                 name=f"add column to {table_name} with {node.name}",
                 test=alter_table_add_column,
@@ -140,6 +141,7 @@ def delete_random_column(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
+            wait_for_all_mutations_to_finish(node=node)
             By(
                 name=f"delete column from {table_name} with {node.name}",
                 test=alter_table_drop_column,
@@ -168,6 +170,7 @@ def rename_random_column(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
+            wait_for_all_mutations_to_finish(node=node)
             By(
                 name=f"rename column from {table_name} with {node.name}",
                 test=alter_table_rename_column,
@@ -554,6 +557,7 @@ def add_random_projection(self):
 
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
+            wait_for_all_mutations_to_finish(node=node)
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
                 exitcode=0,
@@ -616,6 +620,7 @@ def drop_random_projection(self):
                     exit_codes = {}
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
+                        wait_for_all_mutations_to_finish(node=node)
                         r = node.query(
                             f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
                             no_checks=True,
@@ -680,6 +685,8 @@ def clear_random_index(self):
         index_name = random.choice(indexes)
         partition_name = get_random_partition_id(node=node, table_name=table_name)
 
+        wait_for_all_mutations_to_finish(node=node)
+
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
             exitcode=0,
@@ -706,6 +713,7 @@ def drop_random_index(self):
             with When(f"I drop {index_name} on all tables"):
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
+                    wait_for_all_mutations_to_finish(node=node)
 
                     r = node.query(
                         f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
