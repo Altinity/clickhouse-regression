@@ -7,9 +7,10 @@
 #
 import random
 import tempfile
+import time
 
-
-from testflows.core import When, And
+from testflows.core import *
+from testflows.asserts import error
 from helpers.cluster import QueryRuntimeException
 from s3.tests.common import add_config
 from helpers.common import create_xml_config_content
@@ -69,8 +70,8 @@ def get_paths_for_partition_from_part_log(node, table, partition_id, step=When):
 def produce_alter_move(
     node, name, steps=True, random_seed=None, raise_on_exception=False, *args, **kwargs
 ):
-    myrandom = random.Random(random_seed)
-    move_type = myrandom.choice(["PART", "PARTITION"])
+    my_random = random.Random(random_seed)
+    move_type = my_random.choice(["PART", "PARTITION"])
 
     if move_type == "PART":
         for _ in range(10):
@@ -86,23 +87,26 @@ def produce_alter_move(
                     .output.strip()
                     .split("\n")
                 )
+                if "" in parts:
+                    time.sleep(1)
+                    continue
                 break
             except QueryRuntimeException:
                 pass
         else:
             raise Exception("Cannot select from system.parts")
 
-        assert "" not in parts, str(parts)
+        assert "" not in parts, error()
 
-        move_part = myrandom.choice(["'" + part + "'" for part in parts])
+        move_part = f"'{my_random.choice(parts)}'"
     else:
-        move_part = myrandom.choice([201903, 201904])
+        move_part = my_random.choice([201903, 201904])
 
     move_disk = random.choice(["DISK", "VOLUME"])
     if move_disk == "DISK":
-        move_volume = myrandom.choice(["'external'", "'jbod1'", "'jbod2'"])
+        move_volume = my_random.choice(["'external'", "'jbod1'", "'jbod2'"])
     else:
-        move_volume = myrandom.choice(["'main'", "'external'"])
+        move_volume = my_random.choice(["'main'", "'external'"])
     try:
         node.query(
             f"ALTER TABLE {name} MOVE {move_type} {move_part} TO {move_disk} {move_volume}",
