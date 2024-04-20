@@ -76,9 +76,6 @@ class Node(object):
         self.cluster = cluster
         self.name = name
 
-    def repr(self):
-        return f"Node(name='{self.name}')"
-
     def __repr__(self):
         return f"{self.__class__.__name__}(name='{self.name}')"
 
