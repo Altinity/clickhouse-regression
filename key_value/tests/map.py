@@ -16,7 +16,7 @@ def map_input(self, input, output, params, node=None, function=None):
 
     with Then("I check parseKeyValue function returns correct value"):
         r = node.query(
-            f"SELECT {function}(map({input}, {input})[{input}]{params})",
+            f"SELECT {function}(map({input}, {input})[{input}]{params}) FORMAT TabSeparated",
             use_file=True,
         )
         assert r.output == output, error()
@@ -46,9 +46,12 @@ def map_column_input(self, input, output, params, node=None, function=None):
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-        r = node.query(f"""select x[{input}] from {table_name}""", use_file=True)
         r = node.query(
-            f"""select toString({function}(x[{input}]{params})) from {table_name}""",
+            f"""select x[{input}] from {table_name} FORMAT TabSeparated""",
+            use_file=True,
+        )
+        r = node.query(
+            f"""select toString({function}(x[{input}]{params})) from {table_name} FORMAT TabSeparated""",
             use_file=True,
         )
         assert r.output == expected_output, error()
