@@ -149,7 +149,7 @@ def cannot_remove_quota_default(self):
 
 
 def unknown_setting(self, setting):
-    if check_clickhouse_version(">24.3")(self):
+    if check_clickhouse_version(">=24.3")(self):
         return (115, f"Exception: Unknown setting '{setting}'.")
     return (115, f"Exception: Unknown setting {setting}.")
 
