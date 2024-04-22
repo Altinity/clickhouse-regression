@@ -81,7 +81,7 @@ def delete_with_multi_volume_policy_using_ttl(
 
     with Then("I check part are on different disks"):
         r = node.query(
-            f"SELECT COUNT(*) FROM (SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name}')"
+            f"SELECT COUNT(*) FROM (SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name}') FORMAT TabSeparated"
         )
         assert r.output == "2", error()
 
@@ -89,7 +89,7 @@ def delete_with_multi_volume_policy_using_ttl(
         delete(table_name=table_name, condition="Id % 2 = 0", check=True)
 
     with And("I check rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "2", error()
 
 

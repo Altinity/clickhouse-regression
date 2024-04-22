@@ -35,7 +35,7 @@ def delete_after_column_ttl(self, node=None):
     with Then(
         "I expect rows are deleted", description="600 rows 100 should be deleted"
     ):
-        r = node.query(f"SELECT count(*) from {table_name}")
+        r = node.query(f"SELECT count(*) from {table_name} FORMAT TabSeparated")
         assert r.output == str(500), error()
 
 
@@ -68,7 +68,7 @@ def delete_and_column_ttl_concurrent(self, node=None):
     with Then(
         "I expect rows are deleted", description="600 rows half of them may be deleted"
     ):
-        r = node.query(f"SELECT count(*) from {table_name}")
+        r = node.query(f"SELECT count(*) from {table_name} FORMAT TabSeparated")
         assert int(r.output) >= 300, error()
 
 
@@ -111,7 +111,7 @@ def column_ttl_after_delete(self, node=None):
         "I expect rows are deleted",
         description="600 rows half of them should be deleted",
     ):
-        r = node.query(f"SELECT count() FROM {table_name} WHERE a = 777 ")
+        r = node.query(f"SELECT count() FROM {table_name} WHERE a = 777 FORMAT TabSeparated")
         assert int(r.output) == 30, error()
 
 

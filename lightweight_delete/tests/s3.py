@@ -45,13 +45,13 @@ def s3(self, node=None, allow_vfs=False):
         )
 
     with And("I check that data is successfully inserted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "500", error()
 
     with And("I check table stored on s3 disk"):
         r = node.query(
             f"SELECT DISTINCT disk_name FROM system.parts "
-            f"WHERE table = '{table_name}'"
+            f"WHERE table = '{table_name}' FORMAT TabSeparated"
         )
 
         assert r.output == "disk_s3", error()
@@ -60,9 +60,9 @@ def s3(self, node=None, allow_vfs=False):
         delete(table_name=table_name, condition="x<50")
 
     with Then("I expect data is successfully deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "250", error()
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x < 50")
+        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x < 50 FORMAT TabSeparated")
         assert r.output == "0", error()
 
 

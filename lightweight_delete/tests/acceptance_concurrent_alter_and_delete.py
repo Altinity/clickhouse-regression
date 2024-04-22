@@ -20,17 +20,17 @@ def concurrent_delete_attach_detach_partition_acceptance(self, node=None):
         insert_into_acceptance_table(rows_number=1000000)
 
     partition = node.query(
-        "SELECT partition from system.parts where table = 'acceptance_table' limit 1"
+        "SELECT partition from system.parts where table = 'acceptance_table' limit 1 FORMAT TabSeparated"
     ).output
 
     with When("I compute expected output"):
         output1 = node.query(
-            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2))"
+            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2)) FORMAT TabSeparated"
         ).output
 
     with When("I compute expected output"):
         output2 = node.query(
-            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2) and Date != '{partition[3:22]}')"
+            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2) and Date != '{partition[3:22]}') FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -59,7 +59,7 @@ def concurrent_delete_attach_detach_partition_acceptance(self, node=None):
         "I check that rows are deleted",
         description="rows can be not deleted in detached partition",
     ):
-        r = node.query(f"SELECT count(*) FROM acceptance_table")
+        r = node.query(f"SELECT count(*) FROM acceptance_table FORMAT TabSeparated")
         assert r.output in (output1, output2), error()
 
 
@@ -77,12 +77,12 @@ def concurrent_delete_drop_partition_acceptance(self, node=None):
         insert_into_acceptance_table(rows_number=1000000)
 
     partition = node.query(
-        "SELECT partition from system.parts where table = 'acceptance_table' limit 1"
+        "SELECT partition from system.parts where table = 'acceptance_table' limit 1 FORMAT TabSeparated"
     ).output
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM acceptance_table WHERE NOT((Id = 1 and has(Ids, 2)) or Date = '{partition[3:22]}')"
+            f"SELECT count(*) FROM acceptance_table WHERE NOT((Id = 1 and has(Ids, 2)) or Date = '{partition[3:22]}') FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -104,7 +104,7 @@ def concurrent_delete_drop_partition_acceptance(self, node=None):
                 )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM acceptance_table")
+        r = node.query(f"SELECT count(*) FROM acceptance_table FORMAT TabSeparated")
         assert r.output == output, error()
 
 
@@ -122,7 +122,7 @@ def concurrent_add_drop_column_and_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2))"
+            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2)) FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -139,7 +139,7 @@ def concurrent_add_drop_column_and_delete(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM acceptance_table")
+        r = node.query(f"SELECT count(*) FROM acceptance_table FORMAT TabSeparated")
         assert r.output == output, error()
 
 
@@ -157,7 +157,7 @@ def concurrent_modify_column_and_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2))"
+            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2)) FORMAT TabSeparated"
         ).output
 
     with And("I add column to modify it in the loop"):
@@ -178,7 +178,7 @@ def concurrent_modify_column_and_delete(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM acceptance_table")
+        r = node.query(f"SELECT count(*) FROM acceptance_table FORMAT TabSeparated")
         assert r.output == output, error()
 
 
@@ -196,7 +196,7 @@ def concurrent_clear_update_and_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2))"
+            f"SELECT count(*) FROM acceptance_table WHERE NOT(Id = 1 and has(Ids, 2)) FORMAT TabSeparated"
         ).output
 
     with And("I add column to modify it in the loop"):
@@ -214,7 +214,7 @@ def concurrent_clear_update_and_delete(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM acceptance_table")
+        r = node.query(f"SELECT count(*) FROM acceptance_table FORMAT TabSeparated")
         assert r.output == output, error()
 
 

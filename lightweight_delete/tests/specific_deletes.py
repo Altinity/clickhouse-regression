@@ -59,7 +59,7 @@ def random_delete_by_partition_key(
                 delete(table_name=table_name, condition=condition)
 
     with Then("I expect rows are deleted"):
-        output = node.query(f"SELECT count(*) FROM {table_name}").output
+        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
         if self.context.table_engine == "MergeTree":
             assert output == str(
                 num_partitions * (100 - percent_to_delete) * block_size // 100
@@ -126,7 +126,7 @@ def random_delete_by_partition_key_and_value(
                 delete(table_name=table_name, condition=condition)
 
     with Then("I expect rows are deleted"):
-        output = node.query(f"SELECT count(*) FROM {table_name}").output
+        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
         if self.context.table_engine == "MergeTree":
             assert output == str(
                 num_partitions * (100 - percent_to_delete) * block_size // 100
@@ -190,7 +190,7 @@ def random_delete_by_non_partition_key_modifying_all_partitions(
                 delete(table_name=table_name, condition=condition)
 
     with Then("I expect rows are deleted"):
-        output = node.query(f"SELECT count(*) FROM {table_name}").output
+        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
         if self.context.table_engine == "MergeTree":
             assert output == str(
                 num_partitions * (100 - percent_to_delete) * block_size // 100

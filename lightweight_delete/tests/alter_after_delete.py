@@ -354,12 +354,12 @@ def move_partition_after_delete(
         )
 
     with When("I compute expected output"):
-        output11 = node.query(f"SELECT count(*) FROM {table_name_2}").output
+        output11 = node.query(f"SELECT count(*) FROM {table_name_2} FORMAT TabSeparated").output
         output12 = node.query(
-            f"SELECT count(*) FROM {table_name_1} WHERE NOT(x % 2 == 0 OR id != 3)"
+            f"SELECT count(*) FROM {table_name_1} WHERE NOT(x % 2 == 0 OR id != 3) FORMAT TabSeparated"
         ).output
         output2 = node.query(
-            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0 or id = 3)"
+            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0 or id = 3) FORMAT TabSeparated"
         ).output
 
     with And(f"i delete half of the rows in {table_name_1}"):
@@ -371,9 +371,9 @@ def move_partition_after_delete(
         )
 
     with Then("I check move partition after delete perform correctly"):
-        r = node.query(f"SELECT count(*) FROM {table_name_2}")
+        r = node.query(f"SELECT count(*) FROM {table_name_2} FORMAT TabSeparated")
         assert r.output == str(int(output11) + int(output12)), error()
-        r = node.query(f"SELECT count(*) FROM {table_name_1}")
+        r = node.query(f"SELECT count(*) FROM {table_name_1} FORMAT TabSeparated")
         assert r.output == output2, error()
 
 
@@ -413,10 +413,10 @@ def replace_partition_after_delete(
 
     with When("I compute expected output"):
         output1 = node.query(
-            f"SELECT count(*) FROM {table_name_1} WHERE NOT(x % 2 == 0 AND id = 3)"
+            f"SELECT count(*) FROM {table_name_1} WHERE NOT(x % 2 == 0 AND id = 3) FORMAT TabSeparated"
         ).output
         output2 = node.query(
-            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with And(f"i delete half of the rows in {table_name_1}"):
@@ -428,9 +428,9 @@ def replace_partition_after_delete(
         )
 
     with Then("I check replace partition after delete perform correctly"):
-        r = node.query(f"SELECT count(*) FROM {table_name_2}")
+        r = node.query(f"SELECT count(*) FROM {table_name_2} FORMAT TabSeparated")
         assert r.output == output1, error()
-        r = node.query(f"SELECT count(*) FROM {table_name_1}")
+        r = node.query(f"SELECT count(*) FROM {table_name_1} FORMAT TabSeparated")
         assert r.output == output2, error()
 
 

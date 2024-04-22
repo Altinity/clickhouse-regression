@@ -25,7 +25,7 @@ def delete_most_of_the_table(self, node=None):
         )
 
     with When("I compute expected output"):
-        output = node.query(f"SELECT count(*) FROM {table_name} WHERE NOT(id>0)").output
+        output = node.query(f"SELECT count(*) FROM {table_name} WHERE NOT(id>0) FORMAT TabSeparated").output
 
     start_time = time.time()
 
@@ -36,7 +36,7 @@ def delete_most_of_the_table(self, node=None):
     metric("execution_time", execution_time, "s")
 
     with Then("I check that rows are deleted immediately"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == output, error()
         assert execution_time < 20, error()  # todo rewrite value
 

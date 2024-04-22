@@ -67,7 +67,7 @@ def encrypted_disk(self, node=None):
         delete(table_name=table_name, condition="Value = 'there'", check=True)
 
     with Then("I check that the rest of the rows are not deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "100"
 
     with Then("I expect all files has ENC header"):
