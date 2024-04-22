@@ -927,7 +927,7 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
                         client.app.expect("clickhouse1 :\) ")
 
                 with When("I execute select on the table"):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get no errors"):
                         client.app.expect("Ok\.")
@@ -937,7 +937,7 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
                     self.context.node.query(f"DROP ROLE {role_name}")
 
                 with And("I re-execute select on the table"):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get not enough privileges error"):
                         client.app.expect(
@@ -952,7 +952,7 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
                     )
 
                 with And("I execute select on the table after role is added back"):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get no errors"):
                         client.app.expect("Ok\.")
@@ -1020,7 +1020,7 @@ def privilege_new_and_removed(self, ldap_server, ldap_user):
                 with And(
                     "I execute select on the table when the mapped role does not provide this privilege"
                 ):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get not enough privileges error"):
                         client.app.expect(
@@ -1034,7 +1034,7 @@ def privilege_new_and_removed(self, ldap_server, ldap_user):
                     )
 
                 with And("I execute select on the table"):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get no errors"):
                         client.app.expect("Ok\.")
@@ -1046,7 +1046,7 @@ def privilege_new_and_removed(self, ldap_server, ldap_user):
                     )
 
                 with And("I re-execute select on the table"):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get not enough privileges error"):
                         client.app.expect(
@@ -1107,7 +1107,7 @@ def role_added(self, ldap_server, ldap_user):
                         client.app.expect("clickhouse1 :\) ")
 
                 with And("I execute select on the table"):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get not enough privileges error"):
                         client.app.expect(
@@ -1122,7 +1122,7 @@ def role_added(self, ldap_server, ldap_user):
                     )
 
                 with And("I execute select on the table after role is added"):
-                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                    client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                     with Then("I expect to get no errors"):
                         client.app.expect("Ok\.")
