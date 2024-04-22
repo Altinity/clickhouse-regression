@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from platform import processor
 
 from testflows.core import *
+from testflows.asserts import error
 
 from helpers.queries import *
 from s3.tests.common import s3_storage
@@ -175,8 +176,10 @@ def wait_for_all_mutations_to_finish(self, node, timeout=60, delay=5):
 
     with By("querying system.mutations until all are done"):
         while time.time() - start_time < timeout:
-            r = node.query(query)
+            r = node.query(query, no_checks=True)
             if r.output == "":
                 return
 
             time.sleep(delay)
+            
+        assert r.output == "", error("mutations did not finish in time")
