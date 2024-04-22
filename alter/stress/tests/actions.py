@@ -622,6 +622,7 @@ def drop_random_projection(self):
             with attempt:
                 with When(f"I drop {projection_name} on all tables"):
                     exit_codes = {}
+                    exit_messages = {}
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
                         wait_for_all_mutations_to_finish(node=node)
@@ -631,10 +632,11 @@ def drop_random_projection(self):
                             **alter_query_args,
                         )
                         exit_codes[table_name] = r.exitcode
+                        exit_messages[table_name] = r.output
 
                 with Then("all drops should have succeeded"):
                     for table_name in tables:
-                        assert exit_codes[table_name] == 0, error()
+                        assert exit_codes[table_name] == 0, error(table_name + ": " + exit_messages[table_name])
 
         retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
             tables=self.context.table_names
