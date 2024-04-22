@@ -60,6 +60,9 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.node = self.context.cluster.node("clickhouse1")
+        self.context.node_1 = self.context.cluster.node("clickhouse1")
+        self.context.node_2 = self.context.cluster.node("clickhouse2")
+        self.context.node_3 = self.context.cluster.node("clickhouse3")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 

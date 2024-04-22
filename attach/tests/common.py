@@ -13,24 +13,6 @@ def create_database(self, database_name=None, node=None):
     return database_name
 
 
-@TestStep
-def create_replicated_table_old(
-    self, table, table_id=None, database_name="default", node=None
-):
-    if node is None:
-        node = self.context.node
-    if table_id is None:
-        table_id = table
-    node.query(
-        f"""
-        CREATE TABLE {database_name}.{table} (x UInt64) 
-        ENGINE = ReplicatedMergeTree('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}') 
-        ORDER BY x 
-        SETTINGS index_granularity=8192
-        """
-    )
-
-
 @TestStep(Given)
 def create_replicated_table(
     self,
@@ -43,7 +25,7 @@ def create_replicated_table(
     node=None,
     config="graphite_rollup_example",
     sign="sign",
-    version="a",
+    version="extra",
 ):
     if node is None:
         node = self.context.node
@@ -62,13 +44,13 @@ def create_replicated_table(
         ]
 
     if engine == "ReplicatedGraphiteMergeTree":
-        engine = f"ReplicatedGraphiteMergeTree('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}', '{config}')"
+        engine = f"ReplicatedGraphiteMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}', '{config}')"
     elif engine == "ReplicatedVersionedCollapsingMergeTree":
-        engine = f"ReplicatedVersionedCollapsingMergeTree('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}', {sign}, {version})"
+        engine = f"ReplicatedVersionedCollapsingMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}', {sign}, {version})"
     elif engine == "ReplicatedCollapsingMergeTree":
-        engine = f"ReplicatedCollapsingMergeTree('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}', {sign})"
+        engine = f"ReplicatedCollapsingMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}', {sign})"
     else:
-        engine = f"{engine}('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}')"
+        engine = f"{engine}('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}')"
 
     table_name = f"{database_name}.{table_name}"
     create_table(
@@ -95,7 +77,7 @@ def attach_table_UUID(
     columns=None,
     config="graphite_rollup_example",
     sign="sign",
-    version="a",
+    version="extra",
 ):
     if node is None:
         node = self.context.node
@@ -113,13 +95,13 @@ def attach_table_UUID(
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
     if engine == "ReplicatedGraphiteMergeTree":
-        engine = f"ReplicatedGraphiteMergeTree('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}', '{config}')"
+        engine = f"ReplicatedGraphiteMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}', '{config}')"
     elif engine == "ReplicatedVersionedCollapsingMergeTree":
-        engine = f"ReplicatedVersionedCollapsingMergeTree('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}', {sign}, {version})"
+        engine = f"ReplicatedVersionedCollapsingMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}', {sign}, {version})"
     elif engine == "ReplicatedCollapsingMergeTree":
-        engine = f"ReplicatedCollapsingMergeTree('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}', {sign})"
+        engine = f"ReplicatedCollapsingMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}', {sign})"
     else:
-        engine = f"{engine}('/clickhouse/tables/{{shard}}/{{database}}/{table_id}', '{{replica}}')"
+        engine = f"{engine}('/clickhouse/tables/replicated_cluster/{{database}}/{table_id}', '{{replica}}')"
 
     node.query(
         f"""
@@ -131,3 +113,10 @@ def attach_table_UUID(
         exitcode=exitcode,
         message=message,
     )
+
+
+@TestStep
+def detach_table(self, table, node=None):
+    if node is None:
+        node = self.context.node
+    node.query(f"DETACH TABLE {table}")
