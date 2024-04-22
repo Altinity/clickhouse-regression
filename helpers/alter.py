@@ -9,14 +9,18 @@ def alter_table_add_column(
     column_type,
     column_name_after=None,
     node=None,
+    if_not_exists=False,
     **query_kwargs,
 ):
     """Add column to the existing table using alter."""
     if node is None:
         node = self.context.node
 
+    if if_not_exists:
+        if_not_exists = "IF NOT EXISTS "
+
     with By("executing alter add column command on the table"):
-        query = f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}"
+        query = f"ALTER TABLE {table_name} ADD COLUMN {if_not_exists}{column_name} {column_type}"
 
         if column_name_after:
             query += f" AFTER {column_name_after}"
