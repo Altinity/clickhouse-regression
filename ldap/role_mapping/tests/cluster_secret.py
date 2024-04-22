@@ -125,7 +125,7 @@ def select_using_mapped_role(self, cluster, role_name, role_mapped, user):
             for name in self.context.cluster.nodes["clickhouse"]:
                 with By(f"executing query on node {name}", flags=TE):
                     self.context.cluster.node(name).query(
-                        f"SELECT * FROM {src_table}",
+                        f"SELECT * FROM {src_table} FORMAT TabSeparated",
                         settings=query_settings,
                         exitcode=241,
                         message=f"DB::Exception:",
@@ -144,7 +144,7 @@ def select_using_mapped_role(self, cluster, role_name, role_mapped, user):
             for name in self.context.cluster.nodes["clickhouse"]:
                 with By(f"executing query on node {name}", flags=TE):
                     self.context.cluster.node(name).query(
-                        f"SELECT * FROM {src_table}",
+                        f"SELECT * FROM {src_table} FORMAT TabSeparated",
                         settings=query_settings,
                         exitcode=0 if role_mapped else 241,
                         message="" if role_mapped else "DB::Exception:",
@@ -163,7 +163,7 @@ def select_using_mapped_role(self, cluster, role_name, role_mapped, user):
             for name in self.context.cluster.nodes["clickhouse"]:
                 with By(f"executing query on node {name}", flags=TE):
                     self.context.cluster.node(name).query(
-                        f"SELECT * FROM {dist_table}",
+                        f"SELECT * FROM {dist_table} FORMAT TabSeparated",
                         settings=query_settings,
                         exitcode=241,
                         message=f"DB::Exception:",
@@ -182,7 +182,7 @@ def select_using_mapped_role(self, cluster, role_name, role_mapped, user):
             for name in self.context.cluster.nodes["clickhouse"]:
                 with By(f"executing query on node {name}", flags=TE):
                     self.context.cluster.node(name).query(
-                        f"SELECT * FROM {dist_table}",
+                        f"SELECT * FROM {dist_table} FORMAT TabSeparated",
                         settings=query_settings,
                         exitcode=241,
                         message=f"DB::Exception:",
@@ -209,7 +209,7 @@ def select_using_mapped_role(self, cluster, role_name, role_mapped, user):
             for name in self.context.cluster.nodes["clickhouse"]:
                 with By(f"executing query on node {name}", flags=TE):
                     self.context.cluster.node(name).query(
-                        f"SELECT * FROM {dist_table}",
+                        f"SELECT * FROM {dist_table} FORMAT TabSeparated",
                         settings=query_settings,
                         exitcode=0 if role_mapped else 241,
                         message="" if role_mapped else "DB::Exception:",

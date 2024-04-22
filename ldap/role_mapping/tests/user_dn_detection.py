@@ -33,7 +33,7 @@ def check_config(
 
     with When(f"I login I try to login as an LDAP user"):
         r = self.context.node.query(
-            f"SELECT 1",
+            f"SELECT 1 FORMAT TabSeparated",
             settings=[("user", user), ("password", password)],
             exitcode=exitcode,
             message=message,
