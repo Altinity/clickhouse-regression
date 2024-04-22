@@ -86,6 +86,34 @@ xfails = {
     "/alter/attach partition/partition key datetime/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24.2"))
     ],
+    "/alter/attach partition/storage/attach partition on tiered and default storages/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/62764",
+            check_clickhouse_version(">=24.3"),
+        )
+    ],
+    "/alter/attach partition/storage/attach partition on minio and default disks/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/62764",
+            check_clickhouse_version(">=24.3"),
+        )
+    ],
+    "/alter/replace partition/prohibited actions/conditions/storage policy/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/62764",
+            check_clickhouse_version(">=24.3"),
+        )
+    ],
+    "/alter/replace partition/storage/different disks/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/62764",
+            check_clickhouse_version(">=24.3"),
+        )
+    ],
 }
 
 xflags = {}
@@ -101,7 +129,10 @@ ffails = {
         "Crashes before 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/alter/move partition/move to self": (XFail, "https://github.com/ClickHouse/ClickHouse/issues/62459"),
+    "/alter/move partition/move to self": (
+        XFail,
+        "https://github.com/ClickHouse/ClickHouse/issues/62459",
+    ),
 }
 
 
