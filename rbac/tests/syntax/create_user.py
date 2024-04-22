@@ -343,7 +343,7 @@ def feature(self, node="clickhouse1"):
     ):
         with cleanup("user18b"):
             with When("I create settings profile using settings and nonexistent value"):
-                exitcode, message = errors.unknown_setting("fake_setting")
+                exitcode, message = errors.unknown_setting(self, "fake_setting")
                 node.query(
                     "CREATE USER user18b SETTINGS fake_setting = 100000001",
                     exitcode=exitcode,
