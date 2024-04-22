@@ -53,7 +53,7 @@ def scenario(self, engine):
                         f"INSERT INTO {table_name} VALUES(toDate('2019-{month}-{day}'), {value})",
                         steps=False,
                         timeout=240,
-                        raise_on_exception=False,
+                        no_checks=True,
                     )
 
         def alter_move(num):

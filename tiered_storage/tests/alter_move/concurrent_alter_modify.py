@@ -9,6 +9,7 @@ import random
 from tiered_storage.tests.common import produce_alter_move, QueryRuntimeException
 from testflows.core import *
 from testflows.asserts import error
+from testflows.uexpect import ExpectTimeoutError
 
 
 @TestOutline(Scenario)
@@ -77,10 +78,21 @@ def scenario(self, engine):
                             f"ALTER TABLE {table_name} MODIFY COLUMN number {column_type}",
                             steps=False,
                             raise_on_exception=True,
-                            timeout=120,
+                            timeout=30,
+                            retry_count=10,
+                            retry_delay=60,
                         )
                     except QueryRuntimeException:
                         pass
+                    except ExpectTimeoutError as e:
+                        r = node.query(
+                            "SELECT * FROM system.mutations WHERE is_done=0 FORMAT Vertical",
+                            no_checks=True,
+                        )
+                        assert r.output.strip() == "", error(
+                            "ALTER timed out due to stuck mutation:\n" + r.output
+                        )
+                        raise e
 
         with When("I first prepare table"):
             insert(100)
