@@ -121,6 +121,7 @@ def add_random_column(self):
                 node=node,
                 exitcode=0,
                 timeout=30,
+                if_not_exists=True,
                 **alter_query_args,
             )
 
@@ -562,7 +563,7 @@ def add_random_projection(self, safe=True):
                 wait_for_all_mutations_to_finish(node=node)
 
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
+                f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
                 exitcode=0,
                 **alter_query_args,
             )
@@ -636,7 +637,9 @@ def drop_random_projection(self):
 
                 with Then("all drops should have succeeded"):
                     for table_name in tables:
-                        assert exit_codes[table_name] == 0, error(table_name + ": " + exit_messages[table_name])
+                        assert exit_codes[table_name] == 0, error(
+                            table_name + ": " + exit_messages[table_name]
+                        )
 
         retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
             tables=self.context.table_names
