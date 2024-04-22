@@ -385,6 +385,20 @@ def regression(
         )
         self.context.cluster = cluster
 
+    with And("I disable experimental analyzer if needed"):
+        if check_clickhouse_version(">=24.3")(self):
+            if not allow_experimental_analyzer:
+                default_query_settings = getsattr(
+                    current().context, "default_query_settings", []
+                )
+                default_query_settings.append(("allow_experimental_analyzer", 0))
+        else:
+            if allow_experimental_analyzer:
+                default_query_settings = getsattr(
+                    current().context, "default_query_settings", []
+                )
+                default_query_settings.append(("allow_experimental_analyzer", 1))
+
     with Given("I have a Parquet table definition"):
         columns = (
             cluster.node("clickhouse1")
