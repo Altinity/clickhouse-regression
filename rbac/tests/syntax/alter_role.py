@@ -201,7 +201,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup("role5a"):
             with When("I alter role using settings and nonexistent value"):
-                exitcode, message = errors.unknown_setting("fake_setting")
+                exitcode, message = errors.unknown_setting(self, "fake_setting")
                 node.query(
                     "ALTER ROLE role5a SETTINGS fake_setting = 100000001",
                     exitcode=exitcode,

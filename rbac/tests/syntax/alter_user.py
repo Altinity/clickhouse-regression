@@ -378,7 +378,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup("user18b"):
             with When("I alter settings profile using settings and nonexistent value"):
-                exitcode, message = errors.unknown_setting("fake_setting")
+                exitcode, message = errors.unknown_setting(self, "fake_setting")
                 node.query(
                     "ALTER USER user18b SETTINGS fake_setting = 100000001",
                     exitcode=exitcode,
