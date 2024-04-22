@@ -60,7 +60,7 @@ def more_than_one_user_directory(self):
                     f"I login as {users[0]['username']} authenticated using openldap1"
                 ):
                     current().context.node.query(
-                        f"SELECT 1",
+                        f"SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", users[0]["username"]),
                             ("password", users[0]["password"]),
@@ -71,7 +71,7 @@ def more_than_one_user_directory(self):
                     f"I login as {users[1]['username']} authenticated using openldap2"
                 ):
                     current().context.node.query(
-                        f"SELECT 1",
+                        f"SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", users[1]["username"]),
                             ("password", users[1]["password"]),
@@ -168,7 +168,7 @@ def defined_twice_server(self):
             ):
                 with When(f"I login as {user['username']} and execute query"):
                     current().context.node.query(
-                        "SELECT 1",
+                        "SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", user["username"]),
                             ("password", user["password"]),
@@ -211,7 +211,7 @@ def invalid_server(self):
             ):
                 with When(f"I login as {user['username']} and execute query"):
                     current().context.node.query(
-                        "SELECT 1",
+                        "SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", user["username"]),
                             ("password", user["password"]),
@@ -255,7 +255,7 @@ def empty_roles(self):
             ):
                 with When(f"I login as {user['username']} and execute query"):
                     current().context.node.query(
-                        f"SELECT * FROM {table_name} LIMIT 1",
+                        f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", user["username"]),
                             ("password", user["password"]),
@@ -322,7 +322,7 @@ def defined_twice_roles(self):
                         f"I login as {user['username']} and try to read from the first table"
                     ):
                         current().context.node.query(
-                            f"SELECT * FROM {table0_name} LIMIT 1",
+                            f"SELECT * FROM {table0_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", user["username"]),
                                 ("password", user["password"]),
@@ -333,7 +333,7 @@ def defined_twice_roles(self):
                         f"I login as {user['username']} again and try to read from the second table"
                     ):
                         current().context.node.query(
-                            f"SELECT * FROM {table0_name} LIMIT 1",
+                            f"SELECT * FROM {table0_name} LIMIT 1 FORMAT TabSeparated" ,
                             settings=[
                                 ("user", user["username"]),
                                 ("password", user["password"]),
@@ -366,7 +366,7 @@ def invalid_role_in_roles(self):
         with ldap_external_user_directory("openldap1", roles=["foo"], restart=True):
             with When(f"I login as {user['username']} and execute query"):
                 current().context.node.query(
-                    "SELECT 1",
+                    "SELECT 1 FORMAT TabSeparated",
                     settings=[
                         ("user", user["username"]),
                         ("password", user["password"]),
@@ -410,7 +410,7 @@ def missing_roles(self):
             ):
                 with When(f"I login as {user['username']} and execute query"):
                     current().context.node.query(
-                        f"SELECT * FROM {table_name} LIMIT 1",
+                        f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", user["username"]),
                             ("password", user["password"]),
