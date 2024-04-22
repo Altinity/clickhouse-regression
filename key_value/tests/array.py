@@ -16,7 +16,10 @@ def array_input(self, input, output, params, node=None, function=None):
         params = ", " + params
 
     with Then("I check parseKeyValue function returns correct value"):
-        r = node.query(f"SELECT {function}([{input}][1]{params})", use_file=True)
+        r = node.query(
+            f"SELECT {function}([{input}][1]{params}) FORMAT TabSeparated",
+            use_file=True,
+        )
         assert r.output == output, error()
 
 
@@ -45,7 +48,7 @@ def array_column_input(self, input, output, params, node=None, function=None):
 
     with Then("I check extractKeyValuePairs function returns correct value"):
         r = node.query(
-            f"""select toString({function}(x[1]{params})) from {table_name}""",
+            f"""select toString({function}(x[1]{params})) from {table_name} FORMAT TabSeparated""",
             use_file=True,
         )
         assert r.output == expected_output, error()
