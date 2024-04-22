@@ -219,7 +219,7 @@ def parallel_login(self, server=None, user_count=10, timeout=300):
         r = self.context.cluster.command(
             None,
             f"{self.context.cluster.docker_compose} exec {self.context.node.name} "
-            + f'clickhouse client -q "SELECT 1" --user {username} --password {password}',
+            + f'clickhouse client -q "SELECT 1 FORMAT TabSeparated" --user {username} --password {password}',
             steps=steps,
             timeout=timeout,
         )
@@ -232,7 +232,7 @@ def parallel_login(self, server=None, user_count=10, timeout=300):
         self, username, password, exitcode=None, message=None, steps=True, timeout=60
     ):
         self.context.node.query(
-            "SELECT 1",
+            "SELECT 1 FORMAT TabSeparated",
             settings=[("user", username), ("password", password)],
             exitcode=exitcode or 0,
             message=message,
