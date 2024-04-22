@@ -34,7 +34,7 @@ def login_and_execute_query(
 ):
     """Execute query as some user."""
     self.context.node.query(
-        "SELECT 1",
+        "SELECT 1 FORMAT TabSeparated",
         settings=[("user", username), ("password", password)],
         exitcode=exitcode or 0,
         message=message,
@@ -328,7 +328,7 @@ def login_after_ldap_server_is_restarted(self, server, timeout=300, rbac=False):
                 started = time.time()
                 while True:
                     r = self.context.node.query(
-                        "SELECT 1",
+                        "SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", user["cn"]),
                             ("password", user["userpassword"]),
@@ -373,7 +373,7 @@ def login_after_clickhouse_server_is_restarted(self, server, timeout=300, rbac=F
                 started = time.time()
                 while True:
                     r = self.context.node.query(
-                        "SELECT 1",
+                        "SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", user["cn"]),
                             ("password", user["userpassword"]),
@@ -887,7 +887,7 @@ def repeat_requests(self, server, iterations, vcd_value, rbac=False, timeout=600
                 with When(f"I login and execute some query {iterations} times"):
                     start_time = time.time()
                     r = self.context.node.command(
-                        f"time for i in {{1..{iterations}}}; do clickhouse client -q \"SELECT 1\" --user {user['cn']} --password {user['userpassword']} > /dev/null; done",
+                        f"time for i in {{1..{iterations}}}; do clickhouse client -q \"SELECT 1 FORMAT TabSeparated\" --user {user['cn']} --password {user['userpassword']} > /dev/null; done",
                         timeout=timeout,
                     )
                     end_time = time.time()
