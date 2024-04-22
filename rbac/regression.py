@@ -319,10 +319,24 @@ def regression(
         )
         self.context.cluster = cluster
 
+    with And("I disable experimental analyzer if needed"):
+        if check_clickhouse_version(">=24.3")(self):
+            if not allow_experimental_analyzer:
+                default_query_settings = getsattr(
+                    current().context, "default_query_settings", []
+                )
+                default_query_settings.append(("allow_experimental_analyzer", 0))
+        else:
+            if allow_experimental_analyzer:
+                default_query_settings = getsattr(
+                    current().context, "default_query_settings", []
+                )
+                default_query_settings.append(("allow_experimental_analyzer", 1))
+
     if check_clickhouse_version(">=23.2")(self):
         for node in nodes["clickhouse"]:
             add_rbac_config_file(node=cluster.node(node))
-    
+
     Feature(run=load("rbac.tests.syntax.feature", "feature"))
     Feature(run=load("rbac.tests.privileges.feature", "feature"))
     Feature(run=load("rbac.tests.views.feature", "feature"))
