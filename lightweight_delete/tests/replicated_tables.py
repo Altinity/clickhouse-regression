@@ -21,7 +21,7 @@ def replicated_table_deleting_without_overlap(self):
     with When("I compute expected output"):
         expected_output = node.query(
             f"SELECT count(*) FROM {table_name} WHERE NOT((x % 2 == 0 AND id < 5)"
-            f" OR (x % 2 == 1 AND id < 5))"
+            f" OR (x % 2 == 1 AND id < 5)) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -41,7 +41,7 @@ def replicated_table_deleting_without_overlap(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == expected_output, error()
 
 
@@ -61,7 +61,7 @@ def replicated_table_deleting_with_overlap(self):
     with When("I compute expected output"):
         expected_output = node.query(
             f"SELECT count(*) FROM {table_name} WHERE NOT((x % 2 == 0 AND id < 5)"
-            f" OR (x % 2 == 0 AND id < 5))"
+            f" OR (x % 2 == 0 AND id < 5)) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -81,7 +81,7 @@ def replicated_table_deleting_with_overlap(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == expected_output, error()
 
 
@@ -101,7 +101,7 @@ def replicated_table_deleting_with_without_overlap(self):
     with When("I compute expected output"):
         expected_output = node.query(
             f"SELECT count(*) FROM {table_name} WHERE NOT((x % 2 == 0 AND id < 50)"
-            f" OR (x % 2 == 0 AND id < 50) OR (x % 2 == 0 AND id < 75 AND id > 24))"
+            f" OR (x % 2 == 0 AND id < 50) OR (x % 2 == 0 AND id < 75 AND id > 24)) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -124,7 +124,7 @@ def replicated_table_deleting_with_without_overlap(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == expected_output, error()
 
 
@@ -143,7 +143,7 @@ def replicated_table_deleting_without_overlap_entire_table(self):
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x<33 OR (x>32 AND x<68) OR x>67)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x<33 OR (x>32 AND x<68) OR x>67) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -169,7 +169,7 @@ def replicated_table_deleting_without_overlap_entire_table(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == expected_output, error()
 
 
@@ -188,7 +188,7 @@ def replicated_table_deleting_with_overlap_entire_table(self):
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x<50 OR (x>25 AND x<75) OR x>50)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x<50 OR (x>25 AND x<75) OR x>50) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -214,7 +214,7 @@ def replicated_table_deleting_with_overlap_entire_table(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == expected_output, error()
 
 

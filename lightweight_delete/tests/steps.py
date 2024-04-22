@@ -796,7 +796,7 @@ def delete(
                 with attempt:
                     with Then("I check rows are deleted"):
                         check_result = node.query(
-                            f"SELECT count() FROM {table_name} WHERE {condition}"
+                            f"SELECT count() FROM {table_name} WHERE {condition} FORMAT TabSeparated"
                         )
                         assert check_result.output == "0", error()
         if delay:
@@ -812,7 +812,7 @@ def delete(
             with attempt:
                 with Then("I check rows are deleted"):
                     check_result = node.query(
-                        f"SELECT count() FROM {table_name} WHERE {condition}"
+                        f"SELECT count() FROM {table_name} WHERE {condition} FORMAT TabSeparated"
                     )
                     assert check_result.output == "0", error()
     if delay:
@@ -1250,7 +1250,7 @@ def detach_partition_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id = {partition_expr})"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id = {partition_expr}) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from the table"):
@@ -1266,7 +1266,7 @@ def detach_partition_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1285,7 +1285,7 @@ def drop_partition_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id = {partition_expr})"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id = {partition_expr}) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from the table"):
@@ -1301,7 +1301,7 @@ def drop_partition_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1320,7 +1320,7 @@ def attach_partition_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 and id != {partition_expr})"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 and id != {partition_expr}) FORMAT TabSeparated"
         ).output
 
     with When("I detach partition"):
@@ -1341,7 +1341,7 @@ def attach_partition_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1360,7 +1360,7 @@ def freeze_partition_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from the table"):
@@ -1376,7 +1376,7 @@ def freeze_partition_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1395,7 +1395,7 @@ def unfreeze_partition_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then("I freeze third partition"):
@@ -1416,7 +1416,7 @@ def unfreeze_partition_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1438,7 +1438,7 @@ def add_column_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with When("I delete odd rows from the table"):
@@ -1458,7 +1458,7 @@ def add_column_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1486,7 +1486,7 @@ def drop_column_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1500,10 +1500,10 @@ def clear_column_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output1 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id != 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id != 0) FORMAT TabSeparated"
         ).output
         output2 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with When("I delete odd rows from the table"):
@@ -1522,9 +1522,9 @@ def clear_column_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count() FROM {table_name} where x=0")
+                r = node.query(f"SELECT count() FROM {table_name} where x=0 FORMAT TabSeparated")
                 assert r.output == output1, error()
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output2, error()
 
 
@@ -1545,7 +1545,7 @@ def modify_column_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with When("I delete odd rows from the table"):
@@ -1568,7 +1568,7 @@ def modify_column_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1589,7 +1589,7 @@ def comment_column_after_delete_in_the_table(
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with When("I delete odd rows from the table"):
@@ -1608,7 +1608,7 @@ def comment_column_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -1635,7 +1635,7 @@ def create_and_check_replicated_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully inserted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == str(partitions * block_size), error()
 
 
@@ -1913,7 +1913,7 @@ def select_query_ontime(self, node=None):
         node = self.context.node
 
     node.query(
-        f"SELECT count(*) FROM (SELECT avg(c1) FROM (SELECT Year, Month, count(*) AS c1 FROM ontime GROUP BY Year, Month))"
+        f"SELECT count(*) FROM (SELECT avg(c1) FROM (SELECT Year, Month, count(*) AS c1 FROM ontime GROUP BY Year, Month)) FORMAT TabSeparated"
     )
 
 
@@ -1924,7 +1924,7 @@ def select_query_acceptance(self, node=None):
         node = self.context.node
 
     node.query(
-        f"SELECT count(*) FROM (SELECT * FROM acceptance_table where has(Ids, 1))"
+        f"SELECT count(*) FROM (SELECT * FROM acceptance_table where has(Ids, 1)) FORMAT TabSeparated"
     )
 
 

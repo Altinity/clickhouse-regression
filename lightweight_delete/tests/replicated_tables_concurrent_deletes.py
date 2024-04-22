@@ -29,7 +29,7 @@ def replicated_table_deleting_with_without_overlap(
     with When("I compute expected output"):
         expected_output = node.query(
             f"SELECT count(*) FROM {table_name}"
-            f" WHERE NOT((x % 2 == 0 AND id < 50) OR (x % 2 == 0 AND id < 75 AND id > 24))"
+            f" WHERE NOT((x % 2 == 0 AND id < 50) OR (x % 2 == 0 AND id < 75 AND id > 24)) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes"):
@@ -47,7 +47,7 @@ def replicated_table_deleting_with_without_overlap(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name}", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
             )
 
 
@@ -77,7 +77,7 @@ def replicated_table_deleting_without_overlap_entire_table(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x<33 OR (x>32 AND x<68) OR x>67)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x<33 OR (x>32 AND x<68) OR x>67) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes"):
@@ -101,7 +101,7 @@ def replicated_table_deleting_without_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name}", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
             )
 
 
@@ -131,7 +131,7 @@ def replicated_table_deleting_with_overlap_entire_table(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x<50 OR (x>25 AND x<75) OR x>50)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x<50 OR (x>25 AND x<75) OR x>50) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes"):
@@ -156,7 +156,7 @@ def replicated_table_deleting_with_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name}", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
             )
 
 
@@ -187,7 +187,7 @@ def replicated_table_deleting_in_loop_with_without_overlap(
     with When("I compute expected output"):
         expected_output = node.query(
             f"SELECT count(*) FROM {table_name}"
-            f" WHERE NOT((x % 2 == 0 AND id < 50) OR (x % 2 == 0 AND id < 75 AND id > 24))"
+            f" WHERE NOT((x % 2 == 0 AND id < 50) OR (x % 2 == 0 AND id < 75 AND id > 24)) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes"):
@@ -216,7 +216,7 @@ def replicated_table_deleting_in_loop_with_without_overlap(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name}", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
             )
 
 
@@ -246,7 +246,7 @@ def replicated_table_deleting_in_loop_without_overlap_entire_table(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x<33 OR (x>32 AND x<68) OR x>67)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x<33 OR (x>32 AND x<68) OR x>67) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes"):
@@ -285,7 +285,7 @@ def replicated_table_deleting_in_loop_without_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name}", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
             )
 
 
@@ -315,7 +315,7 @@ def replicated_table_deleting_in_loop_with_overlap_entire_table(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x<50 OR (x>25 AND x<75) OR x>50)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x<50 OR (x>25 AND x<75) OR x>50) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes"):
@@ -342,7 +342,7 @@ def replicated_table_deleting_in_loop_with_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name}", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
             )
 
 

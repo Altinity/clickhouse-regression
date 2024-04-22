@@ -66,7 +66,7 @@ def normal_view(self, node=None):
         create_view(
             view_type="",
             view_name=view_name_1,
-            condition=f"SELECT count(*) FROM {table_name}",
+            condition=f"SELECT count(*) FROM {table_name} ",
         )
         create_view(
             view_type="",
@@ -78,11 +78,11 @@ def normal_view(self, node=None):
         r = delete(table_name=table_name, condition="x > 50")
 
     with Then("I check views perform correctly"):
-        r1 = node.query(f"SELECT count(*) FROM {table_name}")
-        r2 = node.query(f"SELECT * FROM {view_name_1}")
+        r1 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
+        r2 = node.query(f"SELECT * FROM {view_name_1} FORMAT TabSeparated")
         assert r1.output == r2.output
-        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id")
-        r2 = node.query(f"SELECT * FROM {view_name_2}")
+        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated")
+        r2 = node.query(f"SELECT * FROM {view_name_2} FORMAT TabSeparated")
         assert r1.output == r2.output
 
 
@@ -123,11 +123,11 @@ def live_view(self, node=None):
         r = delete(table_name=table_name, condition="x > 50")
 
     with Then("I check views perform correctly"):
-        r1 = node.query(f"SELECT count(*) FROM {table_name}")
-        r2 = node.query(f"SELECT * FROM {view_name_1}")
+        r1 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
+        r2 = node.query(f"SELECT * FROM {view_name_1} FORMAT TabSeparated")
         assert r1.output == r2.output
-        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id")
-        r2 = node.query(f"SELECT * FROM {view_name_2}")
+        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated")
+        r2 = node.query(f"SELECT * FROM {view_name_2} FORMAT TabSeparated")
         assert r1.output == r2.output
 
     with Then("I watch live view", description="concurrent watch, delete, insert"):
@@ -222,11 +222,11 @@ def materialized_view(self, node=None):
         optimize_table(table_name=view_name_2)
 
     with Then("I check views perform correctly"):
-        r1 = node.query(f"SELECT count(*) FROM {table_name}")
-        r2 = node.query(f"SELECT * FROM {view_name_1}")
+        r1 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
+        r2 = node.query(f"SELECT * FROM {view_name_1} FORMAT TabSeparated")
         assert r1.output == r2.output
-        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id")
-        r2 = node.query(f"SELECT * FROM {view_name_2}")
+        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated")
+        r2 = node.query(f"SELECT * FROM {view_name_2} FORMAT TabSeparated")
         assert r1.output == r2.output
 
 

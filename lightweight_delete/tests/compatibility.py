@@ -75,7 +75,7 @@ def concurrent_insert_delete_many_parts(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert int(r.output) > 0, error()
 
 
@@ -118,7 +118,7 @@ def concurrent_insert_delete_the_same_data(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert int(r.output) > 0, error()
 
 
