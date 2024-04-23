@@ -513,9 +513,9 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
                     "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
                 ):
                     force_select_final = node.query(
-                        f"SELECT id, count(*) FROM {table1.name} GROUP BY id FORMAT TabSeparated"
+                        f"SELECT id, count(*) FROM {table1.name} GROUP BY id"
                         f" {clause}"
-                        f" SELECT id, count(*) FROM {table2.name} GROUP BY id FORMAT TabSeparated",
+                        f" SELECT id, count(*) FROM {table2.name} GROUP BY id",
                         settings=[("final", 1)],
                     ).output.strip()
 
