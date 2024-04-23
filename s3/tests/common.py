@@ -614,7 +614,7 @@ def change_max_single_part_upload_size(node, size):
 
 def get_used_disks_for_table(node, name, step=When, steps=True):
     def get_used_disks():
-        sql = f"select disk_name from system.parts where table == '{name}' and active=1 order by modification_time"
+        sql = f"select disk_name from system.parts where table == '{name}' and active=1 order by modification_time FORMAT TabSeparated"
         return node.query(sql).output.strip().split("\n")
 
     if not steps:
@@ -630,7 +630,7 @@ def get_path_for_part_from_part_log(node, table, part_name, step=When):
     with And(f"get path_on_disk for part {part_name}"):
         path = node.query(
             f"SELECT path_on_disk FROM system.part_log WHERE table = '{table}' "
-            f" AND part_name = '{part_name}' ORDER BY event_time DESC LIMIT 1"
+            f" AND part_name = '{part_name}' ORDER BY event_time DESC LIMIT 1 FORMAT TabSeparated"
         ).output
     return path.strip()
 
@@ -641,7 +641,7 @@ def get_paths_for_partition_from_part_log(node, table, partition_id, step=When):
     with And(f"get path_on_disk for partition id {partition_id}"):
         paths = node.query(
             f"SELECT path_on_disk FROM system.part_log WHERE table = '{table}'"
-            f" AND partition_id = '{partition_id}' ORDER BY event_time DESC"
+            f" AND partition_id = '{partition_id}' ORDER BY event_time DESC FORMAT TabSeparated"
         ).output
     return paths.strip().split("\n")
 
@@ -1292,7 +1292,7 @@ def standard_check(self):
         node.query(f"INSERT INTO {name} VALUES (427)")
 
     with Then("I check that a simple SELECT * query returns matching data"):
-        r = node.query(f"SELECT * FROM {name}").output.strip()
+        r = node.query(f"SELECT * FROM {name} FORMAT TabSeparated").output.strip()
         assert r == "427", error()
 
 
@@ -1316,37 +1316,37 @@ def standard_selects(self, node, table_name):
     check_query_node(
         node=node,
         num=0,
-        query=f"SELECT COUNT() FROM {table_name}",
+        query=f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated",
         expected="1572867",
     )
     check_query_node(
         node=node,
         num=1,
-        query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+        query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10 FORMAT TabSeparated",
         expected="10",
     )
     check_query_node(
         node=node,
         num=2,
-        query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+        query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
         expected="3407872",
     )
     check_query_node(
         node=node,
         num=3,
-        query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+        query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
         expected="0",
     )
     check_query_node(
         node=node,
         num=4,
-        query=f"SELECT * FROM {table_name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
+        query=f"SELECT * FROM {table_name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d FORMAT TabSeparated",
         expected="0\n1048578\n2097154",
     )
     check_query_node(
         node=node,
         num=5,
-        query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1)",
+        query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1) FORMAT TabSeparated",
         expected="1",
     )
 
@@ -1369,9 +1369,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options[
-                "server_side_encryption_customer_key_base64"
-            ] = ssec_key
+            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
+                ssec_key
+            )
         yield
 
     finally:

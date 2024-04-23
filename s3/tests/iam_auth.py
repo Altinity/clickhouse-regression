@@ -96,7 +96,7 @@ def iam_mode_auth(self):
         node.query(f"INSERT INTO {table_name} VALUES ({expected})")
 
     with Then("I check that select returns matching data"):
-        r = node.query(f"SELECT * FROM {table_name}").output.strip()
+        r = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output.strip()
         assert r == expected, error()
 
 
