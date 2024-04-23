@@ -30,7 +30,7 @@ def create_and_drop_tables(self, number_of_tables=1000):
             f"DROP TABLE IF EXISTS {table_name}; "
             + f"CREATE TABLE {table_name} (x UInt8) ENGINE = MergeTree ORDER BY tuple(); "
             + f"DROP TABLE {table_name} SYNC; "
-            + "SELECT 1; "
+            + "SELECT 1 FORMAT TabSeparated; "
         )
 
     node.query(command)
