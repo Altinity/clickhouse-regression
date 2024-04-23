@@ -13,7 +13,7 @@ def error_using_non_window_function(self):
     exitcode = 63
     message = "DB::Exception: Unknown aggregate function numbers"
 
-    sql = "SELECT numbers(1, 100) OVER () FROM empsalary"
+    sql = "SELECT numbers(1, 100) OVER () FROM empsalary FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -25,7 +25,7 @@ def error_order_by_another_window_function(self):
     exitcode = 184
     message = "DB::Exception: Window function rank() OVER (ORDER BY rand() ASC) is found inside window definition in query"
 
-    sql = "SELECT rank() OVER (ORDER BY rank() OVER (ORDER BY rand()))"
+    sql = "SELECT rank() OVER (ORDER BY rank() OVER (ORDER BY rand())) FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -37,7 +37,7 @@ def error_window_function_in_where(self):
     exitcode = 184
     message = "DB::Exception: Window function row_number() OVER (ORDER BY salary ASC) is found in WHERE in query"
 
-    sql = "SELECT * FROM empsalary WHERE row_number() OVER (ORDER BY salary) < 10"
+    sql = "SELECT * FROM empsalary WHERE row_number() OVER (ORDER BY salary) < 10 FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -58,7 +58,7 @@ def error_window_function_in_join(self):
         else "DB::Exception: Cannot get JOIN keys from JOIN ON section"
     )
 
-    sql = "SELECT * FROM empsalary INNER JOIN tenk1 ON row_number() OVER (ORDER BY salary) < 10"
+    sql = "SELECT * FROM empsalary INNER JOIN tenk1 ON row_number() OVER (ORDER BY salary) < 10 FORMAT TabSeparated"
 
     with When(f"I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -70,7 +70,7 @@ def error_window_function_in_group_by(self):
     exitcode = 47
     message = "DB::Exception: Unknown identifier"
 
-    sql = "SELECT rank() OVER (ORDER BY 1), count(*) FROM empsalary GROUP BY row_number() OVER (ORDER BY salary) < 10"
+    sql = "SELECT rank() OVER (ORDER BY 1), count(*) FROM empsalary GROUP BY row_number() OVER (ORDER BY salary) < 10 FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -82,7 +82,7 @@ def error_window_function_in_having(self):
     exitcode = 184
     message = "DB::Exception: Window function row_number() OVER (ORDER BY salary ASC) is found in HAVING in query"
 
-    sql = "SELECT rank() OVER (ORDER BY 1), count(*) FROM empsalary GROUP BY salary HAVING row_number() OVER (ORDER BY salary) < 10"
+    sql = "SELECT rank() OVER (ORDER BY 1), count(*) FROM empsalary GROUP BY salary HAVING row_number() OVER (ORDER BY salary) < 10 FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -94,7 +94,7 @@ def error_select_from_window(self):
     exitcode = 46
     message = "DB::Exception: Unknown table function rank"
 
-    sql = "SELECT * FROM rank() OVER (ORDER BY rand())"
+    sql = "SELECT * FROM rank() OVER (ORDER BY rand()) FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -125,7 +125,7 @@ def error_named_window_defined_twice(self):
     exitcode = 36
     message = "DB::Exception: Window 'w' is defined twice in the WINDOW clause"
 
-    sql = "SELECT count(*) OVER w FROM tenk1 WINDOW w AS (ORDER BY unique1), w AS (ORDER BY unique1)"
+    sql = "SELECT count(*) OVER w FROM tenk1 WINDOW w AS (ORDER BY unique1), w AS (ORDER BY unique1) FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -137,7 +137,7 @@ def error_coma_between_partition_by_and_order_by_clause(self):
     exitcode = 62
     message = "DB::Exception: Syntax error"
 
-    sql = "SELECT rank() OVER (PARTITION BY four, ORDER BY ten) FROM tenk1"
+    sql = "SELECT rank() OVER (PARTITION BY four, ORDER BY ten) FROM tenk1 FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)

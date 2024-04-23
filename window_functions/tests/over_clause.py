@@ -102,7 +102,7 @@ def missing_window_spec(self):
     message = "Exception: Syntax error"
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -120,7 +120,7 @@ def invalid_window_name(self):
     message = "Exception: Window 'w3' is not defined"
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER w3 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 AS ()",
+        "SELECT number,sum(number) OVER w3 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 AS () FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -138,7 +138,7 @@ def invalid_multiple_windows(self):
     message = "Exception: Missing columns"
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER w1, w2 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 AS (), w2 AS (PARTITION BY number)",
+        "SELECT number,sum(number) OVER w1, w2 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 AS (), w2 AS (PARTITION BY number) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )

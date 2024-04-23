@@ -53,7 +53,7 @@ def missing_expr_error(self):
     message = "Exception: Syntax error: failed at position"
 
     self.context.node.query(
-        "SELECT sum(number) OVER (PARTITION BY) FROM numbers(1,3)",
+        "SELECT sum(number) OVER (PARTITION BY) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -69,7 +69,7 @@ def invalid_expr_error(self):
     message = "Exception: Missing columns: 'foo'"
 
     self.context.node.query(
-        "SELECT sum(number) OVER (PARTITION BY foo) FROM numbers(1,3)",
+        "SELECT sum(number) OVER (PARTITION BY foo) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )

@@ -162,7 +162,7 @@ def empty_table(self):
 
     try:
         execute_query(
-            f"SELECT id, metric, ts, nonNegativeDerivative(metric, ts) OVER (ORDER BY id ASC) AS nnd FROM {table}"
+            f"SELECT id, metric, ts, nonNegativeDerivative(metric, ts) OVER (ORDER BY id ASC) AS nnd FROM {table} FORMAT TabSeparated"
         )
     finally:
         with Finally("drop table"):
