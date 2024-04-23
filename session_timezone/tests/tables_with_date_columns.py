@@ -67,7 +67,7 @@ def different_types_insert(self):
             try:
                 with Given("I create table with DateTime datatype"):
                     node.query(
-                        f"CREATE TABLE IF NOT EXISTS {table_name} (d {type}) Engine=Memory AS SELECT toDateTime('2000-01-01 00:00:00');"
+                        f"CREATE TABLE IF NOT EXISTS {table_name} (d {type}) Engine=Memory AS SELECT toDateTime('2000-01-01 00:00:00') FORMAT TabSeparated;"
                     )
 
                 with When("I insert data with enabled 'session_timezone' setting "):
@@ -86,11 +86,11 @@ def different_types_insert(self):
                     "I check that session_timezone setting affects correct on parse DateTime type"
                 ):
                     node.query(
-                        f"SELECT count()+1 FROM {table_name} WHERE d == '{'2000-01-01' if type is 'Date' else '2000-01-01 01:00:00'}';",
+                        f"SELECT count()+1 FROM {table_name} WHERE d == '{'2000-01-01' if type is 'Date' else '2000-01-01 01:00:00'}' FORMAT TabSeparated;",
                         message=f"{'2' if type.endswith(')') else '3' if type is 'Date' else '1'}",
                     )
                     node.query(
-                        f"SELECT count()+1 FROM {table_name} WHERE d == toDateTime('{'2000-01-01' if type is 'Date' else '2000-01-01 02:00:00'}');",
+                        f"SELECT count()+1 FROM {table_name} WHERE d == toDateTime('{'2000-01-01' if type is 'Date' else '2000-01-01 02:00:00'}') FORMAT TabSeparated;",
                         message=f"{'2' if type.endswith(')') else '3' if type is 'Date' else '1'}",
                     )
             finally:

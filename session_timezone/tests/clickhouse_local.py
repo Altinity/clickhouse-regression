@@ -52,7 +52,7 @@ def set_timezone(self):
         clickhouse_local(
             query=("SET session_timezone = 'Asia/Novosibirsk';")
             + (
-                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Europe/Zurich');"
+                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') FORMAT TabSeparated;"
             ),
             message="2022-12-12 17:23:23.123",
         )
@@ -68,7 +68,7 @@ def set_timezone_with_the_same_continent(self):
         clickhouse_local(
             query=("SET session_timezone = 'Asia/Manila';")
             + (
-                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Asia/Novosibirsk');"
+                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Asia/Novosibirsk') FORMAT TabSeparated;"
             ),
             message="2022-12-12 22:23:23.123",
         )
@@ -85,7 +85,7 @@ def set_and_setting_timezone(self):
             query=("SET session_timezone = 'Asia/Novosibirsk';")
             + (
                 "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') "
-                "SETTINGS session_timezone = 'Europe/Zurich';"
+                "SETTINGS session_timezone = 'Europe/Zurich' FORMAT TabSeparated;"
             ),
             message="2022-12-12 23:23:23.123",
         )
@@ -147,7 +147,7 @@ def all_possible_values_of_timezones(self):
             time_zone = node.query(
                 f"select time_zone from "
                 f"(select *,ROW_NUMBER() OVER (ORDER BY time_zone) as order_number from system.time_zones)"
-                f" WHERE order_number = {i+1}"
+                f" WHERE order_number = {i+1} FORMAT TabSeparated"
             ).output.strip()
             with Step(
                 f"I check that `session_timezone` is changing timezone to {time_zone}"
