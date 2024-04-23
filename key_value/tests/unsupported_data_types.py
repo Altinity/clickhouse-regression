@@ -28,25 +28,25 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
     if constant_type == "array":
         with Then(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}(100{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}(100{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}(123{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}(123{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}('100'{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}('100'{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}('123'{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}{constant_type}('123'{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
@@ -54,13 +54,13 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
     elif constant_type == "FixedString":
         with Then(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('100'{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('100'{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('123'{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('123'{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
@@ -68,13 +68,13 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
     elif constant_type == "UUID":
         with Then(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}generateUUIDv4(){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}generateUUIDv4(){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}generateUUIDv4(){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}generateUUIDv4(){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
@@ -82,13 +82,13 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
     elif constant_type == "Map":
         with Then(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}map('100', '100'){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}map('100', '100'){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}map('100', '100'){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}map('100', '100'){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
@@ -96,13 +96,13 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
     elif constant_type == "Tuple":
         with Then(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}tuple('100', '100'){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}tuple('100', '100'){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}tuple('100', '100'){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}tuple('100', '100'){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
@@ -110,13 +110,13 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
     else:
         with Then(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}(100{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}(100{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
         with And(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
-                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}(123{extra_args}){to_nullable_end})",
+                f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}(123{extra_args}){to_nullable_end}) FORMAT TabSeparated",
                 no_checks=True,
             )
             assert r.exitcode != 0, error()

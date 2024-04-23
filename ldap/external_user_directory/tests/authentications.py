@@ -689,7 +689,7 @@ def login_after_ldap_server_is_restarted(self, server, timeout=60):
             started = time.time()
             while True:
                 r = self.context.node.query(
-                    "SELECT 1",
+                    "SELECT 1 FORMAT TabSeparated",
                     settings=[("user", user["cn"]), ("password", user["userpassword"])],
                     no_checks=True,
                 )
@@ -728,7 +728,7 @@ def login_after_clickhouse_server_is_restarted(self, server, timeout=60):
             started = time.time()
             while True:
                 r = self.context.node.query(
-                    "SELECT 1",
+                    "SELECT 1 FORMAT TabSeparated",
                     settings=[("user", user["cn"]), ("password", user["userpassword"])],
                     no_checks=True,
                 )
@@ -1254,7 +1254,7 @@ def repeat_requests(self, server, iterations, vcd_value, rbac=False):
                     with When(f"I login and execute some query {iterations} times"):
                         start_time = time.time()
                         r = self.context.node.command(
-                            f"time for i in {{1..{iterations}}}; do clickhouse client -q \"SELECT 1\" --user {user['cn']} --password {user['userpassword']} > /dev/null; done"
+                            f"time for i in {{1..{iterations}}}; do clickhouse client -q \"SELECT 1 FORMAT TabSeparated\" --user {user['cn']} --password {user['userpassword']} > /dev/null; done"
                         )
                         end_time = time.time()
 

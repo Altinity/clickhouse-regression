@@ -43,10 +43,10 @@ def source_replica_stopped(self, node=None):
 
         with Then("I check part move doesn't finishing while replica down"):
             retry(node.query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="0"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="0"
             )
             retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="2"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="2"
             )
 
         with And("I start shard 1 replica"):
@@ -58,12 +58,12 @@ def source_replica_stopped(self, node=None):
 
         with Then("I check part move finished"):
             retry(node.query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="1"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
             )
 
             for name in ["clickhouse3", "clickhouse4"]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="1"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
                 )
     finally:
         with Finally("I drop table if exists"):
@@ -104,10 +104,10 @@ def destination_replica_stopped(self):
 
         with Then("I check part move doesn't finishing while replica down"):
             retry(node.query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="1"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
             )
             retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="1"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
             )
 
         with And("I start shard 1 replica"):
@@ -119,12 +119,12 @@ def destination_replica_stopped(self):
 
         with Then("I check part move finished"):
             retry(node.query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="0"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="0"
             )
 
             for name in ["clickhouse3", "clickhouse4"]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="2"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="2"
                 )
 
     finally:
@@ -172,7 +172,7 @@ def distributed_table(self):
         with And("I move same part between shards and check data in distributed table"):
             part_uuid = (
                 self.context.cluster.node("clickhouse1")
-                .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0'")
+                .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
                 .output.strip()
             )
             for i in range(10):
@@ -182,7 +182,7 @@ def distributed_table(self):
                         part = (
                             self.context.cluster.node("clickhouse1")
                             .query(
-                                f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                                f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated"
                             )
                             .output.strip()
                         )
@@ -267,7 +267,7 @@ def distributed_table_stopped_replica(self):
         with And("I move same part between shards and check data in distributed table"):
             part_uuid = (
                 self.context.cluster.node("clickhouse1")
-                .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0'")
+                .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
                 .output.strip()
             )
             for i in range(5):
@@ -277,7 +277,7 @@ def distributed_table_stopped_replica(self):
                         part = (
                             self.context.cluster.node("clickhouse1")
                             .query(
-                                f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                                f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated"
                             )
                             .output.strip()
                         )

@@ -267,7 +267,7 @@ def create_with_source_table_privilege(self, user_name, grant_target_name, node=
                 )
 
             with Then("I check the view"):
-                output = node.query(f"SELECT count(*) FROM {view_name}").output
+                output = node.query(f"SELECT count(*) FROM {view_name} FORMAT TabSeparated").output
                 assert output == "0", error()
 
         finally:
@@ -793,7 +793,7 @@ def select_without_select_privilege(self, node=None):
 
             with Then("I try to select from view without privilege as the user"):
                 node.query(
-                    f"SELECT * FROM {view_name}",
+                    f"SELECT * FROM {view_name} FORMAT TabSeparated",
                     settings=[("user", f"{user_name}")],
                     exitcode=exitcode,
                     message=message,
@@ -844,7 +844,7 @@ def select_with_select_privilege(self, user_name, grant_target_name, node=None):
 
         with Then("I attempt to select from view with privilege as the user"):
             output = node.query(
-                f"SELECT count(*) FROM {view_name}", settings=[("user", f"{user_name}")]
+                f"SELECT count(*) FROM {view_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
             ).output
             assert output == "1", error()
 
@@ -896,7 +896,7 @@ def select_with_revoked_select_privilege(self, user_name, grant_target_name, nod
 
         with Then("I attempt to select from view with privilege as the user"):
             node.query(
-                f"SELECT count(*) FROM {view_name}",
+                f"SELECT count(*) FROM {view_name} FORMAT TabSeparated",
                 settings=[("user", f"{user_name}")],
                 exitcode=exitcode,
                 message=message,
@@ -930,7 +930,7 @@ def select_without_source_table_privilege(self, node=None):
                     "I attempt to select from view without privilege on the source table"
                 ):
                     node.query(
-                        f"SELECT count(*) FROM {view_name}",
+                        f"SELECT count(*) FROM {view_name} FORMAT TabSeparated",
                         settings=[("user", f"{user_name}")],
                         exitcode=exitcode,
                         message=message,
@@ -988,7 +988,7 @@ def select_with_source_table_privilege(self, user_name, grant_target_name, node=
 
             with Then("I check the user is able to select from the view"):
                 output = node.query(
-                    f"SELECT count(*) FROM {view_name}",
+                    f"SELECT count(*) FROM {view_name} FORMAT TabSeparated",
                     settings=[("user", f"{user_name}")],
                 ).output
                 assert output == "0", error()
@@ -1031,7 +1031,7 @@ def select_with_subquery(self, user_name, grant_target_name, node=None):
     table1_name = f"table1_{getuid()}"
     table2_name = f"table2_{getuid()}"
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
-    select_view_query = "SELECT count(*) FROM {view_name}"
+    select_view_query = "SELECT count(*) FROM {view_name} FORMAT TabSeparated"
 
     if node is None:
         node = self.context.node
@@ -1126,7 +1126,7 @@ def select_with_join_query(self, user_name, grant_target_name, node=None):
     table0_name = f"table0_{getuid()}"
     table1_name = f"table1_{getuid()}"
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
-    select_view_query = "SELECT count(*) FROM {view_name}"
+    select_view_query = "SELECT count(*) FROM {view_name} FORMAT TabSeparated"
 
     if node is None:
         node = self.context.node
@@ -1216,7 +1216,7 @@ def select_with_join_subquery(self, grant_target_name, user_name, node=None):
     table2_name = f"table2_{getuid()}"
     table3_name = f"table3_{getuid()}"
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
-    select_view_query = "SELECT count(*) FROM {view_name}"
+    select_view_query = "SELECT count(*) FROM {view_name} FORMAT TabSeparated"
 
     if node is None:
         node = self.context.node
@@ -1315,7 +1315,7 @@ def select_with_nested_views(self, grant_target_name, user_name, node=None):
     table1_name = f"table1_{getuid()}"
     table2_name = f"table2_{getuid()}"
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
-    select_view_query = "SELECT count(*) FROM {view2_name}"
+    select_view_query = "SELECT count(*) FROM {view2_name} FORMAT TabSeparated"
 
     if node is None:
         node = self.context.node
@@ -1451,7 +1451,7 @@ def drop_with_privilege(self, grant_target_name, user_name, node=None):
             node.query(f"DROP VIEW {view_name}", settings=[("user", f"{user_name}")])
 
         with Then("I check the table does not exist"):
-            node.query(f"SELECT * FROM {view_name}", exitcode=exitcode, message=message)
+            node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated", exitcode=exitcode, message=message)
 
     finally:
         with Finally("I drop the view"):

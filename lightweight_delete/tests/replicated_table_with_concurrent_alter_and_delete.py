@@ -25,10 +25,10 @@ def concurrent_delete_attach_detach_partition_in_replicated_table_on_single_node
 
     with When("I compute expected output"):
         expected_output1 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
         expected_output2 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0 AND id != 3)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0 AND id != 3) FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -63,7 +63,7 @@ def concurrent_delete_attach_detach_partition_in_replicated_table_on_single_node
             with Then(f"I expect data is successfully deleted on {name} node"):
                 for attempt in retries(timeout=30, delay=1):
                     with attempt:
-                        r = node.query(f"SELECT count(*) FROM {table_name}")
+                        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                         assert r.output in (expected_output1, expected_output2), error()
 
 
@@ -90,7 +90,7 @@ def concurrent_add_drop_column_and_delete_in_replicated_table_on_single_node(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
 
     alter_add_column(
@@ -120,7 +120,7 @@ def concurrent_add_drop_column_and_delete_in_replicated_table_on_single_node(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name}", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
     )
 
 
@@ -147,7 +147,7 @@ def concurrent_modify_column_and_delete_in_replicated_table_on_single_node(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
 
     alter_add_column(
@@ -175,7 +175,7 @@ def concurrent_modify_column_and_delete_in_replicated_table_on_single_node(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name}", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
     )
 
 
@@ -202,7 +202,7 @@ def concurrent_clear_update_and_delete_in_replicated_table_on_single_node(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
 
     alter_add_column(
@@ -230,7 +230,7 @@ def concurrent_clear_update_and_delete_in_replicated_table_on_single_node(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name}", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
     )
 
 
@@ -257,10 +257,10 @@ def concurrent_delete_attach_detach_partition_in_replicated_table_on_two_nodes(
 
     with When("I compute expected output"):
         expected_output1 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
         expected_output2 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0 AND id != 3)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0 AND id != 3) FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -287,8 +287,8 @@ def concurrent_delete_attach_detach_partition_in_replicated_table_on_two_nodes(
             with Then(f"I expect data is successfully deleted on {name} node"):
                 for attempt in retries(timeout=30, delay=1):
                     with attempt:
-                        node.query(f"select * from {table_name} order by id,x")
-                        r = node.query(f"SELECT count(*) FROM {table_name}")
+                        node.query(f"select * from {table_name} order by id,x FORMAT TabSeparated")
+                        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                         assert r.output in (expected_output1, expected_output2), error()
 
 
@@ -315,7 +315,7 @@ def concurrent_add_drop_column_and_delete_in_replicated_table_on_two_nodes(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
 
     alter_add_column(
@@ -345,7 +345,7 @@ def concurrent_add_drop_column_and_delete_in_replicated_table_on_two_nodes(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name}", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
     )
 
 
@@ -372,7 +372,7 @@ def concurrent_modify_column_and_delete_in_replicated_table_on_two_nodes(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
 
     alter_add_column(
@@ -400,7 +400,7 @@ def concurrent_modify_column_and_delete_in_replicated_table_on_two_nodes(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name}", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
     )
 
 
@@ -427,7 +427,7 @@ def concurrent_clear_update_and_delete_in_replicated_table_on_two_nodes(
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 = 0) FORMAT TabSeparated"
         ).output
 
     with And("I add column to modify it in the loop"):
@@ -456,7 +456,7 @@ def concurrent_clear_update_and_delete_in_replicated_table_on_two_nodes(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name}", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
     )
 
 

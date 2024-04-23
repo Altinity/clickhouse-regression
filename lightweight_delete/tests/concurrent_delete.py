@@ -107,7 +107,7 @@ def concurrent_delete_without_overlap(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "0", error()
 
 
@@ -151,7 +151,7 @@ def concurrent_delete_without_overlap_with_alter_delete(self, node=None):
                 )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "0", error()
 
 
@@ -178,7 +178,7 @@ def concurrent_delete_with_overlap(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes with overlap"):
@@ -190,7 +190,7 @@ def concurrent_delete_with_overlap(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == output, error()
 
 
@@ -222,7 +222,7 @@ def concurrent_delete_with_overlap_with_alter_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then("I perform concurrent deletes with overlap"):
@@ -239,7 +239,7 @@ def concurrent_delete_with_overlap_with_alter_delete(self, node=None):
     with Then("I check that rows are deleted"):
         for attempt in retries(timeout=100, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -279,7 +279,7 @@ def random_delete_percentage_of_the_table(
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         if self.context.table_engine == "MergeTree":
             assert (
                 r.output
@@ -344,7 +344,7 @@ def random_delete_percentage_of_the_table_without_overlap(
         )(table_name=table_name, del_list=del_list)
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         if self.context.table_engine == "MergeTree":
             assert (
                 r.output

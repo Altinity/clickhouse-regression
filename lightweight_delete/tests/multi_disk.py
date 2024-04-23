@@ -43,21 +43,21 @@ def multi_disk_volume(self, number_of_disks=2, node=None):
     with And("I check table takes up more than one disk"):
         r = node.query(
             f"select count(*) from (SELECT DISTINCT disk_name FROM system.parts "
-            f"WHERE table = '{table_name}' group by disk_name)"
+            f"WHERE table = '{table_name}' group by disk_name) FORMAT TabSeparated"
         )
         assert r.output == "2", error()
 
     with Then("I expect data is successfully inserted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "1000000", error()
 
     with Then("I perform delete operation"):
         delete(table_name=table_name, condition="x >= 50")
 
     with Then("I expect data is successfully deleted"):
-        r = node.query(f"select count(*) from {table_name}")
+        r = node.query(f"select count(*) from {table_name} FORMAT TabSeparated")
         assert r.output == "5000", error()
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x >=50")
+        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x >=50 FORMAT TabSeparated")
         assert r.output == "0", error
 
 

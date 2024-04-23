@@ -27,7 +27,7 @@ def replication_queue(self, node=None):
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name}" f" WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name}" f" WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -44,13 +44,13 @@ def replication_queue(self, node=None):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
                 r1 = node.query(
-                    f"SELECT create_time FROM system.replication_queue WHERE table='{table_name}' LIMIT 1"
+                    f"SELECT create_time FROM system.replication_queue WHERE table='{table_name}' LIMIT 1 FORMAT TabSeparated"
                 )
                 assert r1.output != ""
         for attempt in retries(timeout=30, delay=1):
             with attempt:
                 r2 = node.query(
-                    f"SELECT event_time FROM system.query_log WHERE query like '%{table_name}%DELETE%' LIMIT 1"
+                    f"SELECT event_time FROM system.query_log WHERE query like '%{table_name}%DELETE%' LIMIT 1 FORMAT TabSeparated"
                 )
                 assert r2.output != ""
 
@@ -63,7 +63,7 @@ def replication_queue(self, node=None):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
                 check_query_on_all_nodes(
-                    query=f"SELECT count(*) FROM {table_name}", output=expected_output
+                    query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
                 )
 
 

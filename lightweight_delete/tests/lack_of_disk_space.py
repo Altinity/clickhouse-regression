@@ -60,18 +60,18 @@ def lack_of_disk_space(self, node=None):
     with And("I check disks used by the table"):
         r = node.query(
             f"SELECT DISTINCT disk_name FROM system.parts "
-            f"WHERE table = '{table_name}'"
+            f"WHERE table = '{table_name}' FORMAT TabSeparated"
         )
 
         assert r.output == "jbod1", error()
 
         r = node.query(
             f"SELECT sum(bytes_on_disk)/1024/1024 FROM system.parts "
-            f"WHERE table = '{table_name}' and active = 1"
+            f"WHERE table = '{table_name}' and active = 1 FORMAT TabSeparated"
         )
 
     with Then("I expect data is successfully inserted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "7250000", error()
 
     with Then("I perform delete and insert operation in the loop"):
@@ -97,9 +97,9 @@ def lack_of_disk_space(self, node=None):
     with Then("I check table state"):
         for attempt in retries(timeout=100, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output in ("7250000", "5800000"), error()
-                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=0")
+                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=0 FORMAT TabSeparated")
                 assert r.output in ("0", "1450000"), error()
 
 
@@ -139,20 +139,20 @@ def lack_of_disk_space_tiered_storage(self, node=None):
     with And("I check table takes up more than one disk"):
         r = node.query(
             f"SELECT DISTINCT disk_name FROM system.parts "
-            f"WHERE table = '{table_name}'"
+            f"WHERE table = '{table_name}' FORMAT TabSeparated"
         )
         assert set(r.output.strip().splitlines()) == {"jbod1", "jbod2"}, error()
 
         r = node.query(
             f"SELECT sum(bytes_on_disk)/1024/1024 FROM system.parts "
-            f"WHERE table = '{table_name}' and active = 1"
+            f"WHERE table = '{table_name}' and active = 1 FORMAT TabSeparated"
         )
         node.query(
-            f"select name, disk_name, partition from system.parts where table='{table_name}' and active"
+            f"select name, disk_name, partition from system.parts where table='{table_name}' and active FORMAT TabSeparated"
         )
 
     with Then("I expect data is successfully inserted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == f"{block_size*partitions}", error()
 
     with And("I perform delete insert operations in loop"):
@@ -180,17 +180,17 @@ def lack_of_disk_space_tiered_storage(self, node=None):
         for i in range(partitions):
             if i == 1:
                 continue
-            r = node.query(f"SELECT count(*) FROM {table_name} WHERE id={i}")
+            r = node.query(f"SELECT count(*) FROM {table_name} WHERE id={i} FORMAT TabSeparated")
             assert r.output == f"{block_size}", error()
 
     with And("I check table state"):
         for attempt in retries(timeout=100, delay=5, initial_delay=30):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1")
+                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1 FORMAT TabSeparated")
                 note(
                     f"Number of rows that should have been deleted from the table: {r.output}"
                 )
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 if attempt.kwargs["flags"] & LAST_RETRY:
                     assert r.output not in (
                         f"{block_size*partitions}",

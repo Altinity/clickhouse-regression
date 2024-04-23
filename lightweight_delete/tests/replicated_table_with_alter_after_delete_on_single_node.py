@@ -329,12 +329,12 @@ def fetch_partition_after_delete(
         node = self.context.node = self.context.cluster.node("clickhouse1")
 
     with When("I compute expected output"):
-        output11 = node.query(f"SELECT count(*) FROM {table_name_1}").output
+        output11 = node.query(f"SELECT count(*) FROM {table_name_1} FORMAT TabSeparated").output
         output12 = node.query(
-            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0 or id != 3)"
+            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0 or id != 3) FORMAT TabSeparated"
         ).output
         output2 = node.query(
-            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name_2} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with And("I delete half of the first table"):
@@ -350,11 +350,11 @@ def fetch_partition_after_delete(
 
     with Then("I check result"):
         check_query_on_all_nodes(
-            query=f"SELECT count(*) FROM {table_name_1}",
+            query=f"SELECT count(*) FROM {table_name_1} FORMAT TabSeparated",
             output=str(int(output11) + int(output12)),
         )
         check_query_on_all_nodes(
-            query=f"SELECT count(*) FROM {table_name_2}", output=output2
+            query=f"SELECT count(*) FROM {table_name_2} FORMAT TabSeparated", output=output2
         )
 
 

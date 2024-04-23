@@ -18,14 +18,17 @@ def quoting_character_format(self, node=None):
         "I check ClickHouse supports properly specified `quoting_character` parameter"
     ):
         for i in supported_specifying:
-            r = node.query(f"SELECT extractKeyValuePairs('a:a', ':', ',', {i})")
+            r = node.query(
+                f"SELECT extractKeyValuePairs('a:a', ':', ',', {i}) FORMAT TabSeparated"
+            )
             assert r.exitcode == 0
     with When(
         "I check ClickHouse returns an error if `quoting_character` specified wrong"
     ):
         for i in unsupported_specifying:
             r = node.query(
-                f"SELECT extractKeyValuePairs('a:a', ':', ',', {i})", no_checks=True
+                f"SELECT extractKeyValuePairs('a:a', ':', ',', {i}) FORMAT TabSeparated",
+                no_checks=True,
             )
             assert r.exitcode != 0
 
@@ -47,14 +50,17 @@ def pair_delimiters_format(self, node=None):
         "I check ClickHouse supports properly specified `pair_delimiters` parameter"
     ):
         for i in supported_specifying:
-            r = node.query(f"SELECT extractKeyValuePairs('a:a', ':', {i})")
+            r = node.query(
+                f"SELECT extractKeyValuePairs('a:a', ':', {i}) FORMAT TabSeparated"
+            )
             assert r.exitcode == 0
     with When(
         "I check ClickHouse returns an error if `pair_delimiters` specified wrong"
     ):
         for i in unsupported_specifying:
             r = node.query(
-                f"SELECT extractKeyValuePairs('a:a', ':', {i})", no_checks=True
+                f"SELECT extractKeyValuePairs('a:a', ':', {i}) FORMAT TabSeparated",
+                no_checks=True,
             )
             assert r.exitcode != 0
 
@@ -78,13 +84,18 @@ def key_value_pair_delimiter_format(self, node=None):
         "I check ClickHouse supports properly specified `key_value_pair_delimiter` parameter"
     ):
         for i in supported_specifying:
-            r = node.query(f"SELECT extractKeyValuePairs('a:a', {i})")
+            r = node.query(
+                f"SELECT extractKeyValuePairs('a:a', {i}) FORMAT TabSeparated"
+            )
             assert r.exitcode == 0
     with When(
         "I check ClickHouse returns an error if `key_value_pair_delimiter` specified wrong"
     ):
         for i in unsupported_specifying:
-            r = node.query(f"SELECT extractKeyValuePairs('a:a', {i})", no_checks=True)
+            r = node.query(
+                f"SELECT extractKeyValuePairs('a:a', {i}) FORMAT TabSeparated",
+                no_checks=True,
+            )
             assert r.exitcode != 0
 
 

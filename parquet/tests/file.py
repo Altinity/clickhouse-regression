@@ -47,8 +47,8 @@ def insert_into_engine(self):
         )
 
     with Check("I check the data inserted into a new table"):
-        table1 = node.query(f"SELECT * FROM {table_name_merge_tree}")
-        table2 = node.query(f"SELECT * FROM {table_name_parquet_file}")
+        table1 = node.query(f"SELECT * FROM {table_name_merge_tree} FORMAT TabSeparated")
+        table2 = node.query(f"SELECT * FROM {table_name_parquet_file} FORMAT TabSeparated")
         assert table1.output.strip() == table2.output.strip(), error()
 
     with Check(

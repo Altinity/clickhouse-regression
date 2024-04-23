@@ -31,7 +31,7 @@ def without_privilege(self, table_type, node=None):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
 
                 node.query(
-                    f"SELECT * FROM {table_name}",
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -60,7 +60,7 @@ def user_with_privilege(self, table_type, node=None):
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name}", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
                 )
 
                 default = node.query(f"SELECT d FROM {table_name}")
@@ -87,10 +87,10 @@ def user_with_all_privilege(self, table_type, node=None):
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name}", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
                 )
 
-                default = node.query(f"SELECT d FROM {table_name}")
+                default = node.query(f"SELECT d FROM {table_name} FORMAT TabSeparated")
                 assert user_select.output == default.output, error()
 
 
@@ -119,7 +119,7 @@ def user_with_revoked_privilege(self, table_type, node=None):
             with Then("I use SELECT, throws exception"):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
                 node.query(
-                    f"SELECT * FROM {table_name}",
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -148,7 +148,7 @@ def user_with_revoked_all_privilege(self, table_type, node=None):
             with Then("I use SELECT, throws exception"):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
                 node.query(
-                    f"SELECT * FROM {table_name}",
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -214,7 +214,7 @@ def user_column_privileges(
             with And("I select from not granted column"):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
                 node.query(
-                    f"SELECT ({select_columns_fail}) FROM {table_name}",
+                    f"SELECT ({select_columns_fail}) FROM {table_name} FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -222,7 +222,7 @@ def user_column_privileges(
 
         with Then("I select from granted column, verify correct result"):
             user_select = node.query(
-                f"SELECT ({select_columns_pass}) FROM {table_name}",
+                f"SELECT ({select_columns_pass}) FROM {table_name} FORMAT TabSeparated",
                 settings=[("user", user_name)],
             )
             default = node.query(f"SELECT ({select_columns_pass}) FROM {table_name}")
@@ -237,7 +237,7 @@ def user_column_privileges(
             with And("I select from revoked columns"):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
                 node.query(
-                    f"SELECT ({select_columns_pass}) FROM {table_name}",
+                    f"SELECT ({select_columns_pass}) FROM {table_name} FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -273,7 +273,7 @@ def role_with_privilege(self, table_type, node=None):
 
                 with Then("I verify SELECT command"):
                     user_select = node.query(
-                        f"SELECT d FROM {table_name}", settings=[("user", user_name)]
+                        f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
                     )
                     default = node.query(f"SELECT d FROM {table_name}")
                     assert user_select.output == default.output, error()
@@ -308,7 +308,7 @@ def role_with_revoked_privilege(self, table_type, node=None):
             with And("I select from the table"):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
                 node.query(
-                    f"SELECT * FROM {table_name}",
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -341,7 +341,7 @@ def user_with_revoked_role(self, table_type, node=None):
             with And("I select from the table"):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
                 node.query(
-                    f"SELECT * FROM {table_name}",
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -414,7 +414,7 @@ def role_column_privileges(
                 with And("I select from not granted column"):
                     exitcode, message = errors.not_enough_privileges(name=user_name)
                     node.query(
-                        f"SELECT ({select_columns_fail}) FROM {table_name}",
+                        f"SELECT ({select_columns_fail}) FROM {table_name} FORMAT TabSeparated",
                         settings=[("user", user_name)],
                         exitcode=exitcode,
                         message=message,
@@ -422,7 +422,7 @@ def role_column_privileges(
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name}", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
                 )
                 default = node.query(f"SELECT d FROM {table_name}")
                 assert user_select.output == default.output, error()
@@ -436,7 +436,7 @@ def role_column_privileges(
                 with And("I select from revoked columns"):
                     exitcode, message = errors.not_enough_privileges(name=user_name)
                     node.query(
-                        f"SELECT ({select_columns_pass}) FROM {table_name}",
+                        f"SELECT ({select_columns_pass}) FROM {table_name} FORMAT TabSeparated",
                         settings=[("user", user_name)],
                         exitcode=exitcode,
                         message=message,
@@ -475,9 +475,9 @@ def user_with_privilege_on_cluster(self, table_type, node=None):
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name}", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
                 )
-                default = node.query(f"SELECT d FROM {table_name}")
+                default = node.query(f"SELECT d FROM {table_name} FORMAT TabSeparated")
                 assert user_select.output == default.output, error()
 
         finally:

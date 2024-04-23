@@ -36,7 +36,7 @@ def new_role(self, server):
                         f"I login and execute query simple query to cache the LDAP user"
                     ):
                         node.query(
-                            f"SELECT 1",
+                            f"SELECT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -97,7 +97,7 @@ def add_privilege(self, server):
                 ):
                     with When(f"I login and execute query that requires no privileges"):
                         node.query(
-                            f"SELECT 1",
+                            f"SELECT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -108,7 +108,7 @@ def add_privilege(self, server):
                         f"I login and try to read from the table without having select privilege"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -126,7 +126,7 @@ def add_privilege(self, server):
                         f"I login again and expect that cached LDAP user can successfully read from the table"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -137,7 +137,7 @@ def add_privilege(self, server):
                         f"I login again and expect that non-cached LDAP user can successfully read from the table"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[1]["username"]),
                                 ("password", users[1]["password"]),
@@ -184,7 +184,7 @@ def remove_privilege(self, server):
                         f"I login then LDAP user should be able to read from the table"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -200,7 +200,7 @@ def remove_privilege(self, server):
                         f"I login again then cached LDAP user should not be able to read from the table"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -213,7 +213,7 @@ def remove_privilege(self, server):
                         f"I login with non-cached LDAP user then the user should also not be able to read from the table"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[1]["username"]),
                                 ("password", users[1]["password"]),
@@ -250,7 +250,7 @@ def remove_role(self, server):
             ):
                 with When(f"I login and execute query that requires no privileges"):
                     node.query(
-                        f"SELECT 1",
+                        f"SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", users[0]["username"]),
                             ("password", users[0]["password"]),
@@ -262,7 +262,7 @@ def remove_role(self, server):
 
                 with And(f"I try to login using cached LDAP user"):
                     node.query(
-                        f"SELECT 1",
+                        f"SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", users[0]["username"]),
                             ("password", users[0]["password"]),
@@ -271,7 +271,7 @@ def remove_role(self, server):
 
                 with And(f"I try to login again using non-cached LDAP user"):
                     node.query(
-                        f"SELECT 1",
+                        f"SELECT 1 FORMAT TabSeparated",
                         settings=[
                             ("user", users[1]["username"]),
                             ("password", users[1]["password"]),
@@ -319,7 +319,7 @@ def remove_privilege_by_removing_role(self, server):
                         f"I login and expect that LDAP user can read from the table"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -334,7 +334,7 @@ def remove_privilege_by_removing_role(self, server):
                         "but does not have privilege that was provided by the removed role"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -383,7 +383,7 @@ def readd_privilege_by_readding_role(self, server):
                         f"I login and expect that LDAP user can read from the table"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -401,7 +401,7 @@ def readd_privilege_by_readding_role(self, server):
                         "but does not have privilege that was provided by the removed role"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -414,7 +414,7 @@ def readd_privilege_by_readding_role(self, server):
                         f"I try to login using non-cached LDAP user and expect it to succeed"
                     ):
                         node.query(
-                            f"SELECT 1",
+                            f"SELECT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[1]["username"]),
                                 ("password", users[1]["password"]),
@@ -432,7 +432,7 @@ def readd_privilege_by_readding_role(self, server):
                         "and again has the privilege that is provided by the role"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[0]["username"]),
                                 ("password", users[0]["password"]),
@@ -444,7 +444,7 @@ def readd_privilege_by_readding_role(self, server):
                         "for the user also to have privilege provided by the role"
                     ):
                         node.query(
-                            f"SELECT * FROM {table_name} LIMIT 1",
+                            f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", users[1]["username"]),
                                 ("password", users[1]["password"]),
@@ -493,7 +493,7 @@ def not_present_role_added(self, server):
                             client.app.expect("clickhouse1 :\) ")
 
                             with When("I execute select on the table"):
-                                client.app.send(f"SELECT * FROM {table_name} LIMIT 1")
+                                client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
 
                             with Then("I expect to get not enough privileges error"):
                                 client.app.expect("Not enough privileges")
@@ -512,7 +512,7 @@ def not_present_role_added(self, server):
 
                                 with When("I re-execute select on the table"):
                                     client.app.send(
-                                        f"SELECT * FROM {table_name} LIMIT 1"
+                                        f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated"
                                     )
 
                                 with Then("I expect to get no errors"):

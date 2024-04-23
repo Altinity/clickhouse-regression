@@ -267,7 +267,7 @@ def login(servers, directory_server, *users, config=None):
                     if user.get("login", False):
                         with When(f"I login as {user['username']} and execute query"):
                             current().context.node.query(
-                                "SELECT 1",
+                                "SELECT 1 FORMAT TabSeparated",
                                 settings=[
                                     ("user", user["username"]),
                                     ("password", user["password"]),
@@ -297,7 +297,7 @@ def login_and_execute_query(
             while True:
                 with When(f"attempt #{attempt}"):
                     r = self.context.node.query(
-                        "SELECT 1",
+                        "SELECT 1 FORMAT TabSeparated",
                         settings=[("user", username), ("password", password)],
                         no_checks=True,
                         steps=False,
@@ -315,7 +315,7 @@ def login_and_execute_query(
                 attempt += 1
     else:
         self.context.node.query(
-            "SELECT 1",
+            "SELECT 1 FORMAT TabSeparated",
             settings=[("user", username), ("password", password)],
             exitcode=(0 if exitcode is None else exitcode),
             message=message,

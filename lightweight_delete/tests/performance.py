@@ -65,7 +65,7 @@ def performance_without_primary_key(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that spent on select query"):
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x % 2 = 0")
+        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x % 2 = 0 FORMAT TabSeparated")
 
     execution_time1 = time.time() - start_time
 
@@ -108,7 +108,7 @@ def performance_with_primary_key_many_partitions(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that was spent on select query"):
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0")
+        r = node.query(f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0 FORMAT TabSeparated")
 
     execution_time1 = time.time() - start_time
 
@@ -153,7 +153,7 @@ def performance_with_primary_key_many_parts(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that was spent on select query"):
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0")
+        r = node.query(f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0 FORMAT TabSeparated")
 
     execution_time1 = time.time() - start_time
 
@@ -211,7 +211,7 @@ def performance_post_delete_select(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that was spent on delete query"):
-        r1 = node.query(f"SELECT count(*) from {table_name_1}")
+        r1 = node.query(f"SELECT count(*) from {table_name_1} FORMAT TabSeparated")
 
     execution_time1 = time.time() - start_time
     metric("execution_time1", execution_time1, "s")
@@ -219,7 +219,7 @@ def performance_post_delete_select(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that was spent on delete query"):
-        r2 = node.query(f"SELECT count(*) from {table_name_2}")
+        r2 = node.query(f"SELECT count(*) from {table_name_2} FORMAT TabSeparated")
 
     execution_time2 = time.time() - start_time
     metric("execution_time2", execution_time2, "s")

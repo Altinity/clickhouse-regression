@@ -29,14 +29,14 @@ def concurrent_delete_attach_detach_partition(self, node=None):
 
     with When("I compute expected output for when delete affects the detached part"):
         output1 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with When(
         "I compute expected output for when delete does nit affect the detached part"
     ):
         output2 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 and id != 3)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 and id != 3) FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -62,7 +62,7 @@ def concurrent_delete_attach_detach_partition(self, node=None):
     ):
         for attempt in retries(timeout=120, delay=5):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output in (output1, output2), error()
 
 
@@ -87,7 +87,7 @@ def concurrent_delete_drop_partition(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id = 3)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 or id = 3) FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -111,7 +111,7 @@ def concurrent_delete_drop_partition(self, node=None):
     ):
         for attempt in retries(timeout=60, delay=5):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -170,7 +170,7 @@ def concurrent_delete_freeze_partition(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -190,7 +190,7 @@ def concurrent_delete_freeze_partition(self, node=None):
     ):
         for attempt in retries(timeout=60, delay=5):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -215,7 +215,7 @@ def concurrent_add_drop_column_and_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then(
@@ -239,7 +239,7 @@ def concurrent_add_drop_column_and_delete(self, node=None):
     ):
         for attempt in retries(timeout=60, delay=5):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -264,7 +264,7 @@ def concurrent_modify_column_and_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with And("I add column to modify it in the loop"):
@@ -292,7 +292,7 @@ def concurrent_modify_column_and_delete(self, node=None):
     ):
         for attempt in retries(timeout=60, delay=5):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 
@@ -317,7 +317,7 @@ def concurrent_clear_update_and_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with And("I add column to modify it in the loop"):
@@ -337,7 +337,7 @@ def concurrent_clear_update_and_delete(self, node=None):
     with Then("I check that rows are deleted"):
         for attempt in retries(timeout=60, delay=5):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 

@@ -46,7 +46,7 @@ def feature(self, stress=None, node="clickhouse1"):
 
             with Then(f"I try to SELECT from {table_name} as {user_name}"):
                 node.query(
-                    f"SELECT * FROM {table_name}", settings=[("user", user_name)]
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
                 )
 
     with Finally(f"I remove {table_name}"):
