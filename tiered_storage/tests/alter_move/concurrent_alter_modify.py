@@ -97,7 +97,7 @@ def scenario(self, engine):
         with When("I first prepare table"):
             insert(100)
             with And("I count number of rows"):
-                r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+                r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
             with Then("the count should be 100"):
                 assert r == "100", error()
 
@@ -112,12 +112,12 @@ def scenario(self, engine):
                     task.result(timeout=600)
 
         with When("I check the server is still up"):
-            r = node.query("SELECT 1").output.strip()
+            r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()
             with Then("it should return the result of 1"):
                 assert r == "1", error()
 
         with And("I ensure that number of rows in the table has not changed"):
-            r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+            r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
             with Then("it should return the count of 100"):
                 assert r == "100", error()
     finally:

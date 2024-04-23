@@ -132,7 +132,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                                 with And("I get number of active parts"):
                                     active = node.query(
-                                        f"SELECT count() FROM system.parts WHERE table = '{name}' AND active = 1"
+                                        f"SELECT count() FROM system.parts WHERE table = '{name}' AND active = 1 FORMAT TabSeparated"
                                     ).output.strip()
                                     with Then("active parts should be 2"):
                                         assert "2" == active
@@ -157,7 +157,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                                 with And("I get number of active parts after merge"):
                                     active = node.query(
-                                        f"SELECT count() FROM system.parts WHERE table = '{name}' AND active = 1"
+                                        f"SELECT count() FROM system.parts WHERE table = '{name}' AND active = 1 FORMAT TabSeparated"
                                     ).output.strip()
                                     with Then("active parts should be 1"):
                                         assert "1" == active
@@ -166,7 +166,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     "I also double check that number of rows did not change"
                                 ):
                                     r = node.query(
-                                        f"SELECT count() FROM {name}"
+                                        f"SELECT count() FROM {name} FORMAT TabSeparated"
                                     ).output.strip()
                                     assert r == "12", error()
 
@@ -193,7 +193,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     "I again check that number of rows did not change"
                                 ):
                                     r = node.query(
-                                        f"SELECT count() FROM {name}"
+                                        f"SELECT count() FROM {name} FORMAT TabSeparated"
                                     ).output.strip()
                                     assert r == "12", error()
                             finally:

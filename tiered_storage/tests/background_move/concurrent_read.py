@@ -78,7 +78,7 @@ def scenario(self, engine):
                 with Then("result should be as expected"):
                     for i in range(num):
                         r = node.query(
-                            f"SELECT sum(d1) FROM {table_name}",
+                            f"SELECT sum(d1) FROM {table_name} FORMAT TabSeparated",
                             steps=False,
                             timeout=60,
                         ).output.strip()

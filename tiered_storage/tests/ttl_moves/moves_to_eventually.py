@@ -146,7 +146,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                         "I also double check that number of rows did not change"
                                     ):
                                         r = node.query(
-                                            f"SELECT count() FROM {name}"
+                                            f"SELECT count() FROM {name} FORMAT TabSeparated"
                                         ).output.strip()
                                         assert r == "10", error()
                                 finally:

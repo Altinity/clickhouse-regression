@@ -51,7 +51,7 @@ def scenario(self, cluster, nodes=None):
         with And("I check who is leader"):
             for i, node in enumerate(nodes):
                 is_leader = node.query(
-                    f"SELECT is_leader FROM system.replicas WHERE table = '{name}'"
+                    f"SELECT is_leader FROM system.replicas WHERE table = '{name}' FORMAT TabSeparated"
                 ).output.strip()
                 if is_leader == "1":
                     leader = i
@@ -118,7 +118,7 @@ def scenario(self, cluster, nodes=None):
         with When("I check number of rows on each node"):
             for node in nodes:
                 with And(f"I check on {node.name}"):
-                    r = node.query(f"SELECT COUNT() FROM {name}").output.strip()
+                    r = node.query(f"SELECT COUNT() FROM {name} FORMAT TabSeparated").output.strip()
                 with Then("count should be 40"):
                     assert r == "40", error()
 

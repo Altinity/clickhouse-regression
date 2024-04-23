@@ -47,7 +47,7 @@ def scenario(self, engine):
 
     with And("I get table's uuid"):
         table_uuid = node.query(
-            f"SELECT uuid FROM system.tables WHERE name = '{table_name}'"
+            f"SELECT uuid FROM system.tables WHERE name = '{table_name}' FORMAT TabSeparated"
         ).output.strip()
         table_uuid_prefix = table_uuid[:3]
 
@@ -74,7 +74,7 @@ def scenario(self, engine):
                         for attempt in retries(timeout=120, delay=10):
                             with attempt:
                                 r = node.query(
-                                    f"SELECT sleepEachRow(0.1), COUNT() FROM {table_name}",
+                                    f"SELECT sleepEachRow(0.1), COUNT() FROM {table_name} FORMAT TabSeparated",
                                     steps=False,
                                     timeout=60,
                                 ).output.strip()
@@ -108,14 +108,14 @@ def scenario(self, engine):
                     task.result(timeout=2400)
 
         with When("I check the server is still up"):
-            r = node.query("SELECT 1").output.strip()
+            r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()
             with Then("it should return the result of 1"):
                 assert r == "1", error()
 
         for attempt in retries(timeout=30, delay=5):
             with attempt:
                 with When("I ensure all rows are in the table"):
-                    r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+                    r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
                 with Then("it should return the result of 500"):
                     assert r == "500", error()
 

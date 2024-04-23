@@ -99,7 +99,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         with Then(
                             f"number of rows should be {'0' if positive else '10'}"
                         ):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
                             assert r == ("0" if positive else "1"), error()
 
                     finally:

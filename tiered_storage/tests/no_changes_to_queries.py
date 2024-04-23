@@ -118,31 +118,31 @@ def scenario(self, cluster, node="clickhouse1", count=10000):
 
                     with When("I check simple queries"):
                         check_query(
-                            0, f"SELECT COUNT() FROM {name}", expected="1572867"
+                            0, f"SELECT COUNT() FROM {name} FORMAT TabSeparated", expected="1572867"
                         )
                         check_query(
                             1,
-                            f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                            f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                             expected="10",
                         )
                         check_query(
                             2,
-                            f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                            f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                             expected="3407872",
                         )
                         check_query(
                             3,
-                            f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                            f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                             expected="0",
                         )
                         check_query(
                             4,
-                            f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
+                            f"SELECT * FROM {name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d FORMAT TabSeparated",
                             expected="0\n1048578\n2097154",
                         )
                         check_query(
                             5,
-                            f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1)",
+                            f"SELECT * FROM (SELECT d FROM {name} WHERE d == 1) FORMAT TabSeparated",
                             expected="1",
                         )
 

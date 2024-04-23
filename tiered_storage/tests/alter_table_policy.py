@@ -41,12 +41,12 @@ def scenario(self, cluster, node="clickhouse1"):
 
     def check_disk_utilization(name, size, above=True):
         with By("reading system.disks table"):
-            node.query("SELECT * FROM system.disks")
+            node.query("SELECT * FROM system.disks FORMAT TabSeparated")
             r = node.query(
                 f"""
                 SELECT
                     greatest((1 - (free_space/(total_space - keep_free_space))) * 100, 0) AS used
-                FROM system.disks WHERE name = '{name}' ORDER BY name
+                FROM system.disks WHERE name = '{name}' ORDER BY name FORMAT TabSeparated
             """
             ).output.strip("> \n")
 
@@ -120,7 +120,7 @@ def scenario(self, cluster, node="clickhouse1"):
                 if cluster.with_s3amazon or cluster.with_s3gcs:
                     with And("I check external is being used"):
                         output = node.query(
-                            f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' "
+                            f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
                         ).output
                         assert "external\t1" in output, error()
                 else:
@@ -146,7 +146,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 if cluster.with_s3amazon or cluster.with_s3gcs:
                     output = node.query(
-                        f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' "
+                        f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
                     ).output
                     assert "external\t1" in output, error()
                 else:

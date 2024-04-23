@@ -83,7 +83,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 assert set(used_disks) == {"jbod1", "jbod2"}, error()
 
                         with Then("number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
                             assert r == "6", error()
 
                         with And("I wait until second TTL expression would trigger"):
@@ -99,7 +99,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                             with Then("again number of rows should match"):
                                 r = node.query(
-                                    f"SELECT count() FROM {name}"
+                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
                                 ).output.strip()
                                 assert r == "6", error()
 
@@ -115,7 +115,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                             with Then(f"number of rows should match"):
                                 r = node.query(
-                                    f"SELECT count() FROM {name}"
+                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
                                 ).output.strip()
                                 assert r == "6", error()
 

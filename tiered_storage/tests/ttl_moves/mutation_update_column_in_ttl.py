@@ -74,7 +74,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with Then("TTL expressions should be re-evaluated"):
                 with By("checking that all data has been deleted"):
-                    r = node.query(f"SELECT * FROM {name}").output.strip()
+                    r = node.query(f"SELECT * FROM {name} FORMAT TabSeparated").output.strip()
                     assert r == "", error()
 
         finally:

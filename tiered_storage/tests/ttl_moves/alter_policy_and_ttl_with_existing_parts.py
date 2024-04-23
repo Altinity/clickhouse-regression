@@ -74,7 +74,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 assert used_disks == {"jbod1", "jbod2"}, error()
 
                         with Then("number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
                             assert r == "60", error()
 
                         with When(

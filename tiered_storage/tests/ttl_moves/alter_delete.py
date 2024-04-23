@@ -75,7 +75,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 with And("I read data from the table"):
                     r = (
-                        node.query(f"SELECT s1, b1, d1 FROM {name} ORDER BY b1")
+                        node.query(f"SELECT s1, b1, d1 FROM {name} ORDER BY b1 FORMAT TabSeparated")
                         .output.strip()
                         .splitlines()
                     )
@@ -100,7 +100,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 with And("I again read data from the table"):
                     r = (
-                        node.query(f"SELECT s1, b1, d1 FROM {name} ORDER BY b1")
+                        node.query(f"SELECT s1, b1, d1 FROM {name} ORDER BY b1 FORMAT TabSeparated")
                         .output.strip()
                         .splitlines()
                     )
