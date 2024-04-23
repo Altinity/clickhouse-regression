@@ -1627,7 +1627,7 @@ jobs:
     env:
       SUITE: vfs
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_aws' || inputs.suite == 'vfs_all' }}
+    if: ${{ inputs.suite == 'vfs_aws' || inputs.suite == 'vfs_all' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -1665,7 +1665,7 @@ jobs:
     env:
       SUITE: vfs
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_gcs' || inputs.suite == 'vfs_all' }}
+    if: ${{ inputs.suite == 'vfs_gcs' || inputs.suite == 'vfs_all' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -1702,7 +1702,7 @@ jobs:
     env:
       SUITE: vfs
       STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_all' || inputs.suite == 'vfs_minio' }}
+    if: ${{ inputs.suite == 'vfs_all' || inputs.suite == 'vfs_minio' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
