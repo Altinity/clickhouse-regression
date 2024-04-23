@@ -27,12 +27,12 @@ def supported_types(self, constant_type="String", nullable=False, node=None):
 
     with Then(f"I check extractKeyValuePairs support {constant_type}"):
         r = node.query(
-            f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('100'{extra_args}){to_nullable_end})"
+            f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('100'{extra_args}){to_nullable_end}) FORMAT TabSeparated"
         )
 
     with And(f"I check extractKeyValuePairs support {constant_type}"):
         r = node.query(
-            f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('123'{extra_args}){to_nullable_end})"
+            f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('123'{extra_args}){to_nullable_end}) FORMAT TabSeparated"
         )
 
 

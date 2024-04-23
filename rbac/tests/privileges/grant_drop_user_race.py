@@ -70,12 +70,12 @@ def feature(self, stress=None, node="clickhouse1"):
                 with Finally(f"I check if {user0_name} succesfully gained privileges."):
                     if self.context.privilege:
                         node.query(
-                            f"SELECT * FROM {table_name}",
+                            f"SELECT * FROM {table_name} FORMAT TabSeparated",
                             settings=[("user", user0_name)],
                         )
                     else:
                         node.query(
-                            f"SELECT * FROM {table_name}",
+                            f"SELECT * FROM {table_name} FORMAT TabSeparated",
                             message="DB::Exception: user0_grant_drop_user_race",
                             exitcode=241,
                             settings=[("user", user0_name)],

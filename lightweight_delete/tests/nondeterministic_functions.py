@@ -32,7 +32,7 @@ def nondeterministic_function(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "15", error()
 
 

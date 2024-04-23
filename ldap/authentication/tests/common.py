@@ -436,7 +436,7 @@ def login(servers, *users, config=None):
                 if user.get("login", False):
                     with When(f"I login as {user['username']} and execute query"):
                         current().context.node.query(
-                            "SELECT 1",
+                            "SELECT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", user["username"]),
                                 ("password", user["password"]),

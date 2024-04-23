@@ -35,7 +35,7 @@ def backup_concurrent_delete(
     with When("I wait rows are deleted"):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
 
     with When("I create backup"):
@@ -48,9 +48,9 @@ def backup_concurrent_delete(
     with Then("I check that rows are deleted"):
         for attempt in retries(timeout=60, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
-                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20")
+                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated")
                 assert int(r.output) == 0, error()
 
 
@@ -89,7 +89,7 @@ def backup_after_delete(
     with When("I wait rows are deleted"):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
 
     with When("I create backup"):
@@ -105,9 +105,9 @@ def backup_after_delete(
     with Then("I check that rows are deleted"):
         for attempt in retries(timeout=60, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
-                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20")
+                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated")
                 assert int(r.output) == 0, error()
 
 
@@ -158,9 +158,9 @@ def backup_concurrent_delete_partitions(
     with Then("I check that rows are deleted"):
         for attempt in retries(timeout=60, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
-                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20")
+                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated")
                 assert int(r.output) == 0, error()
 
 

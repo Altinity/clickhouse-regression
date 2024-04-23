@@ -201,14 +201,14 @@ def drop_all_pol_with_conditions(self, node=None):
             node.query(f"INSERT INTO {table_name} (y) VALUES (1),(2)")
 
         with And("I can't see any of the rows on the table"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
             assert "" == output, error()
 
         with When("I drop the row policy"):
             node.query(f"DROP ROW POLICY {pol_name} ON {table_name}")
 
         with Then("I select all the rows from the table"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
             assert "1" in output and "2" in output, error()
 
 
@@ -238,14 +238,14 @@ def drop_on(self, node=None):
             node.query(f"INSERT INTO {table_name} (y) VALUES (1),(2)")
 
         with And("I can't see one of the rows on the table"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
             assert "1" in output and "2" not in output, error()
 
         with When("I drop the row policy"):
             node.query(f"DROP ROW POLICY {pol_name} ON {table_name}")
 
         with Then("I select all the rows from the table"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
             assert "1" in output and "2" in output, error()
 
 
@@ -286,11 +286,11 @@ def drop_on_cluster(self, node=None):
             )
 
         with Then("I select from the table"):
-            output = node.query(f"SELECT * FROM {table_name}").output
+            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
             assert "1" in output, error()
 
         with And("I select from another node on the cluster"):
-            output = node2.query(f"SELECT * FROM {table_name}").output
+            output = node2.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
             assert "1" in output, error()
 
     finally:

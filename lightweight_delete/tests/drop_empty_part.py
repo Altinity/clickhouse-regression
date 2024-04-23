@@ -22,7 +22,7 @@ def drop_empty_part(self, node=None):
     with When("I check partition 0 exists in the system.parts table"):
         r = node.query(
             f"SELECT partition FROM system.parts WHERE table = '{table_name}' and active = 1 \
-        ORDER BY partition LIMIT 1"
+        ORDER BY partition LIMIT 1 FORMAT TabSeparated"
         )
         assert r.output == "0", error()
 
@@ -35,7 +35,7 @@ def drop_empty_part(self, node=None):
             with attempt:
                 r = node.query(
                     f"SELECT partition FROM system.parts WHERE table = '{table_name}' and active = 1 \
-                ORDER BY partition LIMIT 1"
+                ORDER BY partition LIMIT 1 FORMAT TabSeparated"
                 )
                 assert r.output == "1", error()
 

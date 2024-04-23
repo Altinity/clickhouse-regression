@@ -56,12 +56,12 @@ def load_inserts(self, node=None):
     with Then("I check data is correctly inserted and deleted"):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) from {table_name}")
+                r = node.query(f"SELECT count(*) from {table_name} FORMAT TabSeparated")
                 assert r.output == "8000", error()
 
     with Then("I check number of mutations clickhouse created"):
         r = node.query(
-            f"SELECT count(*) from system.mutations where (table = '{table_name}')"
+            f"SELECT count(*) from system.mutations where (table = '{table_name}') FORMAT TabSeparated"
         )
         assert int(r.output) < 105, error()
 
@@ -105,12 +105,12 @@ def load_merges(self, node=None):
     with Then("I check data is correctly inserted and deleted"):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) from {table_name}")
+                r = node.query(f"SELECT count(*) from {table_name} FORMAT TabSeparated")
                 assert r.output == "8000", error()
 
     with Then("I check number of mutations clickhouse created"):
         r = node.query(
-            f"SELECT count(*) from system.mutations where (table = '{table_name}')"
+            f"SELECT count(*) from system.mutations where (table = '{table_name}') FORMAT TabSeparated"
         )
         assert int(r.output) < 105, error()
 
@@ -153,7 +153,7 @@ def load_excessive_mutations(self, node=None):
 
     with Then("I check clickhouse did not create a lot of mutations"):
         r = node.query(
-            f"SELECT sum(parts_to_do) from system.mutations where table = '{table_name}'"
+            f"SELECT sum(parts_to_do) from system.mutations where table = '{table_name}' FORMAT TabSeparated"
         )
         assert int(r.output) < 5, error()
 

@@ -25,7 +25,7 @@ def multiple_delete(self, node=None):
 
     with When("I compute expected output"):
         output = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(x < 10)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(x < 10) FORMAT TabSeparated"
         ).output
 
     with When(f"I perform multiple delete"):
@@ -35,7 +35,7 @@ def multiple_delete(self, node=None):
     with Then("I check that rows are deleted"):
         for attempt in retries(delay=1, timeout=30):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output, error()
 
 

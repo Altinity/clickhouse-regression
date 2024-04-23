@@ -47,9 +47,9 @@ def hard_restart(self, signal="SIGKILL", node=None):
 
     with Then("I compute expected output"):
         output1 = node.query(
-            f"SELECT count(*) FROM {table_name} WHERE NOT(id>0)"
+            f"SELECT count(*) FROM {table_name} WHERE NOT(id>0) FORMAT TabSeparated"
         ).output
-        output2 = node.query(f"SELECT count(*) FROM {table_name}").output
+        output2 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
 
     with When("I delete table and kill clickhouse server process in parallel"):
         By(name="executing delete operation", test=delete, parallel=True)(
@@ -68,7 +68,7 @@ def hard_restart(self, signal="SIGKILL", node=None):
     with Then("I check that either rows are deleted completely or data is unchanged"):
         for attempt in retries(timeout=100, delay=1):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output in (output1, output2), error()
 
 

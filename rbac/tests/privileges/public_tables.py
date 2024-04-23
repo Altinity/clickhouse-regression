@@ -20,23 +20,23 @@ def public_tables(self, node=None):
     with user(node, f"{user_name}"):
         with When("I check the user is able to select on system.one"):
             node.query(
-                "SELECT count(*) FROM system.one", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.one FORMAT TabSeparated", settings=[("user", user_name)]
             )
 
         with And("I check the user is able to select on system.numbers"):
             node.query(
-                "SELECT * FROM system.numbers LIMIT 1", settings=[("user", user_name)]
+                "SELECT * FROM system.numbers LIMIT 1 FORMAT TabSeparated", settings=[("user", user_name)]
             )
 
         with And("I check the user is able to select on system.contributors"):
             node.query(
-                "SELECT count(*) FROM system.contributors",
+                "SELECT count(*) FROM system.contributors FORMAT TabSeparated",
                 settings=[("user", user_name)],
             )
 
         with And("I check the user is able to select on system.functions"):
             node.query(
-                "SELECT count(*) FROM system.functions", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.functions FORMAT TabSeparated", settings=[("user", user_name)]
             )
 
 
@@ -52,83 +52,83 @@ def sensitive_tables(self, node=None):
 
     with user(node, f"{user_name}"):
         with Given("I create a query"):
-            node.query("SELECT 1")
+            node.query("SELECT 1 FORMAT TabSeparated")
 
         with When("I select from processes"):
             output = node.query(
-                "SELECT count(*) FROM system.processes", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.processes FORMAT TabSeparated", settings=[("user", user_name)]
             ).output
             assert output == 0, error()
 
         with And("I select from query_log"):
             output = node.query(
-                "SELECT count(*) FROM system.query_log", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.query_log FORMAT TabSeparated", settings=[("user", user_name)]
             ).output
             assert output == 0, error()
 
         with And("I select from query_thread_log"):
             output = node.query(
-                "SELECT count(*) FROM system.query_thread_log",
+                "SELECT count(*) FROM system.query_thread_log FORMAT TabSeparated",
                 settings=[("user", user_name)],
             ).output
             assert output == 0, error()
 
         with And("I select from query_views_log"):
             output = node.query(
-                "SELECT count(*) FROM system.query_views_log",
+                "SELECT count(*) FROM system.query_views_log FORMAT TabSeparated",
                 settings=[("user", user_name)],
             ).output
             assert output == 0, error()
 
         with And("I select from clusters"):
             output = node.query(
-                "SELECT count(*) FROM system.clusters", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.clusters FORMAT TabSeparated", settings=[("user", user_name)]
             ).output
             assert output == 0, error()
 
         with And("I select from events"):
             output = node.query(
-                "SELECT count(*) FROM system.events", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.events FORMAT TabSeparated", settings=[("user", user_name)]
             ).output
             assert output == 0, error()
 
         with And("I select from graphite_retentions"):
             output = node.query(
-                "SELECT count(*) FROM system.graphite_retentions",
+                "SELECT count(*) FROM system.graphite_retentions FORMAT TabSeparated",
                 settings=[("user", user_name)],
             ).output
             assert output == 0, error()
 
         with And("I select from stack_trace"):
             output = node.query(
-                "SELECT count(*) FROM system.stack_trace",
+                "SELECT count(*) FROM system.stack_trace FORMAT TabSeparated",
                 settings=[("user", user_name)],
             ).output
             assert output == 0, error()
 
         with And("I select from trace_log"):
             output = node.query(
-                "SELECT count(*) FROM system.trace_log", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.trace_log FORMAT TabSeparated", settings=[("user", user_name)]
             ).output
             assert output == 0, error()
 
         with And("I select from user_directories"):
             output = node.query(
-                "SELECT count(*) FROM system.user_directories",
+                "SELECT count(*) FROM system.user_directories FORMAT TabSeparated",
                 settings=[("user", user_name)],
             ).output
             assert output == 0, error()
 
         with And("I select from zookeeper"):
             output = node.query(
-                "SELECT count(*) FROM system.zookeeper WHERE path = '/clickhouse' ",
+                "SELECT count(*) FROM system.zookeeper WHERE path = '/clickhouse' FORMAT TabSeparated",
                 settings=[("user", user_name)],
             ).output
             assert output == 0, error()
 
         with And("I select from macros"):
             output = node.query(
-                "SELECT count(*) FROM system.macros", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.macros FORMAT TabSeparated", settings=[("user", user_name)]
             ).output
             assert output == 0, error()
 

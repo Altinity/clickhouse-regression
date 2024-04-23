@@ -34,7 +34,7 @@ def delete_and_check_size_of_the_table(self, node=None):
     with And("I check size of the table in system.parts table"):
         size_in_system_parts_before_deletion_cmd = node.query(
             f"SELECT sum(bytes_on_disk) from system.parts "
-            f"where table = '{table_name}' AND active=1"
+            f"where table = '{table_name}' AND active=1 FORMAT TabSeparated"
         ).output
         if "No such file or directory" in size_in_system_parts_before_deletion_cmd:
             size_in_system_parts_before_deletion = 0
@@ -70,7 +70,7 @@ def delete_and_check_size_of_the_table(self, node=None):
 
                 size_in_system_parts_after_deletion_cmd = node.query(
                     f"SELECT sum(bytes_on_disk) from system.parts "
-                    f"where table = '{table_name}' AND active=1"
+                    f"where table = '{table_name}' AND active=1 FORMAT TabSeparated"
                 ).output
                 if (
                     "No such file or directory"
@@ -89,7 +89,7 @@ def delete_and_check_size_of_the_table(self, node=None):
                     1.9 * size_in_system_parts_after_deletion
                     < size_in_system_parts_before_deletion
                 ), error()
-                r = node.query(f"SELECT count(*) FROM {table_name}")
+                r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == "1000000", error()
 
 

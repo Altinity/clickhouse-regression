@@ -32,7 +32,7 @@ def disk_space(self, node=None):
     with When("I measure table size on disk"):
         size_on_disk_before_deletions = int(
             node.query(
-                f"select sum(bytes_on_disk) from system.parts where table = '{table_name}'"
+                f"select sum(bytes_on_disk) from system.parts where table = '{table_name}' FORMAT TabSeparated"
             ).output
         )
 
@@ -48,7 +48,7 @@ def disk_space(self, node=None):
     with Then("I check table size on disk does not increased a lot"):
         size_on_disk_after_deletions = int(
             node.query(
-                f"select sum(bytes_on_disk) from system.parts where table = '{table_name}' and active"
+                f"select sum(bytes_on_disk) from system.parts where table = '{table_name}' and active FORMAT TabSeparated"
             ).output
         )
         assert size_on_disk_after_deletions < 2 * size_on_disk_before_deletions, error()

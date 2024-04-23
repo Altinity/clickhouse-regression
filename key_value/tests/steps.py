@@ -95,13 +95,16 @@ def check_constant_input(
         with Then("I check parseKeyValue function returns correct value"):
             if exitcode != 0:
                 node.query(
-                    f"with {input} as q SELECT {function}(q{params})",
+                    f"with {input} as q SELECT {function}(q{params}) FORMAT TabSeparated",
                     use_file=True,
                     exitcode=exitcode,
                     ignore_exception=True,
                 )
             else:
-                r = node.query(f"SELECT {function}({input}{params})", use_file=True)
+                r = node.query(
+                    f"SELECT {function}({input}{params}) FORMAT TabSeparated",
+                    use_file=True,
+                )
                 assert r.output == output, error()
     else:
         with Then("I check parseKeyValue function returns correct value"):
@@ -113,5 +116,8 @@ def check_constant_input(
                     ignore_exception=True,
                 )
             else:
-                r = node.query(f"SELECT {function}({input}{params})", use_file=True)
+                r = node.query(
+                    f"SELECT {function}({input}{params}) FORMAT TabSeparated",
+                    use_file=True,
+                )
                 assert r.output == output, error()

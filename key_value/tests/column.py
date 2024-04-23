@@ -25,7 +25,9 @@ def column_input(self, input, output, params, node=None, function=None):
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-        r = node.query(f"""select toString({function}(x{params})) from {table_name}""")
+        r = node.query(
+            f"""select toString({function}(x{params})) from {table_name} FORMAT TabSeparated"""
+        )
         assert r.output == expected_output, error()
 
 
@@ -53,7 +55,7 @@ def column_input_alias(self, input, output, params, node=None, function=None):
 
     with Then("I check extractKeyValuePairs function returns correct value"):
         r = node.query(
-            f"""with x as q select toString({function}(q{params})) from {table_name}"""
+            f"""with x as q select toString({function}(q{params})) from {table_name} FORMAT TabSeparated"""
         )
         assert r.output == expected_output, error()
 

@@ -26,7 +26,7 @@ def load_zookeeper(self):
     with When("I check data is inserted on second node"):
         for attempt in retries(delay=1, timeout=30):
             with attempt:
-                r = node.query(f"select count(*) from {table_name}")
+                r = node.query(f"select count(*) from {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 100000, error()
 
     name = "clickhouse1"
@@ -46,7 +46,7 @@ def load_zookeeper(self):
     with Then("I delete on second node takes a little time"):
         for attempt in retries(delay=1, timeout=300):
             with attempt:
-                r = node.query(f"select count(*) from {table_name}")
+                r = node.query(f"select count(*) from {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 100000 - 100, error()
 
 

@@ -41,7 +41,7 @@ def remote(self, node=None):
             f"I try to select from the table using remote table function as {user_name}"
         ):
             node.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -55,7 +55,7 @@ def remote(self, node=None):
             f"I try to select from the table using remote table function as {user_name}"
         ):
             node.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -76,7 +76,7 @@ def remote(self, node=None):
             "I try to select from the table as the same user, but from clickhouse2"
         ):
             node2.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -92,7 +92,7 @@ def remote(self, node=None):
             "I try to select from the table as the same user, but from clickhouse2"
         ):
             node2.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -105,7 +105,7 @@ def remote(self, node=None):
             f"I successfully select from the remote table as {user_name} from clickhouse2"
         ):
             output = node2.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 settings=[("user", f"{user_name}")],
             ).output
             assert output == default, error()
@@ -114,7 +114,7 @@ def remote(self, node=None):
             "I try to select from the table as the same user, but from clickhouse3"
         ):
             node3.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -130,7 +130,7 @@ def remote(self, node=None):
             "I try to select from the table as the same user, but from clickhouse3"
         ):
             node3.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -143,7 +143,7 @@ def remote(self, node=None):
             f"I successfully select from the remote table as {user_name} from clickhouse3"
         ):
             output = node3.query(
-                f"SELECT * FROM remote(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM remote(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 settings=[("user", f"{user_name}")],
             ).output
             assert output == default, error()
@@ -190,7 +190,7 @@ def cluster(self, node=None):
             f"I try to select from the table using cluster table function as {user_name}"
         ):
             node.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -204,7 +204,7 @@ def cluster(self, node=None):
             f"I try to select from the table using cluster table function as {user_name}"
         ):
             node.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -215,7 +215,7 @@ def cluster(self, node=None):
 
         with And(f"I successfully select from the cluster table as {user_name}"):
             output = node.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 settings=[("user", f"{user_name}")],
             ).output
             default = node.query(f"SELECT * FROM {table_name}").output
@@ -225,7 +225,7 @@ def cluster(self, node=None):
             "I try to select from the table as the same user, but from clickhouse2"
         ):
             node2.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -241,7 +241,7 @@ def cluster(self, node=None):
             "I try to select from the table as the same user, but from clickhouse2"
         ):
             node2.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -254,7 +254,7 @@ def cluster(self, node=None):
             f"I successfully select from the cluster table as {user_name} from clickhouse2"
         ):
             output = node2.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 settings=[("user", f"{user_name}")],
             ).output
             assert output == default, error()
@@ -263,7 +263,7 @@ def cluster(self, node=None):
             "I try to select from the table as the same user, but from clickhouse3"
         ):
             node3.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -279,7 +279,7 @@ def cluster(self, node=None):
             "I try to select from the table as the same user, but from clickhouse3"
         ):
             node3.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 exitcode=exitcode,
                 message=message,
                 settings=[("user", f"{user_name}")],
@@ -292,7 +292,7 @@ def cluster(self, node=None):
             f"I successfully select from the cluster table as {user_name} from clickhouse3"
         ):
             output = node3.query(
-                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name})",
+                f"SELECT * FROM cluster(sharded_cluster12, default.{table_name}) FORMAT TabSeparated",
                 settings=[("user", f"{user_name}")],
             ).output
             assert output == default, error()

@@ -80,12 +80,12 @@ def one_part_move(
 
         with Then("I check part moved and replicated"):
             retry(node.query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="0"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="0"
             )
 
             for name in ["clickhouse3", "clickhouse4"]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="2"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="2"
                 )
     finally:
         with Finally("I drop table if exists"):
@@ -536,15 +536,15 @@ def two_parts_move_concurrent(self):
 
         with Then("I check part moved"):
             retry(node.query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="0"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="0"
             )
             retry(cluster.node("clickhouse2").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="1"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
             )
 
             for name in ["clickhouse3", "clickhouse4"]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="2"
+                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="2"
                 )
 
     finally:
@@ -613,7 +613,7 @@ def part_move_parallel_with_insert(
     with When("I move parts and parallel make insert"):
         part_uuid = (
             self.context.cluster.node("clickhouse1")
-            .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0'")
+            .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
             .output.strip()
         )
         for i in range(iterations):
@@ -625,7 +625,7 @@ def part_move_parallel_with_insert(
                             part = (
                                 self.context.cluster.node("clickhouse1")
                                 .query(
-                                    f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                                    f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated"
                                 )
                                 .output.strip()
                             )
@@ -683,10 +683,10 @@ def part_move_parallel_with_insert_to_source(self):
 
         with Then("I check part moved correct"):
             retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="3"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="3"
             )
             retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="1"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
             )
     finally:
         with Finally("I drop table if exists"):
@@ -719,10 +719,10 @@ def part_move_parallel_with_insert_to_destination(self):
 
         with Then("I check part moved correct"):
             retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="1"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
             )
             retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="3"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="3"
             )
     finally:
         with Finally("I drop table if exists"):
@@ -787,7 +787,7 @@ def part_move_parallel_with_big_insert(self, iterations=1, number=100):
             for i in range(iterations):
                 part_uuid = (
                     self.context.cluster.node("clickhouse1")
-                    .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0'")
+                    .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
                     .output.strip()
                 )
                 part = ""
@@ -796,7 +796,7 @@ def part_move_parallel_with_big_insert(self, iterations=1, number=100):
                         part = (
                             self.context.cluster.node("clickhouse1")
                             .query(
-                                f"SELECT name FROM system.parts where uuid = '{part_uuid}'"
+                                f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated"
                             )
                             .output.strip()
                         )
@@ -833,10 +833,10 @@ def part_move_parallel_with_big_insert(self, iterations=1, number=100):
 
         with Then("I check part moved correct"):
             retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="101"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="101"
             )
             retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
-                f"SELECT count() FROM {table_name}", message="0"
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="0"
             )
     finally:
         with Finally("I drop table if exists"):
