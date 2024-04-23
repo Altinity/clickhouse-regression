@@ -122,7 +122,7 @@ def shutdown(self, privilege, grant_target_name, user_name, node=None):
                 node.close_bashes()
 
             with And("I check that system is down"):
-                command = f'echo -e "SELECT 1" | {cluster.docker_compose} exec -T {node.name} clickhouse client -n'
+                command = f'echo -e "SELECT 1 FORMAT TabSeparated" | {cluster.docker_compose} exec -T {node.name} clickhouse client -n'
 
                 start_time = time.time()
 
@@ -197,7 +197,7 @@ def kill(self, privilege, grant_target_name, user_name, node=None):
                 node.close_bashes()
 
             with And("I check that system is down"):
-                command = f'echo -e "SELECT 1" | {cluster.docker_compose} exec -T {node.name} clickhouse client -n'
+                command = f'echo -e "SELECT 1 FORMAT TabSeparated" | {cluster.docker_compose} exec -T {node.name} clickhouse client -n'
 
                 start_time = time.time()
 
