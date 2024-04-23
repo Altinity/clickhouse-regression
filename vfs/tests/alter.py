@@ -229,7 +229,7 @@ def fetch(self, fetch_item):
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
-        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
+        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2 FORMAT TabSeparated;")
         row_count = int(r.output)
 
     with When("I fetch a partition from the first table"):
@@ -270,7 +270,7 @@ def attach_from(self):
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
-        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
+        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2 FORMAT TabSeparated;")
         row_count = int(r.output)
 
     with When("I attach the partition to the second table"):
@@ -325,7 +325,7 @@ def move_to_table(self):
         )
 
     with And("I count the rows in a partition on the first table"):
-        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
+        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2 FORMAT TabSeparated;")
         row_count = int(r.output)
 
     with When("I attach the partition to the second table"):
@@ -375,7 +375,7 @@ def replace(self):
         )
 
     with And("I count the rows in a partition on the first table"):
-        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2;")
+        r = node.query(f"SELECT count() FROM {source_table_name} where key % 4 = 2 FORMAT TabSeparated;")
         row_count_source = int(r.output)
 
     with When("I replace a partition on the second table"):
@@ -392,7 +392,7 @@ def replace(self):
     with And("I check the size of the replaced part"):
         for node in nodes:
             r = node.query(
-                f"SELECT count() FROM {destination_table_name} where key % 4 = 2;"
+                f"SELECT count() FROM {destination_table_name} where key % 4 = 2 FORMAT TabSeparated;"
             )
             assert row_count_source == int(r.output)
 
@@ -418,7 +418,7 @@ def drop(self, drop_item, detach_first):
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
-        r = nodes[1].query(f"SELECT count() FROM {table_name} where key % 4 = 2;")
+        r = nodes[1].query(f"SELECT count() FROM {table_name} where key % 4 = 2 FORMAT TabSeparated;")
         part_row_count = int(r.output)
 
     if detach_first:
@@ -464,7 +464,7 @@ def check_move(self, move_item, policy, disk_order, to_type):
         if what == "PART":
             what = "part_name"
         part_name = part_name.strip("'")
-        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{part_name}'"
+        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{part_name}' FORMAT TabSeparated"
         r = nodes[0].query(query, exitcode=0)
         assert r.output == source_disk, error()
 
@@ -485,7 +485,7 @@ def check_move(self, move_item, policy, disk_order, to_type):
             )
 
     with And("I check system.parts again"):
-        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{part_name}'"
+        query = f"SELECT disk_name FROM system.parts WHERE {what.lower()}='{part_name}' FORMAT TabSeparated"
         r = nodes[0].query(query, exitcode=0)
         assert r.output == destination_disk, error()
 
@@ -564,7 +564,7 @@ def detach(self, detach_item):
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
         r = nodes[1].query(
-            f"SELECT count() FROM {source_table_name} where key % 4 = 2;"
+            f"SELECT count() FROM {source_table_name} where key % 4 = 2 FORMAT TabSeparated;"
         )
         part_row_count = int(r.output)
 
