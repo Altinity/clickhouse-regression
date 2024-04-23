@@ -575,7 +575,7 @@ def add_random_projection(self, safe=True):
 
         if safe:
             retry(
-                check_tables_have_same_projections, timeout=120, delay=step_retry_delay
+                check_tables_have_same_projections, timeout=step_retry_timeout, delay=step_retry_delay
             )(tables=self.context.table_names)
 
 
@@ -619,7 +619,7 @@ def drop_random_projection(self):
 
         projection_name = random.choice(projections)
 
-        for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
             with attempt:
                 with When(f"I drop {projection_name} on all tables"):
                     exit_codes = {}
@@ -641,7 +641,7 @@ def drop_random_projection(self):
                             table_name + ": " + exit_messages[table_name]
                         )
 
-        retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
+        retry(check_tables_have_same_projections, timeout=step_retry_timeout, delay=step_retry_delay)(
             tables=self.context.table_names
         )
 
