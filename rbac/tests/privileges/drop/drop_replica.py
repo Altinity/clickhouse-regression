@@ -81,7 +81,7 @@ def drop_replica(self, privilege, on, grant_target_name, user_name, node=None):
     with table(node, table_name, "ReplicatedMergeTree-sharded_cluster"):
         with When("I get the name of the replica associated with the table"):
             replica_name = node.query(
-                f"SELECT replica_name FROM system.replicas WHERE table = '{table_name}'"
+                f"SELECT replica_name FROM system.replicas WHERE table = '{table_name}' FORMAT TabSeparated"
             ).output
 
         with Scenario("SYSTEM DROP REPLICA without privilege"):
