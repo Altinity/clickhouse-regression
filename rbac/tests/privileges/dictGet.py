@@ -116,7 +116,7 @@ def dictGet_check(self, privilege, on, grant_target_name, user_name, node=None):
 
             with Then("I attempt to dictGet without privilege"):
                 node.query(
-                    f"SELECT dictGet ({dict_name},'y',toUInt64(1))",
+                    f"SELECT dictGet ({dict_name},'y',toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -129,7 +129,7 @@ def dictGet_check(self, privilege, on, grant_target_name, user_name, node=None):
 
             with Then("I attempt to dictGet with privilege"):
                 node.query(
-                    f"SELECT dictGet ({dict_name},'y',toUInt64(1))",
+                    f"SELECT dictGet ({dict_name},'y',toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                 )
 
@@ -143,7 +143,7 @@ def dictGet_check(self, privilege, on, grant_target_name, user_name, node=None):
 
             with When("I attempt to dictGet without privilege"):
                 node.query(
-                    f"SELECT dictGet ({dict_name},'y',toUInt64(1))",
+                    f"SELECT dictGet ({dict_name},'y',toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -236,7 +236,7 @@ def dictGetOrDefault_check(
 
             with Then("I attempt to dictGetOrDefault without privilege"):
                 node.query(
-                    f"SELECT dictGetOrDefault ({dict_name},'y',toUInt64(1),toUInt64(1))",
+                    f"SELECT dictGetOrDefault ({dict_name},'y',toUInt64(1),toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -249,7 +249,7 @@ def dictGetOrDefault_check(
 
             with Then("I attempt to dictGetOrDefault with privilege"):
                 node.query(
-                    f"SELECT dictGetOrDefault ({dict_name},'y',toUInt64(1),toUInt64(1))",
+                    f"SELECT dictGetOrDefault ({dict_name},'y',toUInt64(1),toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                 )
 
@@ -263,7 +263,7 @@ def dictGetOrDefault_check(
 
             with When("I attempt to dictGetOrDefault without privilege"):
                 node.query(
-                    f"SELECT dictGetOrDefault ({dict_name},'y',toUInt64(1),toUInt64(1))",
+                    f"SELECT dictGetOrDefault ({dict_name},'y',toUInt64(1),toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -354,7 +354,7 @@ def dictHas_check(self, privilege, on, grant_target_name, user_name, node=None):
 
             with Then("I attempt to dictHas without privilege"):
                 node.query(
-                    f"SELECT dictHas({dict_name},toUInt64(1))",
+                    f"SELECT dictHas({dict_name},toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -367,7 +367,7 @@ def dictHas_check(self, privilege, on, grant_target_name, user_name, node=None):
 
             with Then("I attempt to dictHas with privilege"):
                 node.query(
-                    f"SELECT dictHas({dict_name},toUInt64(1))",
+                    f"SELECT dictHas({dict_name},toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                 )
 
@@ -381,7 +381,7 @@ def dictHas_check(self, privilege, on, grant_target_name, user_name, node=None):
 
             with When("I attempt to dictHas without privilege"):
                 node.query(
-                    f"SELECT dictHas({dict_name},toUInt64(1))",
+                    f"SELECT dictHas({dict_name},toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -474,7 +474,7 @@ def dictGetHierarchy_check(
 
             with Then("I attempt to dictGetHierarchy without privilege"):
                 node.query(
-                    f"SELECT dictGetHierarchy({dict_name},toUInt64(1))",
+                    f"SELECT dictGetHierarchy({dict_name},toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -487,7 +487,7 @@ def dictGetHierarchy_check(
 
             with Then("I attempt to dictGetHierarchy with privilege"):
                 node.query(
-                    f"SELECT dictGetHierarchy({dict_name},toUInt64(1))",
+                    f"SELECT dictGetHierarchy({dict_name},toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                 )
 
@@ -501,7 +501,7 @@ def dictGetHierarchy_check(
 
             with When("I attempt to dictGetHierarchy without privilege"):
                 node.query(
-                    f"SELECT dictGetHierarchy({dict_name},toUInt64(1))",
+                    f"SELECT dictGetHierarchy({dict_name},toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -592,7 +592,7 @@ def dictIsIn_check(self, privilege, on, grant_target_name, user_name, node=None)
 
             with Then("I attempt to dictIsIn without privilege"):
                 node.query(
-                    f"SELECT dictIsIn({dict_name},toUInt64(1),toUInt64(1))",
+                    f"SELECT dictIsIn({dict_name},toUInt64(1),toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -605,7 +605,7 @@ def dictIsIn_check(self, privilege, on, grant_target_name, user_name, node=None)
 
             with Then("I attempt to dictIsIn with privilege"):
                 node.query(
-                    f"SELECT dictIsIn({dict_name},toUInt64(1),toUInt64(1))",
+                    f"SELECT dictIsIn({dict_name},toUInt64(1),toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                 )
 
@@ -619,7 +619,7 @@ def dictIsIn_check(self, privilege, on, grant_target_name, user_name, node=None)
 
             with When("I attempt to dictIsIn without privilege"):
                 node.query(
-                    f"SELECT dictIsIn({dict_name},toUInt64(1),toUInt64(1))",
+                    f"SELECT dictIsIn({dict_name},toUInt64(1),toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -750,7 +750,7 @@ def dictGetType_check(
 
             with Then("I attempt to dictGet without privilege"):
                 node.query(
-                    f"SELECT dictGet{type}({dict_name},'z',toUInt64(1))",
+                    f"SELECT dictGet{type}({dict_name},'z',toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -763,7 +763,7 @@ def dictGetType_check(
 
             with Then("I attempt to dictGet with privilege"):
                 node.query(
-                    f"SELECT dictGet{type}({dict_name},'z',toUInt64(1))",
+                    f"SELECT dictGet{type}({dict_name},'z',toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                 )
 
@@ -777,7 +777,7 @@ def dictGetType_check(
 
             with When("I attempt to dictGet without privilege"):
                 node.query(
-                    f"SELECT dictGet{type}({dict_name},'z',toUInt64(1))",
+                    f"SELECT dictGet{type}({dict_name},'z',toUInt64(1)) FORMAT TabSeparated",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
