@@ -210,7 +210,7 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
             )
 
         with Pool(3) as executor:
-            sql = "SELECT {column_name}, toTypeName({column_name}) FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+            sql = "SELECT {column_name}, toTypeName({column_name}) FROM {table_name} ORDER BY tuple(*)"
             for column in table.columns:
                 if reference_table_name:
                     r = current().context.node.query(
