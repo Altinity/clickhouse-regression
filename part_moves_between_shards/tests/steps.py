@@ -274,7 +274,7 @@ def move_part_and_return(
         with retr:
             part = (
                 cluster.node(node_name2)
-                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}'")
+                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated")
                 .output.strip()
             )
 
@@ -330,7 +330,7 @@ def move_part_and_return_stopped_replica(
         with retr:
             part = (
                 self.context.cluster.node(node_name2)
-                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}'")
+                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated")
                 .output.strip()
             )
 
@@ -355,7 +355,7 @@ def select_count_from_table(
     # f" optimize_trivial_count_query = false",
     # message=message, exitcode=exitcode)
     retry(self.context.cluster.node(node_name).query, timeout=100, delay=1)(
-        f"select count() from {table_name} SETTINGS allow_experimental_query_deduplication = 1",
+        f"select count() from {table_name} SETTINGS allow_experimental_query_deduplication = 1 FORMAT TabSeparated",
         message=message,
         exitcode=exitcode,
     )
@@ -391,6 +391,6 @@ def move_part_with_check(
             f"replicated/0{shard_b_number}/{table_name}'"
         )
         retry(self.context.cluster.node(shard_a_name).query, timeout=100, delay=1)(
-            f"select count() from system.parts where name == {part_name}",
+            f"select count() from system.parts where name == {part_name} FORMAT TabSeparated",
             message="0",
         )

@@ -32,7 +32,7 @@ def system_table_check(self):
             retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
                 "select count() from "
                 "system.part_moves_between_shards "
-                f"where table ilike '{table_name}'",
+                f"where table ilike '{table_name}' FORMAT TabSeparated",
                 message="1",
             )
 
@@ -82,7 +82,7 @@ def system_table_source_replica_stopped(self):
         with Then("I check information in 'state' and 'last_exception' columns"):
             retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
                 "SELECT state FROM system.part_moves_between_shards "
-                f"WHERE table = '{table_name}'",
+                f"WHERE table = '{table_name}' FORMAT TabSeparated",
                 message="SYNC_SOURCE",
             )
 
@@ -134,7 +134,7 @@ def system_table_destination_replica_stopped(self):
         with Then("I check information in 'state' and 'last_exception' columns"):
             retry(node.query, timeout=100, delay=1)(
                 "SELECT state FROM system.part_moves_between_shards "
-                f"WHERE table = '{table_name}'",
+                f"WHERE table = '{table_name}' FORMAT TabSeparated",
                 message="SYNC_DESTINATION",
             )
 
