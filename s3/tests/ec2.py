@@ -9,7 +9,6 @@ from s3.requirements import *
 @TestScenario
 @Requirements(
     RQ_SRS_015_S3_AWS_EC2_Disk("1.0"),
-    RQ_SRS_015_S3_AWS_EC2_EnvironmentCredentials("1.0"),
 )
 def disk(self, ch_client, uri):
     """Check that S3 storage works correctly on an Amazon EC2 instance when using

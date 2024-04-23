@@ -57,7 +57,10 @@ def automatic_reconnection(self, policy_name, disk_name="external", node=None):
         )
 
     with Then("I check the table"):
-        assert node.query(f"SELECT * FROM {table_name}").output == "1\t2", error()
+        assert (
+            node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            == "1\t2"
+        ), error()
 
 
 @TestOutline
@@ -86,7 +89,8 @@ def automatic_reconnection_parallel(self, policy_name, disk_name="external", nod
 
     with Then("I check the table"):
         assert (
-            node.query(f"SELECT count(*) FROM {table_name}").output == "30000"
+            node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+            == "30000"
         ), error()
 
 

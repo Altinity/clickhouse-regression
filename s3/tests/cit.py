@@ -166,7 +166,7 @@ def test_put_get_with_redirect(self):
         assert values_csv + "\n" == get_s3_file_content(cluster, bucket, "test.csv")
 
     with And("I make sure that the data returned from 'proxy1' matches"):
-        query = "select *, column1*column2*column3 from s3('{}', 'CSV', '{}')".format(
+        query = "select *, column1*column2*column3 from s3('{}', 'CSV', '{}') FORMAT TabSeparated".format(
             minio_redirect_uri, table_format
         )
         stdout = run_query(instance, query)

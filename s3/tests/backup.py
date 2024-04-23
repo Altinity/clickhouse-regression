@@ -81,7 +81,7 @@ def detach_partition(self, policy_name):
         )
 
     with Finally("I check the data is gone from the table"):
-        output = node.query(f"SELECT * FROM {table_name}").output
+        output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
         assert output == "", error()
 
 
@@ -104,7 +104,7 @@ def attach_partition(self, policy_name):
         )
 
     with And("I check the data is gone from the table"):
-        output = node.query(f"SELECT * FROM {table_name}").output
+        output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
         assert output == "", error()
 
     with And("I restart the node"):
@@ -138,7 +138,10 @@ def metadata_full_restore(self, policy_name, disk="external"):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with And("I check the data"):
-        assert node.query(f"SELECT count(*) FROM {table_name}").output == "1", error()
+        assert (
+            node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+            == "1"
+        ), error()
 
     with And("I detach the table"):
         node.query(f"DETACH TABLE {table_name}")
@@ -158,7 +161,12 @@ def metadata_full_restore(self, policy_name, disk="external"):
     with And("I check the data is restored"):
         for attempt in retries(timeout=10, delay=1):
             with attempt:
-                if node.query(f"SELECT count(*) FROM {table_name}").output != "1":
+                if (
+                    node.query(
+                        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    != "1"
+                ):
                     fail("data not restored")
 
 
@@ -228,7 +236,10 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with And("I check the data"):
-        assert node.query(f"SELECT count(*) FROM {table_name}").output == "1", error()
+        assert (
+            node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+            == "1"
+        ), error()
 
     with Then("I create a restore file on clickhouse2"):
         create_restore_file(node=node2, bucket=self.context.bucket, disk=disk)
@@ -246,7 +257,10 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("0", "1")
                 assert (
-                    node2.query(f"SELECT count(*) FROM {table_name}").output in expected
+                    node2.query(
+                        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    in expected
                 ), error()
 
     with And("I create a restore file on clickhouse3"):
@@ -267,7 +281,10 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("0", "1")
                 assert (
-                    node3.query(f"SELECT count(*) FROM {table_name}").output in expected
+                    node3.query(
+                        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    in expected
                 ), error()
 
 
@@ -326,11 +343,14 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
 
     with And("I check the data"):
         assert (
-            node.query(f"SELECT count(*) FROM s3.{table_name}").output == "6"
+            node.query(
+                f"SELECT count(*) FROM s3.{table_name} FORMAT TabSeparated"
+            ).output
+            == "6"
         ), error()
         assert (
             node.query(
-                f"SELECT count(*) FROM system.parts WHERE table = '{table_name}'"
+                f"SELECT count(*) FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
             ).output
             == "6"
         ), error()
@@ -366,10 +386,12 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("1", "2")
                 if (
-                    node2.query(f"SELECT count(*) FROM s3.{table_name}").output
+                    node2.query(
+                        f"SELECT count(*) FROM s3.{table_name} FORMAT TabSeparated"
+                    ).output
                     not in expected
                     or node2.query(
-                        f"SELECT count(*) FROM system.parts WHERE table = '{table_name}'"
+                        f"SELECT count(*) FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
                     ).output
                     not in expected
                 ):
@@ -390,10 +412,12 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("1", "2")
                 if (
-                    node2.query(f"SELECT count(*) FROM s3.{table_name}").output
+                    node2.query(
+                        f"SELECT count(*) FROM s3.{table_name} FORMAT TabSeparated"
+                    ).output
                     not in expected
                     or node2.query(
-                        f"SELECT count(*) FROM system.parts WHERE table = '{table_name}'"
+                        f"SELECT count(*) FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
                     ).output
                     not in expected
                 ):
@@ -414,12 +438,14 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("3", "6")
                 assert (
-                    node2.query(f"SELECT count(*) FROM s3.{table_name}").output
+                    node2.query(
+                        f"SELECT count(*) FROM s3.{table_name} FORMAT TabSeparated"
+                    ).output
                     in expected
                 ), error()
                 assert (
                     node2.query(
-                        f"SELECT count(*) FROM system.parts WHERE table = '{table_name}'"
+                        f"SELECT count(*) FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
                     ).output
                     in expected
                 ), error()
@@ -485,7 +511,10 @@ def metadata_mutations(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = "2"
                 assert (
-                    node2.query(f"SELECT sum(x) FROM {table_name}").output in expected
+                    node2.query(
+                        f"SELECT sum(x) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    in expected
                 ), error()
 
     with And("I restore revision after mutation"):
@@ -506,7 +535,10 @@ def metadata_mutations(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("1", "2")
                 assert (
-                    node2.query(f"SELECT sum(x) FROM {table_name}").output in expected
+                    node2.query(
+                        f"SELECT sum(x) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    in expected
                 ), error()
 
     with And("I restore revision during mutation"):
@@ -530,7 +562,10 @@ def metadata_mutations(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = ("1", "2")
                 assert (
-                    node2.query(f"SELECT sum(x) FROM {table_name}").output in expected
+                    node2.query(
+                        f"SELECT sum(x) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    in expected
                 ), error()
 
 
@@ -597,7 +632,8 @@ def metadata_detached(self, policy_name, disk="external"):
         if policy_name == "local_and_s3_disk":
             expected = "1"
         assert (
-            node2.query(f"SELECT count(*) FROM {table_name}").output == expected
+            node2.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+            == expected
         ), error()
 
     with And("I attach the partition that was detached before the backup"):
@@ -608,7 +644,8 @@ def metadata_detached(self, policy_name, disk="external"):
         if policy_name == "local_and_s3_disk":
             expected = "1"
         assert (
-            node2.query(f"SELECT count(*) FROM {table_name}").output == expected
+            node2.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+            == expected
         ), error()
 
 
@@ -653,7 +690,10 @@ def metadata_non_restorable_schema(self, policy_name, disk="external"):
         for attempt in retries(timeout=10, delay=1):
             with attempt:
                 assert (
-                    node2.query(f"SELECT count(*) FROM {table_name}").output == "0"
+                    node2.query(
+                        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    == "0"
                 ), error()
 
 
@@ -743,7 +783,10 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
                 if policy_name == "local_and_s3_disk":
                     expected = "1"
                 assert (
-                    node2.query(f"SELECT count(*) FROM {table_name}").output == expected
+                    node2.query(
+                        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    == expected
                 ), error()
 
 
@@ -840,7 +883,11 @@ def metadata_change_configs(self, policy_name, disk="external"):
         for attempt in retries(timeout=10, delay=1):
             with attempt:
                 assert (
-                    int(node.query(f"SELECT count(*) FROM {table_name}").output.strip())
+                    int(
+                        node.query(
+                            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                        ).output.strip()
+                    )
                     < 3
                 ), error()
 
@@ -898,7 +945,12 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
     with And("I check the data"):
         for attempt in retries(timeout=10, delay=1):
             with attempt:
-                if node2.query(f"SELECT sum(x) FROM {table_name}").output != "2":
+                if (
+                    node2.query(
+                        f"SELECT sum(x) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    != "2"
+                ):
                     fail("data has not been restored yet")
 
     node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
@@ -915,7 +967,10 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
     with And("I check the data"):
-        assert node.query(f"SELECT count(*) FROM {table_name}").output == "1", error()
+        assert (
+            node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+            == "1"
+        ), error()
 
     with And("I detach the table"):
         node.query(f"DETACH TABLE {table_name}")
@@ -935,7 +990,12 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
     with And("I check that the data on the table is correct"):
         for attempt in retries(timeout=10, delay=1):
             with attempt:
-                if node.query(f"SELECT count(*) FROM {table_name}").output != "1":
+                if (
+                    node.query(
+                        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                    ).output
+                    != "1"
+                ):
                     fail("data has not been restored yet")
 
 
