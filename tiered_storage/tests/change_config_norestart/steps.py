@@ -178,8 +178,8 @@ def reloading_config(self, node, restart=False, config=storage_config):
         with By("dumping current config"):
             node.command(f"cat /etc/clickhouse-server/config.d/{config}", steps=False)
         with By("executing sytem reload config"):
-            node.query("SELECT name FROM system.disks")
-            node.query("SELECT policy_name FROM system.storage_policies")
+            node.query("SELECT name FROM system.disks FORMAT TabSeparated")
+            node.query("SELECT policy_name FROM system.storage_policies FORMAT TabSeparated")
             node.query("SYSTEM RELOAD CONFIG")
     else:
         with By("restarting the server"):
@@ -655,7 +655,7 @@ def inserting_into_table(self, node, name, count):
 @TestStep
 def selecting_from_table(self, node, name, count):
     with By("reading number of rows in the table"):
-        r = node.query(f"SELECT count() FROM {name}").output.strip()
+        r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
     with Then("checking against the expected value", description=f"{count}"):
         assert r == str(count), error()
 

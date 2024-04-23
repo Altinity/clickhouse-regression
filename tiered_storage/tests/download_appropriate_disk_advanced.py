@@ -134,7 +134,7 @@ def scenario(self, cluster, nodes=None):
         with When("I query replicated table on each node"):
             for node in nodes:
                 with When(f"on node {node.name}"):
-                    r = node.query(f"SELECT sum(number) FROM {name}").output.strip()
+                    r = node.query(f"SELECT sum(number) FROM {name} FORMAT TabSeparated").output.strip()
                     with Then("the result should match"):
                         assert r == "281", error()
     finally:

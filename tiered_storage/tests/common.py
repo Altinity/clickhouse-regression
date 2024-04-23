@@ -35,7 +35,7 @@ def get_random_string(cluster, length, steps=True, *args, **kwargs):
 
 def get_used_disks_for_table(node, name, step=When, steps=True):
     def get_used_disks():
-        sql = f"SELECT disk_name FROM system.parts WHERE table == '{name}' AND active=1 ORDER BY modification_time"
+        sql = f"SELECT disk_name FROM system.parts WHERE table == '{name}' AND active=1 ORDER BY modification_time FORMAT TabSeparated"
         return node.query(sql).output.strip().split("\n")
 
     if not steps:
@@ -51,7 +51,7 @@ def get_path_for_part_from_part_log(node, table, part_name, step=When):
     with And(f"get path_on_disk for part {part_name}"):
         path = node.query(
             f"SELECT path_on_disk FROM system.part_log WHERE table = '{table}' "
-            f" AND part_name = '{part_name}' ORDER BY event_time DESC LIMIT 1"
+            f" AND part_name = '{part_name}' ORDER BY event_time DESC LIMIT 1 FORMAT TabSeparated"
         ).output
     return path.strip()
 
@@ -62,7 +62,7 @@ def get_paths_for_partition_from_part_log(node, table, partition_id, step=When):
     with And(f"get path_on_disk for partition id {partition_id}"):
         paths = node.query(
             f"SELECT path_on_disk FROM system.part_log WHERE table = '{table}'"
-            f" AND partition_id = '{partition_id}' ORDER BY event_time DESC"
+            f" AND partition_id = '{partition_id}' ORDER BY event_time DESC FORMAT TabSeparated"
         ).output
     return paths.strip().split("\n")
 
@@ -78,7 +78,7 @@ def produce_alter_move(
             try:
                 parts = (
                     node.query(
-                        f"SELECT name from system.parts where table = '{name}' and active = 1",
+                        f"SELECT name from system.parts where table = '{name}' and active = 1 FORMAT TabSeparated",
                         steps=steps,
                         raise_on_exception=raise_on_exception,
                         *args,

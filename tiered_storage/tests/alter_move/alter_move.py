@@ -59,7 +59,7 @@ def scenario(self, engine):
         with When("I get the first part from system.parts"):
             first_part = node.query(
                 f"SELECT name FROM system.parts WHERE table = '{table_name}'"
-                " AND active = 1 ORDER BY modification_time LIMIT 1"
+                " AND active = 1 ORDER BY modification_time LIMIT 1 FORMAT TabSeparated"
             ).output.strip()
 
             with And("I try to move first part to 'external' volume"):
@@ -70,7 +70,7 @@ def scenario(self, engine):
             with And("I get disk name from system.parts for the first part"):
                 disk = node.query(
                     f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' "
-                    f" AND name = '{first_part}' and active = 1"
+                    f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                 ).output.strip()
 
             with Then("the disk name should be 'external'"):
@@ -95,7 +95,7 @@ def scenario(self, engine):
             with And("I get disk name from system.parts for the first part"):
                 disk = node.query(
                     f"SELECT disk_name FROM system.parts WHERE table = '{table_name}'"
-                    f" AND name = '{first_part}' and active = 1"
+                    f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                 ).output.strip()
 
             with Then("the disk name shoul dbe 'jbod1'"):
@@ -115,7 +115,7 @@ def scenario(self, engine):
                 disks = (
                     node.query(
                         f"SELECT disk_name FROM system.parts WHERE table = '{table_name}'"
-                        " AND partition = '201904' and active = 1"
+                        " AND partition = '201904' and active = 1 FORMAT TabSeparated"
                     )
                     .output.strip()
                     .split("\n")
@@ -149,7 +149,7 @@ def scenario(self, engine):
                 disks = (
                     node.query(
                         f"SELECT disk_name FROM system.parts WHERE table = '{table_name}'"
-                        " AND partition = '201904' and active = 1"
+                        " AND partition = '201904' and active = 1 FORMAT TabSeparated"
                     )
                     .output.strip()
                     .split("\n")
@@ -168,7 +168,7 @@ def scenario(self, engine):
                 ), error()
 
         with When("in the end I get number of rows in the table"):
-            count = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+            count = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
             with Then("the count should be 4"):
                 assert count == "4", error()
 

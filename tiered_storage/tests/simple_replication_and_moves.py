@@ -92,7 +92,7 @@ def scenario(self, cluster, nodes=None):
             for node in nodes:
                 with By(f"checking on {node.name}"):
                     r = node.query(
-                        "SELECT COUNT() FROM replicated_table_for_moves"
+                        "SELECT COUNT() FROM replicated_table_for_moves FORMAT TabSeparated"
                     ).output.strip()
                 with Then("count should be 40"):
                     assert r == "40", error()

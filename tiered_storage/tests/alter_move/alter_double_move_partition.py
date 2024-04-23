@@ -53,13 +53,13 @@ def scenario(self, storage_type):
             with And("I get disks name from system.parts"):
                 disks = node.query(
                     f"SELECT disk_name FROM system.parts WHERE table = '{table_name}'"
-                    " AND partition = '201903' and active = 1"
+                    " AND partition = '201903' and active = 1 FORMAT TabSeparated"
                 ).output.splitlines()
             with Then("both disk names should be 'external'"):
                 assert disks == ["external"] * 2, error()
 
         with When("I select the number of row in the table"):
-            count = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+            count = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
             with Then("the count should be 2"):
                 assert count == "2", error()
 

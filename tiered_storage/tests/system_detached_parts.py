@@ -60,14 +60,14 @@ def scenario(self, cluster, node="clickhouse1"):
                         node.query(f"ALTER TABLE {name} DETACH PARTITION tuple()")
 
                     with Then("number of rows should be 0"):
-                        count = node.query(f"SELECT count() FROM {name}").output.strip()
+                        count = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
                         assert count == "0", error()
 
                     with And(
                         "disk column for the table in system.detached_parts should have value of 'jbod1'"
                     ):
                         disk = node.query(
-                            f"SELECT disk FROM system.detached_parts WHERE table = '{name}'"
+                            f"SELECT disk FROM system.detached_parts WHERE table = '{name}' FORMAT TabSeparated"
                         ).output.strip()
                         assert disk == "jbod1", error()
 
@@ -75,7 +75,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         node.query(f"ALTER TABLE {name} ATTACH PARTITION tuple()")
 
                     with Then("number of rows should be 5"):
-                        count = node.query(f"SELECT count() FROM {name}").output.strip()
+                        count = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
                         assert count == "5", error()
 
                 finally:
