@@ -18,7 +18,7 @@ def test_alias_columns(self, node=None):
             with Given("I make select as user without rights"):
                 exitcode, message = errors.not_enough_privileges("some_user")
                 node.query(
-                    f"SELECT * FROM default.{table.name}",
+                    f"SELECT * FROM default.{table.name} FORMAT TabSeparated",
                     settings=[("user", "some_user"), ("final", 1)],
                     message=message,
                     exitcode=exitcode,
@@ -58,7 +58,7 @@ def test_alias_columns_alias_column(self, node=None):
             with Given("I make select as user without rights"):
                 exitcode, message = errors.not_enough_privileges("some_user")
                 node.query(
-                    f"SELECT(s) FROM default.{table.name}",
+                    f"SELECT(s) FROM default.{table.name} FORMAT TabSeparated",
                     settings=[("user", "some_user"), ("final", 1)],
                     message=message,
                     exitcode=exitcode,
