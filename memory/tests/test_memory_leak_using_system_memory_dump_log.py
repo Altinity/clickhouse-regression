@@ -31,7 +31,7 @@ def check_leak_with_system_memory_dump_log(self, node=None):
             join()
 
     with Then("I check total memory leaked by Poco::Logger::unsafeGet"):
-        event_time = node.query(f"SELECT now()").output.strip()
+        event_time = node.query(f"SELECT now() FORMAT TabSeparated").output.strip()
         node.query(
             f"SELECT formatReadableSize(sum(size)) AS total_size, count() AS count FROM system.memory_dump_log WHERE event_time='{event_time}' FORMAT PrettyCompact"
         )
@@ -69,7 +69,7 @@ def check_leak_with_system_memory_dump_log(self, node=None):
                 )
                 GROUP BY leak_function
                 SETTINGS allow_introspection_functions=1
-            )
+            ) FORMAT TabSeparated
         """
 
         result = node.query(query).output
