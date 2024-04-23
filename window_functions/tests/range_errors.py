@@ -19,7 +19,7 @@ def error_more_than_one_order_by_column(self):
 
     sql = (
         "select sum(salary) over (order by enroll_date, salary range between 1 preceding and 2 following) AS sum, "
-        "salary, enroll_date from empsalary"
+        "salary, enroll_date from empsalary FORMAT TabSeparated"
     )
 
     with When("I execute query", description=sql):
@@ -34,7 +34,7 @@ def error_missing_order_by(self):
 
     sql = (
         "select sum(salary) over (range between 1 preceding and 2 following) AS sum, "
-        "salary, enroll_date from empsalary"
+        "salary, enroll_date from empsalary FORMAT TabSeparated"
     )
 
     with When("I execute query", description=sql):
@@ -51,7 +51,7 @@ def error_missing_order_by_with_partition_by_clause(self):
 
     sql = (
         "select f1, sum(f1) over (partition by f1 range between 1 preceding and 1 following) AS sum "
-        "from t1 where f1 = f2"
+        "from t1 where f1 = f2 FORMAT TabSeparated"
     )
 
     with When("I execute query", description=sql):
@@ -66,7 +66,7 @@ def error_range_over_non_numerical_column(self):
 
     sql = (
         "select sum(salary) over (order by depname range between 1 preceding and 2 following) as sum, "
-        "salary, enroll_date from empsalary"
+        "salary, enroll_date from empsalary FORMAT TabSeparated"
     )
 
     with When("I execute query", description=sql):
@@ -82,7 +82,7 @@ def error_negative_preceding_offset(self):
 
     sql = (
         "select max(enroll_date) over (order by salary range between -1 preceding and 2 following) AS max, "
-        "salary, enroll_date from empsalary"
+        "salary, enroll_date from empsalary FORMAT TabSeparated"
     )
 
     with When("I execute query", description=sql):
@@ -98,7 +98,7 @@ def error_negative_following_offset(self):
 
     sql = (
         "select max(enroll_date) over (order by salary range between 1 preceding and -2 following) AS max, "
-        "salary, enroll_date from empsalary"
+        "salary, enroll_date from empsalary FORMAT TabSeparated"
     )
 
     with When("I execute query", description=sql):

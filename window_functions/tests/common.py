@@ -579,7 +579,7 @@ def empsalary_table(self, name="empsalary", distributed=False):
                     )
 
     with And("dumping all the data in the table"):
-        self.context.node.query(f"SELECT * FROM {table}")
+        self.context.node.query(f"SELECT * FROM {table} FORMAT TabSeparated")
 
     return table
 
