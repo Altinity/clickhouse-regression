@@ -168,9 +168,13 @@ def interrupt_network(cluster, node, cluster_prefix):
 
 
 @TestStep(When)
-def wait_for_all_mutations_to_finish(self, node, timeout=60, delay=5):
+def wait_for_mutations_to_finish(self, node, timeout=60, delay=5, command_like=None):
     """Wait for all pending mutations to complete."""
-    query = "SELECT * FROM system.mutations WHERE is_done=0 FORMAT VERTICAL"
+    query = "SELECT * FROM system.mutations WHERE is_done=0"
+    if command_like:
+        query += f" AND command LIKE '%{command_like}%'"
+
+    query += " FORMAT Vertical"
 
     start_time = time.time()
 
@@ -181,5 +185,5 @@ def wait_for_all_mutations_to_finish(self, node, timeout=60, delay=5):
                 return
 
             time.sleep(delay)
-            
+
         assert r.output == "", error("mutations did not finish in time")
