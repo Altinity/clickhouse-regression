@@ -969,7 +969,7 @@ def clickhouse_client_connection(
         add_ssl_clickhouse_client_configuration_file(entries=options)
 
     output = node.command(
-        f'clickhouse client {secure_flag} --verbose --host {hostname} --port {port} -q "SELECT 1"',
+        f'clickhouse client {secure_flag} --verbose --host {hostname} --port {port} -q "SELECT 1 FORMAT TabSeparated"',
         message=message,
         messages=messages,
         exitcode=exitcode,

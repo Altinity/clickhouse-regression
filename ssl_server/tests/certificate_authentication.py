@@ -30,7 +30,7 @@ def rbac_user_no_hostname(self):
 
         with Then("I login as the user using the certificate"):
             output = node.command(
-                f"echo 'SELECT currentUser()' | curl https://clickhouse1:{self.context.secure_http_port} --cert client1-cert.pem --key client1-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: steve' --data-binary @-"
+                f"echo 'SELECT currentUser() FORMAT TabSeparated' | curl https://clickhouse1:{self.context.secure_http_port} --cert client1-cert.pem --key client1-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: steve' --data-binary @-"
             ).output
             assert output == "steve", error()
 
@@ -69,7 +69,7 @@ def rbac_user_hostname(self):
 
         with Then("I login as the user using the certificate"):
             output = node.command(
-                f"echo 'SELECT currentUser()' | curl https://clickhouse1:{self.context.secure_http_port} --cert client4-cert.pem --key client4-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: john' --data-binary @-"
+                f"echo 'SELECT currentUser() FORMAT TabSeparated' | curl https://clickhouse1:{self.context.secure_http_port} --cert client4-cert.pem --key client4-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: john' --data-binary @-"
             ).output
             assert output == "john", error()
 
@@ -103,7 +103,7 @@ def config_user_no_hostname(self):
 
         with Then("I login as the user using the certificate"):
             output = node.command(
-                f"echo 'SELECT currentUser()' | curl https://clickhouse1:{self.context.secure_http_port} --cert client2-cert.pem --key client2-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: CN_user' --data-binary @-"
+                f"echo 'SELECT currentUser() FORMAT TabSeparated' | curl https://clickhouse1:{self.context.secure_http_port} --cert client2-cert.pem --key client2-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: CN_user' --data-binary @-"
             ).output
             assert output == "CN_user", error()
 
@@ -134,7 +134,7 @@ def config_user_hostname(self):
 
         with Then("I login as the user using the certificate"):
             output = node.command(
-                f"echo 'SELECT currentUser()' | curl https://clickhouse1:{self.context.secure_http_port} --cert client3-cert.pem --key client3-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: CN_hostname_user' --data-binary @-"
+                f"echo 'SELECT currentUser() FORMAT TabSeparated' | curl https://clickhouse1:{self.context.secure_http_port} --cert client3-cert.pem --key client3-key.pem --cacert ca-cert.pem -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: CN_hostname_user' --data-binary @-"
             ).output
             assert output == "CN_hostname_user", error()
 

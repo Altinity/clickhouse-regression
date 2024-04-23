@@ -11,7 +11,7 @@ def check_non_secure_connection(self, node=None):
         node = self.context.node
 
     with When("I try to execute query using non-secure connection"):
-        r = node.query("SELECT 1")
+        r = node.query("SELECT 1 FORMAT TabSeparated")
 
     with Then("it should work"):
         assert r.output == "1", error()
