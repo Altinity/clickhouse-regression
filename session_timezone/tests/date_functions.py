@@ -24,12 +24,12 @@ def to_date(self):
             with Then("I check value for simple `toDate` function"):
                 if function == "toDateTime64":
                     node.query(
-                        f"SELECT {function}('2000-01-01 00:00:00',3) SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}('2000-01-01 00:00:00',3) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"2000-01-01",
                     )
                 else:
                     node.query(
-                        f"SELECT {function}('2000-01-01 00:00:00') SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}('2000-01-01 00:00:00') SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"2000-01-01",
                     )
 
@@ -55,19 +55,19 @@ def date_default(self):
             with Then("I check default value for simple `toDateOrDefault` function"):
                 if function == "toDateTimeOrDefault":
                     node.query(
-                        f"SELECT {function}('2020-01-01') SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}('2020-01-01') SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"2020-01-01",
                     )
 
                 elif function == "toDateTime64OrDefault":
                     node.query(
                         f"SELECT {function}('2020-01-01', 3)"
-                        f" SETTINGS session_timezone = 'UTC';",
+                        f" SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"2020-01-01",
                     )
                 else:
                     node.query(
-                        f"SELECT {function}('wrong value', {function}('2020-01-01')) SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}('wrong value', {function}('2020-01-01')) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"2020-01-01",
                     )
 
@@ -92,12 +92,12 @@ def date_null(self):
             with Then("I check null value for simple `toDateOrNull` function"):
                 if function == "toDateTime64":
                     node.query(
-                        f"SELECT {function}('wrong value',3) SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}('wrong value',3) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"\\N",
                     )
                 else:
                     node.query(
-                        f"SELECT {function}('wrong value') SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}('wrong value') SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"\\N",
                     )
 
@@ -120,7 +120,7 @@ def date_zero(self):
         with Check(function):
             with Then("I check minimum value for `OrZero` function"):
                 node.query(
-                    f"SELECT {function}('wrong value'{',3' if function == 'toDateTime64OrZero' else ''}) SETTINGS session_timezone = 'Africa/Bissau';",
+                    f"SELECT {function}('wrong value'{',3' if function == 'toDateTime64OrZero' else ''}) SETTINGS session_timezone = 'Africa/Bissau' FORMAT TabSeparated;",
                     message=f"{'1900-01-01' if function is 'toDate32OrZero' else '1970-01-01' if function is 'toDateOrZero' else '1969-12-31 23:00:00' if function is 'toDateTimeOrZero' else '1969-12-31 23:00:00.000'}",
                 )
 
@@ -137,13 +137,13 @@ def snowflake_to_datetime(self):
 
     with Check("snowflakeToDateTime function"):
         node.query(
-            f"SELECT snowflakeToDateTime(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC';",
+            f"SELECT snowflakeToDateTime(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
             message=f"2021-08-15 10:58:19",
         )
 
     with Check("snowflakeToDateTime64 function"):
         node.query(
-            f"SELECT snowflakeToDateTime64(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC';",
+            f"SELECT snowflakeToDateTime64(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
             message=f"2021-08-15 10:58:19.841",
         )
 
@@ -161,14 +161,14 @@ def datetime_to_snowflake(self):
     with Check("dateTime64ToSnowflake function"):
         node.query(
             f"WITH toDateTime64('2021-08-15 18:57:56.492', 3) AS dt64 SELECT dateTime64ToSnowflake(dt64) "
-            f"SETTINGS session_timezone = 'Asia/Shanghai';",
+            f"SETTINGS session_timezone = 'Asia/Shanghai' FORMAT TabSeparated;",
             message=f"1426860704886947840",
         )
 
     with Check("dateTimeToSnowflake function"):
         node.query(
             f"WITH toDateTime('2021-08-15 18:57:56') AS dt SELECT dateTimeToSnowflake(dt) SETTINGS"
-            f" session_timezone = 'Asia/Shanghai';",
+            f" session_timezone = 'Asia/Shanghai' FORMAT TabSeparated;",
             message=f"1426860702823350272",
         )
 
@@ -195,7 +195,7 @@ def parce_best_effort64(self):
         with Check(function):
             with Then(f"I check result for `{function}` function"):
                 node.query(
-                    f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau';",
+                    f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau' FORMAT TabSeparated;",
                     message=f"2021-01-01 00:00:00.000",
                 )
 
@@ -222,7 +222,7 @@ def parce_best_effort(self):
         with Check(function):
             with Then(f"I check result for {function} function"):
                 node.query(
-                    f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau';",
+                    f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau' FORMAT TabSeparated;",
                     message=f"2021-01-01 00:00:00",
                 )
 
@@ -246,7 +246,7 @@ def parce_best_effort32(self):
         with Check(function):
             with Then(f"I check value for {function} function"):
                 node.query(
-                    f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau';",
+                    f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau' FORMAT TabSeparated;",
                     message=f"2021-01-01 00:00:00",
                 )
 
@@ -272,12 +272,12 @@ def parce_date_time(self):
             with Then(f"I check values for {function} function"):
                 if function.startswith("parseDateTimeInJodaSyntax"):
                     node.query(
-                        f"SELECT {function}('2023-02-24 14:53:31', 'yyyy-MM-dd HH:mm:ss') SETTINGS session_timezone = 'Europe/Minsk';",
+                        f"SELECT {function}('2023-02-24 14:53:31', 'yyyy-MM-dd HH:mm:ss') SETTINGS session_timezone = 'Europe/Minsk' FORMAT TabSeparated;",
                         message=f"2023-02-24 14:53:31",
                     )
                 else:
                     node.query(
-                        f"SELECT {function}('2021-01-04+23:00:00', '%Y-%m-%d+%H:%i:%s') SETTINGS session_timezone = 'Africa/Bissau';",
+                        f"SELECT {function}('2021-01-04+23:00:00', '%Y-%m-%d+%H:%i:%s') SETTINGS session_timezone = 'Africa/Bissau' FORMAT TabSeparated;",
                         message=f"2021-01-04 23:00:00",
                     )
 
@@ -301,12 +301,12 @@ def make_date(self):
             with Then(f"I check result for {function} function"):
                 if function == "makeDateTime64" or function == "makeDateTime":
                     node.query(
-                        f"SELECT {function}(2023, 2, 28, 17, 12, 33) SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}(2023, 2, 28, 17, 12, 33) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"2023-02-28 17:12:33",
                     )
                 else:
                     node.query(
-                        f"SELECT {function}(2023, 2, 28) SETTINGS session_timezone = 'UTC';",
+                        f"SELECT {function}(2023, 2, 28) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
                         message=f"2023-02-28",
                     )
 
@@ -338,7 +338,7 @@ def format_date_time_joda(self):
     with Check("formatDateTimeInJodaSyntax function"):
         node.query(
             f"SELECT formatDateTimeInJodaSyntax(toDateTime('2010-01-04 12:34:56'), 'yyyy-MM-dd HH:mm:ss') "
-            f"SETTINGS session_timezone = 'Asia/Shanghai';",
+            f"SETTINGS session_timezone = 'Asia/Shanghai' FORMAT TabSeparated;",
             message="2010-01-04 12:34:56",
         )
 
@@ -354,7 +354,7 @@ def ulid_date(self):
     with Check("ULIDStringToDateTime function"):
         node.query(
             f"SELECT ULIDStringToDateTime('01GNB2S2FGN2P93QPXDNB4EN2R') "
-            f"SETTINGS session_timezone = 'UTC';",
+            f"SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
             message="2022-12-28 00:40:37.616",
         )
 
