@@ -59,7 +59,7 @@ def s3_create_many_files(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_TableFunction_Path_Wildcard("1.0"))
+@Requirements(RQ_SRS_015_S3_Performance_Glob("1.0"))
 def wildcard_performance(self):
     """Check the performance of using wildcards in s3 paths."""
 
