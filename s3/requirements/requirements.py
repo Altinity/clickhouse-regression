@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231130.1212236.
+# document by TestFlows v2.0.231215.1221232.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -140,7 +140,7 @@ RQ_SRS_015_S3_Security_Encryption = Requirement(
     description=(
         "[ClickHouse] SHALL support sending the `x-amz-server-side-encryption-customer-key`\n"
         "header and the `x-amz-server-side-encryption-customer-key-md5` header as part of\n"
-        "the query when the S3 resouce is server-side encrypted.\n"
+        "the query when the S3 resource is server-side encrypted.\n"
         "\n"
     ),
     link=None,
@@ -183,6 +183,7 @@ RQ_SRS_015_S3_RemoteHostFilter = Requirement(
         "    </remote_url_allow_hosts>\n"
         "</yandex>\n"
         "```\n"
+        "\n"
     ),
     link=None,
     level=3,
@@ -246,6 +247,7 @@ RQ_SRS_015_S3_Backup_StoragePolicies = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support using creating manual backups of tables that use storage policies containing:\n"
+        "\n"
         "* one volume with s3 disk\n"
         "* one volume with s3 and local disk\n"
         "* multiple volumes with s3 and local disks\n"
@@ -440,6 +442,7 @@ RQ_SRS_015_S3_MetadataRestore_BucketPath = Requirement(
         "[ClickHouse] SHALL support restoring a table to a specific bucket and path by indicating them\n"
         "in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`\n"
         "using the following syntax:\n"
+        "\n"
         "```\n"
         "'source_path' = {path}\n"
         "'source_bucket' = {bucket}\n"
@@ -462,6 +465,7 @@ RQ_SRS_015_S3_MetadataRestore_RevisionRestore = Requirement(
         "[ClickHouse] SHALL support restoring a table to a specific revision version.\n"
         "The table shall restore to the original bucket and path if and only if it is the latest revision.\n"
         "The revision can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:\n"
+        "\n"
         "```\n"
         "'revision' = {revision number}\n"
         "```\n"
@@ -516,6 +520,7 @@ RQ_SRS_015_S3_MetadataRestore_Detached = Requirement(
         "[ClickHouse] SHALL support restoring tables with a detached partition and\n"
         "the ability to reattach that partition even if it was detached before the `ALTER FREEZE` backup.\n"
         "It can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:\n"
+        "\n"
         "```\n"
         "'detached' = true\n"
         "```\n"
@@ -868,11 +873,11 @@ RQ_SRS_015_S3_Disk_Configuration_Access = Requirement(
         "storage.xml file in the config.d directory to toggle a runtime check for access\n"
         "to the corresponding [S3] disk. If this runtime check fails, [ClickHouse] SHALL\n"
         'return an "Access Denied" error. The specifics of the error depend on version:\n'
+        "\n"
         " - In [Clickhouse] < 22.9 the error message SHALL be `DB::Exception: Access Denied.`\n"
         "else `DB::Exception: Message: Access Denied`\n"
         " - In [Clickhouse] >= 23.8 the error SHALL be returned from CREATE TABLE,\n"
         "else CREATE TABLE SHALL succeed and the error SHALL be returned from INSERT INTO\n"
-        "\n"
         "\n"
     ),
     link=None,
@@ -951,6 +956,7 @@ RQ_SRS_015_S3_Disk_Configuration_Cache_22_8 = Requirement(
         "The definition requires `<type>`, `<disk>`, `<path>`, `<max_size>`, and `<do_not_evict_index_and_mark_files>` parameters.\n"
         "\n"
         "Example:\n"
+        "\n"
         "```\n"
         "<s3_cache>\n"
         "    <type>cache</type>\n"
@@ -1068,7 +1074,9 @@ RQ_SRS_015_S3_Disk_Configuration_CachePath_Conflict = Requirement(
         "path to the disk metadata and the path to the disk cache are the same.\n"
         "The error SHALL be similar to the following:\n"
         "\n"
-        '    "DB::Exception: Metadata and cache path should be different"\n'
+        "```sh\n"
+        '"DB::Exception: Metadata and cache path should be different"\n'
+        "```\n"
         "\n"
     ),
     link=None,
@@ -1688,22 +1696,23 @@ RQ_SRS_015_S3_TableFunction_Credentials_Invalid = Requirement(
     num="4.6.4",
 )
 
-RQ_SRS_015_S3_TableFunction_Path_Wildcard = Requirement(
-    name="RQ.SRS-015.S3.TableFunction.Path.Wildcard",
+RQ_SRS_015_S3_TableFunction_Path_Glob = Requirement(
+    name="RQ.SRS-015.S3.TableFunction.Path.Glob",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the following wildcards for the `<path>` parameter\n"
-        "to the [S3] table function, where 'abc', 'def' SHALL be strings and 'N', 'M' SHALL\n"
-        "be numbers. Note: the `?` wildcard must be encoded as `%3F`.\n"
+        "[ClickHouse] SHALL support using glob patterns in file paths to import multiple files from [S3].\n"
         "\n"
-        "* `*`\n"
-        "* `?`\n"
-        "* `{abc,def}`\n"
-        "* `{N..M}`\n"
+        "> Multiple path components can have globs. For being processed file must exist and match to the whole path pattern (not only suffix or prefix).\n"
+        ">\n"
+        ">   - `*` — Substitutes any number of any characters except / including empty string.\n"
+        ">   - `?` — Substitutes any single character.\n"
+        ">   - `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.\n"
+        ">   - `{N..M}` — Substitutes any number in range from N to M including both borders.\n"
+        ">   - `**` - Fetches all files inside the folder recursively.\n"
         "\n"
     ),
     link=None,
@@ -1777,7 +1786,9 @@ RQ_SRS_015_S3_TableFunction_Structure = Requirement(
         "[ClickHouse] SHALL support the `<structure>` parameter to the [S3] table function to\n"
         "specify the structure of the data. The structure SHALL use the following format:\n"
         "\n"
-        "    'column1_name column1_type, column2_name column2_type, ...'\n"
+        "```xml\n"
+        "'column1_name column1_type, column2_name column2_type, ...'\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -2136,6 +2147,7 @@ RQ_SRS_015_S3_AWS_SSEC = Requirement(
         "\n"
         "The SSEC key can be specified using the `<server_side_encryption_customer_key_base64>` parameter.\n"
         "Example:\n"
+        "\n"
         "```\n"
         "<s3>\n"
         "  <s3-bucket>\n"
@@ -2249,7 +2261,7 @@ RQ_SRS_015_S3_Settings_MaxDownloadThreads = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL download files from S3 in parallel using multiple threads \n"
+        "[ClickHouse] SHALL download files from S3 in parallel using multiple threads\n"
         "specified by `max_download_threads`. Default is 1.\n"
         "\n"
     ),
@@ -2266,7 +2278,7 @@ RQ_SRS_015_S3_Settings_MaxDownloadBufferSize = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL download files from S3 with a maximum buffer size \n"
+        "[ClickHouse] SHALL download files from S3 with a maximum buffer size\n"
         "specified by `max_download_buffer_size`.\n"
         "\n"
     ),
@@ -2347,6 +2359,24 @@ RQ_SRS_015_S3_Performance_PerformTTLMoveOnInsert = Requirement(
     num="4.11.1",
 )
 
+RQ_SRS_015_S3_Performance_Glob = Requirement(
+    name="RQ.SRS-015.S3.Performance.Glob",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL handle glob patterns efficiently, in reasonable time and without memory errors.\n"
+        "Fetch time SHALL be proportional to the amount of data that is fetched,\n"
+        "regardless of the total number of items in the bucket.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.11.2",
+)
+
 RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Select = Requirement(
     name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select",
     version="1.0",
@@ -2362,7 +2392,7 @@ RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Select = Requirement(
     ),
     link=None,
     level=3,
-    num="4.11.2",
+    num="4.11.3",
 )
 
 RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Insert = Requirement(
@@ -2380,7 +2410,7 @@ RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Insert = Requirement(
     ),
     link=None,
     level=3,
-    num="4.11.3",
+    num="4.11.4",
 )
 
 RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Alter = Requirement(
@@ -2398,7 +2428,7 @@ RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Alter = Requirement(
     ),
     link=None,
     level=3,
-    num="4.11.4",
+    num="4.11.5",
 )
 
 SRS_015_ClickHouse_S3_External_Storage = Specification(
@@ -2725,7 +2755,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         Heading(
             name="RQ.SRS-015.S3.TableFunction.Credentials.Invalid", level=3, num="4.6.4"
         ),
-        Heading(name="RQ.SRS-015.S3.TableFunction.Path.Wildcard", level=3, num="4.6.5"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Path.Glob", level=3, num="4.6.5"),
         Heading(name="RQ.SRS-015.S3.TableFunction.ReadFromFile", level=3, num="4.6.6"),
         Heading(name="RQ.SRS-015.S3.TableFunction.Redirect", level=3, num="4.6.7"),
         Heading(name="RQ.SRS-015.S3.TableFunction.Format", level=3, num="4.6.8"),
@@ -2785,20 +2815,21 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
             level=3,
             num="4.11.1",
         ),
+        Heading(name="RQ.SRS-015.S3.Performance.Glob", level=3, num="4.11.2"),
         Heading(
             name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select",
-            level=3,
-            num="4.11.2",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert",
             level=3,
             num="4.11.3",
         ),
         Heading(
-            name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter",
+            name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert",
             level=3,
             num="4.11.4",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter",
+            level=3,
+            num="4.11.5",
         ),
         Heading(name="References", level=1, num="5"),
     ),
@@ -2892,7 +2923,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_TableFunction_Path,
         RQ_SRS_015_S3_TableFunction_Credentials,
         RQ_SRS_015_S3_TableFunction_Credentials_Invalid,
-        RQ_SRS_015_S3_TableFunction_Path_Wildcard,
+        RQ_SRS_015_S3_TableFunction_Path_Glob,
         RQ_SRS_015_S3_TableFunction_ReadFromFile,
         RQ_SRS_015_S3_TableFunction_Redirect,
         RQ_SRS_015_S3_TableFunction_Format,
@@ -2923,6 +2954,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_Settings_S3UploadPartSizeMultiplyFactor,
         RQ_SRS_015_S3_Settings_S3UploadPartSizeMultiplyPartsCountThreshold,
         RQ_SRS_015_S3_Performance_PerformTTLMoveOnInsert,
+        RQ_SRS_015_S3_Performance_Glob,
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Select,
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Insert,
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Alter,
@@ -3041,11 +3073,12 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         * 4.4.7.8.5 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationalter)
         * 4.4.7.8.6 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdelete)
         * 4.4.7.8.7 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdeleteall)
-        * 4.4.7.8.8 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdropreplica)
-        * 4.4.7.8.9 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationaddreplica)
-        * 4.4.7.8.10 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationnodataduplication)
-        * 4.4.7.8.11 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttlmove)
-        * 4.4.7.8.12 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttldelete)
+        * 4.4.7.8.8 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdatapreservedaftermutation)
+        * 4.4.7.8.9 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdropreplica)
+        * 4.4.7.8.10 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationaddreplica)
+        * 4.4.7.8.11 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationnodataduplication)
+        * 4.4.7.8.12 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttlmove)
+        * 4.4.7.8.13 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttldelete)
   * 4.5 [Policy](#policy)
     * 4.5.1 [RQ.SRS-015.S3.Policy.Syntax](#rqsrs-015s3policysyntax)
     * 4.5.2 [RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert](#rqsrs-015s3policyperformttlmoveoninsert)
@@ -3055,7 +3088,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
     * 4.6.2 [RQ.SRS-015.S3.TableFunction.Path](#rqsrs-015s3tablefunctionpath)
     * 4.6.3 [RQ.SRS-015.S3.TableFunction.Credentials](#rqsrs-015s3tablefunctioncredentials)
     * 4.6.4 [RQ.SRS-015.S3.TableFunction.Credentials.Invalid](#rqsrs-015s3tablefunctioncredentialsinvalid)
-    * 4.6.5 [RQ.SRS-015.S3.TableFunction.Path.Wildcard](#rqsrs-015s3tablefunctionpathwildcard)
+    * 4.6.5 [RQ.SRS-015.S3.TableFunction.Path.Glob](#rqsrs-015s3tablefunctionpathglob)
     * 4.6.6 [RQ.SRS-015.S3.TableFunction.ReadFromFile](#rqsrs-015s3tablefunctionreadfromfile)
     * 4.6.7 [RQ.SRS-015.S3.TableFunction.Redirect](#rqsrs-015s3tablefunctionredirect)
     * 4.6.8 [RQ.SRS-015.S3.TableFunction.Format](#rqsrs-015s3tablefunctionformat)
@@ -3091,9 +3124,10 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
     * 4.10.6 [RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyPartsCountThreshold](#rqsrs-015s3settingss3uploadpartsizemultiplypartscountthreshold)
   * 4.11 [Performance](#performance)
     * 4.11.1 [RQ.SRS-015.S3.Performance.PerformTTLMoveOnInsert](#rqsrs-015s3performanceperformttlmoveoninsert)
-    * 4.11.2 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select](#rqsrs-015s3performanceallows3zerocopyreplicationselect)
-    * 4.11.3 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert](#rqsrs-015s3performanceallows3zerocopyreplicationinsert)
-    * 4.11.4 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3performanceallows3zerocopyreplicationalter)
+    * 4.11.2 [RQ.SRS-015.S3.Performance.Glob](#rqsrs-015s3performanceglob)
+    * 4.11.3 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select](#rqsrs-015s3performanceallows3zerocopyreplicationselect)
+    * 4.11.4 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert](#rqsrs-015s3performanceallows3zerocopyreplicationinsert)
+    * 4.11.5 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3performanceallows3zerocopyreplicationalter)
 * 5 [References](#references)
 
 ## Revision History
@@ -3177,7 +3211,7 @@ version: 1.0
 
 [ClickHouse] SHALL support sending the `x-amz-server-side-encryption-customer-key`
 header and the `x-amz-server-side-encryption-customer-key-md5` header as part of
-the query when the S3 resouce is server-side encrypted.
+the query when the S3 resource is server-side encrypted.
 
 #### RQ.SRS-015.S3.RemoteHostFilter
 version: 1.0
@@ -3209,6 +3243,7 @@ addresses. The remote host filter configuration SHALL be similar to the followin
     </remote_url_allow_hosts>
 </yandex>
 ```
+
 #### Backup
 
 ##### MinIO Backup
@@ -3238,6 +3273,7 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support using creating manual backups of tables that use storage policies containing:
+
 * one volume with s3 disk
 * one volume with s3 and local disk
 * multiple volumes with s3 and local disks
@@ -3338,6 +3374,7 @@ version: 1.0
 [ClickHouse] SHALL support restoring a table to a specific bucket and path by indicating them
 in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`
 using the following syntax:
+
 ```
 'source_path' = {path}
 'source_bucket' = {bucket}
@@ -3351,6 +3388,7 @@ version: 1.0
 [ClickHouse] SHALL support restoring a table to a specific revision version.
 The table shall restore to the original bucket and path if and only if it is the latest revision.
 The revision can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:
+
 ```
 'revision' = {revision number}
 ```
@@ -3378,6 +3416,7 @@ version: 1.0
 [ClickHouse] SHALL support restoring tables with a detached partition and
 the ability to reattach that partition even if it was detached before the `ALTER FREEZE` backup.
 It can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:
+
 ```
 'detached' = true
 ```
@@ -3531,11 +3570,11 @@ section of the `<storage_configuration>` section of the config.xml file or the
 storage.xml file in the config.d directory to toggle a runtime check for access
 to the corresponding [S3] disk. If this runtime check fails, [ClickHouse] SHALL
 return an "Access Denied" error. The specifics of the error depend on version:
+
  - In [Clickhouse] < 22.9 the error message SHALL be `DB::Exception: Access Denied.`
 else `DB::Exception: Message: Access Denied`
  - In [Clickhouse] >= 23.8 the error SHALL be returned from CREATE TABLE,
 else CREATE TABLE SHALL succeed and the error SHALL be returned from INSERT INTO
-
 
 ##### RQ.SRS-015.S3.Disk.Configuration.Access.Default
 version: 1.0
@@ -3570,6 +3609,7 @@ corresponding [S3] disk in version 22.8 and later.
 The definition requires `<type>`, `<disk>`, `<path>`, `<max_size>`, and `<do_not_evict_index_and_mark_files>` parameters.
 
 Example:
+
 ```
 <s3_cache>
     <type>cache</type>
@@ -3621,7 +3661,9 @@ file or the storage.xml file in the config.d directory is set such that the
 path to the disk metadata and the path to the disk cache are the same.
 The error SHALL be similar to the following:
 
-    "DB::Exception: Metadata and cache path should be different"
+```sh
+"DB::Exception: Metadata and cache path should be different"
+```
 
 ##### RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek
 version: 1.0
@@ -3891,17 +3933,18 @@ version: 1.0
 `<aws_secret_access_key>` parameters do not provide correct authentication to
 the [S3] bucket.
 
-#### RQ.SRS-015.S3.TableFunction.Path.Wildcard
+#### RQ.SRS-015.S3.TableFunction.Path.Glob
 version: 1.0
 
-[ClickHouse] SHALL support the following wildcards for the `<path>` parameter
-to the [S3] table function, where 'abc', 'def' SHALL be strings and 'N', 'M' SHALL
-be numbers. Note: the `?` wildcard must be encoded as `%3F`.
+[ClickHouse] SHALL support using glob patterns in file paths to import multiple files from [S3].
 
-* `*`
-* `?`
-* `{abc,def}`
-* `{N..M}`
+> Multiple path components can have globs. For being processed file must exist and match to the whole path pattern (not only suffix or prefix).
+>
+>   - `*` — Substitutes any number of any characters except / including empty string.
+>   - `?` — Substitutes any single character.
+>   - `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.
+>   - `{N..M}` — Substitutes any number in range from N to M including both borders.
+>   - `**` - Fetches all files inside the folder recursively.
 
 #### RQ.SRS-015.S3.TableFunction.ReadFromFile
 version: 1.0
@@ -3931,7 +3974,9 @@ version: 1.0
 [ClickHouse] SHALL support the `<structure>` parameter to the [S3] table function to
 specify the structure of the data. The structure SHALL use the following format:
 
-    'column1_name column1_type, column2_name column2_type, ...'
+```xml
+'column1_name column1_type, column2_name column2_type, ...'
+```
 
 #### RQ.SRS-015.S3.TableFunction.Compression
 version: 1.0
@@ -4118,6 +4163,7 @@ server-side encryption and decryption when writing and reading from AWS S3 endpo
 
 The SSEC key can be specified using the `<server_side_encryption_customer_key_base64>` parameter.
 Example:
+
 ```
 <s3>
   <s3-bucket>
@@ -4180,13 +4226,13 @@ is greater than 1.
 #### RQ.SRS-015.S3.Settings.MaxDownloadThreads
 version: 1.0
 
-[ClickHouse] SHALL download files from S3 in parallel using multiple threads 
+[ClickHouse] SHALL download files from S3 in parallel using multiple threads
 specified by `max_download_threads`. Default is 1.
 
 #### RQ.SRS-015.S3.Settings.MaxDownloadBufferSize
 version: 1.0
 
-[ClickHouse] SHALL download files from S3 with a maximum buffer size 
+[ClickHouse] SHALL download files from S3 with a maximum buffer size
 specified by `max_download_buffer_size`.
 
 #### RQ.SRS-015.S3.Settings.PartitionBy
@@ -4218,6 +4264,13 @@ with [S3] volumes when the `<perform_ttl_move_on_insert>` parameter of the
 `<volume>` section of the desired [S3] disk in the `<policies>` section of the
 `<storage_configuration>` section of the config.xml file or the storage.xml file
 in the config.d directory is set to 0.
+
+#### RQ.SRS-015.S3.Performance.Glob
+version: 1.0
+
+[ClickHouse] SHALL handle glob patterns efficiently, in reasonable time and without memory errors.
+Fetch time SHALL be proportional to the amount of data that is fetched,
+regardless of the total number of items in the bucket.
 
 #### RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select
 version: 1.0
