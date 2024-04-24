@@ -64,10 +64,11 @@ def syntax(self):
         ("{1,3,4}", "427\n427", Name("strings_one_missing")),
     ],
 )
-@Requirements(RQ_SRS_015_S3_TableFunction_Path_Wildcard("1.0"))
+@Requirements(RQ_SRS_015_S3_TableFunction_Path_Glob("1.0"))
 def wildcard(self, wildcard, expected):
-    """Check that imports from S3 storage using the S3 table function work
-    correctly when wildcard paths with the '{wildcard}' wildcard are provided.
+    """
+    Check that imports from S3 storage using the S3 table function work
+    correctly when using wildcards in the path.
     """
     table1_name = "table_" + getuid()
     table2_name = "table_" + getuid()
