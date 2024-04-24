@@ -332,7 +332,7 @@ jobs:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 300
     env:
-      SUITE: alter
+      SUITE: attach
     if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
     steps:
       - name: Checkout
