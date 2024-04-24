@@ -1,164 +1,97 @@
-import time
-
 from testflows.core import *
+
 from helpers.common import *
 from helpers.tables import *
+
 from attach.tests.common import *
 from attach.requirements.requirements import (
     RQ_SRS_039_ClickHouse_Attach_ReplicaPath_ActivePath,
 )
 
 
-@TestStep
-def get_table_path(self, node, table):
-    return node.query(
-        f"SELECT data_paths FROM system.tables WHERE table = '{table}'"
-    ).output.strip("'[]\n")
-
-
-@TestStep
-def set_convert_flags(self, node, table):
-    node.command(f"touch {get_table_path(node=node, table=table)}convert_to_replicated")
-
-
 @TestScenario
-def check_active_path_convert(self, engine):
-    node = self.context.node
-    table1 = "table1_" + getuid()
-    table2 = "table2_" + getuid()
-
-    with Given("I create MergeTree table and set convert flags"):
-        node.query(
-            f"CREATE TABLE {table1} ( A Int64, D Date, S String ) ENGINE MergeTree() PARTITION BY toYYYYMM(D) ORDER BY A"
-        )
-
-    with Given("I create replicated table"):
-        node.query(
-            f"CREATE TABLE {table2} ( A Int64, D Date, S String ) ENGINE ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table1}', '{{replica}}') PARTITION BY toYYYYMM(D) ORDER BY A"
-        )
-        node.query(
-            f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
-        )
-        time.sleep(10)
-
-    with Given("I create MergeTree table and set convert flags"):
-        set_convert_flags(node=node, table=table1)
-
-    with When("I restart server"):
-        node.restart_clickhouse()
-
-    with And("I check that table was converted"):
-        node.query(
-            f"SELECT name, engine_full, create_table_query FROM system.tables WHERE name = '{table1}' or name = '{table2}'"
-        )
-        node.query(
-            f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
-        )
-
-
-@TestScenario
-def check_active_path_convert_3(self, engine):
-    node = self.context.node
-    table1 = "table1_" + getuid()
-    table2 = "table2_" + getuid()
-
-    with Given("I create replicated table"):
-        node.query(
-            f"CREATE TABLE {table2} ( A Int64, D Date, S String ) ENGINE ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table1}', '{{replica}}') PARTITION BY toYYYYMM(D) ORDER BY A"
-        )
-        node.query(
-            f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
-        )
-
-    with Given("I create MergeTree table and set convert flags"):
-        node.query(
-            f"CREATE TABLE {table1} ( A Int64, D Date, S String ) ENGINE MergeTree() PARTITION BY toYYYYMM(D) ORDER BY A"
-        )
-
-    with Given("I set convert flags"):
-        set_convert_flags(node=node, table=table1)
-
-    with When("I restart server"):
-        node.restart_clickhouse()
-
-    with And("I check that table was converted"):
-        node.query(
-            f"SELECT name, engine_full, create_table_query FROM system.tables WHERE name = '{table1}' or name = '{table2}'"
-        )
-        node.query(
-            f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
-        )
-
-
-@TestScenario
-def check_active_path_convert_2(self, engine):
+@Repeat(10)
+def check_active_path_convert(self):
     node = self.context.node
     node2 = self.context.node_2
     table1 = "table1_" + getuid()
     table2 = "table2_" + getuid()
-
-    with Given("I create MergeTree table and set convert flags"):
-        node2.query(
-            f"CREATE TABLE {table2} ( A Int64, D Date, S String ) ENGINE MergeTree() PARTITION BY toYYYYMM(D) ORDER BY A"
-        )
-
-    with Given("I set convert flags"):
-        # node2.query(f"CREATE TABLE {table2} ( A Int64, D Date, S String ) ENGINE MergeTree() PARTITION BY toYYYYMM(D) ORDER BY A")
-        set_convert_flags(node=node2, table=table2)
+    columns = [
+        Column(name="id", datatype=Int32()),
+    ]
 
     with Given("I create replicated table on cluster"):
-        node.query(
-            f"CREATE TABLE {table1} ON CLUSTER replicated_cluster ( A Int64, D Date, S String ) ENGINE ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table2}', '{{replica}}') PARTITION BY toYYYYMM(D) ORDER BY A"
-        )
-        node.query(
-            f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
+        create_replicated_table(
+            table_name=table1,
+            engine="ReplicatedMergeTree",
+            cluster="replicated_cluster",
+            node=node,
+            table_id=table2,
+            columns=columns,
+            order_by="id",
         )
 
     with And("I insert data into the table"):
-        node.query(f"INSERT INTO {table1} (A) SELECT number FROM numbers(10)")
+        node.query(f"INSERT INTO {table1} SELECT * FROM numbers(100000000)")
 
     with And("I rename table"):
         node.query(f"RENAME TABLE {table1} TO {table2}")
+
+    with And("I create MergeTree table and set convert flags"):
+        create_table(
+            name=table2,
+            engine="MergeTree",
+            node=node2,
+            columns=columns,
+            order_by="id",
+        )
+        set_convert_flags(node=node2, table=table2)
 
     with When("I restart server"):
         node2.restart_clickhouse()
 
     with And("I check that table was converted"):
-        # node.query(f"SELECT name, engine_full, create_table_query FROM system.tables WHERE name = '{table1}' or name = '{table2}'")
         node.query(
             f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
         )
-        # node2.query(f"SELECT name, engine_full, create_table_query FROM system.tables WHERE name = '{table1}' or name = '{table2}'")
         node2.query(
             f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
         )
 
-    with And("I drop table and create it back"):
-        node2.query(f"DROP TABLE {table2} SYNC")
+    with And("I drop table"):
+        drop_table(table=table2, node=node2)
+
+    with And("I check that table was dropped"):
         node2.query(
             f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
         )
-        node2.query(
-            f"CREATE TABLE {table2} ( A Int64, D Date, S String ) ENGINE ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/{{database}}/{table2}', '{{replica}}') PARTITION BY toYYYYMM(D) ORDER BY A"
+
+    with And("I create replicated table on the second node back"):
+        create_replicated_table(
+            table_name=table2,
+            engine="ReplicatedMergeTree",
+            node=node2,
+            table_id=table2,
+            columns=columns,
+            order_by="id",
         )
 
-    with And("I check that table was converted"):
-        # node.query(f"SELECT name, engine_full, create_table_query FROM system.tables WHERE name = '{table1}' or name = '{table2}'")
+    with And("I check system.replicas"):
         node.query(
             f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
         )
-        # node2.query(f"SELECT name, engine_full, create_table_query FROM system.tables WHERE name = '{table1}' or name = '{table2}'")
         node2.query(
             f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
         )
 
-    with And("I insert data into both tables on second node"):
-        node2.query(f"INSERT INTO {table1} (A) SELECT * FROM numbers(400000000)")
-        node2.query(f"INSERT INTO {table2} (A) SELECT * FROM numbers(400000000)")
-
-    # with And("I select data from both tables"):
-    #     node2.query(f"SELECT * FROM {table1}")
-    #     node2.query(f"SELECT * FROM {table2}")
+    with Then("I expect at least one table to be in RO mode"):
+        is_readonly_table1 = node2.query(
+            f"SELECT is_readonly FROM system.replicas WHERE table = '{table1}'"
+        )
+        is_readonly_table2 = node2.query(
+            f"SELECT is_readonly FROM system.replicas WHERE table = '{table2}'"
+        )
+        assert (is_readonly_table1.output != "0") ^ (is_readonly_table2.output != "0")
 
 
 @TestScenario
@@ -221,7 +154,7 @@ def check_active_path_attach_detached(self, engine):
 
 @TestScenario
 def check_active_path_uuid(self, engine):
-    """Check that it is not possible to `ATTACH TABLE UUID'` with the active path."""
+    """Check that it is not possible to `ATTACH TABLE UUID` with the active path."""
     node = self.context.node
     table_id = getuid()
 
@@ -282,34 +215,32 @@ def feature(self):
     """Check that it is not possible to attach a table with the active path."""
     engines = [
         "ReplicatedMergeTree",
-        #     "ReplicatedReplacingMergeTree",
-        #     "ReplicatedAggregatingMergeTree",
-        #     "ReplicatedCollapsingMergeTree",
-        #     "ReplicatedGraphiteMergeTree",
-        #     "ReplicatedSummingMergeTree",
-        #     "ReplicatedVersionedCollapsingMergeTree",
+        "ReplicatedReplacingMergeTree",
+        "ReplicatedAggregatingMergeTree",
+        "ReplicatedCollapsingMergeTree",
+        "ReplicatedGraphiteMergeTree",
+        "ReplicatedSummingMergeTree",
+        "ReplicatedVersionedCollapsingMergeTree",
     ]
     with Pool(4) as executor:
         for engine in engines:
-            # Scenario(
-            #     f"{engine} attach UUID",
-            #     test=check_active_path_uuid,
-            #     parallel=True,
-            #     executor=executor,
-            #     flags=TE,
-            # )(engine=engine)
-            # Scenario(
-            #     f"{engine} attach detached",
-            #     test=check_active_path_attach_detached,
-            #     parallel=True,
-            #     executor=executor,
-            #     flags=TE,
-            # )(engine=engine)
             Scenario(
-                f"{engine} attach convert",
-                test=check_active_path_convert_2,
+                f"{engine} attach UUID",
+                test=check_active_path_uuid,
+                parallel=True,
+                executor=executor,
+                flags=TE,
+            )(engine=engine)
+            Scenario(
+                f"{engine} attach detached",
+                test=check_active_path_attach_detached,
                 parallel=True,
                 executor=executor,
                 flags=TE,
             )(engine=engine)
         join()
+
+    Scenario(
+        test=check_active_path_convert,
+        flags=TE,
+    )()
