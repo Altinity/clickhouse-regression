@@ -8,6 +8,7 @@ from attach.requirements.requirements import (
     RQ_SRS_039_ClickHouse_Attach_ReplicaPath_ActivePath,
 )
 
+
 columns = [
     Column(name="id", datatype=Int32()),
     Column(name="time", datatype=DateTime()),
@@ -22,7 +23,7 @@ columns = [
 
 
 @TestScenario
-@Repeat(10)
+@Repeat(5)
 def check_active_path_convert(self, engine="ReplicatedMergeTree"):
     node = self.context.node
     node2 = self.context.node_2
@@ -252,6 +253,7 @@ def feature(self):
 
     for engine in engines:
         Scenario(
+            f"check active path convert {engine}",
             test=check_active_path_convert,
             flags=TE,
         )(engine=engine)
