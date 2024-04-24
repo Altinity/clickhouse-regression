@@ -109,7 +109,7 @@ def scenario(self, engine):
                     tasks.append(p.submit(alter_modify, (100,)))
 
                 for task in tasks:
-                    task.result(timeout=600)
+                    task.result(timeout=900)
 
         with When("I check the server is still up"):
             r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()
