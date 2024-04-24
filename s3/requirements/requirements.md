@@ -247,7 +247,7 @@ version: 1.0
 
 [ClickHouse] SHALL support sending the `x-amz-server-side-encryption-customer-key`
 header and the `x-amz-server-side-encryption-customer-key-md5` header as part of
-the query when the S3 resouce is server-side encrypted.
+the query when the S3 resource is server-side encrypted.
 
 #### RQ.SRS-015.S3.RemoteHostFilter
 version: 1.0
@@ -279,6 +279,7 @@ addresses. The remote host filter configuration SHALL be similar to the followin
     </remote_url_allow_hosts>
 </yandex>
 ```
+
 #### Backup
 
 ##### MinIO Backup
@@ -308,6 +309,7 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support using creating manual backups of tables that use storage policies containing:
+
 * one volume with s3 disk
 * one volume with s3 and local disk
 * multiple volumes with s3 and local disks
@@ -408,6 +410,7 @@ version: 1.0
 [ClickHouse] SHALL support restoring a table to a specific bucket and path by indicating them
 in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`
 using the following syntax:
+
 ```
 'source_path' = {path}
 'source_bucket' = {bucket}
@@ -421,6 +424,7 @@ version: 1.0
 [ClickHouse] SHALL support restoring a table to a specific revision version.
 The table shall restore to the original bucket and path if and only if it is the latest revision.
 The revision can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:
+
 ```
 'revision' = {revision number}
 ```
@@ -448,6 +452,7 @@ version: 1.0
 [ClickHouse] SHALL support restoring tables with a detached partition and
 the ability to reattach that partition even if it was detached before the `ALTER FREEZE` backup.
 It can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:
+
 ```
 'detached' = true
 ```
@@ -601,11 +606,11 @@ section of the `<storage_configuration>` section of the config.xml file or the
 storage.xml file in the config.d directory to toggle a runtime check for access
 to the corresponding [S3] disk. If this runtime check fails, [ClickHouse] SHALL
 return an "Access Denied" error. The specifics of the error depend on version:
+
  - In [Clickhouse] < 22.9 the error message SHALL be `DB::Exception: Access Denied.`
 else `DB::Exception: Message: Access Denied`
  - In [Clickhouse] >= 23.8 the error SHALL be returned from CREATE TABLE,
 else CREATE TABLE SHALL succeed and the error SHALL be returned from INSERT INTO
-
 
 ##### RQ.SRS-015.S3.Disk.Configuration.Access.Default
 version: 1.0
@@ -640,6 +645,7 @@ corresponding [S3] disk in version 22.8 and later.
 The definition requires `<type>`, `<disk>`, `<path>`, `<max_size>`, and `<do_not_evict_index_and_mark_files>` parameters.
 
 Example:
+
 ```
 <s3_cache>
     <type>cache</type>
@@ -691,7 +697,9 @@ file or the storage.xml file in the config.d directory is set such that the
 path to the disk metadata and the path to the disk cache are the same.
 The error SHALL be similar to the following:
 
-    "DB::Exception: Metadata and cache path should be different"
+```sh
+"DB::Exception: Metadata and cache path should be different"
+```
 
 ##### RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek
 version: 1.0
@@ -1001,7 +1009,9 @@ version: 1.0
 [ClickHouse] SHALL support the `<structure>` parameter to the [S3] table function to
 specify the structure of the data. The structure SHALL use the following format:
 
-    'column1_name column1_type, column2_name column2_type, ...'
+```xml
+'column1_name column1_type, column2_name column2_type, ...'
+```
 
 #### RQ.SRS-015.S3.TableFunction.Compression
 version: 1.0
@@ -1188,6 +1198,7 @@ server-side encryption and decryption when writing and reading from AWS S3 endpo
 
 The SSEC key can be specified using the `<server_side_encryption_customer_key_base64>` parameter.
 Example:
+
 ```
 <s3>
   <s3-bucket>
@@ -1250,13 +1261,13 @@ is greater than 1.
 #### RQ.SRS-015.S3.Settings.MaxDownloadThreads
 version: 1.0
 
-[ClickHouse] SHALL download files from S3 in parallel using multiple threads 
+[ClickHouse] SHALL download files from S3 in parallel using multiple threads
 specified by `max_download_threads`. Default is 1.
 
 #### RQ.SRS-015.S3.Settings.MaxDownloadBufferSize
 version: 1.0
 
-[ClickHouse] SHALL download files from S3 with a maximum buffer size 
+[ClickHouse] SHALL download files from S3 with a maximum buffer size
 specified by `max_download_buffer_size`.
 
 #### RQ.SRS-015.S3.Settings.PartitionBy
