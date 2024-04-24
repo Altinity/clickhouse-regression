@@ -52,10 +52,10 @@ def from_temporary_to_regular(self):
                 "temporary table"
             ):
                 source_data = client.query(
-                    f"SELECT * FROM '{source_table}' WHERE p = 1 ORDER BY i"
+                    f"SELECT * FROM '{source_table}' WHERE p = 1 ORDER BY i FORMAT TabSeparated"
                 )
                 destination_data = client.query(
-                    f"SELECT * FROM '{destination_table}' WHERE p = 1 ORDER BY i"
+                    f"SELECT * FROM '{destination_table}' WHERE p = 1 ORDER BY i FORMAT TabSeparated"
                 )
 
                 assert destination_data.strip() == source_data.strip(), error()

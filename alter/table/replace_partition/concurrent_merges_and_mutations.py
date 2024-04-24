@@ -89,7 +89,7 @@ def mutations_on_unrelated_partition(self):
         "I update the destination table with arbitrary sleep so that mutation takes long enough time"
     ):
         old_data = node.query(
-            f"SELECT i FROM {destination_table} WHERE p == 1 ORDER BY tuple(*)"
+            f"SELECT i FROM {destination_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
         alter_table_update_column(
@@ -117,7 +117,7 @@ def mutations_on_unrelated_partition(self):
             "confirming that the the i column, which mutation should've changed still has the old data"
         ):
             new_data = node.query(
-                f"SELECT i FROM {destination_table} WHERE p == 1 ORDER BY tuple(*)"
+                f"SELECT i FROM {destination_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
             )
 
             assert old_data.output.strip() != new_data.output.strip(), error()
