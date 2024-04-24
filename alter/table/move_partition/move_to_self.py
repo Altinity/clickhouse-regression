@@ -102,7 +102,7 @@ def check_move_partition(
                 )
 
     with And("I get the list of partitions and validate partition keys pair"):
-        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id"
+        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT TabSeparated"
 
         partition_ids = sorted(
             list(
@@ -113,7 +113,9 @@ def check_move_partition(
     with And("I save the state of source table before moving"):
         source_before = (
             get_node(self, "source")
-            .query(f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra")
+            .query(
+                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+            )
             .output
         )
 
@@ -145,13 +147,13 @@ def check_move_partition(
     ):
         source_partition_data = (
             get_node(self, "source")
-            .query(f"SELECT count() FROM {source_table_name}")
+            .query(f"SELECT count() FROM {source_table_name} FORMAT TabSeparated")
             .output
         )
         assert int(source_partition_data) == 0
 
         destination_partition_data = get_node(self, "destination").query(
-            f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+            f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
@@ -160,13 +162,13 @@ def check_move_partition(
     with And(f"I check that all replicas of destination table have same data:"):
         if "Replicated" in self.context.destination_engine:
             destination_partition_data_1 = self.context.node_1.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             destination_partition_data_2 = self.context.node_2.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             destination_partition_data_3 = self.context.node_3.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra"
+                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
@@ -180,12 +182,12 @@ def check_move_partition(
         "I check that I can use data in the destination table after detach attach"
     ):
         data_before = self.context.node_1.query(
-            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra"
+            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra FORMAT TabSeparated"
         ).output
         self.context.node_1.query(f"DETACH TABLE {destination_table_name}")
         self.context.node_1.query(f"ATTACH TABLE {destination_table_name}")
         data_after = self.context.node_1.query(
-            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra"
+            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra FORMAT TabSeparated"
         )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
