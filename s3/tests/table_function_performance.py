@@ -63,6 +63,8 @@ def s3_create_many_files(self):
 def wildcard_performance(self):
     """Check the performance of using wildcards in s3 paths."""
 
+    expected_time = 60
+
     node = current().context.node
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
@@ -82,10 +84,12 @@ def wildcard_performance(self):
                 t_start = time.time()
                 r = node.query(
                     f"""SELECT median(d) FROM s3('{many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
-                    timeout=60,
+                    timeout=expected_time,
                 )
-                metric(f"wildcard {name} ({wildcard})", time.time() - t_start, "s")
+                t_elapsed = time.time() - t_start
+                metric(f"wildcard {name} ({wildcard})", t_elapsed, "s")
                 assert r.output.strip() != "", error()
+                assert t_elapsed < expected_time, error()
 
 
 @TestOutline(Feature)
