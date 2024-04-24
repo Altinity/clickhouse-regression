@@ -8,22 +8,31 @@ from attach.requirements.requirements import (
     RQ_SRS_039_ClickHouse_Attach_ReplicaPath_ActivePath,
 )
 
+columns = [
+            Column(name="id", datatype=Int32()),
+            Column(name="time", datatype=DateTime()),
+            Column(name="date", datatype=Date()),
+            Column(name="extra", datatype=UInt64()),
+            Column(name="Path", datatype=String()),
+            Column(name="Time", datatype=DateTime()),
+            Column(name="Value", datatype=Float64()),
+            Column(name="Timestamp", datatype=Int64()),
+            Column(name="sign", datatype=Int8()),
+        ]
+
 
 @TestScenario
 @Repeat(10)
-def check_active_path_convert(self):
+def check_active_path_convert(self, engine="ReplicatedMergeTree"):
     node = self.context.node
     node2 = self.context.node_2
     table1 = "table1_" + getuid()
     table2 = "table2_" + getuid()
-    columns = [
-        Column(name="id", datatype=Int32()),
-    ]
 
     with Given("I create replicated table on cluster"):
         create_replicated_table(
             table_name=table1,
-            engine="ReplicatedMergeTree",
+            engine=engine,
             cluster="replicated_cluster",
             node=node,
             table_id=table2,
@@ -32,15 +41,16 @@ def check_active_path_convert(self):
         )
 
     with And("I insert data into the table"):
-        node.query(f"INSERT INTO {table1} SELECT * FROM numbers(100000000)")
+        node.query(f"INSERT INTO {table1} (id) SELECT * FROM numbers(100000000)")
 
     with And("I rename table"):
         node.query(f"RENAME TABLE {table1} TO {table2}")
 
     with And("I create MergeTree table and set convert flags"):
+        non_replicated_engine = engine.replace("Replicated", "")
         create_table(
             name=table2,
-            engine="MergeTree",
+            engine=non_replicated_engine,
             node=node2,
             columns=columns,
             order_by="id",
@@ -69,7 +79,7 @@ def check_active_path_convert(self):
     with And("I create replicated table on the second node back"):
         create_replicated_table(
             table_name=table2,
-            engine="ReplicatedMergeTree",
+            engine=engine,
             node=node2,
             table_id=table2,
             columns=columns,
@@ -240,7 +250,9 @@ def feature(self):
             )(engine=engine)
         join()
 
-    Scenario(
-        test=check_active_path_convert,
-        flags=TE,
-    )()
+
+    for engine in engines:
+        Scenario(
+            test=check_active_path_convert,
+            flags=TE,
+        )(engine=engine)
