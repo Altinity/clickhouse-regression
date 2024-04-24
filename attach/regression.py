@@ -15,7 +15,7 @@ from helpers.tables import check_clickhouse_version
 issue_62905 = "https://github.com/ClickHouse/ClickHouse/issues/62905"
 
 xfails = {
-    "/attach/active path/check active path convert/run #[0-9]": [(Fail, issue_62905)],
+    "/attach/active path/check active path convert:/run #[0-9]": [(Fail, issue_62905)],
 }
 
 ffails = {
@@ -33,11 +33,11 @@ ffails = {
 
 
 @TestModule
-@Name("attach")
+@ArgumentParser(argparser)
 @XFails(xfails)
 @FFails(ffails)
-@ArgumentParser(argparser)
 @Specifications(SRS_039_ClickHouse_Attach_Statement)
+@Name("attach")
 def regression(
     self,
     local,
