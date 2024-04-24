@@ -9,16 +9,16 @@ from attach.requirements.requirements import (
 )
 
 columns = [
-            Column(name="id", datatype=Int32()),
-            Column(name="time", datatype=DateTime()),
-            Column(name="date", datatype=Date()),
-            Column(name="extra", datatype=UInt64()),
-            Column(name="Path", datatype=String()),
-            Column(name="Time", datatype=DateTime()),
-            Column(name="Value", datatype=Float64()),
-            Column(name="Timestamp", datatype=Int64()),
-            Column(name="sign", datatype=Int8()),
-        ]
+    Column(name="id", datatype=Int32()),
+    Column(name="time", datatype=DateTime()),
+    Column(name="date", datatype=Date()),
+    Column(name="extra", datatype=UInt64()),
+    Column(name="Path", datatype=String()),
+    Column(name="Time", datatype=DateTime()),
+    Column(name="Value", datatype=Float64()),
+    Column(name="Timestamp", datatype=Int64()),
+    Column(name="sign", datatype=Int8()),
+]
 
 
 @TestScenario
@@ -249,7 +249,6 @@ def feature(self):
                 flags=TE,
             )(engine=engine)
         join()
-
 
     for engine in engines:
         Scenario(
