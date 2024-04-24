@@ -114,7 +114,7 @@ def missing_window_spec(self):
     message = "Exception: Syntax error"
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER w1 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1",
+        "SELECT number,sum(number) OVER w1 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
