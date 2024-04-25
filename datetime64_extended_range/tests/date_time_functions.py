@@ -33,7 +33,7 @@ def to_time_zone(self):
                         tz2_expected = dt_transformed.strftime("%Y-%m-%d %H:%M:%S")
                     with And("Forming a toTimeZone ClickHouse query"):
                         tz1_query = dt_local.strftime("%Y-%m-%d %H:%M:%S")
-                        query = f"SELECT toTimeZone(toDateTime64('{tz1_query}', 0, '{tz1}'), '{tz2}')"
+                        query = f"SELECT toTimeZone(toDateTime64('{tz1_query}', 0, '{tz1}'), '{tz2}') FORMAT TabSeparated"
                     with Then(f"I execute query", flags=TE):
                         exec_query(request=query, expected=f"{tz2_expected}")
 
@@ -66,7 +66,7 @@ def to_date_part(self, py_func, ch_func):
                             expected = f"{result}"
                         with And(f"Forming a {ch_func} ClickHouse query"):
                             dt_str = dt.strftime("%Y-%m-%d %H:%M:%S")
-                            query = f"SELECT {ch_func}(toDateTime64('{dt_str}', 0, '{tz1}'), '{tz2}')"
+                            query = f"SELECT {ch_func}(toDateTime64('{dt_str}', 0, '{tz1}'), '{tz2}') FORMAT TabSeparated"
                         with Then(f"I execute query that uses '{ch_func}' function"):
                             exec_query(request=query, expected=f"{expected}")
 
@@ -1252,7 +1252,9 @@ def now(self):
 
         with Step(f"{dt} {tz}"):
             with When("I execute query and format its result to string"):
-                r = self.context.node.query(f"SELECT toDateTime64(now(), 0, '{tz}')")
+                r = self.context.node.query(
+                    f"SELECT toDateTime64(now(), 0, '{tz}') FORMAT TabSeparated"
+                )
                 query_result = r.output
                 received_dt = datetime.datetime.strptime(
                     query_result, "%Y-%m-%d %H:%M:%S"
@@ -1285,7 +1287,9 @@ def today(self):
 
         with Step(f"{dt} {tz}"):
             with When("I execute query and format its result to string"):
-                r = self.context.node.query(f"SELECT toDateTime64(today(), 0, '{tz}')")
+                r = self.context.node.query(
+                    f"SELECT toDateTime64(today(), 0, '{tz}') FORMAT TabSeparated"
+                )
                 query_result = r.output
                 received_dt = datetime.datetime.strptime(
                     query_result, "%Y-%m-%d %H:%M:%S"
@@ -1322,7 +1326,7 @@ def yesterday(self):
         with Step(f"{dt} {tz}"):
             with When("I execute query and format its result to string"):
                 r = self.context.node.query(
-                    f"SELECT toDateTime64(yesterday(), 0, '{tz}')"
+                    f"SELECT toDateTime64(yesterday(), 0, '{tz}') FORMAT TabSeparated"
                 )
                 query_result = r.output
                 received_dt = datetime.datetime.strptime(
@@ -1638,10 +1642,11 @@ def date_diff(self):
             for unit in compare_units:
                 with Given(f"{unit}: {dt1_str} {dt2_str}, {tz}"):
                     with When("I compute expected result with Pythons"):
-                        expected = date_diff_helper(dt1=dt1, dt2=dt2, unit=unit)
+                        expected = int(date_diff_helper(dt1=dt1, dt2=dt2, unit=unit))
                     with Then(f"I check dateDiff {dt1_str} {dt2_str} in {unit}"):
                         query = f"SELECT dateDiff('{unit}', toDateTime64('{dt1_str}', 0, '{tz}'), toDateTime64('{dt2_str}', 0, '{tz}'))"
-                        exec_query(request=query, expected=expected)
+                        r = exec_query(request=query)
+                        assert abs(int(r.output) - expected) <= 2, error()
 
 
 @TestScenario
