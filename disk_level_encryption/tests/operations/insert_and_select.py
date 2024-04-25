@@ -291,14 +291,16 @@ def check_insert_and_select_ten_millions_rows(
         node.query(query)
 
     with Then("I expect data is successfully inserted"):
-        expected_query = f"select number % 100  as Id, concat('hello', leftPad(toString(number), 8, '0')) as Value from numbers(1,{rows}) order by Id, Value"
+        expected_query = f"select number % 100  as Id, concat('hello', leftPad(toString(number), 8, '0')) as Value from numbers(1,{rows}) order by Id, Value FORMAT JSONEachRow"
         with stashed(name=stashed.hash(expected_query)) as stash:
             r = node.hash_query(expected_query)
             stash(r)
 
         expected_hash = stash.value
         with When("I read back all data that is in the table"):
-            r = node.hash_query(f"select * from {table_name} order by Id, Value")
+            r = node.hash_query(
+                f"select * from {table_name} order by Id, Value FORMAT JSONEachRow"
+            )
         with Then("I expected hash of the read data to match expected"):
             assert r == expected_hash
 

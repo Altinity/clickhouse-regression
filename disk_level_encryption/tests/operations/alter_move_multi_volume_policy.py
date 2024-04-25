@@ -55,14 +55,14 @@ def alter_move_multi_volume_policy(
 
     with Then("I check alter move to encrypted disk"):
         r = node.query(
-            f"SELECT name, disk_name, path FROM system.parts WHERE table = '{table_name}'"
+            f"SELECT name, disk_name, path FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
         )
         partition_part_name = "2" if partition else "2_3_3_0"
         part_or_partition = "PARTITION" if partition else "PART"
         partition_part_table_row = "partition" if partition else "name"
 
         r = node.query(
-            f"SELECT {partition_part_table_row} FROM system.parts WHERE table = '{table_name}' AND disk_name LIKE '%local0%' LIMIT 1"
+            f"SELECT {partition_part_table_row} FROM system.parts WHERE table = '{table_name}' AND disk_name LIKE '%local0%' LIMIT 1 FORMAT TabSeparated"
         )
         partition_part_name = r.output
 
@@ -70,7 +70,7 @@ def alter_move_multi_volume_policy(
             f"ALTER TABLE {table_name} MOVE {part_or_partition} '{partition_part_name}' TO VOLUME 'volume1'"
         )
         r = node.query(
-            f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+            f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
         )
         assert "local1" in r.output, error()
 
@@ -83,7 +83,7 @@ def alter_move_multi_volume_policy(
             f"ALTER TABLE {table_name} MOVE {part_or_partition} '{partition_part_name}' TO VOLUME 'volume0'"
         )
         r = node.query(
-            f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+            f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
         )
         assert "local0" in r.output, error()
 
