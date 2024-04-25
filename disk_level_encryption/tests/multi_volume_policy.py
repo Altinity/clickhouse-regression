@@ -71,7 +71,7 @@ def multi_volume_policy_using_move_factor(
 
     with Then("I expect data is inserted into all disks"):
         r = node.query(
-            f"SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name}' ORDER BY disk_name"
+            f"SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name}' ORDER BY disk_name FORMAT TabSeparated"
         )
         assert r.output == used_disks, error()
 
@@ -159,7 +159,7 @@ def multi_volume_policy_using_ttl(
     if check_merge:
         with Then("I check we can merge these parts"):
             r = node.query(
-                f"SELECT name, disk_name, active FROM system.parts WHERE table = '{table_name}'"
+                f"SELECT name, disk_name, active FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
             )
             with Then("I expect data is successfully inserted"):
                 for attempt in retries(timeout=30, delay=5):
