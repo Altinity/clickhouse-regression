@@ -834,7 +834,7 @@ def check_tables_have_same_projections(
     if check_absent is not None:
         with And(f"I check that {check_absent} do not exist"):
             for projection_name in check_absent:
-                assert projection_name in table_projections[tables[0]], error()
+                assert projection_name not in table_projections[tables[0]], error()
 
 
 @TestStep(Then)
