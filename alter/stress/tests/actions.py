@@ -142,7 +142,7 @@ def delete_random_column(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
-            wait_for_mutations_to_finish(node=node)
+            # wait_for_mutations_to_finish(node=node)
             By(
                 name=f"delete column from {table_name} with {node.name}",
                 test=alter_table_drop_column,
@@ -171,7 +171,7 @@ def rename_random_column(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
-            wait_for_mutations_to_finish(node=node)
+            # wait_for_mutations_to_finish(node=node)
             By(
                 name=f"rename column from {table_name} with {node.name}",
                 test=alter_table_rename_column,
@@ -199,6 +199,7 @@ def update_random_column(self):
     """Replace some values on a random column."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
+    wait_for_mutations_to_finish(node=node, command_like="COLUMN")
     column_name = get_random_column_name(node=node, table_name=table_name)
     By(
         name=f"update column from {table_name} with {node.name}",
@@ -630,9 +631,7 @@ def drop_random_projection(self):
                     exit_messages = {}
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
-                        wait_for_mutations_to_finish(
-                            node=node, command_like="DROP PROJECTION"
-                        )
+                        # wait_for_mutations_to_finish(node=node)
                         r = node.query(
                             f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
                             no_checks=True,
@@ -647,11 +646,12 @@ def drop_random_projection(self):
                             table_name + ": " + exit_messages[table_name]
                         )
 
+        wait_for_mutations_to_finish(node=node, command_like="DROP PROJECTION")
         retry(
             check_tables_have_same_projections,
             timeout=step_retry_timeout,
             delay=step_retry_delay,
-        )(tables=self.context.table_names)
+        )(tables=self.context.table_names, check_absent=[projection_name])
 
 
 @TestStep
@@ -735,7 +735,7 @@ def drop_random_index(self):
             with When(f"I drop {index_name} on all tables"):
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
-                    wait_for_mutations_to_finish(node=node)
+                    # wait_for_mutations_to_finish(node=node)
 
                     r = node.query(
                         f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
@@ -804,7 +804,9 @@ def check_tables_have_same_columns(self, tables):
 
 
 @TestStep(Then)
-def check_tables_have_same_projections(self, tables):
+def check_tables_have_same_projections(
+    self, tables, check_present: list = None, check_absent: list = None
+):
     """
     Asserts that the given tables have the same projections.
     Smartly selects a node for each given replicated table.
@@ -814,6 +816,7 @@ def check_tables_have_same_projections(self, tables):
         table_projections = {}
         for table_name in tables:
             node = get_random_node_for_table(table_name=table_name)
+            wait_for_mutations_to_finish(node=node, command_like="PROJECTION")
             table_projections[table_name] = set(
                 get_projections(node=node, table_name=table_name)
             )
@@ -822,6 +825,16 @@ def check_tables_have_same_projections(self, tables):
         for table1, table2 in combinations(tables, 2):
             with By(f"checking {table1} and {table2}"):
                 assert table_projections[table1] == table_projections[table2], error()
+
+    if check_present is not None:
+        with And(f"I check that {check_present} exist"):
+            for projection_name in check_present:
+                assert projection_name in table_projections[tables[0]], error()
+
+    if check_absent is not None:
+        with And(f"I check that {check_present} do not exist"):
+            for projection_name in check_present:
+                assert projection_name in table_projections[tables[0]], error()
 
 
 @TestStep(Then)
@@ -1050,7 +1063,7 @@ def restart_clickhouse(self, signal="SEGV"):
 
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
-def restart_network(self):
+def restart_network(self, restart_node_after=True):
     """
     Stop the network on a random instance, wait, and restart.
     This simulates a short outage.
@@ -1061,6 +1074,10 @@ def restart_network(self):
     with interrupt_network(self.context.cluster, node, "stress"):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
+
+    if restart_node_after:
+        with When("I restart the node to ensure communication is restored"):
+            node.restart()
 
 
 network_impairments = [
