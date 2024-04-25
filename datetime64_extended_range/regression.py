@@ -48,9 +48,6 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/17079#issuecomment-783396589",
         )
     ],
-    "date time funcs/date diff/:": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22824")
-    ],
     "date time funcs/format date time/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22852")
     ],
