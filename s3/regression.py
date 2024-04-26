@@ -204,6 +204,14 @@ ffails = {
         Skip,
         "GCS is not supported for zero copy replication",
     ),
+    "gcs/:/disk/:/:/:the size of the s3 bucket*": (
+        Skip,
+        "AWS S3 credentials not set for gcs tests.",
+    ),
+    "gcs/:/disk/:/:the size of the s3 bucket*": (
+        Skip,
+        "AWS S3 credentials not set for gcs tests.",
+    ),
     "aws s3/:/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
