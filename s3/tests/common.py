@@ -747,7 +747,10 @@ def get_bucket_size(
         access_key = self.context.secret_access_key
 
     if minio_enabled is None:
-        minio_enabled = self.context.minio_enabled
+        if getattr(self.context, "storage") == "minio" or self.context.minio_enabled:
+            minio_enabled = True
+        else:
+            minio_enabled = False
 
     if minio_enabled:
         minio_client = self.context.cluster.minio_client
@@ -1369,9 +1372,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
-                ssec_key
-            )
+            self.context.s3_options[
+                "server_side_encryption_customer_key_base64"
+            ] = ssec_key
         yield
 
     finally:
@@ -1462,3 +1465,26 @@ def insert_from_s3_function(
         query += f" FORMAT {fmt}"
 
     node.query(query)
+
+
+@TestStep(Given)
+def measure_buckets_before_and_after(
+    self, bucket_prefix=None, bucket_name=None, tolerance=5
+):
+    """Return the current bucket size and assert that it is the same after cleanup."""
+
+    with When("I get the size of the s3 bucket before adding data"):
+        size_before = get_stable_bucket_size(prefix=bucket_prefix, name=bucket_name)
+
+    yield size_before
+
+    with Then(
+        """The size of the s3 bucket should be very close to the size
+                before adding any data"""
+    ):
+        check_stable_bucket_size(
+            prefix=bucket_prefix,
+            name=bucket_name,
+            expected_size=size_before,
+            tolerance=tolerance,
+        )
