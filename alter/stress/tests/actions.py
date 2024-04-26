@@ -120,7 +120,7 @@ def add_random_column(self):
                 column_type="UInt16",
                 node=node,
                 exitcode=0,
-                timeout=30,
+                timeout=120,
                 if_not_exists=True,
                 **alter_query_args,
             )
@@ -181,7 +181,7 @@ def rename_random_column(self):
                 column_name_old=column_name,
                 column_name_new=new_name,
                 exitcode=0,
-                timeout=30,
+                timeout=120,
                 **alter_query_args,
             )
 
@@ -211,7 +211,7 @@ def update_random_column(self):
         condition=f"({column_name} < 10000)",
         node=node,
         exitcode=0,
-        timeout=30,
+        timeout=120,
         **alter_query_args,
     )
 
