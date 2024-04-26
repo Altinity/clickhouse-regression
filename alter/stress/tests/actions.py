@@ -29,7 +29,7 @@ alter_query_args = {"retry_delay": 60, "retry_count": 5}
 
 @TestStep
 @Name("optimize")
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def optimize_random(self, node=None, table_name=None, repeat_limit=3):
     """Apply OPTIMIZE on the given table and node, choosing at random if not specified."""
     if table_name is None:
@@ -42,7 +42,7 @@ def optimize_random(self, node=None, table_name=None, repeat_limit=3):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("insert")
 def insert_to_random(self):
     """Insert random data to a random table."""
@@ -62,7 +62,7 @@ def insert_to_random(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def select_count_random(self, repeat_limit=5):
     """Perform select count() queries on a random node and table."""
     for _ in range(random.randint(1, repeat_limit)):
