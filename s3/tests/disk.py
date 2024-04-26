@@ -2403,11 +2403,11 @@ def disk_tests(self):
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
-    self.context.uri = uri
+    self.context.uri = uri + 'disk/'
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
     self.context.bucket_name = "altinity-qa-test"
-    self.context.bucket_path = "data"
+    self.context.bucket_path = "data/disk"
 
     disk_tests()
 
@@ -2439,10 +2439,10 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"
-    self.context.uri = uri
+    self.context.uri = uri + 'disk/'
     self.context.access_key_id = key
     self.context.secret_access_key = secret
     self.context.bucket_name = "root"
-    self.context.bucket_path = "data"
+    self.context.bucket_path = "data/disk"
 
     disk_tests()

@@ -747,10 +747,9 @@ def get_bucket_size(
         access_key = self.context.secret_access_key
 
     if minio_enabled is None:
-        if getattr(self.context, "storage") == "minio" or self.context.minio_enabled:
-            minio_enabled = True
-        else:
-            minio_enabled = False
+        minio_enabled = getattr(self.context, "storage", None) == "minio" or getattr(
+            self.context, "minio_enabled", False
+        )
 
     if minio_enabled:
         minio_client = self.context.cluster.minio_client
@@ -1372,9 +1371,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options[
-                "server_side_encryption_customer_key_base64"
-            ] = ssec_key
+            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
+                ssec_key
+            )
         yield
 
     finally:
