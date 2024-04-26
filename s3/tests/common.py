@@ -752,22 +752,24 @@ def get_bucket_size(
         )
 
     if minio_enabled:
-        minio_client = self.context.cluster.minio_client
+        with By("querying with minio client"):
+            minio_client = self.context.cluster.minio_client
 
-        objects = minio_client.list_objects(
-            bucket_name=name, prefix=prefix, recursive=True
+            objects = minio_client.list_objects(
+                bucket_name=name, prefix=prefix, recursive=True
+            )
+            return sum(obj._size for obj in objects)
+
+    with By("querying with boto3 client"):
+        s3 = boto3.resource(
+            "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
         )
-        return sum(obj._size for obj in objects)
+        bucket = s3.Bucket(name)
+        total_bytes = 0
+        for obj in bucket.objects.filter(Prefix=prefix):
+            total_bytes += obj.size
 
-    s3 = boto3.resource(
-        "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
-    )
-    bucket = s3.Bucket(name)
-    total_bytes = 0
-    for obj in bucket.objects.filter(Prefix=prefix):
-        total_bytes += obj.size
-
-    return total_bytes
+        return total_bytes
 
 
 @TestStep(Then)
@@ -797,7 +799,7 @@ def get_stable_bucket_size(
 ):
     """Get the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
 
-    with By("Checking the current bucket size"):
+    with By("checking the current bucket size"):
         size_previous = get_bucket_size(
             name=name,
             prefix=prefix,
@@ -808,9 +810,9 @@ def get_stable_bucket_size(
 
     start_time = time.time()
     while True:
-        with And(f"Waiting {delay}s"):
+        with And(f"waiting {delay}s"):
             time.sleep(delay)
-        with And("Checking the current bucket size"):
+        with And("checking the current bucket size"):
             size = get_bucket_size(
                 name=name,
                 prefix=prefix,
@@ -818,12 +820,12 @@ def get_stable_bucket_size(
                 access_key=access_key,
                 key_id=key_id,
             )
-        with And(f"Checking if current={size} == previous={size_previous}"):
+        with And(f"checking if current={size} == previous={size_previous}"):
             if size_previous == size:
                 break
         size_previous = size
 
-        with And("Checking timeout"):
+        with And("checking timeout"):
             assert time.time() - start_time <= timeout, error(
                 f"Bucket size did not stabilize in {timeout}s"
             )

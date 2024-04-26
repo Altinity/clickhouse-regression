@@ -1101,7 +1101,7 @@ def mergetree(self, engine):
         with When("I add data to the table"):
             standard_inserts(node=node, table_name=name)
 
-        with Then("Check that data was added in S3"):
+        with Then("I check that the size of the s3 bucket has increased"):
             size_after_insert = get_stable_bucket_size()
             assert size_after_insert > size_before, error()
 
@@ -1160,7 +1160,7 @@ def mergetree_collapsing(self):
             with And("then doing a large insert of 10Mb of data"):
                 insert_data_mtc(number_of_mb=10, start=1024 * 1024 * 2)
 
-        with Then("Check that data was added in S3"):
+        with Then("I check that the size of the s3 bucket has increased"):
             size_after_insert = get_stable_bucket_size()
             assert size_after_insert > size_before, error()
 
@@ -1239,7 +1239,7 @@ def mergetree_versionedcollapsing(self):
             with And("then doing a large insert of 10Mb of data"):
                 insert_data_mtvc(number_of_mb=10, start=1024 * 1024 * 2)
 
-        with Then("Check that data was added in S3"):
+        with Then("I check that the size of the s3 bucket has increased"):
             size_after_insert = get_stable_bucket_size()
             assert size_after_insert > size_before, error()
 
@@ -1309,7 +1309,7 @@ def log(self, engine):
         with When("I add data to the table"):
             standard_inserts(node=node, table_name=name)
 
-        with Then("Check that data was added in S3"):
+        with Then("I check that the size of the s3 bucket has increased"):
             size_after_insert = get_stable_bucket_size()
             assert size_after_insert > size_before, error()
 
