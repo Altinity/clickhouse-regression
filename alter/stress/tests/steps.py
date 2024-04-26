@@ -55,11 +55,13 @@ def s3_config(self):
 def get_nodes_for_table(self, nodes, table_name):
     """Return all nodes that know about a given table."""
     active_nodes = []
-    for node in nodes:
-        r = node.query("SELECT table from system.replicas FORMAT JSONColumns")
-        tables = json.loads(r.output)["table"]
-        if table_name in tables:
-            active_nodes.append(node)
+    with By(f"querying all nodes for table {table_name}"):
+        for node in nodes:
+            r = node.query(
+                f"SELECT table from system.replicas where table='{table_name}' FORMAT TSV"
+            )
+            if table_name == r.output.strip():
+                active_nodes.append(node)
 
     return active_nodes
 
@@ -84,16 +86,6 @@ def get_random_node_for_table(self, table_name):
     return random.choice(
         get_nodes_for_table(nodes=self.context.ch_nodes, table_name=table_name)
     )
-
-
-@TestStep(Given)
-def get_column_names(self, node, table_name, timeout=30) -> list:
-    """Get a list of a table's column names."""
-    r = node.query(
-        f"DESCRIBE TABLE {table_name} FORMAT JSONColumns",
-        timeout=timeout,
-    )
-    return json.loads(r.output)["name"]
 
 
 @TestStep
