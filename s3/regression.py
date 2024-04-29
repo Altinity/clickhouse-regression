@@ -138,6 +138,8 @@ xfails = {
     "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
+    "aws s3/:/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
+    "aws s3/:/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "gcs/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
