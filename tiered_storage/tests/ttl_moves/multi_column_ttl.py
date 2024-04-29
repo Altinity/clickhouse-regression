@@ -81,7 +81,9 @@ def scenario(self, cluster, node="clickhouse1"):
                 with retry:
                     with When("I read data from the table"):
                         with By("reading number of rows"):
-                            r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
                             with Then(
                                 "checking that the rows that fall into TTL delete expression not to be present"
                             ):
@@ -89,7 +91,9 @@ def scenario(self, cluster, node="clickhouse1"):
 
                         with By("reading actual data"):
                             r = (
-                                node.query(f"SELECT value FROM {name} ORDER BY value FORMAT TabSeparated")
+                                node.query(
+                                    f"SELECT value FROM {name} ORDER BY value FORMAT TabSeparated"
+                                )
                                 .output.strip()
                                 .splitlines()
                             )

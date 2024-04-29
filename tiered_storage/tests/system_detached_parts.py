@@ -60,7 +60,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         node.query(f"ALTER TABLE {name} DETACH PARTITION tuple()")
 
                     with Then("number of rows should be 0"):
-                        count = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
+                        count = node.query(
+                            f"SELECT count() FROM {name} FORMAT TabSeparated"
+                        ).output.strip()
                         assert count == "0", error()
 
                     with And(
@@ -75,7 +77,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         node.query(f"ALTER TABLE {name} ATTACH PARTITION tuple()")
 
                     with Then("number of rows should be 5"):
-                        count = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
+                        count = node.query(
+                            f"SELECT count() FROM {name} FORMAT TabSeparated"
+                        ).output.strip()
                         assert count == "5", error()
 
                 finally:

@@ -168,7 +168,9 @@ def scenario(self, engine):
                 ), error()
 
         with When("in the end I get number of rows in the table"):
-            count = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
+            count = node.query(
+                f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+            ).output.strip()
             with Then("the count should be 4"):
                 assert count == "4", error()
 

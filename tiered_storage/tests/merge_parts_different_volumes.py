@@ -137,7 +137,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert all(d == "external" for d in disks), error()
 
                 with When("in the end I get number of rows in the table"):
-                    count = node.query(f"SELECT COUNT() FROM {name} FORMAT TabSeparated").output.strip()
+                    count = node.query(
+                        f"SELECT COUNT() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
 
                     with Then("the count should be 6"):
                         assert count == "6", error()

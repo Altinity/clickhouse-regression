@@ -80,7 +80,9 @@ def scenario(self, storage_type):
                 assert disks == ["external"] * 2, error()
 
         with When("in the end I get the number of rows in the table"):
-            count = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
+            count = node.query(
+                f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+            ).output.strip()
             with Then("the count should be 2"):
                 assert count == "2", error()
     finally:

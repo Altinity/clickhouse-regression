@@ -115,7 +115,9 @@ def scenario(self, engine):
         for attempt in retries(timeout=30, delay=5):
             with attempt:
                 with When("I ensure all rows are in the table"):
-                    r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
+                    r = node.query(
+                        f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+                    ).output.strip()
                 with Then("it should return the result of 500"):
                     assert r == "500", error()
 

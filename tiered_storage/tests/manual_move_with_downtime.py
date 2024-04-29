@@ -141,7 +141,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert all_paths_start_with_jbod1, error()
 
                 with When("in the end I get number of rows in the table"):
-                    count = node.query(f"SELECT COUNT() FROM {name} FORMAT TabSeparated").output.strip()
+                    count = node.query(
+                        f"SELECT COUNT() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
                     with Then("the count should be 4"):
                         assert count == "4", error()
 

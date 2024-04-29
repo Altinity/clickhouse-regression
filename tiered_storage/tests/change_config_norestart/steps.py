@@ -179,7 +179,9 @@ def reloading_config(self, node, restart=False, config=storage_config):
             node.command(f"cat /etc/clickhouse-server/config.d/{config}", steps=False)
         with By("executing sytem reload config"):
             node.query("SELECT name FROM system.disks FORMAT TabSeparated")
-            node.query("SELECT policy_name FROM system.storage_policies FORMAT TabSeparated")
+            node.query(
+                "SELECT policy_name FROM system.storage_policies FORMAT TabSeparated"
+            )
             node.query("SYSTEM RELOAD CONFIG")
     else:
         with By("restarting the server"):

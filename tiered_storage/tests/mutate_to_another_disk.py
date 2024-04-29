@@ -59,7 +59,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         node.query(f"INSERT INTO {name} VALUES {values}", steps=False)
 
                 with When("I count number of rows"):
-                    r = node.query(f"SELECT COUNT() FROM {name} FORMAT TabSeparated").output.strip()
+                    r = node.query(
+                        f"SELECT COUNT() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
                     with Then("the count should be 25"):
                         assert r == "25"
 

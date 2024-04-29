@@ -159,7 +159,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         node.query(f"DROP TABLE IF EXISTS {name}_fill_up SYNC")
 
                 with When("in the end I get number of rows in the table"):
-                    count = node.query(f"SELECT COUNT() FROM {name} FORMAT TabSeparated").output.strip()
+                    count = node.query(
+                        f"SELECT COUNT() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
 
                     with Then("the count should be 4"):
                         assert count == "4", error()

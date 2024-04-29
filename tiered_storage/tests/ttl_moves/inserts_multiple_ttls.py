@@ -83,7 +83,9 @@ def scenario(self, cluster, node="clickhouse1"):
                                 ), error()
 
                         with Then("number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
                             assert r == "6", error()
 
                         with When("I wait until second TTL expression triggers"):
@@ -103,7 +105,9 @@ def scenario(self, cluster, node="clickhouse1"):
                                         ), error()
 
                         with Then("again number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
                             assert r == "6", error()
 
                         with And("I wait until TTL expression to delete triggers"):
