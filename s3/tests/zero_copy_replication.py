@@ -9,29 +9,6 @@ from s3.tests.common import *
 from s3.requirements import *
 
 
-@TestStep(Given)
-def measure_buckets_before_and_after(
-    self, bucket_prefix=None, bucket_name=None, tolerance=5
-):
-    """Return the current bucket size and assert that it is the same after cleanup."""
-
-    with When("I get the size of the s3 bucket before adding data"):
-        size_before = get_stable_bucket_size(prefix=bucket_prefix, name=bucket_name)
-
-    yield size_before
-
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_stable_bucket_size(
-            prefix=bucket_prefix,
-            name=bucket_name,
-            expected_size=size_before,
-            tolerance=tolerance,
-        )
-
-
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global("1.0"))
 def global_setting(self):

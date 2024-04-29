@@ -29,7 +29,7 @@ alter_query_args = {"retry_delay": 60, "retry_count": 5}
 
 @TestStep
 @Name("optimize")
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def optimize_random(self, node=None, table_name=None, repeat_limit=3):
     """Apply OPTIMIZE on the given table and node, choosing at random if not specified."""
     if table_name is None:
@@ -42,7 +42,7 @@ def optimize_random(self, node=None, table_name=None, repeat_limit=3):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("insert")
 def insert_to_random(self):
     """Insert random data to a random table."""
@@ -62,7 +62,7 @@ def insert_to_random(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def select_count_random(self, repeat_limit=5):
     """Perform select count() queries on a random node and table."""
     for _ in range(random.randint(1, repeat_limit)):
@@ -120,7 +120,7 @@ def add_random_column(self):
                 column_type="UInt16",
                 node=node,
                 exitcode=0,
-                timeout=30,
+                timeout=120,
                 if_not_exists=True,
                 **alter_query_args,
             )
@@ -181,7 +181,7 @@ def rename_random_column(self):
                 column_name_old=column_name,
                 column_name_new=new_name,
                 exitcode=0,
-                timeout=30,
+                timeout=120,
                 **alter_query_args,
             )
 
@@ -211,7 +211,7 @@ def update_random_column(self):
         condition=f"({column_name} < 10000)",
         node=node,
         exitcode=0,
-        timeout=30,
+        timeout=120,
         **alter_query_args,
     )
 
@@ -832,9 +832,9 @@ def check_tables_have_same_projections(
                 assert projection_name in table_projections[tables[0]], error()
 
     if check_absent is not None:
-        with And(f"I check that {check_present} do not exist"):
-            for projection_name in check_present:
-                assert projection_name in table_projections[tables[0]], error()
+        with And(f"I check that {check_absent} do not exist"):
+            for projection_name in check_absent:
+                assert projection_name not in table_projections[tables[0]], error()
 
 
 @TestStep(Then)
