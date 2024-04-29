@@ -6,6 +6,7 @@ from testflows.asserts import values, error, snapshot
 
 from helpers.common import (
     check_clickhouse_version,
+    check_current_cpu,
     get_snapshot_id,
     getuid,
     current_cpu,
