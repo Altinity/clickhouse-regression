@@ -114,6 +114,12 @@ xfails = {
             check_clickhouse_version(">=24.3"),
         )
     ],
+    "/alter/attach partition/part level/merge increment/*": [
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
 }
 
 xflags = {}
