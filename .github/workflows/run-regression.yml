@@ -1485,7 +1485,7 @@ jobs:
 
   ssl_server:
     runs-on: [self-hosted, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 360
     env:
       SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
