@@ -66,7 +66,9 @@ def scenario(self, cluster, node="clickhouse1"):
             assert set(disks) == expected_disks, error()
 
         with When("I get the number of rows"):
-            r = node.query("SELECT COUNT() FROM default.renaming_table FORMAT TabSeparated").output.strip()
+            r = node.query(
+                "SELECT COUNT() FROM default.renaming_table FORMAT TabSeparated"
+            ).output.strip()
             with Then(f"count should be {count}"):
                 assert r == count
 
