@@ -1081,10 +1081,12 @@ def mergetree(self, engine):
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         default_s3_disk_and_volume()
 
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
     try:
         with Given(
-            f"""I create table using the {engine} engine and S3
-                    storage policy external"""
+            f"""I create table using the {engine} engine and S3 storage policy external"""
         ):
             node.query(
                 f"""
@@ -1099,7 +1101,11 @@ def mergetree(self, engine):
         with When("I add data to the table"):
             standard_inserts(node=node, table_name=name)
 
-        with Then("I check simple queries"):
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
             standard_selects(node=node, table_name=name)
 
     finally:
@@ -1126,10 +1132,12 @@ def mergetree_collapsing(self):
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         default_s3_disk_and_volume()
 
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
     try:
         with Given(
-            f"""I create table using the CollapsingMergeTree engine
-                    and S3 storage policy external"""
+            """I create table using the CollapsingMergeTree engine and S3 storage policy external"""
         ):
             node.query(
                 f"""
@@ -1152,7 +1160,11 @@ def mergetree_collapsing(self):
             with And("then doing a large insert of 10Mb of data"):
                 insert_data_mtc(number_of_mb=10, start=1024 * 1024 * 2)
 
-        with Then("I check simple queries"):
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
             check_query(
                 num=0,
                 query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
@@ -1198,10 +1210,12 @@ def mergetree_versionedcollapsing(self):
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         default_s3_disk_and_volume()
 
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
     try:
         with Given(
-            f"""I create table using the VersionedCollapsingMergeTree
-                    engine and S3 storage policy external"""
+            """I create table using the VersionedCollapsingMergeTree engine and S3 storage policy external"""
         ):
             node.query(
                 f"""
@@ -1225,7 +1239,11 @@ def mergetree_versionedcollapsing(self):
             with And("then doing a large insert of 10Mb of data"):
                 insert_data_mtvc(number_of_mb=10, start=1024 * 1024 * 2)
 
-        with Then("I check simple queries"):
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
             check_query(
                 num=0,
                 query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
@@ -1246,6 +1264,57 @@ def mergetree_versionedcollapsing(self):
                 query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
+
+    finally:
+        with Finally("I drop the table if exists"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+
+
+@TestOutline(Scenario)
+@Examples(
+    "engine",
+    [
+        ("TinyLog", Name("TinyLog")),
+        ("Log", Name("Log")),
+        ("StripeLog", Name("StripeLog")),
+    ],
+)
+# @Requirements()
+def log(self, engine):
+    """Check that different Log engines can be used to select S3 storage
+    disks when tables are created.
+    """
+    name = "table_" + getuid()
+    node = current().context.node
+
+    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+        default_s3_disk_and_volume()
+
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
+    try:
+        with Given(
+            f"""I create table using the {engine} engine and S3 storage policy external"""
+        ):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64
+                ) ENGINE = {engine}()
+                SETTINGS storage_policy='external'
+            """
+            )
+
+        with When("I add data to the table"):
+            standard_inserts(node=node, table_name=name)
+
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
+            standard_selects(node=node, table_name=name)
 
     finally:
         with Finally("I drop the table if exists"):
@@ -2334,9 +2403,11 @@ def disk_tests(self):
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
-    self.context.uri = uri
+    self.context.uri = uri + 'disk/'
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.bucket_name = "altinity-qa-test"
+    self.context.bucket_path = "data/disk"
 
     disk_tests()
 
@@ -2352,6 +2423,8 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.bucket_name = None
+    self.context.bucket_path = None
 
     if check_clickhouse_version(">=22.6")(self):
         with Given("I disable batch delete option"):
@@ -2366,8 +2439,10 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"
-    self.context.uri = uri
+    self.context.uri = uri + 'disk/'
     self.context.access_key_id = key
     self.context.secret_access_key = secret
+    self.context.bucket_name = "root"
+    self.context.bucket_path = "data/disk"
 
     disk_tests()

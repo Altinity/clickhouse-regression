@@ -747,25 +747,29 @@ def get_bucket_size(
         access_key = self.context.secret_access_key
 
     if minio_enabled is None:
-        minio_enabled = self.context.minio_enabled
+        minio_enabled = getattr(self.context, "storage", None) == "minio" or getattr(
+            self.context, "minio_enabled", False
+        )
 
     if minio_enabled:
-        minio_client = self.context.cluster.minio_client
+        with By("querying with minio client"):
+            minio_client = self.context.cluster.minio_client
 
-        objects = minio_client.list_objects(
-            bucket_name=name, prefix=prefix, recursive=True
+            objects = minio_client.list_objects(
+                bucket_name=name, prefix=prefix, recursive=True
+            )
+            return sum(obj._size for obj in objects)
+
+    with By("querying with boto3 client"):
+        s3 = boto3.resource(
+            "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
         )
-        return sum(obj._size for obj in objects)
+        bucket = s3.Bucket(name)
+        total_bytes = 0
+        for obj in bucket.objects.filter(Prefix=prefix):
+            total_bytes += obj.size
 
-    s3 = boto3.resource(
-        "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
-    )
-    bucket = s3.Bucket(name)
-    total_bytes = 0
-    for obj in bucket.objects.filter(Prefix=prefix):
-        total_bytes += obj.size
-
-    return total_bytes
+        return total_bytes
 
 
 @TestStep(Then)
@@ -795,7 +799,7 @@ def get_stable_bucket_size(
 ):
     """Get the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
 
-    with By("Checking the current bucket size"):
+    with By("checking the current bucket size"):
         size_previous = get_bucket_size(
             name=name,
             prefix=prefix,
@@ -806,9 +810,9 @@ def get_stable_bucket_size(
 
     start_time = time.time()
     while True:
-        with And(f"Waiting {delay}s"):
+        with And(f"waiting {delay}s"):
             time.sleep(delay)
-        with And("Checking the current bucket size"):
+        with And("checking the current bucket size"):
             size = get_bucket_size(
                 name=name,
                 prefix=prefix,
@@ -816,12 +820,12 @@ def get_stable_bucket_size(
                 access_key=access_key,
                 key_id=key_id,
             )
-        with And(f"Checking if current={size} == previous={size_previous}"):
+        with And(f"checking if current={size} == previous={size_previous}"):
             if size_previous == size:
                 break
         size_previous = size
 
-        with And("Checking timeout"):
+        with And("checking timeout"):
             assert time.time() - start_time <= timeout, error(
                 f"Bucket size did not stabilize in {timeout}s"
             )
@@ -1462,3 +1466,26 @@ def insert_from_s3_function(
         query += f" FORMAT {fmt}"
 
     node.query(query)
+
+
+@TestStep(Given)
+def measure_buckets_before_and_after(
+    self, bucket_prefix=None, bucket_name=None, tolerance=5
+):
+    """Return the current bucket size and assert that it is the same after cleanup."""
+
+    with When("I get the size of the s3 bucket before adding data"):
+        size_before = get_stable_bucket_size(prefix=bucket_prefix, name=bucket_name)
+
+    yield size_before
+
+    with Then(
+        """The size of the s3 bucket should be very close to the size
+                before adding any data"""
+    ):
+        check_stable_bucket_size(
+            prefix=bucket_prefix,
+            name=bucket_name,
+            expected_size=size_before,
+            tolerance=tolerance,
+        )
