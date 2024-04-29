@@ -23,11 +23,20 @@ xfails = {
     ],
 }
 
+ffails = {
+    "/functions/projection optimization/projection optimization/*": (
+        Skip,
+        "Crashes before 23.11 https://github.com/ClickHouse/ClickHouse/pull/58638",
+        check_clickhouse_version("<23.11"),
+    )
+}
+
 
 @TestModule
 @ArgumentParser(argparser)
 @Name("functions")
 @XFails(xfails)
+@FFails(ffails)
 def regression(
     self,
     local,
@@ -38,7 +47,7 @@ def regression(
     allow_vfs=False,
     allow_experimental_analyzer=False,
 ):
-    """Functions regression suite."""
+    """Functions regression suite. Automated test for issues."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
@@ -62,6 +71,7 @@ def regression(
 
     Feature(run=load("functions.tests.merge", "feature"))
     Feature(run=load("functions.tests.insert", "feature"))
+    Feature(run=load("functions.tests.projection_optimization", "feature"))
 
 
 if main():
