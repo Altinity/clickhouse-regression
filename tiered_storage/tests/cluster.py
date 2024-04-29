@@ -53,7 +53,12 @@ class ClickHouseNode(Node):
         with By("waiting until container is healthy"):
             start_time = time.time()
             while True:
-                if self.query("select 1 FORMAT TabSeparated", no_checks=1, timeout=120).exitcode == 0:
+                if (
+                    self.query(
+                        "select 1 FORMAT TabSeparated", no_checks=1, timeout=120
+                    ).exitcode
+                    == 0
+                ):
                     break
                 if time.time() - start_time < timeout:
                     time.sleep(2)

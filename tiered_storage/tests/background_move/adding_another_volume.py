@@ -80,7 +80,9 @@ def scenario(self, engine):
                     node.query(f"INSERT INTO {table_name} VALUES {values}")
 
             with And("I ensure all rows are in the table"):
-                r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
+                r = node.query(
+                    f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+                ).output.strip()
                 with Then(f"it should return the result of {rows_count}"):
                     assert r == f"{rows_count}", error()
 
@@ -100,7 +102,9 @@ def scenario(self, engine):
             node.restart()
 
             with And("I ensure all rows are in the table"):
-                r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
+                r = node.query(
+                    f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+                ).output.strip()
                 with Then(f"it should return the result of {rows_count}"):
                     assert r == f"{rows_count}", error()
 
@@ -123,7 +127,9 @@ def scenario(self, engine):
             node.restart()
 
         with And("I ensure there are no duplicates and all rows are in the table"):
-            r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
+            r = node.query(
+                f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+            ).output.strip()
             with Then(f"it should return the result of {rows_count}"):
                 assert r == f"{rows_count}", error()
     finally:

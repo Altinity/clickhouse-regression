@@ -109,7 +109,9 @@ def scenario(self, engine):
                 assert r == "1", error()
 
         with And("I ensure all rows are in the table"):
-            r = node.query(f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated").output.strip()
+            r = node.query(
+                f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+            ).output.strip()
             with Then("it should return the result of 250"):
                 assert r == "250", error()
 

@@ -110,7 +110,9 @@ def scenario(self, cluster, node="clickhouse1", count=10000):
 
                     with And("I check a simple query before restart"):
                         check_query(
-                            0, f"SELECT COUNT() FROM {name} FORMAT TabSeparated", expected="1572867"
+                            0,
+                            f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
+                            expected="1572867",
                         )
 
                     with And("I restart the clickhouse node"):
@@ -118,7 +120,9 @@ def scenario(self, cluster, node="clickhouse1", count=10000):
 
                     with When("I check simple queries"):
                         check_query(
-                            0, f"SELECT COUNT() FROM {name} FORMAT TabSeparated", expected="1572867"
+                            0,
+                            f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
+                            expected="1572867",
                         )
                         check_query(
                             1,

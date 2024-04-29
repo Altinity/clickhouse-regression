@@ -118,7 +118,9 @@ def scenario(self, cluster, nodes=None):
         with When("I check number of rows on each node"):
             for node in nodes:
                 with And(f"I check on {node.name}"):
-                    r = node.query(f"SELECT COUNT() FROM {name} FORMAT TabSeparated").output.strip()
+                    r = node.query(
+                        f"SELECT COUNT() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
                 with Then("count should be 40"):
                     assert r == "40", error()
 

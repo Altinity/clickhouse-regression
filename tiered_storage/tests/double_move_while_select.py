@@ -126,7 +126,9 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 with When("I do select on the table"):
                     r = (
-                        node.query(f"SELECT n FROM {name} ORDER BY n FORMAT TabSeparated")
+                        node.query(
+                            f"SELECT n FROM {name} ORDER BY n FORMAT TabSeparated"
+                        )
                         .output.strip()
                         .splitlines()
                     )

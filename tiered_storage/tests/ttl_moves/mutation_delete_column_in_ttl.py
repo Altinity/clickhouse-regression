@@ -88,7 +88,9 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with Then("checking that row has been deleted"):
                 r = (
-                    node.query(f"SELECT ttl_days FROM {name} ORDER BY ttl_days FORMAT TabSeparated")
+                    node.query(
+                        f"SELECT ttl_days FROM {name} ORDER BY ttl_days FORMAT TabSeparated"
+                    )
                     .output.strip()
                     .splitlines()
                 )

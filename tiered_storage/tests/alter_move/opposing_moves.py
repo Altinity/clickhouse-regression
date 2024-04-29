@@ -85,7 +85,9 @@ def scenario(self):
                     task.result(timeout=600)
 
         with When("I check the data in the table"):
-            r = node.query(f"SELECT count() FROM {name} FORMAT TabSeparated").output.strip()
+            r = node.query(
+                f"SELECT count() FROM {name} FORMAT TabSeparated"
+            ).output.strip()
             with Then("number of rows should stay the same"):
                 assert r == "28", error()
 

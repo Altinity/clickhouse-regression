@@ -145,7 +145,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         for retry in retries(timeout=30, delay=1):
                             with retry:
                                 r = (
-                                    node.query(f"SELECT ttl_days FROM {name} FORMAT TabSeparated")
+                                    node.query(
+                                        f"SELECT ttl_days FROM {name} FORMAT TabSeparated"
+                                    )
                                     .output.strip()
                                     .splitlines()
                                 )
