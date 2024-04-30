@@ -1,7 +1,6 @@
-from helpers.tables import common_columns
-from helpers.tables import is_numeric, is_unsigned_integer
 
-from aggregate_functions.tests.steps import *
+from helpers.tables import is_numeric, is_unsigned_integer, common_columns
+
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AnalysisOfVariance,
@@ -32,8 +31,14 @@ def scenario(
     extended_precision=True,
 ):
     """Check analysisOfVariance(anova) aggregate function."""
+
+    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
+        clickhouse_version = ">=24.3"
+    else:
+        clickhouse_version = ">=24.1"
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=24.1"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if "Merge" in self.name:
