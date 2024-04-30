@@ -47,9 +47,9 @@ def check_comparable_performance(self, policy=None, disk_path=None, node=None):
 
     with Then("I check performance for insert statement"):
         node.query("SYSTEM FLUSH LOGS")
-        sql = f"select query_duration_ms from system.query_log where query_id='{uid1}' and type=2"
+        sql = f"select query_duration_ms from system.query_log where query_id='{uid1}' and type=2 FORMAT TabSeparated"
         r_unencrypted = int((node.query(sql)).output)
-        sql = f"select query_duration_ms from system.query_log where query_id='{uid2}' and type=2"
+        sql = f"select query_duration_ms from system.query_log where query_id='{uid2}' and type=2 FORMAT TabSeparated"
         r_encrypted = int((node.query(sql)).output)
         assert 40 > (r_unencrypted - r_encrypted) / r_encrypted > -40, error()
 
@@ -65,9 +65,9 @@ def check_comparable_performance(self, policy=None, disk_path=None, node=None):
 
     with Then("I check performance for select statement"):
         node.query("SYSTEM FLUSH LOGS")
-        sql = f"select query_duration_ms from system.query_log where query_id='{uid3}' and type=2"
+        sql = f"select query_duration_ms from system.query_log where query_id='{uid3}' and type=2 FORMAT TabSeparated"
         r_unencrypted = int((node.query(sql)).output)
-        sql = f"select query_duration_ms from system.query_log where query_id='{uid4}' and type=2"
+        sql = f"select query_duration_ms from system.query_log where query_id='{uid4}' and type=2 FORMAT TabSeparated"
         r_encrypted = int((node.query(sql)).output)
         assert 40 > (r_unencrypted - r_encrypted) / r_encrypted > -40, error()
 

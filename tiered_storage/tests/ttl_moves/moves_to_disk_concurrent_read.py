@@ -79,7 +79,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     start_time = time.time()
                                     while time.time() - start_time < 30:
                                         r = node.query(
-                                            f"SELECT count() FROM {name}",
+                                            f"SELECT count() FROM {name} FORMAT TabSeparated",
                                             steps=False,
                                             timeout=60,
                                         ).output.strip()
@@ -91,7 +91,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     start_time = time.time()
                                     while time.time() - start_time < 30:
                                         r = node.query(
-                                            f"SELECT sleep(3), sleep(2), sleep(1), count() FROM {name}",
+                                            f"SELECT sleep(3), sleep(2), sleep(1), count() FROM {name} FORMAT TabSeparated",
                                             steps=False,
                                             timeout=60,
                                         ).output.strip()
@@ -116,7 +116,9 @@ def scenario(self, cluster, node="clickhouse1"):
                                         assert set(used_disks) == {"external"}, error()
 
                         with Then("number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
                             assert r == "10", error()
 
                     finally:

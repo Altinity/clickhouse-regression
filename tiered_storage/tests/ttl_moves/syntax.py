@@ -48,7 +48,7 @@ def scenario(self, cluster, node="clickhouse1"):
                        """
                     )
                     with Then("a simple select works"):
-                        node.query(f"SELECT * FROM {name}")
+                        node.query(f"SELECT * FROM {name} FORMAT TabSeparated")
                 finally:
                     with Finally("I drop the table"):
                         node.query(f"DROP TABLE IF EXISTS {name} SYNC")
@@ -67,7 +67,7 @@ def scenario(self, cluster, node="clickhouse1"):
                        """
                     )
                     with Then("a simple select works"):
-                        node.query(f"SELECT * FROM {name}")
+                        node.query(f"SELECT * FROM {name} FORMAT TabSeparated")
                 finally:
                     with Finally("I drop the table"):
                         node.query(f"DROP TABLE IF EXISTS {name} SYNC")
@@ -91,7 +91,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     """
                     )
                     with Then("a simple select works"):
-                        node.query(f"SELECT * FROM {name}")
+                        node.query(f"SELECT * FROM {name} FORMAT TabSeparated")
                 finally:
                     with Finally("I drop the table"):
                         node.query(f"DROP TABLE IF EXISTS {name} SYNC")
@@ -115,7 +115,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     """
                     )
                     with Then("a simple select works"):
-                        node.query(f"SELECT * FROM {name}")
+                        node.query(f"SELECT * FROM {name} FORMAT TabSeparated")
                 finally:
                     with Finally("I drop the table"):
                         node.query(f"DROP TABLE IF EXISTS {name} SYNC")

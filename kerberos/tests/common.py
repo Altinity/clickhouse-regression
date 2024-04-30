@@ -42,7 +42,9 @@ def create_default_config(filename):
         f.write(contents)
 
 
-def test_select_query(node, krb_auth=True, req="SELECT currentUser()"):
+def test_select_query(
+    node, krb_auth=True, req="SELECT currentUser() FORMAT TabSeparated"
+):
     """Helper forming a HTTP query to ClickHouse server"""
     if krb_auth:
         return f"echo '{req}' | curl --negotiate -u : 'http://{node.name}:8123/' --data-binary @-"

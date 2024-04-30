@@ -46,10 +46,10 @@ def check_comparable_part_sizes(
 
     with Then("I expect all the data in wide format"):
         r_unencrypted = node.query(
-            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name_unencrypted}' and active ORDER BY part_type"
+            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name_unencrypted}' and active ORDER BY part_type FORMAT TabSeparated"
         )
         r_encrypted = node.query(
-            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name_encrypted}' and active ORDER BY part_type"
+            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name_encrypted}' and active ORDER BY part_type FORMAT TabSeparated"
         )
         assert r_unencrypted.output == r_encrypted.output == part_type, error()
 
@@ -58,12 +58,14 @@ def check_comparable_part_sizes(
                       FROM system.parts
                       WHERE active AND (table = '{table_name_unencrypted}')
                       GROUP BY table
+                      FORMAT TabSeparated
                    """
         r_unencrypted = int(node.query(sql).output)
         sql = f"""SELECT sum(bytes)
                       FROM system.parts
                       WHERE active AND (table = '{table_name_encrypted}')
                       GROUP BY table
+                      FORMAT TabSeparated
                    """
         r_encrypted = int(node.query(sql).output)
         assert 0.01 > (r_unencrypted - r_encrypted) / r_encrypted > -0.01, error()
@@ -76,12 +78,14 @@ def check_comparable_part_sizes(
                       FROM system.parts
                       WHERE active AND (table = '{table_name_unencrypted}')
                       GROUP BY table
+                      FORMAT TabSeparated
                    """
         r_unencrypted = int(node.query(sql).output)
         sql = f"""SELECT sum(bytes)
                       FROM system.parts
                       WHERE active AND (table = '{table_name_encrypted}')
                       GROUP BY table
+                      FORMAT TabSeparated
                    """
         r_encrypted = int(node.query(sql).output)
         assert 0.01 > (r_unencrypted - r_encrypted) / r_encrypted > -0.01, error()

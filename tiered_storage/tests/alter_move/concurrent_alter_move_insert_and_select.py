@@ -74,7 +74,7 @@ def scenario(self, engine):
             with When(f"I perform select {i} {num} times"):
                 for i in range(num):
                     node.query(
-                        f"SELECT sleepEachRow(0.001), COUNT() FROM {table_name}",
+                        f"SELECT sleepEachRow(0.001), COUNT() FROM {table_name} FORMAT TabSeparated",
                         steps=False,
                         timeout=120,
                     )
@@ -104,12 +104,14 @@ def scenario(self, engine):
                     task.result(timeout=1000)
 
         with When("I check the server is still up"):
-            r = node.query("SELECT 1").output.strip()
+            r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()
             with Then("it should return the result of 1"):
                 assert r == "1", error()
 
         with And("I ensure all rows are in the table"):
-            r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+            r = node.query(
+                f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+            ).output.strip()
             with Then("it should return the result of 250"):
                 assert r == "250", error()
 

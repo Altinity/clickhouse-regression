@@ -51,7 +51,7 @@ def scenario(self, cluster, node="clickhouse1"):
                 with When("I get number of active parts for the table"):
                     parts = (
                         node.query(
-                            f"SELECT name FROM system.parts WHERE table = '{name}' AND active = 1"
+                            f"SELECT name FROM system.parts WHERE table = '{name}' AND active = 1 FORMAT TabSeparated"
                         )
                         .output.strip()
                         .splitlines()
@@ -70,7 +70,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     if positive:
                         with When("I do long select"):
                             node.query(
-                                f"SELECT sleep(3), sleep(2), sleep(1), n FROM {name}",
+                                f"SELECT sleep(3), sleep(2), sleep(1), n FROM {name} FORMAT TabSeparated",
                                 steps=False,
                                 timeout=60,
                             )
@@ -109,7 +109,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 part = parts[0]
                                 r = (
                                     node.query(
-                                        f"SELECT disk_name FROM system.parts WHERE table = '{name}' AND active = 1 AND name = '{part}'"
+                                        f"SELECT disk_name FROM system.parts WHERE table = '{name}' AND active = 1 AND name = '{part}' FORMAT TabSeparated"
                                     )
                                     .output.strip()
                                     .splitlines()
@@ -126,7 +126,9 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 with When("I do select on the table"):
                     r = (
-                        node.query(f"SELECT n FROM {name} ORDER BY n")
+                        node.query(
+                            f"SELECT n FROM {name} ORDER BY n FORMAT TabSeparated"
+                        )
                         .output.strip()
                         .splitlines()
                     )

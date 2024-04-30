@@ -32,24 +32,24 @@ def optimize(
     return node.query(q, no_checks=no_checks, exitcode=0)
 
 
-@TestStep
+@TestStep(Given)
 def get_column_names(self, node: ClickHouseNode, table_name: str, timeout=30) -> list:
     """Get a list of a table's column names."""
     r = node.query(
-        f"DESCRIBE TABLE {table_name} FORMAT JSONColumns",
+        f"SELECT groupArray(name) FROM system.columns WHERE table='{table_name}' FORMAT JSONCompactEachRow",
         timeout=timeout,
     )
-    return json.loads(r.output)["name"]
+    return json.loads(r.output)[0]
 
 
 @TestStep
 def get_active_parts(self, node: ClickHouseNode, table_name: str, timeout=30) -> list:
     """Get a list of active parts in a table."""
     r = node.query(
-        f"SELECT name FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
+        f"SELECT groupArray(name) FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONCompactEachRow",
         timeout=timeout,
     )
-    return json.loads(r.output)["name"]
+    return json.loads(r.output)[0]
 
 
 @TestStep
@@ -58,10 +58,10 @@ def get_active_partition_ids(
 ) -> list:
     """Get a list of active partitions in a table."""
     r = node.query(
-        f"SELECT partition_id FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONColumns",
+        f"SELECT groupArray(partition_id) FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONCompactEachRow",
         timeout=timeout,
     )
-    return json.loads(r.output)["partition_id"]
+    return json.loads(r.output)[0]
 
 
 @TestStep
@@ -79,10 +79,10 @@ def get_projections(self, node: ClickHouseNode, table_name: str) -> list:
     Get a list of active projections for a given table.
     """
     r = node.query(
-        f"SELECT distinct(name) FROM system.projection_parts WHERE table='{table_name}' and active FORMAT JSONColumns",
+        f"SELECT groupArray(distinct(name)) FROM system.projection_parts WHERE table='{table_name}' and active FORMAT JSONCompactEachRow",
         exitcode=0,
     )
-    return json.loads(r.output)["name"]
+    return json.loads(r.output)[0]
 
 
 @TestStep
@@ -91,10 +91,10 @@ def get_indexes(self, node: ClickHouseNode, table_name: str) -> list:
     Get a list of secondary indexes for a given table.
     """
     r = node.query(
-        f"SELECT name FROM system.data_skipping_indices WHERE table='{table_name}' FORMAT JSONColumns",
+        f"SELECT groupArray(name) FROM system.data_skipping_indices WHERE table='{table_name}' FORMAT JSONCompactEachRow",
         exitcode=0,
     )
-    return json.loads(r.output)["name"]
+    return json.loads(r.output)[0]
 
 
 @TestStep

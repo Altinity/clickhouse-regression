@@ -108,7 +108,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                                 with Then("number of rows should match"):
                                     r = node.query(
-                                        f"SELECT count() FROM {name}"
+                                        f"SELECT count() FROM {name} FORMAT TabSeparated"
                                     ).output.strip()
                                     assert r == "10", error()
 

@@ -61,7 +61,7 @@ def feature(self, distributed, node="clickhouse1"):
                 "toDateTime('2020-01-01') + number AS f_timestamp, "
                 "toDateTime64('2020-01-01', 9, 'CET') + number AS f_timestamp64tz, "
                 "toDateTime64('2020-01-01', 9) + number AS f_timestamp64 "
-                "FROM numbers(10000)"
+                "FROM numbers(10000) FORMAT TabSeparated"
             ),
             name="datetimes2",
         )

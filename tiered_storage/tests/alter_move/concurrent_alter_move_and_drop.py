@@ -94,7 +94,7 @@ def scenario(self, engine):
                     task.result(timeout=600)
 
         with When("I check the server is still up"):
-            r = node.query("SELECT 1").output.strip()
+            r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()
             with Then("it should return the result of 1"):
                 assert r == "1", error()
     finally:

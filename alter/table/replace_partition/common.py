@@ -154,10 +154,10 @@ def check_partition_was_replaced(
         "selecting and saving the partition data from the source table and destination table"
     ):
         partition_values_source = node.query(
-            f"SELECT {column} FROM {source_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*)"
+            f"SELECT {column} FROM {source_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*) FORMAT TabSeparated"
         )
         partition_values_destination = node.query(
-            f"SELECT {column} FROM {destination_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*)"
+            f"SELECT {column} FROM {destination_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with Then(
@@ -230,7 +230,7 @@ def replace_partition_and_validate_data(
         "saving the data from the source table before replacing partitions on the destination table"
     ):
         source_data_before = node.query(
-            f"SELECT i FROM {source_table} WHERE p = {partition_to_replace} ORDER BY tuple(*)"
+            f"SELECT i FROM {source_table} WHERE p = {partition_to_replace} ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with And("replacing partition on the destination table"):

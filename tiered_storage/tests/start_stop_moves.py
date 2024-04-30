@@ -54,7 +54,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with When("I get the first part in system.parts"):
                         first_part = node.query(
                             f"SELECT name FROM system.parts WHERE table = '{name}'"
-                            " AND active = 1 ORDER BY modification_time LIMIT 1"
+                            " AND active = 1 ORDER BY modification_time LIMIT 1 FORMAT TabSeparated"
                         ).output.strip()
 
                     with When("I disallow moves"):
@@ -87,7 +87,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         with And("I select disk_name form system.parts"):
                             disk = node.query(
                                 f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                f" AND name = '{first_part}' and active = 1"
+                                f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                             ).output.strip()
 
                         with Then("part should be on external disk"):

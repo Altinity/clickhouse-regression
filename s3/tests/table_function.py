@@ -64,10 +64,11 @@ def syntax(self):
         ("{1,3,4}", "427\n427", Name("strings_one_missing")),
     ],
 )
-@Requirements(RQ_SRS_015_S3_TableFunction_Path_Wildcard("1.0"))
+@Requirements(RQ_SRS_015_S3_TableFunction_Path_Glob("1.0"))
 def wildcard(self, wildcard, expected):
-    """Check that imports from S3 storage using the S3 table function work
-    correctly when wildcard paths with the '{wildcard}' wildcard are provided.
+    """
+    Check that imports from S3 storage using the S3 table function work
+    correctly when using wildcards in the path.
     """
     table1_name = "table_" + getuid()
     table2_name = "table_" + getuid()
@@ -112,8 +113,11 @@ def wildcard(self, wildcard, expected):
     ):
         for retry in retries(timeout=600, delay=5):
             with retry:
-                r = node.query(f"SELECT * FROM {table2_name}").output.strip()
+                r = node.query(
+                    f"SELECT * FROM {table2_name} FORMAT TabSeparated"
+                ).output.strip()
                 assert r == expected, error()
+
 
 @TestOutline(Scenario)
 @Examples(
@@ -297,7 +301,7 @@ def partition(self):
         with Then(f"I check the data in the {partition_id} partition"):
             output = node.query(
                 f"""SELECT * FROM
-                s3('{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String')"""
+                s3('{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String') FORMAT TabSeparated"""
             ).output
             assert output == partition_id, error()
 
@@ -350,15 +354,21 @@ def multiple_columns(self):
         )
 
     with Then("I check a count query"):
-        r = node.query(f"SELECT COUNT(*) FROM {table2_name}").output.strip()
+        r = node.query(
+            f"SELECT COUNT(*) FROM {table2_name} FORMAT TabSeparated"
+        ).output.strip()
         assert r == "3", error()
 
     with And("I check a select * query"):
-        r = node.query(f"SELECT * FROM {table2_name}").output.strip()
+        r = node.query(
+            f"SELECT * FROM {table2_name} FORMAT TabSeparated"
+        ).output.strip()
         assert r == "1\tDog\t0\n2\tCat\t7\n3\tHorse\t12", error()
 
     with And("I check a query selecting one row"):
-        r = node.query(f"SELECT d,a,b FROM {table2_name} WHERE d=3").output.strip()
+        r = node.query(
+            f"SELECT d,a,b FROM {table2_name} WHERE d=3 FORMAT TabSeparated"
+        ).output.strip()
         assert r == "3\tHorse\t12", error()
 
 

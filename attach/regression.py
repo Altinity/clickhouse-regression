@@ -11,7 +11,12 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.tables import check_clickhouse_version
 
-xfails = {}
+
+issue_62905 = "https://github.com/ClickHouse/ClickHouse/issues/62905"
+
+xfails = {
+    "/attach/active path/check active path convert:/run #[0-9]": [(Fail, issue_62905)],
+}
 
 ffails = {
     "/attach/replica_path/check replica path intersection": (
@@ -19,15 +24,20 @@ ffails = {
         "Crashes before 24.4",
         check_clickhouse_version("<24.4"),
     ),
+    "/attach/active path/check active path convert*": (
+        Skip,
+        "Engine MergeTree does not support convert_to_replicated flag before 24.2",
+        check_clickhouse_version("<24.2"),
+    ),
 }
 
 
 @TestModule
-@Name("attach")
+@ArgumentParser(argparser)
 @XFails(xfails)
 @FFails(ffails)
-@ArgumentParser(argparser)
 @Specifications(SRS_039_ClickHouse_Attach_Statement)
+@Name("attach")
 def regression(
     self,
     local,

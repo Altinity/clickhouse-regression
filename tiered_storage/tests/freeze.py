@@ -67,7 +67,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with When("I get the number of rows"):
                 r = node.query(
-                    "SELECT COUNT() FROM default.freezing_table"
+                    "SELECT COUNT() FROM default.freezing_table FORMAT TabSeparated"
                 ).output.strip()
                 with Then(f"count should be {count}"):
                     assert r == count

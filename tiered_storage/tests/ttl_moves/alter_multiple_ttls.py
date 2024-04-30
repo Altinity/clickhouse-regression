@@ -117,7 +117,9 @@ def scenario(self, cluster, node="clickhouse1"):
                                 ), error()
 
                         with Then("number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
                             assert r == "6", error()
 
                         with And(
@@ -142,7 +144,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                                     with Then("again number of rows should match"):
                                         r = node.query(
-                                            f"SELECT count() FROM {name}"
+                                            f"SELECT count() FROM {name} FORMAT TabSeparated"
                                         ).output.strip()
                                         assert r == "6", error()
 
@@ -165,7 +167,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                             f"number of rows should {'be 0' if positive else 'match'}"
                                         ):
                                             r = node.query(
-                                                f"SELECT count() FROM {name}"
+                                                f"SELECT count() FROM {name} FORMAT TabSeparated"
                                             ).output.strip()
                                             assert r == (
                                                 "0" if positive else "3"

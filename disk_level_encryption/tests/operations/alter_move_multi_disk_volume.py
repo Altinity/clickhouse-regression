@@ -48,7 +48,7 @@ def alter_move_multi_disk_volume(
 
     with Then("I check alter move to encrypted disk"):
         r = node.query(
-            f"SELECT name, disk_name, path FROM system.parts WHERE table = '{table_name}'"
+            f"SELECT name, disk_name, path FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
         )
         partition_part_name = "2" if partition else "2_3_3_0"
         part_or_partition = "PARTITION" if partition else "PART"
@@ -56,12 +56,12 @@ def alter_move_multi_disk_volume(
 
         if disks_types[0] == "encrypted":
             r = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
             )
             assert r.output == "encrypted_local0", error()
         else:
             r = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
             )
             assert r.output == "local0", error()
 
@@ -70,7 +70,7 @@ def alter_move_multi_disk_volume(
                 f"ALTER TABLE {table_name} MOVE {part_or_partition} '{partition_part_name}' TO DISK 'encrypted_local1'"
             )
             r = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
             )
             assert r.output == "encrypted_local1", error()
         else:
@@ -78,7 +78,7 @@ def alter_move_multi_disk_volume(
                 f"ALTER TABLE {table_name} MOVE {part_or_partition} '{partition_part_name}' TO DISK 'local1'"
             )
             r = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
             )
             assert r.output == "local1", error()
 
@@ -92,7 +92,7 @@ def alter_move_multi_disk_volume(
                 f"ALTER TABLE {table_name} MOVE {part_or_partition} '{partition_part_name}' TO DISK 'encrypted_local0'"
             )
             r = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
             )
             assert r.output == "encrypted_local0", error()
         else:
@@ -100,7 +100,7 @@ def alter_move_multi_disk_volume(
                 f"ALTER TABLE {table_name} MOVE {part_or_partition} '{partition_part_name}' TO DISK 'local0'"
             )
             r = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}' FORMAT TabSeparated"
             )
             assert r.output == "local0", error()
 
@@ -111,7 +111,7 @@ def alter_move_multi_disk_volume(
     with And("I restart server"):
         node.restart()
         r = node.query(
-            f"SELECT name, disk_name, path FROM system.parts WHERE table = '{table_name}'"
+            f"SELECT name, disk_name, path FROM system.parts WHERE table = '{table_name}' FORMAT TabSeparated"
         )
 
     with Then("I expect data is not changed after ALTER MOVE"):

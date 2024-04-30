@@ -123,7 +123,7 @@ def check_replace_partition(self, source_partition_key, destination_partition_ke
         )
 
     with And("I get the list of partitions"):
-        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table}' ORDER BY partition_id"
+        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table}' ORDER BY partition_id FORMAT TabSeparated"
         partition_ids = sorted(list(node.query(partition_list_query).output.split()))
 
     with Then("I try to replace partition on the destination"):

@@ -1,11 +1,10 @@
 from testflows.core import *
-from aggregate_functions.tests.steps import *
 
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_TheilsU,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id
+from aggregate_functions.tests.steps import *
 from aggregate_functions.tests.corr import scenario as checks
 
 
@@ -16,7 +15,13 @@ def scenario(self, func="theilsU({params})", table=None, snapshot_id=None):
     """Check theilsU aggregate function by using the same checks as for covarPop
     as well as functions specific checks."""
 
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    clickhouse_version = None
+    if check_current_cpu("aarch64")(self):
+        clickhouse_version = ">=24.3"
+
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

@@ -111,7 +111,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         ):
                             node.query(f"OPTIMIZE TABLE {name}")
                         r = node.query(
-                            f"SELECT * FROM {name} WHERE value = 'delete'"
+                            f"SELECT * FROM {name} WHERE value = 'delete' FORMAT TabSeparated"
                         ).output.strip()
                         assert r == "", error()
 
@@ -129,7 +129,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         before_disks = set(
                             node.query(
                                 f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                " AND active = 1"
+                                " AND active = 1 FORMAT TabSeparated"
                             ).output.splitlines()
                         )
 
@@ -145,7 +145,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         for retry in retries(timeout=30, delay=1):
                             with retry:
                                 r = (
-                                    node.query(f"SELECT ttl_days FROM {name}")
+                                    node.query(
+                                        f"SELECT ttl_days FROM {name} FORMAT TabSeparated"
+                                    )
                                     .output.strip()
                                     .splitlines()
                                 )
@@ -157,7 +159,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 after_disks = set(
                                     node.query(
                                         f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                        " AND active = 1"
+                                        " AND active = 1 FORMAT TabSeparated"
                                     ).output.splitlines()
                                 )
                                 assert after_disks == set(), error()

@@ -142,7 +142,9 @@ def deletion(self):
                 tasks[1].result(timeout=200)
 
             with Then(f"I check CH is alive"):
-                assert ch_nodes[0].query("SELECT 1").output == "1", error()
+                assert (
+                    ch_nodes[0].query("SELECT 1 FORMAT TabSeparated").output == "1"
+                ), error()
 
             with Finally("I make sure both users are removed"):
                 ch_nodes[0].query("DROP USER krb1", no_checks=True)

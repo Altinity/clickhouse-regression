@@ -5,7 +5,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id, execute_query
+from aggregate_functions.tests.steps import *
 from aggregate_functions.tests.quantileWeighted import scenario as checks
 
 
@@ -23,7 +23,9 @@ def scenario(
 ):
     """Check welchTTest aggregate function by using the same tests as for quantileWeighted."""
 
-    if check_clickhouse_version(">=24.1")(self):
+    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
+        clickhouse_version = ">=24.3"
+    elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
     elif check_clickhouse_version(">=23.2")(self):
         clickhouse_version = ">=23.2"

@@ -49,7 +49,7 @@ def scenario(self):
 
         with And("I check what partitions are now available"):
             r = node.query(
-                f"SELECT partition, name FROM system.parts WHERE table = '{name}'"
+                f"SELECT partition, name FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
             ).output.strip()
             with Then("result should match the expected"):
                 assert r == "201903\t201903_1_1_0", error()
@@ -85,7 +85,9 @@ def scenario(self):
                     task.result(timeout=600)
 
         with When("I check the data in the table"):
-            r = node.query(f"SELECT count() FROM {name}").output.strip()
+            r = node.query(
+                f"SELECT count() FROM {name} FORMAT TabSeparated"
+            ).output.strip()
             with Then("number of rows should stay the same"):
                 assert r == "28", error()
 

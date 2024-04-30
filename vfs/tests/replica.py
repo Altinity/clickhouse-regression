@@ -592,11 +592,11 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     @TestStep(When)
     def select(self, node):
         for _ in range(random.randint(2, 10)):
-            node.query(f"SELECT count() FROM {table_name}", no_checks=True)
+            node.query(f"SELECT count() FROM {table_name} FORMAT TabSeparated", no_checks=True)
 
     @TestStep(When)
     def truncate(self, node):
-        node.query(f"TRUNCATE TABLE IF EXISTS {table_name}", no_checks=True)
+        node.query(f"TRUNCATE TABLE IF EXISTS {table_name} FORMAT TabSeparated", no_checks=True)
 
     @TestStep(Then)
     @Retry(timeout=60, delay=0.5)

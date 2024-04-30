@@ -43,7 +43,7 @@ def scenario(self, engine):
 
     with And("I get table's uuid"):
         table_uuid = node.query(
-            f"SELECT uuid FROM system.tables WHERE name = '{table_name}'"
+            f"SELECT uuid FROM system.tables WHERE name = '{table_name}' FORMAT TabSeparated"
         ).output.strip()
         table_uuid_prefix = table_uuid[:3]
 
@@ -82,7 +82,7 @@ def scenario(self, engine):
             path = (
                 node.query(
                     f"SELECT path_on_disk FROM system.part_log WHERE table = '{table_name}'"
-                    " AND event_type='MovePart' ORDER BY event_time"
+                    " AND event_type='MovePart' ORDER BY event_time FORMAT TabSeparated"
                 )
                 .output.strip()
                 .splitlines()

@@ -334,7 +334,7 @@ def authentication_performance(self):
         start_time_usual = time.time()
         for i in range(100):
             ch_nodes[2].command(
-                f"echo 'SELECT 1' | curl 'http://pwd_user:pwd@clickhouse1:8123/' -d @-"
+                f"echo 'SELECT 1 FORMAT TabSeparated' | curl 'http://pwd_user:pwd@clickhouse1:8123/' -d @-"
             )
         usual_time = (time.time() - start_time_usual) / 100
 

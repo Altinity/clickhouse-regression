@@ -646,13 +646,13 @@ def force_index_by_date(self):
 
         with When("I select from the table"):
             output = node.query(
-                f"SELECT count() FROM {table_name} WHERE date_time >= toDateTime64('2020-01-01 00:00:00.000',3) SETTINGS force_index_by_date=1;"
+                f"SELECT count() FROM {table_name} WHERE date_time >= toDateTime64('2020-01-01 00:00:00.000',3) SETTINGS force_index_by_date=1 FORMAT TabSeparated"
             ).output
             assert output == "1", error()
 
         with Then("I check SELECT throws an exception."):
             node.query(
-                f"SELECT count() FROM {table_name} WHERE toDateTime64(date_time,3) >= toDateTime64('2020-01-10 00:00:00.000',3) SETTINGS force_index_by_date=1;",
+                f"SELECT count() FROM {table_name} WHERE toDateTime64(date_time,3) >= toDateTime64('2020-01-10 00:00:00.000',3) SETTINGS force_index_by_date=1 FORMAT TabSeparated",
                 exitcode=21,
                 message="DB::Exception: Neither MinMax index by columns (date_time) nor partition expr is used and setting 'force_index_by_date' is set. (INDEX_NOT_USED)",
             )
@@ -684,13 +684,13 @@ def force_primary_key(self):
 
         with When("I select from the table"):
             output = node.query(
-                f"SELECT count() FROM {table_name} WHERE date_time >= toDateTime64('2020-01-01 00:00:00.000',3) SETTINGS force_primary_key=1;"
+                f"SELECT count() FROM {table_name} WHERE date_time >= toDateTime64('2020-01-01 00:00:00.000',3) SETTINGS force_primary_key=1 FORMAT TabSeparated"
             ).output
             assert output == "1", error()
 
         with Then("I check SELECT throws an exception."):
             node.query(
-                f"SELECT count() FROM {table_name} WHERE toDateTime64(date_time,3) >= toDateTime64('2020-01-10 00:00:00.000',3) SETTINGS force_primary_key=1;",
+                f"SELECT count() FROM {table_name} WHERE toDateTime64(date_time,3) >= toDateTime64('2020-01-10 00:00:00.000',3) SETTINGS force_primary_key=1 FORMAT TabSeparated",
                 exitcode=21,
                 message="Exception: Primary key (toDate(date_time)) is not used and setting 'force_primary_key' is set. (INDEX_NOT_USED)",
             )

@@ -26,6 +26,7 @@ def create_replicated_table(
     config="graphite_rollup_example",
     sign="sign",
     version="extra",
+    cluster=None,
 ):
     if node is None:
         node = self.context.node
@@ -59,6 +60,7 @@ def create_replicated_table(
         name=table_name,
         columns=columns,
         order_by=order_by,
+        cluster=cluster,
     )
 
 
@@ -120,3 +122,22 @@ def detach_table(self, table, node=None):
     if node is None:
         node = self.context.node
     node.query(f"DETACH TABLE {table}")
+
+
+@TestStep
+def drop_table(self, table, node=None):
+    if node is None:
+        node = self.context.node
+    node.query(f"DROP TABLE {table} SYNC")
+
+
+@TestStep
+def get_table_path(self, node, table):
+    return node.query(
+        f"SELECT data_paths FROM system.tables WHERE table = '{table}'"
+    ).output.strip("'[]\n")
+
+
+@TestStep
+def set_convert_flags(self, node, table):
+    node.command(f"touch {get_table_path(node=node, table=table)}convert_to_replicated")

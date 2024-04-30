@@ -99,7 +99,9 @@ def lack_of_disk_space(self, node=None):
             with attempt:
                 r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output in ("7250000", "5800000"), error()
-                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=0 FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name} WHERE id=0 FORMAT TabSeparated"
+                )
                 assert r.output in ("0", "1450000"), error()
 
 
@@ -126,7 +128,9 @@ def lack_of_disk_space_tiered_storage(self, node=None):
 
     partitions = 10
     parts_per_partition = 1
-    block_size = 1500000
+    block_size = 1_500_000
+    if check_clickhouse_version(">=24.3")(self):
+        block_size = 1_000_000
 
     with When("I insert data into the table"):
         insert(
@@ -180,13 +184,17 @@ def lack_of_disk_space_tiered_storage(self, node=None):
         for i in range(partitions):
             if i == 1:
                 continue
-            r = node.query(f"SELECT count(*) FROM {table_name} WHERE id={i} FORMAT TabSeparated")
+            r = node.query(
+                f"SELECT count(*) FROM {table_name} WHERE id={i} FORMAT TabSeparated"
+            )
             assert r.output == f"{block_size}", error()
 
     with And("I check table state"):
         for attempt in retries(timeout=100, delay=5, initial_delay=30):
             with attempt:
-                r = node.query(f"SELECT count(*) FROM {table_name} WHERE id=1 FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name} WHERE id=0 FORMAT TabSeparated"
+                )
                 note(
                     f"Number of rows that should have been deleted from the table: {r.output}"
                 )
@@ -201,6 +209,61 @@ def lack_of_disk_space_tiered_storage(self, node=None):
                         f"{block_size*partitions}",
                         f"{block_size*partitions-block_size}",
                     ), error()
+
+
+@TestScenario
+def lightweight_delete_memory_consuption(self, node=None):
+
+    if node is None:
+        node = self.context.node
+
+    table_name = f"table_{getuid()}"
+
+    with Given("I add configuration file"):
+        add_disk_configuration(entries=entries, restart=True)
+
+    with And("I create a table that uses small disk"):
+        create_table(
+            table_name=table_name, settings=f"SETTINGS storage_policy = 'small_disk'"
+        )
+
+    partitions = 10
+    parts_per_partition = 1
+    block_size = 150_000
+
+    with When("I insert data into the table"):
+        insert(
+            table_name=table_name,
+            partitions=partitions,
+            parts_per_partition=parts_per_partition,
+            block_size=block_size,
+        )
+
+    with And("I check how much memory is used"):
+        r = node.query(
+            f"SELECT sum(bytes_on_disk)/1024/1024 FROM system.parts "
+            f"WHERE table = '{table_name}' and active = 1 FORMAT TabSeparated"
+        )
+
+    with And("I expect data is successfully inserted"):
+        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
+        assert r.output == f"{block_size*partitions}", error()
+
+    with And("I perform delete operations in loop"):
+        with Then("I perform delete operation"):
+            i = 0
+            while i < 11:
+                r = delete(
+                    table_name=table_name, condition=f" id = {i}", no_checks=True
+                )
+                node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
+                if r.exitcode != 0:
+                    i = 100
+                i += 1
+
+    with Then("I expect data is successfully deleted"):
+        r = node.query(f"SELECT count() FROM {table_name} FORMAT TabSeparated")
+        assert r.output == "0", error()
 
 
 @TestFeature

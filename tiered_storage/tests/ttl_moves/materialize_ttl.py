@@ -98,7 +98,9 @@ def scenario(self, cluster, node="clickhouse1"):
                                 assert set(used_disks) == {"jbod1", "jbod2"}, error()
 
                         with Then("number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
                             assert r == "6", error()
 
                         with When("I change TTL expressions using ALTER TABLE"):
@@ -131,7 +133,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                             with Then("I check delete has not been triggered"):
                                 r = node.query(
-                                    f"SELECT count() FROM {name}"
+                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
                                 ).output.strip()
                                 assert r == "6", error()
 
@@ -173,7 +175,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                             with Then("number of rows should still not have changed"):
                                 r = node.query(
-                                    f"SELECT count() FROM {name}"
+                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
                                 ).output.strip()
                                 assert r == "6", error()
 
@@ -193,7 +195,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     if not positive:
                                         with Then(f"number of rows should change"):
                                             r = node.query(
-                                                f"SELECT count() FROM {name}"
+                                                f"SELECT count() FROM {name} FORMAT TabSeparated"
                                             ).output.strip()
                                             assert r == "3", error()
                                     else:
@@ -204,7 +206,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                                 f"all rows should have been deleted"
                                             ):
                                                 r = node.query(
-                                                    f"SELECT count() FROM {name}"
+                                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
                                                 ).output.strip()
                                                 assert r == "0", error()
                                         else:
@@ -212,7 +214,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                                 f"some rows should have been deleted"
                                             ):
                                                 r = node.query(
-                                                    f"SELECT count() FROM {name}"
+                                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
                                                 ).output.strip()
                                                 assert (
                                                     r

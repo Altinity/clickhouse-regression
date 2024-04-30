@@ -73,7 +73,9 @@ def truncate(self, table_name, node=None):
         node.query(f"TRUNCATE TABLE {table_name} SYNC")
 
     with Then("I check table is empty"):
-        assert node.query(f"SELECT * FROM {table_name}").output == ""
+        assert (
+            node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output == ""
+        )
 
 
 @TestOutline
@@ -98,7 +100,9 @@ def gcs_truncate_err_log(self, table_name, node=None):
         node.query(f"TRUNCATE TABLE {table_name} SYNC")
 
     with Then("I check table is empty"):
-        assert node.query(f"SELECT * FROM {table_name}").output == ""
+        assert (
+            node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output == ""
+        )
 
     with When("I get error log size at the end of the test"):
         cmd = node.command(
@@ -224,7 +228,9 @@ def exports(self):
         node.query(f"INSERT INTO {name_table1} VALUES ({expected})")
 
     with Then("I check that a simple SELECT * query returns matching data"):
-        r = node.query(f"SELECT * FROM {name_table1}").output.strip()
+        r = node.query(
+            f"SELECT * FROM {name_table1} FORMAT TabSeparated"
+        ).output.strip()
         assert r == expected, error()
 
     with Given("I create a second table for comparison"):
@@ -281,7 +287,7 @@ def wide_parts(self):
 
     with And("I get the part types for the data added in this table"):
         part_types = node.query(
-            f"SELECT part_type FROM system.parts WHERE table = '{name}'"
+            f"SELECT part_type FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
         ).output.splitlines()
 
     with Then("The part type should be Wide"):
@@ -312,7 +318,7 @@ def compact_parts(self):
 
     with And("I get the part types for the data added in this table"):
         part_types = node.query(
-            f"SELECT part_type FROM system.parts WHERE table = '{name}'"
+            f"SELECT part_type FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
         ).output.splitlines()
 
     with Then("The part type should be Compact"):
@@ -359,7 +365,7 @@ def metadata(self):
 
     with And("I get the disk name for the parts added in this table"):
         disk_names = node.query(
-            f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+            f"SELECT disk_name FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
         ).output.splitlines()
 
     with Then("The disk name should match the disk selected by the 'external' policy"):
@@ -368,7 +374,7 @@ def metadata(self):
 
     with When("I get the path for the parts added in this table"):
         disk_paths = node.query(
-            f"SELECT path FROM system.parts WHERE table = '{name}'"
+            f"SELECT path FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
         ).output.splitlines()
 
     with Then(
@@ -457,7 +463,7 @@ def multiple_storage(self):
                     in this table"""
         ):
             disk_names = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
             ).output.splitlines()
 
         with And("""I check the names to make sure both disks are used"""):
@@ -547,7 +553,7 @@ def multiple_storage_query(self):
                     in this table"""
         ):
             disk_names = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
             ).output.splitlines()
 
         with And("""I check the names to make sure both disks are used"""):
@@ -556,20 +562,24 @@ def multiple_storage_query(self):
             ), error()
 
         with Then("I check simple queries"):
-            check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
+            check_query(
+                num=0,
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
+                expected="1572867",
+            )
             check_query(
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query(
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query(
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -612,7 +622,7 @@ def add_storage(self):
             node.query(f"INSERT INTO {name} VALUES ({expected})")
 
         with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT * FROM {name}").output.strip()
+            r = node.query(f"SELECT * FROM {name} FORMAT TabSeparated").output.strip()
             assert r == expected, error()
 
     with Check("two disks"):
@@ -637,7 +647,7 @@ def add_storage(self):
             node.query(f"INSERT INTO {name} VALUES ({expected})")
 
         with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT * FROM {name}").output.strip()
+            r = node.query(f"SELECT * FROM {name} FORMAT TabSeparated").output.strip()
             assert r == expected, error()
 
 
@@ -746,14 +756,14 @@ def cache(self, cache):
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
             disk_paths = node.query(
-                f"SELECT cache_path FROM system.filesystem_cache"
+                f"SELECT cache_path FROM system.filesystem_cache FORMAT TabSeparated"
             ).output.splitlines()
 
             with And("I select from the table to generate the cache"):
                 node.query(f"SELECT * FROM {name} FORMAT Null")
         else:
             disk_paths = node.query(
-                f"SELECT path FROM system.parts WHERE table = '{name}'"
+                f"SELECT path FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
             ).output.splitlines()
 
     with Then(
@@ -795,14 +805,14 @@ def cache_default(self):
     with When("I get the path for the parts added in this table"):
         if check_clickhouse_version(">=22.8")(self):
             disk_paths = node.query(
-                f"SELECT cache_path FROM system.filesystem_cache"
+                f"SELECT cache_path FROM system.filesystem_cache FORMAT TabSeparated"
             ).output.splitlines()
 
             with And("I select from the table to generate the cache"):
                 node.query(f"SELECT * FROM {name} FORMAT Null")
         else:
             disk_paths = node.query(
-                f"SELECT path FROM system.parts WHERE table = '{name}'"
+                f"SELECT path FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
             ).output.splitlines()
 
     with Then(
@@ -855,7 +865,7 @@ def cache_path(self):
                 node.query(f"SELECT * FROM {name} FORMAT Null")
         else:
             disk_paths = node.query(
-                f"SELECT path FROM system.parts WHERE table = '{name}'"
+                f"SELECT path FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
             ).output.splitlines()
 
     with Then(
@@ -959,7 +969,7 @@ def generic_url(self):
         node.query(f"INSERT INTO {name} VALUES (427)")
 
     with Then("I check that a simple SELECT * query returns matching data"):
-        r = node.query(f"SELECT * FROM {name}").output.strip()
+        r = node.query(f"SELECT * FROM {name} FORMAT TabSeparated").output.strip()
         assert r == expected, error()
 
 
@@ -1040,7 +1050,7 @@ def environment_credentials(self):
             node.query(f"INSERT INTO {name} VALUES ({expected})")
 
         with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT * FROM {name}").output.strip()
+            r = node.query(f"SELECT * FROM {name} FORMAT TabSeparated").output.strip()
             assert r == expected, error()
 
 
@@ -1071,10 +1081,12 @@ def mergetree(self, engine):
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         default_s3_disk_and_volume()
 
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
     try:
         with Given(
-            f"""I create table using the {engine} engine and S3
-                    storage policy external"""
+            f"""I create table using the {engine} engine and S3 storage policy external"""
         ):
             node.query(
                 f"""
@@ -1089,7 +1101,11 @@ def mergetree(self, engine):
         with When("I add data to the table"):
             standard_inserts(node=node, table_name=name)
 
-        with Then("I check simple queries"):
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
             standard_selects(node=node, table_name=name)
 
     finally:
@@ -1116,10 +1132,12 @@ def mergetree_collapsing(self):
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         default_s3_disk_and_volume()
 
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
     try:
         with Given(
-            f"""I create table using the CollapsingMergeTree engine
-                    and S3 storage policy external"""
+            """I create table using the CollapsingMergeTree engine and S3 storage policy external"""
         ):
             node.query(
                 f"""
@@ -1142,21 +1160,29 @@ def mergetree_collapsing(self):
             with And("then doing a large insert of 10Mb of data"):
                 insert_data_mtc(number_of_mb=10, start=1024 * 1024 * 2)
 
-        with Then("I check simple queries"):
-            check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
+            check_query(
+                num=0,
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
+                expected="1572867",
+            )
             check_query(
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query(
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query(
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -1184,10 +1210,12 @@ def mergetree_versionedcollapsing(self):
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         default_s3_disk_and_volume()
 
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
     try:
         with Given(
-            f"""I create table using the VersionedCollapsingMergeTree
-                    engine and S3 storage policy external"""
+            """I create table using the VersionedCollapsingMergeTree engine and S3 storage policy external"""
         ):
             node.query(
                 f"""
@@ -1211,23 +1239,82 @@ def mergetree_versionedcollapsing(self):
             with And("then doing a large insert of 10Mb of data"):
                 insert_data_mtvc(number_of_mb=10, start=1024 * 1024 * 2)
 
-        with Then("I check simple queries"):
-            check_query(num=0, query=f"SELECT COUNT() FROM {name}", expected="1572867")
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
+            check_query(
+                num=0,
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
+                expected="1572867",
+            )
             check_query(
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query(
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query(
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
+
+    finally:
+        with Finally("I drop the table if exists"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+
+
+@TestOutline(Scenario)
+@Examples(
+    "engine",
+    [
+        ("TinyLog", Name("TinyLog")),
+        ("Log", Name("Log")),
+        ("StripeLog", Name("StripeLog")),
+    ],
+)
+# @Requirements()
+def log(self, engine):
+    """Check that different Log engines can be used to select S3 storage
+    disks when tables are created.
+    """
+    name = "table_" + getuid()
+    node = current().context.node
+
+    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+        default_s3_disk_and_volume()
+
+    with And("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
+    try:
+        with Given(
+            f"""I create table using the {engine} engine and S3 storage policy external"""
+        ):
+            node.query(
+                f"""
+                CREATE TABLE {name} (
+                    d UInt64
+                ) ENGINE = {engine}()
+                SETTINGS storage_policy='external'
+            """
+            )
+
+        with When("I add data to the table"):
+            standard_inserts(node=node, table_name=name)
+
+        with Then("I check that the size of the s3 bucket has increased"):
+            size_after_insert = get_stable_bucket_size()
+            assert size_after_insert > size_before, error()
+
+        with And("I check simple queries"):
+            standard_selects(node=node, table_name=name)
 
     finally:
         with Finally("I drop the table if exists"):
@@ -1391,7 +1478,7 @@ def perform_ttl_move_on_insert(self, bool_value):
             node.query(f"INSERT INTO {name} VALUES ({expected}, {now})")
 
         with Then("I check that a simple SELECT * query returns matching data"):
-            r = node.query(f"SELECT d FROM {name}").output.strip()
+            r = node.query(f"SELECT d FROM {name} FORMAT TabSeparated").output.strip()
             assert r == expected, error()
 
     finally:
@@ -1465,7 +1552,7 @@ def perform_ttl_move_on_insert_default(self):
                     in this table"""
         ):
             disk_names = node.query(
-                f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
+                f"SELECT disk_name FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
             ).output.splitlines()
 
         with And(
@@ -1584,7 +1671,7 @@ def alter_move(self, node="clickhouse1"):
                 with When("I get the first part from system.parts"):
                     first_part = node.query(
                         f"SELECT name FROM system.parts WHERE table = '{name}'"
-                        " AND active = 1 ORDER BY modification_time LIMIT 1"
+                        " AND active = 1 ORDER BY modification_time LIMIT 1 FORMAT TabSeparated"
                     ).output.strip()
 
                     with And("I try to move first part to 'external' volume"):
@@ -1595,7 +1682,7 @@ def alter_move(self, node="clickhouse1"):
                     with And("I get disk name from system.parts for the first part"):
                         disk = node.query(
                             f"SELECT disk_name FROM system.parts WHERE table = '{name}' "
-                            f" AND name = '{first_part}' and active = 1"
+                            f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                         ).output.strip()
 
                     with Then("the disk name should be 'external'"):
@@ -1617,7 +1704,7 @@ def alter_move(self, node="clickhouse1"):
                     with And("I get disk name from system.parts for the first part"):
                         disk = node.query(
                             f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                            f" AND name = '{first_part}' and active = 1"
+                            f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                         ).output.strip()
 
                     with Then("the disk name shoul dbe 'jbod1'"):
@@ -1638,7 +1725,7 @@ def alter_move(self, node="clickhouse1"):
                         disks = (
                             node.query(
                                 f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                " AND partition = '201904' and active = 1"
+                                " AND partition = '201904' and active = 1 FORMAT TabSeparated"
                             )
                             .output.strip()
                             .split("\n")
@@ -1669,7 +1756,7 @@ def alter_move(self, node="clickhouse1"):
                         disks = (
                             node.query(
                                 f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                                " AND partition = '201904' and active = 1"
+                                " AND partition = '201904' and active = 1 FORMAT TabSeparated"
                             )
                             .output.strip()
                             .split("\n")
@@ -1687,7 +1774,9 @@ def alter_move(self, node="clickhouse1"):
                             assert path.startswith(expected), error()
 
                 with When("in the end I get number of rows in the table"):
-                    count = node.query(f"SELECT COUNT() FROM {name}").output.strip()
+                    count = node.query(
+                        f"SELECT COUNT() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
                     with Then("the count should be 4"):
                         assert count == "4", error()
 
@@ -2043,25 +2132,25 @@ def alter_on_cluster_modify_ttl(self):
             check_query_node(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT COUNT() FROM {name}",
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[0],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[0],
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[0],
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -2069,25 +2158,25 @@ def alter_on_cluster_modify_ttl(self):
             check_query_node(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT COUNT() FROM {name}",
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[1],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[1],
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[1],
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -2095,25 +2184,25 @@ def alter_on_cluster_modify_ttl(self):
             check_query_node(
                 node=nodes[2],
                 num=0,
-                query=f"SELECT COUNT() FROM {name}",
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[2],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[2],
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[2],
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -2126,25 +2215,25 @@ def alter_on_cluster_modify_ttl(self):
             check_query_node(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT COUNT() FROM {name}",
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[0],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[0],
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[0],
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -2152,25 +2241,25 @@ def alter_on_cluster_modify_ttl(self):
             check_query_node(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT COUNT() FROM {name}",
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[1],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[1],
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[1],
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -2178,25 +2267,25 @@ def alter_on_cluster_modify_ttl(self):
             check_query_node(
                 node=nodes[2],
                 num=0,
-                query=f"SELECT COUNT() FROM {name}",
+                query=f"SELECT COUNT() FROM {name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[2],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[2],
                 num=2,
-                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[2],
                 num=3,
-                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -2265,7 +2354,7 @@ def low_cardinality_offset(self, use_alter_delete=True):
 
     with Then("I select data from the table"):
         output = node.query(
-            f"SELECT uniq(d) FROM {name}",
+            f"SELECT uniq(d) FROM {name} FORMAT TabSeparated",
             settings=[
                 ("max_threads", "2"),
                 (
@@ -2314,9 +2403,11 @@ def disk_tests(self):
 def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
-    self.context.uri = uri
+    self.context.uri = uri + 'disk/'
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.bucket_name = "altinity-qa-test"
+    self.context.bucket_path = "data/disk"
 
     disk_tests()
 
@@ -2332,6 +2423,8 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.bucket_name = None
+    self.context.bucket_path = None
 
     if check_clickhouse_version(">=22.6")(self):
         with Given("I disable batch delete option"):
@@ -2346,8 +2439,10 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"
-    self.context.uri = uri
+    self.context.uri = uri + 'disk/'
     self.context.access_key_id = key
     self.context.secret_access_key = secret
+    self.context.bucket_name = "root"
+    self.context.bucket_path = "data/disk"
 
     disk_tests()

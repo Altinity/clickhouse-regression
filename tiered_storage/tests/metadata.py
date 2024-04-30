@@ -115,7 +115,7 @@ def scenario(self, cluster, node="clickhouse1", count=10000):
                         description=expected,
                     ):
                         path = node.query(
-                            f"SELECT metadata_path FROM system.tables WHERE name='{name}'"
+                            f"SELECT metadata_path FROM system.tables WHERE name='{name}' FORMAT TabSeparated"
                         ).output.strip()
                         assert re.match(expected, path) is not None, error()
                 finally:

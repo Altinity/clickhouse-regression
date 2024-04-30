@@ -9,29 +9,6 @@ from s3.tests.common import *
 from s3.requirements import *
 
 
-@TestStep(Given)
-def measure_buckets_before_and_after(
-    self, bucket_prefix=None, bucket_name=None, tolerance=5
-):
-    """Return the current bucket size and assert that it is the same after cleanup."""
-
-    with When("I get the size of the s3 bucket before adding data"):
-        size_before = get_stable_bucket_size(prefix=bucket_prefix, name=bucket_name)
-
-    yield size_before
-
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_stable_bucket_size(
-            prefix=bucket_prefix,
-            name=bucket_name,
-            expected_size=size_before,
-            tolerance=tolerance,
-        )
-
-
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global("1.0"))
 def global_setting(self):
@@ -205,7 +182,7 @@ def default_value(self):
 
     with When("I get the value of allow_s3_zero_copy_replication"):
         allow_zero_copy = node.query(
-            f"SELECT value FROM system.merge_tree_settings WHERE name = '{self.context.zero_copy_replication_setting}'"
+            f"SELECT value FROM system.merge_tree_settings WHERE name = '{self.context.zero_copy_replication_setting}' FORMAT TabSeparated"
         ).output.strip()
 
     with Then(f"The value should be {default_value}"):
@@ -250,7 +227,9 @@ def metadata(self):
         )
         numBytes = int(
             nodes[0]
-            .query(f"SELECT value FROM system.events WHERE event = '{event}'")
+            .query(
+                f"SELECT value FROM system.events WHERE event = '{event}' FORMAT TabSeparated"
+            )
             .output.strip()
         )
 
@@ -270,7 +249,9 @@ def metadata(self):
         )
         numBytes = int(
             nodes[1]
-            .query(f"SELECT value FROM system.events WHERE event = '{event}'")
+            .query(
+                f"SELECT value FROM system.events WHERE event = '{event}' FORMAT TabSeparated"
+            )
             .output.strip()
         )
 
@@ -314,7 +295,7 @@ def alter(self, count=10):
             check_query_pair(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT sign FROM {table_name} LIMIT 1",
+                query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                 expected=f"{sign}",
             )
 
@@ -322,7 +303,7 @@ def alter(self, count=10):
             check_query_pair(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT sign FROM {table_name} LIMIT 1",
+                query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
                 expected=f"{sign}",
             )
 
@@ -355,7 +336,7 @@ def alter(self, count=10):
         check_query_pair(
             node=nodes[1],
             num=0,
-            query=f"SELECT sign FROM {table_name} LIMIT 1",
+            query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
             expected="1",
         )
 
@@ -572,49 +553,49 @@ def ttl_move(self):
             check_query_node(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT COUNT() FROM {table_name}",
+                query=f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[0],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[0],
                 num=2,
-                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[0],
                 num=3,
-                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
             check_query_node(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT COUNT() FROM {table_name}",
+                query=f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated",
                 expected="1572867",
             )
             check_query_node(
                 node=nodes[1],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10 FORMAT TabSeparated",
                 expected="10",
             )
             check_query_node(
                 node=nodes[1],
                 num=2,
-                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[1],
                 num=3,
-                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="0",
             )
 
@@ -686,49 +667,49 @@ def ttl_delete(self):
             check_query_node(
                 node=nodes[0],
                 num=0,
-                query=f"SELECT COUNT() FROM {table_name}",
+                query=f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated",
                 expected="1310721",
             )
             check_query_node(
                 node=nodes[0],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10 FORMAT TabSeparated",
                 expected="0",
             )
             check_query_node(
                 node=nodes[0],
                 num=2,
-                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[0],
                 num=3,
-                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="2097152",
             )
             check_query_node(
                 node=nodes[1],
                 num=0,
-                query=f"SELECT COUNT() FROM {table_name}",
+                query=f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated",
                 expected="1310721",
             )
             check_query_node(
                 node=nodes[1],
                 num=1,
-                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+                query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10 FORMAT TabSeparated",
                 expected="0",
             )
             check_query_node(
                 node=nodes[1],
                 num=2,
-                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
                 expected="3407872",
             )
             check_query_node(
                 node=nodes[1],
                 num=3,
-                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+                query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
                 expected="2097152",
             )
 
@@ -771,7 +752,7 @@ def bad_detached_part(self):
 
     with And("I get the path for the part"):
         r = nodes[1].query(
-            f"SELECT path FROM system.parts where table='{table_name}' and name='all_0_0_0'"
+            f"SELECT path FROM system.parts where table='{table_name}' and name='all_0_0_0' FORMAT TabSeparated"
         )
         part_path = r.output
         assert part_path.startswith("/"), error("Expected absolute path!")
@@ -787,7 +768,7 @@ def bad_detached_part(self):
 
     with And("I check detached parts on the second node"):
         r = nodes[1].query(
-            f"SELECT reason, name FROM system.detached_parts where table='{table_name}'"
+            f"SELECT reason, name FROM system.detached_parts where table='{table_name}' FORMAT TabSeparated"
         )
         assert r.output == "broken-on-start	broken-on-start_all_0_0_0", error()
 
@@ -795,7 +776,7 @@ def bad_detached_part(self):
         nodes[1].query(f"DROP TABLE {table_name} SYNC")
 
     with Then("The first node should still have the data"):
-        r = nodes[0].query(f"SELECT * FROM {table_name}")
+        r = nodes[0].query(f"SELECT * FROM {table_name} FORMAT TabSeparated")
         assert r.output == "123", error()
 
 

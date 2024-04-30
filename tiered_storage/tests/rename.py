@@ -66,7 +66,9 @@ def scenario(self, cluster, node="clickhouse1"):
             assert set(disks) == expected_disks, error()
 
         with When("I get the number of rows"):
-            r = node.query("SELECT COUNT() FROM default.renaming_table").output.strip()
+            r = node.query(
+                "SELECT COUNT() FROM default.renaming_table FORMAT TabSeparated"
+            ).output.strip()
             with Then(f"count should be {count}"):
                 assert r == count
 
@@ -74,14 +76,14 @@ def scenario(self, cluster, node="clickhouse1"):
             node.query("RENAME TABLE default.renaming_table TO default.renaming_table1")
             with When("I get the number of rows in the new table"):
                 r = node.query(
-                    "SELECT COUNT() FROM default.renaming_table1"
+                    "SELECT COUNT() FROM default.renaming_table1 FORMAT TabSeparated"
                 ).output.strip()
                 with Then(f"count should be {count}"):
                     assert r == count
 
             with When("I get the number of rows for the old table"):
                 node.query(
-                    "SELECT COUNT() FROM default.renaming_table",
+                    "SELECT COUNT() FROM default.renaming_table FORMAT TabSeparated",
                     table_not_exists_message.format(
                         table_name="default.renaming_table"
                     ),
@@ -96,14 +98,14 @@ def scenario(self, cluster, node="clickhouse1"):
                 )
             with And("I get the number of rows in the new table"):
                 r = node.query(
-                    "SELECT COUNT() FROM test.renaming_table2"
+                    "SELECT COUNT() FROM test.renaming_table2 FORMAT TabSeparated"
                 ).output.strip()
                 with Then(f"count should be {count}"):
                     assert r == count
 
             with When("I get the number of rows for the old table"):
                 node.query(
-                    "SELECT COUNT() FROM default.renaming_table1",
+                    "SELECT COUNT() FROM default.renaming_table1 FORMAT TabSeparated",
                     table_not_exists_message.format(
                         table_name="default.renaming_table1"
                     ),

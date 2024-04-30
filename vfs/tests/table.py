@@ -43,7 +43,7 @@ def bad_detached_part(self):
 
         with And("I get the path for the part"):
             r = nodes[1].query(
-                f"SELECT path FROM system.parts where table='{table_name}' and name='all_0_0_0'"
+                f"SELECT path FROM system.parts where table='{table_name}' and name='all_0_0_0' FORMAT TabSeparated"
             )
             part_path = r.output
             assert part_path.startswith("/"), error("Expected absolute path!")
@@ -59,7 +59,7 @@ def bad_detached_part(self):
 
         with And("I check detached parts on the second node"):
             r = nodes[1].query(
-                f"SELECT reason, name FROM system.detached_parts where table='{table_name}'"
+                f"SELECT reason, name FROM system.detached_parts where table='{table_name}' FORMAT TabSeparated"
             )
             assert r.output == "broken-on-start	broken-on-start_all_0_0_0", error()
 
@@ -67,7 +67,7 @@ def bad_detached_part(self):
             nodes[1].query(f"DROP TABLE {table_name} SYNC")
 
         with Then("The first node should still have the data"):
-            r = nodes[0].query(f"SELECT * FROM {table_name}")
+            r = nodes[0].query(f"SELECT * FROM {table_name} FORMAT TabSeparated")
             assert r.output == "123", error()
 
     finally:

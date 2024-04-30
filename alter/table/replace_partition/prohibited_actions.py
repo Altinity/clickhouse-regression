@@ -174,9 +174,11 @@ def non_mergetree_table(self):
 
     with But("check that partition was not replaced on the destination table"):
         destination_data = node.query(
-            f"SELECT * FROM {destination_table} WHERE p = 2 ORDER BY p"
+            f"SELECT * FROM {destination_table} WHERE p = 2 ORDER BY p FORMAT TabSeparated"
         )
-        source_data = node.query(f"SELECT * FROM {source_table} WHERE p = 2 ORDER BY p")
+        source_data = node.query(
+            f"SELECT * FROM {source_table} WHERE p = 2 ORDER BY p FORMAT TabSeparated"
+        )
 
         assert destination_data.output.strip() != source_data.output.strip()
 

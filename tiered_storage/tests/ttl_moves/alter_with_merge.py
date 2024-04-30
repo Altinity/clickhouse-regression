@@ -84,7 +84,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                             with Then("number of rows should match"):
                                 r = node.query(
-                                    f"SELECT count() FROM {name}"
+                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
                                 ).output.strip()
                                 assert r == "6", error()
 
@@ -110,7 +110,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                             with And("I get number of active parts"):
                                 active = node.query(
-                                    f"SELECT count() FROM system.parts WHERE table = '{name}' AND active = 1"
+                                    f"SELECT count() FROM system.parts WHERE table = '{name}' AND active = 1 FORMAT TabSeparated"
                                 ).output.strip()
                                 with Then("active parts should be 1"):
                                     assert "1" == active
@@ -131,7 +131,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                                 with Then("again number of rows should match"):
                                     r = node.query(
-                                        f"SELECT count() FROM {name}"
+                                        f"SELECT count() FROM {name} FORMAT TabSeparated"
                                     ).output.strip()
                                     assert r == "6", error()
 
@@ -147,7 +147,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     f"number of rows should {'be 0' if positive else 'match'}"
                                 ):
                                     r = node.query(
-                                        f"SELECT count() FROM {name}"
+                                        f"SELECT count() FROM {name} FORMAT TabSeparated"
                                     ).output.strip()
                                     assert r == ("0" if positive else "6"), error()
 

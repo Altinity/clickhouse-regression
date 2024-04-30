@@ -63,7 +63,7 @@ def set_timezone(self):
         node.query(
             ("SET session_timezone = 'Asia/Novosibirsk';")
             + (
-                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Europe/Zurich');"
+                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') FORMAT TabSeparated;"
             ),
             exitcode=0,
             message="2022-12-12 17:23:23.123",
@@ -83,7 +83,7 @@ def set_timezone_with_the_same_continent(self):
         node.query(
             ("SET session_timezone = 'Asia/Manila';")
             + (
-                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Asia/Novosibirsk');"
+                "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Asia/Novosibirsk') FORMAT TabSeparated;"
             ),
             exitcode=0,
             message="2022-12-12 22:23:23.123",
@@ -105,7 +105,7 @@ def set_and_setting_timezone(self):
             ("SET session_timezone = 'Asia/Novosibirsk';")
             + (
                 "SELECT toDateTime64(toDateTime64('2022-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') "
-                "SETTINGS session_timezone = 'Europe/Zurich';"
+                "SETTINGS session_timezone = 'Europe/Zurich' FORMAT TabSeparated;"
             ),
             exitcode=0,
             message="2022-12-12 23:23:23.123",
@@ -142,7 +142,7 @@ def date_datetime_column_types(self):
         with Given("I create table with DateTime('UTC') datatype"):
             node.query(
                 f"CREATE TABLE IF NOT EXISTS {table_name} (d DateTime('UTC')) ENGINE = Memory AS SELECT "
-                "toDateTime('2000-01-01 00:00:00', 'UTC');"
+                "toDateTime('2000-01-01 00:00:00', 'UTC') FORMAT TabSeparated;"
             )
 
         with Then(
@@ -150,11 +150,11 @@ def date_datetime_column_types(self):
         ):
             node.query(
                 f"SELECT *, timezone() FROM {table_name} WHERE d = toDateTime('2000-01-01 00:00:00') "
-                "SETTINGS session_timezone = 'Asia/Novosibirsk'"
+                "SETTINGS session_timezone = 'Asia/Novosibirsk' FORMAT TabSeparated"
             )
             node.query(
                 f"SELECT *, timezone() FROM {table_name} WHERE d = '2000-01-01 00:00:00' "
-                "SETTINGS session_timezone = 'Asia/Novosibirsk';",
+                "SETTINGS session_timezone = 'Asia/Novosibirsk' FORMAT TabSeparated;",
                 message="2000-01-01 00:00:00\tAsia/Novosibirsk",
             )
 
@@ -170,13 +170,13 @@ def all_possible_values_of_timezones(self):
     node = self.context.cluster.node("clickhouse1")
 
     number_of_timezones = node.query(
-        "SELECT count() FROM system.time_zones"
+        "SELECT count() FROM system.time_zones FORMAT TabSeparated"
     ).output.strip()
 
     with Check("I check all possible timezones from system.time_zones table"):
         for i in range(0, int(number_of_timezones)):
             time_zone = node.query(
-                f"SELECT time_zone FROM system.time_zones LIMIT 1 OFFSET {i}"
+                f"SELECT time_zone FROM system.time_zones LIMIT 1 OFFSET {i} FORMAT TabSeparated"
             ).output.strip()
             with Step(
                 f"I check that `session_timezone` is changing timezone to {time_zone}"
@@ -194,30 +194,30 @@ def different_types(self):
     node = self.context.cluster.node("clickhouse1")
 
     number_of_timezones = node.query(
-        "SELECT count() FROM system.time_zones"
+        "SELECT count() FROM system.time_zones FORMAT TabSeparated"
     ).output.strip()
 
     with Check("I check all possible timezones from system.time_zones table"):
         # for i in range(0, int(number_of_timezones)):
         for i in range(0, 3):
             time_zone = node.query(
-                f"SELECT time_zone FROM system.time_zones LIMIT 1 OFFSET {i}"
+                f"SELECT time_zone FROM system.time_zones LIMIT 1 OFFSET {i} FORMAT TabSeparated"
             ).output.strip()
             with Step(
                 f"I check that `session_timezone` is changing timezone to {time_zone}"
             ):
                 node.query(
-                    f"SELECT Date('2000-01-01 01:00:00') SETTINGS session_timezone = '{time_zone}';",
+                    f"SELECT Date('2000-01-01 01:00:00') SETTINGS session_timezone = '{time_zone}' FORMAT TabSeparated;",
                     message=f"2000-01-01",
                 )
 
                 node.query(
-                    f"SELECT toDateTime(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
+                    f"SELECT toDateTime(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}' FORMAT TabSeparated;",
                     message=f"2000-01-01 00:00:00.000",
                 )
 
                 node.query(
-                    f"SELECT toDateTime64(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
+                    f"SELECT toDateTime64(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}' FORMAT TabSeparated;",
                     message=f"2000-01-01 00:00:00.000",
                 )
 

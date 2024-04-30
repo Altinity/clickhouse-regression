@@ -11,7 +11,7 @@ def join_step(self, table, tables_auxiliary, join_type="INNER JOIN", node=None):
     with When(f"I make {join_type} {tables_auxiliary[0].name} on {table.name}"):
         node.query(
             f"SELECT count() FROM {table.name} {join_type}"
-            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 0)],
         ).output.strip()
 
@@ -29,7 +29,7 @@ def join_with_force_final(
     ):
         node.query(
             f"SELECT count() FROM {table.name} {join_type}"
-            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 1)],
         ).output.strip()
 
@@ -48,7 +48,7 @@ def join_with_final_on_left_table(
         node.query(
             f"SELECT count() FROM {table.name} "
             f"{' FINAL' if table.final_modifier_available else ''} {join_type}"
-            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 0)],
         ).output.strip()
 
@@ -67,7 +67,7 @@ def join_with_final_on_left_table_with_force_final(
         node.query(
             f"SELECT count() FROM {table.name} "
             f"{' FINAL' if table.final_modifier_available else ''} {join_type}"
-            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 1)],
         ).output.strip()
 
@@ -85,7 +85,7 @@ def join_with_final_on_right_table(
     ):
         node.query(
             f"SELECT count() FROM {table.name} {join_type}"
-            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 0)],
         ).output.strip()
 
@@ -103,7 +103,7 @@ def join_with_final_on_right_table_with_force_final(
     ):
         node.query(
             f"SELECT count() FROM {table.name} {join_type}"
-            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 1)],
         ).output.strip()
 
@@ -121,7 +121,7 @@ def join_with_final_on_both_tables(
     ):
         node.query(
             f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
-            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 0)],
         ).output.strip()
 
@@ -139,7 +139,7 @@ def join_with_final_on_both_tables_with_force_final(
     ):
         node.query(
             f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
-            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 1)],
         ).output.strip()
 
@@ -156,13 +156,13 @@ def join_result_check(self, table, tables_auxiliary, join_type="INNER JOIN", nod
         allow_experimental_analyzer()
         with_final_clause = node.query(
             f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
-            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 0)],
         ).output.strip()
         disable_experimental_analyzer()
         with_final_setting = node.query(
             f"SELECT count() FROM {table.name} {join_type}"
-            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id",
+            f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
             settings=[("final", 1)],
         ).output.strip()
         assert with_final_clause == with_final_setting, error()
