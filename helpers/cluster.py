@@ -997,6 +997,9 @@ class Cluster(object):
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
+        keeper_binary_path=None,
+        zookeeper_binary_path=None,
+        use_keeper=False,
         thread_fuzzer=False,
         collect_service_logs=False,
         use_zookeeper_nodes=False,
@@ -1008,6 +1011,9 @@ class Cluster(object):
         self.environ = {} if (environ is None) else environ
         self.clickhouse_binary_path = clickhouse_binary_path
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
+        self.keeper_binary_path = keeper_binary_path
+        self.zookeeper_binary_path = zookeeper_binary_path
+        self.use_keeper = use_keeper
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -1029,6 +1035,11 @@ class Cluster(object):
 
         if not os.path.exists(self.configs_dir):
             raise TypeError(f"configs directory '{self.configs_dir}' does not exist")
+
+        if zookeeper_binary_path and not use_zookeeper_nodes:
+            raise TypeError(
+                "use_zookeeper_nodes must be set to True if zookeeper_binary_path is specified"
+            )
 
         if docker_compose_project_dir is None:
             docker_compose_project_dir = os.path.join(
@@ -1058,6 +1069,54 @@ class Cluster(object):
                 f"docker compose file '{docker_compose_file_path}' does not exist"
             )
 
+        def download_http_binary(binary_source):
+            file_name = (
+                f"{short_hash(binary_source)}-{binary_source.rsplit('/', 1)[-1]}"
+            )
+            file_dir = f"{current_dir()}/../binaries/"
+            os.makedirs(file_dir, exist_ok=True)
+            file_path = file_dir + file_name
+            if not os.path.exists(file_path):
+                with Shell() as bash:
+                    bash.timeout = 300
+                    try:
+                        note(
+                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
+                        )
+                        cmd = bash(
+                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
+                        )
+                        assert cmd.exitcode == 0
+                    except BaseException:
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                        raise
+
+            return file_path
+
+        def parse_version_from_docker_path(docker_path):
+            version = ""
+            for c in docker_path.rsplit(":", 1)[-1]:
+                if c in ".0123456789":
+                    version += c
+                else:
+                    break
+            return version
+
+        def unpack_deb(deb_binary_path, program_name):
+            deb_binary_dir = deb_binary_path.rsplit(".deb", 1)[0]
+            os.makedirs(deb_binary_dir, exist_ok=True)
+            with Shell() as bash:
+                bash.timeout = 300
+                if not os.path.exists(f"{deb_binary_dir}/{program_name}"):
+                    bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
+                    bash(
+                        f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}""'
+                    )
+                    bash(f'chmod +x "{deb_binary_dir}/{program_name}"')
+
+            return f"{deb_binary_dir}/{program_name}"
+
         if self.clickhouse_binary_path:
             if self.use_specific_version:
                 (
@@ -1080,32 +1139,15 @@ class Cluster(object):
                     "I download ClickHouse server binary using wget",
                     description=f"{self.clickhouse_binary_path}",
                 ):
-                    file_name = f"{short_hash(self.clickhouse_binary_path)}-{self.clickhouse_binary_path.rsplit('/', 1)[-1]}"
-                    file_dir = f"{current_dir()}/../binaries/"
-                    os.makedirs(file_dir, exist_ok=True)
-                    file_path = file_dir + file_name
-                    if not os.path.exists(file_path):
-                        with Shell() as bash:
-                            bash.timeout = 300
-                            try:
-                                cmd = bash(
-                                    f'wget --progress dot:giga "{self.clickhouse_binary_path}" -O {file_path}'
-                                )
-                                assert cmd.exitcode == 0
-                            except BaseException:
-                                if os.path.exists(file_path):
-                                    os.remove(file_path)
-                                raise
-                    self.clickhouse_binary_path = file_path
+                    self.clickhouse_binary_path = download_http_binary(
+                        binary_source=self.clickhouse_binary_path
+                    )
 
             elif self.clickhouse_binary_path.startswith("docker://"):
                 if current().context.clickhouse_version is None:
-                    parsed_version = ""
-                    for c in self.clickhouse_binary_path.rsplit(":", 1)[-1]:
-                        if c in ".0123456789":
-                            parsed_version += c
-                        else:
-                            break
+                    parsed_version = parse_version_from_docker_path(
+                        self.clickhouse_binary_path
+                    )
                     if parsed_version:
                         if not (
                             parsed_version.startswith(".")
@@ -1124,33 +1166,24 @@ class Cluster(object):
                 with Given(
                     "unpack deb package", description=f"{self.clickhouse_binary_path}"
                 ):
-                    deb_binary_dir = self.clickhouse_binary_path.rsplit(".deb", 1)[0]
-                    os.makedirs(deb_binary_dir, exist_ok=True)
-                    with Shell() as bash:
-                        bash.timeout = 300
-                        if not os.path.exists(
-                            f"{deb_binary_dir}/clickhouse"
-                        ) or not os.path.exists(
-                            f"{deb_binary_dir}/clickhouse-odbc-bridge"
-                        ):
-                            bash(
-                                f'ar x "{self.clickhouse_binary_path}" --output "{deb_binary_dir}"'
-                            )
-                            bash(
-                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse -O > "{deb_binary_dir}/clickhouse"'
-                            )
-                            bash(f'chmod +x "{deb_binary_dir}/clickhouse"')
-                            bash(
-                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse-odbc-bridge -O > "{deb_binary_dir}/clickhouse-odbc-bridge"'
-                            )
-                            bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
-                    self.clickhouse_binary_path = f"{deb_binary_dir}/clickhouse"
+                    self.clickhouse_binary_path = unpack_deb(
+                        deb_binary_path=self.clickhouse_binary_path,
+                        program_name="clickhouse",
+                    )
+                    unpack_deb(
+                        deb_binary_path=self.clickhouse_binary_path,
+                        program_name="clickhouse-odbc-bridge",
+                    )
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
             with Shell() as bash:
                 bash.timeout = 300
                 bash(f"chmod +x {self.clickhouse_binary_path}")
+
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(f"chmod +x {self.zookeeper_binary_path}")
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1688,6 +1721,9 @@ def create_cluster(
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
+    use_keeper=False,
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
@@ -1704,6 +1740,9 @@ def create_cluster(
         docker_compose_project_dir=docker_compose_project_dir,
         docker_compose_file=docker_compose_file,
         environ=environ,
+        keeper_binary_path=keeper_binary_path,
+        zookeeper_binary_path=zookeeper_binary_path,
+        use_keeper=use_keeper,
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,
