@@ -504,7 +504,7 @@ jobs:
 
   clickhouse_keeper:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 360
     env:
       SUITE: clickhouse_keeper
       STORAGE: /no_ssl
