@@ -9,7 +9,12 @@ from testflows._core.name import sep
 from testflows._core.testtype import TestSubType
 from testflows.asserts import values, error, snapshot
 
-from helpers.common import check_clickhouse_version, getuid, current_cpu
+from helpers.common import (
+    check_clickhouse_version,
+    getuid,
+    current_cpu,
+    check_current_cpu,
+)
 
 interval_periods = [
     "SECOND",
@@ -125,6 +130,7 @@ def execute_query(
     no_checks=False,
     snapshot_name=None,
     format="TabSeparatedWithNames",
+    add_version_to_snapshot=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
@@ -135,6 +141,9 @@ def execute_query(
             .replace(f"{sep}distributed{sep}", ":")
             .split("/window functions", 1)[-1]
         )
+
+    if add_version_to_snapshot is not None:
+        snapshot_name += add_version_to_snapshot
 
     with When("I execute query", description=sql):
         r = current().context.node.query(
