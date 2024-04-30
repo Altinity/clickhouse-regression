@@ -93,6 +93,13 @@ def aggregate_funcs_over_rows_frame(self, func):
     ) and check_clickhouse_version(">=22")(self):
         snapshot_name += "/version>=22"
 
+    if (
+        (func.startswith("simpleLinearRegression"))
+        and check_clickhouse_version(">=24.3")(self)
+        and check_current_cpu("aarch64")(self)
+    ):
+        snapshot_name += "/version>=24.3"
+
     execute_query(
         f"""
         SELECT {func} OVER (ORDER BY salary, empno ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS func
