@@ -34,8 +34,13 @@ def scenario(
     snapshot_id=None,
 ):
     """Check covarPop aggregate function."""
+    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
+        clickhouse_version = ">=24.3"
+    else:
+        clickhouse_version = ">=23.2"
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if "Merge" in self.name:
