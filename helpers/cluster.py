@@ -37,6 +37,10 @@ MESSAGES_TO_RETRY = [
 ]
 
 
+def filter_version(version):
+    return "".join([c for c in version.strip(".") if c in ".0123456789"])
+
+
 def short_hash(s):
     """Return good enough short hash of a string."""
     return hashlib.sha1(s.encode("utf-8")).hexdigest()[:10]
@@ -895,8 +899,13 @@ class ClickHouseKeeperNode(Node):
         timeout=100,
         user="clickhouse",
         force_recovery=False,
+        check_version=True,
     ):
         """Start ClickHouse Keeper."""
+        if check_version:
+            r = self.command("/usr/bin/clickhouse-keeper --version", steps=False)
+            current().context.keeper_version = filter_version(r.output.strip())
+
         pid = self.keeper_pid()
         if pid:
             raise RuntimeError(f"ClickHouse Keeper already running with pid {pid}")
@@ -999,7 +1008,6 @@ class Cluster(object):
         environ=None,
         keeper_binary_path=None,
         zookeeper_binary_path=None,
-        use_keeper=False,
         thread_fuzzer=False,
         collect_service_logs=False,
         use_zookeeper_nodes=False,
@@ -1013,7 +1021,6 @@ class Cluster(object):
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
         self.zookeeper_binary_path = zookeeper_binary_path
-        self.use_keeper = use_keeper
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -1038,7 +1045,7 @@ class Cluster(object):
 
         if zookeeper_binary_path and not use_zookeeper_nodes:
             raise TypeError(
-                "use_zookeeper_nodes must be set to True if zookeeper_binary_path is specified"
+                f"use_zookeeper_nodes must be set to True if zookeeper_binary_path={zookeeper_binary_path} is specified"
             )
 
         if docker_compose_project_dir is None:
@@ -1095,13 +1102,7 @@ class Cluster(object):
             return file_path
 
         def parse_version_from_docker_path(docker_path):
-            version = ""
-            for c in docker_path.rsplit(":", 1)[-1]:
-                if c in ".0123456789":
-                    version += c
-                else:
-                    break
-            return version
+            return filter_version(docker_path.rsplit(":", 1)[-1])
 
         def unpack_deb(deb_binary_path, program_name):
             deb_binary_dir = deb_binary_path.rsplit(".deb", 1)[0]
@@ -1181,9 +1182,50 @@ class Cluster(object):
                 bash.timeout = 300
                 bash(f"chmod +x {self.clickhouse_binary_path}")
 
+        if self.keeper_binary_path:
+            if self.keeper_binary_path.startswith(("http://", "https://")):
+                with Given(
+                    "I download ClickHouse Keeper server binary using wget",
+                    description=f"{self.keeper_binary_path}",
+                ):
+                    self.keeper_binary_path = download_http_binary(
+                        binary_source=self.keeper_binary_path
+                    )
+
+            elif self.keeper_binary_path.startswith("docker://"):
+                if getsattr(current().context, "keeper_version", None) is None:
+                    parsed_version = parse_version_from_docker_path(
+                        self.keeper_binary_path
+                    )
+                    if parsed_version:
+                        if not (
+                            parsed_version.startswith(".")
+                            or parsed_version.endswith(".")
+                        ):
+                            current().context.keeper_version = parsed_version
+
+                self.keeper_binary_path = self.get_binary_from_docker_container(
+                    docker_image=self.keeper_binary_path,
+                    container_binary_path="/usr/bin/clickhouse-keeper",
+                )
+
+            if self.keeper_binary_path.endswith(".deb"):
+                with Given(
+                    "unpack deb package", description=f"{self.keeper_binary_path}"
+                ):
+                    self.keeper_binary_path = unpack_deb(
+                        deb_binary_path=self.keeper_binary_path,
+                        program_name="clickhouse-keeper",
+                    )
+
+            self.keeper_binary_path = os.path.abspath(self.keeper_binary_path)
+
             with Shell() as bash:
                 bash.timeout = 300
-                bash(f"chmod +x {self.zookeeper_binary_path}")
+                bash(f"chmod +x {self.keeper_binary_path}")
+
+        if self.zookeeper_binary_path:
+            raise NotImplementedError("Zookeeper is not supported yet")
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1236,6 +1278,51 @@ class Cluster(object):
                 bash(f"ls -la {host_clickhouse_binary_path}")
 
         return host_clickhouse_binary_path, host_clickhouse_odbc_bridge_binary_path
+
+    def get_binary_from_docker_container(
+        self,
+        docker_image,
+        container_binary_path="/usr/bin/clickhouse",
+        host_binary_path=None,
+    ):
+        """
+        Get clickhouse-keeper binary from some Docker container.
+
+        Args:
+            docker_image: docker image name
+            container_binary_path: path to link the binary in the container
+            host_binary_path: path to store the binary on the host
+        """
+
+        docker_image = docker_image.split("docker://", 1)[-1]
+        docker_container_name = str(uuid.uuid1())
+
+        if host_binary_path is None:
+            host_binary_path = os.path.join(
+                tempfile.gettempdir(),
+                f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
+            )
+
+        with Given(
+            "I get ClickHouse Keeper binary from docker container",
+            description=f"{docker_image}",
+        ):
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(
+                    f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
+                )
+                bash(
+                    f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
+                )
+                bash(f'docker stop "{docker_container_name}"')
+
+        with And("debug"):
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(f"ls -la {host_binary_path}")
+
+        return host_binary_path
 
     @property
     def control_shell(self, timeout=300):
@@ -1524,6 +1611,9 @@ class Cluster(object):
                         "clickhouse-odbc-bridge",
                     )
                 )
+                self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
+                    self.keeper_binary_path
+                )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
             with And("I list environment variables to show their values"):
@@ -1723,7 +1813,6 @@ def create_cluster(
     environ=None,
     keeper_binary_path=None,
     zookeeper_binary_path=None,
-    use_keeper=False,
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
@@ -1742,7 +1831,6 @@ def create_cluster(
         environ=environ,
         keeper_binary_path=keeper_binary_path,
         zookeeper_binary_path=zookeeper_binary_path,
-        use_keeper=use_keeper,
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,
