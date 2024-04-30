@@ -262,9 +262,8 @@ def lightweight_delete_memory_consuption(self, node=None):
                 i += 1
 
     with Then("I expect data is successfully deleted"):
-        if check_clickhouse_version("<24.3")(self):
-            r = node.query(f"SELECT count() FROM {table_name} FORMAT TabSeparated")
-            assert r.output == "0", error()
+        r = node.query(f"SELECT count() FROM {table_name} FORMAT TabSeparated")
+        assert r.output == "0", error()
 
 
 @TestFeature
