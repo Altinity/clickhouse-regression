@@ -544,6 +544,20 @@ func
 (nan,nan)
 """
 
+_window_functions_tests_aggregate_funcs_aggregate_funcs_over_rows_frame_func__simpleLinearRegression_salary__empno___version__24_3 = r"""
+func
+(0.004664429530201342,-17.93288590604027)
+(0.003894230769230769,-13.60576923076923)
+(0.00288135593220339,-7.915254237288137)
+(0.0023192111029948868,-5.12417823228634)
+(0.0021933471933471933,-4.551975051975051)
+(0.0017991004497751124,-2.473763118440779)
+(0.0013182096873083997,0.08338442673206625)
+(-0.003125,26.75)
+(-0.00375,30.5)
+(nan,nan)
+"""
+
 _window_functions_tests_aggregate_funcs_aggregate_funcs_over_rows_frame_func__skewPop_salary__ = r"""
 func
 1.1766149730944095
@@ -1394,7 +1408,35 @@ id	time	w
 9	2020-01-01 00:00:09.000000000	8.41847731304077
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime64TZ_time_column_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00.000000000	0
+1	2020-01-01 00:00:01.000000000	0.7310585786300049
+2	2020-01-01 00:00:02.000000000	1.5752103826044412
+3	2020-01-01 00:00:03.000000000	2.4926527345857696
+4	2020-01-01 00:00:04.000000000	3.4519415676621947
+5	2020-01-01 00:00:05.000000000	4.432932763071741
+6	2020-01-01 00:00:06.000000000	5.424412292903226
+7	2020-01-01 00:00:07.000000000	6.420707894737403
+8	2020-01-01 00:00:08.000000000	7.419134118454189
+9	2020-01-01 00:00:09.000000000	8.41847731304077
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime64_time_column = r"""
+id	time	w
+0	2020-01-01 00:00:00.000	0
+1	2020-01-01 00:00:01.000	0.7310585786300049
+2	2020-01-01 00:00:02.000	1.5752103826044412
+3	2020-01-01 00:00:03.000	2.4926527345857696
+4	2020-01-01 00:00:04.000	3.4519415676621947
+5	2020-01-01 00:00:05.000	4.432932763071741
+6	2020-01-01 00:00:06.000	5.424412292903226
+7	2020-01-01 00:00:07.000	6.420707894737403
+8	2020-01-01 00:00:08.000	7.419134118454189
+9	2020-01-01 00:00:09.000	8.41847731304077
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime64_time_column_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00.000	0
 1	2020-01-01 00:00:01.000	0.7310585786300049
@@ -1422,7 +1464,35 @@ id	time	w
 9	2020-01-01 00:00:09	8.41847731304077
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTimeTZ_time_column_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	0.7310585786300049
+2	2020-01-01 00:00:02	1.5752103826044412
+3	2020-01-01 00:00:03	2.4926527345857696
+4	2020-01-01 00:00:04	3.4519415676621947
+5	2020-01-01 00:00:05	4.432932763071741
+6	2020-01-01 00:00:06	5.424412292903226
+7	2020-01-01 00:00:07	6.420707894737403
+8	2020-01-01 00:00:08	7.419134118454189
+9	2020-01-01 00:00:09	8.41847731304077
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime_time_column = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	0.7310585786300049
+2	2020-01-01 00:00:02	1.5752103826044412
+3	2020-01-01 00:00:03	2.4926527345857696
+4	2020-01-01 00:00:04	3.4519415676621947
+5	2020-01-01 00:00:05	4.432932763071741
+6	2020-01-01 00:00:06	5.424412292903226
+7	2020-01-01 00:00:07	6.420707894737403
+8	2020-01-01 00:00:08	7.419134118454189
+9	2020-01-01 00:00:09	8.41847731304077
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime_time_column_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	0.7310585786300049
@@ -1445,6 +1515,15 @@ id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
 -5	2022-01-01 00:00:00	-1.8
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_0_time_gap_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
+1	2022-01-01 00:00:00	-1.8
+2	2022-01-01 00:00:00	-1.8
+-3	2022-01-01 00:00:00	-1.8
+-4	2022-01-01 00:00:00	-1.8
+-5	2022-01-01 00:00:00	-1.8
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check__1_time_gap = r"""
 id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
 1	2022-01-01 00:00:00	3.255762093989612
@@ -1454,7 +1533,30 @@ id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
 5	2022-01-01 00:00:00	3.255762093989612
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check__1_time_gap_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
+1	2022-01-01 00:00:00	3.255762093989612
+2	2022-01-01 00:00:00	3.255762093989612
+3	2022-01-01 00:00:00	3.255762093989612
+4	2022-01-01 00:00:01	3.255762093989612
+5	2022-01-01 00:00:00	3.255762093989612
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_overflow = r"""
+id	time	w
+0	2020-01-01 00:00:00	4999.5
+1	2020-01-01 00:00:01	4999.5
+2	2020-01-01 00:00:02	4999.5
+3	2020-01-01 00:00:03	4999.5
+4	2020-01-01 00:00:04	4999.5
+5	2020-01-01 00:00:05	4999.5
+6	2020-01-01 00:00:06	4999.5
+7	2020-01-01 00:00:07	4999.5
+8	2020-01-01 00:00:08	4999.5
+9	2020-01-01 00:00:09	4999.5
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_overflow_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	4999.5
 1	2020-01-01 00:00:01	4999.5
@@ -1482,7 +1584,35 @@ id	time	w
 9	2020-01-01 00:00:09	999.0460634232364
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_with_negative_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00	999.0460634232365
+1	2020-01-01 00:00:01	999.0460634232365
+2	2020-01-01 00:00:02	999.0460634232365
+3	2020-01-01 00:00:03	999.0460634232365
+4	2020-01-01 00:00:04	999.0460634232365
+5	2020-01-01 00:00:05	999.0460634232365
+6	2020-01-01 00:00:06	999.0460634232365
+7	2020-01-01 00:00:07	999.0460634232365
+8	2020-01-01 00:00:08	999.0460634232365
+9	2020-01-01 00:00:09	999.0460634232365
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_with_zero = r"""
+id	time	w
+0	2020-01-01 00:00:00	nan
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	nan
+3	2020-01-01 00:00:03	nan
+4	2020-01-01 00:00:04	nan
+5	2020-01-01 00:00:05	nan
+6	2020-01-01 00:00:06	nan
+7	2020-01-01 00:00:07	nan
+8	2020-01-01 00:00:08	nan
+9	2020-01-01 00:00:09	nan
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_with_zero_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	nan
 1	2020-01-01 00:00:01	nan
@@ -1510,7 +1640,35 @@ id	time	w
 9	2020-01-01 00:00:09	4999.5
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_time_with_0_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00	4999.5
+1	2020-01-01 00:00:01	4999.5
+2	2020-01-01 00:00:02	4999.5
+3	2020-01-01 00:00:03	4999.5
+4	2020-01-01 00:00:04	4999.5
+5	2020-01-01 00:00:05	4999.5
+6	2020-01-01 00:00:06	4999.5
+7	2020-01-01 00:00:07	4999.5
+8	2020-01-01 00:00:08	4999.5
+9	2020-01-01 00:00:09	4999.5
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_0 = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	0
+2	2020-01-01 00:00:02	0
+3	2020-01-01 00:00:03	0
+4	2020-01-01 00:00:04	0
+5	2020-01-01 00:00:05	0
+6	2020-01-01 00:00:06	0
+7	2020-01-01 00:00:07	0
+8	2020-01-01 00:00:08	0
+9	2020-01-01 00:00:09	0
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_0_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	0
@@ -1533,7 +1691,25 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal128_4__type_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal32_4__type = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal32_4__type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1551,7 +1727,25 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal64_4__type_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Float32_type = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Float32_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1569,7 +1763,25 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Float64_type_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int16_type = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int16_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1587,7 +1799,25 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int32_type_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int64_type = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int64_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1605,7 +1835,25 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int8_type_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt16_type = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt16_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1623,7 +1871,25 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt32_type_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt64_type = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt64_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1641,7 +1907,30 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt8_type_version__24_3 = r"""
+id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
+1	1970-01-01 01:00:01	2.4428577575728454
+1	1970-01-01 01:00:02	2.4428577575728454
+2	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:03	2.4428577575728454
+3	1970-01-01 01:00:05	2.4428577575728454
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_one_row_partitions = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2
+3	2020-01-01 00:00:03	3
+4	2020-01-01 00:00:04	4
+5	2020-01-01 00:00:05	5
+6	2020-01-01 00:00:06	6
+7	2020-01-01 00:00:07	7
+8	2020-01-01 00:00:08	8
+9	2020-01-01 00:00:09	9
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_one_row_partitions_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	1
@@ -1669,7 +1958,35 @@ id	time	w
 14	2020-01-01 00:00:14	9988.95009144695
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	9988.95009144695
+2	2020-01-01 00:00:02	9988.95009144695
+4	2020-01-01 00:00:04	9988.95009144695
+5	2020-01-01 00:00:05	9988.95009144695
+7	2020-01-01 00:00:07	9988.95009144695
+8	2020-01-01 00:00:08	9988.95009144695
+10	2020-01-01 00:00:10	9988.95009144695
+11	2020-01-01 00:00:11	9988.95009144695
+13	2020-01-01 00:00:13	9988.95009144695
+14	2020-01-01 00:00:14	9988.95009144695
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute = r"""
+id	time	w
+1	2020-01-01 00:00:01	48.68302837130835
+2	2020-01-01 00:00:02	48.699517020495165
+3	2020-01-01 00:00:03	48.71736284737082
+4	2020-01-01 00:00:04	48.736669997228184
+5	2020-01-01 00:00:05	48.75754970551674
+6	2020-01-01 00:00:06	48.78012067255031
+7	2020-01-01 00:00:07	48.80450944473328
+8	2020-01-01 00:00:08	48.830850800540155
+9	2020-01-01 00:00:09	48.85928813919405
+10	2020-01-01 00:00:10	48.88997386967902
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	48.68302837130835
 2	2020-01-01 00:00:02	48.699517020495165
@@ -1688,12 +2005,36 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13239221788919936536
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13239221788919936536
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6991653878736917462
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16402863909584675538
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	1.5249791874789398
+4	2020-01-01 00:00:04	4.524979187478939
+5	2020-01-01 00:00:05	4.524979187478939
+7	2020-01-01 00:00:07	7.524979187478941
+8	2020-01-01 00:00:08	7.524979187478941
+10	2020-01-01 00:00:10	10.52497918747894
+11	2020-01-01 00:00:11	10.52497918747894
+13	2020-01-01 00:00:13	13.524979187478941
+14	2020-01-01 00:00:14	13.524979187478941
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	1.5249791874789398
 2	2020-01-01 00:00:02	1.5249791874789398
@@ -1721,9 +2062,28 @@ id	time	w
 10	2020-01-01 00:00:10	10.066555795755196
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	2.0665557957551988
+3	2020-01-01 00:00:03	3.0665557957551988
+4	2020-01-01 00:00:04	4.066555795755199
+5	2020-01-01 00:00:05	5.066555795755199
+6	2020-01-01 00:00:06	6.066555795755198
+7	2020-01-01 00:00:07	7.066555795755197
+8	2020-01-01 00:00:08	8.066555795755196
+9	2020-01-01 00:00:09	9.066555795755198
+10	2020-01-01 00:00:10	10.066555795755198
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	15361642123780743416
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	14429555309796454170
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
@@ -1731,7 +2091,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	5862409234961184510
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	15307615954504467838
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	1.5249791874789398
+4	2020-01-01 00:00:04	4
+5	2020-01-01 00:00:05	4.524979187478939
+7	2020-01-01 00:00:07	7
+8	2020-01-01 00:00:08	7.524979187478941
+10	2020-01-01 00:00:10	10
+11	2020-01-01 00:00:11	10.52497918747894
+13	2020-01-01 00:00:13	13
+14	2020-01-01 00:00:14	13.524979187478941
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	1
 2	2020-01-01 00:00:02	1.5249791874789398
@@ -1759,9 +2138,28 @@ id	time	w
 10	2020-01-01 00:00:10	9.524979187478941
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	1.5249791874789398
+3	2020-01-01 00:00:03	2.52497918747894
+4	2020-01-01 00:00:04	3.52497918747894
+5	2020-01-01 00:00:05	4.52497918747894
+6	2020-01-01 00:00:06	5.524979187478941
+7	2020-01-01 00:00:07	6.52497918747894
+8	2020-01-01 00:00:08	7.52497918747894
+9	2020-01-01 00:00:09	8.524979187478941
+10	2020-01-01 00:00:10	9.524979187478941
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7966396018471970678
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	7297242392081283338
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
@@ -1769,7 +2167,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16190995035408338233
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	18027367577351402446
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	9988.95009144695
+2	2020-01-01 00:00:02	9988.95009144695
+4	2020-01-01 00:00:04	9988.95009144695
+5	2020-01-01 00:00:05	9988.95009144695
+7	2020-01-01 00:00:07	9988.95009144695
+8	2020-01-01 00:00:08	9988.95009144695
+10	2020-01-01 00:00:10	9988.95009144695
+11	2020-01-01 00:00:11	9988.95009144695
+13	2020-01-01 00:00:13	9988.95009144695
+14	2020-01-01 00:00:14	9988.95009144695
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	9988.95009144695
 2	2020-01-01 00:00:02	9988.95009144695
@@ -1797,7 +2214,26 @@ id	time	w
 10	2020-01-01 00:00:10	48.830850800540155
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	48.66779947798152
+2	2020-01-01 00:00:02	48.66779947798152
+3	2020-01-01 00:00:03	48.68302837130835
+4	2020-01-01 00:00:04	48.699517020495165
+5	2020-01-01 00:00:05	48.71736284737082
+6	2020-01-01 00:00:06	48.736669997228184
+7	2020-01-01 00:00:07	48.75754970551674
+8	2020-01-01 00:00:08	48.78012067255031
+9	2020-01-01 00:00:09	48.80450944473328
+10	2020-01-01 00:00:10	48.830850800540155
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	9881448387590534551
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	9881448387590534551
 """
@@ -1807,7 +2243,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6522037762247401915
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4541465367653127624
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	1.9999999999999998
+4	2020-01-01 00:00:04	4.524979187478939
+5	2020-01-01 00:00:05	4.999999999999999
+7	2020-01-01 00:00:07	7.524979187478941
+8	2020-01-01 00:00:08	8
+10	2020-01-01 00:00:10	10.52497918747894
+11	2020-01-01 00:00:11	11
+13	2020-01-01 00:00:13	13.524979187478941
+14	2020-01-01 00:00:14	14.000000000000002
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	1.5249791874789398
 2	2020-01-01 00:00:02	1.9999999999999998
@@ -1835,14 +2290,38 @@ id	time	w
 10	2020-01-01 00:00:10	10.524979187478941
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	2.52497918747894
+3	2020-01-01 00:00:03	3.52497918747894
+4	2020-01-01 00:00:04	4.52497918747894
+5	2020-01-01 00:00:05	5.524979187478941
+6	2020-01-01 00:00:06	6.52497918747894
+7	2020-01-01 00:00:07	7.52497918747894
+8	2020-01-01 00:00:08	8.524979187478941
+9	2020-01-01 00:00:09	9.524979187478941
+10	2020-01-01 00:00:10	10.524979187478941
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	9677279760188586566
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6998628102243875284
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16296003584577490805
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	9329909658882923324
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__basic_check = r"""
@@ -1879,6 +2358,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
@@ -1921,7 +2405,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	2681923910724328312
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	799083818724233891
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+4	2020-01-01 00:00:04	1.5249791874789398
+5	2020-01-01 00:00:05	2.4919545561453664
+7	2020-01-01 00:00:07	3.248306737913917
+8	2020-01-01 00:00:08	4.25821335155325
+10	2020-01-01 00:00:10	5.116151200593762
+11	2020-01-01 00:00:11	6.184642405239253
+13	2020-01-01 00:00:13	7.12224457526869
+14	2020-01-01 00:00:14	8.251527756309828
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	nan
 2	2020-01-01 00:00:02	1
@@ -1949,12 +2452,36 @@ id	time	w
 10	2020-01-01 00:00:10	5.657727808870021
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+3	2020-01-01 00:00:03	1.5249791874789398
+4	2020-01-01 00:00:04	2.0665557957551988
+5	2020-01-01 00:00:05	2.624647182103896
+6	2020-01-01 00:00:06	3.199138467908942
+7	2020-01-01 00:00:07	3.7898833461901758
+8	2020-01-01 00:00:08	4.396705100666194
+9	2020-01-01 00:00:09	5.019397822553704
+10	2020-01-01 00:00:10	5.657727808870021
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	2840650869004265920
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	2840650869004265920
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	12349134980424805700
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12349134980424805700
 """
@@ -1997,6 +2524,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6829062704342881462
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6829062704342881462
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9988.95009144695
@@ -2033,6 +2565,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10188631851657758577
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16458442593046828105
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__basic_check = r"""
@@ -2073,6 +2610,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10188631851657758577
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16458442593046828105
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9988.95009144695
@@ -2109,6 +2651,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10188631851657758577
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16458442593046828105
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
@@ -2149,6 +2696,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10188631851657758577
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16458442593046828105
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9988.95009144695
@@ -2187,7 +2739,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10188631851657758577
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16458442593046828105
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	9988.95009144695
+2	2020-01-01 00:00:02	9988.95009144695
+4	2020-01-01 00:00:04	9988.95009144695
+5	2020-01-01 00:00:05	9988.95009144695
+7	2020-01-01 00:00:07	9988.95009144695
+8	2020-01-01 00:00:08	9988.95009144695
+10	2020-01-01 00:00:10	9988.95009144695
+11	2020-01-01 00:00:11	9988.95009144695
+13	2020-01-01 00:00:13	9988.95009144695
+14	2020-01-01 00:00:14	9988.95009144695
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	9988.95009144695
 2	2020-01-01 00:00:02	9988.95009144695
@@ -2215,7 +2786,26 @@ id	time	w
 10	2020-01-01 00:00:10	48.88997386967902
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	48.68302837130835
+2	2020-01-01 00:00:02	48.699517020495165
+3	2020-01-01 00:00:03	48.71736284737082
+4	2020-01-01 00:00:04	48.736669997228184
+5	2020-01-01 00:00:05	48.75754970551674
+6	2020-01-01 00:00:06	48.78012067255031
+7	2020-01-01 00:00:07	48.80450944473328
+8	2020-01-01 00:00:08	48.830850800540155
+9	2020-01-01 00:00:09	48.85928813919405
+10	2020-01-01 00:00:10	48.88997386967902
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13239221788919936536
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13239221788919936536
 """
@@ -2225,7 +2815,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6991653878736917462
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16402863909584675538
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	2.4919545561453664
+4	2020-01-01 00:00:04	3.8179519532644535
+5	2020-01-01 00:00:05	5.491954556145366
+7	2020-01-01 00:00:07	6.817951953264453
+8	2020-01-01 00:00:08	8.491954556145366
+10	2020-01-01 00:00:10	9.817951953264453
+11	2020-01-01 00:00:11	11.491954556145366
+13	2020-01-01 00:00:13	12.817951953264451
+14	2020-01-01 00:00:14	14.491954556145364
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	1.5249791874789398
 2	2020-01-01 00:00:02	2.4919545561453664
@@ -2253,14 +2862,38 @@ id	time	w
 10	2020-01-01 00:00:10	10.066555795755196
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	2.0665557957551988
+3	2020-01-01 00:00:03	3.0665557957551988
+4	2020-01-01 00:00:04	4.066555795755199
+5	2020-01-01 00:00:05	5.066555795755199
+6	2020-01-01 00:00:06	6.066555795755198
+7	2020-01-01 00:00:07	7.066555795755197
+8	2020-01-01 00:00:08	8.066555795755196
+9	2020-01-01 00:00:09	9.066555795755198
+10	2020-01-01 00:00:10	10.066555795755198
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	15361642123780743416
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	14429555309796454170
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6608735858039516742
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	15059704790173788829
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
@@ -2277,6 +2910,20 @@ id	time	w
 14	2020-01-01 00:00:14	13.524979187478941
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	1.5249791874789398
+4	2020-01-01 00:00:04	3.099667994624956
+5	2020-01-01 00:00:05	4.52497918747894
+7	2020-01-01 00:00:07	6.099667994624955
+8	2020-01-01 00:00:08	7.52497918747894
+10	2020-01-01 00:00:10	9.099667994624957
+11	2020-01-01 00:00:11	10.524979187478941
+13	2020-01-01 00:00:13	12.099667994624955
+14	2020-01-01 00:00:14	13.52497918747894
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute = r"""
 id	time	w
 1	2020-01-01 00:00:01	1
@@ -2291,9 +2938,28 @@ id	time	w
 10	2020-01-01 00:00:10	9.524979187478941
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	1.5249791874789398
+3	2020-01-01 00:00:03	2.52497918747894
+4	2020-01-01 00:00:04	3.52497918747894
+5	2020-01-01 00:00:05	4.52497918747894
+6	2020-01-01 00:00:06	5.524979187478941
+7	2020-01-01 00:00:07	6.52497918747894
+8	2020-01-01 00:00:08	7.52497918747894
+9	2020-01-01 00:00:09	8.524979187478941
+10	2020-01-01 00:00:10	9.524979187478941
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7966396018471970678
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	7297242392081283338
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
@@ -2301,7 +2967,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	11255747048810892357
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	7553695442776722505
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	9988.95009144695
+2	2020-01-01 00:00:02	9988.95009144695
+4	2020-01-01 00:00:04	9988.95009144695
+5	2020-01-01 00:00:05	9988.95009144695
+7	2020-01-01 00:00:07	9988.95009144695
+8	2020-01-01 00:00:08	9988.95009144695
+10	2020-01-01 00:00:10	9988.95009144695
+11	2020-01-01 00:00:11	9988.95009144695
+13	2020-01-01 00:00:13	9988.95009144695
+14	2020-01-01 00:00:14	9988.95009144695
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	9988.95009144695
 2	2020-01-01 00:00:02	9988.95009144695
@@ -2329,7 +3014,26 @@ id	time	w
 10	2020-01-01 00:00:10	48.830850800540155
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	48.66779947798152
+2	2020-01-01 00:00:02	48.66779947798152
+3	2020-01-01 00:00:03	48.68302837130835
+4	2020-01-01 00:00:04	48.699517020495165
+5	2020-01-01 00:00:05	48.71736284737082
+6	2020-01-01 00:00:06	48.736669997228184
+7	2020-01-01 00:00:07	48.75754970551674
+8	2020-01-01 00:00:08	48.78012067255031
+9	2020-01-01 00:00:09	48.80450944473328
+10	2020-01-01 00:00:10	48.830850800540155
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	9881448387590534551
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	9881448387590534551
 """
@@ -2337,6 +3041,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	859560214284391466
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4076788104734413191
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check = r"""
@@ -2353,6 +3062,20 @@ id	time	w
 14	2020-01-01 00:00:14	15.099667994624955
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	3.099667994624956
+4	2020-01-01 00:00:04	4.52497918747894
+5	2020-01-01 00:00:05	6.099667994624955
+7	2020-01-01 00:00:07	7.52497918747894
+8	2020-01-01 00:00:08	9.099667994624957
+10	2020-01-01 00:00:10	10.524979187478941
+11	2020-01-01 00:00:11	12.099667994624955
+13	2020-01-01 00:00:13	13.52497918747894
+14	2020-01-01 00:00:14	15.099667994624953
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute = r"""
 id	time	w
 1	2020-01-01 00:00:01	1.5249791874789398
@@ -2367,14 +3090,38 @@ id	time	w
 10	2020-01-01 00:00:10	10.524979187478941
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1.5249791874789398
+2	2020-01-01 00:00:02	2.52497918747894
+3	2020-01-01 00:00:03	3.52497918747894
+4	2020-01-01 00:00:04	4.52497918747894
+5	2020-01-01 00:00:05	5.524979187478941
+6	2020-01-01 00:00:06	6.52497918747894
+7	2020-01-01 00:00:07	7.52497918747894
+8	2020-01-01 00:00:08	8.524979187478941
+9	2020-01-01 00:00:09	9.524979187478941
+10	2020-01-01 00:00:10	10.524979187478941
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	9677279760188586566
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6998628102243875284
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16887330542869266947
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	5437358706373763486
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__basic_check = r"""
@@ -2411,6 +3158,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
@@ -2453,7 +3205,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	2681923910724328312
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	799083818724233891
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+4	2020-01-01 00:00:04	1.5249791874789398
+5	2020-01-01 00:00:05	2.4919545561453664
+7	2020-01-01 00:00:07	3.248306737913917
+8	2020-01-01 00:00:08	4.25821335155325
+10	2020-01-01 00:00:10	5.116151200593762
+11	2020-01-01 00:00:11	6.184642405239253
+13	2020-01-01 00:00:13	7.12224457526869
+14	2020-01-01 00:00:14	8.251527756309828
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	nan
 2	2020-01-01 00:00:02	1
@@ -2481,12 +3252,36 @@ id	time	w
 10	2020-01-01 00:00:10	5.657727808870021
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+3	2020-01-01 00:00:03	1.5249791874789398
+4	2020-01-01 00:00:04	2.0665557957551988
+5	2020-01-01 00:00:05	2.624647182103896
+6	2020-01-01 00:00:06	3.199138467908942
+7	2020-01-01 00:00:07	3.7898833461901758
+8	2020-01-01 00:00:08	4.396705100666194
+9	2020-01-01 00:00:09	5.019397822553704
+10	2020-01-01 00:00:10	5.657727808870021
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	2840650869004265920
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	2840650869004265920
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	12349134980424805700
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12349134980424805700
 """
@@ -2529,6 +3324,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6829062704342881462
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6829062704342881462
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9988.95009144695
@@ -2567,7 +3367,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10188631851657758577
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16458442593046828105
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toFloat32_decay_length = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	0.5237915435013812
+2	2020-01-01 00:00:02	1.0633962697787114
+3	2020-01-01 00:00:03	1.6187427337534772
+4	2020-01-01 00:00:04	2.1897315566228315
+5	2020-01-01 00:00:05	2.77623606042911
+6	2020-01-01 00:00:06	3.378103070246944
+7	2020-01-01 00:00:07	3.995153874104678
+8	2020-01-01 00:00:08	4.627185328971674
+9	2020-01-01 00:00:09	5.273971099585486
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toFloat32_decay_length_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	0.5237915435013812
@@ -2595,6 +3414,20 @@ id	time	w
 9	2020-01-01 00:00:09	5.273971099585486
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toFloat64_decay_length_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	0.5237915435013812
+2	2020-01-01 00:00:02	1.0633962697787114
+3	2020-01-01 00:00:03	1.6187427337534772
+4	2020-01-01 00:00:04	2.1897315566228315
+5	2020-01-01 00:00:05	2.77623606042911
+6	2020-01-01 00:00:06	3.378103070246944
+7	2020-01-01 00:00:07	3.995153874104678
+8	2020-01-01 00:00:08	4.627185328971674
+9	2020-01-01 00:00:09	5.273971099585486
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toUInt32_decay_length = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
@@ -2609,7 +3442,35 @@ id	time	w
 9	2020-01-01 00:00:09	5.311435123918215
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toUInt32_decay_length_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	0.52497918747894
+2	2020-01-01 00:00:02	1.0665557957551983
+3	2020-01-01 00:00:03	1.6246471821038961
+4	2020-01-01 00:00:04	2.199138467908942
+5	2020-01-01 00:00:05	2.7898833461901753
+6	2020-01-01 00:00:06	3.3967051006661944
+7	2020-01-01 00:00:07	4.019397822553705
+8	2020-01-01 00:00:08	4.657727808870022
+9	2020-01-01 00:00:09	5.311435123918215
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toUInt64_decay_length = r"""
+id	time	w
+0	2020-01-01 00:00:00	0
+1	2020-01-01 00:00:01	0.52497918747894
+2	2020-01-01 00:00:02	1.0665557957551983
+3	2020-01-01 00:00:03	1.6246471821038961
+4	2020-01-01 00:00:04	2.199138467908942
+5	2020-01-01 00:00:05	2.7898833461901753
+6	2020-01-01 00:00:06	3.3967051006661944
+7	2020-01-01 00:00:07	4.019397822553705
+8	2020-01-01 00:00:08	4.657727808870022
+9	2020-01-01 00:00:09	5.311435123918215
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toUInt64_decay_length_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	0.52497918747894
@@ -3837,6 +4698,20 @@ id	time	w
 9	2020-01-01 00:00:09	21982.456886794735
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_decay_length_with_negative_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00	21982.456886794735
+1	2020-01-01 00:00:01	21982.456886794735
+2	2020-01-01 00:00:02	21982.456886794735
+3	2020-01-01 00:00:03	21982.456886794735
+4	2020-01-01 00:00:04	21982.456886794735
+5	2020-01-01 00:00:05	21982.456886794735
+6	2020-01-01 00:00:06	21982.456886794735
+7	2020-01-01 00:00:07	21982.456886794735
+8	2020-01-01 00:00:08	21982.456886794735
+9	2020-01-01 00:00:09	21982.456886794735
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_decay_length_with_zero = r"""
 id	time	w
 0	2020-01-01 00:00:00	nan
@@ -4024,7 +4899,35 @@ id	time	w
 14	2020-01-01 00:00:14	9998
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	9998
+2	2020-01-01 00:00:02	9998
+4	2020-01-01 00:00:04	9998
+5	2020-01-01 00:00:05	9998
+7	2020-01-01 00:00:07	9998
+8	2020-01-01 00:00:08	9998
+10	2020-01-01 00:00:10	9998
+11	2020-01-01 00:00:11	9998
+13	2020-01-01 00:00:13	9998
+14	2020-01-01 00:00:14	9998
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute = r"""
+id	time	w
+1	2020-01-01 00:00:01	58
+2	2020-01-01 00:00:02	58
+3	2020-01-01 00:00:03	58
+4	2020-01-01 00:00:04	58
+5	2020-01-01 00:00:05	58
+6	2020-01-01 00:00:06	58
+7	2020-01-01 00:00:07	58
+8	2020-01-01 00:00:08	58
+9	2020-01-01 00:00:09	58
+10	2020-01-01 00:00:10	58
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	58
 2	2020-01-01 00:00:02	58
@@ -4043,12 +4946,36 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13451113004697527667
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13451113004697527667
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10806118902687505865
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	10806118902687505865
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	2
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	5
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	8
+10	2020-01-01 00:00:10	11
+11	2020-01-01 00:00:11	11
+13	2020-01-01 00:00:13	14
+14	2020-01-01 00:00:14	14
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	2
 2	2020-01-01 00:00:02	2
@@ -4076,7 +5003,26 @@ id	time	w
 10	2020-01-01 00:00:10	11
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	3
+3	2020-01-01 00:00:03	4
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	6
+6	2020-01-01 00:00:06	7
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	9
+9	2020-01-01 00:00:09	10
+10	2020-01-01 00:00:10	11
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	8970933505069997234
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	8970933505069997234
 """
@@ -4086,7 +5032,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16812556211937367765
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16812556211937367765
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2
+4	2020-01-01 00:00:04	4
+5	2020-01-01 00:00:05	5
+7	2020-01-01 00:00:07	7
+8	2020-01-01 00:00:08	8
+10	2020-01-01 00:00:10	10
+11	2020-01-01 00:00:11	11
+13	2020-01-01 00:00:13	13
+14	2020-01-01 00:00:14	14
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	1
 2	2020-01-01 00:00:02	2
@@ -4114,7 +5079,26 @@ id	time	w
 10	2020-01-01 00:00:10	10
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2
+3	2020-01-01 00:00:03	3
+4	2020-01-01 00:00:04	4
+5	2020-01-01 00:00:05	5
+6	2020-01-01 00:00:06	6
+7	2020-01-01 00:00:07	7
+8	2020-01-01 00:00:08	8
+9	2020-01-01 00:00:09	9
+10	2020-01-01 00:00:10	10
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6912631249882696577
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6912631249882696577
 """
@@ -4124,7 +5108,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	9998
+2	2020-01-01 00:00:02	9998
+4	2020-01-01 00:00:04	9998
+5	2020-01-01 00:00:05	9998
+7	2020-01-01 00:00:07	9998
+8	2020-01-01 00:00:08	9998
+10	2020-01-01 00:00:10	9998
+11	2020-01-01 00:00:11	9998
+13	2020-01-01 00:00:13	9998
+14	2020-01-01 00:00:14	9998
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
 2	2020-01-01 00:00:02	9998
@@ -4152,7 +5155,26 @@ id	time	w
 10	2020-01-01 00:00:10	58
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	58
+2	2020-01-01 00:00:02	58
+3	2020-01-01 00:00:03	58
+4	2020-01-01 00:00:04	58
+5	2020-01-01 00:00:05	58
+6	2020-01-01 00:00:06	58
+7	2020-01-01 00:00:07	58
+8	2020-01-01 00:00:08	58
+9	2020-01-01 00:00:09	58
+10	2020-01-01 00:00:10	58
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	7998450438310151220
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7998450438310151220
 """
@@ -4162,7 +5184,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	2
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	5
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	8
+10	2020-01-01 00:00:10	11
+11	2020-01-01 00:00:11	11
+13	2020-01-01 00:00:13	14
+14	2020-01-01 00:00:14	14
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	2
 2	2020-01-01 00:00:02	2
@@ -4190,12 +5231,36 @@ id	time	w
 10	2020-01-01 00:00:10	11
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	3
+3	2020-01-01 00:00:03	4
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	6
+6	2020-01-01 00:00:06	7
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	9
+9	2020-01-01 00:00:09	10
+10	2020-01-01 00:00:10	11
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	8970933505069997234
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	8970933505069997234
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16812556211937367765
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16812556211937367765
 """
@@ -4238,6 +5303,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
@@ -4276,7 +5346,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+4	2020-01-01 00:00:04	2
+5	2020-01-01 00:00:05	4
+7	2020-01-01 00:00:07	5
+8	2020-01-01 00:00:08	7
+10	2020-01-01 00:00:10	8
+11	2020-01-01 00:00:11	10
+13	2020-01-01 00:00:13	11
+14	2020-01-01 00:00:14	13
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	nan
 2	2020-01-01 00:00:02	1
@@ -4304,12 +5393,36 @@ id	time	w
 10	2020-01-01 00:00:10	9
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+3	2020-01-01 00:00:03	2
+4	2020-01-01 00:00:04	3
+5	2020-01-01 00:00:05	4
+6	2020-01-01 00:00:06	5
+7	2020-01-01 00:00:07	6
+8	2020-01-01 00:00:08	7
+9	2020-01-01 00:00:09	8
+10	2020-01-01 00:00:10	9
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13452262558908146813
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13452262558908146813
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13709057447670281832
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13709057447670281832
 """
@@ -4352,6 +5465,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
@@ -4386,6 +5504,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
@@ -4428,6 +5551,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
@@ -4462,6 +5590,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
@@ -4504,6 +5637,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
@@ -4542,7 +5680,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	9998
+2	2020-01-01 00:00:02	9998
+4	2020-01-01 00:00:04	9998
+5	2020-01-01 00:00:05	9998
+7	2020-01-01 00:00:07	9998
+8	2020-01-01 00:00:08	9998
+10	2020-01-01 00:00:10	9998
+11	2020-01-01 00:00:11	9998
+13	2020-01-01 00:00:13	9998
+14	2020-01-01 00:00:14	9998
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
 2	2020-01-01 00:00:02	9998
@@ -4570,7 +5727,26 @@ id	time	w
 10	2020-01-01 00:00:10	58
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	58
+2	2020-01-01 00:00:02	58
+3	2020-01-01 00:00:03	58
+4	2020-01-01 00:00:04	58
+5	2020-01-01 00:00:05	58
+6	2020-01-01 00:00:06	58
+7	2020-01-01 00:00:07	58
+8	2020-01-01 00:00:08	58
+9	2020-01-01 00:00:09	58
+10	2020-01-01 00:00:10	58
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13451113004697527667
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13451113004697527667
 """
@@ -4580,7 +5756,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	10806118902687505865
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	10806118902687505865
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	4
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	7
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	10
+10	2020-01-01 00:00:10	11
+11	2020-01-01 00:00:11	13
+13	2020-01-01 00:00:13	14
+14	2020-01-01 00:00:14	16
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	2
 2	2020-01-01 00:00:02	4
@@ -4608,7 +5803,26 @@ id	time	w
 10	2020-01-01 00:00:10	11
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	3
+3	2020-01-01 00:00:03	4
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	6
+6	2020-01-01 00:00:06	7
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	9
+9	2020-01-01 00:00:09	10
+10	2020-01-01 00:00:10	11
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	8970933505069997234
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	8970933505069997234
 """
@@ -4618,7 +5832,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1920552523620768063
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1920552523620768063
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2
+4	2020-01-01 00:00:04	4
+5	2020-01-01 00:00:05	5
+7	2020-01-01 00:00:07	7
+8	2020-01-01 00:00:08	8
+10	2020-01-01 00:00:10	10
+11	2020-01-01 00:00:11	11
+13	2020-01-01 00:00:13	13
+14	2020-01-01 00:00:14	14
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	1
 2	2020-01-01 00:00:02	2
@@ -4646,7 +5879,26 @@ id	time	w
 10	2020-01-01 00:00:10	10
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2
+3	2020-01-01 00:00:03	3
+4	2020-01-01 00:00:04	4
+5	2020-01-01 00:00:05	5
+6	2020-01-01 00:00:06	6
+7	2020-01-01 00:00:07	7
+8	2020-01-01 00:00:08	8
+9	2020-01-01 00:00:09	9
+10	2020-01-01 00:00:10	10
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6912631249882696577
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	6912631249882696577
 """
@@ -4656,7 +5908,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	9998
+2	2020-01-01 00:00:02	9998
+4	2020-01-01 00:00:04	9998
+5	2020-01-01 00:00:05	9998
+7	2020-01-01 00:00:07	9998
+8	2020-01-01 00:00:08	9998
+10	2020-01-01 00:00:10	9998
+11	2020-01-01 00:00:11	9998
+13	2020-01-01 00:00:13	9998
+14	2020-01-01 00:00:14	9998
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
 2	2020-01-01 00:00:02	9998
@@ -4684,7 +5955,26 @@ id	time	w
 10	2020-01-01 00:00:10	58
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	58
+2	2020-01-01 00:00:02	58
+3	2020-01-01 00:00:03	58
+4	2020-01-01 00:00:04	58
+5	2020-01-01 00:00:05	58
+6	2020-01-01 00:00:06	58
+7	2020-01-01 00:00:07	58
+8	2020-01-01 00:00:08	58
+9	2020-01-01 00:00:09	58
+10	2020-01-01 00:00:10	58
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	7998450438310151220
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7998450438310151220
 """
@@ -4694,7 +5984,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	4
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	7
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	10
+10	2020-01-01 00:00:10	11
+11	2020-01-01 00:00:11	13
+13	2020-01-01 00:00:13	14
+14	2020-01-01 00:00:14	16
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	2
 2	2020-01-01 00:00:02	4
@@ -4722,12 +6031,36 @@ id	time	w
 10	2020-01-01 00:00:10	11
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2
+2	2020-01-01 00:00:02	3
+3	2020-01-01 00:00:03	4
+4	2020-01-01 00:00:04	5
+5	2020-01-01 00:00:05	6
+6	2020-01-01 00:00:06	7
+7	2020-01-01 00:00:07	8
+8	2020-01-01 00:00:08	9
+9	2020-01-01 00:00:09	10
+10	2020-01-01 00:00:10	11
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	8970933505069997234
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	8970933505069997234
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1920552523620768063
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1920552523620768063
 """
@@ -4770,6 +6103,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
@@ -4808,7 +6146,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+4	2020-01-01 00:00:04	2
+5	2020-01-01 00:00:05	4
+7	2020-01-01 00:00:07	5
+8	2020-01-01 00:00:08	7
+10	2020-01-01 00:00:10	8
+11	2020-01-01 00:00:11	10
+13	2020-01-01 00:00:13	11
+14	2020-01-01 00:00:14	13
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	nan
 2	2020-01-01 00:00:02	1
@@ -4836,12 +6193,36 @@ id	time	w
 10	2020-01-01 00:00:10	9
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	nan
+2	2020-01-01 00:00:02	1
+3	2020-01-01 00:00:03	2
+4	2020-01-01 00:00:04	3
+5	2020-01-01 00:00:05	4
+6	2020-01-01 00:00:06	5
+7	2020-01-01 00:00:07	6
+8	2020-01-01 00:00:08	7
+9	2020-01-01 00:00:09	8
+10	2020-01-01 00:00:10	9
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13452262558908146813
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13452262558908146813
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13709057447670281832
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13709057447670281832
 """
@@ -4884,6 +6265,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	9998
@@ -4918,6 +6304,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1032201993393357875
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedMax_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1032201993393357875
 """
@@ -5078,6 +6469,20 @@ id	time	w
 7	2020-01-01 00:00:07	21993454503.620564
 8	2020-01-01 00:00:08	21993454503.620564
 9	2020-01-01 00:00:09	21993454503.620564
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_decay_length_with_negative_version__24_3 = r"""
+id	time	w
+0	2020-01-01 00:00:00	21993454503.620567
+1	2020-01-01 00:00:01	21993454503.620567
+2	2020-01-01 00:00:02	21993454503.620567
+3	2020-01-01 00:00:03	21993454503.620567
+4	2020-01-01 00:00:04	21993454503.620567
+5	2020-01-01 00:00:05	21993454503.620567
+6	2020-01-01 00:00:06	21993454503.620567
+7	2020-01-01 00:00:07	21993454503.620567
+8	2020-01-01 00:00:08	21993454503.620567
+9	2020-01-01 00:00:09	21993454503.620567
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_decay_length_with_zero = r"""
@@ -5267,7 +6672,35 @@ id	time	w
 14	2020-01-01 00:00:14	73413.05376916874
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	73413.05376916874
+2	2020-01-01 00:00:02	73413.05376916874
+4	2020-01-01 00:00:04	73413.05376916874
+5	2020-01-01 00:00:05	73413.05376916874
+7	2020-01-01 00:00:07	73413.05376916874
+8	2020-01-01 00:00:08	73413.05376916874
+10	2020-01-01 00:00:10	73413.05376916874
+11	2020-01-01 00:00:11	73413.05376916874
+13	2020-01-01 00:00:13	73413.05376916874
+14	2020-01-01 00:00:14	73413.05376916874
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute = r"""
+id	time	w
+1	2020-01-01 00:00:01	509.8657018190976
+2	2020-01-01 00:00:02	509.8583060916646
+3	2020-01-01 00:00:03	509.8460457773492
+4	2020-01-01 00:00:04	509.8279794535788
+5	2020-01-01 00:00:05	509.8030214840442
+6	2020-01-01 00:00:06	509.76992209751967
+7	2020-01-01 00:00:07	509.7272448715611
+8	2020-01-01 00:00:08	509.6733412955684
+9	2020-01-01 00:00:09	509.60632204793006
+10	2020-01-01 00:00:10	509.5240245774399
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	509.8657018190976
 2	2020-01-01 00:00:02	509.8583060916646
@@ -5286,12 +6719,36 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	4967222295646687783
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4967222295646687783
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12210348626335803712
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	2316297849340719971
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	2.9048374180359593
+4	2020-01-01 00:00:04	8.619349672143837
+5	2020-01-01 00:00:05	8.619349672143837
+7	2020-01-01 00:00:07	14.333861926251718
+8	2020-01-01 00:00:08	14.333861926251718
+10	2020-01-01 00:00:10	20.048374180359595
+11	2020-01-01 00:00:11	20.048374180359595
+13	2020-01-01 00:00:13	25.762886434467475
+14	2020-01-01 00:00:14	25.762886434467475
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	2.9048374180359593
 2	2020-01-01 00:00:02	2.9048374180359593
@@ -5319,9 +6776,28 @@ id	time	w
 10	2020-01-01 00:00:10	27.41695095806142
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	5.628405589149901
+3	2020-01-01 00:00:03	8.351973760263842
+4	2020-01-01 00:00:04	11.075541931377783
+5	2020-01-01 00:00:05	13.799110102491724
+6	2020-01-01 00:00:06	16.522678273605663
+7	2020-01-01 00:00:07	19.246246444719603
+8	2020-01-01 00:00:08	21.969814615833542
+9	2020-01-01 00:00:09	24.693382786947485
+10	2020-01-01 00:00:10	27.416950958061427
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	986837177245891226
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	17177218217075523913
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
@@ -5329,7 +6805,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12829065133447644649
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	320451493116528259
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2.9048374180359593
+4	2020-01-01 00:00:04	4
+5	2020-01-01 00:00:05	8.619349672143837
+7	2020-01-01 00:00:07	7
+8	2020-01-01 00:00:08	14.333861926251718
+10	2020-01-01 00:00:10	10
+11	2020-01-01 00:00:11	20.048374180359595
+13	2020-01-01 00:00:13	13
+14	2020-01-01 00:00:14	25.762886434467475
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	1
 2	2020-01-01 00:00:02	2.9048374180359593
@@ -5357,9 +6852,28 @@ id	time	w
 10	2020-01-01 00:00:10	18.143536762323635
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2.9048374180359593
+3	2020-01-01 00:00:03	4.809674836071919
+4	2020-01-01 00:00:04	6.714512254107878
+5	2020-01-01 00:00:05	8.619349672143837
+6	2020-01-01 00:00:06	10.524187090179797
+7	2020-01-01 00:00:07	12.429024508215756
+8	2020-01-01 00:00:08	14.333861926251714
+9	2020-01-01 00:00:09	16.238699344287674
+10	2020-01-01 00:00:10	18.143536762323635
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7755997449266801038
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4153748905038498474
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
@@ -5367,7 +6881,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	11926478536899922643
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	3478934939339647691
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	73413.05376916874
+2	2020-01-01 00:00:02	73413.05376916874
+4	2020-01-01 00:00:04	73413.05376916874
+5	2020-01-01 00:00:05	73413.05376916874
+7	2020-01-01 00:00:07	73413.05376916874
+8	2020-01-01 00:00:08	73413.05376916874
+10	2020-01-01 00:00:10	73413.05376916874
+11	2020-01-01 00:00:11	73413.05376916874
+13	2020-01-01 00:00:13	73413.05376916874
+14	2020-01-01 00:00:14	73413.05376916874
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	73413.05376916874
 2	2020-01-01 00:00:02	73413.05376916874
@@ -5395,7 +6928,26 @@ id	time	w
 10	2020-01-01 00:00:10	509.6733412955684
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	509.86904778455505
+2	2020-01-01 00:00:02	509.86904778455505
+3	2020-01-01 00:00:03	509.8657018190976
+4	2020-01-01 00:00:04	509.8583060916646
+5	2020-01-01 00:00:05	509.8460457773492
+6	2020-01-01 00:00:06	509.8279794535788
+7	2020-01-01 00:00:07	509.8030214840442
+8	2020-01-01 00:00:08	509.76992209751967
+9	2020-01-01 00:00:09	509.7272448715611
+10	2020-01-01 00:00:10	509.6733412955684
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1854751238588869498
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1854751238588869498
 """
@@ -5405,7 +6957,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	5217429107553078120
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6699689522961227875
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	1.9999999999999998
+4	2020-01-01 00:00:04	8.619349672143837
+5	2020-01-01 00:00:05	4.999999999999999
+7	2020-01-01 00:00:07	14.333861926251718
+8	2020-01-01 00:00:08	8
+10	2020-01-01 00:00:10	20.048374180359595
+11	2020-01-01 00:00:11	11
+13	2020-01-01 00:00:13	25.762886434467475
+14	2020-01-01 00:00:14	14.000000000000002
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	2.9048374180359593
 2	2020-01-01 00:00:02	1.9999999999999998
@@ -5433,14 +7004,38 @@ id	time	w
 10	2020-01-01 00:00:10	20.048374180359595
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	4.809674836071919
+3	2020-01-01 00:00:03	6.714512254107878
+4	2020-01-01 00:00:04	8.619349672143837
+5	2020-01-01 00:00:05	10.524187090179797
+6	2020-01-01 00:00:06	12.429024508215756
+7	2020-01-01 00:00:07	14.333861926251714
+8	2020-01-01 00:00:08	16.238699344287674
+9	2020-01-01 00:00:09	18.143536762323635
+10	2020-01-01 00:00:10	20.048374180359595
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13934832415559925474
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	17864546820017591112
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	17838749376518847452
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	6808652788102822622
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__basic_check = r"""
@@ -5477,6 +7072,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
@@ -5519,7 +7119,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12999113209401452513
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	15259948609631945224
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	0
+2	2020-01-01 00:00:02	1
+4	2020-01-01 00:00:04	2.9048374180359593
+5	2020-01-01 00:00:05	6.378279726837681
+7	2020-01-01 00:00:07	10.771306159542913
+8	2020-01-01 00:00:08	15.818799603636073
+10	2020-01-01 00:00:10	22.313441789782324
+11	2020-01-01 00:00:11	28.26870100031019
+13	2020-01-01 00:00:13	36.57857842435122
+14	2020-01-01 00:00:14	42.9480070598911
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	0
 2	2020-01-01 00:00:02	1
@@ -5547,12 +7166,36 @@ id	time	w
 10	2020-01-01 00:00:10	35.281381288934696
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	0
+2	2020-01-01 00:00:02	1
+3	2020-01-01 00:00:03	2.9048374180359593
+4	2020-01-01 00:00:04	5.628405589149901
+5	2020-01-01 00:00:05	9.09279198094556
+6	2020-01-01 00:00:06	13.227498418776857
+7	2020-01-01 00:00:07	17.96873551632079
+8	2020-01-01 00:00:08	23.258784249958747
+9	2020-01-01 00:00:09	29.045418287388113
+10	2020-01-01 00:00:10	35.281381288934696
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	207461051412820560
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	207461051412820560
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	7493948266116429797
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7493948266116429797
 """
@@ -5595,6 +7238,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13193147715685283094
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13193147715685283094
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	73413.05376916874
@@ -5631,6 +7279,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7279384746436667054
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ORDER_BY_id_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4835566242294516990
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__basic_check = r"""
@@ -5671,6 +7324,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7279384746436667054
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4835566242294516990
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	73413.05376916874
@@ -5707,6 +7365,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7279384746436667054
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4835566242294516990
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
@@ -5747,6 +7410,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7279384746436667054
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4835566242294516990
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	73413.05376916874
@@ -5785,7 +7453,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7279384746436667054
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_RANGE_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4835566242294516990
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	73413.05376916874
+2	2020-01-01 00:00:02	73413.05376916874
+4	2020-01-01 00:00:04	73413.05376916874
+5	2020-01-01 00:00:05	73413.05376916874
+7	2020-01-01 00:00:07	73413.05376916874
+8	2020-01-01 00:00:08	73413.05376916874
+10	2020-01-01 00:00:10	73413.05376916874
+11	2020-01-01 00:00:11	73413.05376916874
+13	2020-01-01 00:00:13	73413.05376916874
+14	2020-01-01 00:00:14	73413.05376916874
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	73413.05376916874
 2	2020-01-01 00:00:02	73413.05376916874
@@ -5813,7 +7500,26 @@ id	time	w
 10	2020-01-01 00:00:10	509.5240245774399
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	509.8657018190976
+2	2020-01-01 00:00:02	509.8583060916646
+3	2020-01-01 00:00:03	509.8460457773492
+4	2020-01-01 00:00:04	509.8279794535788
+5	2020-01-01 00:00:05	509.8030214840442
+6	2020-01-01 00:00:06	509.76992209751967
+7	2020-01-01 00:00:07	509.7272448715611
+8	2020-01-01 00:00:08	509.6733412955684
+9	2020-01-01 00:00:09	509.60632204793006
+10	2020-01-01 00:00:10	509.5240245774399
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4967222295646687783
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	4967222295646687783
 """
@@ -5823,7 +7529,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12210348626335803712
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_FOLLOWING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	2316297849340719971
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	6.378279726837681
+4	2020-01-01 00:00:04	10.100986113507272
+5	2020-01-01 00:00:05	14.056926648116779
+7	2020-01-01 00:00:07	18.037953029660304
+8	2020-01-01 00:00:08	21.73557356939588
+10	2020-01-01 00:00:10	25.974919945813337
+11	2020-01-01 00:00:11	29.41422049067498
+13	2020-01-01 00:00:13	33.911886861966366
+14	2020-01-01 00:00:14	37.092867411954074
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	2.9048374180359593
 2	2020-01-01 00:00:02	6.378279726837681
@@ -5851,14 +7576,38 @@ id	time	w
 10	2020-01-01 00:00:10	27.41695095806142
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	5.628405589149901
+3	2020-01-01 00:00:03	8.351973760263842
+4	2020-01-01 00:00:04	11.075541931377783
+5	2020-01-01 00:00:05	13.799110102491724
+6	2020-01-01 00:00:06	16.522678273605663
+7	2020-01-01 00:00:07	19.246246444719603
+8	2020-01-01 00:00:08	21.969814615833542
+9	2020-01-01 00:00:09	24.693382786947485
+10	2020-01-01 00:00:10	27.416950958061427
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	986837177245891226
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	17177218217075523913
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	8650298104394552100
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4973018359321984867
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check = r"""
@@ -5875,6 +7624,20 @@ id	time	w
 14	2020-01-01 00:00:14	25.76288643446747
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__basic_check_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2.9048374180359593
+4	2020-01-01 00:00:04	5.637461506155963
+5	2020-01-01 00:00:05	8.619349672143837
+7	2020-01-01 00:00:07	11.093653765389908
+8	2020-01-01 00:00:08	14.333861926251714
+10	2020-01-01 00:00:10	16.549846024623854
+11	2020-01-01 00:00:11	20.048374180359595
+13	2020-01-01 00:00:13	22.006038283857798
+14	2020-01-01 00:00:14	25.762886434467468
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute = r"""
 id	time	w
 1	2020-01-01 00:00:01	1
@@ -5889,9 +7652,28 @@ id	time	w
 10	2020-01-01 00:00:10	18.143536762323635
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	1
+2	2020-01-01 00:00:02	2.9048374180359593
+3	2020-01-01 00:00:03	4.809674836071919
+4	2020-01-01 00:00:04	6.714512254107878
+5	2020-01-01 00:00:05	8.619349672143837
+6	2020-01-01 00:00:06	10.524187090179797
+7	2020-01-01 00:00:07	12.429024508215756
+8	2020-01-01 00:00:08	14.333861926251714
+9	2020-01-01 00:00:09	16.238699344287674
+10	2020-01-01 00:00:10	18.143536762323635
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7755997449266801038
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4153748905038498474
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
@@ -5899,7 +7681,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13814739211333278915
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	15879506471867999892
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	73413.05376916874
+2	2020-01-01 00:00:02	73413.05376916874
+4	2020-01-01 00:00:04	73413.05376916874
+5	2020-01-01 00:00:05	73413.05376916874
+7	2020-01-01 00:00:07	73413.05376916874
+8	2020-01-01 00:00:08	73413.05376916874
+10	2020-01-01 00:00:10	73413.05376916874
+11	2020-01-01 00:00:11	73413.05376916874
+13	2020-01-01 00:00:13	73413.05376916874
+14	2020-01-01 00:00:14	73413.05376916874
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	73413.05376916874
 2	2020-01-01 00:00:02	73413.05376916874
@@ -5927,7 +7728,26 @@ id	time	w
 10	2020-01-01 00:00:10	509.6733412955684
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	509.86904778455505
+2	2020-01-01 00:00:02	509.86904778455505
+3	2020-01-01 00:00:03	509.8657018190976
+4	2020-01-01 00:00:04	509.8583060916646
+5	2020-01-01 00:00:05	509.8460457773492
+6	2020-01-01 00:00:06	509.8279794535788
+7	2020-01-01 00:00:07	509.8030214840442
+8	2020-01-01 00:00:08	509.76992209751967
+9	2020-01-01 00:00:09	509.7272448715611
+10	2020-01-01 00:00:10	509.6733412955684
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	1854751238588869498
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	1854751238588869498
 """
@@ -5935,6 +7755,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12811325191248731383
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_1_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	8578878731513821275
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check = r"""
@@ -5951,6 +7776,20 @@ id	time	w
 14	2020-01-01 00:00:14	27.462230543091742
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__basic_check_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	5.637461506155963
+4	2020-01-01 00:00:04	8.619349672143837
+5	2020-01-01 00:00:05	11.093653765389908
+7	2020-01-01 00:00:07	14.333861926251714
+8	2020-01-01 00:00:08	16.549846024623854
+10	2020-01-01 00:00:10	20.048374180359595
+11	2020-01-01 00:00:11	22.006038283857798
+13	2020-01-01 00:00:13	25.762886434467468
+14	2020-01-01 00:00:14	27.46223054309174
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute = r"""
 id	time	w
 1	2020-01-01 00:00:01	2.9048374180359593
@@ -5965,14 +7804,38 @@ id	time	w
 10	2020-01-01 00:00:10	20.048374180359595
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	2.9048374180359593
+2	2020-01-01 00:00:02	4.809674836071919
+3	2020-01-01 00:00:03	6.714512254107878
+4	2020-01-01 00:00:04	8.619349672143837
+5	2020-01-01 00:00:05	10.524187090179797
+6	2020-01-01 00:00:06	12.429024508215756
+7	2020-01-01 00:00:07	14.333861926251714
+8	2020-01-01 00:00:08	16.238699344287674
+9	2020-01-01 00:00:09	18.143536762323635
+10	2020-01-01 00:00:10	20.048374180359595
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13934832415559925474
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	17864546820017591112
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	818567104687798407
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_1_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	9697155262113833297
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__basic_check = r"""
@@ -6009,6 +7872,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	16831297400999588778
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	16831297400999588778
 """
@@ -6051,7 +7919,26 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	12999113209401452513
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_CURRENT_ROW_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	15259948609631945224
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check = r"""
+id	time	w
+1	2020-01-01 00:00:01	0
+2	2020-01-01 00:00:02	1
+4	2020-01-01 00:00:04	2.9048374180359593
+5	2020-01-01 00:00:05	6.378279726837681
+7	2020-01-01 00:00:07	10.771306159542913
+8	2020-01-01 00:00:08	15.818799603636073
+10	2020-01-01 00:00:10	22.313441789782324
+11	2020-01-01 00:00:11	28.26870100031019
+13	2020-01-01 00:00:13	36.57857842435122
+14	2020-01-01 00:00:14	42.9480070598911
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__basic_check_version__24_3 = r"""
 id	time	w
 1	2020-01-01 00:00:01	0
 2	2020-01-01 00:00:02	1
@@ -6079,12 +7966,36 @@ id	time	w
 10	2020-01-01 00:00:10	35.281381288934696
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__check_with_partition_by_minute_version__24_3 = r"""
+id	time	w
+1	2020-01-01 00:00:01	0
+2	2020-01-01 00:00:02	1
+3	2020-01-01 00:00:03	2.9048374180359593
+4	2020-01-01 00:00:04	5.628405589149901
+5	2020-01-01 00:00:05	9.09279198094556
+6	2020-01-01 00:00:06	13.227498418776857
+7	2020-01-01 00:00:07	17.96873551632079
+8	2020-01-01 00:00:08	23.258784249958747
+9	2020-01-01 00:00:09	29.045418287388113
+10	2020-01-01 00:00:10	35.281381288934696
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	207461051412820560
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	207461051412820560
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	7493948266116429797
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_1_PRECEDING__full_table_with_partition_by_minute_version__24_3 = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7493948266116429797
 """
@@ -6127,6 +8038,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	13193147715685283094
 """
 
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_CURRENT_ROW__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	13193147715685283094
+"""
+
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__basic_check = r"""
 id	time	w
 1	2020-01-01 00:00:01	73413.05376916874
@@ -6163,6 +8079,11 @@ anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute = r"""
 anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
 9999	2020-01-01 02:46:39	7279384746436667054
+"""
+
+_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_check_over_ROWS_BETWEEN_UNBOUNDED_PRECEDING_AND_UNBOUNDED_FOLLOWING__full_table_with_partition_by_minute_version__24_3 = r"""
+anyLast(id)	anyLast(time)	cityHash64(groupArray(w))
+9999	2020-01-01 02:46:39	4835566242294516990
 """
 
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedSum_toFloat32_decay_length = r"""
