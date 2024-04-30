@@ -201,7 +201,7 @@ def select_active_parts(self, table_name, node=None):
         node = self.context.node
 
     return node.query(
-        f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active FORMAT TabSeparated"
+        f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active ORDER BY tuple(*) FORMAT TabSeparated"
     ).output.split("\n")
 
 

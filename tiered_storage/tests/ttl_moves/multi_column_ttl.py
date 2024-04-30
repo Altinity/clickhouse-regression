@@ -81,7 +81,9 @@ def scenario(self, cluster, node="clickhouse1"):
                 with retry:
                     with When("I read data from the table"):
                         with By("reading number of rows"):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
                             with Then(
                                 "checking that the rows that fall into TTL delete expression not to be present"
                             ):
@@ -89,7 +91,9 @@ def scenario(self, cluster, node="clickhouse1"):
 
                         with By("reading actual data"):
                             r = (
-                                node.query(f"SELECT value FROM {name} ORDER BY value")
+                                node.query(
+                                    f"SELECT value FROM {name} ORDER BY value FORMAT TabSeparated"
+                                )
                                 .output.strip()
                                 .splitlines()
                             )
@@ -105,7 +109,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     )
                     disks = node.query(
                         f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                        " AND active = 1"
+                        " AND active = 1 FORMAT TabSeparated"
                     ).output.splitlines()
                 with Then("checking disk names"):
                     assert set(disks) == {"jbod1", "jbod2", "external"}, error()

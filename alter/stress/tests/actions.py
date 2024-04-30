@@ -29,7 +29,7 @@ alter_query_args = {"retry_delay": 60, "retry_count": 5}
 
 @TestStep
 @Name("optimize")
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def optimize_random(self, node=None, table_name=None, repeat_limit=3):
     """Apply OPTIMIZE on the given table and node, choosing at random if not specified."""
     if table_name is None:
@@ -42,7 +42,7 @@ def optimize_random(self, node=None, table_name=None, repeat_limit=3):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("insert")
 def insert_to_random(self):
     """Insert random data to a random table."""
@@ -62,7 +62,7 @@ def insert_to_random(self):
 
 
 @TestStep
-@Retry(timeout=10, delay=1)
+@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def select_count_random(self, repeat_limit=5):
     """Perform select count() queries on a random node and table."""
     for _ in range(random.randint(1, repeat_limit)):
@@ -110,7 +110,7 @@ def add_random_column(self):
     with table_schema_lock:
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
-            wait_for_all_mutations_to_finish(node=node)
+            wait_for_mutations_to_finish(node=node)
             By(
                 name=f"add column to {table_name} with {node.name}",
                 test=alter_table_add_column,
@@ -120,7 +120,7 @@ def add_random_column(self):
                 column_type="UInt16",
                 node=node,
                 exitcode=0,
-                timeout=30,
+                timeout=120,
                 if_not_exists=True,
                 **alter_query_args,
             )
@@ -142,7 +142,7 @@ def delete_random_column(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
-            wait_for_all_mutations_to_finish(node=node)
+            # wait_for_mutations_to_finish(node=node)
             By(
                 name=f"delete column from {table_name} with {node.name}",
                 test=alter_table_drop_column,
@@ -171,7 +171,7 @@ def rename_random_column(self):
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
             node = get_random_node_for_table(table_name=table_name)
-            wait_for_all_mutations_to_finish(node=node)
+            # wait_for_mutations_to_finish(node=node)
             By(
                 name=f"rename column from {table_name} with {node.name}",
                 test=alter_table_rename_column,
@@ -181,13 +181,15 @@ def rename_random_column(self):
                 column_name_old=column_name,
                 column_name_new=new_name,
                 exitcode=0,
-                timeout=30,
+                timeout=120,
                 **alter_query_args,
             )
 
-        retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
-            tables=self.context.table_names
-        )
+        retry(
+            check_tables_have_same_columns,
+            timeout=step_retry_timeout,
+            delay=step_retry_delay,
+        )(tables=self.context.table_names)
 
 
 @TestStep
@@ -197,6 +199,7 @@ def update_random_column(self):
     """Replace some values on a random column."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
+    wait_for_mutations_to_finish(node=node, command_like="COLUMN")
     column_name = get_random_column_name(node=node, table_name=table_name)
     By(
         name=f"update column from {table_name} with {node.name}",
@@ -208,7 +211,7 @@ def update_random_column(self):
         condition=f"({column_name} < 10000)",
         node=node,
         exitcode=0,
-        timeout=30,
+        timeout=120,
         **alter_query_args,
     )
 
@@ -560,7 +563,7 @@ def add_random_projection(self, safe=True):
             node = get_random_node_for_table(table_name=table_name)
 
             if safe:
-                wait_for_all_mutations_to_finish(node=node)
+                wait_for_mutations_to_finish(node=node)
 
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
@@ -575,7 +578,9 @@ def add_random_projection(self, safe=True):
 
         if safe:
             retry(
-                check_tables_have_same_projections, timeout=120, delay=step_retry_delay
+                check_tables_have_same_projections,
+                timeout=step_retry_timeout,
+                delay=step_retry_delay,
             )(tables=self.context.table_names)
 
 
@@ -619,14 +624,14 @@ def drop_random_projection(self):
 
         projection_name = random.choice(projections)
 
-        for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
             with attempt:
                 with When(f"I drop {projection_name} on all tables"):
                     exit_codes = {}
                     exit_messages = {}
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
-                        wait_for_all_mutations_to_finish(node=node)
+                        # wait_for_mutations_to_finish(node=node)
                         r = node.query(
                             f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
                             no_checks=True,
@@ -641,9 +646,12 @@ def drop_random_projection(self):
                             table_name + ": " + exit_messages[table_name]
                         )
 
-        retry(check_tables_have_same_projections, timeout=120, delay=step_retry_delay)(
-            tables=self.context.table_names
-        )
+        wait_for_mutations_to_finish(node=node, command_like="DROP PROJECTION")
+        retry(
+            check_tables_have_same_projections,
+            timeout=step_retry_timeout,
+            delay=step_retry_delay,
+        )(tables=self.context.table_names, check_absent=[projection_name])
 
 
 @TestStep
@@ -662,7 +670,7 @@ def add_random_index(self, safe=True):
                     node = get_random_node_for_table(table_name=table_name)
 
                     if safe:
-                        wait_for_all_mutations_to_finish(node=node)
+                        wait_for_mutations_to_finish(node=node)
 
                     node.query(
                         f"ALTER TABLE {table_name} ADD INDEX IF NOT EXISTS {index_name} {column_name} TYPE bloom_filter",
@@ -699,7 +707,7 @@ def clear_random_index(self):
         index_name = random.choice(indexes)
         partition_name = get_random_partition_id(node=node, table_name=table_name)
 
-        wait_for_all_mutations_to_finish(node=node)
+        wait_for_mutations_to_finish(node=node)
 
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
@@ -727,7 +735,7 @@ def drop_random_index(self):
             with When(f"I drop {index_name} on all tables"):
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
-                    wait_for_all_mutations_to_finish(node=node)
+                    # wait_for_mutations_to_finish(node=node)
 
                     r = node.query(
                         f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
@@ -796,7 +804,9 @@ def check_tables_have_same_columns(self, tables):
 
 
 @TestStep(Then)
-def check_tables_have_same_projections(self, tables):
+def check_tables_have_same_projections(
+    self, tables, check_present: list = None, check_absent: list = None
+):
     """
     Asserts that the given tables have the same projections.
     Smartly selects a node for each given replicated table.
@@ -806,6 +816,7 @@ def check_tables_have_same_projections(self, tables):
         table_projections = {}
         for table_name in tables:
             node = get_random_node_for_table(table_name=table_name)
+            wait_for_mutations_to_finish(node=node, command_like="PROJECTION")
             table_projections[table_name] = set(
                 get_projections(node=node, table_name=table_name)
             )
@@ -814,6 +825,16 @@ def check_tables_have_same_projections(self, tables):
         for table1, table2 in combinations(tables, 2):
             with By(f"checking {table1} and {table2}"):
                 assert table_projections[table1] == table_projections[table2], error()
+
+    if check_present is not None:
+        with And(f"I check that {check_present} exist"):
+            for projection_name in check_present:
+                assert projection_name in table_projections[tables[0]], error()
+
+    if check_absent is not None:
+        with And(f"I check that {check_absent} do not exist"):
+            for projection_name in check_absent:
+                assert projection_name not in table_projections[tables[0]], error()
 
 
 @TestStep(Then)
@@ -1042,7 +1063,7 @@ def restart_clickhouse(self, signal="SEGV"):
 
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
-def restart_network(self):
+def restart_network(self, restart_node_after=True):
     """
     Stop the network on a random instance, wait, and restart.
     This simulates a short outage.
@@ -1053,6 +1074,10 @@ def restart_network(self):
     with interrupt_network(self.context.cluster, node, "stress"):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
+
+    if restart_node_after:
+        with When("I restart the node to ensure communication is restored"):
+            node.restart()
 
 
 network_impairments = [

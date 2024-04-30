@@ -25,6 +25,7 @@ on:
           - alter_replace_partition
           - alter_attach_partition
           - alter_move_partition
+          - attach
           - base_58
           - benchmark_all
           - benchmark_aws
@@ -325,6 +326,39 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-move-partition-artifacts
+          path: ${{ env.artifact_paths}}
+  
+  attach:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 300
+    env:
+      SUITE: attach
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              --only "/attach/*"
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
   base_58:
@@ -1452,7 +1486,7 @@ jobs:
 
   ssl_server:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 360
     env:
       SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
@@ -1628,7 +1662,7 @@ jobs:
     env:
       SUITE: vfs
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_aws' || inputs.suite == 'vfs_all' }}
+    if: ${{ inputs.suite == 'vfs_aws' || inputs.suite == 'vfs_all' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -1666,7 +1700,7 @@ jobs:
     env:
       SUITE: vfs
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_gcs' || inputs.suite == 'vfs_all' }}
+    if: ${{ inputs.suite == 'vfs_gcs' || inputs.suite == 'vfs_all' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -1703,7 +1737,7 @@ jobs:
     env:
       SUITE: vfs
       STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'vfs_all' || inputs.suite == 'vfs_minio' }}
+    if: ${{ inputs.suite == 'vfs_all' || inputs.suite == 'vfs_minio' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

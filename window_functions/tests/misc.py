@@ -261,7 +261,7 @@ def count_with_empty_over_clause_without_start(self):
     exitcode = 0
     message = "1"
 
-    sql = "SELECT count() OVER () FROM tenk1 LIMIT 1"
+    sql = "SELECT count() OVER () FROM tenk1 LIMIT 1 FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)

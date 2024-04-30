@@ -13,7 +13,7 @@ def missing_frame_extent(self):
     exitcode, message = syntax_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number ROWS) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ORDER BY number ROWS) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -28,7 +28,7 @@ def invalid_frame_extent(self):
     exitcode, message = frame_offset_nonnegative_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number ROWS -1) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ORDER BY number ROWS -1) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -130,7 +130,7 @@ def start_unbounded_following_error(self):
     exitcode, message = frame_start_error()
 
     self.context.node.query(
-        "SELECT empno, salary, sum(salary) OVER (ROWS UNBOUNDED FOLLOWING) AS sum FROM empsalary ORDER BY empno",
+        "SELECT empno, salary, sum(salary) OVER (ROWS UNBOUNDED FOLLOWING) AS sum FROM empsalary ORDER BY empno FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -145,7 +145,7 @@ def start_expr_following_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT empno, salary, sum(salary) OVER (ROWS 1 FOLLOWING) AS sum FROM empsalary ORDER BY empno",
+        "SELECT empno, salary, sum(salary) OVER (ROWS 1 FOLLOWING) AS sum FROM empsalary ORDER BY empno FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -191,7 +191,7 @@ def between_current_row_and_expr_preceding_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number ROWS BETWEEN CURRENT ROW AND 1 PRECEDING) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ORDER BY number ROWS BETWEEN CURRENT ROW AND 1 PRECEDING) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -208,7 +208,7 @@ def between_current_row_and_unbounded_preceding_error(self):
     exitcode, message = frame_end_unbounded_preceding_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number ROWS BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ORDER BY number ROWS BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -334,7 +334,7 @@ def between_unbounded_preceding_and_unbounded_preceding_error(self):
     exitcode, message = frame_end_unbounded_preceding_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED PRECEDING) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED PRECEDING) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -456,7 +456,7 @@ def between_unbounded_following_error(self, range):
     exitcode, message = frame_start_error()
 
     self.context.node.query(
-        f"SELECT number,sum(number) OVER (ROWS BETWEEN {range}) FROM numbers(1,3)",
+        f"SELECT number,sum(number) OVER (ROWS BETWEEN {range}) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -477,7 +477,7 @@ def between_unbounded_following_error(self, range):
 def between_expr_following_error(self, range, exitcode, message):
     """Check cases when rows between expr following returns an error."""
     self.context.node.query(
-        f"SELECT number,sum(number) OVER (ROWS BETWEEN {range}) FROM numbers(1,3)",
+        f"SELECT number,sum(number) OVER (ROWS BETWEEN {range}) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -496,7 +496,7 @@ def between_expr_following_and_expr_following_error(self):
     exitcode, message = frame_start_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ROWS BETWEEN 1 FOLLOWING AND 0 FOLLOWING) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ROWS BETWEEN 1 FOLLOWING AND 0 FOLLOWING) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -601,7 +601,7 @@ def between_expr_preceding_and_unbounded_preceding_error(self):
     exitcode, message = frame_end_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ROWS BETWEEN 1 PRECEDING AND UNBOUNDED PRECEDING) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ROWS BETWEEN 1 PRECEDING AND UNBOUNDED PRECEDING) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -644,7 +644,7 @@ def between_expr_preceding_and_expr_preceding_error(self):
     exitcode, message = frame_start_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ROWS BETWEEN 1 PRECEDING AND 2 PRECEDING) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ROWS BETWEEN 1 PRECEDING AND 2 PRECEDING) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )

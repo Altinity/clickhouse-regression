@@ -101,7 +101,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         disks_for_merges = (
                             node.query(
                                 f"SELECT disk_name FROM system.parts WHERE table == '{name}'"
-                                " AND level >= 1 and active = 1 ORDER BY modification_time"
+                                " AND level >= 1 and active = 1 ORDER BY modification_time FORMAT TabSeparated"
                             )
                             .output.strip()
                             .split("\n")

@@ -2270,7 +2270,7 @@ def performance_vs_two_tuple_of_arrays(self, len=10, rows=6000000):
     with And("I retrieve particular key value from table with tuples"):
         start_time = time.time()
         node.query(
-            f"SELECT sum(arrayFirst((v, k) -> k = {len-1}, tupleElement(pairs, 2), tupleElement(pairs, 1))) AS sum FROM {tuple_table}",
+            f"SELECT sum(arrayFirst((v, k) -> k = {len-1}, tupleElement(pairs, 2), tupleElement(pairs, 1))) AS sum FROM {tuple_table} FORMAT TabSeparated",
             exitcode=0,
             message=f"{rows*(len-1)}",
         )
@@ -2280,7 +2280,7 @@ def performance_vs_two_tuple_of_arrays(self, len=10, rows=6000000):
     with And("I retrieve particular key value from table with map"):
         start_time = time.time()
         node.query(
-            f"SELECT sum(pairs[{len-1}]) AS sum FROM {map_table}",
+            f"SELECT sum(pairs[{len-1}]) AS sum FROM {map_table} FORMAT TabSeparated",
             exitcode=0,
             message=f"{rows*(len-1)}",
         )
@@ -2326,7 +2326,7 @@ def performance_vs_array_of_tuples(self, len=10, rows=6000000):
     with And("I retrieve particular key value from table with an array of tuples"):
         start_time = time.time()
         node.query(
-            f"SELECT sum(arrayFirst((v) -> v.1 = {len-1}, pairs).2) AS sum FROM {array_table}",
+            f"SELECT sum(arrayFirst((v) -> v.1 = {len-1}, pairs).2) AS sum FROM {array_table} FORMAT TabSeparated",
             exitcode=0,
             message=f"{rows*(len-1)}",
         )
@@ -2336,7 +2336,7 @@ def performance_vs_array_of_tuples(self, len=10, rows=6000000):
     with And("I retrieve particular key value from table with map"):
         start_time = time.time()
         node.query(
-            f"SELECT sum(pairs[{len-1}]) AS sum FROM {map_table}",
+            f"SELECT sum(pairs[{len-1}]) AS sum FROM {map_table} FORMAT TabSeparated",
             exitcode=0,
             message=f"{rows*(len-1)}",
         )
@@ -2369,7 +2369,7 @@ def performance(self, len=10, rows=6000000):
     with And("I retrieve particular key value from table with map"):
         start_time = time.time()
         node.query(
-            f"SELECT sum(pairs[{len-1}]) AS sum FROM {map_table}",
+            f"SELECT sum(pairs[{len-1}]) AS sum FROM {map_table} FORMAT TabSeparated",
             exitcode=0,
             message=f"{rows*(len-1)}",
         )

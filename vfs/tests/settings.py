@@ -181,7 +181,7 @@ def disable_vfs_with_vfs_table(self):
 
         with Then("the table is hidden"):
             nodes[2].query(
-                f"SELECT * FROM {table_name}",
+                f"SELECT * FROM {table_name} FORMAT TabSeparated",
                 message=f"DB::Exception: Table default.{table_name} does not exist",
             )
 
@@ -191,7 +191,7 @@ def disable_vfs_with_vfs_table(self):
 
         with Then("the data is still not accessible"):
             nodes[1].query(
-                f"SELECT * FROM {table_name}",
+                f"SELECT * FROM {table_name} FORMAT TabSeparated",
                 message=f"DB::Exception: Table default.{table_name} does not exist",
             )
 
@@ -353,7 +353,7 @@ def select(self, table_name, settings=None):
         settings = "SETTINGS " + settings
     for _ in range(random.randint(3, 10)):
         with By(f"count rows in {table_name} on {node.name}"):
-            node.query(f"SELECT count() FROM {table_name} {settings}")
+            node.query(f"SELECT count() FROM {table_name} {settings} FORMAT TabSeparated")
 
 
 def combinations_all_lengths(items, min_size=1, max_size=None):

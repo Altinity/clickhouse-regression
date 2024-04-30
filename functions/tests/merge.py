@@ -1,9 +1,13 @@
 from helpers.common import *
 from helpers.cluster import *
 
+# https://github.com/ClickHouse/ClickHouse/issues/59401
+
 
 @TestScenario
 def merge(self):
+    "Automated test for issue 59401."
+
     with Given("I create table on three servers"):
         table_name = "test_local" + getuid()
         create_table_query = f"""           

@@ -13,7 +13,7 @@ def missing_frame_extent(self):
     exitcode, message = syntax_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number RANGE) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ORDER BY number RANGE) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -28,7 +28,7 @@ def invalid_frame_extent(self):
     exitcode, message = syntax_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number RANGE '1') FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (ORDER BY number RANGE '1') FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -115,14 +115,14 @@ def start_unbounded_following_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE UNBOUNDED FOLLOWING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE UNBOUNDED FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE UNBOUNDED FOLLOWING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE UNBOUNDED FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -196,7 +196,7 @@ def start_expr_following_without_order_by_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT empno, depname, salary, sum(salary) OVER (RANGE 1 FOLLOWING) AS sum FROM empsalary",
+        "SELECT empno, depname, salary, sum(salary) OVER (RANGE 1 FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -213,7 +213,7 @@ def start_expr_following_with_order_by_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE 1 FOLLOWING) AS sum FROM empsalary",
+        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE 1 FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -261,7 +261,7 @@ def start_expr_preceding_order_by_non_numerical_column_error(self):
     exitcode, message = frame_range_offset_error()
 
     self.context.node.query(
-        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY depname RANGE 1 PRECEDING) AS sum FROM empsalary",
+        "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY depname RANGE 1 PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -278,7 +278,7 @@ def start_expr_preceding_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT empno, depname, salary, sum(salary) OVER (RANGE 1 PRECEDING) AS sum FROM empsalary",
+        "SELECT empno, depname, salary, sum(salary) OVER (RANGE 1 PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -341,14 +341,14 @@ def between_current_row_and_unbounded_preceding_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -436,7 +436,7 @@ def between_current_row_and_expr_following_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING) FROM numbers(1,3)",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -485,14 +485,14 @@ def between_current_row_and_expr_preceding_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN CURRENT ROW AND 1 PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN CURRENT ROW AND 1 PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN CURRENT ROW AND 1 PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN CURRENT ROW AND 1 PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -574,14 +574,14 @@ def between_unbounded_preceding_and_unbounded_preceding_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -667,7 +667,7 @@ def between_unbounded_preceding_and_expr_following_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -684,7 +684,7 @@ def between_unbounded_preceding_and_expr_preceding_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -764,14 +764,14 @@ def between_unbounded_following_and_current_row_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -789,14 +789,14 @@ def between_unbounded_following_and_unbounded_following_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -814,14 +814,14 @@ def between_unbounded_following_and_unbounded_preceding_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -839,14 +839,14 @@ def between_unbounded_following_and_expr_preceding_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 PRECEDING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 PRECEDING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -864,14 +864,14 @@ def between_unbounded_following_and_expr_following_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 FOLLOWING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 FOLLOWING) AS sum FROM empsalary",
+            "SELECT empno, depname, salary, sum(salary) OVER (ORDER BY salary RANGE BETWEEN UNBOUNDED FOLLOWING AND 1 FOLLOWING) AS sum FROM empsalary FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -888,7 +888,7 @@ def between_expr_preceding_and_current_row_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND CURRENT ROW) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND CURRENT ROW) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -905,7 +905,7 @@ def between_expr_preceding_and_unbounded_following_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -922,7 +922,7 @@ def between_expr_preceding_and_expr_following_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -939,7 +939,7 @@ def between_expr_preceding_and_expr_preceding_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND 0 PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND 0 PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -957,14 +957,14 @@ def between_expr_preceding_and_unbounded_preceding_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT number,sum(number) OVER (ORDER BY salary RANGE BETWEEN 1 PRECEDING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (ORDER BY salary RANGE BETWEEN 1 PRECEDING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -1164,7 +1164,7 @@ def between_expr_preceding_and_expr_preceding_with_order_by_error(self):
     exitcode, message = frame_start_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND 2 PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 PRECEDING AND 2 PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -1181,7 +1181,7 @@ def between_expr_following_and_current_row_without_order_by_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND CURRENT ROW) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND CURRENT ROW) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -1198,7 +1198,7 @@ def between_expr_following_and_unbounded_following_without_order_by_error(self):
     exitcode, message = frame_requires_order_by_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -1215,7 +1215,7 @@ def between_expr_following_and_expr_following_without_order_by_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND 1 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND 1 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -1232,7 +1232,7 @@ def between_expr_following_and_expr_preceding_without_order_by_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND 0 PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND 0 PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -1250,14 +1250,14 @@ def between_expr_following_and_unbounded_preceding_error(self):
 
     with Example("without order by"):
         self.context.node.query(
-            "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("with order by"):
         self.context.node.query(
-            "SELECT number,sum(number) OVER (ORDER BY salary RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (ORDER BY salary RANGE BETWEEN 1 FOLLOWING AND UNBOUNDED PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -1276,7 +1276,7 @@ def between_expr_following_and_current_row_with_order_by_error(self):
     exitcode, message = window_frame_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 1 FOLLOWING AND CURRENT ROW) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 1 FOLLOWING AND CURRENT ROW) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )
@@ -1296,14 +1296,14 @@ def between_expr_following_and_expr_preceding_error(self):
 
     with Example("1 following 0 preceding"):
         self.context.node.query(
-            "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND 0 PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (RANGE BETWEEN 1 FOLLOWING AND 0 PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
 
     with Example("1 following 0 preceding"):
         self.context.node.query(
-            "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND 1 PRECEDING) FROM values('number Int8', (1),(1),(2),(3))",
+            "SELECT number,sum(number) OVER (RANGE BETWEEN 0 FOLLOWING AND 1 PRECEDING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
             exitcode=exitcode,
             message=message,
         )
@@ -1322,7 +1322,7 @@ def between_expr_following_and_expr_following_with_order_by_error(self):
     exitcode, message = frame_start_error()
 
     self.context.node.query(
-        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 1 FOLLOWING AND 0 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3))",
+        "SELECT number,sum(number) OVER (ORDER BY number RANGE BETWEEN 1 FOLLOWING AND 0 FOLLOWING) FROM values('number Int8', (1),(1),(2),(3)) FORMAT TabSeparated",
         exitcode=exitcode,
         message=message,
     )

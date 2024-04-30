@@ -67,7 +67,7 @@ def multi_disk_volume(
 
     with Then("I expect data is inserted into all disks"):
         r = node.query(
-            f"SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name}' ORDER BY disk_name"
+            f"SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name}' ORDER BY disk_name FORMAT TabSeparated"
         )
         note(r.output)
         note(used_disks)

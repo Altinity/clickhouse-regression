@@ -54,7 +54,13 @@ xfails = {
 
 xflags = {}
 
-ffails = {}
+ffails = {
+    "/lightweight delete/lack of disk space/lightweight delete memory consuption/*": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/63107",
+        check_clickhouse_version(">=24.3"),
+    )
+}
 
 
 def argparser(parser):

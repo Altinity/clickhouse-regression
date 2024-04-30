@@ -16,7 +16,7 @@ RQ_SRS_039_ClickHouse_Attach_AttachExistingTable = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support 'ATTACH TABLE' statement to attach an existing table.\n"
+        "[ClickHouse] SHALL support `ATTACH TABLE` statement to attach an existing table.\n"
         "\n"
     ),
     link=None,
@@ -32,7 +32,7 @@ RQ_SRS_039_ClickHouse_Attach_CreateNewTableAndAttach_DataWithUUID = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support 'ATTACH TABLE UUID' statement to create a new table and attach data with specified table UUID.\n"
+        "[ClickHouse] SHALL support `ATTACH TABLE UUID` statement to create a new table and attach data with specified table UUID.\n"
         "\n"
     ),
     link=None,
@@ -48,7 +48,7 @@ RQ_SRS_039_ClickHouse_Attach_AttachExistingDictionary = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support 'ATTACH DICTIONARY' statement to attach an existing dictionary.\n"
+        "[ClickHouse] SHALL support `ATTACH DICTIONARY` statement to attach an existing dictionary.\n"
         "\n"
     ),
     link=None,
@@ -64,7 +64,7 @@ RQ_SRS_039_ClickHouse_Attach_AttachExistingDatabase = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support 'ATTACH DATABASE' statement to attach previously detached database.\n"
+        "[ClickHouse] SHALL support `ATTACH DATABASE` statement to attach previously detached database.\n"
         "\n"
     ),
     link=None,
@@ -224,7 +224,7 @@ If the table was detached permanently, it won't be reattached at the server star
 #### RQ.SRS-039.ClickHouse.Attach.AttachExistingTable
 version: 1.0
 
-[ClickHouse] SHALL support 'ATTACH TABLE' statement to attach an existing table.
+[ClickHouse] SHALL support `ATTACH TABLE` statement to attach an existing table.
 
 ### Create New Table And Attach Data
 
@@ -254,7 +254,7 @@ Result:
 ##### SR.SRS-039.ClickHouse.Attach.CreateNewTableAndAttach.DataWithPath
 version: 1.0
 
-[ClickHouse] SHALL support 'ATTACH TABLE FROM' statement to create a new table and attach data with specified path to table data.
+[ClickHouse] SHALL support `ATTACH TABLE FROM` statement to create a new table and attach data with specified path to table data.
 
 #### With Specified Table UUID
 
@@ -268,7 +268,7 @@ ATTACH TABLE name UUID '<uuid>' (col1 Type1, ...)
 ##### RQ.SRS-039.ClickHouse.Attach.CreateNewTableAndAttach.DataWithUUID
 version: 1.0
 
-[ClickHouse] SHALL support 'ATTACH TABLE UUID' statement to create a new table and attach data with specified table UUID.
+[ClickHouse] SHALL support `ATTACH TABLE UUID` statement to create a new table and attach data with specified table UUID.
 
 ### Attach Existing Dictionary
 Attaches a previously detached dictionary.
@@ -280,7 +280,7 @@ ATTACH DICTIONARY [IF NOT EXISTS] [db.]name [ON CLUSTER cluster]
 
 #### RQ.SRS-039.ClickHouse.Attach.AttachExistingDictionary
 version: 1.0
-[ClickHouse] SHALL support 'ATTACH DICTIONARY' statement to attach an existing dictionary.
+[ClickHouse] SHALL support `ATTACH DICTIONARY` statement to attach an existing dictionary.
 
 ### Attach Existing Database
 Attaches a previously detached database.  
@@ -291,7 +291,7 @@ ATTACH DATABASE [IF NOT EXISTS] name [ENGINE=<database engine>] [ON CLUSTER clus
 
 #### RQ.SRS-039.ClickHouse.Attach.AttachExistingDatabase
 version: 1.0
-[ClickHouse] SHALL support 'ATTACH DATABASE' statement to attach previously detached database.
+[ClickHouse] SHALL support `ATTACH DATABASE` statement to attach previously detached database.
 
 ### Attach Replicated Tables
 

@@ -21,7 +21,7 @@ def system_certificates(self):
 
             with Then("I check that system.certificates has the serial number"):
                 output = node.query(
-                    f"SELECT count() FROM system.certificates WHERE serial_number = '{serial_number.lower()}'"
+                    f"SELECT count() FROM system.certificates WHERE serial_number = '{serial_number.lower()}' FORMAT TabSeparated"
                 ).output
                 assert output == "1", error()
 

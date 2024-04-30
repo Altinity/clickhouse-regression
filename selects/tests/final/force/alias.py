@@ -518,12 +518,12 @@ def group_order_by_multiple_alias_with_override_column(self, node=None):
                 node.query(
                     "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
                     f"device == '00000000-0000-0000-0000-000000000000', 'b', 'c' ) AS device_id_type, count() FROM {name} "
-                    "FINAL GROUP BY device, device_id_type ORDER BY device;"
+                    "FINAL GROUP BY device, device_id_type ORDER BY device FORMAT TabSeparated;"
                 ).output.strip()
                 == node.query(
                     "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
                     f"device == '00000000-0000-0000-0000-000000000000', 'b', 'c' ) AS device_id_type, count() FROM {name} "
-                    "GROUP BY device, device_id_type ORDER BY device;",
+                    "GROUP BY device, device_id_type ORDER BY device FORMAT TabSeparated;",
                     settings=[("final", 1)],
                 ).output.strip()
             )
@@ -556,11 +556,11 @@ def group_order_by_multiple_alias_with_aggregate_new_alias(self, node=None):
             assert (
                 node.query(
                     "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
-                    f"FROM {name} FINAL GROUP BY col3 ORDER BY final_col DESC;"
+                    f"FROM {name} FINAL GROUP BY col3 ORDER BY final_col DESC FORMAT TabSeparated;"
                 ).output.strip()
                 == node.query(
                     "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
-                    f"FROM {name} GROUP BY col3 ORDER BY final_col DESC;",
+                    f"FROM {name} GROUP BY col3 ORDER BY final_col DESC FORMAT TabSeparated;",
                     settings=[("final", 1)],
                 ).output.strip()
             )
@@ -568,11 +568,11 @@ def group_order_by_multiple_alias_with_aggregate_new_alias(self, node=None):
             assert (
                 node.query(
                     "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
-                    f" FROM {name} FINAL GROUP BY col3;"
+                    f" FROM {name} FINAL GROUP BY col3 FORMAT TabSeparated;"
                 ).output.strip()
                 == node.query(
                     "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
-                    f" FROM {name} GROUP BY col3;",
+                    f" FROM {name} GROUP BY col3 FORMAT TabSeparated;",
                     settings=[("final", 1)],
                 ).output.strip()
             )
@@ -608,14 +608,14 @@ def select_nested_subquery_with_alias(self, node=None):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                     f"SELECT count()*100 as count_alias FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
-                    f"{' FINAL' if table.final_modifier_available else ''})))"
+                    f"{' FINAL' if table.final_modifier_available else ''}))) FORMAT TabSeparated"
                 ).output.strip()
 
             with And(
                 "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
-                    f"SELECT count()*100 as count_alias FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name})))",
+                    f"SELECT count()*100 as count_alias FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}))) FORMAT TabSeparated",
                     settings=[("final", 1)],
                 ).output.strip()
 
@@ -804,9 +804,9 @@ def select_family_union_clause_with_alias(self, node=None, clause=None, negative
                     "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
                 ):
                     force_select_final = node.query(
-                        f"SELECT id, count(*) as all_raws_sum FROM {table1.name} GROUP BY id"
+                        f"SELECT id, count(*) as all_raws_sum FROM {table1.name} GROUP BY id FORMAT TabSeparated"
                         f" {clause}"
-                        f" SELECT id, count(*) as all_raws_sum FROM {table2.name} GROUP BY id",
+                        f" SELECT id, count(*) as all_raws_sum FROM {table2.name} GROUP BY id FORMAT TabSeparated",
                         settings=[("final", 1)],
                     ).output.strip()
 

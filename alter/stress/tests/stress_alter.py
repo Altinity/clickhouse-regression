@@ -190,6 +190,15 @@ def alter_combinations(
             note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
 
     finally:
+        with Finally("I log any pending mutations that might have caused a fail"):
+            for node in self.context.ch_nodes:
+                r = node.query(
+                    "SELECT * FROM system.mutations WHERE is_done=0 FORMAT Vertical",
+                    no_checks=True,
+                )
+                if r.output.strip():
+                    note(f"Pending mutations on {node.name}:\n{r.output.strip()}")
+
         with Finally(
             "I drop each table on each node in case the cluster is in a bad state"
         ):

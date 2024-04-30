@@ -44,7 +44,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
         with And("I check what partitions are now available"):
             r = node.query(
-                f"SELECT partition, name FROM system.parts WHERE table = '{name}_first'"
+                f"SELECT partition, name FROM system.parts WHERE table = '{name}_first' FORMAT TabSeparated"
             ).output.strip()
             with Then("result should match the expected"):
                 assert r == "201903\t201903_1_1_0", error()

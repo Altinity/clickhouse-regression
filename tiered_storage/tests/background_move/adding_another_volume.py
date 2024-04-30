@@ -50,7 +50,7 @@ def scenario(self, engine):
 
     with And("I get table's uuid"):
         table_uuid = node.query(
-            f"SELECT uuid FROM system.tables WHERE name = '{table_name}'"
+            f"SELECT uuid FROM system.tables WHERE name = '{table_name}' FORMAT TabSeparated"
         ).output.strip()
         table_uuid_prefix = table_uuid[:3]
 
@@ -80,7 +80,9 @@ def scenario(self, engine):
                     node.query(f"INSERT INTO {table_name} VALUES {values}")
 
             with And("I ensure all rows are in the table"):
-                r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+                r = node.query(
+                    f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+                ).output.strip()
                 with Then(f"it should return the result of {rows_count}"):
                     assert r == f"{rows_count}", error()
 
@@ -100,7 +102,9 @@ def scenario(self, engine):
             node.restart()
 
             with And("I ensure all rows are in the table"):
-                r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+                r = node.query(
+                    f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+                ).output.strip()
                 with Then(f"it should return the result of {rows_count}"):
                     assert r == f"{rows_count}", error()
 
@@ -123,7 +127,9 @@ def scenario(self, engine):
             node.restart()
 
         with And("I ensure there are no duplicates and all rows are in the table"):
-            r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+            r = node.query(
+                f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+            ).output.strip()
             with Then(f"it should return the result of {rows_count}"):
                 assert r == f"{rows_count}", error()
     finally:

@@ -450,7 +450,9 @@ def build_options_check(self):
     """Check that system.build_options shows that ClickHouse was built using FIPs compliant BoringSSL library."""
     node = self.context.node
     with When("I read the system.build_options table"):
-        output = node.query("SELECT * FROM system.build_options").output
+        output = node.query(
+            "SELECT * FROM system.build_options FORMAT TabSeparated"
+        ).output
         debug(output)
 
     with Then("I check that FIPS mode is present"):

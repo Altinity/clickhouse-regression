@@ -72,7 +72,7 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
         "I replace partition on destination table from the source table and validate the data"
     ):
         parts_before_replace = node.query(
-            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
         replace_partition(
@@ -82,7 +82,7 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
         )
 
         parts_after_replace = node.query(
-            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*)"
+            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with And(
@@ -96,7 +96,7 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
             message = "Exception:"
 
         node.query(
-            f"SELECT * FROM {destination_table}",
+            f"SELECT * FROM {destination_table} FORMAT TabSeparated",
             message=message,
         )
 
@@ -128,7 +128,7 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
         for retry in retries(timeout=10):
             with retry:
                 node.query(
-                    f"SELECT * FROM {destination_table}",
+                    f"SELECT * FROM {destination_table} FORMAT TabSeparated",
                 )
 
 

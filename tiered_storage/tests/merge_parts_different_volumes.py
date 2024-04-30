@@ -72,7 +72,7 @@ def scenario(self, cluster, node="clickhouse1"):
                 with When("I get the parts from system.parts"):
                     first_part = node.query(
                         f"SELECT name FROM system.parts WHERE table = '{name}'"
-                        " AND active = 1 ORDER BY modification_time"
+                        " AND active = 1 ORDER BY modification_time FORMAT TabSeparated"
                     ).output.strip()
 
                 with When("I move part 201903_4_4_0 to 'medium' volume"):
@@ -83,7 +83,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with And("I get disk name from system.parts for the part"):
                         disk = node.query(
                             f"SELECT disk_name FROM system.parts WHERE table = '{name}' "
-                            f" AND name = '201903_4_4_0' and active = 1"
+                            f" AND name = '201903_4_4_0' and active = 1 FORMAT TabSeparated"
                         ).output.strip()
 
                     with Then("the disk name should be 'jbod2'"):
@@ -97,7 +97,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with And("I get disk name from system.parts for the part"):
                         disk = node.query(
                             f"SELECT disk_name FROM system.parts WHERE table = '{name}' "
-                            f" AND name = '201903_6_6_0' and active = 1"
+                            f" AND name = '201903_6_6_0' and active = 1 FORMAT TabSeparated"
                         ).output.strip()
 
                     with Then("the disk name should be 'external'"):
@@ -124,7 +124,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     disks = (
                         node.query(
                             f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
-                            " AND partition = '201903' and active = 1"
+                            " AND partition = '201903' and active = 1 FORMAT TabSeparated"
                         )
                         .output.strip()
                         .split("\n")
@@ -137,7 +137,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert all(d == "external" for d in disks), error()
 
                 with When("in the end I get number of rows in the table"):
-                    count = node.query(f"SELECT COUNT() FROM {name}").output.strip()
+                    count = node.query(
+                        f"SELECT COUNT() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
 
                     with Then("the count should be 6"):
                         assert count == "6", error()

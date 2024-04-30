@@ -72,7 +72,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with And("check that the data to be deleted is there"):
                 r = node.query(
-                    f"SELECT ttl_days FROM {name} WHERE ttl_days = {delete_value}"
+                    f"SELECT ttl_days FROM {name} WHERE ttl_days = {delete_value} FORMAT TabSeparated"
                 ).output.strip()
                 assert r == f"{delete_value}", error()
 
@@ -88,7 +88,9 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with Then("checking that row has been deleted"):
                 r = (
-                    node.query(f"SELECT ttl_days FROM {name} ORDER BY ttl_days")
+                    node.query(
+                        f"SELECT ttl_days FROM {name} ORDER BY ttl_days FORMAT TabSeparated"
+                    )
                     .output.strip()
                     .splitlines()
                 )

@@ -112,14 +112,16 @@ def scenario(self, engine):
                     task.result(timeout=600)
 
         with When("I check the server is still up"):
-            r = node.query("SELECT 1").output.strip()
+            r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()
             with Then("it should return the result of 1"):
                 assert r == "1", error()
 
         for retry in retries(timeout=30, delay=5):
             with retry:
                 with When("I ensure all rows are in the table"):
-                    r = node.query(f"SELECT COUNT() FROM {table_name}").output.strip()
+                    r = node.query(
+                        f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated"
+                    ).output.strip()
                     with Then("it should return the result of 500"):
                         assert r == str(n_inserts), error()
     finally:

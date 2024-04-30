@@ -141,6 +141,7 @@ def feature(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    allow_experimental_analyzer,
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
@@ -355,20 +356,7 @@ def regression(
     environ = {}
 
     self.context.clickhouse_version = clickhouse_version
-
-    with Given("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
+    self.context.allow_experimental_analyzer = allow_experimental_analyzer
 
     if with_minio or with_s3amazon or with_s3gcs:
         if not self.skip:
@@ -419,6 +407,7 @@ def regression(
         with_s3gcs=with_s3gcs,
         environ=environ,
         allow_vfs=allow_vfs,
+        allow_experimental_analyzer=allow_experimental_analyzer,
     )
 
 

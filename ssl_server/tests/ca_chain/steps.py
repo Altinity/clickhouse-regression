@@ -199,7 +199,10 @@ def check_secure_connection(self, from_node, to_node, message=None):
 
     with When("I execute query using secure connection"):
         r = from_node.query(
-            "SELECT 1", message=message, secure=True, settings=[("host", to_node.name)]
+            "SELECT 1 FORMAT TabSeparated",
+            message=message,
+            secure=True,
+            settings=[("host", to_node.name)],
         )
 
     if message is None:

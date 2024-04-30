@@ -51,7 +51,7 @@ def insert_check_datetime(self, datetime, expected, precision=0, timezone="UTC")
     with create_table(timezone, self.context.node):
         with When("I use toDateTime64"):
             r = self.context.node.query(
-                f"SELECT toDateTime64('{datetime}', {precision}, '{timezone}')"
+                f"SELECT toDateTime64('{datetime}', {precision}, '{timezone}') FORMAT TabSeparated",
             )
 
     with Then(f"I expect {expected}"):
@@ -99,7 +99,7 @@ def select_check_datetime(self, datetime, expected, precision=0, timezone="UTC")
     """
     with When("I use toDateTime64"):
         r = self.context.node.query(
-            f"SELECT toDateTime64('{datetime}', {precision}, '{timezone}')"
+            f"SELECT toDateTime64('{datetime}', {precision}, '{timezone}') FORMAT TabSeparated",
         )
 
     with Then(f"I expect {expected}"):
@@ -107,12 +107,16 @@ def select_check_datetime(self, datetime, expected, precision=0, timezone="UTC")
 
 
 @TestStep(When)
-def exec_query(self, request, expected=None, exitcode=None):
+def exec_query(self, request, format="TabSeparated", expected=None, exitcode=None):
     """Execute a query and check expected result.
     :param request: query string
     :param expected: result string
     :param exitcode: exitcode
     """
+    if format is not None:
+        if "format" not in request.lower():
+            request = f"{request} FORMAT {format}"
+
     r = self.context.node.query(request)
 
     if expected is not None:
@@ -122,6 +126,8 @@ def exec_query(self, request, expected=None, exitcode=None):
     elif exitcode is not None:
         with Then(f"output exitcode should match expected", description=f"{exitcode}"):
             assert r.exitcode == exitcode, error()
+
+    return r
 
 
 @TestOutline

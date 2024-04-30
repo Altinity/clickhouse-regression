@@ -41,7 +41,7 @@ def check_only_compact_format(self, policy=None, disk_path=None, node=None):
 
     with Then("I expect data stored in compact format"):
         r = node.query(
-            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active"
+            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active FORMAT TabSeparated"
         )
         assert r.output == "Compact", error()
 
@@ -100,7 +100,7 @@ def check_only_wide_format(self, policy=None, disk_path=None, node=None):
 
     with Then("I expect data stored in wide format"):
         r = node.query(
-            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active"
+            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active FORMAT TabSeparated"
         )
         assert r.output == "Wide", error()
 
@@ -164,7 +164,7 @@ def check_wide_and_compact_format(self, policy=None, disk_path=None, node=None):
 
         with Then("I expect data stored in wide and compact format"):
             r = node.query(
-                f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active ORDER BY part_type"
+                f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active ORDER BY part_type FORMAT TabSeparated"
             )
             assert r.output == "Compact\nWide", error()
 
@@ -209,7 +209,7 @@ def check_wide_and_compact_format(self, policy=None, disk_path=None, node=None):
 
     with Then("I expect all the data in wide format"):
         r = node.query(
-            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active ORDER BY part_type"
+            f"SELECT DISTINCT part_type FROM system.parts WHERE table = '{table_name}' and active ORDER BY part_type FORMAT TabSeparated"
         )
         assert r.output == "Wide", error()
 

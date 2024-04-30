@@ -273,7 +273,7 @@ def select_array_join(self, node=None):
 
                 with When("I execute query with force_select_final=1 setting"):
                     force_select_final = node.query(
-                        f"SELECT count() FROM {name} ARRAY JOIN arr",
+                        f"SELECT count() FROM {name} ARRAY JOIN arr FORMAT TabSeparated",
                         settings=[("final", 1)],
                     ).output.strip()
 
@@ -282,11 +282,11 @@ def select_array_join(self, node=None):
                 ):
                     if engine.startswith("Merge") or engine.endswith("Log"):
                         explicit_final = node.query(
-                            f"SELECT count() FROM {name} ARRAY JOIN arr"
+                            f"SELECT count() FROM {name} ARRAY JOIN arr FORMAT TabSeparated"
                         ).output.strip()
                     else:
                         explicit_final = node.query(
-                            f"SELECT count() FROM {name} FINAL ARRAY JOIN arr"
+                            f"SELECT count() FROM {name} FINAL ARRAY JOIN arr FORMAT TabSeparated"
                         ).output.strip()
 
                 with Then("I compare results are the same"):
@@ -752,14 +752,14 @@ def select_subquery(self, node=None):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM {table.name}"
-                    f"{' FINAL' if table.final_modifier_available else ''})"
+                    f"{' FINAL' if table.final_modifier_available else ''}) FORMAT TabSeparated"
                 ).output.strip()
 
             with And(
                 "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
-                    f"SELECT count() FROM (SELECT * FROM {table.name})",
+                    f"SELECT count() FROM (SELECT * FROM {table.name}) FORMAT TabSeparated",
                     settings=[("final", 1)],
                 ).output.strip()
 
@@ -797,14 +797,14 @@ def select_nested_subquery(self, node=None):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
-                    f"{' FINAL' if table.final_modifier_available else ''})))"
+                    f"{' FINAL' if table.final_modifier_available else ''}))) FORMAT TabSeparated"
                 ).output.strip()
 
             with And(
                 "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
-                    f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name})))",
+                    f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}))) FORMAT TabSeparated",
                     settings=[("final", 1)],
                 ).output.strip()
 
@@ -1021,7 +1021,7 @@ def select_array_join_subquery(self, node=None):
                         with When("I execute query with force_select_final=1 setting"):
                             force_select_final = node.query(
                                 f"SELECT count() FROM {name} ARRAY JOIN "
-                                f"(select arr from {table2.name} LIMIT 1) as zz",
+                                f"(select arr from {table2.name} LIMIT 1) as zz FORMAT TabSeparated",
                                 settings=[("final", 1)],
                             ).output.strip()
 
@@ -1031,12 +1031,12 @@ def select_array_join_subquery(self, node=None):
                             if engine.startswith("Merge") or engine.endswith("Log"):
                                 explicit_final = node.query(
                                     f"SELECT count() FROM {name} ARRAY JOIN "
-                                    f"(select arr from {table2.name} LIMIT 1) as zz"
+                                    f"(select arr from {table2.name} LIMIT 1) as zz FORMAT TabSeparated"
                                 ).output.strip()
                             else:
                                 explicit_final = node.query(
                                     f"SELECT count() FROM {name} FINAL ARRAY JOIN"
-                                    f" (select arr from {table2.name} FINAL) as zz"
+                                    f" (select arr from {table2.name} FINAL) as zz FORMAT TabSeparated"
                                 ).output.strip()
 
                         with Then("I compare results are the same"):

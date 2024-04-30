@@ -614,7 +614,7 @@ def change_max_single_part_upload_size(node, size):
 
 def get_used_disks_for_table(node, name, step=When, steps=True):
     def get_used_disks():
-        sql = f"select disk_name from system.parts where table == '{name}' and active=1 order by modification_time"
+        sql = f"select disk_name from system.parts where table == '{name}' and active=1 order by modification_time FORMAT TabSeparated"
         return node.query(sql).output.strip().split("\n")
 
     if not steps:
@@ -630,7 +630,7 @@ def get_path_for_part_from_part_log(node, table, part_name, step=When):
     with And(f"get path_on_disk for part {part_name}"):
         path = node.query(
             f"SELECT path_on_disk FROM system.part_log WHERE table = '{table}' "
-            f" AND part_name = '{part_name}' ORDER BY event_time DESC LIMIT 1"
+            f" AND part_name = '{part_name}' ORDER BY event_time DESC LIMIT 1 FORMAT TabSeparated"
         ).output
     return path.strip()
 
@@ -641,7 +641,7 @@ def get_paths_for_partition_from_part_log(node, table, partition_id, step=When):
     with And(f"get path_on_disk for partition id {partition_id}"):
         paths = node.query(
             f"SELECT path_on_disk FROM system.part_log WHERE table = '{table}'"
-            f" AND partition_id = '{partition_id}' ORDER BY event_time DESC"
+            f" AND partition_id = '{partition_id}' ORDER BY event_time DESC FORMAT TabSeparated"
         ).output
     return paths.strip().split("\n")
 
@@ -747,25 +747,29 @@ def get_bucket_size(
         access_key = self.context.secret_access_key
 
     if minio_enabled is None:
-        minio_enabled = self.context.minio_enabled
+        minio_enabled = getattr(self.context, "storage", None) == "minio" or getattr(
+            self.context, "minio_enabled", False
+        )
 
     if minio_enabled:
-        minio_client = self.context.cluster.minio_client
+        with By("querying with minio client"):
+            minio_client = self.context.cluster.minio_client
 
-        objects = minio_client.list_objects(
-            bucket_name=name, prefix=prefix, recursive=True
+            objects = minio_client.list_objects(
+                bucket_name=name, prefix=prefix, recursive=True
+            )
+            return sum(obj._size for obj in objects)
+
+    with By("querying with boto3 client"):
+        s3 = boto3.resource(
+            "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
         )
-        return sum(obj._size for obj in objects)
+        bucket = s3.Bucket(name)
+        total_bytes = 0
+        for obj in bucket.objects.filter(Prefix=prefix):
+            total_bytes += obj.size
 
-    s3 = boto3.resource(
-        "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
-    )
-    bucket = s3.Bucket(name)
-    total_bytes = 0
-    for obj in bucket.objects.filter(Prefix=prefix):
-        total_bytes += obj.size
-
-    return total_bytes
+        return total_bytes
 
 
 @TestStep(Then)
@@ -795,7 +799,7 @@ def get_stable_bucket_size(
 ):
     """Get the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
 
-    with By("Checking the current bucket size"):
+    with By("checking the current bucket size"):
         size_previous = get_bucket_size(
             name=name,
             prefix=prefix,
@@ -806,9 +810,9 @@ def get_stable_bucket_size(
 
     start_time = time.time()
     while True:
-        with And(f"Waiting {delay}s"):
+        with And(f"waiting {delay}s"):
             time.sleep(delay)
-        with And("Checking the current bucket size"):
+        with And("checking the current bucket size"):
             size = get_bucket_size(
                 name=name,
                 prefix=prefix,
@@ -816,12 +820,12 @@ def get_stable_bucket_size(
                 access_key=access_key,
                 key_id=key_id,
             )
-        with And(f"Checking if current={size} == previous={size_previous}"):
+        with And(f"checking if current={size} == previous={size_previous}"):
             if size_previous == size:
                 break
         size_previous = size
 
-        with And("Checking timeout"):
+        with And("checking timeout"):
             assert time.time() - start_time <= timeout, error(
                 f"Bucket size did not stabilize in {timeout}s"
             )
@@ -1292,7 +1296,7 @@ def standard_check(self):
         node.query(f"INSERT INTO {name} VALUES (427)")
 
     with Then("I check that a simple SELECT * query returns matching data"):
-        r = node.query(f"SELECT * FROM {name}").output.strip()
+        r = node.query(f"SELECT * FROM {name} FORMAT TabSeparated").output.strip()
         assert r == "427", error()
 
 
@@ -1316,37 +1320,37 @@ def standard_selects(self, node, table_name):
     check_query_node(
         node=node,
         num=0,
-        query=f"SELECT COUNT() FROM {table_name}",
+        query=f"SELECT COUNT() FROM {table_name} FORMAT TabSeparated",
         expected="1572867",
     )
     check_query_node(
         node=node,
         num=1,
-        query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10",
+        query=f"SELECT uniqExact(d) FROM {table_name} WHERE d < 10 FORMAT TabSeparated",
         expected="10",
     )
     check_query_node(
         node=node,
         num=2,
-        query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1",
+        query=f"SELECT d FROM {table_name} ORDER BY d DESC LIMIT 1 FORMAT TabSeparated",
         expected="3407872",
     )
     check_query_node(
         node=node,
         num=3,
-        query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1",
+        query=f"SELECT d FROM {table_name} ORDER BY d ASC LIMIT 1 FORMAT TabSeparated",
         expected="0",
     )
     check_query_node(
         node=node,
         num=4,
-        query=f"SELECT * FROM {table_name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d",
+        query=f"SELECT * FROM {table_name} WHERE d == 0 OR d == 1048578 OR d == 2097154 ORDER BY d FORMAT TabSeparated",
         expected="0\n1048578\n2097154",
     )
     check_query_node(
         node=node,
         num=5,
-        query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1)",
+        query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1) FORMAT TabSeparated",
         expected="1",
     )
 
@@ -1369,9 +1373,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options[
-                "server_side_encryption_customer_key_base64"
-            ] = ssec_key
+            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
+                ssec_key
+            )
         yield
 
     finally:
@@ -1462,3 +1466,26 @@ def insert_from_s3_function(
         query += f" FORMAT {fmt}"
 
     node.query(query)
+
+
+@TestStep(Given)
+def measure_buckets_before_and_after(
+    self, bucket_prefix=None, bucket_name=None, tolerance=5
+):
+    """Return the current bucket size and assert that it is the same after cleanup."""
+
+    with When("I get the size of the s3 bucket before adding data"):
+        size_before = get_stable_bucket_size(prefix=bucket_prefix, name=bucket_name)
+
+    yield size_before
+
+    with Then(
+        """The size of the s3 bucket should be very close to the size
+                before adding any data"""
+    ):
+        check_stable_bucket_size(
+            prefix=bucket_prefix,
+            name=bucket_name,
+            expected_size=size_before,
+            tolerance=tolerance,
+        )
