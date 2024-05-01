@@ -43,7 +43,6 @@ def run_feature(
         zookeeper_binary_path=zookeeper_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        use_zookeeper_nodes=True,
         configs_dir=current_dir(),
     ) as cluster:
         self.context.cluster = cluster
