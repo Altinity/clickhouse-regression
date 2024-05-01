@@ -1793,9 +1793,10 @@ class Cluster(object):
                 for name in self.nodes["zookeeper"]:
                     self.node(name).wait_healthy()
                     if name.startswith("zookeeper"):
-                        self.node(name).set_zookeeper_path_from_version(
-                            current().context.zookeeper_version
-                        )
+                        if current().context.zookeeper_version:
+                            self.node(name).set_zookeeper_path_from_version(
+                                current().context.zookeeper_version
+                            )
                         self.node(name).start_zookeeper()
 
             for name in self.nodes["clickhouse"]:
