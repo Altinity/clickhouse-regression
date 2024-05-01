@@ -36,52 +36,59 @@ def check_replica_path_intersection(self):
 
     with When("I attach table"):
         uuid = getuid()
-        self.context.node_2.query(
-            f"ATTACH TABLE {second_table_name} UUID '{uuid}' (id Int32)"
-            + f"ENGINE = ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/default/{second_table_name}',"
-            "'{replica}') ORDER BY id SETTINGS index_granularity = 8192"
-        )
+        if check_clickhouse_version(">=24.4")(self):
+            exitcode, message = (
+                253,
+                "DB::Exception: There already is an active replica with this replica path",
+            )
+            self.context.node_2.query(
+                f"ATTACH TABLE {second_table_name} UUID '{uuid}' (id Int32)"
+                + f"ENGINE = ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/default/{second_table_name}',"
+                "'{replica}') ORDER BY id SETTINGS index_granularity = 8192",
+                exitcode=exitcode,
+                message=message,
+            )
+        else:
+            with And("I check system.replicas"):
+                assert self.context.node_2.query(
+                    f"""
+                    SELECT
+                        table,
+                        is_readonly,
+                        replica_name,
+                        replica_path,
+                        replica_is_active
+                    FROM system.replicas
+                    WHERE table IN ('{second_table_name}', '{first_table_name}')
+                    FORMAT PrettyCompactMonoBlock
+                    """
+                )
 
-    with And("I check system.replicas"):
-        assert self.context.node_2.query(
-            f"""
-            SELECT
-                table,
-                is_readonly,
-                replica_name,
-                replica_path,
-                replica_is_active
-            FROM system.replicas
-            WHERE table IN ('{second_table_name}', '{first_table_name}')
-            FORMAT PrettyCompactMonoBlock
-            """
-        )
+            with And("I drop second table"):
+                self.context.node_2.query(f"DROP TABLE {second_table_name} SYNC")
 
-    with And("I drop second table"):
-        self.context.node_2.query(f"DROP TABLE {second_table_name} SYNC")
+            with And("I create table second table"):
+                columns = [
+                    Column(name="id", datatype=Int32()),
+                ]
+                create_table(
+                    name=second_table_name,
+                    engine=f"ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/default/{second_table_name}',"
+                    + "'{replica}')",
+                    columns=columns,
+                    order_by="id",
+                    node=self.context.node_2,
+                )
 
-    with And("I create table second table"):
-        columns = [
-            Column(name="id", datatype=Int32()),
-        ]
-        create_table(
-            name=second_table_name,
-            engine=f"ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/default/{second_table_name}',"
-            + "'{replica}')",
-            columns=columns,
-            order_by="id",
-            node=self.context.node_2,
-        )
+            with And("I insert data"):
+                self.context.node_2.query(
+                    f"INSERT INTO {second_table_name} SELECT * FROM numbers(400000000)"
+                )
 
-    with And("I insert data"):
-        self.context.node_2.query(
-            f"INSERT INTO {second_table_name} SELECT * FROM numbers(400000000)"
-        )
-
-    with And("I insert into first table"):
-        self.context.node_2.query(
-            f"INSERT INTO {first_table_name} SELECT * FROM numbers(500000000)"
-        )
+            with And("I insert into first table"):
+                self.context.node_2.query(
+                    f"INSERT INTO {first_table_name} SELECT * FROM numbers(500000000)"
+                )
 
 
 @TestFeature
