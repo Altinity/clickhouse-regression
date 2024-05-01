@@ -1691,10 +1691,10 @@ class Cluster(object):
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
-                    self.keeper_binary_path
+                    self.keeper_binary_path or ""
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_PATH"] = (
-                    self.zookeeper_binary_path
+                    self.zookeeper_binary_path or ""
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     current().context.zookeeper_version

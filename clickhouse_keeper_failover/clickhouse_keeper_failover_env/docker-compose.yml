@@ -19,7 +19,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-1/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-1/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-/usr/bin/clickhouse-keeper}:/usr/bin/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
   
   keeper-2:
     build:
@@ -38,7 +38,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-2/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-2/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-/usr/bin/clickhouse-keeper}:/usr/bin/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
 
   keeper-3:
     build:
@@ -57,7 +57,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-3/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-3/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-/usr/bin/clickhouse-keeper}:/usr/bin/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
 
   keeper-4:
     build:
@@ -76,7 +76,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-4/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-4/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-/usr/bin/clickhouse-keeper}:/usr/bin/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
   
   keeper-5:
     build:
@@ -95,7 +95,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-5/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-5/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-/usr/bin/clickhouse-keeper}:/usr/bin/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
 
   keeper-6:
     build:
@@ -114,4 +114,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/data/:/var/lib/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-/usr/bin/clickhouse-keeper}:/usr/bin/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
