@@ -62,6 +62,14 @@ def mysql_engine_to_parquet_file_to_mysql_engine(self):
     with Then("I check the data on the second table"):
         with Pool(3) as executor:
             for column in columns:
+                use_verion = None
+                if (
+                    check_clickhouse_version(">=24.3")(self)
+                    and check_current_cpu("aarch64")(self)
+                    and "float64" in column.name
+                ):
+                    use_verion = ">=24.3"
+
                 Check(
                     test=execute_query_step,
                     name=f"{column.name}",
@@ -70,6 +78,7 @@ def mysql_engine_to_parquet_file_to_mysql_engine(self):
                 )(
                     sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}",
                     snapshot_id="tests." + current_cpu(),
+                    use_version=use_verion,
                 )
             join()
 
@@ -133,6 +142,14 @@ def mysql_function_to_parquet_file_to_mysql_function(self):
     with Then("I check the data on the second table"):
         with Pool(3) as executor:
             for column in columns:
+                use_verion = None
+                if (
+                    check_clickhouse_version(">=24.3")(self)
+                    and check_current_cpu("aarch64")(self)
+                    and "float64" in column.name
+                ):
+                    use_verion = ">=24.3"
+
                 Check(
                     test=execute_query_step,
                     name=f"{column.name}",
@@ -141,6 +158,7 @@ def mysql_function_to_parquet_file_to_mysql_function(self):
                 )(
                     sql=f"SELECT {column.name}, toTypeName({column.name}) FROM mysql('mysql1:3306', 'default', '{table1_name}', 'user', 'password')",
                     snapshot_id="tests." + current_cpu(),
+                    use_version=use_verion,
                 )
             join()
 

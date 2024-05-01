@@ -246,10 +246,6 @@ def exponentialTimeDecayedFunc(
 @TestScenario
 def exponentialTimeDecayedSum(self):
     """Check exponentialTimeDecayedSum."""
-    add_version_to_snapshot = None
-    # if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
-    #     add_version_to_snapshot = "/version>=24.3"
-
     exponentialTimeDecayedFunc(
         funcname="exponentialTimeDecayedSum",
     )
@@ -264,10 +260,6 @@ def exponentialTimeDecayedMax(self):
 @TestScenario
 def exponentialTimeDecayedAvg(self):
     """Check exponentialTimeDecayedAvg."""
-    add_version_to_snapshot = None
-    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
-        add_version_to_snapshot = "/version>=24.3"
-
     exponentialTimeDecayedFunc(
         funcname="exponentialTimeDecayedAvg",
     )
