@@ -18,6 +18,10 @@ _parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_eng
 {"float64":1.7976909999999995e308,"toTypeName(float64)":"Float64"}
 """
 
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_float64__24_3 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
 _parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_int16 = r"""
 {"int16":32767,"toTypeName(int16)":"Int16"}
 """
@@ -52,6 +56,10 @@ _parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_eng
 
 _parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_float64_ = r"""
 {"nullable_float64_":1.7976909999999995e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_float64___24_3 = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
 """
 
 _parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_int16_ = r"""
@@ -130,6 +138,10 @@ _parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_f
 {"float64":1.7976909999999995e308,"toTypeName(float64)":"Float64"}
 """
 
+_parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_float64__24_3 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
 _parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_int16 = r"""
 {"int16":32767,"toTypeName(int16)":"Int16"}
 """
@@ -164,6 +176,10 @@ _parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_f
 
 _parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_float64_ = r"""
 {"nullable_float64_":1.7976909999999995e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_float64___24_3 = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
 """
 
 _parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_int16_ = r"""
@@ -242,6 +258,10 @@ _parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engi
 {"float64":1.7976909999999995e308,"toTypeName(float64)":"Float64"}
 """
 
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_float64__24_3 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
 _parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_int16 = r"""
 {"int16":32767,"toTypeName(int16)":"Int16"}
 """
@@ -276,6 +296,10 @@ _parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engi
 
 _parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_float64_ = r"""
 {"nullable_float64_":1.7976909999999995e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_float64___24_3 = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
 """
 
 _parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_int16_ = r"""
@@ -354,6 +378,10 @@ _parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_fu
 {"float64":1.7976909999999995e308,"toTypeName(float64)":"Float64"}
 """
 
+_parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_float64__24_3 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
 _parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_int16 = r"""
 {"int16":32767,"toTypeName(int16)":"Int16"}
 """
@@ -388,6 +416,10 @@ _parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_fu
 
 _parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_float64_ = r"""
 {"nullable_float64_":1.7976909999999995e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_float64___24_3 = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
 """
 
 _parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_int16_ = r"""
@@ -466,6 +498,10 @@ _parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_eng
 {"float64":1.7976909999999995e308,"toTypeName(float64)":"Float64"}
 """
 
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_float64__24_3 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
 _parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_int16 = r"""
 {"int16":32767,"toTypeName(int16)":"Int16"}
 """
@@ -500,6 +536,10 @@ _parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_eng
 
 _parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_float64_ = r"""
 {"nullable_float64_":1.7976909999999995e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_float64___24_3 = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
 """
 
 _parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_nullable_int16_ = r"""
@@ -578,6 +618,10 @@ _parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_f
 {"float64":1.7976909999999995e308,"toTypeName(float64)":"Float64"}
 """
 
+_parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_float64__24_3 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
 _parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_int16 = r"""
 {"int16":32767,"toTypeName(int16)":"Int16"}
 """
@@ -612,6 +656,10 @@ _parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_f
 
 _parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_float64_ = r"""
 {"nullable_float64_":1.7976909999999995e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_float64___24_3 = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
 """
 
 _parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_int16_ = r"""
