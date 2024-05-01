@@ -47,6 +47,8 @@ def regression(
     stress,
     allow_vfs,
     allow_experimental_analyzer=False,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
 ):
     """Attach statement regression."""
 
@@ -63,6 +65,8 @@ def regression(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_binary_path=zookeeper_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,

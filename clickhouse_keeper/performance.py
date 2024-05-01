@@ -40,6 +40,8 @@ def regression(
     three_node,
     clickhouse_version,
     collect_service_logs,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
     ssl=None,
     stress=None,
     allow_vfs=False,

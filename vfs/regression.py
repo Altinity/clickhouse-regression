@@ -45,6 +45,8 @@ def minio(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
 ):
     """Setup and run minio tests."""
     nodes = {
@@ -56,6 +58,8 @@ def minio(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_binary_path=zookeeper_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,
@@ -108,6 +112,8 @@ def aws_s3(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
 ):
     """Setup and run aws s3 tests."""
     nodes = {
@@ -143,6 +149,8 @@ def aws_s3(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_binary_path=zookeeper_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,
@@ -186,6 +194,8 @@ def gcs(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
 ):
     """Setup and run gcs tests."""
     nodes = {
@@ -214,6 +224,8 @@ def gcs(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_binary_path=zookeeper_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,
@@ -266,6 +278,8 @@ def regression(
     gcs_key_id,
     stress,
     allow_vfs,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
     allow_experimental_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
@@ -296,35 +310,37 @@ def regression(
                 )
                 default_query_settings.append(("allow_experimental_analyzer", 1))
 
+    module_kwargs = dict(
+        local=local,
+        clickhouse_binary_path=clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
+        keeper_binary_path=keeper_binary_path,
+        zookeeper_binary_path=zookeeper_binary_path,
+    )
+
     if "aws_s3" in storages:
         Module(test=aws_s3)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             bucket=aws_s3_bucket,
             region=aws_s3_region,
             key_id=aws_s3_key_id,
             access_key=aws_s3_access_key,
+            **module_kwargs,
         )
 
     if "gcs" in storages:
         Module(test=gcs)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             uri=gcs_uri,
             key_id=gcs_key_id,
             access_key=gcs_key_secret,
+            **module_kwargs,
         )
 
     if "minio" in storages:
         Module(test=minio)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
+            **module_kwargs,
         )
 
 
