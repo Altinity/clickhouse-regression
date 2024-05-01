@@ -37,13 +37,68 @@ MESSAGES_TO_RETRY = [
 ]
 
 
-def filter_version(version):
-    return "".join([c for c in version.strip(".") if c in ".0123456789"])
-
-
 def short_hash(s):
     """Return good enough short hash of a string."""
     return hashlib.sha1(s.encode("utf-8")).hexdigest()[:10]
+
+
+def download_http_binary(binary_source):
+    """Download binary from http source and return path to the downloaded file."""
+    file_name = f"{short_hash(binary_source)}-{binary_source.rsplit('/', 1)[-1]}"
+    file_dir = f"{current_dir()}/../binaries/"
+    os.makedirs(file_dir, exist_ok=True)
+    file_path = file_dir + file_name
+    if not os.path.exists(file_path):
+        with Shell() as bash:
+            bash.timeout = 300
+            try:
+                note(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
+                cmd = bash(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
+                assert cmd.exitcode == 0
+            except BaseException:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                raise
+
+    return file_path
+
+
+def filter_version(version):
+    """Filter version from string."""
+    return "".join([c for c in version.strip(".") if c in ".0123456789"])
+
+
+def parse_version_from_docker_path(docker_path):
+    """Parse version from docker path."""
+    return filter_version(docker_path.rsplit(":", 1)[-1])
+
+
+def unpack_deb(deb_binary_path, program_name):
+    """Unpack deb binary and return path to the binary."""
+    deb_binary_dir = deb_binary_path.rsplit(".deb", 1)[0]
+    os.makedirs(deb_binary_dir, exist_ok=True)
+    with Shell() as bash:
+        bash.timeout = 300
+        if not os.path.exists(f"{deb_binary_dir}/{program_name}"):
+            bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
+            bash(
+                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}""'
+            )
+            bash(f'chmod +x "{deb_binary_dir}/{program_name}"')
+
+    return f"{deb_binary_dir}/{program_name}"
+
+
+def unpack_tar_gz(tar_path):
+    """Unpack tar.gz file and return path to the result."""
+    tar_dest_dir = tar_path.rsplit(".tar.gz", 1)[0]
+    os.makedirs(tar_dest_dir, exist_ok=True)
+    with Shell() as bash:
+        bash.timeout = 300
+        bash(f'tar -xzf "{tar_path}" -C "{tar_dest_dir}" --strip-components=1')
+        bash(f'chmod +x "{tar_dest_dir}/bin/*"')
+
+    return f"{tar_dest_dir}"
 
 
 class Shell(ShellBase):
@@ -206,8 +261,17 @@ class ZooKeeperNode(Node):
     version_regex = re.compile(r"version ([.0-9]+)")
     zookeeper_path = ""
 
+    @staticmethod
+    def get_zookeeper_dir_from_version(zookeeper_version):
+        """Return path to ZooKeeper scripts based on the version."""
+        return f"/apache-zookeeper-{zookeeper_version}-bin"
+
     def set_zookeeper_path_from_version(self, zookeeper_version):
-        self.zookeeper_path = f"/apache-zookeeper-{zookeeper_version}-bin/bin"
+        """Set path to ZooKeeper scripts based on the version."""
+        assert not self.zookeeper_pid(), "Stop ZooKeeper server before changing PATH."
+        self.zookeeper_path = (
+            self.get_zookeeper_dir_from_version(zookeeper_version) + "/bin"
+        )
 
     def zk_server_command(self, command, **kwargs):
         return self.command(
@@ -1028,6 +1092,7 @@ class Cluster(object):
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
         self.zookeeper_binary_path = zookeeper_binary_path
+        self.zookeeper_version = None
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -1051,8 +1116,8 @@ class Cluster(object):
             raise TypeError(f"configs directory '{self.configs_dir}' does not exist")
 
         if zookeeper_binary_path and not use_zookeeper_nodes:
-            raise TypeError(
-                f"use_zookeeper_nodes must be set to True if zookeeper_binary_path={zookeeper_binary_path} is specified"
+            raise ValueError(
+                f"use_zookeeper_nodes must be set to True if zookeeper_binary_path is specified"
             )
 
         if docker_compose_project_dir is None:
@@ -1083,48 +1148,6 @@ class Cluster(object):
                 f"docker compose file '{docker_compose_file_path}' does not exist"
             )
 
-        def download_http_binary(binary_source):
-            file_name = (
-                f"{short_hash(binary_source)}-{binary_source.rsplit('/', 1)[-1]}"
-            )
-            file_dir = f"{current_dir()}/../binaries/"
-            os.makedirs(file_dir, exist_ok=True)
-            file_path = file_dir + file_name
-            if not os.path.exists(file_path):
-                with Shell() as bash:
-                    bash.timeout = 300
-                    try:
-                        note(
-                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
-                        )
-                        cmd = bash(
-                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
-                        )
-                        assert cmd.exitcode == 0
-                    except BaseException:
-                        if os.path.exists(file_path):
-                            os.remove(file_path)
-                        raise
-
-            return file_path
-
-        def parse_version_from_docker_path(docker_path):
-            return filter_version(docker_path.rsplit(":", 1)[-1])
-
-        def unpack_deb(deb_binary_path, program_name):
-            deb_binary_dir = deb_binary_path.rsplit(".deb", 1)[0]
-            os.makedirs(deb_binary_dir, exist_ok=True)
-            with Shell() as bash:
-                bash.timeout = 300
-                if not os.path.exists(f"{deb_binary_dir}/{program_name}"):
-                    bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
-                    bash(
-                        f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}""'
-                    )
-                    bash(f'chmod +x "{deb_binary_dir}/{program_name}"')
-
-            return f"{deb_binary_dir}/{program_name}"
-
         if self.clickhouse_binary_path:
             if self.use_specific_version:
                 (
@@ -1144,7 +1167,7 @@ class Cluster(object):
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
-                    "I download ClickHouse server binary using wget",
+                    "I download ClickHouse server binary",
                     description=f"{self.clickhouse_binary_path}",
                 ):
                     self.clickhouse_binary_path = download_http_binary(
@@ -1157,7 +1180,7 @@ class Cluster(object):
                         self.clickhouse_binary_path
                     )
                     if parsed_version:
-                        if not (
+                        if not (  # What case are we trying to catch here?
                             parsed_version.startswith(".")
                             or parsed_version.endswith(".")
                         ):
@@ -1192,7 +1215,7 @@ class Cluster(object):
         if self.keeper_binary_path:
             if self.keeper_binary_path.startswith(("http://", "https://")):
                 with Given(
-                    "I download ClickHouse Keeper server binary using wget",
+                    "I download ClickHouse Keeper server binary",
                     description=f"{self.keeper_binary_path}",
                 ):
                     self.keeper_binary_path = download_http_binary(
@@ -1232,7 +1255,56 @@ class Cluster(object):
                 bash(f"chmod +x {self.keeper_binary_path}")
 
         if self.zookeeper_binary_path:
-            raise NotImplementedError("Zookeeper is not supported yet")
+            if self.zookeeper_binary_path.startswith(("http://", "https://")):
+                with Given(
+                    "I check the link",
+                    description="It's easy to accidentally grab a link that doesn't work",
+                ):
+                    assert (
+                        "www.apache.org" not in self.zookeeper_binary_path
+                    ), "expected url of the form https://dlcdn.apache.org/zookeeper/zookeeper-{zookeeper_version}/apache-zookeeper-{zookeeper_version}-bin.tar.gz"
+
+                with Given(
+                    "I download ZooKeeper server binary",
+                    description=f"{self.zookeeper_binary_path}",
+                ):
+                    self.zookeeper_binary_path = download_http_binary(
+                        binary_source=self.zookeeper_binary_path
+                    )
+
+            elif self.zookeeper_binary_path.startswith("docker://"):
+                if getsattr(current().context, "zookeeper_version", None) is None:
+                    parsed_version = parse_version_from_docker_path(
+                        self.zookeeper_binary_path
+                    )
+                    current().context.zookeeper_version = parsed_version
+
+                assert current().context.zookeeper_version, error()
+
+                zookeeper_dir = ZooKeeperNode.get_zookeeper_dir_from_version(
+                    current().context.zookeeper_version
+                )
+                self.zookeeper_binary_path = self.get_binary_from_docker_container(
+                    docker_image=self.zookeeper_binary_path,
+                    container_binary_path=zookeeper_dir,
+                    host_binary_path="/tmp" + zookeeper_dir,
+                )
+
+            if self.zookeeper_binary_path.endswith(".tar.gz"):
+                with Given(
+                    "unpack tar package", description=f"{self.zookeeper_binary_path}"
+                ):
+                    self.zookeeper_binary_path = unpack_tar_gz(
+                        tar_path=self.zookeeper_binary_path
+                    )
+
+            self.zookeeper_binary_path = os.path.abspath(self.zookeeper_binary_path)
+
+            pause(self.zookeeper_binary_path)
+
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(f"chmod -R +x {self.zookeeper_binary_path}")
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1620,6 +1692,12 @@ class Cluster(object):
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_PATH"] = (
+                    self.zookeeper_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
+                    self.zookeeper_version
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
