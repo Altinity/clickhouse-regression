@@ -3,7 +3,7 @@ set -e
 echo "Pre-pull images for docker-compose"
 docker pull library/hello-world
 docker pull zookeeper:3.7.0
-docker pull zookeeper:3.6.2
+docker pull zookeeper:3.8.4
 docker pull zookeeper:3.4.12
 docker pull clickhouse/clickhouse-integration-test:28741
 docker pull osixia/openldap:1.4.0
@@ -17,7 +17,7 @@ docker pull minio/mc:RELEASE.2022-05-09T04-08-26Z
 echo "Save images"
 docker save library/hello-world -o hello-world.dockerimage
 docker save zookeeper:3.7.0 -o zookeeper.3.7.0.dockerimage
-docker save zookeeper:3.6.2 -o zookeeper.3.6.2.dockerimage
+docker save zookeeper:3.8.4 -o zookeeper.3.8.4.dockerimage
 docker save zookeeper:3.4.12 -o zookeeper.3.4.12.dockerimage
 docker save clickhouse/clickhouse-integration-test:28741 -o clickhouse-integration-test.28741.dockerimage
 docker save osixia/phpldapadmin:0.9.0 -o phpldapadmin.0.9.0.dockerimage
