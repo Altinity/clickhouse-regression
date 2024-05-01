@@ -318,7 +318,7 @@ class ZooKeeperNode(Node):
         if check_version:
             r = self.zk_server_command("version")
             version = self.version_regex.search(r.output).group(1)
-            self.context.zookeeper_version = version
+            current().context.zookeeper_version = version
 
         with By(f"starting {self.name}"):
             self.zk_server_command("start", exitcode=0)
@@ -1697,7 +1697,7 @@ class Cluster(object):
                     self.zookeeper_binary_path
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
-                    self.zookeeper_version
+                    current().context.zookeeper_version
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
@@ -1793,6 +1793,9 @@ class Cluster(object):
                 for name in self.nodes["zookeeper"]:
                     self.node(name).wait_healthy()
                     if name.startswith("zookeeper"):
+                        self.node(name).set_zookeeper_path_from_version(
+                            current().context.zookeeper_version
+                        )
                         self.node(name).start_zookeeper()
 
             for name in self.nodes["clickhouse"]:
