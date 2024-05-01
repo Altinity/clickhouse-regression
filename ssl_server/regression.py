@@ -173,6 +173,8 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     force_fips,
+    keeper_binary_path=None,
+    zookeeper_binary_path=None,
     stress=None,
     allow_vfs=False,
     allow_experimental_analyzer=False,
@@ -196,6 +198,8 @@ def regression(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_binary_path=zookeeper_binary_path,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,
