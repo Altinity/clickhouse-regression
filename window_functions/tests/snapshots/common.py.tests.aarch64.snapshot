@@ -1408,35 +1408,7 @@ id	time	w
 9	2020-01-01 00:00:09.000000000	8.41847731304077
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime64TZ_time_column_version__24_3 = r"""
-id	time	w
-0	2020-01-01 00:00:00.000000000	0
-1	2020-01-01 00:00:01.000000000	0.7310585786300049
-2	2020-01-01 00:00:02.000000000	1.5752103826044412
-3	2020-01-01 00:00:03.000000000	2.4926527345857696
-4	2020-01-01 00:00:04.000000000	3.4519415676621947
-5	2020-01-01 00:00:05.000000000	4.432932763071741
-6	2020-01-01 00:00:06.000000000	5.424412292903226
-7	2020-01-01 00:00:07.000000000	6.420707894737403
-8	2020-01-01 00:00:08.000000000	7.419134118454189
-9	2020-01-01 00:00:09.000000000	8.41847731304077
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime64_time_column = r"""
-id	time	w
-0	2020-01-01 00:00:00.000	0
-1	2020-01-01 00:00:01.000	0.7310585786300049
-2	2020-01-01 00:00:02.000	1.5752103826044412
-3	2020-01-01 00:00:03.000	2.4926527345857696
-4	2020-01-01 00:00:04.000	3.4519415676621947
-5	2020-01-01 00:00:05.000	4.432932763071741
-6	2020-01-01 00:00:06.000	5.424412292903226
-7	2020-01-01 00:00:07.000	6.420707894737403
-8	2020-01-01 00:00:08.000	7.419134118454189
-9	2020-01-01 00:00:09.000	8.41847731304077
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime64_time_column_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00.000	0
 1	2020-01-01 00:00:01.000	0.7310585786300049
@@ -1464,35 +1436,7 @@ id	time	w
 9	2020-01-01 00:00:09	8.41847731304077
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTimeTZ_time_column_version__24_3 = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	0.7310585786300049
-2	2020-01-01 00:00:02	1.5752103826044412
-3	2020-01-01 00:00:03	2.4926527345857696
-4	2020-01-01 00:00:04	3.4519415676621947
-5	2020-01-01 00:00:05	4.432932763071741
-6	2020-01-01 00:00:06	5.424412292903226
-7	2020-01-01 00:00:07	6.420707894737403
-8	2020-01-01 00:00:08	7.419134118454189
-9	2020-01-01 00:00:09	8.41847731304077
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime_time_column = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	0.7310585786300049
-2	2020-01-01 00:00:02	1.5752103826044412
-3	2020-01-01 00:00:03	2.4926527345857696
-4	2020-01-01 00:00:04	3.4519415676621947
-5	2020-01-01 00:00:05	4.432932763071741
-6	2020-01-01 00:00:06	5.424412292903226
-7	2020-01-01 00:00:07	6.420707894737403
-8	2020-01-01 00:00:08	7.419134118454189
-9	2020-01-01 00:00:09	8.41847731304077
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_DateTime_time_column_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	0.7310585786300049
@@ -1515,15 +1459,6 @@ id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
 -5	2022-01-01 00:00:00	-1.8
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_0_time_gap_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
-1	2022-01-01 00:00:00	-1.8
-2	2022-01-01 00:00:00	-1.8
--3	2022-01-01 00:00:00	-1.8
--4	2022-01-01 00:00:00	-1.8
--5	2022-01-01 00:00:00	-1.8
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check__1_time_gap = r"""
 id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
 1	2022-01-01 00:00:00	3.255762093989612
@@ -1533,30 +1468,7 @@ id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
 5	2022-01-01 00:00:00	3.255762093989612
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check__1_time_gap_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(1)(id, time) OVER ()
-1	2022-01-01 00:00:00	3.255762093989612
-2	2022-01-01 00:00:00	3.255762093989612
-3	2022-01-01 00:00:00	3.255762093989612
-4	2022-01-01 00:00:01	3.255762093989612
-5	2022-01-01 00:00:00	3.255762093989612
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_overflow = r"""
-id	time	w
-0	2020-01-01 00:00:00	4999.5
-1	2020-01-01 00:00:01	4999.5
-2	2020-01-01 00:00:02	4999.5
-3	2020-01-01 00:00:03	4999.5
-4	2020-01-01 00:00:04	4999.5
-5	2020-01-01 00:00:05	4999.5
-6	2020-01-01 00:00:06	4999.5
-7	2020-01-01 00:00:07	4999.5
-8	2020-01-01 00:00:08	4999.5
-9	2020-01-01 00:00:09	4999.5
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_overflow_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	4999.5
 1	2020-01-01 00:00:01	4999.5
@@ -1612,35 +1524,7 @@ id	time	w
 9	2020-01-01 00:00:09	nan
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_decay_length_with_zero_version__24_3 = r"""
-id	time	w
-0	2020-01-01 00:00:00	nan
-1	2020-01-01 00:00:01	nan
-2	2020-01-01 00:00:02	nan
-3	2020-01-01 00:00:03	nan
-4	2020-01-01 00:00:04	nan
-5	2020-01-01 00:00:05	nan
-6	2020-01-01 00:00:06	nan
-7	2020-01-01 00:00:07	nan
-8	2020-01-01 00:00:08	nan
-9	2020-01-01 00:00:09	nan
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_time_with_0 = r"""
-id	time	w
-0	2020-01-01 00:00:00	4999.5
-1	2020-01-01 00:00:01	4999.5
-2	2020-01-01 00:00:02	4999.5
-3	2020-01-01 00:00:03	4999.5
-4	2020-01-01 00:00:04	4999.5
-5	2020-01-01 00:00:05	4999.5
-6	2020-01-01 00:00:06	4999.5
-7	2020-01-01 00:00:07	4999.5
-8	2020-01-01 00:00:08	4999.5
-9	2020-01-01 00:00:09	4999.5
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_time_with_0_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	4999.5
 1	2020-01-01 00:00:01	4999.5
@@ -1668,30 +1552,7 @@ id	time	w
 9	2020-01-01 00:00:09	0
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_0_version__24_3 = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	0
-2	2020-01-01 00:00:02	0
-3	2020-01-01 00:00:03	0
-4	2020-01-01 00:00:04	0
-5	2020-01-01 00:00:05	0
-6	2020-01-01 00:00:06	0
-7	2020-01-01 00:00:07	0
-8	2020-01-01 00:00:08	0
-9	2020-01-01 00:00:09	0
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal128_4__type = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal128_4__type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1709,25 +1570,7 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal32_4__type_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal64_4__type = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Decimal64_4__type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1745,25 +1588,7 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Float32_type_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Float64_type = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Float64_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1781,25 +1606,7 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int16_type_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int32_type = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int32_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1817,25 +1624,7 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int64_type_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int8_type = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_Int8_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1853,25 +1642,7 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt16_type_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt32_type = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt32_type_version__24_3 = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
 1	1970-01-01 01:00:02	2.4428577575728454
@@ -1889,15 +1660,6 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt64_type_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt8_type = r"""
 id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 1	1970-01-01 01:00:01	2.4428577575728454
@@ -1907,30 +1669,7 @@ id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
 3	1970-01-01 01:00:05	2.4428577575728454
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_input_value_with_UInt8_type_version__24_3 = r"""
-id	time	exponentialTimeDecayedAvg(2.2)(id, time) OVER ()
-1	1970-01-01 01:00:01	2.4428577575728454
-1	1970-01-01 01:00:02	2.4428577575728454
-2	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:03	2.4428577575728454
-3	1970-01-01 01:00:05	2.4428577575728454
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_one_row_partitions = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	1
-2	2020-01-01 00:00:02	2
-3	2020-01-01 00:00:03	3
-4	2020-01-01 00:00:04	4
-5	2020-01-01 00:00:05	5
-6	2020-01-01 00:00:06	6
-7	2020-01-01 00:00:07	7
-8	2020-01-01 00:00:08	8
-9	2020-01-01 00:00:09	9
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_check_one_row_partitions_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	1
@@ -3386,35 +3125,7 @@ id	time	w
 9	2020-01-01 00:00:09	5.273971099585486
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toFloat32_decay_length_version__24_3 = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	0.5237915435013812
-2	2020-01-01 00:00:02	1.0633962697787114
-3	2020-01-01 00:00:03	1.6187427337534772
-4	2020-01-01 00:00:04	2.1897315566228315
-5	2020-01-01 00:00:05	2.77623606042911
-6	2020-01-01 00:00:06	3.378103070246944
-7	2020-01-01 00:00:07	3.995153874104678
-8	2020-01-01 00:00:08	4.627185328971674
-9	2020-01-01 00:00:09	5.273971099585486
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toFloat64_decay_length = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	0.5237915435013812
-2	2020-01-01 00:00:02	1.0633962697787114
-3	2020-01-01 00:00:03	1.6187427337534772
-4	2020-01-01 00:00:04	2.1897315566228315
-5	2020-01-01 00:00:05	2.77623606042911
-6	2020-01-01 00:00:06	3.378103070246944
-7	2020-01-01 00:00:07	3.995153874104678
-8	2020-01-01 00:00:08	4.627185328971674
-9	2020-01-01 00:00:09	5.273971099585486
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toFloat64_decay_length_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	0.5237915435013812
@@ -3442,35 +3153,7 @@ id	time	w
 9	2020-01-01 00:00:09	5.311435123918215
 """
 
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toUInt32_decay_length_version__24_3 = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	0.52497918747894
-2	2020-01-01 00:00:02	1.0665557957551983
-3	2020-01-01 00:00:03	1.6246471821038961
-4	2020-01-01 00:00:04	2.199138467908942
-5	2020-01-01 00:00:05	2.7898833461901753
-6	2020-01-01 00:00:06	3.3967051006661944
-7	2020-01-01 00:00:07	4.019397822553705
-8	2020-01-01 00:00:08	4.657727808870022
-9	2020-01-01 00:00:09	5.311435123918215
-"""
-
 _window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toUInt64_decay_length = r"""
-id	time	w
-0	2020-01-01 00:00:00	0
-1	2020-01-01 00:00:01	0.52497918747894
-2	2020-01-01 00:00:02	1.0665557957551983
-3	2020-01-01 00:00:03	1.6246471821038961
-4	2020-01-01 00:00:04	2.199138467908942
-5	2020-01-01 00:00:05	2.7898833461901753
-6	2020-01-01 00:00:06	3.3967051006661944
-7	2020-01-01 00:00:07	4.019397822553705
-8	2020-01-01 00:00:08	4.657727808870022
-9	2020-01-01 00:00:09	5.311435123918215
-"""
-
-_window_functions_tests_time_decayed_funcs_exponentialTimeDecayedAvg_toUInt64_decay_length_version__24_3 = r"""
 id	time	w
 0	2020-01-01 00:00:00	0
 1	2020-01-01 00:00:01	0.52497918747894
