@@ -503,8 +503,12 @@ def execute_query_step(
     use_file=False,
     hash_output=False,
     snapshot_id=None,
+    use_version=None,
 ):
     """Wrapper to call the execute_query function using testflows Check."""
+    if use_version is not None:
+        snapshot_name = current().name + use_version
+
     execute_query(
         sql=sql,
         expected=expected,
@@ -574,5 +578,6 @@ def execute_query(
                             id=snapshot_id,
                             name=snapshot_name,
                             encoder=str,
+                            mode=snapshot.CHECK,
                         )
                     ), error()
