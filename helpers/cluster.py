@@ -203,19 +203,24 @@ class ZooKeeperNode(Node):
     """Node with ZooKeeper server."""
 
     SERVER_ENV = ""
+    version_regex = re.compile(r"version ([.0-9]+)")
+    zookeeper_path = ""
+
+    def set_zookeeper_path_from_version(self, zookeeper_version):
+        self.zookeeper_path = f"/apache-zookeeper-{zookeeper_version}-bin/bin"
+
+    def zk_server_command(self, command, **kwargs):
+        return self.command(
+            f"{self.SERVER_ENV}{self.zookeeper_path}zkServer.sh {command}",
+            steps=False,
+            **kwargs,
+        )
 
     def wait_zookeeper_healthy(self, timeout=300):
         with By(f"waiting until ZooKeeper server on {self.name} is healthy"):
             for attempt in retries(timeout=timeout, delay=1):
                 with attempt:
-                    if (
-                        self.command(
-                            f"{self.SERVER_ENV}zkServer.sh status",
-                            no_checks=1,
-                            steps=False,
-                        ).exitcode
-                        != 0
-                    ):
+                    if self.zk_server_command("status", no_checks=1).exitcode != 0:
                         fail("ZooKeeper server is not healthy")
 
     def zookeeper_pid(self):
@@ -242,21 +247,23 @@ class ZooKeeperNode(Node):
         """Stop ZooKeeper server."""
 
         with By(f"stopping {self.name}"):
-            self.command(f"{self.SERVER_ENV}zkServer.sh stop", exitcode=0, steps=False)
+            self.zk_server_command("stop")
 
-    def start_zookeeper(self, timeout=300):
+    def start_zookeeper(self, timeout=300, check_version=True):
         """Start ZooKeeper server."""
+        if check_version:
+            r = self.zk_server_command("version")
+            version = self.version_regex.search(r.output).group(1)
+            self.context.zookeeper_version = version
 
         with By(f"starting {self.name}"):
-            self.command(f"{self.SERVER_ENV}zkServer.sh start", exitcode=0, steps=False)
+            self.zk_server_command("start", exitcode=0)
 
     def restart_zookeeper(self, timeout=300):
         """Restart ZooKeeper server."""
 
         with By(f"restarting {self.name}"):
-            self.command(
-                f"{self.SERVER_ENV}zkServer.sh restart", exitcode=0, steps=False
-            )
+            self.zk_server_command("restart", exitcode=0)
 
     def stop(self, timeout=300, retry_count=5):
         """Stop node."""
