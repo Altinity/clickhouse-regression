@@ -137,7 +137,8 @@ def alter_combinations(
         with And("I create 10 random projections and indexes"):
             for _ in range(10):
                 # safe=False because we don't need to waste time on extra checks during setup
-                add_random_projection(safe=False)
+                if add_remove_projections:
+                    add_random_projection(safe=False)
                 add_random_index(safe=False)
 
         # To test a single combination, uncomment and edit as needed.
