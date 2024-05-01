@@ -1092,7 +1092,6 @@ class Cluster(object):
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
         self.zookeeper_binary_path = zookeeper_binary_path
-        self.zookeeper_version = None
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -1105,6 +1104,7 @@ class Cluster(object):
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
+        current().context.zookeeper_version = None
 
         # auto set configs directory
         if self.configs_dir is None:
