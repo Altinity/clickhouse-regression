@@ -178,7 +178,7 @@ xfails = {
         (
             Error,
             "https://github.com/ClickHouse/ClickHouse/pull/62120",
-            check_clickhouse_version("<24.4"),
+            check_clickhouse_version("<24.5"),
         )
     ],
     ":/:/disk/low cardinality offset": [
