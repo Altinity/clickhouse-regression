@@ -277,7 +277,7 @@ def freeze_unfreeze_random_part(self):
         query = f"ALTER TABLE {table_name} FREEZE PARTITION {partition} WITH NAME '{backup_name}'"
         node.query(query, exitcode=0, **alter_query_args)
 
-    with And(f"I wait {delay:.2}s"):
+    with And(f"I wait {delay:.3}s"):
         time.sleep(delay)
 
     with Finally("I unfreeze the part"):
@@ -799,7 +799,7 @@ def check_tables_have_same_columns(self, tables):
 
     with Then("all tables should have the same columns"):
         for table1, table2 in combinations(tables, 2):
-            with By(f"checking {table1} and {table2}"):
+            with By(f"checking {table1} and {table2}", flags=TE):
                 assert table_columns[table1] == table_columns[table2], error()
 
 
@@ -823,7 +823,7 @@ def check_tables_have_same_projections(
 
     with Then("all tables should have the same projections"):
         for table1, table2 in combinations(tables, 2):
-            with By(f"checking {table1} and {table2}"):
+            with By(f"checking {table1} and {table2}", flags=TE):
                 assert table_projections[table1] == table_projections[table2], error()
 
     if check_present is not None:
@@ -854,7 +854,7 @@ def check_tables_have_same_indexes(self, tables):
 
     with Then("all tables should have the same indexes"):
         for table1, table2 in combinations(tables, 2):
-            with By(f"checking {table1} and {table2}"):
+            with By(f"checking {table1} and {table2}", flags=TE):
                 assert table_indexes[table1] == table_indexes[table2], error()
 
 
