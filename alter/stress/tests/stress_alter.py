@@ -28,6 +28,7 @@ def alter_combinations(
     n_columns=50,
     restarts=False,
     add_remove_replicas=False,
+    add_remove_projections=False,
     fill_disks=False,
     insert_keeper_fault_injection_probability=0,
     network_impairment=False,
@@ -51,14 +52,10 @@ def alter_combinations(
             delete_random_column,
             update_random_column,
             delete_random_rows,
-            # delete_random_rows_lightweight,
             detach_attach_random_partition,
             freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
-            add_random_projection,
-            clear_random_projection,
-            drop_random_projection,
             add_random_index,
             clear_random_index,
             drop_random_index,
@@ -77,6 +74,15 @@ def alter_combinations(
 
         if add_remove_replicas:
             actions += [delete_replica, add_replica]
+
+        if add_remove_projections:
+            actions += [
+                add_random_projection,
+                clear_random_projection,
+                drop_random_projection,
+            ]
+        else:
+            actions += [delete_random_rows_lightweight]
 
         if fill_disks:
             actions += [
