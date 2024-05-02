@@ -233,7 +233,7 @@ def check_storage_policy(self, source_storage_policy, destination_storage_policy
     ):
         if (
             source_storage_policy == destination_storage_policy
-            or check_clickhouse_version(">=24.3")(self)
+            or check_clickhouse_version(">=24.5")(self)
         ):
             exitcode, message = None, None
         else:
