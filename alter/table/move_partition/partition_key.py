@@ -61,10 +61,10 @@ def check_move_partition(
 ):
     """Check `move partition to table` with different types of source and destination tables."""
 
-    if check_clickhouse_version("<24.4")(self):
+    if check_clickhouse_version("<24.5")(self):
         if source_partition_key != destination_partition_key:
             skip(
-                "`move partition from` with tables that have different partition keys are not supported before 24.4"
+                "`move partition from` with tables that have different partition keys are not supported before 24.5"
             )
 
     self.context.source_engine = source_table.__name__.split("_")[-1]
@@ -102,7 +102,7 @@ def check_move_partition(
             node=self.context.node_1,
         )
 
-    if check_clickhouse_version(">=24.4")(self):
+    if check_clickhouse_version(">=24.5")(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):

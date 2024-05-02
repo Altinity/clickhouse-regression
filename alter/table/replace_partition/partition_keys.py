@@ -83,7 +83,7 @@ def get_exitcode_and_message(self, source_partition_key, destination_partition_k
         exitcode = 248
         message = "DB::Exception: Wrong number of fields"
     else:
-        if check_clickhouse_version(">=24.4")(self):
+        if check_clickhouse_version(">=24.5")(self):
             exitcode = 36
             message = "DB::Exception: Cannot replace partition"
         else:
@@ -112,7 +112,7 @@ def check_replace_partition(self, source_partition_key, destination_partition_ke
             partition_by=destination_partition_key,
             node=node,
         )
-        if check_clickhouse_version(">=24.4")(self):
+        if check_clickhouse_version(">=24.5")(self):
             node.query(
                 f"ALTER TABLE {destination_table} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
             )

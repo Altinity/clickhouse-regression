@@ -178,7 +178,7 @@ xfails = {
         (
             Error,
             "https://github.com/ClickHouse/ClickHouse/pull/62120",
-            check_clickhouse_version("<24.4"),
+            check_clickhouse_version("<24.5"),
         )
     ],
     ":/:/disk/low cardinality offset": [
@@ -317,6 +317,9 @@ def minio_regression(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.table_function_performance", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
 
 
 @TestModule

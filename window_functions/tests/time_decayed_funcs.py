@@ -6,7 +6,9 @@ from window_functions.tests.common import *
 
 @TestOutline
 def exponentialTimeDecayedFunc(
-    self, funcname, extremely_large_number_of_arguments=1000
+    self,
+    funcname,
+    extremely_large_number_of_arguments=1000,
 ):
     """Check exponentialTimeDecayed functions such as
     exponentialTimeDecayedSum, exponentialTimeDecayedMax and exponentialTimeDecayedAvg.
@@ -46,12 +48,12 @@ def exponentialTimeDecayedFunc(
     for time_datatype, time_column in time_columns:
         with Example(f"{time_datatype} time column"):
             execute_query(
-                f"SELECT id, {time_column} AS time, {funcname}(1)(id, {time_column}) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS w FROM datetimes2 ORDER BY id LIMIT 10"
+                f"SELECT id, {time_column} AS time, {funcname}(1)(id, {time_column}) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS w FROM datetimes2 ORDER BY id LIMIT 10",
             )
 
     with Example("check decay length with zero"):
         execute_query(
-            f"SELECT id, f_timestamp AS time, {funcname}(0)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10"
+            f"SELECT id, f_timestamp AS time, {funcname}(0)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
         )
 
     with Example("check decay length with INTERVAL"):
@@ -63,9 +65,17 @@ def exponentialTimeDecayedFunc(
             assert r.exitcode != 0, error("should return an error")
 
     with Example("check decay length with negative"):
-        execute_query(
-            f"SELECT id, f_timestamp AS time, {funcname}(-1000)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10"
-        )
+        if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(
+            self
+        ):
+            execute_query(
+                f"SELECT id, f_timestamp AS time, {funcname}(-1000)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
+                add_version_to_snapshot="/version>=24.3",
+            )
+        else:
+            execute_query(
+                f"SELECT id, f_timestamp AS time, {funcname}(-1000)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
+            )
 
     with Example("check decay length with invalid number of arguments"):
         execute_query(
@@ -114,7 +124,7 @@ def exponentialTimeDecayedFunc(
 
     with Example("check decay length overflow"):
         execute_query(
-            f"SELECT id, f_timestamp AS time, {funcname}(1000000000000000000000000000000000000000000000000000000000000000)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10"
+            f"SELECT id, f_timestamp AS time, {funcname}(1000000000000000000000000000000000000000000000000000000000000000)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
         )
 
     with Example(f"check using as a non-window aggregate function"):
@@ -159,7 +169,7 @@ def exponentialTimeDecayedFunc(
 
     with Example("check one row partitions"):
         execute_query(
-            f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER (PARTITION BY id) AS w FROM (SELECT * FROM datetimes2 ORDER BY id LIMIT 10))"
+            f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER (PARTITION BY id) AS w FROM (SELECT * FROM datetimes2 ORDER BY id LIMIT 10))",
         )
 
     with Example(f"check -1 time gap"):
@@ -173,29 +183,72 @@ def exponentialTimeDecayedFunc(
         )
 
     for window in windows(order_by="id"):
-        with Check(f"check over({window})"):
+        with Check(f"check over({window})", flags=TE):
             with Example("basic check"):
-                execute_query(
-                    f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER ({window}) AS w FROM datetimes2 WHERE id % 3 ORDER BY id LIMIT 10)"
-                )
+                if (
+                    check_clickhouse_version(">=24.3")(self)
+                    and check_current_cpu("aarch64")(self)
+                    and ("1" in window)
+                ):
+                    execute_query(
+                        f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER ({window}) AS w FROM datetimes2 WHERE id % 3 ORDER BY id LIMIT 10)",
+                        add_version_to_snapshot="/version>=24.3",
+                    )
+                else:
+                    execute_query(
+                        f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER ({window}) AS w FROM datetimes2 WHERE id % 3 ORDER BY id LIMIT 10)",
+                    )
+
             with Example("check with partition by minute"):
-                execute_query(
-                    f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER (PARTITION BY toStartOfMinute(f_timestamp) {window}) AS w FROM datetimes2 WHERE id % 59 ORDER BY id LIMIT 10)"
-                )
+                if (
+                    check_clickhouse_version(">=24.3")(self)
+                    and check_current_cpu("aarch64")(self)
+                    and ("1" in window)
+                ):
+                    execute_query(
+                        f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER (PARTITION BY toStartOfMinute(f_timestamp) {window}) AS w FROM datetimes2 WHERE id % 59 ORDER BY id LIMIT 10)",
+                        add_version_to_snapshot="/version>=24.3",
+                    )
+                else:
+                    execute_query(
+                        f"SELECT id, time, w FROM (SELECT id, f_timestamp AS time, {funcname}(10)(id, f_timestamp) OVER (PARTITION BY toStartOfMinute(f_timestamp) {window}) AS w FROM datetimes2 WHERE id % 59 ORDER BY id LIMIT 10)",
+                    )
+
             with Example("full table"):
-                execute_query(
-                    f"SELECT anyLast(id), anyLast(time), cityHash64(groupArray(w)) FROM (SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER ({window}) AS w FROM datetimes2 ORDER BY id)"
-                )
+                if (
+                    check_clickhouse_version(">=24.3")(self)
+                    and check_current_cpu("aarch64")(self)
+                    and ("1" in window)
+                ):
+                    execute_query(
+                        f"SELECT anyLast(id), anyLast(time), cityHash64(groupArray(w)) FROM (SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER ({window}) AS w FROM datetimes2 ORDER BY id)",
+                        add_version_to_snapshot="/version>=24.3",
+                    )
+                else:
+                    execute_query(
+                        f"SELECT anyLast(id), anyLast(time), cityHash64(groupArray(w)) FROM (SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER ({window}) AS w FROM datetimes2 ORDER BY id)",
+                    )
+
             with Example("full table with partition by minute"):
-                execute_query(
-                    f"SELECT anyLast(id), anyLast(time), cityHash64(groupArray(w)) FROM (SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER (PARTITION BY toStartOfMinute(f_timestamp) {window}) AS w FROM datetimes2 WHERE id % 59 ORDER BY id)"
-                )
+                if check_clickhouse_version(">=24.3")(self) and check_current_cpu(
+                    "aarch64"
+                )(self):
+                    execute_query(
+                        f"SELECT anyLast(id), anyLast(time), cityHash64(groupArray(w)) FROM (SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER (PARTITION BY toStartOfMinute(f_timestamp) {window}) AS w FROM datetimes2 WHERE id % 59 ORDER BY id)",
+                        add_version_to_snapshot="/version>=24.3",
+                    )
+                else:
+                    execute_query(
+                        f"SELECT anyLast(id), anyLast(time), cityHash64(groupArray(w)) FROM (SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER (PARTITION BY toStartOfMinute(f_timestamp) {window}) AS w FROM datetimes2 WHERE id % 59 ORDER BY id)",
+                    )
 
 
 @TestScenario
 def exponentialTimeDecayedSum(self):
     """Check exponentialTimeDecayedSum."""
-    exponentialTimeDecayedFunc(funcname="exponentialTimeDecayedSum")
+    exponentialTimeDecayedFunc(
+        funcname="exponentialTimeDecayedSum",
+    )
 
 
 @TestScenario
@@ -207,7 +260,9 @@ def exponentialTimeDecayedMax(self):
 @TestScenario
 def exponentialTimeDecayedAvg(self):
     """Check exponentialTimeDecayedAvg."""
-    exponentialTimeDecayedFunc(funcname="exponentialTimeDecayedAvg")
+    exponentialTimeDecayedFunc(
+        funcname="exponentialTimeDecayedAvg",
+    )
 
 
 @TestScenario

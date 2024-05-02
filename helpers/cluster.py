@@ -6,6 +6,8 @@ import hashlib
 import threading
 import tempfile
 import re
+import json
+import shutil
 
 from testflows._core.cli.arg.common import description
 
@@ -1084,6 +1086,7 @@ class Cluster(object):
         use_zookeeper_nodes=False,
         frame=None,
         use_specific_version=False,
+        rm_instances_files=True,
     ):
         self._bash = {}
         self._control_shell = None
@@ -1146,6 +1149,12 @@ class Cluster(object):
         if not os.path.exists(docker_compose_file_path):
             raise TypeError(
                 f"docker compose file '{docker_compose_file_path}' does not exist"
+            )
+
+        if rm_instances_files:
+            shutil.rmtree(
+                os.path.join(docker_compose_project_dir, "..", "_instances"),
+                ignore_errors=True,
             )
 
         if self.clickhouse_binary_path:
@@ -1633,6 +1642,15 @@ class Cluster(object):
                     node=node,
                     command=f'echo -e "\n-- sending stop to: {node} --\n" >> /var/log/clickhouse-server/clickhouse-server.log',
                 )
+
+        # Edit permissions on server files for external manipulation
+        for node_type in ["clickhouse", "zookeeper", "keeper"]:
+            for node in self.nodes.get(node_type, []):
+                try:
+                    self.open_instances_permissions(node=node)
+                except:
+                    pass
+
         try:
             bash = self.bash(None)
             with self.lock:
@@ -1655,6 +1673,31 @@ class Cluster(object):
                     self._control_shell.__exit__(None, None, None)
                     self._control_shell = None
             return cmd
+
+    def open_instances_permissions(self, node):
+        """
+        Add open permissions on all files and folders in _instances.
+        
+        Will not do anything if cluster is already down.
+        """
+        with self.lock:
+            try:
+                container_id = self.node_container_id(node, timeout=1)
+            except RuntimeError:
+                return
+
+        r = self.command(
+            node=None, command=f"docker inspect {container_id}", exitcode=0
+        )
+        mounts = json.loads(r.output)[0]["Mounts"]
+        docker_exposed_dirs = [
+            m["Destination"] for m in mounts if "_instances" in m["Source"]
+        ]
+
+        for exposed_dir in docker_exposed_dirs:
+            self.command(
+                node=node, command=f"chmod a+rwX -R {exposed_dir}", no_checks=True
+            )
 
     def temp_path(self):
         """Return temporary folder path."""
