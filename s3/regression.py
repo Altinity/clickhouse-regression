@@ -313,6 +313,9 @@ def minio_regression(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.table_function_performance", "minio"))(
+                uri=uri_bucket_file, key=root_user, secret=root_password
+            )
 
 
 @TestModule
