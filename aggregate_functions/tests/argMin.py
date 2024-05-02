@@ -82,11 +82,7 @@ def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
     with Check("user example"):
         use_result_in_snapshot_name = False
         # different representation of state
-        if (
-            check_clickhouse_version(">=23.12")(self)
-            and check_clickhouse_version("<24.3")(self)
-            and "argMaxState" in self.name
-        ):
+        if check_clickhouse_version(">=23.12")(self) and "argMaxState" in self.name:
             use_result_in_snapshot_name = True
 
         execute_query(
