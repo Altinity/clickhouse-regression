@@ -7,6 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
+from helpers.common import experimental_analyzer
 from helpers.argparser import argparser as argparser_base
 from s3.tests.common import *
 
@@ -269,6 +270,7 @@ def minio_regression(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    with_analyzer,
 ):
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -284,6 +286,10 @@ def minio_regression(
 
         with Given("I have a minio client"):
             start_minio(access_key=root_user, secret_key=root_password)
+
+        with And("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
@@ -329,6 +335,7 @@ def aws_s3_regression(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    with_analyzer,
 ):
     """Setup and run aws s3 tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -366,6 +373,10 @@ def aws_s3_regression(
 
         self.context.cluster = cluster
         self.context.cluster.bucket = bucket
+
+        with Given("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
         with Module(self.context.object_storage_mode):
             Feature(test=load("s3.tests.table_function", "aws_s3"))(
@@ -411,6 +422,7 @@ def gcs_regression(
     local,
     clickhouse_binary_path,
     collect_service_logs,
+    with_analyzer,
 ):
     """Setup and run gcs tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -433,6 +445,10 @@ def gcs_regression(
         environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
     ) as cluster:
         self.context.cluster = cluster
+
+        with Given("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
         with Module(self.context.object_storage_mode):
             Feature(test=load("s3.tests.table_function", "gcs"))(
@@ -480,7 +496,7 @@ def regression(
     gcs_key_id,
     stress,
     allow_vfs,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """S3 Storage regression."""
 
@@ -527,6 +543,7 @@ def regression(
         local=local,
         clickhouse_binary_path=clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
+        with_analyzer=with_analyzer,
         **storage_module_kwargs,
     )
 

@@ -69,7 +69,7 @@ def regression(
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse atomic inserts regression."""
     nodes = {
@@ -97,6 +97,10 @@ def regression(
             ),
         )
         self.context.cluster = cluster
+    
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     if check_clickhouse_version("<22.4")(self):
         skip(reason="only supported on ClickHouse version >= 22.4")

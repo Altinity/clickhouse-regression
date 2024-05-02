@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from data_types.requirements import SRS018_ClickHouse_Map_Data_Type
 
 xfails = {
@@ -174,7 +174,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Map type regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -193,6 +193,11 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    with And("I enable or disable experimental analyzer if needed"):
+        experimental_analyzer(
+            node=cluster.node("clickhouse1"), with_analyzer=with_analyzer
+        )
 
     Feature(run=load("data_types.tests.map", "feature"))
 

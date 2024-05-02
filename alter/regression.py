@@ -5,8 +5,10 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import create_cluster
 from alter.requirements.requirements import *
+
+from helpers.cluster import create_cluster
+from helpers.common import experimental_analyzer
 from helpers.argparser import argparser as base_argparser
 from helpers.datatypes import *
 
@@ -158,7 +160,7 @@ def regression(
     use_specific_version,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Alter regression."""
     nodes = {
@@ -188,6 +190,10 @@ def regression(
             use_specific_version=use_specific_version,
         )
         self.context.cluster = cluster
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in cluster.nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Feature(run=load("alter.table.replace_partition.feature", "feature"))
     Feature(run=load("alter.table.attach_partition.feature", "feature"))

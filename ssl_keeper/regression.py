@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from ssl_keeper.helpers.cluster import Cluster
 from helpers.argparser import argparser as base_argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 
 
 def argparser(parser):
@@ -48,7 +48,7 @@ def regression(
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse ssl ClickHouse Keeper regression."""
     nodes = {
@@ -74,6 +74,10 @@ def regression(
 
         if check_clickhouse_version("<22.4")(self):
             skip(reason="only supported on ClickHouse version >= 22.4")
+        
+        with Given("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
         Feature(run=load("ssl_keeper.tests.sanity", "feature"))
         Feature(run=load("ssl_keeper.tests.fips_ssl", "feature"))
