@@ -32,15 +32,31 @@ Table of which suites rely on what docker images.
 || zookeeper:3.8.4 |
 | aggregate_functions | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.8.4 |
+| alter | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3 |
+|| altinityinfra/python-bottle:265-ea7abf434d5f99618d1e188b8284cf43835724f3 |
+|| minio/mc:RELEASE.2022-06-11T21-10-36Z |
+|| minio/minio:RELEASE.2022-07-17T15-43-14Z |
+|| mysql:8.0.34 |
+|| postgres:15.0-bullseye |
+|| zookeeper:3.8.4 |
 | atomic_insert | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| zookeeper:3.8.4 |
+| attach | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.8.4 |
 | base_58 | clickhouse/clickhouse-integration-test:28741 |
 || zookeeper:3.8.4 |
 | clickhouse/functional | altinityinfra/clickhouse-functional-test:1.0 |
 || bitnami/zookeeper:3.7.1-debian-11-r90 |
 | clickhouse_keeper | altinityinfra/clickhouse-regression-multiarch:1.0 |
-|| zookeeper:3.7.0 |
+|| clickhouse/clickhouse-server:22.8.12.45 |
+|| zookeeper:3.8.4 |
 || zookeeper:3.4.12 |
+|| altinity/zookeeper-fips:3.7.1-1 |
+|| altinityinfra/bash-tools:1.0 |
+| clickhouse_keeper_failout | clickhouse/clickhouse-keeper:latest |
+| data_types | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| zookeeper:3.8.4 |
 | datetime64_extended_range | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.8.4 |
 | disk_level_encryption | altinityinfra/clickhouse-regression-multiarch:1.0 |
@@ -52,6 +68,8 @@ Table of which suites rely on what docker images.
 || zookeeper:3.8.4 |
 | extended_precision_data_types | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || mysql:5.7.30 |
+| functions | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| zookeeper:3.8.4 |
 | kafka | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || confluentinc/cp-kafka:5.2.0 |
 || zookeeper:3.4.12 |
@@ -70,19 +88,27 @@ Table of which suites rely on what docker images.
 | map_type | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.8.4 |
 | ontime_benchmark | altinityinfra/clickhouse-regression-multiarch-ontime:1.0 |
+|| zookeeper:3.8.4 |
+| memory | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| zookeeper:3.8.4 |
+| ontime_benchmark | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3 |
+|| altinityinfra/python-bottle:265-ea7abf434d5f99618d1e188b8284cf43835724f3 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.8.4 |
 | parquet | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
-|| mysql:5.7.30 |
+|| mysql:8.0.34 |
 || postgres:15.0-bullseye |
 || zookeeper:3.8.4 |
 | part_moves_between_shards | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.4.12 |
 | rbac | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || mysql:5.7.30 |
+|| zookeeper:3.8.4 |
+|| mysql:8.0.34 |
 || zookeeper:3.8.4 |
 | s3 | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
@@ -94,16 +120,25 @@ Table of which suites rely on what docker images.
 | selects | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.8.4 |
 | ssl_server | altinityinfra/clickhouse-regression-multiarch:1.0|
+|| zookeeper:3.8.4 |
+| session_timezone | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| zookeeper:3.8.4 |
+| ssl_keeper | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| altinityinfra/bash-tools:1.0 |
+| ssl_server | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || clickhouse/clickhouse-server:22.8.12.45 |
 || zookeeper:3.8.4 |
+|| altinity/zookeeper-fips:3.7.1-1 |
 | tiered_storage | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
 || zookeeper:3.8.4 |
 | vfs | altinityinfra/clickhouse-regression-multiarch:1.0 |
+|| minio/mc:RELEASE.2022-06-11T21-10-36Z |
+|| minio/minio:RELEASE.2022-07-17T15-43-14Z |
+|| zookeeper:3.8.4 |
 | window_functions | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.8.4 |
-
 
 ## Check online runners
 

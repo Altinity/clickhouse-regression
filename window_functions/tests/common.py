@@ -9,7 +9,12 @@ from testflows._core.name import sep
 from testflows._core.testtype import TestSubType
 from testflows.asserts import values, error, snapshot
 
-from helpers.common import check_clickhouse_version, getuid, current_cpu
+from helpers.common import (
+    check_clickhouse_version,
+    getuid,
+    current_cpu,
+    check_current_cpu,
+)
 
 interval_periods = [
     "SECOND",
@@ -28,16 +33,16 @@ def windows(order_by):
         # frame with all rows
         ""
         # rows
-        "ROWS BETWEEN CURRENT ROW AND CURRENT ROW",
-        "ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING",
-        "ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING",
-        "ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW",
-        "ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING",
-        "ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING",
-        "ROWS BETWEEN 1 PRECEDING AND CURRENT ROW",
-        "ROWS BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING",
-        "ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING",
-        "ROWS BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING",
+        f"ORDER BY {order_by} ROWS BETWEEN CURRENT ROW AND CURRENT ROW",
+        f"ORDER BY {order_by} ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING",
+        f"ORDER BY {order_by} ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING",
+        f"ORDER BY {order_by} ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW",
+        f"ORDER BY {order_by} ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING",
+        f"ORDER BY {order_by} ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING",
+        f"ORDER BY {order_by} ROWS BETWEEN 1 PRECEDING AND CURRENT ROW",
+        f"ORDER BY {order_by} ROWS BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING",
+        f"ORDER BY {order_by} ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING",
+        f"ORDER BY {order_by} ROWS BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING",
         # range
         "RANGE BETWEEN CURRENT ROW AND CURRENT ROW",
         "RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING",
@@ -125,6 +130,7 @@ def execute_query(
     no_checks=False,
     snapshot_name=None,
     format="TabSeparatedWithNames",
+    add_version_to_snapshot=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
@@ -135,6 +141,9 @@ def execute_query(
             .replace(f"{sep}distributed{sep}", ":")
             .split("/window functions", 1)[-1]
         )
+
+    if add_version_to_snapshot is not None:
+        snapshot_name += add_version_to_snapshot
 
     with When("I execute query", description=sql):
         r = current().context.node.query(
