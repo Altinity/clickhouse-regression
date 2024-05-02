@@ -191,6 +191,21 @@ xfails = {
             check_clickhouse_version("<23.11"),
         )
     ],
+    ":/:/backup/:/metadata:": [(
+        Fail,
+        "Investigate",
+        check_clickhouse_version("<=22.8"),
+    )],
+    ":/:/disk/cache*": [(
+        Fail,
+        "Investigate",
+        check_clickhouse_version("<=22.8"),
+    )],
+    ":/:/invalid disk/cache*": [(
+        Fail,
+        "Investigate",
+        check_clickhouse_version("<=22.8"),
+    )],
 }
 
 ffails = {
@@ -230,17 +245,17 @@ ffails = {
     ":/:/backup/:/metadata:": (
         XFail,
         "Under development for 22.8 and newer.",
-        check_clickhouse_version(">=22.8"),
+        check_clickhouse_version("<=22.8"),
     ),
     ":/:/disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
-        check_clickhouse_version(">=22.8"),
+        check_clickhouse_version("<=22.8"),
     ),
     ":/:/invalid disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
-        check_clickhouse_version(">=22.8"),
+        check_clickhouse_version("<=22.8"),
     ),
     ":/vfs": (Skip, "vfs not supported on < 24", check_clickhouse_version("<24")),
     ":/:/disk/no restart": (
