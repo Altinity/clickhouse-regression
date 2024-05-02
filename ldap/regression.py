@@ -18,7 +18,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse LDAP integration regression module."""
     args = {

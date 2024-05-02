@@ -10,6 +10,7 @@ from attach.requirements.requirements import SRS_039_ClickHouse_Attach_Statement
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.tables import check_clickhouse_version
+from helpers.common import experimental_analyzer
 
 
 issue_62905 = "https://github.com/ClickHouse/ClickHouse/issues/62905"
@@ -44,9 +45,9 @@ def regression(
     clickhouse_binary_path,
     clickhouse_version,
     collect_service_logs,
-    stress,
-    allow_vfs,
-    allow_experimental_analyzer=False,
+    stress=None,
+    allow_vfs=False,
+    with_analyzer=False,
 ):
     """Attach statement regression."""
 
@@ -75,6 +76,10 @@ def regression(
         self.context.node_3 = self.context.cluster.node("clickhouse3")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Feature(run=load("attach.tests.replica_path", "feature"), flags=TE)
     Feature(run=load("attach.tests.active_path", "feature"), flags=TE)

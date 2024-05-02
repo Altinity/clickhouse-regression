@@ -43,7 +43,7 @@ def regression(
     ssl=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Check ClickHouse performance when using ClickHouse Keeper."""
     nodes = {

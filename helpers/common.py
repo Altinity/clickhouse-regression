@@ -824,3 +824,30 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None):
     if snapshot_id is None:
         return name.basename(current().name) + id_postfix
     return snapshot_id
+
+
+def get_settings_value(node, setting_name):
+    """Return value of the setting from the `system.settings` table."""
+    return node.query(
+        f"SELECT value FROM system.settings WHERE name = '{setting_name}' FORMAT TabSeparated"
+    ).output
+
+
+def is_with_analyzer(node):
+    """Return True if the `allow_experimental_analyzer` setting is enabled."""
+    return (
+        get_settings_value(node=node, setting_name="allow_experimental_analyzer") == "1"
+    )
+
+
+@TestStep(Given)
+def experimental_analyzer(self, node, with_analyzer):
+    default_value = get_settings_value(
+        node=node,
+        setting_name="allow_experimental_analyzer",
+    )
+    default_query_settings = getsattr(current().context, "default_query_settings", [])
+    if with_analyzer and default_value == "0":
+        default_query_settings.append(("allow_experimental_analyzer", 1))
+    elif not with_analyzer and default_value == "1":
+        default_query_settings.append(("allow_experimental_analyzer", 0))

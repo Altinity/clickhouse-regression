@@ -23,7 +23,6 @@ def performance_cluster(
     stress,
     clickhouse_version,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
 ):
     nodes = {"clickhouse": ("clickhouse1",), "duckdb": ("duckdb1",)}
 

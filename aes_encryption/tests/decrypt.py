@@ -140,14 +140,14 @@ def invalid_parameters(self):
         )
 
     with Example("bad mode type - forgot quotes"):
-        if check_clickhouse_version("<24.3")(self):
+        if is_with_analyzer(node=self.context.node):
+            exitcode = 47
+            message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
+        else:
             exitcode = 47
             message = (
                 "DB::Exception: Missing columns: 'ecb' 'aes' while processing query"
             )
-        else:
-            exitcode = 47
-            message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
 
         decrypt(
             ciphertext=ciphertext,

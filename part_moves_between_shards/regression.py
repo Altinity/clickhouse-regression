@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from part_moves_between_shards.requirements import *
 
 
@@ -75,7 +75,7 @@ def regression(
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse regression when using parts moves."""
     nodes = {
@@ -99,6 +99,10 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     if check_clickhouse_version("<21.4")(self):
         skip(reason="only supported on ClickHouse version >= 21.4")

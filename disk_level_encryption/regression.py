@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from disk_level_encryption.requirements import *
 
 
@@ -54,7 +54,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse disk level encryption regression."""
     nodes = {
@@ -79,6 +79,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Feature(run=load("disk_level_encryption.tests.memory", "feature"))
     Feature(run=load("disk_level_encryption.tests.column_ttl", "feature"))

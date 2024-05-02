@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as argparser_base
-from helpers.common import check_clickhouse_version, check_current_cpu, current_cpu
+from helpers.common import *
 
 from ssl_server.requirements import SRS017_ClickHouse_SSL
 
@@ -175,7 +175,7 @@ def regression(
     force_fips,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse security SSL server regression."""
     nodes = {
@@ -202,20 +202,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-    
-    with And("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
+
+    with Given("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     with Given("I check if the binary is FIPS compatible"):
         if "fips" in current().context.clickhouse_version or force_fips:

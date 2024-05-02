@@ -32,7 +32,7 @@ def regression(
     clickhouse_version=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """DNS regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2")}
@@ -51,6 +51,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+    
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Scenario(run=load("dns.tests.lookup.scenario", "scenario"))
     Feature(run=load("dns.tests.ipv6", "feature"))

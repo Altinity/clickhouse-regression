@@ -6,10 +6,11 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import create_cluster
 from base_58.requirements.requirements import *
+
+from helpers.cluster import create_cluster
 from helpers.argparser import argparser as argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 
 xfails = {"alias input/alias instead of table and column": [(Fail, "not implemented")]}
 
@@ -35,7 +36,7 @@ def regression(
     stress=None,
     parallel=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Base58 regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -52,6 +53,10 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.stress = stress
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     if parallel is not None:
         self.context.parallel = parallel

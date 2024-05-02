@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from key_value.requirements.requirements import *
 from helpers.argparser import argparser as argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from key_value.tests.constant import *
 
 xfails = {}
@@ -36,7 +36,7 @@ def regression(
     stress=None,
     parallel=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Key Value regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -56,6 +56,10 @@ def regression(
 
     if check_clickhouse_version("<23.5")(self):
         skip(reason="only supported on ClickHouse version >= 23.5")
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     if parallel is not None:
         self.context.parallel = parallel

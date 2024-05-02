@@ -7,7 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 
 from clickhouse_keeper_failover.tests.steps import *
 
@@ -77,7 +77,7 @@ def regression(
     collect_service_logs,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Clickhouse-keeper failover testing."""
 
