@@ -87,7 +87,7 @@ def check_move_partition(
             node=self.context.node_1,
         )
 
-    if check_clickhouse_version(">=24.4")(self):
+    if check_clickhouse_version(">=24.5")(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):
