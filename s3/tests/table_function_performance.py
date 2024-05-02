@@ -5,22 +5,14 @@ from testflows.core import *
 from s3.tests.common import *
 from s3.requirements import *
 
-many_files_uri = (
-    "https://s3.us-west-2.amazonaws.com/altinity-qa-test/data/many_files_benchmark/"
-)
-
-
-@TestStep(Given)
+@TestFeature
+@Name("setup")
 def s3_create_many_files(self):
     """Create a folder with many folders and files in S3"""
 
-    assert self.context.storage == "aws_s3", error(
-        "Must be in s3 mode to insert new data"
-    )
-
     num_folders = 50_000
     start_offset = 0
-    folder_size_mb = 4
+    folder_size_mb = 0.5 if self.context.storage == "minio" else 4
     num_files_per_folder = 5
 
     node = current().context.node
@@ -33,7 +25,7 @@ def s3_create_many_files(self):
     def insert_files(self, folder_id, iteration):
         node.query(
             f"""INSERT INTO TABLE FUNCTION 
-            s3('{many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
+            s3('{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
             PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} 
             -- {iteration}/{num_folders}"""
         )
@@ -71,7 +63,7 @@ def wildcard_performance(self):
 
     examples = [
         ("522029", "one_file"),
-        ("{249278..283359}", "range"),
+        ("{25000..26000}", "range"),
         ("{759040,547776,167687,283359}", "nums"),
         ("{759040,547776,167687,283359,abc}", "nums_one_missing"),
         # ("*", "star"),
@@ -83,7 +75,7 @@ def wildcard_performance(self):
             with Then(f"""I query the data using the wildcard '{wildcard}'"""):
                 t_start = time.time()
                 r = node.query(
-                    f"""SELECT median(d) FROM s3('{many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
+                    f"""SELECT median(d) FROM s3('{self.context.many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
                     timeout=expected_time,
                 )
                 t_elapsed = time.time() - t_start
@@ -111,10 +103,9 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
 
-    # with Given("I create many S3 files"):
-    #     s3_create_many_files()
-    #     return
+    # Scenario(run=s3_create_many_files)
 
     outline()
 
@@ -128,6 +119,9 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
+
+    # Scenario(run=s3_create_many_files)
 
     outline()
 
@@ -141,5 +135,8 @@ def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.uri = uri
     self.context.access_key_id = key
     self.context.secret_access_key = secret
+    self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
+
+    Scenario(run=s3_create_many_files)
 
     outline()
