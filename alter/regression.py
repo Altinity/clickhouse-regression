@@ -122,6 +122,12 @@ xfails = {
             "Need to investigate",
         )
     ],
+    "/alter/attach partition/part level/part level reset/*": [  # ReplicatedReplacingMergeTree
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
 }
 
 xflags = {}
