@@ -45,7 +45,7 @@ Table of which suites rely on what docker images.
 || zookeeper:3.6.2 |
 | attach | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| base_58 | clickhouse/clickhouse-integration-test:28741 |
+| base_58 | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 | clickhouse/functional | altinityinfra/clickhouse-functional-test:1.0 |
 || bitnami/zookeeper:3.7.1-debian-11-r90 |
@@ -77,7 +77,7 @@ Table of which suites rely on what docker images.
 | kerberos | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || altinityinfra/docker-krb5-server:1.0 |
 || zookeeper:3.6.2 |
-| key_value | clickhouse/clickhouse-integration-test:28741 |
+| key_value | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 | ldap | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || osixia/openldap:1.4.0 |
