@@ -25,9 +25,11 @@
       * 4.1.10.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
       * 4.1.10.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
       * 4.1.10.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
-    * 4.1.11 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
-      * 4.1.11.1 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
-      * 4.1.11.2 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
+      * 4.1.10.8 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
+    * 4.1.11 [Metadata](#metadata)
+      * 4.1.11.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
+      * 4.1.11.2 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
+      * 4.1.11.3 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
     * 4.1.12 [Metadata Restore](#metadata-restore)
       * 4.1.12.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
       * 4.1.12.2 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
@@ -55,49 +57,50 @@
     * 4.4.3 [RQ.SRS-015.S3.Disk.MultipleStorageDevices](#rqsrs-015s3diskmultiplestoragedevices)
     * 4.4.4 [RQ.SRS-015.S3.Disk.MultipleStorageDevices.NoChangesForQuerying](#rqsrs-015s3diskmultiplestoragedevicesnochangesforquerying)
     * 4.4.5 [RQ.SRS-015.S3.Disk.Metadata](#rqsrs-015s3diskmetadata)
-    * 4.4.6 [Disk Configuration](#disk-configuration)
-      * 4.4.6.1 [RQ.SRS-015.S3.Disk.Configuration](#rqsrs-015s3diskconfiguration)
-      * 4.4.6.2 [RQ.SRS-015.S3.Disk.Configuration.Syntax](#rqsrs-015s3diskconfigurationsyntax)
-      * 4.4.6.3 [RQ.SRS-015.S3.Disk.Configuration.Invalid](#rqsrs-015s3diskconfigurationinvalid)
-      * 4.4.6.4 [RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart](#rqsrs-015s3diskconfigurationchangesnorestart)
-      * 4.4.6.5 [RQ.SRS-015.S3.Disk.Configuration.Access](#rqsrs-015s3diskconfigurationaccess)
-      * 4.4.6.6 [RQ.SRS-015.S3.Disk.Configuration.Access.Default](#rqsrs-015s3diskconfigurationaccessdefault)
-      * 4.4.6.7 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled](#rqsrs-015s3diskconfigurationcacheenabled)
-      * 4.4.6.8 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default](#rqsrs-015s3diskconfigurationcacheenableddefault)
-      * 4.4.6.9 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8](#rqsrs-015s3diskconfigurationcache228)
-      * 4.4.6.10 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations](#rqsrs-015s3diskconfigurationcache228cacheonwriteoperations)
-      * 4.4.6.11 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize](#rqsrs-015s3diskconfigurationcache228datacachemaxsize)
-      * 4.4.6.12 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold](#rqsrs-015s3diskconfigurationcache228enablecachehitsthreshold)
-      * 4.4.6.13 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit](#rqsrs-015s3diskconfigurationcache228filesystemquerycachelimit)
-      * 4.4.6.14 [RQ.SRS-015.S3.Disk.Configuration.CachePath](#rqsrs-015s3diskconfigurationcachepath)
-      * 4.4.6.15 [RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict](#rqsrs-015s3diskconfigurationcachepathconflict)
-      * 4.4.6.16 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek](#rqsrs-015s3diskconfigurationminbytesforseek)
-      * 4.4.6.17 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax](#rqsrs-015s3diskconfigurationminbytesforseeksyntax)
-      * 4.4.6.18 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsize)
-      * 4.4.6.19 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsizesyntax)
-      * 4.4.6.20 [RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials](#rqsrs-015s3diskconfigurations3useenvironmentcredentials)
-    * 4.4.7 [MergeTree Engine Family](#mergetree-engine-family)
-      * 4.4.7.1 [RQ.SRS-015.S3.Disk.MergeTree](#rqsrs-015s3diskmergetree)
-      * 4.4.7.2 [RQ.SRS-015.S3.Disk.MergeTree.MergeTree](#rqsrs-015s3diskmergetreemergetree)
-      * 4.4.7.3 [RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree](#rqsrs-015s3diskmergetreereplacingmergetree)
-      * 4.4.7.4 [RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree](#rqsrs-015s3diskmergetreesummingmergetree)
-      * 4.4.7.5 [RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree](#rqsrs-015s3diskmergetreeaggregatingmergetree)
-      * 4.4.7.6 [RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree](#rqsrs-015s3diskmergetreecollapsingmergetree)
-      * 4.4.7.7 [RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree](#rqsrs-015s3diskmergetreeversionedcollapsingmergetree)
-      * 4.4.7.8 [S3 Zero Copy Replication](#s3-zero-copy-replication)
-        * 4.4.7.8.1 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplication)
-        * 4.4.7.8.2 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdefault)
-        * 4.4.7.8.3 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationglobal)
-        * 4.4.7.8.4 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationmetadata)
-        * 4.4.7.8.5 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationalter)
-        * 4.4.7.8.6 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdelete)
-        * 4.4.7.8.7 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdeleteall)
-        * 4.4.7.8.8 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdatapreservedaftermutation)
-        * 4.4.7.8.9 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdropreplica)
-        * 4.4.7.8.10 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationaddreplica)
-        * 4.4.7.8.11 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationnodataduplication)
-        * 4.4.7.8.12 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttlmove)
-        * 4.4.7.8.13 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttldelete)
+    * 4.4.6 [RQ.SRS-015.S3.Disk.DropSync](#rqsrs-015s3diskdropsync)
+    * 4.4.7 [Disk Configuration](#disk-configuration)
+      * 4.4.7.1 [RQ.SRS-015.S3.Disk.Configuration](#rqsrs-015s3diskconfiguration)
+      * 4.4.7.2 [RQ.SRS-015.S3.Disk.Configuration.Syntax](#rqsrs-015s3diskconfigurationsyntax)
+      * 4.4.7.3 [RQ.SRS-015.S3.Disk.Configuration.Invalid](#rqsrs-015s3diskconfigurationinvalid)
+      * 4.4.7.4 [RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart](#rqsrs-015s3diskconfigurationchangesnorestart)
+      * 4.4.7.5 [RQ.SRS-015.S3.Disk.Configuration.Access](#rqsrs-015s3diskconfigurationaccess)
+      * 4.4.7.6 [RQ.SRS-015.S3.Disk.Configuration.Access.Default](#rqsrs-015s3diskconfigurationaccessdefault)
+      * 4.4.7.7 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled](#rqsrs-015s3diskconfigurationcacheenabled)
+      * 4.4.7.8 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default](#rqsrs-015s3diskconfigurationcacheenableddefault)
+      * 4.4.7.9 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8](#rqsrs-015s3diskconfigurationcache228)
+      * 4.4.7.10 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations](#rqsrs-015s3diskconfigurationcache228cacheonwriteoperations)
+      * 4.4.7.11 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize](#rqsrs-015s3diskconfigurationcache228datacachemaxsize)
+      * 4.4.7.12 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold](#rqsrs-015s3diskconfigurationcache228enablecachehitsthreshold)
+      * 4.4.7.13 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit](#rqsrs-015s3diskconfigurationcache228filesystemquerycachelimit)
+      * 4.4.7.14 [RQ.SRS-015.S3.Disk.Configuration.CachePath](#rqsrs-015s3diskconfigurationcachepath)
+      * 4.4.7.15 [RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict](#rqsrs-015s3diskconfigurationcachepathconflict)
+      * 4.4.7.16 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek](#rqsrs-015s3diskconfigurationminbytesforseek)
+      * 4.4.7.17 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax](#rqsrs-015s3diskconfigurationminbytesforseeksyntax)
+      * 4.4.7.18 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsize)
+      * 4.4.7.19 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsizesyntax)
+      * 4.4.7.20 [RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials](#rqsrs-015s3diskconfigurations3useenvironmentcredentials)
+    * 4.4.8 [MergeTree Engine Family](#mergetree-engine-family)
+      * 4.4.8.1 [RQ.SRS-015.S3.Disk.MergeTree](#rqsrs-015s3diskmergetree)
+      * 4.4.8.2 [RQ.SRS-015.S3.Disk.MergeTree.MergeTree](#rqsrs-015s3diskmergetreemergetree)
+      * 4.4.8.3 [RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree](#rqsrs-015s3diskmergetreereplacingmergetree)
+      * 4.4.8.4 [RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree](#rqsrs-015s3diskmergetreesummingmergetree)
+      * 4.4.8.5 [RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree](#rqsrs-015s3diskmergetreeaggregatingmergetree)
+      * 4.4.8.6 [RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree](#rqsrs-015s3diskmergetreecollapsingmergetree)
+      * 4.4.8.7 [RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree](#rqsrs-015s3diskmergetreeversionedcollapsingmergetree)
+      * 4.4.8.8 [S3 Zero Copy Replication](#s3-zero-copy-replication)
+        * 4.4.8.8.1 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplication)
+        * 4.4.8.8.2 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdefault)
+        * 4.4.8.8.3 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationglobal)
+        * 4.4.8.8.4 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationmetadata)
+        * 4.4.8.8.5 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationalter)
+        * 4.4.8.8.6 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdelete)
+        * 4.4.8.8.7 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdeleteall)
+        * 4.4.8.8.8 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdatapreservedaftermutation)
+        * 4.4.8.8.9 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdropreplica)
+        * 4.4.8.8.10 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationaddreplica)
+        * 4.4.8.8.11 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationnodataduplication)
+        * 4.4.8.8.12 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttlmove)
+        * 4.4.8.8.13 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttldelete)
   * 4.5 [Policy](#policy)
     * 4.5.1 [RQ.SRS-015.S3.Policy.Syntax](#rqsrs-015s3policysyntax)
     * 4.5.2 [RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert](#rqsrs-015s3policyperformttlmoveoninsert)
@@ -112,9 +115,10 @@
     * 4.6.7 [RQ.SRS-015.S3.TableFunction.Redirect](#rqsrs-015s3tablefunctionredirect)
     * 4.6.8 [RQ.SRS-015.S3.TableFunction.Format](#rqsrs-015s3tablefunctionformat)
     * 4.6.9 [RQ.SRS-015.S3.TableFunction.Structure](#rqsrs-015s3tablefunctionstructure)
-    * 4.6.10 [RQ.SRS-015.S3.TableFunction.Compression](#rqsrs-015s3tablefunctioncompression)
-    * 4.6.11 [RQ.SRS-015.S3.TableFunction.Compression.Auto](#rqsrs-015s3tablefunctioncompressionauto)
-    * 4.6.12 [RQ.SRS-015.S3.TableFunction.S3Cluster](#rqsrs-015s3tablefunctions3cluster)
+    * 4.6.10 [RQ.SRS-015.S3.TableFunction.MeasureFileSize](#rqsrs-015s3tablefunctionmeasurefilesize)
+    * 4.6.11 [RQ.SRS-015.S3.TableFunction.Compression](#rqsrs-015s3tablefunctioncompression)
+    * 4.6.12 [RQ.SRS-015.S3.TableFunction.Compression.Auto](#rqsrs-015s3tablefunctioncompressionauto)
+    * 4.6.13 [RQ.SRS-015.S3.TableFunction.S3Cluster](#rqsrs-015s3tablefunctions3cluster)
   * 4.7 [MinIO](#minio)
     * 4.7.1 [RQ.SRS-015.S3.MinIO.Disk.Configuration](#rqsrs-015s3miniodiskconfiguration)
     * 4.7.2 [RQ.SRS-015.S3.MinIO.TableFunction](#rqsrs-015s3miniotablefunction)
@@ -305,6 +309,11 @@ version: 1.0
 
 [ClickHouse] SHALL support restoring backups of tables using `ALTER TABLE ATTACH PARTITION` from data inside
 `/var/lib/clickhouse/data/database/table/detached/`.
+
+##### RQ.SRS-015.S3.Backup.Cleanup
+version: 1.0
+
+[ClickHouse] SHALL clean up local and remote files related to frozen or detached partitions when a table is dropped.
 
 #### Metadata
 
@@ -503,6 +512,17 @@ version: 1.0
 [ClickHouse] SHALL create a metadata file for each [S3] disk which tracks the total
 number of objects stored in the disk, the aggregate size of the objects, and for each
 object stored in the disk, tracks the path to the object and the object size.
+
+#### RQ.SRS-015.S3.Disk.DropSync
+version: 1.0
+
+[ClickHouse] SHALL immediately remove related files from S3 when a table is dropped with the SYNC keyword.
+
+Usage:
+
+```sql
+DROP TABLE mytable SYNC
+```
 
 #### Disk Configuration
 
@@ -923,11 +943,11 @@ version: 1.0
 
 > Multiple path components can have globs. For being processed file must exist and match to the whole path pattern (not only suffix or prefix).
 >
->   - `*` — Substitutes any number of any characters except / including empty string.
->   - `?` — Substitutes any single character.
->   - `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.
->   - `{N..M}` — Substitutes any number in range from N to M including both borders.
->   - `**` - Fetches all files inside the folder recursively.
+> * `*` — Substitutes any number of any characters except / including empty string.
+> * `?` — Substitutes any single character.
+> * `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.
+> * `{N..M}` — Substitutes any number in range from N to M including both borders.
+> * `**` - Fetches all files inside the folder recursively.
 
 #### RQ.SRS-015.S3.TableFunction.ReadFromFile
 version: 1.0
@@ -959,6 +979,23 @@ specify the structure of the data. The structure SHALL use the following format:
 
 ```xml
 'column1_name column1_type, column2_name column2_type, ...'
+```
+
+#### RQ.SRS-015.S3.TableFunction.MeasureFileSize
+version: 1.0
+
+[ClickHouse] SHALL report the accurate size of s3 objects through the `_size`
+virtual column of the s3 table function.
+
+Example:
+
+```sql
+SELECT count() AS files, sum(_size) as bytes
+FROM s3('https://s3.us-west-2.amazonaws.com/mybucket/clickhouse/demo2/s3_disk/**', 'One')
+
+┌─files─┬──────bytes─┐
+│   122 │ 1638600424 │
+└───────┴────────────┘
 ```
 
 #### RQ.SRS-015.S3.TableFunction.Compression
