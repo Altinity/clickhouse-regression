@@ -3281,6 +3281,61 @@ version: 1.0
 [ClickHouse] SHALL only succesfully `INSERT` into a target table of a materialized view if and only if
 the user has `INSERT` privelege on the target table, either explicitly or through a role.
 
+#### SQL Security
+DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three legal values: `DEFINER`, `INVOKER`, or `NONE`. You can specify any existing user or CURRENT_USER in the DEFINER clause.
+
+The following table will explain which rights are required for which user in order to select from(insert to) view. In every case it is still required to have `GRANT SELECT(INSERT) ON <view>` in order to read from it.
+
+| SQL security option | View | Materialized View | 
+| --------------------|------|-------------------|
+| `DEFINER alice` | `alice` must have a `SELECT`(`INSERT`) grant for the view's source table.	 | `alice` must have a `SELECT` grant for the view's source table and an `SELECT`(`INSERT`) grant for the view's target table. |
+|`INVOKER` |	User must have a `SELECT`(`INSERT`) grant for the view's source table. |	`SQL SECURITY INVOKER` can't be specified for materialized views. |
+|`NONE` |	- | -
+
+##### RQ.SRS-006.RBAC.MaterializedView.Definer.CreateView
+version: 1.0
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW` statement.
+
+Syntax:
+```sql
+CREATE [OR REPLACE] VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster_name] 
+[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
+AS SELECT ...
+```
+
+##### RQ.SRS-006.RBAC.MaterializedView.Definer.CreateMaterializedView
+version: 1.0
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW` statement.
+
+Syntax:
+```sql
+CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]name] [ENGINE = engine] [POPULATE] 
+[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
+AS SELECT ...
+```
+
+##### RQ.SRS-006.RBAC.MaterializedView.Definer.ModifySQLSecurity
+version: 1.0
+[ClickHouse] SHALL support the `ALTER TABLE MODIFY SQL SECURITY` statement to change the SQL security for an existing view.
+
+Syntax:
+```sql
+ALTER TABLE MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user | CURRENT_USER }]
+```
+
+##### RQ.SRS-006.RBAC.MaterializedView.Definer.Default.SQLSecurity.View
+version: 1.0
+[ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if SQL SECURITY is not specified.
+
+##### RQ.SRS-006.RBAC.MaterializedView.Definer.Default.SQLSecurity.MaterializedView
+version: 1.0
+[ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` for materialized views if SQL SECURITY is not specified.
+
+##### RQ.SRS-006.RBAC.MaterializedView.Definer.Default.Definer
+version: 1.0
+[ClickHouse] SHALL set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified.
+
+
 #### Live View
 
 ##### RQ.SRS-006.RBAC.LiveView
