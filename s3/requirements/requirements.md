@@ -18,45 +18,26 @@
     * 4.1.8 [RQ.SRS-015.S3.Security.Encryption](#rqsrs-015s3securityencryption)
     * 4.1.9 [RQ.SRS-015.S3.RemoteHostFilter](#rqsrs-015s3remotehostfilter)
     * 4.1.10 [Backup](#backup)
-      * 4.1.10.1 [MinIO Backup](#minio-backup)
-        * 4.1.10.1.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
-      * 4.1.10.2 [AWS S3 Backup](#aws-s3-backup)
-        * 4.1.10.2.1 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
-      * 4.1.10.3 [GCS Backup](#gcs-backup)
-        * 4.1.10.3.1 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
-      * 4.1.10.4 [Storage Policies](#storage-policies)
-        * 4.1.10.4.1 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
-      * 4.1.10.5 [Alter Freeze](#alter-freeze)
-        * 4.1.10.5.1 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
-      * 4.1.10.6 [Alter Detach](#alter-detach)
-        * 4.1.10.6.1 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
-      * 4.1.10.7 [Alter Attach](#alter-attach)
-        * 4.1.10.7.1 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
-    * 4.1.11 [Metadata](#metadata)
-      * 4.1.11.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
-      * 4.1.11.2 [Revisions](#revisions)
-        * 4.1.11.2.1 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
-      * 4.1.11.3 [Bad Backup Number](#bad-backup-number)
-        * 4.1.11.3.1 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
+      * 4.1.10.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
+      * 4.1.10.2 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
+      * 4.1.10.3 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
+      * 4.1.10.4 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
+      * 4.1.10.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
+      * 4.1.10.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
+      * 4.1.10.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
+    * 4.1.11 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
+      * 4.1.11.1 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
+      * 4.1.11.2 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
     * 4.1.12 [Metadata Restore](#metadata-restore)
-      * 4.1.12.1 [Restore File](#restore-file)
-        * 4.1.12.1.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
-      * 4.1.12.2 [Bad Restore File](#bad-restore-file)
-        * 4.1.12.2.1 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
-      * 4.1.12.3 [Huge Restore File](#huge-restore-file)
-        * 4.1.12.3.1 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
-      * 4.1.12.4 [No Local Metadata](#no-local-metadata)
-        * 4.1.12.4.1 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
-      * 4.1.12.5 [Bucket Path](#bucket-path)
-        * 4.1.12.5.1 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
-      * 4.1.12.6 [Revision Restore](#revision-restore)
-        * 4.1.12.6.1 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
-      * 4.1.12.7 [Mutations](#mutations)
-        * 4.1.12.7.1 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
-      * 4.1.12.8 [Parallel Mutations](#parallel-mutations)
-        * 4.1.12.8.1 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
-      * 4.1.12.9 [Detached](#detached)
-        * 4.1.12.9.1 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
+      * 4.1.12.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
+      * 4.1.12.2 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
+      * 4.1.12.3 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
+      * 4.1.12.4 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
+      * 4.1.12.5 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
+      * 4.1.12.6 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
+      * 4.1.12.7 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
+      * 4.1.12.8 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
+      * 4.1.12.9 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
     * 4.1.13 [RQ.SRS-015.S3.AWS](#rqsrs-015s3aws)
     * 4.1.14 [RQ.SRS-015.S3.MinIO](#rqsrs-015s3minio)
     * 4.1.15 [RQ.SRS-015.S3.GCS](#rqsrs-015s3gcs)
@@ -284,30 +265,22 @@ addresses. The remote host filter configuration SHALL be similar to the followin
 
 #### Backup
 
-##### MinIO Backup
-
-###### RQ.SRS-015.S3.Backup.MinIOBackup
+##### RQ.SRS-015.S3.Backup.MinIOBackup
 version: 1.0
 
 [ClickHouse] SHALL support manual backups of tables that use minio storage.
 
-##### AWS S3 Backup
-
-###### RQ.SRS-015.S3.Backup.AWSS3Backup
+##### RQ.SRS-015.S3.Backup.AWSS3Backup
 version: 1.0
 
 [ClickHouse] SHALL support manual backups of tables that use aws s3 storage.
 
-##### GCS Backup
-
-###### RQ.SRS-015.S3.Backup.GCSBackup
+##### RQ.SRS-015.S3.Backup.GCSBackup
 version: 1.0
 
 [ClickHouse] SHALL support manual backups of tables that use gcs storage.
 
-##### Storage Policies
-
-###### RQ.SRS-015.S3.Backup.StoragePolicies
+##### RQ.SRS-015.S3.Backup.StoragePolicies
 version: 1.0
 
 [ClickHouse] SHALL support using creating manual backups of tables that use storage policies containing:
@@ -316,24 +289,18 @@ version: 1.0
 * one volume with s3 and local disk
 * multiple volumes with s3 and local disks
 
-##### Alter Freeze
-
-###### RQ.SRS-015.S3.Backup.AlterFreeze
+##### RQ.SRS-015.S3.Backup.AlterFreeze
 version: 1.0
 
 [ClickHouse] SHALL support using `ALTER TABLE FREEZE` on tables that use S3 in the storage policy. If the policy includes a local disk,
 the query will create a local backup in the `shadow/` directory of the working ClickHouse directory (`/var/lib/clickhouse` by default).
 
-##### Alter Detach
-
-###### RQ.SRS-015.S3.Backup.AlterDetach
+##### RQ.SRS-015.S3.Backup.AlterDetach
 version: 1.0
 
 [ClickHouse] SHALL support using `ALTER TABLE DETACH PARTITION` on partitions of tables that use S3.
 
-##### Alter Attach
-
-###### RQ.SRS-015.S3.Backup.AlterAttach
+##### RQ.SRS-015.S3.Backup.AlterAttach
 version: 1.0
 
 [ClickHouse] SHALL support restoring backups of tables using `ALTER TABLE ATTACH PARTITION` from data inside
@@ -349,9 +316,7 @@ if and only if they have `<send_metadata>` set to `true` in the disk config.
 The disk metadata is stored in `/var/lib/clickhouse/disks/{disk name}/`.
 The metadata is stored in the s3 bucket.
 
-##### Revisions
-
-###### RQ.SRS-015.S3.Metadata.Revisions
+##### RQ.SRS-015.S3.Metadata.Revisions
 version: 1.0
 
 [ClickHouse] SHALL keep a revision counter for each table and change the counter for
@@ -359,54 +324,42 @@ every insert, merge, or remove operation. The revision counter in stored in
 `/var/lib/clickhouse/disks/s3/shadow/{backup number}/revision.txt`, where
 the backup number indicated how many times `ALTER FREEZE` has been used on the table.
 
-##### Bad Backup Number
-
-###### RQ.SRS-015.S3.Metadata.BadBackupNumber
+##### RQ.SRS-015.S3.Metadata.BadBackupNumber
 version: 1.0
 
 [ClickHouse] SHALL
 
 #### Metadata Restore
 
-##### Restore File
-
-###### RQ.SRS-0.5.S3.MetadataRestore.RestoreFile
+##### RQ.SRS-0.5.S3.MetadataRestore.RestoreFile
 version: 1.0
 
 [ClickHouse] SHALL support restoring tables using a restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` and executing
 `SYSTEM RESTART DISK` and reattaching the table.
 
-##### Bad Restore File
-
-###### RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile
+##### RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile
 version: 1.0
 
 [ClickHouse] SHALL not support restoring tables using a restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains
 a wrong bucket, path, or revision value.
 
-##### Huge Restore File
-
-###### RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile
+##### RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile
 version: 1.0
 
 [ClickHouse] SHALL not support restoring tables using a restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains
 a large amount of not usable information.
 
-##### No Local Metadata
-
-###### RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata
+##### RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table from the restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` even
 if the local metadata has been purged.
 
-##### Bucket Path
-
-###### RQ.SRS-015.S3.MetadataRestore.BucketPath
+##### RQ.SRS-015.S3.MetadataRestore.BucketPath
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table to a specific bucket and path by indicating them
@@ -418,9 +371,7 @@ using the following syntax:
 'source_bucket' = {bucket}
 ```
 
-##### Revision Restore
-
-###### RQ.SRS-015.S3.MetadataRestore.RevisionRestore
+##### RQ.SRS-015.S3.MetadataRestore.RevisionRestore
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table to a specific revision version.
@@ -431,24 +382,18 @@ The revision can be indicated in the restore file located in `/var/lib/clickhous
 'revision' = {revision number}
 ```
 
-##### Mutations
-
-###### RQ.SRS-015.S3.MetadataRestore.Mutations
+##### RQ.SRS-015.S3.MetadataRestore.Mutations
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table to a state before, during, or after a mutation.
 
-##### Parallel Mutations
-
-###### RQ.SRS-015.S3.MetadataRestore.ParallelMutations
+##### RQ.SRS-015.S3.MetadataRestore.ParallelMutations
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table correctly even when mutations
 are being added in parallel with the restore process.
 
-##### Detached
-
-###### RQ.SRS-015.S3.MetadataRestore.Detached
+##### RQ.SRS-015.S3.MetadataRestore.Detached
 version: 1.0
 
 [ClickHouse] SHALL support restoring tables with a detached partition and
