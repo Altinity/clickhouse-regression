@@ -316,10 +316,10 @@ RQ_SRS_015_S3_Backup_Cleanup = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL clean up local and remote files related to backed up partitions when a table is dropped.\n"
+        "[ClickHouse] SHALL clean up local and remote files related to backed up partitions after a table is dropped.\n"
         "\n"
         "* Detached partitions SHALL be removed immediately\n"
-        "* Frozen partitions SHALL be removed immediately after UNFREEZE\n"
+        "* Frozen partitions SHALL be removed immediately after SYSTEM UNFREEZE\n"
         "\n"
     ),
     link=None,
@@ -3328,10 +3328,10 @@ version: 1.0
 ##### RQ.SRS-015.S3.Backup.Cleanup
 version: 1.0
 
-[ClickHouse] SHALL clean up local and remote files related to backed up partitions when a table is dropped.
+[ClickHouse] SHALL clean up local and remote files related to backed up partitions after a table is dropped.
 
 * Detached partitions SHALL be removed immediately
-* Frozen partitions SHALL be removed immediately after UNFREEZE
+* Frozen partitions SHALL be removed immediately after SYSTEM UNFREEZE
 
 #### Metadata
 
