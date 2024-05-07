@@ -141,9 +141,13 @@ def delete_random_column(self):
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            # wait_for_mutations_to_finish(node=node)
-            By(
+            with By("selecting a random node that knows about the table"):
+                node = get_random_node_for_table(table_name=table_name)
+
+            with And("waiting for any other mutations on that column to finish"):
+                wait_for_mutations_to_finish(node=node, command_like=column_name)
+
+            And(
                 name=f"delete column from {table_name} with {node.name}",
                 test=alter_table_drop_column,
             )(
@@ -707,7 +711,7 @@ def clear_random_index(self):
         index_name = random.choice(indexes)
         partition_name = get_random_partition_id(node=node, table_name=table_name)
 
-        wait_for_mutations_to_finish(node=node)
+        wait_for_mutations_to_finish(node=node, command_like=index_name)
 
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
@@ -734,14 +738,18 @@ def drop_random_index(self):
             exit_codes = {}
             with When(f"I drop {index_name} on all tables"):
                 for table_name in self.context.table_names:
-                    node = get_random_node_for_table(table_name=table_name)
-                    # wait_for_mutations_to_finish(node=node)
+                    with By("selecting a random node that knows about the table"):
+                        node = get_random_node_for_table(table_name=table_name)
 
-                    r = node.query(
-                        f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
-                        **alter_query_args,
-                    )
-                    exit_codes[table_name] = r.exitcode
+                    with And("waiting for any other mutations on that index to finish"):
+                        wait_for_mutations_to_finish(node=node, command_like=index_name)
+
+                    with And("dropping the index"):
+                        r = node.query(
+                            f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
+                            **alter_query_args,
+                        )
+                        exit_codes[table_name] = r.exitcode
 
             with Then("all drops should have succeeded"):
                 for table_name in self.context.table_names:
