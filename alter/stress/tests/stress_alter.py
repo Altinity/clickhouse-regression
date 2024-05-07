@@ -13,8 +13,8 @@ from alter.stress.tests.steps import *
 
 def build_action_list(
     columns=True,
-    projections=True,
-    indexes=True,
+    projections=False,
+    indexes=False,
     restarts=False,
     network_restarts=False,
     add_remove_replicas=False,
@@ -270,6 +270,24 @@ def safe(self):
 
     alter_combinations(
         actions=build_action_list(),
+        limit=None if self.context.stress else 20,
+    )
+
+
+@TestScenario
+def indexes_and_projections(self):
+    """
+    Perform only actions using indexes and projections.
+
+    Column actions are disabled to avoid mutation timeouts.
+    """
+
+    alter_combinations(
+        actions=build_action_list(
+            columns=False,
+            projections=True,
+            indexes=True,
+        ),
         limit=None if self.context.stress else 20,
     )
 

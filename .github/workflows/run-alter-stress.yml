@@ -17,10 +17,11 @@ on:
         type: choice
         options:
           - safe
-          - add-remove-replicas
-          - full-disk
-          - network-faults
-          - insert-faults
+          - indexes and projections
+          - add remove replicas
+          - full disk
+          - network faults
+          - insert faults
       storage_provider:
         description: "Storage Provider to use (default: minio)"
         type: choice
