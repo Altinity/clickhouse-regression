@@ -313,10 +313,10 @@ version: 1.0
 ##### RQ.SRS-015.S3.Backup.Cleanup
 version: 1.0
 
-[ClickHouse] SHALL clean up local and remote files related to backed up partitions when a table is dropped.
+[ClickHouse] SHALL clean up local and remote files related to backed up partitions after a table is dropped.
 
 * Detached partitions SHALL be removed immediately
-* Frozen partitions SHALL be removed immediately after UNFREEZE
+* Frozen partitions SHALL be removed immediately after SYSTEM UNFREEZE
 
 #### Metadata
 
