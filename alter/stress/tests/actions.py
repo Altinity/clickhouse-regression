@@ -687,11 +687,13 @@ def add_random_index(self, safe=True):
                 tables=self.context.table_names
             )
 
-    node.query(
-        f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
-        exitcode=0,
-        **alter_query_args,
-    )
+    for table_name in self.context.table_names:
+        node = get_random_node_for_table(table_name=table_name)
+        node.query(
+            f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
+            exitcode=0,
+            **alter_query_args,
+        )
 
 
 @TestStep
