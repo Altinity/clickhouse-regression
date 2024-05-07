@@ -513,7 +513,9 @@ def measure_file_size(self):
         size_after = get_stable_bucket_size(prefix=bucket_path)
 
     with Then("I compare the size that clickhouse reports"):
-        r = node.query(f"SELECT sum(_size) FROM s3('{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV")
+        r = node.query(
+            f"SELECT sum(_size) FROM s3('{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
+        )
         assert size_after - size_before == int(r.output.strip()), error()
 
 

@@ -68,7 +68,7 @@ def alter_freeze_partition(self, policy_name):
             partition_name="1",
             exitcode=0,
         )
-    
+
     with Then("I check the data is back"):
         node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated", message="1\t2")
 
