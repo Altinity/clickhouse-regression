@@ -30,12 +30,17 @@ def alter_freeze(self, policy_name):
 
 
 @TestOutline
-@Requirements(RQ_SRS_015_S3_Backup_AlterFreeze("1.0"))
+@Requirements(
+    RQ_SRS_015_S3_Backup_AlterFreeze("1.0"), RQ_SRS_015_S3_Backup_Cleanup("1.0")
+)
 def alter_freeze_partition(self, policy_name):
     """Check tables work with ALTER TABLE FREEZE on specific partitions."""
     node = self.context.node
     table_name = f"table_{getuid()}"
     backup_name = f"backup_{getuid()}"
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after()
 
     with Given(f"I have a table {table_name}"):
         s3_table(table_name=table_name, policy=policy_name)
@@ -43,7 +48,7 @@ def alter_freeze_partition(self, policy_name):
     with When("I insert some data into the table"):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
-    with Then("I freeze the table"):
+    with And("I freeze the partition"):
         alter_table_freeze_partition_with_name(
             node=node,
             table_name=table_name,
@@ -52,7 +57,10 @@ def alter_freeze_partition(self, policy_name):
             exitcode=0,
         )
 
-    with Finally("I unfreeze the table"):
+    with Then("I check the data is gone from the table"):
+        node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated", message="")
+
+    with When("I unfreeze the partition"):
         alter_table_unfreeze_partition_with_name(
             node=node,
             table_name=table_name,
@@ -61,13 +69,21 @@ def alter_freeze_partition(self, policy_name):
             exitcode=0,
         )
 
+    with Then("I check the data is back"):
+        node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated", message="1\t2")
+
 
 @TestOutline
-@Requirements(RQ_SRS_015_S3_Backup_AlterDetach("1.0"))
+@Requirements(
+    RQ_SRS_015_S3_Backup_AlterDetach("1.0"), RQ_SRS_015_S3_Backup_Cleanup("1.0")
+)
 def detach_partition(self, policy_name):
     """Check tables work with ALTER TABLE DETACH PARTITION."""
     node = self.context.node
     table_name = f"table_{getuid()}"
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(tolerance=20)
 
     with Given(f"I have a table {table_name}"):
         s3_table(table_name=table_name, policy=policy_name)
@@ -1141,6 +1157,8 @@ def aws_s3(self, uri, access_key, key_id, bucket, region, node="clickhouse1"):
     self.context.bucket = bucket
     self.context.bucket2 = bucket + "2"
     self.context.region = region
+    self.context.bucket_name = bucket
+    self.context.bucket_path = "data"
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
@@ -1158,6 +1176,8 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.bucket2 = "data2"
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.bucket_name = None
+    self.context.bucket_path = None
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
@@ -1175,6 +1195,8 @@ def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.secret_access_key = secret
     self.context.bucket = self.context.cluster.minio_bucket
     self.context.bucket2 = self.context.cluster.minio_bucket_2
+    self.context.bucket_name = "root"
+    self.context.bucket_path = "data"
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)

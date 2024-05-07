@@ -11,9 +11,99 @@ from alter.stress.tests.actions import *
 from alter.stress.tests.steps import *
 
 
+def build_action_list(
+    columns=True,
+    projections=True,
+    indexes=True,
+    restarts=False,
+    network_restarts=False,
+    add_remove_replicas=False,
+    fill_disks=False,
+):
+    actions = [
+        delete_random_rows,
+        detach_attach_random_partition,
+        freeze_unfreeze_random_part,
+        drop_random_part,
+        replace_random_part,
+        modify_random_ttl,
+        remove_random_ttl,
+        move_random_partition_to_random_disk,
+        move_random_partition_to_random_table,
+        attach_random_part_from_table,
+        fetch_random_part_from_table,
+    ]
+
+    if restarts:
+        actions += [restart_keeper, restart_clickhouse]
+
+    if network_restarts:
+        actions.append(restart_network)
+
+    if add_remove_replicas:
+        actions += [delete_replica, add_replica]
+
+    if columns:
+        actions += [
+            add_random_column,
+            rename_random_column,
+            clear_random_column,
+            delete_random_column,
+            update_random_column,
+        ]
+
+    if projections:
+        actions += [
+            add_random_projection,
+            clear_random_projection,
+            drop_random_projection,
+        ]
+    else:
+        actions += [delete_random_rows_lightweight]
+
+    if indexes:
+        actions += [
+            add_random_index,
+            clear_random_index,
+            drop_random_index,
+        ]
+
+    if fill_disks:
+        actions += [
+            fill_clickhouse_disks,
+            fill_zookeeper_disks,
+        ]
+
+    return actions
+
+
+def build_action_groups(
+    actions: list,
+    combination_size=3,
+    limit=10,
+    shuffle=True,
+    with_replacement=True,
+):
+    with Given(f"I make a list of groups of {combination_size} actions"):
+        action_groups = list(
+            combinations(actions, combination_size, with_replacement=with_replacement)
+        )
+
+    if shuffle:
+        with And("I shuffle the list"):
+            random.shuffle(action_groups)
+
+    if limit:
+        with And(f"I choose {limit} groups of actions"):
+            action_groups = action_groups[:limit]
+
+    return action_groups
+
+
 @TestOutline(Scenario)
 def alter_combinations(
     self,
+    actions: list,
     limit=10,
     shuffle=True,
     combination_size=3,
@@ -26,12 +116,9 @@ def alter_combinations(
     maximum_replicas=3,
     n_tables=5,
     n_columns=50,
-    restarts=False,
-    add_remove_replicas=False,
-    add_remove_projections=False,
-    fill_disks=False,
     insert_keeper_fault_injection_probability=0,
     network_impairment=False,
+    limit_disk_space=False,
 ):
     """
     Perform combinations of alter actions, checking that all replicas agree.
@@ -44,59 +131,38 @@ def alter_combinations(
     self.context.maximum_replicas = maximum_replicas
     self.context.fault_probability = insert_keeper_fault_injection_probability
 
-    with Given("I have a list of actions I can perform"):
-        actions = [
-            add_random_column,
-            rename_random_column,
-            clear_random_column,
-            delete_random_column,
-            update_random_column,
-            delete_random_rows,
-            detach_attach_random_partition,
-            freeze_unfreeze_random_part,
-            drop_random_part,
-            replace_random_part,
-            add_random_index,
-            clear_random_index,
-            drop_random_index,
-            modify_random_ttl,
-            remove_random_ttl,
-            move_random_partition_to_random_disk,
-            move_random_partition_to_random_table,
-            attach_random_part_from_table,
-            fetch_random_part_from_table,
-        ]
-        if restarts:
-            actions += [restart_keeper, restart_clickhouse]
+    assert not (
+        restart_network in actions and network_impairment
+    ), "network impairment is not compatible with restart_network"
 
-        if not network_impairment:
-            actions.append(restart_network)
+    if fill_clickhouse_disks in actions or fill_zookeeper_disks in actions:
+        assert (
+            limit_disk_space
+        ), "enable limit_disk_space when using fill_disks to avoid unexpected behavior"
 
-        if add_remove_replicas:
-            actions += [delete_replica, add_replica]
+    action_groups = build_action_groups(
+        actions=actions,
+        combination_size=combination_size,
+        limit=limit,
+        shuffle=shuffle,
+    )
 
-        if add_remove_projections:
-            actions += [
-                add_random_projection,
-                clear_random_projection,
-                drop_random_projection,
-            ]
-        else:
-            actions += [delete_random_rows_lightweight]
+    # To test a single combination, uncomment and edit as needed.
+    # action_groups = [
+    #     [
+    #         delete_replica,
+    #         add_replica,
+    #     ]
+    # ]
 
-        if fill_disks:
-            actions += [
-                fill_clickhouse_disks,
-                fill_zookeeper_disks,
-            ]
+    background_actions = [
+        insert_to_random,
+        select_count_random,
+        select_sum_random,
+        select_max_min_random,
+    ]
 
-    with And(f"I make a list of groups of {combination_size} actions"):
-        action_groups = list(
-            combinations(actions, combination_size, with_replacement=True)
-        )
-        note(f"Created {len(action_groups)} groups of actions to run")
-
-    if fill_disks:
+    if limit_disk_space:
         with Given("Clickhouse is restarted with limited disk space"):
             for node in self.context.ch_nodes:
                 limit_clickhouse_disks(node=node)
@@ -104,14 +170,6 @@ def alter_combinations(
         with And("Zookeeper is restarted with limited disk space"):
             for node in self.context.zk_nodes:
                 limit_zookeeper_disks(node=node)
-
-    if shuffle:
-        with And("I shuffle the list"):
-            random.shuffle(action_groups)
-
-    if limit:
-        with And(f"I choose {limit} groups of actions"):
-            action_groups = action_groups[:limit]
 
     try:
         with Given(f"I create {n_tables} tables with {n_columns} columns and data"):
@@ -134,27 +192,14 @@ def alter_combinations(
                     node=self.context.node, table_name=table_name, columns=columns
                 )
 
-        with And("I create 10 random projections and indexes"):
+        with And("I create 10 random projections and indexes if required"):
             for _ in range(10):
                 # safe=False because we don't need to waste time on extra checks during setup
-                if add_remove_projections:
+                if drop_random_projection in actions:
                     add_random_projection(safe=False)
-                add_random_index(safe=False)
 
-        # To test a single combination, uncomment and edit as needed.
-        # action_groups = [
-        #     [
-        #         delete_replica,
-        #         add_replica,
-        #     ]
-        # ]
-
-        background_actions = [
-            insert_to_random,
-            select_count_random,
-            select_sum_random,
-            select_max_min_random,
-        ]
+                if drop_random_index in actions:
+                    add_random_index(safe=False)
 
         t = time.time()
         total_combinations = len(action_groups)
@@ -224,22 +269,24 @@ def safe(self):
     """
 
     alter_combinations(
+        actions=build_action_list(),
         limit=None if self.context.stress else 20,
-        shuffle=True,
-        restarts=False,
     )
 
 
 @TestScenario
 def insert_faults(self):
     """
-    Perform actions with keeper fault injection on inserts.
+    Perform actions with keeper fault injection on inserts with VFS PR.
     """
 
+    if not self.context.allow_vfs:
+        skip("VFS is not enabled")
+
     alter_combinations(
-        limit=None if self.context.stress else 20,
-        shuffle=True,
+        actions=build_action_list(),
         insert_keeper_fault_injection_probability=0.1,
+        limit=None if self.context.stress else 20,
     )
 
 
@@ -250,10 +297,9 @@ def network_faults(self):
     """
 
     alter_combinations(
+        actions=build_action_list(),
         limit=None if self.context.stress else 20,
-        shuffle=True,
         network_impairment=True,
-        restarts=False,
     )
 
 
@@ -264,9 +310,8 @@ def restarts(self):
     """
 
     alter_combinations(
+        actions=build_action_list(restarts=True),
         limit=None if self.context.stress else 20,
-        shuffle=True,
-        restarts=True,
     )
 
 
@@ -277,9 +322,8 @@ def add_remove_replicas(self):
     """
 
     alter_combinations(
+        actions=build_action_list(add_remove_replicas=True),
         limit=None if self.context.stress else 20,
-        shuffle=True,
-        add_remove_replicas=True,
     )
 
 
@@ -290,10 +334,9 @@ def full_disk(self):
     """
 
     alter_combinations(
+        actions=self.build_action_list(fill_disks=True),
         limit=None if self.context.stress else 20,
-        shuffle=True,
-        fill_disks=True,
-        restarts=False,
+        limit_disk_space=True,
     )
 
 
