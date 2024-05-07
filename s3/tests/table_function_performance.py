@@ -5,6 +5,7 @@ from testflows.core import *
 from s3.tests.common import *
 from s3.requirements import *
 
+
 @TestFeature
 @Name("setup")
 def s3_create_many_files(self):
