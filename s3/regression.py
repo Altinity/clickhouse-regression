@@ -207,11 +207,11 @@ ffails = {
         Skip,
         "GCS is not supported for zero copy replication",
     ),
-    "gcs/:/disk/:/:/:the size of the s3 bucket*": (
+    "gcs/:/:/:/:/:the size of the s3 bucket*": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    "gcs/:/disk/:/:the size of the s3 bucket*": (
+    "gcs/:/:/:/:the size of the s3 bucket*": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
@@ -289,7 +289,9 @@ def minio_regression(
 
         with And("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
-                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
 
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
@@ -376,7 +378,9 @@ def aws_s3_regression(
 
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
-                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
 
         with Module(self.context.object_storage_mode):
             Feature(test=load("s3.tests.table_function", "aws_s3"))(
@@ -386,7 +390,10 @@ def aws_s3_regression(
                 uri=uri, key_id=key_id, access_key=access_key
             )
             Feature(test=load("s3.tests.disk", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
+                uri=uri,
+                key_id=key_id,
+                access_key=access_key,
+                bucket=bucket,
             )
             Feature(test=load("s3.tests.sanity", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
@@ -408,7 +415,10 @@ def aws_s3_regression(
                 bucket=bucket,
             )
             Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
+                uri=uri,
+                key_id=key_id,
+                access_key=access_key,
+                bucket=bucket,
             )
 
 
@@ -448,7 +458,9 @@ def gcs_regression(
 
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
-                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
 
         with Module(self.context.object_storage_mode):
             Feature(test=load("s3.tests.table_function", "gcs"))(
