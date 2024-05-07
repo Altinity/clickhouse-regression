@@ -742,7 +742,7 @@ def drop_random_index(self):
                         node = get_random_node_for_table(table_name=table_name)
 
                     with And("waiting for any other mutations on that index to finish"):
-                        wait_for_mutations_to_finish(node=node, command_like=index_name)
+                        wait_for_mutations_to_finish(node=node, command_like=index_name, timeout=300)
 
                     with And("dropping the index"):
                         r = node.query(
