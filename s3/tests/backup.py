@@ -39,7 +39,7 @@ def alter_freeze_partition(self, policy_name):
     table_name = f"table_{getuid()}"
     backup_name = f"backup_{getuid()}"
 
-    with Given("I get the size of the s3 bucket before adding data"):
+    with Given("I check the size of the s3 bucket before and after the test"):
         measure_buckets_before_and_after()
 
     with Given(f"I have a table {table_name}"):
@@ -74,6 +74,39 @@ def alter_freeze_partition(self, policy_name):
 
 
 @TestOutline
+@Requirements(RQ_SRS_015_S3_Backup_Cleanup("1.0"))
+def system_unfreeze(self, policy_name):
+    """Check that SYSTEM UNFREEZE removes backups of dropped tables"""
+    node = self.context.node
+    table_name = f"table_{getuid()}"
+    backup_name = f"backup_{getuid()}"
+
+    with Given("I check the size of the s3 bucket before and after the test"):
+        measure_buckets_before_and_after()
+
+    with Given(f"I have a table {table_name}"):
+        s3_table(table_name=table_name, policy=policy_name)
+
+    with When("I insert some data into the table"):
+        node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
+
+    with And("I freeze the partition"):
+        alter_table_freeze_partition_with_name(
+            node=node,
+            table_name=table_name,
+            backup_name=backup_name,
+            partition_name="1",
+            exitcode=0,
+        )
+
+    with And("I drop the table"):
+        node.query(f"DROP TABLE {table_name} SYNC", exitcode=0)
+
+    with And("I call SYSTEM UNFREEZE"):
+        node.query(f"SYSTEM UNFREEZE WITH NAME '{backup_name}'", exitcode=0)
+
+
+@TestOutline
 @Requirements(
     RQ_SRS_015_S3_Backup_AlterDetach("1.0"), RQ_SRS_015_S3_Backup_Cleanup("1.0")
 )
@@ -82,7 +115,7 @@ def detach_partition(self, policy_name):
     node = self.context.node
     table_name = f"table_{getuid()}"
 
-    with Given("I get the size of the s3 bucket before adding data"):
+    with Given("I check the size of the s3 bucket before and after the test"):
         measure_buckets_before_and_after(tolerance=20)
 
     with Given(f"I have a table {table_name}"):
