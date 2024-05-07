@@ -842,6 +842,7 @@ def is_with_analyzer(node):
 
 @TestStep(Given)
 def experimental_analyzer(self, node, with_analyzer):
+    """Enable or disable the experimental analyzer."""
     default_value = get_settings_value(
         node=node,
         setting_name="allow_experimental_analyzer",
