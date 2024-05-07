@@ -215,6 +215,10 @@ ffails = {
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
+    "gcs/:/table function/measure file size": (
+        Skip,
+        "AWS S3 credentials not set for gcs tests.",
+    ),
     "aws s3/:/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
@@ -384,7 +388,7 @@ def aws_s3_regression(
 
         with Module(self.context.object_storage_mode):
             Feature(test=load("s3.tests.table_function", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
+                uri=uri, key_id=key_id, access_key=access_key, bucket=bucket
             )
             Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
@@ -415,10 +419,7 @@ def aws_s3_regression(
                 bucket=bucket,
             )
             Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(
-                uri=uri,
-                key_id=key_id,
-                access_key=access_key,
-                bucket=bucket,
+                uri=uri, key_id=key_id, access_key=access_key
             )
 
 
