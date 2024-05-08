@@ -92,9 +92,14 @@ def exponentialTimeDecayedFunc(
         )
 
     with Example("check decay length with column argument"):
+        if is_with_analyzer(node=self.context.node):
+            exitcode = 36
+        else:
+            exitcode = 47
+
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(id)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=47,
+            exitcode=exitcode,
             message=f"Exception: ",
         )
 
@@ -360,9 +365,14 @@ def exponentialTimeDecayedCount(self, extremely_large_number_of_arguments=1000):
         )
 
     with Example("check decay length with column argument"):
+        if is_with_analyzer(node=self.context.node):
+            exitcode = 36
+        else:
+            exitcode = 47
+
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(id)(f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=47,
+            exitcode=exitcode,
             message=f"Exception: ",
         )
 

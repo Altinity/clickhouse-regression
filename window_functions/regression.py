@@ -181,6 +181,12 @@ xfails = {
             check_clickhouse_version(">=23.11"),
         )
     ],
+    "/window functions/tests/*/errors/error named window defined twice/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/63539",
+        )
+    ],
 }
 
 xflags = {}
