@@ -14,6 +14,7 @@ from helpers.common import (
     getuid,
     current_cpu,
     check_current_cpu,
+    is_with_analyzer,
 )
 
 interval_periods = [

@@ -13,6 +13,12 @@ def error_using_non_window_function(self):
     exitcode = 63
     message = "DB::Exception: Unknown aggregate function numbers"
 
+    if is_with_analyzer(node=self.context.node):
+        exitcode = 63
+        message = (
+            "DB::Exception: Aggregate function with name 'numbers' does not exists."
+        )
+
     sql = "SELECT numbers(1, 100) OVER () FROM empsalary FORMAT TabSeparated"
 
     with When("I execute query", description=sql):
@@ -24,6 +30,10 @@ def error_order_by_another_window_function(self):
     """Check that trying to order by another window function returns an error."""
     exitcode = 184
     message = "DB::Exception: Window function rank() OVER (ORDER BY rand() ASC) is found inside window definition in query"
+
+    if is_with_analyzer(node=self.context.node):
+        exitcode = 10
+        message = "DB::Exception: Not found column rank() OVER"
 
     sql = "SELECT rank() OVER (ORDER BY rank() OVER (ORDER BY rand())) FORMAT TabSeparated"
 
@@ -57,6 +67,9 @@ def error_window_function_in_join(self):
         if check_clickhouse_version("<21.9")(self)
         else "DB::Exception: Cannot get JOIN keys from JOIN ON section"
     )
+    if is_with_analyzer(node=self.context.node):
+        exitcode = 184
+        message = "DB::Exception: Window function row_number() OVER (ORDER BY salary ASC) is found in JOIN TREE in query."
 
     sql = "SELECT * FROM empsalary INNER JOIN tenk1 ON row_number() OVER (ORDER BY salary) < 10 FORMAT TabSeparated"
 
@@ -69,6 +82,10 @@ def error_window_function_in_group_by(self):
     """Check that trying to use window function in `GROUP BY` returns an error."""
     exitcode = 47
     message = "DB::Exception: Unknown identifier"
+
+    if is_with_analyzer(node=self.context.node):
+        exitcode = 184
+        message = "DB::Exception: Received from localhost:9000. DB::Exception: Window function row_number() OVER (ORDER BY salary ASC) is found in GROUP BY in query."
 
     sql = "SELECT rank() OVER (ORDER BY 1), count(*) FROM empsalary GROUP BY row_number() OVER (ORDER BY salary) < 10 FORMAT TabSeparated"
 
