@@ -9,7 +9,7 @@ from s3.requirements import *
 @TestFeature
 @Name("setup")
 def s3_create_many_files(self):
-    """Create a folder with many folders and files in S3"""
+    """Create a folder with many folders and files in S3."""
 
     num_folders = 50_000
     start_offset = 0
@@ -51,38 +51,36 @@ def s3_create_many_files(self):
         join()
 
 
-@TestScenario
+@TestOutline(Scenario)
+@Examples(
+    "wildcard expected_time",
+    [
+        ("522029", 60, Name("one file")),
+        ("{25000..26000}", 60, Name("range")),
+        ("{759040,547776,167687,283359}", 60, Name("nums")),
+        ("{759040,547776,167687,283359,abc}", 60, Name("nums one missing")),
+        ("*", 60, Name("star")),
+        ("%3F", 60, Name("question")),
+    ],
+)
 @Requirements(RQ_SRS_015_S3_Performance_Glob("1.0"))
-def wildcard_performance(self):
+def wildcard_performance(self, wildcard, expected_time):
     """Check the performance of using wildcards in s3 paths."""
-
-    expected_time = 60
 
     node = current().context.node
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
 
-    examples = [
-        ("522029", "one_file"),
-        ("{25000..26000}", "range"),
-        ("{759040,547776,167687,283359}", "nums"),
-        ("{759040,547776,167687,283359,abc}", "nums_one_missing"),
-        # ("*", "star"),
-        # ("%3F", "question"),
-    ]
-
-    for wildcard, name in examples:
-        with Example(name):
-            with Then(f"""I query the data using the wildcard '{wildcard}'"""):
-                t_start = time.time()
-                r = node.query(
-                    f"""SELECT median(d) FROM s3('{self.context.many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
-                    timeout=expected_time,
-                )
-                t_elapsed = time.time() - t_start
-                metric(f"wildcard {name} ({wildcard})", t_elapsed, "s")
-                assert r.output.strip() != "", error()
-                assert t_elapsed < expected_time, error()
+    with Then(f"""I query the data using the wildcard '{wildcard}'"""):
+        t_start = time.time()
+        r = node.query(
+            f"""SELECT median(d) FROM s3('{self.context.many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
+            timeout=expected_time,
+        )
+        t_elapsed = time.time() - t_start
+        metric(f"wildcard {name} ({wildcard})", t_elapsed, "s")
+        assert r.output.strip() != "", error()
+        assert t_elapsed < expected_time, error()
 
 
 @TestOutline(Feature)
