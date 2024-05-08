@@ -295,7 +295,7 @@ def columns(self):
     """
 
     alter_combinations(
-        actions=build_action_list(columns=True, moves=False, ttl=False),
+        actions=build_action_list(columns=True, part_manipulation=False, ttl=False),
         limit=None if self.context.stress else 20,
     )
 
@@ -307,7 +307,9 @@ def columns_and_indexes(self):
     """
 
     alter_combinations(
-        actions=build_action_list(columns=True, moves=False, ttl=False, indexes=True),
+        actions=build_action_list(
+            columns=True, part_manipulation=False, ttl=False, indexes=True
+        ),
         limit=None if self.context.stress else 20,
     )
 
