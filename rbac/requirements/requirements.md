@@ -3294,7 +3294,7 @@ The following table show which rights are required for which user in order to se
 |`NONE` |	- | -
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL support the `ALTER TABLE MODIFY SQL SECURITY` statement to change the SQL security for an existing view.
 
 Syntax:
@@ -3303,13 +3303,13 @@ ALTER TABLE MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user |
 ```
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.Default.Definer
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified.
 
 ##### View
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.View.CreateView 
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW` statement.
 
 Syntax:
@@ -3320,22 +3320,22 @@ AS SELECT ...
 ```
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.View.Default
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if SQL SECURITY is not specified.
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL only succesfully `SELECT` from a view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL only succesfully `SELECT` from a view with INVOKER security mode if and only if the invoker user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
 
 
 ##### Materialized View
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CreateMaterializedView
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW` statement.
 
 Syntax:
@@ -3346,33 +3346,31 @@ AS SELECT ...
 ```
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` for materialized views if SQL SECURITY is not specified.
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL only succesfully `SELECT` from a materialized view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table and target table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role.
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with DEFINER security mode if and only if the definer user has `INSERT` privilege on the target table, either explicitly or through a role and invoker user has `INSERT` privileges on the view, either explicitly or through a role.
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invokers
-version: 1.0
+version: 1.0  
 [ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
 
 
 #### Live View
 
 ##### RQ.SRS-006.RBAC.LiveView
-version: 1.0
-
+version: 1.0  
 [ClickHouse] SHALL support controlling access to **create**, **select**, **alter** and **drop**
 privileges for a live view for users or roles.
 
 ##### RQ.SRS-006.RBAC.LiveView.Create
-version: 1.0
-
+version: 1.0  
 [ClickHouse] SHALL only successfully execute a `CREATE LIVE VIEW` command if and only if
 the user has **create view** privilege either explicitly or through roles.
 
