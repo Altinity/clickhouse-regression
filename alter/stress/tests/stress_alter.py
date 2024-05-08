@@ -164,10 +164,6 @@ def alter_combinations(
     #         add_replica,
     #     ]
     # ]
-    action_groups = [
-        [delete_random_column, add_random_index, add_random_index],
-        [freeze_unfreeze_random_part, update_random_column, drop_random_index],
-    ] * 20
 
     background_actions = [
         insert_to_random,
@@ -191,6 +187,11 @@ def alter_combinations(
             columns = "key DateTime," + ",".join(
                 f"value{i} UInt16" for i in range(n_columns)
             )
+            ttl = (
+                f"key + INTERVAL {random.randint(1, 10)} YEAR"
+                if modify_random_ttl in actions
+                else None
+            )
             for i in range(n_tables):
                 table_name = f"table{i}_{self.context.storage_policy}"
                 replicated_table_cluster(
@@ -198,7 +199,7 @@ def alter_combinations(
                     storage_policy=self.context.storage_policy,
                     partition_by="toQuarter(key) - 1",
                     columns=columns,
-                    ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
+                    ttl=ttl,
                     no_cleanup=True,
                 )
                 self.context.table_names.append(table_name)
@@ -295,7 +296,9 @@ def columns(self):
     """
 
     alter_combinations(
-        actions=build_action_list(columns=True, moves=False, ttl=False),
+        actions=build_action_list(
+            columns=True, part_manipulation=False, ttl=False, indexes=False
+        ),
         limit=None if self.context.stress else 20,
     )
 
@@ -307,7 +310,9 @@ def columns_and_indexes(self):
     """
 
     alter_combinations(
-        actions=build_action_list(columns=True, moves=False, ttl=False, indexes=True),
+        actions=build_action_list(
+            columns=True, part_manipulation=False, ttl=False, indexes=True
+        ),
         limit=None if self.context.stress else 20,
     )
 
