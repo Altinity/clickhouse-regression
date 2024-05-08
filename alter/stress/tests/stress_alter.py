@@ -187,6 +187,11 @@ def alter_combinations(
             columns = "key DateTime," + ",".join(
                 f"value{i} UInt16" for i in range(n_columns)
             )
+            ttl = (
+                f"key + INTERVAL {random.randint(1, 10)} YEAR"
+                if modify_random_ttl in actions
+                else None
+            )
             for i in range(n_tables):
                 table_name = f"table{i}_{self.context.storage_policy}"
                 replicated_table_cluster(
@@ -194,7 +199,7 @@ def alter_combinations(
                     storage_policy=self.context.storage_policy,
                     partition_by="toQuarter(key) - 1",
                     columns=columns,
-                    ttl=f"key + INTERVAL {random.randint(1, 10)} YEAR",
+                    ttl=ttl,
                     no_cleanup=True,
                 )
                 self.context.table_names.append(table_name)
