@@ -78,6 +78,7 @@ def check_materialized_view_with_definer(
     view_definer_source_table_privilege,
     view_definer_target_table_privilege,
     view_user_privilege,
+    grant_privilege,
 ):
     """Check that I can perform `create` and `insert` operations as a
     user with privileges limited to a materialized view. The materialized
@@ -111,31 +112,31 @@ def check_materialized_view_with_definer(
         )
         populate_mv_table(node=node, mv_table_name=mv_table_name, table_name=table_name)
 
-    with And("I grant privileges to source and target tables to user"):
-        for privilege in view_definer_source_table_privilege:
-            grant_privilege(
-                node=node,
-                privilege=privilege,
-                object=table_name,
-                user=user_name_definer,
-            )
-        for privilege in view_definer_target_table_privilege:
-            grant_privilege(
-                node=node,
-                privilege=privilege,
-                object=mv_table_name,
-                user=user_name_definer,
-            )
+    with And("I grant privileges to source and target tables to user either directly or via role"):
+        grant_privilege(
+            node=node,
+            privileges=view_definer_source_table_privilege,
+            object=table_name,
+            user=user_name_definer,
+        )
+        grant_privilege(
+            node=node,
+            privileges=view_definer_target_table_privilege,
+            object=mv_table_name,
+            user=user_name_definer,
+        )
 
     with When("I create second user"):
         user_name_two = "user_two_" + getuid()
         create_user(node=node, user_name=user_name_two)
 
-    with And("I grant privilege on materialized view to second user"):
-        for privilege in view_user_privilege:
-            grant_privilege(
-                node=node, privilege=privilege, object=view_name, user=user_name_two
-            )
+    with And("I grant privilege on materialized view to second user either directly or via role"):
+        grant_privilege(
+            node=node,
+            privileges=view_user_privilege,
+            object=view_name,
+            user=user_name_two,
+        )
 
     with Then("I try to select from materialized view with second user"):
         check_select_from_mv(
@@ -143,8 +144,8 @@ def check_materialized_view_with_definer(
             view_user_privilege=view_user_privilege,
             view_definer_source_table_privilege=view_definer_source_table_privilege,
             view_definer_target_table_privilege=view_definer_target_table_privilege,
-            user_name_definer=user_name_definer,
-            user_name_two=user_name_two,
+            definer_user=user_name_definer,
+            user_name=user_name_two,
             view_name=view_name,
         )
 
@@ -153,8 +154,8 @@ def check_materialized_view_with_definer(
             node=node,
             view_user_privilege=view_user_privilege,
             view_definer_target_table_privilege=view_definer_target_table_privilege,
-            user_name_definer=user_name_definer,
-            user_name_two=user_name_two,
+            definer_user=user_name_definer,
+            user_name=user_name_two,
             view_name=view_name,
         )
 
@@ -177,6 +178,11 @@ def materialized_view_with_definer(self):
         "CREATE",
     ]
 
+    if not self.context.stress:
+        privileges = ["NONE", "SELECT", "INSERT"]
+        
+    grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
+
     view_definer_source_table_privileges_combinations = list(
         combinations(privileges, 2)
     ) + [["NONE"]]
@@ -190,10 +196,12 @@ def materialized_view_with_definer(self):
             view_definer_source_table_privilege,
             view_definer_target_table_privilege,
             view_user_privilege,
+            grant_privilege,
         ) in product(
             view_definer_source_table_privileges_combinations,
             view_definer_target_table_privileges_combinations,
             view_user_privileges_combinations,
+            grant_privileges,
         ):
             Scenario(
                 name=f"{view_definer_source_table_privilege}, {view_definer_target_table_privilege}, {view_user_privilege}",
@@ -204,6 +212,7 @@ def materialized_view_with_definer(self):
                 view_definer_source_table_privilege=view_definer_source_table_privilege,
                 view_definer_target_table_privilege=view_definer_target_table_privilege,
                 view_user_privilege=view_user_privilege,
+                grant_privilege=grant_privilege,
             )
         join()
 
@@ -242,7 +251,7 @@ def definer_with_less_privileges(self):
         )
         populate_mv_table(node=node, mv_table_name=mv_table_name, table_name=table_name)
 
-    with And("I grant privileges to user"):
+    with And("I grant privileges to user"): 
         grant_privilege(
             node=node,
             privilege=view_definer_source_table_privilege,
