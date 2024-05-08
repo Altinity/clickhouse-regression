@@ -10,14 +10,14 @@ from rbac.tests.sql_security.common import *
 from helpers.common import getuid
 
 
-@TestStep
-def check_select_from_view(
+@TestStep(Then)
+def check_select_from_mv(
     self,
     view_definer_source_table_privilege,
     view_definer_target_table_privilege,
     view_user_privilege,
-    user_name_definer,
-    user_name_two,
+    definer_user,
+    user_name,
     view_name,
     node,
 ):
@@ -27,29 +27,27 @@ def check_select_from_view(
         and "SELECT" in view_definer_source_table_privilege
         and "SELECT" in view_definer_target_table_privilege
     ):
-        node.query(f"SELECT * FROM {view_name}", settings=[("user", user_name_two)])
+        node.query(f"SELECT * FROM {view_name}", settings=[("user", user_name)])
     else:
         if "SELECT" not in view_user_privilege:
-            exitcode, message = errors.not_enough_privileges(name=f"{user_name_two}")
+            exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
         else:
-            exitcode, message = errors.not_enough_privileges(
-                name=f"{user_name_definer}"
-            )
+            exitcode, message = errors.not_enough_privileges(name=f"{definer_user}")
         node.query(
             f"SELECT * FROM {view_name}",
-            settings=[("user", user_name_two)],
+            settings=[("user", user_name)],
             exitcode=exitcode,
             message=message,
         )
 
 
-@TestStep
-def check_insert_into_view(
+@TestStep(Then)
+def check_insert_into_mv(
     self,
     view_definer_target_table_privilege,
     view_user_privilege,
-    user_name_definer,
-    user_name_two,
+    definer_user,
+    user_name,
     view_name,
     node,
 ):
@@ -59,18 +57,16 @@ def check_insert_into_view(
         and "INSERT" in view_definer_target_table_privilege
     ):
         node.query(
-            f"INSERT INTO {view_name} VALUES (1)", settings=[("user", user_name_two)]
+            f"INSERT INTO {view_name} VALUES (1)", settings=[("user", user_name)]
         )
     else:
         if "INSERT" not in view_user_privilege:
-            exitcode, message = errors.not_enough_privileges(name=f"{user_name_two}")
+            exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
         else:
-            exitcode, message = errors.not_enough_privileges(
-                name=f"{user_name_definer}"
-            )
+            exitcode, message = errors.not_enough_privileges(name=f"{definer_user}")
         node.query(
             f"INSERT INTO {view_name} VALUES (1)",
-            settings=[("user", user_name_two)],
+            settings=[("user", user_name)],
             exitcode=exitcode,
             message=message,
         )
@@ -109,7 +105,7 @@ def check_materialized_view_with_definer(
             node=node,
             view_name=view_name,
             mv_table_name=mv_table_name,
-            table_name=table_name,
+            select_table_name=table_name,
             definer=user_name_definer,
             sql_security="DEFINER",
         )
@@ -142,7 +138,7 @@ def check_materialized_view_with_definer(
             )
 
     with Then("I try to select from materialized view with second user"):
-        check_select_from_view(
+        check_select_from_mv(
             node=node,
             view_user_privilege=view_user_privilege,
             view_definer_source_table_privilege=view_definer_source_table_privilege,
@@ -153,7 +149,7 @@ def check_materialized_view_with_definer(
         )
 
     with And("I try to insert into materialized view with second user"):
-        check_insert_into_view(
+        check_insert_into_mv(
             node=node,
             view_user_privilege=view_user_privilege,
             view_definer_target_table_privilege=view_definer_target_table_privilege,
@@ -165,7 +161,7 @@ def check_materialized_view_with_definer(
 
 @TestScenario
 @Flags(TE)
-def definers(self):
+def materialized_view_with_definer(self):
     """Check that user can only select from materialized view or
     insert into materialized view if definer has enough privileges.
     For select: definer should have SELECT on source table and target table,
@@ -213,7 +209,7 @@ def definers(self):
 
 
 @TestScenario
-def materialized_view_with_definer(self):
+def definer_with_less_privileges(self):
     """Check that user can not select from materialized view
     if definer does not have enough privileges."""
 
@@ -240,7 +236,7 @@ def materialized_view_with_definer(self):
             node=node,
             view_name=view_name,
             mv_table_name=mv_table_name,
-            table_name=table_name,
+            select_table_name=table_name,
             definer=user_name_definer,
             sql_security="DEFINER",
         )
@@ -260,7 +256,7 @@ def materialized_view_with_definer(self):
             user=user_name_definer,
         )
 
-    with Then("I try to select from materialized view with second user"):
+    with Then("I try to select from materialized view"):
         exitcode, message = errors.not_enough_privileges(name=f"{user_name_definer}")
         node.query(f"SELECT * FROM {view_name}", exitcode=exitcode, message=message)
 
@@ -268,11 +264,11 @@ def materialized_view_with_definer(self):
 @TestFeature
 @Name("definers")
 def feature(self, node="clickhouse1"):
-    """Check materialized view with definers."""
+    """Check usage of materialized views that were created with definers."""
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_2 = self.context.cluster.node("clickhouse2")
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
 
     Scenario(run=materialized_view_with_definer)
-    Scenario(run=definers)
+    Scenario(run=definer_with_less_privileges)
