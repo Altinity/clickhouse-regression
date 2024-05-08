@@ -55,7 +55,7 @@ def s3_create_many_files(self):
 @Examples(
     "wildcard expected_time",
     [
-        ("522029", 60, Name("one file")),
+        ("522029", 60, Name("one folder")),
         ("{25000..26000}", 60, Name("range")),
         ("{759040,547776,167687,283359}", 60, Name("nums")),
         ("{759040,547776,167687,283359,abc}", 60, Name("nums one missing")),
