@@ -70,6 +70,7 @@ def minio(
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
         self.context.uri = uri_bucket_file
 
+    Feature(run=load("alter.stress.tests.simplified", "feature"))
     Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
