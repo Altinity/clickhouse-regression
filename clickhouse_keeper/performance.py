@@ -41,7 +41,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
     ssl=None,
     stress=None,
     allow_vfs=False,

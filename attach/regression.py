@@ -48,7 +48,7 @@ def regression(
     allow_vfs,
     allow_experimental_analyzer=False,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
 ):
     """Attach statement regression."""
 
@@ -66,7 +66,7 @@ def regression(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
             keeper_binary_path=keeper_binary_path,
-            zookeeper_binary_path=zookeeper_binary_path,
+            zookeeper_version=zookeeper_version,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,

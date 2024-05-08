@@ -29,7 +29,7 @@ def minio(
     clickhouse_binary_path,
     collect_service_logs,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
 ):
     """Setup and run minio tests."""
     nodes = {
@@ -43,7 +43,7 @@ def minio(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
             keeper_binary_path=keeper_binary_path,
-            zookeeper_binary_path=zookeeper_binary_path,
+            zookeeper_version=zookeeper_version,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -82,7 +82,7 @@ def aws_s3(
     clickhouse_binary_path,
     collect_service_logs,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
 ):
     """Setup and run aws s3 tests."""
     nodes = {
@@ -120,7 +120,7 @@ def aws_s3(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
             keeper_binary_path=keeper_binary_path,
-            zookeeper_binary_path=zookeeper_binary_path,
+            zookeeper_version=zookeeper_version,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -150,7 +150,7 @@ def gcs(
     clickhouse_binary_path,
     collect_service_logs,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
 ):
     """Setup and run gcs tests."""
     nodes = {
@@ -181,7 +181,7 @@ def gcs(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
             keeper_binary_path=keeper_binary_path,
-            zookeeper_binary_path=zookeeper_binary_path,
+            zookeeper_version=zookeeper_version,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -220,7 +220,7 @@ def regression(
     stress,
     allow_vfs,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
     allow_experimental_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
@@ -238,7 +238,7 @@ def regression(
         clickhouse_binary_path=clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         keeper_binary_path=keeper_binary_path,
-        zookeeper_binary_path=zookeeper_binary_path,
+        zookeeper_version=zookeeper_version,
     )
 
     if "aws_s3" in storages:

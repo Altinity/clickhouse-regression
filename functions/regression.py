@@ -44,7 +44,7 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
     stress=None,
     allow_vfs=False,
     allow_experimental_analyzer=False,
@@ -62,7 +62,7 @@ def regression(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
             keeper_binary_path=keeper_binary_path,
-            zookeeper_binary_path=zookeeper_binary_path,
+            zookeeper_version=zookeeper_version,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             docker_compose_project_dir=os.path.join(

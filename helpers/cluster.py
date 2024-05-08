@@ -261,23 +261,10 @@ class ZooKeeperNode(Node):
 
     SERVER_ENV = ""
     version_regex = re.compile(r"version ([.0-9]+)")
-    zookeeper_path = ""
-
-    @staticmethod
-    def get_zookeeper_dir_from_version(zookeeper_version):
-        """Return path to ZooKeeper scripts based on the version."""
-        return f"/apache-zookeeper-{zookeeper_version}-bin"
-
-    def set_zookeeper_path_from_version(self, zookeeper_version):
-        """Set path to ZooKeeper scripts based on the version."""
-        assert not self.zookeeper_pid(), "Stop ZooKeeper server before changing PATH."
-        self.zookeeper_path = (
-            self.get_zookeeper_dir_from_version(zookeeper_version) + "/bin"
-        )
 
     def zk_server_command(self, command, **kwargs):
         return self.command(
-            f"{self.SERVER_ENV}{self.zookeeper_path}zkServer.sh {command}",
+            f"{self.SERVER_ENV}zkServer.sh {command}",
             steps=False,
             **kwargs,
         )
@@ -1080,7 +1067,7 @@ class Cluster(object):
         docker_compose_file="docker-compose.yml",
         environ=None,
         keeper_binary_path=None,
-        zookeeper_binary_path=None,
+        zookeeper_version=None,
         thread_fuzzer=False,
         collect_service_logs=False,
         use_zookeeper_nodes=False,
@@ -1094,7 +1081,7 @@ class Cluster(object):
         self.clickhouse_binary_path = clickhouse_binary_path
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
-        self.zookeeper_binary_path = zookeeper_binary_path
+        self.zookeeper_version = zookeeper_version
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -1107,7 +1094,6 @@ class Cluster(object):
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
-        current().context.zookeeper_version = None
 
         # auto set configs directory
         if self.configs_dir is None:
@@ -1117,11 +1103,6 @@ class Cluster(object):
 
         if not os.path.exists(self.configs_dir):
             raise TypeError(f"configs directory '{self.configs_dir}' does not exist")
-
-        if zookeeper_binary_path and not use_zookeeper_nodes:
-            raise ValueError(
-                f"use_zookeeper_nodes must be set to True if zookeeper_binary_path is specified"
-            )
 
         if docker_compose_project_dir is None:
             docker_compose_project_dir = os.path.join(
@@ -1262,58 +1243,6 @@ class Cluster(object):
             with Shell() as bash:
                 bash.timeout = 300
                 bash(f"chmod +x {self.keeper_binary_path}")
-
-        if self.zookeeper_binary_path:
-            if self.zookeeper_binary_path.startswith(("http://", "https://")):
-                with Given(
-                    "I check the link",
-                    description="It's easy to accidentally grab a link that doesn't work",
-                ):
-                    assert (
-                        "www.apache.org" not in self.zookeeper_binary_path
-                    ), "expected url of the form https://dlcdn.apache.org/zookeeper/zookeeper-{zookeeper_version}/apache-zookeeper-{zookeeper_version}-bin.tar.gz"
-
-                with Given(
-                    "I download ZooKeeper server binary",
-                    description=f"{self.zookeeper_binary_path}",
-                ):
-                    self.zookeeper_binary_path = download_http_binary(
-                        binary_source=self.zookeeper_binary_path
-                    )
-
-            elif self.zookeeper_binary_path.startswith("docker://"):
-                if getsattr(current().context, "zookeeper_version", None) is None:
-                    parsed_version = parse_version_from_docker_path(
-                        self.zookeeper_binary_path
-                    )
-                    current().context.zookeeper_version = parsed_version
-
-                assert current().context.zookeeper_version, error()
-
-                zookeeper_dir = ZooKeeperNode.get_zookeeper_dir_from_version(
-                    current().context.zookeeper_version
-                )
-                self.zookeeper_binary_path = self.get_binary_from_docker_container(
-                    docker_image=self.zookeeper_binary_path,
-                    container_binary_path=zookeeper_dir,
-                    host_binary_path="/tmp" + zookeeper_dir,
-                )
-
-            if self.zookeeper_binary_path.endswith(".tar.gz"):
-                with Given(
-                    "unpack tar package", description=f"{self.zookeeper_binary_path}"
-                ):
-                    self.zookeeper_binary_path = unpack_tar_gz(
-                        tar_path=self.zookeeper_binary_path
-                    )
-
-            self.zookeeper_binary_path = os.path.abspath(self.zookeeper_binary_path)
-
-            pause(self.zookeeper_binary_path)
-
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"chmod -R +x {self.zookeeper_binary_path}")
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1677,7 +1606,7 @@ class Cluster(object):
     def open_instances_permissions(self, node):
         """
         Add open permissions on all files and folders in _instances.
-        
+
         Will not do anything if cluster is already down.
         """
         with self.lock:
@@ -1736,11 +1665,8 @@ class Cluster(object):
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""
                 )
-                self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_PATH"] = (
-                    self.zookeeper_binary_path or ""
-                )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
-                    current().context.zookeeper_version
+                    self.zookeeper_version or ""
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
@@ -1797,7 +1723,7 @@ class Cluster(object):
                             with attempt:
                                 cmd = self.command(
                                     None,
-                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
+                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --build --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
                                     exitcode=0,
                                 )
@@ -1836,10 +1762,6 @@ class Cluster(object):
                 for name in self.nodes["zookeeper"]:
                     self.node(name).wait_healthy()
                     if name.startswith("zookeeper"):
-                        if current().context.zookeeper_version:
-                            self.node(name).set_zookeeper_path_from_version(
-                                current().context.zookeeper_version
-                            )
                         self.node(name).start_zookeeper()
 
             for name in self.nodes["clickhouse"]:
@@ -1944,7 +1866,7 @@ def create_cluster(
     docker_compose_file="docker-compose.yml",
     environ=None,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
@@ -1962,7 +1884,7 @@ def create_cluster(
         docker_compose_file=docker_compose_file,
         environ=environ,
         keeper_binary_path=keeper_binary_path,
-        zookeeper_binary_path=zookeeper_binary_path,
+        zookeeper_version=zookeeper_version,
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,

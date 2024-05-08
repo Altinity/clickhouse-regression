@@ -37,10 +37,10 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--zookeeper-binary-path",
+        "--zookeeper-version",
         type=str,
-        dest="zookeeper_binary_path",
-        help="path to ZooKeeper binary",
+        dest="zookeeper_version",
+        help="Zookeeper version",
         default=None,
     )
 
