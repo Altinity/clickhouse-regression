@@ -164,10 +164,6 @@ def alter_combinations(
     #         add_replica,
     #     ]
     # ]
-    action_groups = [
-        [delete_random_column, add_random_index, add_random_index],
-        [freeze_unfreeze_random_part, update_random_column, drop_random_index],
-    ] * 20
 
     background_actions = [
         insert_to_random,
@@ -295,7 +291,9 @@ def columns(self):
     """
 
     alter_combinations(
-        actions=build_action_list(columns=True, part_manipulation=False, ttl=False),
+        actions=build_action_list(
+            columns=True, part_manipulation=False, ttl=False, indexes=False
+        ),
         limit=None if self.context.stress else 20,
     )
 
