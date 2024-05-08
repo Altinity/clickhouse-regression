@@ -98,7 +98,7 @@ def regression(
     use_alter_delete=False,
     force_run=False,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
     stress=None,
     parallel=None,
     allow_vfs=False,
@@ -114,7 +114,7 @@ def regression(
         local,
         clickhouse_binary_path,
         keeper_binary_path=keeper_binary_path,
-        zookeeper_binary_path=zookeeper_binary_path,
+        zookeeper_version=zookeeper_version,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
     ) as cluster:

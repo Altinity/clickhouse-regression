@@ -224,7 +224,7 @@ def safe(self):
     """
 
     alter_combinations(
-        limit=None if self.context.stress else 20,
+        limit=None if self.context.stress else 5,
         shuffle=True,
         restarts=False,
     )

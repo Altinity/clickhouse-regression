@@ -71,7 +71,7 @@ def regression(
     allow_vfs=False,
     allow_experimental_analyzer=False,
     keeper_binary_path=None,
-    zookeeper_binary_path=None,
+    zookeeper_version=None,
 ):
     """ClickHouse atomic inserts regression."""
     nodes = {
@@ -91,7 +91,7 @@ def regression(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
             keeper_binary_path=keeper_binary_path,
-            zookeeper_binary_path=zookeeper_binary_path,
+            zookeeper_version=zookeeper_version,
             collect_service_logs=collect_service_logs,
             thread_fuzzer=thread_fuzzer,
             nodes=nodes,
