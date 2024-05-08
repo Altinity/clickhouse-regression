@@ -13,6 +13,8 @@ from alter.stress.tests.steps import *
 
 def build_action_list(
     columns=True,
+    part_manipulation=True,
+    ttl=True,
     projections=False,
     indexes=False,
     restarts=False,
@@ -22,17 +24,13 @@ def build_action_list(
 ):
     actions = [
         delete_random_rows,
-        detach_attach_random_partition,
-        freeze_unfreeze_random_part,
-        drop_random_part,
-        replace_random_part,
-        modify_random_ttl,
-        remove_random_ttl,
-        move_random_partition_to_random_disk,
-        move_random_partition_to_random_table,
-        attach_random_part_from_table,
-        fetch_random_part_from_table,
     ]
+
+    if ttl:
+        actions += [
+            modify_random_ttl,
+            remove_random_ttl,
+        ]
 
     if restarts:
         actions += [restart_keeper, restart_clickhouse]
@@ -50,6 +48,18 @@ def build_action_list(
             clear_random_column,
             delete_random_column,
             update_random_column,
+        ]
+
+    if part_manipulation:
+        actions += [
+            detach_attach_random_partition,
+            freeze_unfreeze_random_part,
+            drop_random_part,
+            replace_random_part,
+            move_random_partition_to_random_disk,
+            move_random_partition_to_random_table,
+            attach_random_part_from_table,
+            fetch_random_part_from_table,
         ]
 
     if projections:
@@ -154,6 +164,10 @@ def alter_combinations(
     #         add_replica,
     #     ]
     # ]
+    action_groups = [
+        [delete_random_column, add_random_index, add_random_index],
+        [freeze_unfreeze_random_part, update_random_column, drop_random_index],
+    ] * 20
 
     background_actions = [
         insert_to_random,
@@ -275,6 +289,30 @@ def safe(self):
 
 
 @TestScenario
+def columns(self):
+    """
+    Perform only actions that manipulate columns.
+    """
+
+    alter_combinations(
+        actions=build_action_list(columns=True, moves=False, ttl=False),
+        limit=None if self.context.stress else 20,
+    )
+
+
+@TestScenario
+def columns_and_indexes(self):
+    """
+    Perform only actions that manipulate columns and indexes.
+    """
+
+    alter_combinations(
+        actions=build_action_list(columns=True, moves=False, ttl=False, indexes=True),
+        limit=None if self.context.stress else 20,
+    )
+
+
+@TestScenario
 def indexes_and_projections(self):
     """
     Perform only actions using indexes and projections.
@@ -381,7 +419,7 @@ def normal(self):
 
 
 @TestFeature
-@Name("alter")
+@Name("combinations")
 def feature(self):
     """Stress test with many alters."""
 
