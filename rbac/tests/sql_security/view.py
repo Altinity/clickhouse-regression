@@ -23,10 +23,13 @@ def check_query(
     """Check select from (insert into) view with given privileges."""
     if node is None:
         node = self.context.node
-    
+
     query = f"SELECT * FROM {view_name}"
 
-    if "SELECT" in view_user_privilege and "SELECT" in view_definer_source_table_privilege:
+    if (
+        "SELECT" in view_user_privilege
+        and "SELECT" in view_definer_source_table_privilege
+    ):
         node.query(query, settings=[("user", user_name)])
     else:
         if "SELECT" not in view_user_privilege:
@@ -46,6 +49,7 @@ def check_view_with_definer(
     self,
     view_definer_source_table_privilege,
     view_user_privilege,
+    grant_privilege,
 ):
     """Check that I can perform `create` and `insert` operations as a
     user with privileges limited to a view. The view must have been created
@@ -72,24 +76,25 @@ def check_view_with_definer(
             sql_security="DEFINER",
         )
 
-    with And("I grant privileges to source table to user"):
-        for privilege in view_definer_source_table_privilege:
-            grant_privilege(
-                node=node,
-                privilege=privilege,
-                object=table_name,
-                user=user_name_definer,
-            )
+    with And("I grant privileges to source table to user either directly or via role"):
+        grant_privilege(
+            node=node,
+            privileges=view_definer_source_table_privilege,
+            object=table_name,
+            user=user_name_definer,
+        )
 
     with When("I create second user"):
         user_name_two = "user_two_" + getuid()
         create_user(node=node, user_name=user_name_two)
 
-    with And("I grant privilege on view to second user"):
-        for privilege in view_user_privilege:
-            grant_privilege(
-                node=node, privilege=privilege, object=view_name, user=user_name_two
-            )
+    with And("I grant privilege on view to second user either directly or via role"):
+        grant_privilege(
+            node=node,
+            privileges=view_user_privilege,
+            object=view_name,
+            user=user_name_two,
+        )
 
     with Then("I try to select from view with second user"):
         check_query(
@@ -118,6 +123,10 @@ def view_with_definer(self):
         "ALTER",
         "CREATE",
     ]
+    grant_privileges = [
+        grant_privileges_directly,
+        grant_privileges_via_role,
+    ]
 
     view_definer_source_table_privileges_combinations = list(
         combinations(privileges, 2)
@@ -125,9 +134,14 @@ def view_with_definer(self):
     view_user_privileges_combinations = (list(combinations(privileges, 2))) + [["NONE"]]
 
     with Pool(10) as executor:
-        for (view_definer_source_table_privilege, view_user_privilege,) in product(
+        for (
+            view_definer_source_table_privilege,
+            view_user_privilege,
+            grant_privilege,
+        ) in product(
             view_definer_source_table_privileges_combinations,
             view_user_privileges_combinations,
+            grant_privileges,
         ):
             Scenario(
                 name=f"{view_definer_source_table_privilege},{view_user_privilege}",
@@ -137,6 +151,7 @@ def view_with_definer(self):
             )(
                 view_definer_source_table_privilege=view_definer_source_table_privilege,
                 view_user_privilege=view_user_privilege,
+                grant_privilege=grant_privilege,
             )
         join()
 
