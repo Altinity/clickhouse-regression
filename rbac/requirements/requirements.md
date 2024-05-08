@@ -3283,9 +3283,9 @@ the user has `INSERT` privelege on the target table, either explicitly or throug
 
 #### SQL Security
 
-DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three legal values: `DEFINER`, `INVOKER`, or `NONE`. You can specify any existing user or CURRENT_USER in the DEFINER clause.
+DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three legal values: `DEFINER`, `INVOKER`, or `NONE`. [Clickhouse] allows to specify any existing user or CURRENT_USER in the DEFINER clause.
 
-The following table will explain which rights are required for which user in order to select from view. In every case it is still required to have `GRANT SELECT ON <view>` in order to read from it.
+The following table show which rights are required for which user in order to select from view. In every case it is **required** to have `GRANT SELECT ON <view>` in order to read from it.
 
 | SQL security option | View | Materialized View | 
 | --------------------|------|-------------------|
@@ -3325,19 +3325,11 @@ version: 1.0
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select
 version: 1.0
-[ClickHouse] SHALL allow SELECT operations from a view with DEFINER security mode only if the definer user has SELECT privileges for the view's source table. An invoker user MUST have SELECT privileges for the view.
-
-###### RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Insert
-version: 1.0
-[ClickHouse] SHALL ...
+[ClickHouse] SHALL only succesfully `SELECT` from a view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select
 version: 1.0
-[ClickHouse] SHALL 
-
-###### RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Insert
-version: 1.0
-[ClickHouse] SHALL ...
+[ClickHouse] SHALL only succesfully `SELECT` from a view with INVOKER security mode if and only if the invoker user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
 
 
 ##### Materialized View
@@ -3359,20 +3351,15 @@ version: 1.0
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select
 version: 1.0
-[ClickHouse] SHALL allow SELECT operations from a materialized view with DEFINER security mode only if the definer user has SELECT privileges for the view's source table and SELECT privileges for the view's target table. An invoker user MUST have SELECT privileges for the materialized view.
-
+[ClickHouse] SHALL only succesfully `SELECT` from a materialized view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table and target table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role.
 
 ###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert
 version: 1.0
-[ClickHouse] SHALL allow INSERT operations into a materialized view with DEFINER security mode only if the definer user has INSERT privileges for the view's target table. An invoker user MUST have INSERT privileges for the materialized view.
+[ClickHouse] SHALL only succesfully `INSERT` into a materialized view with DEFINER security mode if and only if the definer user has `INSERT` privilege on the target table, either explicitly or through a role and invoker user has `INSERT` privileges on the view, either explicitly or through a role.
 
-###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker.Select
+###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invokers
 version: 1.0
-[ClickHouse] SHALL allow pass
-
-###### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker.Insert
-version: 1.0
-[ClickHouse] SHALL ...
+[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
 
 
 #### Live View
