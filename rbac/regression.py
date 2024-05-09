@@ -200,10 +200,13 @@ xfails = {
     "privileges/projections/ : privilege, ADD PROJECTION, privilege granted to :": [
         (Fail, "unstable test")
     ],
-    "/rbac/SQL security/materialized view with definer/check default values/I try to select from materialized view with second user/*": [
+    "/rbac/SQL security/materialized view with definer/check default values/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
     ],
     "/rbac/SQL security/materialized view with definer/check change default values/I try to select from materialized view with second user/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
+    ],
+    "/rbac/SQL security/view with definer/check default sql security with definer/I try to select from view with user/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
     ],
 }
