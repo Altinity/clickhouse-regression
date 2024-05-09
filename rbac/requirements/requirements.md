@@ -3312,7 +3312,7 @@ version: 1.0
 
 #### View SQL Security
 
-##### RQ.SRS-006.RBAC.SQLSecurity.View.CreateView 
+##### RQ.SRS-006.RBAC.SQLSecurity.View.CreateView
 version: 1.0  
 [ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW` statement.
 
@@ -3361,7 +3361,7 @@ version: 1.0
 version: 1.0  
 [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with DEFINER security mode if and only if the definer user has `INSERT` privilege on the target table, either explicitly or through a role and invoker user has `INSERT` privileges on the view, either explicitly or through a role.
 
-##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invokers
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker
 version: 1.0  
 [ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
 
