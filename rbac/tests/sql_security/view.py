@@ -7,7 +7,7 @@ import rbac.helper.errors as errors
 from rbac.requirements import *
 from rbac.helper.common import *
 from rbac.tests.sql_security.common import *
-from helpers.common import getuid
+from helpers.common import getuid, get_settings_value
 
 
 @TestStep(Then)
@@ -112,12 +112,9 @@ def check_view_with_definer(
 )
 @Flags(TE)
 def view_with_definer(self):
-    """Check that user can only select from view or
-    insert into view if definer has enough privileges.
-    For select: definer should have SELECT on source table,
+    """Check that user can only select from view if definer
+    has enough privileges: definer should have SELECT on source table,
     user should have SELECT on view.
-    For insert: definer should have INSERT on source table,
-    user should have INSERT on materialized view.
     """
     privileges = [
         "NONE",
@@ -153,6 +150,117 @@ def view_with_definer(self):
                 executor=executor,
             )(
                 view_definer_source_table_privilege=view_definer_source_table_privilege,
+                view_user_privilege=view_user_privilege,
+                grant_privilege=grant_privilege,
+            )
+        join()
+
+
+@TestScenario
+def check_view_with_invoker(
+    self,
+    view_user_source_table_privilege,
+    view_user_privilege,
+    grant_privilege,
+):
+    """Check that user can only select from view or insert into view
+    if he has enough privileges."""
+
+    node = self.context.node
+
+    with Given("I create table and insert data"):
+        table_name = "table_one_" + getuid()
+        create_simple_MergeTree_table(node=node, table_name=table_name)
+        insert_data_from_numbers(node=node, table_name=table_name)
+
+    with And("I create view"):
+        view_name = "view_" + getuid()
+        create_view(
+            node=node,
+            view_name=view_name,
+            select_table_name=table_name,
+            sql_security="INVOKER",
+        )
+
+    with And("I create user"):
+        user_name = "user_" + getuid()
+        create_user(node=node, user_name=user_name)
+
+    with And("I grant privileges to source table to user either directly or via role"):
+        grant_privilege(
+            node=node,
+            privileges=view_user_source_table_privilege,
+            object=table_name,
+            user=user_name,
+        )
+        grant_privilege(
+            node=node,
+            privileges=view_user_privilege,
+            object=view_name,
+            user=user_name,
+            grant_privilege=grant_privilege,
+        )
+
+    with Then("I try to select from view with second user"):
+        exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
+        if (
+            "SELECT" in view_user_privilege
+            and "SELECT" in view_user_source_table_privilege
+        ):
+            exitcode, message = None, None
+
+        node.query(
+            f"SELECT * FROM {view_name}",
+            settings=[("user", user_name)],
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_View_Invoker_Select("1.0"),
+)
+@Flags(TE)
+def view_with_invoker(self):
+    """Check that user can only select from view with
+    `INVOKER` SQL SECURITY if user has enough privileges:
+    `SELECT` on view and `SELECT` on source table.
+    """
+    privileges = [
+        "NONE",
+        "SELECT",
+        "INSERT",
+        "ALTER",
+        "CREATE",
+    ]
+    grant_privileges = [
+        grant_privileges_directly,
+        grant_privileges_via_role,
+    ]
+
+    view_user_source_table_privileges_combinations = list(
+        combinations(privileges, 2)
+    ) + [["NONE"]]
+    view_user_privileges_combinations = (list(combinations(privileges, 2))) + [["NONE"]]
+
+    with Pool(10) as executor:
+        for (
+            view_user_source_table_privilege,
+            view_user_privilege,
+            grant_privilege,
+        ) in product(
+            view_user_source_table_privileges_combinations,
+            view_user_privileges_combinations,
+            grant_privileges,
+        ):
+            Scenario(
+                name=f"{view_user_source_table_privilege}, {view_user_privilege}",
+                test=check_view_with_definer,
+                parallel=True,
+                executor=executor,
+            )(
+                view_definer_source_table_privilege=view_user_source_table_privilege,
                 view_user_privilege=view_user_privilege,
                 grant_privilege=grant_privilege,
             )
@@ -199,6 +307,57 @@ def definer_with_less_privileges(self):
         node.query(f"SELECT * FROM {view_name}", exitcode=exitcode, message=message)
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_View_Default("1.0"),
+)
+def check_default_values(self):
+    """Check that default SQL SECURITY value is INVOKER."""
+    node = self.context.node
+
+    with Given("I check default value for SQL SECURITY in system.settings"):
+        assert (
+            get_settings_value(
+                node=node, setting_name="default_normal_view_sql_security"
+            )
+            == "INVOKER"
+        )
+
+    with And("I create table and insert data"):
+        table_name = "table_one_" + getuid()
+        create_simple_MergeTree_table(node=node, table_name=table_name)
+        insert_data_from_numbers(node=node, table_name=table_name)
+
+    with And("I create view"):
+        view_name = "view_" + getuid()
+        create_view(node=node, view_name=view_name, select_table_name=table_name)
+
+    with Then("I check how the view was created"):
+        node.query(f"SHOW CREATE VIEW {view_name}")
+
+    with And("I create user and grant privileges to user"):
+        user_name = "user_" + getuid()
+        create_user(node=node, user_name=user_name)
+        grant_privilege(node=node, privilege="SELECT", object=view_name, user=user_name)
+
+    with And("I try to select from view with user"):
+        exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
+        node.query(
+            f"SELECT * FROM {view_name}",
+            settings=[("user", user_name)],
+            exitcode=exitcode,
+            message=message,
+        )
+
+    with And("I add `SELECT` privilege to view source table"):
+        grant_privilege(
+            node=node, privilege="SELECT", object=table_name, user=user_name
+        )
+
+    with And("I should be able to select from view"):
+        node.query(f"SELECT * FROM {view_name}", settings=[("user", user_name)])
+
+
 @TestFeature
 @Requirements(
     RQ_SRS_006_RBAC_SQLSecurity_View_CreateView("1.0"),
@@ -213,3 +372,5 @@ def feature(self, node="clickhouse1"):
 
     Scenario(run=view_with_definer)
     Scenario(run=definer_with_less_privileges)
+    Scenario(run=check_default_values)
+    Scenario(run=view_with_invoker)
