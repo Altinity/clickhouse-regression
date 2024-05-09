@@ -20,6 +20,7 @@ def check_select_from_mv(
     user_name,
     view_name,
     node,
+    expected_data=None,
 ):
     """Check select from view with given privileges."""
     if (
@@ -27,7 +28,12 @@ def check_select_from_mv(
         and "SELECT" in view_definer_source_table_privilege
         and "SELECT" in view_definer_target_table_privilege
     ):
-        node.query(f"SELECT * FROM {view_name}", settings=[("user", user_name)])
+        result = node.query(
+            f"SELECT * FROM {view_name} ORDER BY tuple(*) FORMAT TabSeparated",
+            settings=[("user", user_name)],
+        )
+        if expected_data is not None:
+            assert result.output == expected_data
     else:
         if "SELECT" not in view_user_privilege:
             exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
@@ -50,15 +56,20 @@ def check_insert_into_mv(
     user_name,
     view_name,
     node,
+    data_before_insert=None,
 ):
     """Check insert into view with given privileges."""
     if (
         "INSERT" in view_user_privilege
         and "INSERT" in view_definer_target_table_privilege
     ):
-        node.query(
-            f"INSERT INTO {view_name} VALUES (1)", settings=[("user", user_name)]
+
+        result = node.query(
+            f"INSERT INTO {view_name} VALUES (1)",
+            settings=[("user", user_name)],
         )
+        if data_before_insert is not None:
+            assert result.output != data_before_insert
     else:
         if "INSERT" not in view_user_privilege:
             exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
@@ -95,6 +106,9 @@ def check_materialized_view_with_definer(
         table_name = "table_one_" + getuid()
         create_simple_MergeTree_table(node=node, table_name=table_name)
         insert_data_from_numbers(node=node, table_name=table_name)
+        data = node.query(
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+        ).output
 
     with And("I create mv table"):
         mv_table_name = "mv_table_one_" + getuid()
@@ -151,6 +165,7 @@ def check_materialized_view_with_definer(
             definer_user=user_name_definer,
             user_name=user_name_two,
             view_name=view_name,
+            expected_data=data,
         )
 
     with And("I try to insert into materialized view with second user"):
@@ -161,6 +176,7 @@ def check_materialized_view_with_definer(
             definer_user=user_name_definer,
             user_name=user_name_two,
             view_name=view_name,
+            data_before_insert=data,
         )
 
 
@@ -290,6 +306,9 @@ def check_default_values(self):
     with Given("I create table and insert data"):
         table_name = create_simple_MergeTree_table(node=node)
         insert_data_from_numbers(node=node, table_name=table_name)
+        data = node.query(
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+        ).output
 
     with And("I create mv table"):
         mv_table_name = "mv_table_one_" + getuid()
@@ -297,10 +316,13 @@ def check_default_values(self):
 
     with And("I check default settings"):
         assert (
-            get_settings_value(node=node, setting_name="default_view_definer") == "CURRENT_USER"
+            get_settings_value(node=node, setting_name="default_view_definer")
+            == "CURRENT_USER"
         )
         assert (
-            get_settings_value(node=node, setting_name="default_materialized_view_sql_security")
+            get_settings_value(
+                node=node, setting_name="default_materialized_view_sql_security"
+            )
             == "DEFINER"
         )
 
@@ -323,7 +345,11 @@ def check_default_values(self):
         )
 
     with And("I try to select from materialized view with second user"):
-        node.query(f"SELECT * FROM {view_name}", settings=[("user", select_user_name)])
+        result = node.query(
+            f"SELECT * FROM {view_name} ORDER BY tuple(*) FORMAT TabSeparated",
+            settings=[("user", select_user_name)],
+        )
+        assert result.output == data
 
 
 @TestScenario
@@ -359,7 +385,9 @@ def check_change_default_values(self):
 
     with And("I check that settings were changed"):
         assert (
-            get_settings_value(node=node, setting_name="default_materialized_view_sql_security")
+            get_settings_value(
+                node=node, setting_name="default_materialized_view_sql_security"
+            )
             == "INVOKER"
         )
         assert (

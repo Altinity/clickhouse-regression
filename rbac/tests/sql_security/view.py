@@ -19,18 +19,22 @@ def check_query(
     user_name,
     view_name,
     node=None,
+    expected_result=None,
 ):
     """Check select from (insert into) view with given privileges."""
     if node is None:
         node = self.context.node
 
-    query = f"SELECT * FROM {view_name}"
+    query = f"SELECT * FROM {view_name} ORDER BY tuple(*) FORMAT TabSeparated"
 
     if (
         "SELECT" in view_user_privilege
         and "SELECT" in view_definer_source_table_privilege
     ):
-        node.query(query, settings=[("user", user_name)])
+        result = node.query(query, settings=[("user", user_name)])
+
+        if expected_result is not None:
+            assert result.output == expected_result
     else:
         if "SELECT" not in view_user_privilege:
             exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
@@ -65,6 +69,9 @@ def check_view_with_definer(
         table_name = "table_one_" + getuid()
         create_simple_MergeTree_table(node=node, table_name=table_name)
         insert_data_from_numbers(node=node, table_name=table_name)
+        data = node.query(
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+        ).output
 
     with And("I create view and populate it"):
         view_name = "view_" + getuid()
@@ -103,6 +110,7 @@ def check_view_with_definer(
             definer_user=user_name_definer,
             user_name=user_name_two,
             view_name=view_name,
+            expected_result=data,
         )
 
 
@@ -198,7 +206,6 @@ def check_view_with_invoker(
             privileges=view_user_privilege,
             object=view_name,
             user=user_name,
-            grant_privilege=grant_privilege,
         )
 
     with Then("I try to select from view with second user"):
@@ -256,11 +263,11 @@ def view_with_invoker(self):
         ):
             Scenario(
                 name=f"{view_user_source_table_privilege}, {view_user_privilege}",
-                test=check_view_with_definer,
+                test=check_view_with_invoker,
                 parallel=True,
                 executor=executor,
             )(
-                view_definer_source_table_privilege=view_user_source_table_privilege,
+                view_user_source_table_privilege=view_user_source_table_privilege,
                 view_user_privilege=view_user_privilege,
                 grant_privilege=grant_privilege,
             )
@@ -327,6 +334,9 @@ def check_default_values(self):
         table_name = "table_one_" + getuid()
         create_simple_MergeTree_table(node=node, table_name=table_name)
         insert_data_from_numbers(node=node, table_name=table_name)
+        data = node.query(
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+        ).output
 
     with And("I create view"):
         view_name = "view_" + getuid()
@@ -355,7 +365,133 @@ def check_default_values(self):
         )
 
     with And("I should be able to select from view"):
-        node.query(f"SELECT * FROM {view_name}", settings=[("user", user_name)])
+        result = node.query(
+            f"SELECT * FROM {view_name} ORDER BY tuple(*) FORMAT TabSeparated",
+            settings=[("user", user_name)],
+        )
+        assert result.output == data
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_View_Default("1.0"),
+)
+def check_default_sql_security_with_definer(self):
+    """Check that default SQL SECURITY value is INVOKER even if definer is specified."""
+    node = self.context.node
+
+    with Given("I check default value for SQL SECURITY in system.settings"):
+        assert (
+            get_settings_value(
+                node=node, setting_name="default_normal_view_sql_security"
+            )
+            == "INVOKER"
+        )
+
+    with And("I create table and insert data"):
+        table_name = "table_one_" + getuid()
+        create_simple_MergeTree_table(node=node, table_name=table_name)
+        insert_data_from_numbers(node=node, table_name=table_name)
+
+    with And("I create view"):
+        view_name = "view_" + getuid()
+        create_view(
+            node=node,
+            view_name=view_name,
+            select_table_name=table_name,
+            definer="default",
+        )
+
+    with And("I create user and grant privileges to user"):
+        user_name = "user_" + getuid()
+        create_user(node=node, user_name=user_name)
+        grant_privilege(node=node, privilege="SELECT", object=view_name, user=user_name)
+
+    with And("I try to select from view with user"):
+        exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
+        node.query(
+            f"SELECT * FROM {view_name}",
+            settings=[("user", user_name)],
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestScenario
+def check_modify_sql_security(self):
+    """Check that user can modify SQL SECURITY of the view."""
+
+    with Given("I create table and insert data"):
+        table_name = "table_one_" + getuid()
+        create_simple_MergeTree_table(node=self.context.node, table_name=table_name)
+        insert_data_from_numbers(node=self.context.node, table_name=table_name)
+        data = self.context.node.query(
+            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+        ).output
+
+    with And("I create definer user with SELECT privilege on source table"):
+        user_name_definer = "definer_user_" + getuid()
+        create_user(node=self.context.node, user_name=user_name_definer)
+        grant_privilege(
+            node=self.context.node,
+            privilege="SELECT",
+            object=table_name,
+            user=user_name_definer,
+        )
+
+    with And("I create view with DEFINER SQL SECURITY"):
+        view_name = "view_" + getuid()
+        create_view(
+            node=self.context.node,
+            view_name=view_name,
+            select_table_name=table_name,
+            definer=user_name_definer,
+            sql_security="DEFINER",
+        )
+
+    with And("I create user and grant privileges to user"):
+        user_name = "user_" + getuid()
+        create_user(node=self.context.node, user_name=user_name)
+        grant_privilege(
+            node=self.context.node, privilege="SELECT", object=view_name, user=user_name
+        )
+
+    with And("I select from view with user"):
+        result = self.context.node.query(
+            f"SELECT * FROM {view_name} ORDER BY tuple(*) FORMAT TabSeparated",
+            settings=[("user", user_name)],
+        )
+        assert result.output == data
+
+    with When("I modify SQL SECURITY to INVOKER"):
+        self.context.node.query(f"ALTER TABLE {view_name} MODIFY SQL SECURITY INVOKER")
+
+    with And("I check how the view was created"):
+        self.context.node.query(f"SHOW CREATE VIEW {view_name}")
+
+    with Then("I try to select from view with user"):
+        exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
+        self.context.node.query(
+            f"SELECT * FROM {view_name}",
+            settings=[("user", user_name)],
+            exitcode=exitcode,
+            message=message,
+        )
+
+    with And("I modify SQL SECURITY to DEFINER"):
+        self.context.node.query(
+            f"ALTER TABLE {view_name} MODIFY SQL SECURITY DEFINER DEFINER = {user_name_definer}"
+        )
+
+    with And("I check how the view was created"):
+        self.context.node.query(f"SHOW CREATE VIEW {view_name}")
+
+    with And("I select from view with user"):
+        result = self.context.node.query(
+            f"SELECT * FROM {view_name} ORDER BY tuple(*) FORMAT TabSeparated",
+            settings=[("user", user_name)],
+        )
+        assert result.output == data
 
 
 @TestFeature
@@ -373,4 +509,6 @@ def feature(self, node="clickhouse1"):
     Scenario(run=view_with_definer)
     Scenario(run=definer_with_less_privileges)
     Scenario(run=check_default_values)
+    Scenario(run=check_default_sql_security_with_definer)
     Scenario(run=view_with_invoker)
+    Scenario(run=check_modify_sql_security)
