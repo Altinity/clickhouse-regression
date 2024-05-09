@@ -359,11 +359,11 @@ def check_change_default_values(self):
 
     with And("I check that settings were changed"):
         assert (
-            get_settings_value(node=node, settings_name="default_materialized_view_sql_security")
+            get_settings_value(node=node, setting_name="default_materialized_view_sql_security")
             == "INVOKER"
         )
         assert (
-            get_settings_value(node=node, settings_name="default_view_definer")
+            get_settings_value(node=node, setting_name="default_view_definer")
             == f"{user_name_one}"
         )
 
