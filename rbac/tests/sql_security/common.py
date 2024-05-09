@@ -2,12 +2,12 @@ from contextlib import contextmanager
 
 from testflows.core import *
 
-from helpers.common import getuid
-
 import rbac.helper.errors as errors
 from rbac.requirements import *
 from rbac.helper.common import *
 from rbac.tests.sql_security.common import *
+
+from helpers.common import getuid
 
 
 @TestStep(Given)
@@ -76,6 +76,9 @@ def create_materialized_view(
     if_not_exists=False,
     on_cluster=None,
     select_columns="*",
+    settings=None,
+    exitcode=None,
+    message=None,
 ):
     """Create materialized view."""
 
@@ -100,7 +103,10 @@ def create_materialized_view(
     query += f"AS SELECT {select_columns} FROM {select_table_name}"
 
     try:
-        node.query(query)
+        if settings is not None:
+            node.query(query, settings=settings, exitcode=exitcode, message=message)
+        else:
+            node.query(query, exitcode=exitcode, message=message)
         yield view_name
 
     finally:
@@ -179,3 +185,22 @@ def create_role(self, privilege=None, object=None, role_name=None, node=None):
     finally:
         with Finally("I drop the role"):
             node.query(f"DROP ROLE IF EXISTS {role_name}")
+
+
+@TestStep(Given)
+def change_core_settings(
+    self, entries, xml_symbols=True, modify=False, restart=True, format=None, user=None
+):
+    """Create configuration file and add it to the server."""
+    with By("converting config file content to xml"):
+        config = create_xml_config_content(
+            entries,
+            "change_settings.xml",
+            config_d_dir="/etc/clickhouse-server/users.d",
+            preprocessed_name="users.xml",
+        )
+        if format is not None:
+            for key, value in format.items():
+                config.content = config.content.replace(key, value)
+    with And("adding xml config file to the server"):
+        return add_config(config, restart=restart, modify=modify, user=user)

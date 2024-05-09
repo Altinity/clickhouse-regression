@@ -107,6 +107,9 @@ def check_view_with_definer(
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_View_Definer_Select("1.0"),
+)
 @Flags(TE)
 def view_with_definer(self):
     """Check that user can only select from view or
@@ -197,7 +200,10 @@ def definer_with_less_privileges(self):
 
 
 @TestFeature
-@Name("definers")
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_View_CreateView("1.0"),
+)
+@Name("view with definer")
 def feature(self, node="clickhouse1"):
     """Check usage views that were created with definers."""
     self.context.node = self.context.cluster.node("clickhouse1")

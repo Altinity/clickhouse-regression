@@ -193,7 +193,7 @@ class KeyWithAttributes:
 
 
 def create_xml_config_content(
-    entries, config_file, config_d_dir="/etc/clickhouse-server/config.d", root="yandex"
+    entries, config_file, config_d_dir="/etc/clickhouse-server/config.d", root="yandex", preprocessed_name="config.xml"
 ):
     """Create XML configuration file from a dictionary.
 
@@ -239,7 +239,7 @@ def create_xml_config_content(
         xmltree.tostring(root, short_empty_elements=False, encoding="utf-8"), "utf-8"
     )
 
-    return Config(content, path, name, uid, "config.xml")
+    return Config(content, path, name, uid, preprocessed_name)
 
 
 def add_invalid_config(
