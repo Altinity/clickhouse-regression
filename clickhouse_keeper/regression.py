@@ -75,6 +75,9 @@ xfails = {
     "/clickhouse keeper/cli converter/snapshot invalid dir": [
         (Fail, "Improper behaviour <23.8", check_clickhouse_version("<23.8"))
     ],
+    "alter column distributed/alter drop column": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63576", check_clickhouse_version(">=24.3"))
+    ],
 }
 
 

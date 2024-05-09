@@ -175,7 +175,7 @@ xfails = {
     "aws s3/:/table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
-    ":/:/table function performance/wildcard performance/:": [
+    ":/:/table function performance/wildcard/:": [
         (
             Error,
             "https://github.com/ClickHouse/ClickHouse/pull/62120",
