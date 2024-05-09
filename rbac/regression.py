@@ -200,6 +200,12 @@ xfails = {
     "privileges/projections/ : privilege, ADD PROJECTION, privilege granted to :": [
         (Fail, "unstable test")
     ],
+    "/rbac/SQL security/materialized view with definer/check default values/I try to select from materialized view with second user/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
+    ],
+    "/rbac/SQL security/materialized view with definer/check change default values/I try to select from materialized view with second user/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
+    ],
 }
 
 xflags = {
@@ -330,6 +336,7 @@ def regression(
     Feature(run=load("rbac.tests.syntax.feature", "feature"))
     Feature(run=load("rbac.tests.privileges.feature", "feature"))
     Feature(run=load("rbac.tests.views.feature", "feature"))
+    Feature(run=load("rbac.tests.sql_security.feature", "feature"))
 
 
 if main():
