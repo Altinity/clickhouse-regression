@@ -250,8 +250,8 @@ def invalid_parameters(self):
                 ciphertext=ciphertext,
                 key="'0123456789123456'",
                 mode="'aes-128-cfb1'",
-                exitcode=None,
-                message=None,
+                exitcode=exitcode,
+                message=message,
             )
 
         with When("using unsupported cfb8 mode"):
@@ -263,8 +263,8 @@ def invalid_parameters(self):
                 ciphertext=ciphertext,
                 key="'0123456789123456'",
                 mode="'aes-128-cfb8'",
-                exitcode=None,
-                message=None,
+                exitcode=exitcode,
+                message=message,
             )
 
         with When("typo in the block algorithm"):
