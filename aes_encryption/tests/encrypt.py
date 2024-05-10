@@ -178,21 +178,29 @@ def invalid_parameters(self):
         ],
     ):
         with When("using unsupported cfb1 mode"):
+            exitcode, message = 36, "DB::Exception: Invalid mode: aes-128-cfb1"
+            if check_clickhouse_version(">=24.4")(self):
+                exitcode, message = None, None
+
             encrypt(
                 plaintext="'hello there'",
                 key="'0123456789123456'",
                 mode="'aes-128-cfb1'",
-                exitcode=36,
-                message="DB::Exception: Invalid mode: aes-128-cfb1",
+                exitcode=exitcode,
+                message=message,
             )
 
         with When("using unsupported cfb8 mode"):
+            exitcode, message = 36, "DB::Exception: Invalid mode: aes-128-cfb8"
+            if check_clickhouse_version(">=24.4")(self):
+                exitcode, message = None, None
+                
             encrypt(
                 plaintext="'hello there'",
                 key="'0123456789123456'",
                 mode="'aes-128-cfb8'",
-                exitcode=36,
-                message="DB::Exception: Invalid mode: aes-128-cfb8",
+                exitcode=exitcode,
+                message=message,
             )
 
         with When("typo in the block algorithm"):
