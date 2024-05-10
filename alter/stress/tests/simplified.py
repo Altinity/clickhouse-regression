@@ -205,7 +205,7 @@ def feature(self):
     """Run test simplified scenarios."""
 
     with Given("I have S3 disks configured"):
-        s3_config()
+        disk_config()
 
     for scenario in loads(current_module(), Scenario):
         scenario()

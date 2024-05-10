@@ -20,6 +20,45 @@ ffails = {}
 
 
 @TestModule
+@Name("local")
+def local_storage(
+    self,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
+    with_analyzer,
+):
+    """Setup and run minio tests."""
+    nodes = {
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+    }
+
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            use_zookeeper_nodes=True,
+            configs_dir=current_dir(),
+        )
+        self.context.cluster = cluster
+        self.context.node = self.context.cluster.node("clickhouse1")
+        self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
+        self.context.minio_enabled = False
+
+    with And("I enable or disable experimental analyzer if needed"):
+        experimental_analyzer(
+            node=cluster.node("clickhouse1"), with_analyzer=with_analyzer
+        )
+
+    Feature(run=load("alter.stress.tests.simplified", "feature"))
+    Feature(run=load("alter.stress.tests.stress_alter", "feature"))
+
+
+@TestModule
 def minio(
     self,
     uri,
@@ -59,7 +98,7 @@ def minio(
         self.context.bucket_path = "data/object-storage"
 
         self.context.minio_enabled = True
-    
+
     with And("I enable or disable experimental analyzer if needed"):
         experimental_analyzer(
             node=cluster.node("clickhouse1"), with_analyzer=with_analyzer
@@ -136,7 +175,7 @@ def aws_s3(
         self.context.node = self.context.cluster.node("clickhouse1")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
-    
+
     with And("I enable or disable experimental analyzer if needed"):
         experimental_analyzer(
             node=cluster.node("clickhouse1"), with_analyzer=with_analyzer
@@ -193,12 +232,10 @@ def gcs(
         self.context.node = self.context.cluster.node("clickhouse1")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
-    
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
-            experimental_analyzer(
-                node=cluster.node(node), with_analyzer=with_analyzer
-            )
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
@@ -270,6 +307,14 @@ def regression(
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
+            with_analyzer=with_analyzer,
+        )
+
+    if "local" in storages:
+        Module(test=local_storage)(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
             with_analyzer=with_analyzer,
         )
 

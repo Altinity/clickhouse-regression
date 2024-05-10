@@ -22,7 +22,7 @@ def argparser(parser):
         "--storage",
         action="append",
         help="select which storage types to run tests with",
-        choices=["minio", "aws_s3", "gcs"],
+        choices=["minio", "aws_s3", "gcs", "local"],
         default=None,
         dest="storages",
     )

@@ -1,7 +1,178 @@
 version: '2.3'
 
+services:
+  minio1:
+    extends:
+      file: minio-service.yml
+      service: minio1
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio1:
+        condition: service_healthy
+
+  zookeeper1:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper1
+    environment:
+      ZOO_MY_ID: 1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/datalog/:/datalog"
+      - zookeeper_data-limited-1:/data-limited
+      - zookeeper_datalog-limited-1:/datalog-limited
+
+  zookeeper2:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper2
+    environment:
+      ZOO_MY_ID: 2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/datalog/:/datalog/"
+      - zookeeper_data-limited-2:/data-limited
+      - zookeeper_datalog-limited-2:/datalog-limited
+
+  zookeeper3:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper3
+    environment:
+      ZOO_MY_ID: 3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/datalog/:/datalog/"
+      - zookeeper_data-limited-3:/data-limited
+      - zookeeper_datalog-limited-3:/datalog-limited
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-1:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-1:/var/log/clickhouse-server-limited
+      - clickhouse1_jbod1:/jbod1
+      - clickhouse1_jbod2:/jbod2
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-2:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-2:/var/log/clickhouse-server-limited
+      - clickhouse2_jbod1:/jbod1
+      - clickhouse2_jbod2:/jbod2
+    depends_on:
+      zookeeper2:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-3:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-3:/var/log/clickhouse-server-limited
+      - clickhouse3_jbod1:/jbod1
+      - clickhouse3_jbod2:/jbod2
+    depends_on:
+      zookeeper3:
+        condition: service_healthy
+
+  aws:
+    extends:
+      file: aws-client.yml
+      service: aws
+
+  # dummy service which does nothing, but allows to postpone
+  # 'docker-compose up -d' till all dependecies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+      minio1:
+        condition: service_healthy
+
 volumes:
   data1-1:
+
+  clickhouse1_jbod1:
+    driver: local
+    driver_opts:
+      o: "size=10G"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse1_jbod2:
+    driver: local
+    driver_opts:
+      o: "size=10G"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_jbod1:
+    driver: local
+    driver_opts:
+      o: "size=10G"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_jbod2:
+    driver: local
+    driver_opts:
+      o: "size=10G"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_jbod1:
+    driver: local
+    driver_opts:
+      o: "size=10G"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_jbod2:
+    driver: local
+    driver_opts:
+      o: "size=10G"
+      device: tmpfs
+      type: tmpfs
 
   var_lib_clickhouse-limited-1:
     driver: local
@@ -87,125 +258,3 @@ volumes:
       device: tmpfs
       type: tmpfs
 
-services:
-  minio1:
-    extends:
-      file: minio-service.yml
-      service: minio1
-
-  minio-client:
-    extends:
-      file: minio-client.yml
-      service: minio-client
-    depends_on:
-      minio1:
-        condition: service_healthy
-
-  zookeeper1:
-    extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper1
-    environment:
-      ZOO_MY_ID: 1
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/datalog/:/datalog"
-      - zookeeper_data-limited-1:/data-limited
-      - zookeeper_datalog-limited-1:/datalog-limited
-
-  zookeeper2:
-    extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper2
-    environment:
-      ZOO_MY_ID: 2
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/datalog/:/datalog/"
-      - zookeeper_data-limited-2:/data-limited
-      - zookeeper_datalog-limited-2:/datalog-limited
-
-  zookeeper3:
-    extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper3
-    environment:
-      ZOO_MY_ID: 3
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/datalog/:/datalog/"
-      - zookeeper_data-limited-3:/data-limited
-      - zookeeper_datalog-limited-3:/datalog-limited
-
-  clickhouse1:
-    extends:
-      file: clickhouse-service.yml
-      service: clickhouse
-    hostname: clickhouse1
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - var_lib_clickhouse-limited-1:/var/lib/clickhouse-limited
-      - var_log_clickhouse-limited-1:/var/log/clickhouse-server-limited
-    depends_on:
-      zookeeper1:
-        condition: service_healthy
-
-  clickhouse2:
-    extends:
-      file: clickhouse-service.yml
-      service: clickhouse
-    hostname: clickhouse2
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - var_lib_clickhouse-limited-2:/var/lib/clickhouse-limited
-      - var_log_clickhouse-limited-2:/var/log/clickhouse-server-limited
-    depends_on:
-      zookeeper2:
-        condition: service_healthy
-
-  clickhouse3:
-    extends:
-      file: clickhouse-service.yml
-      service: clickhouse
-    hostname: clickhouse3
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - var_lib_clickhouse-limited-3:/var/lib/clickhouse-limited
-      - var_log_clickhouse-limited-3:/var/log/clickhouse-server-limited
-    depends_on:
-      zookeeper3:
-        condition: service_healthy
-
-  aws:
-    extends:
-      file: aws-client.yml
-      service: aws
-
-  # dummy service which does nothing, but allows to postpone
-  # 'docker-compose up -d' till all dependecies will go healthy
-  all_services_ready:
-    image: hello-world
-    depends_on:
-      clickhouse1:
-        condition: service_healthy
-      clickhouse2:
-        condition: service_healthy
-      clickhouse3:
-        condition: service_healthy
-      zookeeper1:
-        condition: service_healthy
-      zookeeper2:
-        condition: service_healthy
-      zookeeper3:
-        condition: service_healthy
-      minio1:
-        condition: service_healthy
