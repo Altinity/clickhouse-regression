@@ -17,7 +17,9 @@ def scenario(self, func="last_value({params})", table=None, snapshot_id=None):
         ">=23.2" if check_clickhouse_version("<23.11")(self) else ">=23.11"
     )
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if "Merge" in self.name:

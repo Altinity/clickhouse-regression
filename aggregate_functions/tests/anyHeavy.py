@@ -14,7 +14,7 @@ from aggregate_functions.tests.any import scenario as checks
 def scenario(self, func="anyHeavy({params})", table=None, snapshot_id=None):
     """Check anyHeavy aggregate function by using the same tests as for any."""
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2", add_analyzer=True
     )
 
     if "Merge" in self.name:
