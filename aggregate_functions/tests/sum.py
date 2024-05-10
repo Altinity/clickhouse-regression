@@ -11,7 +11,9 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Sum("1.0"))
 def scenario(self, func="sum({params})", table=None, decimal=True, snapshot_id=None):
     """Check sum aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, add_analyzer=True
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

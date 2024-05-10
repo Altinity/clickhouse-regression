@@ -19,7 +19,9 @@ def scenario(
     self, func="sumMapFilteredWithOverflow({params})", table=None, snapshot_id=None
 ):
     """Check sumMapFilteredWithOverflow aggregate function by using the same tests as for sumMapFiltered."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, add_analyzer=True
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
