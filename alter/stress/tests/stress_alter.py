@@ -433,7 +433,7 @@ def feature(self):
     self.context.disallow_move_partition_to_self = True
 
     with Given("I have S3 disks configured"):
-        s3_config()
+        disk_config()
 
     if self.context.allow_vfs:
         Feature(run=vfs)

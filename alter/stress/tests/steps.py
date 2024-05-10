@@ -13,34 +13,54 @@ from s3.tests.common import s3_storage
 
 
 @TestStep(Given)
-def s3_config(self):
+def disk_config(self):
     """Set up disks and policies for vfs tests."""
-    with Given("I have two S3 disks configured"):
-        disks = {
-            "external": {
-                "type": "s3",
-                "endpoint": f"{self.context.uri}object-storage/storage/",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-            "external_tiered": {
-                "type": "s3",
-                "endpoint": f"{self.context.uri}object-storage/tiered/",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-        }
 
-    with And("""I have a storage policy configured to use the S3 disk"""):
-        policies = {
-            "external": {"volumes": {"external": {"disk": "external"}}},
-            "tiered": {
-                "volumes": {
-                    "default": {"disk": "external"},
-                    "external": {"disk": "external_tiered"},
-                }
-            },
-        }
+    if getattr(self.context, "uri", None):
+        with Given("I have two S3 disks configured"):
+            disks = {
+                "external": {
+                    "type": "s3",
+                    "endpoint": f"{self.context.uri}object-storage/storage/",
+                    "access_key_id": f"{self.context.access_key_id}",
+                    "secret_access_key": f"{self.context.secret_access_key}",
+                },
+                "external_tiered": {
+                    "type": "s3",
+                    "endpoint": f"{self.context.uri}object-storage/tiered/",
+                    "access_key_id": f"{self.context.access_key_id}",
+                    "secret_access_key": f"{self.context.secret_access_key}",
+                },
+            }
+
+        with And("I have storage policies configured to use the S3 disks"):
+            policies = {
+                "external": {"volumes": {"external": {"disk": "external"}}},
+                "tiered": {
+                    "volumes": {
+                        "default": {"disk": "external"},
+                        "external": {"disk": "external_tiered"},
+                    }
+                },
+            }
+
+    else:
+        with Given("I have two jbod disks configured"):
+            disks = {
+                "jbod1": {"path": "/jbod1/"},
+                "jbod2": {"path": "/jbod2/"},
+            }
+
+        with And("I have storage policies configured to use the jbod disks"):
+            policies = {
+                "external": {"volumes": {"external": {"disk": "jbod1"}}},
+                "tiered": {
+                    "volumes": {
+                        "default": {"disk": "jbod1"},
+                        "external": {"disk": "jbod2"},
+                    }
+                },
+            }
 
     return s3_storage(
         disks=disks,
