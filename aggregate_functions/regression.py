@@ -333,10 +333,6 @@ ffails = {
         "largestTriangleThreeBuckets works from 23.10",
         check_clickhouse_version("<23.10"),
     ),
-    "/aggregate functions/merge/largestTriangleThreeBucketsMerge/*": (
-        Skip,
-        "largestTriangleThreeBuckets does not work with Merge, need to fix",
-    ),
     "/aggregate functions/first_value_respect_nulls/*": (
         Skip,
         "first_value_respect_nulls works from 23.5",
@@ -429,16 +425,6 @@ ffails = {
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/aggThrow/with group by/*": (
-        Skip,
-        issue_58727,
-        check_clickhouse_version(">=23.11"),
-    ),
-    "/aggregate functions/:/aggThrow*/with group by/*": (
-        Skip,
-        issue_58727,
-        check_clickhouse_version(">=23.11"),
-    ),
     "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": (
         Skip,
         issue_58741,
@@ -449,12 +435,16 @@ ffails = {
         issue_58741,
         check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
-    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": (
+    "/aggregate functions/merge/largestTriangleThreeBucketsMerge": (
+        Skip,
+        "largestTriangleThreeBuckets does not work with Merge, need to fix",
+    ),
+    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan": (
         Skip,
         "need to investigate",
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/finalizeAggregation/largestTriangleThreeBuckets_finalizeAggregation_Merge/*": (
+    "/aggregate functions/finalizeAggregation/largestTriangleThreeBuckets_finalizeAggregation_Merge": (
         Skip,
         "need to investigate (something with zero representation)",
         check_clickhouse_version(">=23.11"),

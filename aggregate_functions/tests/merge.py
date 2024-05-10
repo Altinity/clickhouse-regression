@@ -184,6 +184,7 @@ def feature(self):
         "topKWeighted",
         "uniqUpTo",
         "windowFunnel",
+        "largestTriangleThreeBuckets"
     ]
 
     test_funcs = [i for i in aggregate_functions]
