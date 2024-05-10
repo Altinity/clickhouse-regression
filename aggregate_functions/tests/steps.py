@@ -10,6 +10,7 @@ from helpers.common import (
     get_snapshot_id,
     getuid,
     current_cpu,
+    is_with_analyzer,
 )
 
 # exhaustive list of all aggregate functions
@@ -270,3 +271,19 @@ def execute_query(
                             mode=snapshot.CHECK,  # snapshot.REWRITE | snapshot.CHECK | snapshot.UPDATE
                         )
                     ), error()
+
+
+def get_snapshot_id(snapshot_id=None, clickhouse_version=None, add_analyzer=False):
+    """Return snapshot id based on the current test's name
+    and ClickHouse server version."""
+    id_postfix = ""
+    if clickhouse_version:
+        if check_clickhouse_version(clickhouse_version)(current()):
+            id_postfix = clickhouse_version
+
+    if snapshot_id is None:
+        snapshot_id = name.basename(current().name) + id_postfix
+        if is_with_analyzer(node=current().context.node) and add_analyzer:
+            snapshot_id += "_with_analyzer"
+
+    return snapshot_id
