@@ -149,6 +149,7 @@ def feature(self):
         "singleValueOrNull",  # problem on 22.8
         "sequenceCount",
         "sequenceMatch",
+        "sequenceNextNode",
     ]
     parametric = [
         "approx_top_k",
@@ -184,7 +185,7 @@ def feature(self):
         "topKWeighted",
         "uniqUpTo",
         "windowFunnel",
-        "largestTriangleThreeBuckets"
+        "largestTriangleThreeBuckets",
     ]
 
     test_funcs = [i for i in aggregate_functions]

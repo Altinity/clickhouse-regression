@@ -319,10 +319,6 @@ ffails = {
         "quantilesGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/sequenceNextNode*Merge/*": (
-        Skip,
-        "sequenceNextNodeMerge needs to be done",
-    ),
     "/aggregate functions/largestTriangleThreeBuckets/*": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
