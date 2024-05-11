@@ -9,6 +9,8 @@ services:
     environment:
       ZOO_TICK_TIME: 500
       ZOO_MY_ID: 4
+      ZOO_SERVERS: server.4=localhost:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: "*"
     healthcheck:
       test: echo stat | nc localhost 2181
       interval: 3s
