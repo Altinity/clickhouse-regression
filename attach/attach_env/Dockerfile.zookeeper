@@ -1,4 +1,6 @@
-FROM zookeeper:3.8.4
+
+ARG ZOOKEEPER_VERSION
+FROM zookeeper:${ZOOKEEPER_VERSION:-3.8.4}
 
 RUN apt update
 RUN apt install --yes iproute2 procps
