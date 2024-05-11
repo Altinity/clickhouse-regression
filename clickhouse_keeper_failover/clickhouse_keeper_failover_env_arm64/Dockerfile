@@ -1,4 +1,4 @@
-FROM clickhouse/clickhouse-keeper:latest
+FROM clickhouse/clickhouse-keeper:24.3
 
 # keeper throws errors if this directory doesn't exist
 RUN mkdir -p /var/lib/clickhouse-keeper && \
