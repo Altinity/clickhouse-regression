@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
   zookeeper:
-    image: zookeeper:3.8.4
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}3.8.4
     expose:
       - "2181"
     environment:
