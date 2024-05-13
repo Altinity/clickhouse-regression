@@ -192,6 +192,8 @@ def alter_combinations(
                 if modify_random_ttl in actions
                 else None
             )
+            table_settings = "min_bytes_for_wide_part=0" if self.context.wide_parts_only else None
+
             for i in range(n_tables):
                 table_name = f"table{i}_{self.context.storage_policy}"
                 replicated_table_cluster(
@@ -201,6 +203,7 @@ def alter_combinations(
                     columns=columns,
                     ttl=ttl,
                     no_cleanup=True,
+                    settings=table_settings,
                 )
                 self.context.table_names.append(table_name)
                 insert_random(
@@ -258,13 +261,7 @@ def alter_combinations(
 
     finally:
         with Finally("I log any pending mutations that might have caused a fail"):
-            for node in self.context.ch_nodes:
-                r = node.query(
-                    "SELECT * FROM system.mutations WHERE is_done=0 FORMAT Vertical",
-                    no_checks=True,
-                )
-                if r.output.strip():
-                    note(f"Pending mutations on {node.name}:\n{r.output.strip()}")
+            log_failing_mutations()
 
         with Finally(
             "I drop each table on each node in case the cluster is in a bad state"
@@ -431,6 +428,9 @@ def feature(self):
     # Workarounds
     # https://github.com/ClickHouse/ClickHouse/issues/62459
     self.context.disallow_move_partition_to_self = True
+
+    #https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
+    self.context.wide_parts_only = True
 
     with Given("I have S3 disks configured"):
         disk_config()
