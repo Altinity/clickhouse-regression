@@ -71,7 +71,7 @@ def alter_drop_column(self):
                 self.context.cluster.node(name).query(
                     f"SELECT COLUMNS('Added1') FROM {table_name} FORMAT TabSeparated;",
                     exitcode=51,
-                    message="DB::Exception: Empty list of columns in SELECT query.",
+                    message="DB::Exception: Empty list of columns",
                 )
 
     finally:
