@@ -10,7 +10,7 @@ from alter.table.replace_partition.common import (
 from alter.table.replace_partition.requirements.requirements import (
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Versions,
 )
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 @TestStep(Given)
@@ -35,9 +35,15 @@ def change_clickhouse_version(self):
     with By("moving the ClickHouse binary to /usr/bin and restarting it"):
         node_with_different_version.stop_clickhouse(safe=False)
 
-        node_with_different_version.command(
-            "cp /usr/bin/clickhouse_different_version/* /usr/bin"
-        )
+        if check_clickhouse_version(">=24.4")(self):
+            node_with_different_version.command(
+                "cp /usr/bin/clickhouse_different_version/clickhouse /usr/bin"
+            )
+        else:
+            node_with_different_version.command(
+                "cp /usr/bin/clickhouse_different_version/* /usr/bin"
+            )
+
         node_with_different_version.start_clickhouse(check_version=False)
 
 
@@ -51,9 +57,15 @@ def revert_clickhouse_version(self):
     ):
         node_with_different_version.stop_clickhouse(safe=False)
 
-        node_with_different_version.command(
-            "cp /usr/bin/clickhouse_main_version/* /usr/bin"
-        )
+        if check_clickhouse_version(">=24.4")(self):
+            node_with_different_version.command(
+                "cp /usr/bin/clickhouse_main_version/clickhouse /usr/bin"
+            )
+        else:
+            node_with_different_version.command(
+                "cp /usr/bin/clickhouse_main_version/* /usr/bin"
+            )
+
         node_with_different_version.start_clickhouse(check_version=False)
 
 
