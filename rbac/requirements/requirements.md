@@ -3298,6 +3298,94 @@ the user has `INSERT` privelege on the target table, either explicitly or throug
 
 #### SQL Security
 
+**Schema**
+---
+```yaml
+View Type:
+  Normal View:
+    Operations:
+      - Select from view
+    SQL SECURITY:
+      - DEFINER
+      - INVOKER
+      - NONE
+      - not specified
+    DEFINER:
+      - user
+      - CURRENT_USER
+      - not specified
+    grant privileges:
+      - directly
+      - via role
+    cluster:
+      - on cluster
+      - not on cluster
+    view source table:
+      - table
+      - view
+      - materialized view
+    view source table grants:
+      - select
+      - insert
+      - none
+      - create
+      # Add other grants here if needed
+    view grants:
+      - select
+      - none
+      - create
+      # Add other grants here if needed
+  Materialized View:
+    Operations:
+      - Select from mv
+      - Select from mv table
+      - Insert into mv
+      - Insert into mv table
+    SQL SECURITY:
+      - DEFINER
+      - NONE
+      - not specified
+    DEFINER:
+      - user
+      - CURRENT_USER
+      - not specified
+    grant privileges:
+      - directly
+      - via role
+    cluster:
+      - on cluster
+      - not on cluster
+    source table:
+      - table
+      - view
+      - materialized view
+    view source table grants:
+      - select
+      - insert
+      - none
+      - create
+      # Add other grants here if needed
+    view destination table grants:
+      - select
+      - insert
+      - none
+      - create
+      # Add other grants here if needed
+    materialized view grants:
+      - select
+      - none
+      - create
+      # Add other grants here if needed
+
+```
+
+* cascading views (3)
+    * mv -> mv -> v
+    * v -> nan -> nan
+    * v -> v -> nan
+    * ...
+
+
 DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three legal values: `DEFINER`, `INVOKER`, or `NONE`. [Clickhouse] allows to specify any existing user or CURRENT_USER in the DEFINER clause.
 
 The following table show which rights are required for which user in order to select from view. In every case it is **required** to have `GRANT SELECT ON <view>` in order to read from it.
@@ -3325,6 +3413,16 @@ ALTER TABLE [ON CLUSTER] MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFIN
 version: 1.0  
 [ClickHouse] SHALL set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified.
 
+##### RQ.SRS-006.RBAC.SQLSecurity.Default.OnlyDefiner
+version: 1.0  
+[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.Default.OnlySQLSecurityDefiner
+version: 1.0  
+[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.Default
+
 #### View SQL Security
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.CreateView
@@ -3340,7 +3438,7 @@ AS SELECT ...
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Default
 version: 1.0  
-[ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if SQL SECURITY is not specified.
+[ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to false.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select
 version: 1.0  
@@ -3349,6 +3447,10 @@ version: 1.0
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select
 version: 1.0  
 [ClickHouse] SHALL only succesfully `SELECT` from a view with INVOKER security mode if and only if the invoker user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.OnCluster
+version: 1.0  
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW ON CLUSTER` statement.
 
 
 #### Materialized View SQL Security
@@ -3366,7 +3468,7 @@ AS SELECT ...
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default
 version: 1.0  
-[ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` for materialized views if SQL SECURITY is not specified.
+[ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` and `DEFINER` to `CURRENT_USER` for materialized views if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to false.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select
 version: 1.0  
@@ -3379,6 +3481,10 @@ version: 1.0
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker
 version: 1.0  
 [ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster
+version: 1.0  
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW ON CLUSTER` statement.
 
 
 #### Live View
