@@ -1061,8 +1061,12 @@ def run_tests(self):
 def with_experimental_analyzer(self):
     """Run all tests with allow_experimental_analyzer=1."""
     with Given("I set allow_experimental_analyzer=1"):
-        allow_experimental_analyzer()
+        default_value = allow_experimental_analyzer()
+
     run_tests()
+
+    with Then("I set allow experimental analyzer to default value"):
+        set_allow_experimental_analyzer(value=default_value)
 
 
 @TestFeature

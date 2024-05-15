@@ -2,8 +2,7 @@ import time
 import random
 from testflows.core import *
 from testflows.asserts import error
-from helpers.common import create_xml_config_content, add_config
-from helpers.common import getuid, instrument_clickhouse_server_log
+from helpers.common import *
 
 engines = [
     "Log",
@@ -45,24 +44,31 @@ join_types = [
 
 @TestStep(Given)
 def allow_experimental_analyzer(self):
-    """Add allow_experimental_analyzer to the default query settings."""
+    """Add allow_experimental_analyzer to the default query settings.
+    Returns 0 if analyzer was turned off, 1 if it was turned on, None if it was not set.
+    """
     default_query_settings = getsattr(current().context, "default_query_settings", [])
     if ("allow_experimental_analyzer", 0) in default_query_settings:
         default_query_settings.remove(("allow_experimental_analyzer", 0))
         default_query_settings.append(("allow_experimental_analyzer", 1))
-    elif ("allow_experimental_analyzer", 1) not in default_query_settings:
-        default_query_settings.append(("allow_experimental_analyzer", 1))
+        return 0
+    elif ("allow_experimental_analyzer", 1) in default_query_settings:
+        return 1
+    else:
+        experimental_analyzer(node=self.context.node, with_analyzer=True)
+        return None
 
 
 @TestStep(Given)
-def disable_experimental_analyzer(self):
-    """Disable allow_experimental_analyzer in the default query settings."""
-    default_query_settings = getsattr(current().context, "default_query_settings", [])
-    if ("allow_experimental_analyzer", 1) in default_query_settings:
-        default_query_settings.remove(("allow_experimental_analyzer", 1))
-        default_query_settings.append(("allow_experimental_analyzer", 0))
-    elif ("allow_experimental_analyzer", 0) not in default_query_settings:
-        default_query_settings.append(("allow_experimental_analyzer", 0))
+def set_allow_experimental_analyzer(self, value=None):
+    """Set allow_experimental_analyzer to the specified value."""
+    default_query_settings = getattr(current().context, "default_query_settings", [])
+    default_query_settings = [
+        (k, v) for k, v in default_query_settings if k != "allow_experimental_analyzer"
+    ]
+    if value is not None:
+        default_query_settings.append(("allow_experimental_analyzer", value))
+    setattr(current().context, "default_query_settings", default_query_settings)
 
 
 @TestStep(Given)
