@@ -2,6 +2,7 @@
 import random
 import json
 import time
+import re
 from contextlib import contextmanager
 from platform import processor
 
@@ -199,3 +200,46 @@ def wait_for_mutations_to_finish(self, node, timeout=60, delay=5, command_like=N
             time.sleep(delay)
 
         assert r.output == "", error("mutations did not finish in time")
+
+
+@TestStep(Finally)
+def log_failing_mutations(self, nodes=None):
+    """Log failing mutations."""
+    if not nodes:
+        nodes = self.context.ch_nodes
+
+    for node in nodes:
+        with By("querying system.mutations"):
+            r = node.query(
+                "SELECT * FROM system.mutations WHERE is_done=0 FORMAT Vertical",
+                no_checks=True,
+            )
+            if r.output.strip() == "":
+                continue
+
+            note(f"Pending mutations on {node.name}:\n{r.output.strip()}")
+
+        with And("double checking the failed mutations"):
+            r = node.query(
+                "SELECT latest_failed_part, table, latest_fail_reason FROM system.mutations WHERE is_done=0 FORMAT JSONCompactColumns"
+            )
+            for part, table, fail_reason in json.loads(r.output):
+                if fail_reason == "":
+                    continue
+
+                node.query(
+                    f"SHOW CREATE TABLE {table} INTO OUTFILE '/var/log/clickhouse-server/show_create_{table}.txt'"
+                )
+                r = node.query(
+                    f"SELECT * FROM system.parts WHERE name='{part}' and table='{table}' FORMAT Vertical",
+                )
+                if r.output.strip():
+                    note(f"State of {part}:\n{r.output.strip()}")
+
+                if "Not found column" in fail_reason:
+                    column = re.search(r"column (.+):", fail_reason).group(1)
+                    r = node.query(
+                        f"SELECT * FROM system.parts_columns WHERE name='{part}' and table='{table}' and column='{column}' FORMAT Vertical",
+                    )
+                    if r.output.strip():
+                        note(f"State of {column}:\n{r.output.strip()}")
