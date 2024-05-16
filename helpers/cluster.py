@@ -1068,6 +1068,7 @@ class Cluster(object):
         environ=None,
         keeper_binary_path=None,
         zookeeper_version=None,
+        use_keeper=False,
         thread_fuzzer=False,
         collect_service_logs=False,
         use_zookeeper_nodes=False,
@@ -1082,6 +1083,7 @@ class Cluster(object):
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
         self.zookeeper_version = zookeeper_version
+        self.use_keeper = use_keeper
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -1668,6 +1670,7 @@ class Cluster(object):
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     self.zookeeper_version or ""
                 )
+                self.environ["CLICKHOUSE_TESTS_COORDINATOR"] = "keeper" if self.use_keeper else "zookeeper"
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
             with And("I list environment variables to show their values"):
@@ -1867,6 +1870,7 @@ def create_cluster(
     environ=None,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
@@ -1885,6 +1889,7 @@ def create_cluster(
         environ=environ,
         keeper_binary_path=keeper_binary_path,
         zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,

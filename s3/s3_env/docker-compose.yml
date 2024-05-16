@@ -170,29 +170,61 @@ services:
       minio1:
         condition: service_healthy
 
-  zookeeper:
-    volumes:
-      - clickhouse1_jbod1:/clickhouse1_jbod1
-      - clickhouse1_jbod2:/clickhouse1_jbod2
-      - clickhouse1_jbod3:/clickhouse1_jbod3
-      - clickhouse1_jbod4:/clickhouse1_jbod4
-      - clickhouse1_external:/clickhouse1_external
-      - clickhouse1_external2:/clickhouse1_external2
-      - clickhouse2_jbod1:/clickhouse2_jbod1
-      - clickhouse2_jbod2:/clickhouse2_jbod2
-      - clickhouse2_jbod3:/clickhouse2_jbod3
-      - clickhouse2_jbod4:/clickhouse2_jbod4
-      - clickhouse2_external:/clickhouse2_external
-      - clickhouse2_external2:/clickhouse2_external2
-      - clickhouse3_jbod1:/clickhouse3_jbod1
-      - clickhouse3_jbod2:/clickhouse3_jbod2
-      - clickhouse3_jbod3:/clickhouse3_jbod3
-      - clickhouse3_jbod4:/clickhouse3_jbod4
-      - clickhouse3_external:/clickhouse3_external
-      - clickhouse3_external2:/clickhouse3_external2
+  zookeeper1:
     extends:
       file: zookeeper-service.yml
       service: zookeeper
+    hostname: zookeeper1
+    environment:
+      ZOO_MY_ID: 1
+
+  zookeeper2:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper2
+    environment:
+      ZOO_MY_ID: 2
+
+  zookeeper3:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper3
+    environment:
+      ZOO_MY_ID: 3
+
+  keeper1:
+    extends:
+      file: keeper-service.yml
+      service: keeper
+    hostname: keeper1
+    environment:
+      - KEEPER_SERVER_ID=1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/data/:/var/lib/clickhouse"
+  keeper2:
+    extends:
+      file: keeper-service.yml
+      service: keeper
+    hostname: keeper2
+    environment:
+      - KEEPER_SERVER_ID=2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/data/:/var/lib/clickhouse"
+
+  keeper3:
+    extends:
+      file: keeper-service.yml
+      service: keeper
+    hostname: keeper3
+    environment:
+      - KEEPER_SERVER_ID=3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/data/:/var/lib/clickhouse"
 
   clickhouse1:
     extends:
@@ -210,7 +242,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse2:
@@ -229,7 +261,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse3:
@@ -248,7 +280,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   aws:
@@ -267,7 +299,11 @@ services:
         condition: service_healthy
       clickhouse3:
         condition: service_healthy
-      zookeeper:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
         condition: service_healthy
       minio1:
         condition: service_healthy
