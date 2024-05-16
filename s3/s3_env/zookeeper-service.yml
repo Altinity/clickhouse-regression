@@ -5,9 +5,10 @@ services:
     image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     expose:
       - "2181"
+    init: true
     environment:
       ZOO_TICK_TIME: 500
-      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
     healthcheck:
       test: echo stat | nc localhost 2181
       interval: 10s

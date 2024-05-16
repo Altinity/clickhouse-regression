@@ -271,6 +271,7 @@ def minio_regression(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
 ):
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -280,6 +281,7 @@ def minio_regression(
         clickhouse_binary_path,
         keeper_binary_path=keeper_binary_path,
         zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
         environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
@@ -335,6 +337,7 @@ def aws_s3_regression(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
 ):
     """Setup and run aws s3 tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -360,6 +363,7 @@ def aws_s3_regression(
         clickhouse_binary_path,
         keeper_binary_path=keeper_binary_path,
         zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
         environ={
@@ -421,6 +425,7 @@ def gcs_regression(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
 ):
     """Setup and run gcs tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -440,6 +445,7 @@ def gcs_regression(
         clickhouse_binary_path,
         keeper_binary_path=keeper_binary_path,
         zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
         environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
@@ -494,6 +500,7 @@ def regression(
     allow_vfs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     allow_experimental_analyzer=False,
 ):
     """S3 Storage regression."""
@@ -543,6 +550,7 @@ def regression(
         collect_service_logs=collect_service_logs,
         keeper_binary_path=keeper_binary_path,
         zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         **storage_module_kwargs,
     )
 
