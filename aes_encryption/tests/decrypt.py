@@ -140,14 +140,14 @@ def invalid_parameters(self):
         )
 
     with Example("bad mode type - forgot quotes"):
-        if check_clickhouse_version("<24.3")(self):
+        if is_with_analyzer(node=self.context.node):
+            exitcode = 47
+            message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
+        else:
             exitcode = 47
             message = (
                 "DB::Exception: Missing columns: 'ecb' 'aes' while processing query"
             )
-        else:
-            exitcode = 47
-            message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
 
         decrypt(
             ciphertext=ciphertext,
@@ -242,21 +242,29 @@ def invalid_parameters(self):
         ],
     ):
         with When("using unsupported cfb1 mode"):
+            exitcode, message = 36, "DB::Exception: Invalid mode: aes-128-cfb1"
+            if check_clickhouse_version(">=24.4")(self):
+                exitcode, message = None, None
+
             decrypt(
                 ciphertext=ciphertext,
                 key="'0123456789123456'",
                 mode="'aes-128-cfb1'",
-                exitcode=36,
-                message="DB::Exception: Invalid mode: aes-128-cfb1",
+                exitcode=exitcode,
+                message=message,
             )
 
         with When("using unsupported cfb8 mode"):
+            exitcode, message = 36, "DB::Exception: Invalid mode: aes-128-cfb8"
+            if check_clickhouse_version(">=24.4")(self):
+                exitcode, message = None, None
+
             decrypt(
                 ciphertext=ciphertext,
                 key="'0123456789123456'",
                 mode="'aes-128-cfb8'",
-                exitcode=36,
-                message="DB::Exception: Invalid mode: aes-128-cfb8",
+                exitcode=exitcode,
+                message=message,
             )
 
         with When("typo in the block algorithm"):

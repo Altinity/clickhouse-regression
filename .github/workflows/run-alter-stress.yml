@@ -17,15 +17,20 @@ on:
         type: choice
         options:
           - safe
-          - add-remove-replicas
-          - full-disk
-          - network-faults
-          - insert-faults
+          - columns
+          - columns and indexes
+          - indexes and projections
+          - add remove replicas
+          - restarts
+          - full disk
+          - network faults
+          - insert faults
       storage_provider:
         description: "Storage Provider to use (default: minio)"
         type: choice
         options:
           - minio
+          - local
           - aws_s3
           - gcs
           - all
@@ -89,7 +94,7 @@ env:
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)"
     --log raw.log ${{ inputs.extra_args }}
     --stress
-    --only ":/alter/:/${{ inputs.scenario }}*"
+    --only ":/combinations/:/${{ inputs.scenario }}*"
   artifact_paths: |
     ./report.html
     ./*.log.txt
@@ -136,7 +141,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: alter-stress-aws-artifacts
+          name: alter-stress-aws-x86-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_gcs_x86:
@@ -173,7 +178,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: alter-stress-gcs-artifacts
+          name: alter-stress-gcs-x86-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_minio_x86:
@@ -207,7 +212,41 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: alter-stress-minio-artifacts
+          name: alter-stress-minio-x86-artifacts
+          path: ${{ env.artifact_paths}}
+
+  alter_stress_local_x86:
+    runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
+    timeout-minutes: 10000
+    env:
+      SUITE: alter/stress
+      STORAGE: /local_x86
+    if: ${{ contains('all local', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage local
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: alter-stress-local-x86-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_aws_arm:
@@ -245,7 +284,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: alter-stress-aws-artifacts
+          name: alter-stress-aws-arm-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_gcs_arm:
@@ -282,7 +321,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: alter-stress-gcs-artifacts
+          name: alter-stress-gcs-arm-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_stress_minio_arm:
@@ -316,5 +355,39 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: alter-stress-minio-artifacts
+          name: alter-stress-minio-arm-artifacts
+          path: ${{ env.artifact_paths}}
+
+  alter_stress_local_arm:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 10000
+    env:
+      SUITE: alter/stress
+      STORAGE: /local_arm
+    if: ${{ contains('all local', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage local
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: alter-stress-local-arm-artifacts
           path: ${{ env.artifact_paths}}

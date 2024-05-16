@@ -40,7 +40,9 @@ def scenario(
         clickhouse_version = ">=23.2"
 
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if "Merge" in self.name:

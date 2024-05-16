@@ -14,11 +14,22 @@ from aggregate_functions.tests.argMin import scenario as checks
 def scenario(self, func="argMax({params})", table=None, snapshot_id=None):
     """Check argMax aggregate function by using the same tests as for argMin."""
     # https://github.com/ClickHouse/ClickHouse/pull/58139
-    clickhouse_version = (
-        ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
-    )
+    if "State" in self.name:
+        if check_clickhouse_version(">=24.4")(self):
+            clickhouse_version = ">=24.4"
+        elif check_clickhouse_version(">=23.12")(self):
+            clickhouse_version = ">=23.12"
+        else:
+            clickhouse_version = ">=23.2"
+    else:
+        clickhouse_version = (
+            ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
+        )
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if "Merge" in self.name:

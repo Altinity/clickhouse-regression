@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
-from helpers.common import check_clickhouse_version, current_cpu
+from helpers.common import *
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 
@@ -169,7 +169,7 @@ def regression(
     ssl=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse regression when using clickhouse-keeper."""
     nodes = {
@@ -230,6 +230,10 @@ def regression(
         )
         self.context.cluster = cluster
 
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
     if check_clickhouse_version("<21.4")(self):
         skip(reason="only supported on ClickHouse version >= 21.4")
 
@@ -238,20 +242,6 @@ def regression(
             self.context.fips_mode = True
         else:
             self.context.fips_mode = False
-
-    with And("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
 
     if ssl:
         create_3_3_cluster_config_ssl()

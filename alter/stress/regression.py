@@ -6,7 +6,7 @@ from testflows.core import *
 append_path(sys.path, "../..")
 
 from helpers.cluster import create_cluster
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from s3.regression import argparser
 from s3.tests.common import start_minio
 
@@ -20,6 +20,45 @@ ffails = {}
 
 
 @TestModule
+@Name("local")
+def local_storage(
+    self,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
+    with_analyzer,
+):
+    """Setup and run minio tests."""
+    nodes = {
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+    }
+
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            local=local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            use_zookeeper_nodes=True,
+            configs_dir=current_dir(),
+        )
+        self.context.cluster = cluster
+        self.context.node = self.context.cluster.node("clickhouse1")
+        self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
+        self.context.minio_enabled = False
+
+    with And("I enable or disable experimental analyzer if needed"):
+        experimental_analyzer(
+            node=cluster.node("clickhouse1"), with_analyzer=with_analyzer
+        )
+
+    Feature(run=load("alter.stress.tests.simplified", "feature"))
+    Feature(run=load("alter.stress.tests.stress_alter", "feature"))
+
+
+@TestModule
 def minio(
     self,
     uri,
@@ -30,6 +69,7 @@ def minio(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    with_analyzer=False,
 ):
     """Setup and run minio tests."""
     nodes = {
@@ -63,11 +103,17 @@ def minio(
 
         self.context.minio_enabled = True
 
+    with And("I enable or disable experimental analyzer if needed"):
+        experimental_analyzer(
+            node=cluster.node("clickhouse1"), with_analyzer=with_analyzer
+        )
+
     with And("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
         self.context.uri = uri_bucket_file
 
+    Feature(run=load("alter.stress.tests.simplified", "feature"))
     Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
@@ -83,6 +129,7 @@ def aws_s3(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
     nodes = {
@@ -137,6 +184,11 @@ def aws_s3(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
+    with And("I enable or disable experimental analyzer if needed"):
+        experimental_analyzer(
+            node=cluster.node("clickhouse1"), with_analyzer=with_analyzer
+        )
+
     Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
@@ -151,6 +203,7 @@ def gcs(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    with_analyzer=False,
 ):
     """Setup and run gcs tests."""
     nodes = {
@@ -192,6 +245,10 @@ def gcs(
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
         self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
     Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
@@ -221,7 +278,7 @@ def regression(
     allow_vfs,
     keeper_binary_path=None,
     zookeeper_version=None,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
 
@@ -239,6 +296,7 @@ def regression(
         collect_service_logs=collect_service_logs,
         keeper_binary_path=keeper_binary_path,
         zookeeper_version=zookeeper_version,
+        with_analyzer=with_analyzer,
     )
 
     if "aws_s3" in storages:
@@ -263,6 +321,11 @@ def regression(
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
+            **module_args,
+        )
+
+    if "local" in storages:
+        Module(test=local_storage)(
             **module_args,
         )
 

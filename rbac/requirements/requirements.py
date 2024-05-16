@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v1.9.220810.1192506.
+# document by TestFlows v2.0.240111.1210833.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -6309,6 +6309,231 @@ RQ_SRS_006_RBAC_MaterializedView_Insert_TargetTable = Requirement(
     num="5.18.2.10",
 )
 
+RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL support the `ALTER TABLE MODIFY SQL SECURITY` statement to change the SQL security for an existing view.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.3.1",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity_OnCluster = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity.OnCluster",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL support the `ALTER TABLE ON CLUSTER MODIFY SQL SECURITY` statement to change the SQL security for an existing view on cluster.\n"
+        "\n"
+        "Syntax:\n"
+        "```sql\n"
+        "ALTER TABLE [ON CLUSTER] MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user | CURRENT_USER }]\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.3.2",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_Default_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.Default.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.3.3",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_CreateView = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.CreateView",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW` statement.\n"
+        "\n"
+        "Syntax:\n"
+        "```sql\n"
+        "CREATE [OR REPLACE] VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster_name] \n"
+        "[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] \n"
+        "AS SELECT ...\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.1",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Default = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Default",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if SQL SECURITY is not specified.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.2",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Definer_Select = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL only succesfully `SELECT` from a view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.3",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Invoker_Select = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL only succesfully `SELECT` from a view with INVOKER security mode if and only if the invoker user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.4",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CreateMaterializedView = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CreateMaterializedView",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW` statement.\n"
+        "\n"
+        "Syntax:\n"
+        "```sql\n"
+        "CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]name] [ENGINE = engine] [POPULATE] \n"
+        "[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] \n"
+        "AS SELECT ...\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.1",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Default = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` for materialized views if SQL SECURITY is not specified.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.2",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Select = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL only succesfully `SELECT` from a materialized view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table and target table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.3",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Insert = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL only succesfully `INSERT` into a materialized view with DEFINER security mode if and only if the definer user has `INSERT` privilege on the target table, either explicitly or through a role and invoker user has `INSERT` privileges on the view, either explicitly or through a role.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.4",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Invoker = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.5",
+)
+
 RQ_SRS_006_RBAC_LiveView = Requirement(
     name="RQ.SRS-006.RBAC.LiveView",
     version="1.0",
@@ -6317,13 +6542,14 @@ RQ_SRS_006_RBAC_LiveView = Requirement(
     type=None,
     uid=None,
     description=(
+        "  \n"
         "[ClickHouse] SHALL support controlling access to **create**, **select**, **alter** and **drop**\n"
         "privileges for a live view for users or roles.\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="5.18.3.1",
+    num="5.18.6.1",
 )
 
 RQ_SRS_006_RBAC_LiveView_Create = Requirement(
@@ -6334,6 +6560,7 @@ RQ_SRS_006_RBAC_LiveView_Create = Requirement(
     type=None,
     uid=None,
     description=(
+        "  \n"
         "[ClickHouse] SHALL only successfully execute a `CREATE LIVE VIEW` command if and only if\n"
         "the user has **create view** privilege either explicitly or through roles.\n"
         "\n"
@@ -6352,7 +6579,7 @@ RQ_SRS_006_RBAC_LiveView_Create = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.3.2",
+    num="5.18.6.2",
 )
 
 RQ_SRS_006_RBAC_LiveView_Select = Requirement(
@@ -6383,7 +6610,7 @@ RQ_SRS_006_RBAC_LiveView_Select = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.3.3",
+    num="5.18.6.3",
 )
 
 RQ_SRS_006_RBAC_LiveView_Drop = Requirement(
@@ -6400,7 +6627,7 @@ RQ_SRS_006_RBAC_LiveView_Drop = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.3.4",
+    num="5.18.6.4",
 )
 
 RQ_SRS_006_RBAC_LiveView_Refresh = Requirement(
@@ -6417,7 +6644,7 @@ RQ_SRS_006_RBAC_LiveView_Refresh = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.3.5",
+    num="5.18.6.5",
 )
 
 RQ_SRS_006_RBAC_Select = Requirement(
@@ -10873,12 +11100,69 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             level=4,
             num="5.18.2.10",
         ),
-        Heading(name="Live View", level=3, num="5.18.3"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView", level=4, num="5.18.3.1"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Create", level=4, num="5.18.3.2"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Select", level=4, num="5.18.3.3"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Drop", level=4, num="5.18.3.4"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Refresh", level=4, num="5.18.3.5"),
+        Heading(name="SQL Security", level=3, num="5.18.3"),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity",
+            level=4,
+            num="5.18.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity.OnCluster",
+            level=4,
+            num="5.18.3.2",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.Default.Definer", level=4, num="5.18.3.3"
+        ),
+        Heading(name="View SQL Security", level=3, num="5.18.4"),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.CreateView", level=4, num="5.18.4.1"
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Default", level=4, num="5.18.4.2"
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select",
+            level=4,
+            num="5.18.4.3",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select",
+            level=4,
+            num="5.18.4.4",
+        ),
+        Heading(name="Materialized View SQL Security", level=3, num="5.18.5"),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CreateMaterializedView",
+            level=4,
+            num="5.18.5.1",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default",
+            level=4,
+            num="5.18.5.2",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select",
+            level=4,
+            num="5.18.5.3",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert",
+            level=4,
+            num="5.18.5.4",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker",
+            level=4,
+            num="5.18.5.5",
+        ),
+        Heading(name="Live View", level=3, num="5.18.6"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView", level=4, num="5.18.6.1"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Create", level=4, num="5.18.6.2"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Select", level=4, num="5.18.6.3"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Drop", level=4, num="5.18.6.4"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Refresh", level=4, num="5.18.6.5"),
         Heading(name="Select", level=2, num="5.19"),
         Heading(name="RQ.SRS-006.RBAC.Select", level=3, num="5.19.1"),
         Heading(name="RQ.SRS-006.RBAC.Select.Column", level=3, num="5.19.2"),
@@ -11880,6 +12164,18 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_MaterializedView_Insert,
         RQ_SRS_006_RBAC_MaterializedView_Insert_SourceTable,
         RQ_SRS_006_RBAC_MaterializedView_Insert_TargetTable,
+        RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity,
+        RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity_OnCluster,
+        RQ_SRS_006_RBAC_SQLSecurity_Default_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_View_CreateView,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Default,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Definer_Select,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Invoker_Select,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CreateMaterializedView,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Default,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Select,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Insert,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Invoker,
         RQ_SRS_006_RBAC_LiveView,
         RQ_SRS_006_RBAC_LiveView_Create,
         RQ_SRS_006_RBAC_LiveView_Select,
@@ -15366,17 +15662,100 @@ version: 1.0
 [ClickHouse] SHALL only succesfully `INSERT` into a target table of a materialized view if and only if
 the user has `INSERT` privelege on the target table, either explicitly or through a role.
 
+#### SQL Security
+
+DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three legal values: `DEFINER`, `INVOKER`, or `NONE`. [Clickhouse] allows to specify any existing user or CURRENT_USER in the DEFINER clause.
+
+The following table show which rights are required for which user in order to select from view. In every case it is **required** to have `GRANT SELECT ON <view>` in order to read from it.
+
+| SQL security option | View | Materialized View | 
+| --------------------|------|-------------------|
+| `DEFINER alice` | `alice` must have a `SELECT` grant for the view's source table.	 | `alice` must have a `SELECT` grant for the view's source table and an `SELECT` grant for the view's target table. |
+|`INVOKER` |	User must have a `SELECT` grant for the view's source table. |	`SQL SECURITY INVOKER` can't be specified for materialized views. |
+|`NONE` |	- | -
+
+##### RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity
+version: 1.0  
+[ClickHouse] SHALL support the `ALTER TABLE MODIFY SQL SECURITY` statement to change the SQL security for an existing view.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity.OnCluster
+version: 1.0  
+[ClickHouse] SHALL support the `ALTER TABLE ON CLUSTER MODIFY SQL SECURITY` statement to change the SQL security for an existing view on cluster.
+
+Syntax:
+```sql
+ALTER TABLE [ON CLUSTER] MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user | CURRENT_USER }]
+```
+
+##### RQ.SRS-006.RBAC.SQLSecurity.Default.Definer
+version: 1.0  
+[ClickHouse] SHALL set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified.
+
+#### View SQL Security
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.CreateView
+version: 1.0  
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW` statement.
+
+Syntax:
+```sql
+CREATE [OR REPLACE] VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster_name] 
+[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
+AS SELECT ...
+```
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Default
+version: 1.0  
+[ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if SQL SECURITY is not specified.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select
+version: 1.0  
+[ClickHouse] SHALL only succesfully `SELECT` from a view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select
+version: 1.0  
+[ClickHouse] SHALL only succesfully `SELECT` from a view with INVOKER security mode if and only if the invoker user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
+
+
+#### Materialized View SQL Security
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CreateMaterializedView
+version: 1.0  
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW` statement.
+
+Syntax:
+```sql
+CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]name] [ENGINE = engine] [POPULATE] 
+[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
+AS SELECT ...
+```
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default
+version: 1.0  
+[ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` for materialized views if SQL SECURITY is not specified.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select
+version: 1.0  
+[ClickHouse] SHALL only succesfully `SELECT` from a materialized view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table and target table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert
+version: 1.0  
+[ClickHouse] SHALL only succesfully `INSERT` into a materialized view with DEFINER security mode if and only if the definer user has `INSERT` privilege on the target table, either explicitly or through a role and invoker user has `INSERT` privileges on the view, either explicitly or through a role.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker
+version: 1.0  
+[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
+
+
 #### Live View
 
 ##### RQ.SRS-006.RBAC.LiveView
-version: 1.0
-
+version: 1.0  
 [ClickHouse] SHALL support controlling access to **create**, **select**, **alter** and **drop**
 privileges for a live view for users or roles.
 
 ##### RQ.SRS-006.RBAC.LiveView.Create
-version: 1.0
-
+version: 1.0  
 [ClickHouse] SHALL only successfully execute a `CREATE LIVE VIEW` command if and only if
 the user has **create view** privilege either explicitly or through roles.
 

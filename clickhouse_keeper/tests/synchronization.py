@@ -259,14 +259,19 @@ def detach(self):
         )
 
     with Then("I check that table detached on all shards"):
-        message = (
-            "DB::Exception: Table default.{table_name} doesn't exist."
-            if check_clickhouse_version("<23.8")(self)
-            else "DB::Exception: Table default.{table_name} does not exist."
-        )
-
         for name in self.context.cluster.nodes["clickhouse"][:9]:
-            retry(self.context.cluster.node(name).query, timeout=100, delay=1)(
+            node = self.context.cluster.node(name)
+
+            if is_with_analyzer(node):
+                message = (
+                    "Exception: Unknown table expression identifier '{table_name}'"
+                )
+            elif check_clickhouse_version("<23.8")(self):
+                message = "Exception: Table {table_name} doesn't exist"
+            else:
+                message = "Exception: Table {table_name} does not exist"
+
+            retry(node.query, timeout=100, delay=1)(
                 f"select * from {table_name} FORMAT TabSeparated",
                 message=message.format(table_name=table_name),
                 exitcode=60,

@@ -10,7 +10,7 @@ from aggregate_functions.requirements import (
 def scenario(self, func="any({params})", table=None, snapshot_id=None):
     """Check any aggregate function."""
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2", add_analyzer=True
     )
 
     if "Merge" in self.name:

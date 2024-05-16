@@ -17,7 +17,9 @@ def scenario(
     self, func="anyLast_respect_nulls({params})", table=None, snapshot_id=None
 ):
     """Check anyLast_respect_nulls aggregate function by using the same tests as for any."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, add_analyzer=True
+    )
 
     if check_clickhouse_version("<23.11")(self):
         skip("any_respect_nulls works from 23.11")

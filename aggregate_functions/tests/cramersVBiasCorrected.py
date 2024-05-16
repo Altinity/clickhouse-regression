@@ -17,7 +17,9 @@ def scenario(
     self, func="cramersVBiasCorrected({params})", table=None, snapshot_id=None
 ):
     """Check cramersVBiasCorrected aggregate function by using the same checks as for covarPop."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, add_analyzer=True
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

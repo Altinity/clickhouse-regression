@@ -20,7 +20,7 @@ def scenario(
     """Check last_value_respect_nulls aggregate function by using the same tests as for first_value_respect_nulls."""
 
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.11"
+        snapshot_id=snapshot_id, clickhouse_version=">=23.11", add_analyzer=True
     )
 
     if "Merge" in self.name:

@@ -141,9 +141,13 @@ def delete_random_column(self):
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
         for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            # wait_for_mutations_to_finish(node=node)
-            By(
+            with By("selecting a random node that knows about the table"):
+                node = get_random_node_for_table(table_name=table_name)
+
+            with And("waiting for any other mutations on that column to finish"):
+                wait_for_mutations_to_finish(node=node, command_like=column_name)
+
+            And(
                 name=f"delete column from {table_name} with {node.name}",
                 test=alter_table_drop_column,
             )(
@@ -525,7 +529,7 @@ def delete_random_rows(self):
 def delete_random_rows_lightweight(self):
     """
     Lightweight delete a few rows at random.
-    Not supported with projections!
+    Not supported with projections.
     """
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
@@ -683,11 +687,13 @@ def add_random_index(self, safe=True):
                 tables=self.context.table_names
             )
 
-    node.query(
-        f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
-        exitcode=0,
-        **alter_query_args,
-    )
+    for table_name in self.context.table_names:
+        node = get_random_node_for_table(table_name=table_name)
+        node.query(
+            f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
+            exitcode=0,
+            **alter_query_args,
+        )
 
 
 @TestStep
@@ -707,7 +713,7 @@ def clear_random_index(self):
         index_name = random.choice(indexes)
         partition_name = get_random_partition_id(node=node, table_name=table_name)
 
-        wait_for_mutations_to_finish(node=node)
+        wait_for_mutations_to_finish(node=node, command_like=index_name)
 
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
@@ -734,14 +740,20 @@ def drop_random_index(self):
             exit_codes = {}
             with When(f"I drop {index_name} on all tables"):
                 for table_name in self.context.table_names:
-                    node = get_random_node_for_table(table_name=table_name)
-                    # wait_for_mutations_to_finish(node=node)
+                    with By("selecting a random node that knows about the table"):
+                        node = get_random_node_for_table(table_name=table_name)
 
-                    r = node.query(
-                        f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
-                        **alter_query_args,
-                    )
-                    exit_codes[table_name] = r.exitcode
+                    with And("waiting for any other mutations on that index to finish"):
+                        wait_for_mutations_to_finish(
+                            node=node, command_like=index_name, timeout=300
+                        )
+
+                    with And("dropping the index"):
+                        r = node.query(
+                            f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
+                            **alter_query_args,
+                        )
+                        exit_codes[table_name] = r.exitcode
 
             with Then("all drops should have succeeded"):
                 for table_name in self.context.table_names:
@@ -783,84 +795,127 @@ def remove_random_ttl(self):
 
 
 @TestStep(Then)
-def check_tables_have_same_columns(self, tables):
+def check_tables_have_same_columns(self, tables, return_outliers=False):
     """
     Asserts that the given tables have the same columns.
     Smartly selects a node for each given replicated table.
     Does not check that all replicas of a table agree.
-    """
-    with When("I get the columns for each table"):
-        table_columns = {}
-        for table_name in tables:
-            node = get_random_node_for_table(table_name=table_name)
-            table_columns[table_name] = set(
-                get_column_names(node=node, table_name=table_name)
-            )
 
-    with Then("all tables should have the same columns"):
-        for table1, table2 in combinations(tables, 2):
-            with By(f"checking {table1} and {table2}", flags=TE):
-                assert table_columns[table1] == table_columns[table2], error()
+    Args:
+        tables: List of table names to check.
+        return_outliers: If True, return the set of columns that are not present in all tables.
+    """
+    try:
+        with When("I get the columns for each table"):
+            table_columns = {}
+            for table_name in tables:
+                node = get_random_node_for_table(table_name=table_name)
+                table_columns[table_name] = set(
+                    get_column_names(node=node, table_name=table_name)
+                )
+
+        with Then("all tables should have the same columns"):
+            for table1, table2 in combinations(tables, 2):
+                with By(f"checking {table1} and {table2}", flags=TE):
+                    assert table_columns[table1] == table_columns[table2], error()
+    finally:
+        if return_outliers:
+            return set.union(*table_columns.values()) - set.intersection(
+                *table_columns.values()
+            )
+    return set()
 
 
 @TestStep(Then)
 def check_tables_have_same_projections(
-    self, tables, check_present: list = None, check_absent: list = None
+    self,
+    tables,
+    check_present: list = None,
+    check_absent: list = None,
+    return_outliers=False,
 ):
     """
     Asserts that the given tables have the same projections.
     Smartly selects a node for each given replicated table.
     Does not check that all replicas of a table agree.
+
+    Args:
+        tables: List of table names to check.
+        check_present: List of projection names that should be present in all tables.
+        check_absent: List of projection names that should not be present in any tables.
+        return_outliers: If True, return the set of projections that are not present in all tables.
     """
-    with When("I get the projections for each table"):
-        table_projections = {}
-        for table_name in tables:
-            node = get_random_node_for_table(table_name=table_name)
-            wait_for_mutations_to_finish(node=node, command_like="PROJECTION")
-            table_projections[table_name] = set(
-                get_projections(node=node, table_name=table_name)
+    try:
+        with When("I get the projections for each table"):
+            table_projections = {}
+            for table_name in tables:
+                node = get_random_node_for_table(table_name=table_name)
+                wait_for_mutations_to_finish(node=node, command_like="PROJECTION")
+                table_projections[table_name] = set(
+                    get_projections(node=node, table_name=table_name)
+                )
+
+        with Then("all tables should have the same projections"):
+            for table1, table2 in combinations(tables, 2):
+                with By(f"checking {table1} and {table2}", flags=TE):
+                    assert (
+                        table_projections[table1] == table_projections[table2]
+                    ), error()
+
+        if check_present is not None:
+            with And(f"I check that {check_present} exist"):
+                for projection_name in check_present:
+                    assert projection_name in table_projections[tables[0]], error()
+
+        if check_absent is not None:
+            with And(f"I check that {check_absent} do not exist"):
+                for projection_name in check_absent:
+                    assert projection_name not in table_projections[tables[0]], error()
+    finally:
+        if return_outliers:
+            return set.union(*table_projections.values()) - set.intersection(
+                *table_projections.values()
             )
-
-    with Then("all tables should have the same projections"):
-        for table1, table2 in combinations(tables, 2):
-            with By(f"checking {table1} and {table2}", flags=TE):
-                assert table_projections[table1] == table_projections[table2], error()
-
-    if check_present is not None:
-        with And(f"I check that {check_present} exist"):
-            for projection_name in check_present:
-                assert projection_name in table_projections[tables[0]], error()
-
-    if check_absent is not None:
-        with And(f"I check that {check_absent} do not exist"):
-            for projection_name in check_absent:
-                assert projection_name not in table_projections[tables[0]], error()
+    return set()
 
 
 @TestStep(Then)
-def check_tables_have_same_indexes(self, tables):
+def check_tables_have_same_indexes(self, tables, return_outliers=False):
     """
     Asserts that the given tables have the same indexes.
     Smartly selects a node for each given replicated table.
     Does not check that all replicas of a table agree.
-    """
-    with When("I get the indexes for each table"):
-        table_indexes = {}
-        for table_name in tables:
-            node = get_random_node_for_table(table_name=table_name)
-            table_indexes[table_name] = set(
-                get_indexes(node=node, table_name=table_name)
-            )
 
-    with Then("all tables should have the same indexes"):
-        for table1, table2 in combinations(tables, 2):
-            with By(f"checking {table1} and {table2}", flags=TE):
-                assert table_indexes[table1] == table_indexes[table2], error()
+    Args:
+        tables: List of table names to check.
+        return_outliers: If True, return the set of indexes that are not present in all tables.
+    """
+    try:
+        with When("I get the indexes for each table"):
+            table_indexes = {}
+            for table_name in tables:
+                node = get_random_node_for_table(table_name=table_name)
+                table_indexes[table_name] = set(
+                    get_indexes(node=node, table_name=table_name)
+                )
+
+        with Then("all tables should have the same indexes"):
+            for table1, table2 in combinations(tables, 2):
+                with By(f"checking {table1} and {table2}", flags=TE):
+                    assert table_indexes[table1] == table_indexes[table2], error()
+    finally:
+        if return_outliers:
+            return set.union(*table_indexes.values()) - set.intersection(
+                *table_indexes.values()
+            )
+    return set()
 
 
 @TestStep(Then)
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
-def check_consistency(self, tables=None, sync_timeout=None):
+def check_consistency(
+    self, tables=None, sync_timeout=None, restore_consistent_structure=False
+):
     """
     Check that the given tables hold the same amount of data on all nodes where they exist.
     Also check that column names match, subsequent part move tests require matching columns.
@@ -923,10 +978,37 @@ def check_consistency(self, tables=None, sync_timeout=None):
     # The below check also asserts that all tables have the same structure
     # Part move actions require matching structure
 
-    with Then("check that table structures are in sync"):
-        check_tables_have_same_columns(tables=tables)
-        check_tables_have_same_projections(tables=tables)
-        check_tables_have_same_indexes(tables=tables)
+    try:
+        with Then("check that table structures are in sync", flags=TE):
+            outlier_columns = check_tables_have_same_columns(
+                tables=tables, return_outliers=restore_consistent_structure
+            )
+            outlier_projections = check_tables_have_same_projections(
+                tables=tables, return_outliers=restore_consistent_structure
+            )
+            outlier_indexes = check_tables_have_same_indexes(
+                tables=tables, return_outliers=restore_consistent_structure
+            )
+    finally:
+        if restore_consistent_structure and any(
+            [outlier_columns, outlier_projections, outlier_indexes]
+        ):
+            with Finally("I clean up any inconsistencies between tables"):
+                for table_name in tables:
+                    node = get_random_node_for_table(table_name=table_name)
+
+                    for projection in outlier_projections:
+                        node.query(
+                            f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection}"
+                        )
+                    for index in outlier_indexes:
+                        node.query(
+                            f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index}"
+                        )
+                    for column in outlier_columns:
+                        node.query(
+                            f"ALTER TABLE {table_name} DROP COLUMN IF EXISTS {column}"
+                        )
 
 
 @TestStep

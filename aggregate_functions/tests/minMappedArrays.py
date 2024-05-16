@@ -18,7 +18,9 @@ def scenario(self, func="minMappedArrays({params})", table=None, snapshot_id=Non
         ">=23.11" if check_clickhouse_version("<24.1")(self) else ">=24.1"
     )
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if "Merge" in self.name:

@@ -12,7 +12,7 @@ from window_functions.requirements import (
     SRS019_ClickHouse_Window_Functions,
     RQ_SRS_019_ClickHouse_WindowFunctions,
 )
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 
 
 xfails = {
@@ -181,6 +181,12 @@ xfails = {
             check_clickhouse_version(">=23.11"),
         )
     ],
+    "/window functions/tests/*/errors/error named window defined twice/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/63539",
+        )
+    ],
 }
 
 xflags = {}
@@ -233,7 +239,7 @@ def regression(
     zookeeper_version=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Window functions regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -255,19 +261,9 @@ def regression(
         )
         self.context.cluster = cluster
 
-    with And("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Feature(run=load("window_functions.tests.feature", "feature"), flags=TE)
 

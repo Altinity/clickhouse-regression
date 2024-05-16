@@ -72,8 +72,8 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--allow_experimental_analyzer",
+        "--with-analyzer",
         action="store_true",
         default=False,
-        help="Allow to use experimental analyzer.",
+        help="Use experimental analyzer.",
     )

@@ -119,6 +119,10 @@ def invalid_window_name(self):
     exitcode = 47
     message = "Exception: Window 'w3' is not defined"
 
+    if is_with_analyzer(node=self.context.node):
+        exitcode = 36
+        message = "DB::Exception: Window 'w3' does not exists."
+
     self.context.node.query(
         "SELECT number,sum(number) OVER w3 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 AS () FORMAT TabSeparated",
         exitcode=exitcode,
@@ -136,6 +140,9 @@ def invalid_multiple_windows(self):
     """Check invalid multiple window names."""
     exitcode = 47
     message = "Exception: Missing columns"
+
+    if is_with_analyzer(node=self.context.node):
+        message = "DB::Exception: Unknown expression identifier"
 
     self.context.node.query(
         "SELECT number,sum(number) OVER w1, w2 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 AS (), w2 AS (PARTITION BY number) FORMAT TabSeparated",

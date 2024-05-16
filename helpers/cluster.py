@@ -610,7 +610,7 @@ class ClickHouseNode(Node):
                 command = f'set -o pipefail && cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} {client} | {hash_utility}'
                 for setting in query_settings:
                     name, value = setting
-                    command += f' --{name} "{value}"'
+                    client += f' --{name} "{value}"'
                 description = f"""
                             {pipe_cmd} \"{sql[:100]}...\" > {query.name}
                             {command}
@@ -634,7 +634,7 @@ class ClickHouseNode(Node):
             )
             for setting in query_settings:
                 name, value = setting
-                command += f' --{name} "{value}"'
+                client += f' --{name} "{value}"'
             with (
                 step("executing command", description=command, format_description=False)
                 if steps
@@ -1149,13 +1149,13 @@ class Cluster(object):
                     self.use_specific_version
                 )
 
-                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
-                    self.specific_clickhouse_binary_path
-                )
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_BINARY"
+                ] = self.specific_clickhouse_binary_path
 
-                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
-                    self.clickhouse_specific_odbc_binary
-                )
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
+                ] = self.clickhouse_specific_odbc_binary
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
@@ -1654,15 +1654,14 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
-                    self.clickhouse_binary_path
-                )
-                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
-                    self.clickhouse_odbc_bridge_binary_path
-                    or os.path.join(
-                        os.path.dirname(self.clickhouse_binary_path),
-                        "clickhouse-odbc-bridge",
-                    )
+                self.environ[
+                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
+                ] = self.clickhouse_binary_path
+                self.environ[
+                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
+                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
+                    os.path.dirname(self.clickhouse_binary_path),
+                    "clickhouse-odbc-bridge",
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""

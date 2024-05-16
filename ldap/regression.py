@@ -20,7 +20,7 @@ def regression(
     zookeeper_version=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse LDAP integration regression module."""
     args = {

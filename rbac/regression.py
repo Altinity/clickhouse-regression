@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from rbac.requirements import SRS_006_ClickHouse_Role_Based_Access_Control
 from rbac.helper.common import add_rbac_config_file
 
@@ -200,6 +200,15 @@ xfails = {
     "privileges/projections/ : privilege, ADD PROJECTION, privilege granted to :": [
         (Fail, "unstable test")
     ],
+    "/rbac/SQL security/materialized view with definer/check default values/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
+    ],
+    "/rbac/SQL security/materialized view with definer/check change default values/I try to select from materialized view with second user/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
+    ],
+    "/rbac/SQL security/view with definer/check default sql security with definer/I try to select from view with user/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
+    ],
 }
 
 xflags = {
@@ -301,7 +310,7 @@ def regression(
     zookeeper_version=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """RBAC regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -323,19 +332,9 @@ def regression(
         )
         self.context.cluster = cluster
 
-    with And("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     if check_clickhouse_version(">=23.2")(self):
         for node in nodes["clickhouse"]:
@@ -344,6 +343,7 @@ def regression(
     Feature(run=load("rbac.tests.syntax.feature", "feature"))
     Feature(run=load("rbac.tests.privileges.feature", "feature"))
     Feature(run=load("rbac.tests.views.feature", "feature"))
+    Feature(run=load("rbac.tests.sql_security.feature", "feature"))
 
 
 if main():

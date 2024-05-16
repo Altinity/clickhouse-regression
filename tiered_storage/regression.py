@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
 from vfs.tests.steps import enable_vfs
@@ -141,7 +141,7 @@ def feature(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    allow_experimental_analyzer,
+    with_analyzer,
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
@@ -171,6 +171,10 @@ def feature(
         common_args = dict(args=args, flags=TE)
 
         object_storage_mode = "vfs" if allow_vfs else "normal"
+
+        with Given("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
         with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
             with Feature(object_storage_mode):
@@ -356,13 +360,12 @@ def regression(
     gcs_key_id=None,
     gcs_uri=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Tiered Storage regression."""
     environ = {}
 
     self.context.clickhouse_version = clickhouse_version
-    self.context.allow_experimental_analyzer = allow_experimental_analyzer
 
     if with_minio or with_s3amazon or with_s3gcs:
         if not self.skip:
@@ -415,7 +418,7 @@ def regression(
         zookeeper_version=zookeeper_version,
         environ=environ,
         allow_vfs=allow_vfs,
-        allow_experimental_analyzer=allow_experimental_analyzer,
+        with_analyzer=with_analyzer,
     )
 
 
