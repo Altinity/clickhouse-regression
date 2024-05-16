@@ -43,6 +43,13 @@ def argparser(parser):
         help="Zookeeper version",
         default=None,
     )
+    parser.add_argument(
+        "--use-keeper",
+        action="store_true",
+        default=False,
+        dest="use_keeper",
+        help="use ClickHouse Keeper instead of ZooKeeper",
+    )
 
     parser.add_argument(
         "--stress",

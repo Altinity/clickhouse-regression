@@ -132,7 +132,7 @@ volumes:
 services:
   minio1:
     extends:
-      file: minio-service.yml
+      file: ../../helpers/docker/minio-service.yml
       service: minio1
     depends_on:
       - proxy1
@@ -164,7 +164,7 @@ services:
 
   minio-client:
     extends:
-      file: minio-client.yml
+      file: ../../helpers/docker/minio-client.yml
       service: minio-client
     depends_on:
       minio1:
@@ -172,59 +172,33 @@ services:
 
   zookeeper1:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper1
-    environment:
-      ZOO_MY_ID: 1
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper1
 
   zookeeper2:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper2
-    environment:
-      ZOO_MY_ID: 2
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper2
 
   zookeeper3:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper3
-    environment:
-      ZOO_MY_ID: 3
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper3
 
   keeper1:
     extends:
-      file: keeper-service.yml
-      service: keeper
-    hostname: keeper1
-    environment:
-      - KEEPER_SERVER_ID=1
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/data/:/var/lib/clickhouse"
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper1
+
   keeper2:
     extends:
-      file: keeper-service.yml
-      service: keeper
-    hostname: keeper2
-    environment:
-      - KEEPER_SERVER_ID=2
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/data/:/var/lib/clickhouse"
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper2
 
   keeper3:
     extends:
-      file: keeper-service.yml
-      service: keeper
-    hostname: keeper3
-    environment:
-      - KEEPER_SERVER_ID=3
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/data/:/var/lib/clickhouse"
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper3
 
   clickhouse1:
     extends:
@@ -285,7 +259,7 @@ services:
 
   aws:
     extends:
-      file: aws-client.yml
+      file: ../../helpers/docker/aws-client.yml
       service: aws
 
   # dummy service which does nothing, but allows to postpone
@@ -304,6 +278,12 @@ services:
       zookeeper2:
         condition: service_healthy
       zookeeper3:
+        condition: service_healthy
+      keeper1:
+        condition: service_healthy
+      keeper2:
+        condition: service_healthy
+      keeper3:
         condition: service_healthy
       minio1:
         condition: service_healthy
