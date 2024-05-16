@@ -28,7 +28,9 @@ def scenario(self, func="groupArrayInsertAt({params})", table=None, snapshot_id=
         ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
     )
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if "Merge" in self.name:

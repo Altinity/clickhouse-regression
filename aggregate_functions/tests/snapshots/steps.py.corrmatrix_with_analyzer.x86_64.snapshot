@@ -1,0 +1,1663 @@
+_aggregate_functions_corrMatrix_NULL_for_all_rows = r"""
+{"corrMatrixDistinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix__inf = r"""
+{"corrMatrix(x)":[[null]],"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_constant = r"""
+{"corrMatrix(1)":[[null]],"any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Float32 = r"""
+{"corrMatrix(float32, float32)":[[1,1],[1,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Float64 = r"""
+{"corrMatrix(float32, float64)":[[1,null],[null,null]],"any(toTypeName(float32))":"Float32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Int16 = r"""
+{"corrMatrix(float32, int16)":[[1,0.3341341077571928],[0.3341341077571928,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Int32 = r"""
+{"corrMatrix(float32, int32)":[[1,0.5084148945874267],[0.5084148945874267,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Int64 = r"""
+{"corrMatrix(float32, int64)":[[1,0.48788875222552025],[0.48788875222552025,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Int8 = r"""
+{"corrMatrix(float32, int8)":[[1,0.34742964187537123],[0.34742964187537123,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_Float32_ = r"""
+{"corrMatrix(float32, nullable_float32_)":[[1,0.696150472080762],[0.696150472080762,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_Float64_ = r"""
+{"corrMatrix(float32, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_Int16_ = r"""
+{"corrMatrix(float32, nullable_int16_)":[[1,0.6811025928249177],[0.6811025928249177,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_Int32_ = r"""
+{"corrMatrix(float32, nullable_int32_)":[[1,0.5688016010357914],[0.5688016010357914,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_Int64_ = r"""
+{"corrMatrix(float32, nullable_int64_)":[[1,0.17414952686838112],[0.17414952686838112,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_Int8_ = r"""
+{"corrMatrix(float32, nullable_int8_)":[[1,0.44408865250542107],[0.44408865250542107,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_UInt16_ = r"""
+{"corrMatrix(float32, nullable_uint16_)":[[1,0.522408356157622],[0.522408356157622,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_UInt32_ = r"""
+{"corrMatrix(float32, nullable_uint32_)":[[1,0.4111652557822562],[0.4111652557822562,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"corrMatrix(float32, nullable_uint64_)":[[1,0.13502984618955177],[0.13502984618955177,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_Nullable_UInt8_ = r"""
+{"corrMatrix(float32, nullable_uint8_)":[[1,0.22955738212652602],[0.22955738212652602,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_UInt16 = r"""
+{"corrMatrix(float32, uint16)":[[1,0.61504567083017],[0.61504567083017,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_UInt32 = r"""
+{"corrMatrix(float32, uint32)":[[1,0.4342555367204529],[0.4342555367204529,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_UInt64 = r"""
+{"corrMatrix(float32, uint64)":[[1,0.34226430755434883],[0.34226430755434883,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float32_UInt8 = r"""
+{"corrMatrix(float32, uint8)":[[1,0.4232264181990007],[0.4232264181990007,1]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Float32 = r"""
+{"corrMatrix(float64, float32)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Float64 = r"""
+{"corrMatrix(float64, float64)":[[null,null],[null,null]],"any(toTypeName(float64))":"Float64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Int16 = r"""
+{"corrMatrix(float64, int16)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Int32 = r"""
+{"corrMatrix(float64, int32)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Int64 = r"""
+{"corrMatrix(float64, int64)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Int8 = r"""
+{"corrMatrix(float64, int8)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_Float32_ = r"""
+{"corrMatrix(float64, nullable_float32_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_Float64_ = r"""
+{"corrMatrix(float64, nullable_float64_)":[[null,null],[null,null]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_Int16_ = r"""
+{"corrMatrix(float64, nullable_int16_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_Int32_ = r"""
+{"corrMatrix(float64, nullable_int32_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_Int64_ = r"""
+{"corrMatrix(float64, nullable_int64_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_Int8_ = r"""
+{"corrMatrix(float64, nullable_int8_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_UInt16_ = r"""
+{"corrMatrix(float64, nullable_uint16_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_UInt32_ = r"""
+{"corrMatrix(float64, nullable_uint32_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
+{"corrMatrix(float64, nullable_uint64_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_Nullable_UInt8_ = r"""
+{"corrMatrix(float64, nullable_uint8_)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_UInt16 = r"""
+{"corrMatrix(float64, uint16)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_UInt32 = r"""
+{"corrMatrix(float64, uint32)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_UInt64 = r"""
+{"corrMatrix(float64, uint64)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Float64_UInt8 = r"""
+{"corrMatrix(float64, uint8)":[[null,null],[null,1]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Float32 = r"""
+{"corrMatrix(int16, float32)":[[1,0.3341341077571928],[0.3341341077571928,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Float64 = r"""
+{"corrMatrix(int16, float64)":[[1,null],[null,null]],"any(toTypeName(int16))":"Int16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Int16 = r"""
+{"corrMatrix(int16, int16)":[[1,1],[1,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Int32 = r"""
+{"corrMatrix(int16, int32)":[[1,0.6181878271528508],[0.6181878271528508,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Int64 = r"""
+{"corrMatrix(int16, int64)":[[1,0.7368374808910384],[0.7368374808910384,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Int8 = r"""
+{"corrMatrix(int16, int8)":[[1,0.3826849733114953],[0.3826849733114953,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_Float32_ = r"""
+{"corrMatrix(int16, nullable_float32_)":[[1,0.6354526831470761],[0.6354526831470761,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_Float64_ = r"""
+{"corrMatrix(int16, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_Int16_ = r"""
+{"corrMatrix(int16, nullable_int16_)":[[1,0.641111616272071],[0.641111616272071,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_Int32_ = r"""
+{"corrMatrix(int16, nullable_int32_)":[[1,0.22864826157142654],[0.22864826157142654,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_Int64_ = r"""
+{"corrMatrix(int16, nullable_int64_)":[[1,0.6516168383481148],[0.6516168383481148,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_Int8_ = r"""
+{"corrMatrix(int16, nullable_int8_)":[[1,0.6898005167205099],[0.6898005167205099,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_UInt16_ = r"""
+{"corrMatrix(int16, nullable_uint16_)":[[1,0.5601110397791109],[0.5601110397791109,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_UInt32_ = r"""
+{"corrMatrix(int16, nullable_uint32_)":[[1,0.3754451464654075],[0.3754451464654075,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_UInt64_ = r"""
+{"corrMatrix(int16, nullable_uint64_)":[[1,0.7606473716273311],[0.7606473716273311,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_Nullable_UInt8_ = r"""
+{"corrMatrix(int16, nullable_uint8_)":[[1,0.3862129287593017],[0.3862129287593017,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_UInt16 = r"""
+{"corrMatrix(int16, uint16)":[[1,0.3833869934202822],[0.3833869934202822,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_UInt32 = r"""
+{"corrMatrix(int16, uint32)":[[1,0.4950491838353031],[0.4950491838353031,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_UInt64 = r"""
+{"corrMatrix(int16, uint64)":[[1,0.3652475117132907],[0.3652475117132907,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int16_UInt8 = r"""
+{"corrMatrix(int16, uint8)":[[1,0.6396388841171212],[0.6396388841171212,1]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Float32 = r"""
+{"corrMatrix(int32, float32)":[[1,0.5084148945874267],[0.5084148945874267,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Float64 = r"""
+{"corrMatrix(int32, float64)":[[1,null],[null,null]],"any(toTypeName(int32))":"Int32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Int16 = r"""
+{"corrMatrix(int32, int16)":[[1,0.6181878271528508],[0.6181878271528508,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Int32 = r"""
+{"corrMatrix(int32, int32)":[[1,1],[1,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Int64 = r"""
+{"corrMatrix(int32, int64)":[[1,0.38925711049366385],[0.38925711049366385,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Int8 = r"""
+{"corrMatrix(int32, int8)":[[1,0.3568561440854428],[0.3568561440854428,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_Float32_ = r"""
+{"corrMatrix(int32, nullable_float32_)":[[1,0.39174249098867814],[0.39174249098867814,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_Float64_ = r"""
+{"corrMatrix(int32, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_Int16_ = r"""
+{"corrMatrix(int32, nullable_int16_)":[[1,0.4591120274781645],[0.4591120274781645,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_Int32_ = r"""
+{"corrMatrix(int32, nullable_int32_)":[[1,0.3101793297648429],[0.3101793297648429,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_Int64_ = r"""
+{"corrMatrix(int32, nullable_int64_)":[[1,0.5128367612367806],[0.5128367612367806,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_Int8_ = r"""
+{"corrMatrix(int32, nullable_int8_)":[[1,0.668854227104325],[0.668854227104325,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_UInt16_ = r"""
+{"corrMatrix(int32, nullable_uint16_)":[[1,0.385668737605005],[0.385668737605005,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_UInt32_ = r"""
+{"corrMatrix(int32, nullable_uint32_)":[[1,0.4720323526613273],[0.4720323526613273,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_UInt64_ = r"""
+{"corrMatrix(int32, nullable_uint64_)":[[1,0.24799336336367608],[0.24799336336367608,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_Nullable_UInt8_ = r"""
+{"corrMatrix(int32, nullable_uint8_)":[[1,0.4037695115592165],[0.4037695115592165,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_UInt16 = r"""
+{"corrMatrix(int32, uint16)":[[1,0.5943052074785636],[0.5943052074785636,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_UInt32 = r"""
+{"corrMatrix(int32, uint32)":[[1,0.5869946882050356],[0.5869946882050356,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_UInt64 = r"""
+{"corrMatrix(int32, uint64)":[[1,0.10893963336622735],[0.10893963336622735,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int32_UInt8 = r"""
+{"corrMatrix(int32, uint8)":[[1,0.68363213912273],[0.68363213912273,1]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Float32 = r"""
+{"corrMatrix(int64, float32)":[[1,0.48788875222552025],[0.48788875222552025,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Float64 = r"""
+{"corrMatrix(int64, float64)":[[1,null],[null,null]],"any(toTypeName(int64))":"Int64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Int16 = r"""
+{"corrMatrix(int64, int16)":[[1,0.7368374808910384],[0.7368374808910384,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Int32 = r"""
+{"corrMatrix(int64, int32)":[[1,0.38925711049366385],[0.38925711049366385,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Int64 = r"""
+{"corrMatrix(int64, int64)":[[1,1],[1,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Int8 = r"""
+{"corrMatrix(int64, int8)":[[1,0.7499664724285313],[0.7499664724285313,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_Float32_ = r"""
+{"corrMatrix(int64, nullable_float32_)":[[1,0.7101208027090555],[0.7101208027090555,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_Float64_ = r"""
+{"corrMatrix(int64, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_Int16_ = r"""
+{"corrMatrix(int64, nullable_int16_)":[[1,0.745160310778416],[0.745160310778416,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_Int32_ = r"""
+{"corrMatrix(int64, nullable_int32_)":[[1,0.7333572396144785],[0.7333572396144785,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_Int64_ = r"""
+{"corrMatrix(int64, nullable_int64_)":[[1,0.7490779655737548],[0.7490779655737548,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_Int8_ = r"""
+{"corrMatrix(int64, nullable_int8_)":[[1,0.6395519146202245],[0.6395519146202245,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_UInt16_ = r"""
+{"corrMatrix(int64, nullable_uint16_)":[[1,0.5095794697249467],[0.5095794697249467,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_UInt32_ = r"""
+{"corrMatrix(int64, nullable_uint32_)":[[1,0.718380097999055],[0.718380097999055,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"corrMatrix(int64, nullable_uint64_)":[[1,0.8727848553023226],[0.8727848553023226,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_Nullable_UInt8_ = r"""
+{"corrMatrix(int64, nullable_uint8_)":[[1,0.6319289088944657],[0.6319289088944657,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_UInt16 = r"""
+{"corrMatrix(int64, uint16)":[[1,0.5020458980851905],[0.5020458980851905,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_UInt32 = r"""
+{"corrMatrix(int64, uint32)":[[1,0.49692080543867856],[0.49692080543867856,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_UInt64 = r"""
+{"corrMatrix(int64, uint64)":[[1,0.5665423558993438],[0.5665423558993438,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int64_UInt8 = r"""
+{"corrMatrix(int64, uint8)":[[1,0.5178929145624611],[0.5178929145624611,1]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Float32 = r"""
+{"corrMatrix(int8, float32)":[[1,0.34742964187537123],[0.34742964187537123,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Float64 = r"""
+{"corrMatrix(int8, float64)":[[1,null],[null,null]],"any(toTypeName(int8))":"Int8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Int16 = r"""
+{"corrMatrix(int8, int16)":[[1,0.3826849733114953],[0.3826849733114953,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Int32 = r"""
+{"corrMatrix(int8, int32)":[[1,0.3568561440854428],[0.3568561440854428,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Int64 = r"""
+{"corrMatrix(int8, int64)":[[1,0.7499664724285313],[0.7499664724285313,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Int8 = r"""
+{"corrMatrix(int8, int8)":[[1,1],[1,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_Float32_ = r"""
+{"corrMatrix(int8, nullable_float32_)":[[1,0.5804306846109606],[0.5804306846109606,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_Float64_ = r"""
+{"corrMatrix(int8, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_Int16_ = r"""
+{"corrMatrix(int8, nullable_int16_)":[[1,0.45218952526279793],[0.45218952526279793,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_Int32_ = r"""
+{"corrMatrix(int8, nullable_int32_)":[[1,0.7708538440399155],[0.7708538440399155,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_Int64_ = r"""
+{"corrMatrix(int8, nullable_int64_)":[[1,0.63475666413751],[0.63475666413751,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_Int8_ = r"""
+{"corrMatrix(int8, nullable_int8_)":[[1,0.6615627916166733],[0.6615627916166733,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_UInt16_ = r"""
+{"corrMatrix(int8, nullable_uint16_)":[[1,0.00855316048886462],[0.00855316048886462,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_UInt32_ = r"""
+{"corrMatrix(int8, nullable_uint32_)":[[1,0.9771001443982721],[0.9771001443982721,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_UInt64_ = r"""
+{"corrMatrix(int8, nullable_uint64_)":[[1,0.7235199376065458],[0.7235199376065458,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_Nullable_UInt8_ = r"""
+{"corrMatrix(int8, nullable_uint8_)":[[1,0.5939772038077613],[0.5939772038077613,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_UInt16 = r"""
+{"corrMatrix(int8, uint16)":[[1,0.25913814074508124],[0.25913814074508124,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_UInt32 = r"""
+{"corrMatrix(int8, uint32)":[[1,0.13554406446993994],[0.13554406446993994,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_UInt64 = r"""
+{"corrMatrix(int8, uint64)":[[1,0.23230904100945782],[0.23230904100945782,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Int8_UInt8 = r"""
+{"corrMatrix(int8, uint8)":[[1,0.29503277830457103],[0.29503277830457103,1]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Float32 = r"""
+{"corrMatrix(nullable_float32_, float32)":[[1,0.696150472080762],[0.696150472080762,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Float64 = r"""
+{"corrMatrix(nullable_float32_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Int16 = r"""
+{"corrMatrix(nullable_float32_, int16)":[[1,0.6354526831470761],[0.6354526831470761,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Int32 = r"""
+{"corrMatrix(nullable_float32_, int32)":[[1,0.39174249098867814],[0.39174249098867814,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Int64 = r"""
+{"corrMatrix(nullable_float32_, int64)":[[1,0.7101208027090555],[0.7101208027090555,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Int8 = r"""
+{"corrMatrix(nullable_float32_, int8)":[[1,0.5804306846109606],[0.5804306846109606,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_float32_, nullable_float32_)":[[1,1],[1,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_float32_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_float32_, nullable_int16_)":[[1,0.707881526895047],[0.707881526895047,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_float32_, nullable_int32_)":[[1,0.6158601895393432],[0.6158601895393432,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_float32_, nullable_int64_)":[[1,0.3058412470274907],[0.3058412470274907,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_float32_, nullable_int8_)":[[1,0.7851870379722905],[0.7851870379722905,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_float32_, nullable_uint16_)":[[1,0.5812734625461156],[0.5812734625461156,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_float32_, nullable_uint32_)":[[1,0.5063982038307205],[0.5063982038307205,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_float32_, nullable_uint64_)":[[1,0.6582067224925683],[0.6582067224925683,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_float32_, nullable_uint8_)":[[1,0.2085210234484194],[0.2085210234484194,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__UInt16 = r"""
+{"corrMatrix(nullable_float32_, uint16)":[[1,0.3584010310729358],[0.3584010310729358,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__UInt32 = r"""
+{"corrMatrix(nullable_float32_, uint32)":[[1,0.45523516018035415],[0.45523516018035415,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"corrMatrix(nullable_float32_, uint64)":[[1,0.7551711668295389],[0.7551711668295389,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float32__UInt8 = r"""
+{"corrMatrix(nullable_float32_, uint8)":[[1,0.5385540465046403],[0.5385540465046403,1]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Float32 = r"""
+{"corrMatrix(nullable_float64_, float32)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Float64 = r"""
+{"corrMatrix(nullable_float64_, float64)":[[null,null],[null,null]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Int16 = r"""
+{"corrMatrix(nullable_float64_, int16)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Int32 = r"""
+{"corrMatrix(nullable_float64_, int32)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Int64 = r"""
+{"corrMatrix(nullable_float64_, int64)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Int8 = r"""
+{"corrMatrix(nullable_float64_, int8)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_float64_, nullable_float32_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_float64_, nullable_float64_)":[[null,null],[null,null]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_float64_, nullable_int16_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_float64_, nullable_int32_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_float64_, nullable_int64_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_float64_, nullable_int8_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_float64_, nullable_uint16_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_float64_, nullable_uint32_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_float64_, nullable_uint64_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_float64_, nullable_uint8_)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__UInt16 = r"""
+{"corrMatrix(nullable_float64_, uint16)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__UInt32 = r"""
+{"corrMatrix(nullable_float64_, uint32)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__UInt64 = r"""
+{"corrMatrix(nullable_float64_, uint64)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Float64__UInt8 = r"""
+{"corrMatrix(nullable_float64_, uint8)":[[null,null],[null,1]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Float32 = r"""
+{"corrMatrix(nullable_int16_, float32)":[[1,0.6811025928249177],[0.6811025928249177,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Float64 = r"""
+{"corrMatrix(nullable_int16_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Int16 = r"""
+{"corrMatrix(nullable_int16_, int16)":[[1,0.641111616272071],[0.641111616272071,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Int32 = r"""
+{"corrMatrix(nullable_int16_, int32)":[[1,0.4591120274781645],[0.4591120274781645,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Int64 = r"""
+{"corrMatrix(nullable_int16_, int64)":[[1,0.745160310778416],[0.745160310778416,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Int8 = r"""
+{"corrMatrix(nullable_int16_, int8)":[[1,0.45218952526279793],[0.45218952526279793,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_int16_, nullable_float32_)":[[1,0.707881526895047],[0.707881526895047,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_int16_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_int16_, nullable_int16_)":[[1,1],[1,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_int16_, nullable_int32_)":[[1,0.44508892216630197],[0.44508892216630197,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_int16_, nullable_int64_)":[[1,0.4028270916367478],[0.4028270916367478,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_int16_, nullable_int8_)":[[1,0.7265354186814531],[0.7265354186814531,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_int16_, nullable_uint16_)":[[1,0.41720935504674433],[0.41720935504674433,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_int16_, nullable_uint32_)":[[1,0.41239731711687355],[0.41239731711687355,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_int16_, nullable_uint64_)":[[1,0.5551464102072863],[0.5551464102072863,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_int16_, nullable_uint8_)":[[1,0.23587661889833925],[0.23587661889833925,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__UInt16 = r"""
+{"corrMatrix(nullable_int16_, uint16)":[[1,0.4211040454171673],[0.4211040454171673,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__UInt32 = r"""
+{"corrMatrix(nullable_int16_, uint32)":[[1,0.8044083624394557],[0.8044083624394557,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__UInt64 = r"""
+{"corrMatrix(nullable_int16_, uint64)":[[1,0.6021351755391955],[0.6021351755391955,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int16__UInt8 = r"""
+{"corrMatrix(nullable_int16_, uint8)":[[1,0.5147773343680743],[0.5147773343680743,1]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Float32 = r"""
+{"corrMatrix(nullable_int32_, float32)":[[1,0.5688016010357914],[0.5688016010357914,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Float64 = r"""
+{"corrMatrix(nullable_int32_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Int16 = r"""
+{"corrMatrix(nullable_int32_, int16)":[[1,0.22864826157142654],[0.22864826157142654,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Int32 = r"""
+{"corrMatrix(nullable_int32_, int32)":[[1,0.3101793297648429],[0.3101793297648429,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Int64 = r"""
+{"corrMatrix(nullable_int32_, int64)":[[1,0.7333572396144785],[0.7333572396144785,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Int8 = r"""
+{"corrMatrix(nullable_int32_, int8)":[[1,0.7708538440399155],[0.7708538440399155,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_int32_, nullable_float32_)":[[1,0.6158601895393432],[0.6158601895393432,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_int32_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_int32_, nullable_int16_)":[[1,0.44508892216630197],[0.44508892216630197,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_int32_, nullable_int32_)":[[1,1],[1,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_int32_, nullable_int64_)":[[1,0.46897845403435917],[0.46897845403435917,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_int32_, nullable_int8_)":[[1,0.5091475480128773],[0.5091475480128773,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_int32_, nullable_uint16_)":[[1,0.4482280430320932],[0.4482280430320932,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_int32_, nullable_uint32_)":[[1,0.7564760360854534],[0.7564760360854534,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_int32_, nullable_uint64_)":[[1,0.5427361623899241],[0.5427361623899241,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_int32_, nullable_uint8_)":[[1,0.5592672145726252],[0.5592672145726252,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__UInt16 = r"""
+{"corrMatrix(nullable_int32_, uint16)":[[1,0.5009604047419333],[0.5009604047419333,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__UInt32 = r"""
+{"corrMatrix(nullable_int32_, uint32)":[[1,0.37139732796337227],[0.37139732796337227,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__UInt64 = r"""
+{"corrMatrix(nullable_int32_, uint64)":[[1,0.6243281316750209],[0.6243281316750209,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int32__UInt8 = r"""
+{"corrMatrix(nullable_int32_, uint8)":[[1,0.357568133587647],[0.357568133587647,1]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Float32 = r"""
+{"corrMatrix(nullable_int64_, float32)":[[1,0.17414952686838112],[0.17414952686838112,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Float64 = r"""
+{"corrMatrix(nullable_int64_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Int16 = r"""
+{"corrMatrix(nullable_int64_, int16)":[[1,0.6516168383481148],[0.6516168383481148,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Int32 = r"""
+{"corrMatrix(nullable_int64_, int32)":[[1,0.5128367612367806],[0.5128367612367806,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Int64 = r"""
+{"corrMatrix(nullable_int64_, int64)":[[1,0.7490779655737548],[0.7490779655737548,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Int8 = r"""
+{"corrMatrix(nullable_int64_, int8)":[[1,0.63475666413751],[0.63475666413751,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_int64_, nullable_float32_)":[[1,0.3058412470274907],[0.3058412470274907,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_int64_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_int64_, nullable_int16_)":[[1,0.4028270916367478],[0.4028270916367478,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_int64_, nullable_int32_)":[[1,0.46897845403435917],[0.46897845403435917,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_int64_, nullable_int64_)":[[1,1],[1,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_int64_, nullable_int8_)":[[1,0.46619579689906565],[0.46619579689906565,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_int64_, nullable_uint16_)":[[1,0.3083346340954199],[0.3083346340954199,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_int64_, nullable_uint32_)":[[1,0.6896657034234737],[0.6896657034234737,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_int64_, nullable_uint64_)":[[1,0.7186090265499441],[0.7186090265499441,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_int64_, nullable_uint8_)":[[1,0.9280965803151695],[0.9280965803151695,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__UInt16 = r"""
+{"corrMatrix(nullable_int64_, uint16)":[[1,0.44180801423345695],[0.44180801423345695,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__UInt32 = r"""
+{"corrMatrix(nullable_int64_, uint32)":[[1,0.32666245459186527],[0.32666245459186527,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"corrMatrix(nullable_int64_, uint64)":[[1,0.1996869876081641],[0.1996869876081641,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int64__UInt8 = r"""
+{"corrMatrix(nullable_int64_, uint8)":[[1,0.3359123884491673],[0.3359123884491673,1]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Float32 = r"""
+{"corrMatrix(nullable_int8_, float32)":[[1,0.44408865250542107],[0.44408865250542107,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Float64 = r"""
+{"corrMatrix(nullable_int8_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Int16 = r"""
+{"corrMatrix(nullable_int8_, int16)":[[1,0.6898005167205099],[0.6898005167205099,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Int32 = r"""
+{"corrMatrix(nullable_int8_, int32)":[[1,0.668854227104325],[0.668854227104325,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Int64 = r"""
+{"corrMatrix(nullable_int8_, int64)":[[1,0.6395519146202245],[0.6395519146202245,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Int8 = r"""
+{"corrMatrix(nullable_int8_, int8)":[[1,0.6615627916166733],[0.6615627916166733,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_int8_, nullable_float32_)":[[1,0.7851870379722905],[0.7851870379722905,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_int8_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_int8_, nullable_int16_)":[[1,0.7265354186814531],[0.7265354186814531,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_int8_, nullable_int32_)":[[1,0.5091475480128773],[0.5091475480128773,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_int8_, nullable_int64_)":[[1,0.46619579689906565],[0.46619579689906565,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_int8_, nullable_int8_)":[[1,1],[1,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_int8_, nullable_uint16_)":[[1,0.32831589560502705],[0.32831589560502705,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_int8_, nullable_uint32_)":[[1,0.612668472742646],[0.612668472742646,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_int8_, nullable_uint64_)":[[1,0.6918239797103402],[0.6918239797103402,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_int8_, nullable_uint8_)":[[1,0.2632156724297403],[0.2632156724297403,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__UInt16 = r"""
+{"corrMatrix(nullable_int8_, uint16)":[[1,0.2035686078259949],[0.2035686078259949,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__UInt32 = r"""
+{"corrMatrix(nullable_int8_, uint32)":[[1,0.5614527658631121],[0.5614527658631121,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__UInt64 = r"""
+{"corrMatrix(nullable_int8_, uint64)":[[1,0.5195961076128046],[0.5195961076128046,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_Int8__UInt8 = r"""
+{"corrMatrix(nullable_int8_, uint8)":[[1,0.5508401907008935],[0.5508401907008935,1]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Float32 = r"""
+{"corrMatrix(nullable_uint16_, float32)":[[1,0.522408356157622],[0.522408356157622,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Float64 = r"""
+{"corrMatrix(nullable_uint16_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Int16 = r"""
+{"corrMatrix(nullable_uint16_, int16)":[[1,0.5601110397791109],[0.5601110397791109,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Int32 = r"""
+{"corrMatrix(nullable_uint16_, int32)":[[1,0.385668737605005],[0.385668737605005,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Int64 = r"""
+{"corrMatrix(nullable_uint16_, int64)":[[1,0.5095794697249467],[0.5095794697249467,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Int8 = r"""
+{"corrMatrix(nullable_uint16_, int8)":[[1,0.00855316048886462],[0.00855316048886462,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_float32_)":[[1,0.5812734625461156],[0.5812734625461156,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_int16_)":[[1,0.41720935504674433],[0.41720935504674433,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_int32_)":[[1,0.4482280430320932],[0.4482280430320932,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_int64_)":[[1,0.3083346340954199],[0.3083346340954199,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_int8_)":[[1,0.32831589560502705],[0.32831589560502705,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_uint16_)":[[1,1],[1,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_uint32_)":[[1,0.013050292771591629],[0.013050292771591629,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_uint64_)":[[1,0.35716058666070094],[0.35716058666070094,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_uint16_, nullable_uint8_)":[[1,0.30065690134297635],[0.30065690134297635,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__UInt16 = r"""
+{"corrMatrix(nullable_uint16_, uint16)":[[1,0.5737912193437367],[0.5737912193437367,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__UInt32 = r"""
+{"corrMatrix(nullable_uint16_, uint32)":[[1,0.6179165328332953],[0.6179165328332953,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__UInt64 = r"""
+{"corrMatrix(nullable_uint16_, uint64)":[[1,0.7981959970988072],[0.7981959970988072,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt16__UInt8 = r"""
+{"corrMatrix(nullable_uint16_, uint8)":[[1,0.5266116512867125],[0.5266116512867125,1]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Float32 = r"""
+{"corrMatrix(nullable_uint32_, float32)":[[1,0.4111652557822562],[0.4111652557822562,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Float64 = r"""
+{"corrMatrix(nullable_uint32_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Int16 = r"""
+{"corrMatrix(nullable_uint32_, int16)":[[1,0.3754451464654075],[0.3754451464654075,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Int32 = r"""
+{"corrMatrix(nullable_uint32_, int32)":[[1,0.4720323526613273],[0.4720323526613273,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Int64 = r"""
+{"corrMatrix(nullable_uint32_, int64)":[[1,0.718380097999055],[0.718380097999055,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Int8 = r"""
+{"corrMatrix(nullable_uint32_, int8)":[[1,0.9771001443982721],[0.9771001443982721,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_float32_)":[[1,0.5063982038307205],[0.5063982038307205,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_int16_)":[[1,0.41239731711687355],[0.41239731711687355,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_int32_)":[[1,0.7564760360854534],[0.7564760360854534,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_int64_)":[[1,0.6896657034234737],[0.6896657034234737,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_int8_)":[[1,0.612668472742646],[0.612668472742646,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_uint16_)":[[1,0.013050292771591629],[0.013050292771591629,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_uint32_)":[[1,1],[1,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_uint64_)":[[1,0.6336539917231393],[0.6336539917231393,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_uint32_, nullable_uint8_)":[[1,0.6777865483176683],[0.6777865483176683,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__UInt16 = r"""
+{"corrMatrix(nullable_uint32_, uint16)":[[1,0.4123534034964799],[0.4123534034964799,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__UInt32 = r"""
+{"corrMatrix(nullable_uint32_, uint32)":[[1,0.19135618050752917],[0.19135618050752917,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__UInt64 = r"""
+{"corrMatrix(nullable_uint32_, uint64)":[[1,0.1484220576286335],[0.1484220576286335,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt32__UInt8 = r"""
+{"corrMatrix(nullable_uint32_, uint8)":[[1,0.39245979526008495],[0.39245979526008495,1]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Float32 = r"""
+{"corrMatrix(nullable_uint64_, float32)":[[1,0.13502984618955177],[0.13502984618955177,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Float64 = r"""
+{"corrMatrix(nullable_uint64_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Int16 = r"""
+{"corrMatrix(nullable_uint64_, int16)":[[1,0.7606473716273311],[0.7606473716273311,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Int32 = r"""
+{"corrMatrix(nullable_uint64_, int32)":[[1,0.24799336336367608],[0.24799336336367608,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Int64 = r"""
+{"corrMatrix(nullable_uint64_, int64)":[[1,0.8727848553023226],[0.8727848553023226,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Int8 = r"""
+{"corrMatrix(nullable_uint64_, int8)":[[1,0.7235199376065458],[0.7235199376065458,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_float32_)":[[1,0.6582067224925683],[0.6582067224925683,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_int16_)":[[1,0.5551464102072863],[0.5551464102072863,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_int32_)":[[1,0.5427361623899241],[0.5427361623899241,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_int64_)":[[1,0.7186090265499441],[0.7186090265499441,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_int8_)":[[1,0.6918239797103402],[0.6918239797103402,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_uint16_)":[[1,0.35716058666070094],[0.35716058666070094,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_uint32_)":[[1,0.6336539917231393],[0.6336539917231393,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_uint64_)":[[1,1],[1,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_uint64_, nullable_uint8_)":[[1,0.5205495984093333],[0.5205495984093333,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__UInt16 = r"""
+{"corrMatrix(nullable_uint64_, uint16)":[[1,0.11179873354365069],[0.11179873354365069,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__UInt32 = r"""
+{"corrMatrix(nullable_uint64_, uint32)":[[1,0.26184939479125885],[0.26184939479125885,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"corrMatrix(nullable_uint64_, uint64)":[[1,0.5254239967566582],[0.5254239967566582,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt64__UInt8 = r"""
+{"corrMatrix(nullable_uint64_, uint8)":[[1,0.36009933335588584],[0.36009933335588584,1]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Float32 = r"""
+{"corrMatrix(nullable_uint8_, float32)":[[1,0.22955738212652602],[0.22955738212652602,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Float64 = r"""
+{"corrMatrix(nullable_uint8_, float64)":[[1,null],[null,null]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Int16 = r"""
+{"corrMatrix(nullable_uint8_, int16)":[[1,0.3862129287593017],[0.3862129287593017,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Int32 = r"""
+{"corrMatrix(nullable_uint8_, int32)":[[1,0.4037695115592165],[0.4037695115592165,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Int64 = r"""
+{"corrMatrix(nullable_uint8_, int64)":[[1,0.6319289088944657],[0.6319289088944657,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Int8 = r"""
+{"corrMatrix(nullable_uint8_, int8)":[[1,0.5939772038077613],[0.5939772038077613,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Float32_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_float32_)":[[1,0.2085210234484194],[0.2085210234484194,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Float64_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int16_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_int16_)":[[1,0.23587661889833925],[0.23587661889833925,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int32_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_int32_)":[[1,0.5592672145726252],[0.5592672145726252,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int64_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_int64_)":[[1,0.9280965803151695],[0.9280965803151695,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int8_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_int8_)":[[1,0.2632156724297403],[0.2632156724297403,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt16_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_uint16_)":[[1,0.30065690134297635],[0.30065690134297635,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt32_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_uint32_)":[[1,0.6777865483176683],[0.6777865483176683,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt64_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_uint64_)":[[1,0.5205495984093333],[0.5205495984093333,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt8_ = r"""
+{"corrMatrix(nullable_uint8_, nullable_uint8_)":[[1,1],[1,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__UInt16 = r"""
+{"corrMatrix(nullable_uint8_, uint16)":[[1,0.5102744010129865],[0.5102744010129865,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__UInt32 = r"""
+{"corrMatrix(nullable_uint8_, uint32)":[[1,0.20200485104326316],[0.20200485104326316,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__UInt64 = r"""
+{"corrMatrix(nullable_uint8_, uint64)":[[1,0.1795917570324443],[0.1795917570324443,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_Nullable_UInt8__UInt8 = r"""
+{"corrMatrix(nullable_uint8_, uint8)":[[1,0.17703579510681644],[0.17703579510681644,1]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Float32 = r"""
+{"corrMatrix(uint16, float32)":[[1,0.61504567083017],[0.61504567083017,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Float64 = r"""
+{"corrMatrix(uint16, float64)":[[1,null],[null,null]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Int16 = r"""
+{"corrMatrix(uint16, int16)":[[1,0.3833869934202822],[0.3833869934202822,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Int32 = r"""
+{"corrMatrix(uint16, int32)":[[1,0.5943052074785636],[0.5943052074785636,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Int64 = r"""
+{"corrMatrix(uint16, int64)":[[1,0.5020458980851905],[0.5020458980851905,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Int8 = r"""
+{"corrMatrix(uint16, int8)":[[1,0.25913814074508124],[0.25913814074508124,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_Float32_ = r"""
+{"corrMatrix(uint16, nullable_float32_)":[[1,0.3584010310729358],[0.3584010310729358,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_Float64_ = r"""
+{"corrMatrix(uint16, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_Int16_ = r"""
+{"corrMatrix(uint16, nullable_int16_)":[[1,0.4211040454171673],[0.4211040454171673,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_Int32_ = r"""
+{"corrMatrix(uint16, nullable_int32_)":[[1,0.5009604047419333],[0.5009604047419333,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_Int64_ = r"""
+{"corrMatrix(uint16, nullable_int64_)":[[1,0.44180801423345695],[0.44180801423345695,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_Int8_ = r"""
+{"corrMatrix(uint16, nullable_int8_)":[[1,0.2035686078259949],[0.2035686078259949,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_UInt16_ = r"""
+{"corrMatrix(uint16, nullable_uint16_)":[[1,0.5737912193437367],[0.5737912193437367,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_UInt32_ = r"""
+{"corrMatrix(uint16, nullable_uint32_)":[[1,0.4123534034964799],[0.4123534034964799,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_UInt64_ = r"""
+{"corrMatrix(uint16, nullable_uint64_)":[[1,0.11179873354365069],[0.11179873354365069,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_Nullable_UInt8_ = r"""
+{"corrMatrix(uint16, nullable_uint8_)":[[1,0.5102744010129865],[0.5102744010129865,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_UInt16 = r"""
+{"corrMatrix(uint16, uint16)":[[1,1],[1,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_UInt32 = r"""
+{"corrMatrix(uint16, uint32)":[[1,0.7225085140396112],[0.7225085140396112,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_UInt64 = r"""
+{"corrMatrix(uint16, uint64)":[[1,0.3613154410044965],[0.3613154410044965,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt16_UInt8 = r"""
+{"corrMatrix(uint16, uint8)":[[1,0.7930988834033469],[0.7930988834033469,1]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Float32 = r"""
+{"corrMatrix(uint32, float32)":[[1,0.4342555367204529],[0.4342555367204529,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Float64 = r"""
+{"corrMatrix(uint32, float64)":[[1,null],[null,null]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Int16 = r"""
+{"corrMatrix(uint32, int16)":[[1,0.4950491838353031],[0.4950491838353031,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Int32 = r"""
+{"corrMatrix(uint32, int32)":[[1,0.5869946882050356],[0.5869946882050356,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Int64 = r"""
+{"corrMatrix(uint32, int64)":[[1,0.49692080543867856],[0.49692080543867856,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Int8 = r"""
+{"corrMatrix(uint32, int8)":[[1,0.13554406446993994],[0.13554406446993994,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_Float32_ = r"""
+{"corrMatrix(uint32, nullable_float32_)":[[1,0.45523516018035415],[0.45523516018035415,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_Float64_ = r"""
+{"corrMatrix(uint32, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_Int16_ = r"""
+{"corrMatrix(uint32, nullable_int16_)":[[1,0.8044083624394557],[0.8044083624394557,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_Int32_ = r"""
+{"corrMatrix(uint32, nullable_int32_)":[[1,0.37139732796337227],[0.37139732796337227,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_Int64_ = r"""
+{"corrMatrix(uint32, nullable_int64_)":[[1,0.32666245459186527],[0.32666245459186527,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_Int8_ = r"""
+{"corrMatrix(uint32, nullable_int8_)":[[1,0.5614527658631121],[0.5614527658631121,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_UInt16_ = r"""
+{"corrMatrix(uint32, nullable_uint16_)":[[1,0.6179165328332953],[0.6179165328332953,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_UInt32_ = r"""
+{"corrMatrix(uint32, nullable_uint32_)":[[1,0.19135618050752917],[0.19135618050752917,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_UInt64_ = r"""
+{"corrMatrix(uint32, nullable_uint64_)":[[1,0.26184939479125885],[0.26184939479125885,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_Nullable_UInt8_ = r"""
+{"corrMatrix(uint32, nullable_uint8_)":[[1,0.20200485104326316],[0.20200485104326316,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_UInt16 = r"""
+{"corrMatrix(uint32, uint16)":[[1,0.7225085140396112],[0.7225085140396112,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_UInt32 = r"""
+{"corrMatrix(uint32, uint32)":[[1,1],[1,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_UInt64 = r"""
+{"corrMatrix(uint32, uint64)":[[1,0.6201586219951343],[0.6201586219951343,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt32_UInt8 = r"""
+{"corrMatrix(uint32, uint8)":[[1,0.7816104520324881],[0.7816104520324881,1]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Float32 = r"""
+{"corrMatrix(uint64, float32)":[[1,0.34226430755434883],[0.34226430755434883,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Float64 = r"""
+{"corrMatrix(uint64, float64)":[[1,null],[null,null]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Int16 = r"""
+{"corrMatrix(uint64, int16)":[[1,0.3652475117132907],[0.3652475117132907,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Int32 = r"""
+{"corrMatrix(uint64, int32)":[[1,0.10893963336622735],[0.10893963336622735,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Int64 = r"""
+{"corrMatrix(uint64, int64)":[[1,0.5665423558993438],[0.5665423558993438,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Int8 = r"""
+{"corrMatrix(uint64, int8)":[[1,0.23230904100945782],[0.23230904100945782,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
+{"corrMatrix(uint64, nullable_float32_)":[[1,0.7551711668295389],[0.7551711668295389,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_Float64_ = r"""
+{"corrMatrix(uint64, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_Int16_ = r"""
+{"corrMatrix(uint64, nullable_int16_)":[[1,0.6021351755391955],[0.6021351755391955,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_Int32_ = r"""
+{"corrMatrix(uint64, nullable_int32_)":[[1,0.6243281316750209],[0.6243281316750209,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"corrMatrix(uint64, nullable_int64_)":[[1,0.1996869876081641],[0.1996869876081641,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_Int8_ = r"""
+{"corrMatrix(uint64, nullable_int8_)":[[1,0.5195961076128046],[0.5195961076128046,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_UInt16_ = r"""
+{"corrMatrix(uint64, nullable_uint16_)":[[1,0.7981959970988072],[0.7981959970988072,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_UInt32_ = r"""
+{"corrMatrix(uint64, nullable_uint32_)":[[1,0.1484220576286335],[0.1484220576286335,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"corrMatrix(uint64, nullable_uint64_)":[[1,0.5254239967566582],[0.5254239967566582,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_Nullable_UInt8_ = r"""
+{"corrMatrix(uint64, nullable_uint8_)":[[1,0.1795917570324443],[0.1795917570324443,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_UInt16 = r"""
+{"corrMatrix(uint64, uint16)":[[1,0.3613154410044965],[0.3613154410044965,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_UInt32 = r"""
+{"corrMatrix(uint64, uint32)":[[1,0.6201586219951343],[0.6201586219951343,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_UInt64 = r"""
+{"corrMatrix(uint64, uint64)":[[1,1],[1,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt64_UInt8 = r"""
+{"corrMatrix(uint64, uint8)":[[1,0.3969283407719309],[0.3969283407719309,1]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Float32 = r"""
+{"corrMatrix(uint8, float32)":[[1,0.4232264181990007],[0.4232264181990007,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Float64 = r"""
+{"corrMatrix(uint8, float64)":[[1,null],[null,null]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Int16 = r"""
+{"corrMatrix(uint8, int16)":[[1,0.6396388841171212],[0.6396388841171212,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Int32 = r"""
+{"corrMatrix(uint8, int32)":[[1,0.68363213912273],[0.68363213912273,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Int64 = r"""
+{"corrMatrix(uint8, int64)":[[1,0.5178929145624611],[0.5178929145624611,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Int8 = r"""
+{"corrMatrix(uint8, int8)":[[1,0.29503277830457103],[0.29503277830457103,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_Float32_ = r"""
+{"corrMatrix(uint8, nullable_float32_)":[[1,0.5385540465046403],[0.5385540465046403,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_Float64_ = r"""
+{"corrMatrix(uint8, nullable_float64_)":[[1,null],[null,null]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_Int16_ = r"""
+{"corrMatrix(uint8, nullable_int16_)":[[1,0.5147773343680743],[0.5147773343680743,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_Int32_ = r"""
+{"corrMatrix(uint8, nullable_int32_)":[[1,0.357568133587647],[0.357568133587647,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_Int64_ = r"""
+{"corrMatrix(uint8, nullable_int64_)":[[1,0.3359123884491673],[0.3359123884491673,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_Int8_ = r"""
+{"corrMatrix(uint8, nullable_int8_)":[[1,0.5508401907008935],[0.5508401907008935,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_UInt16_ = r"""
+{"corrMatrix(uint8, nullable_uint16_)":[[1,0.5266116512867125],[0.5266116512867125,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_UInt32_ = r"""
+{"corrMatrix(uint8, nullable_uint32_)":[[1,0.39245979526008495],[0.39245979526008495,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_UInt64_ = r"""
+{"corrMatrix(uint8, nullable_uint64_)":[[1,0.36009933335588584],[0.36009933335588584,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_Nullable_UInt8_ = r"""
+{"corrMatrix(uint8, nullable_uint8_)":[[1,0.17703579510681644],[0.17703579510681644,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_UInt16 = r"""
+{"corrMatrix(uint8, uint16)":[[1,0.7930988834033469],[0.7930988834033469,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_UInt32 = r"""
+{"corrMatrix(uint8, uint32)":[[1,0.7816104520324881],[0.7816104520324881,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_UInt64 = r"""
+{"corrMatrix(uint8, uint64)":[[1,0.3969283407719309],[0.3969283407719309,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_datatypes_permutations_UInt8_UInt8 = r"""
+{"corrMatrix(uint8, uint8)":[[1,1],[1,1]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_corrMatrix_example1 = r"""
+{"corrMatrix(a_value, b_value)":[[1,-0.09561394275721463],[-0.09561394275721463,1]],"any(toTypeName(a_value))":"UInt32","any(toTypeName(b_value))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_example2 = r"""
+{"corrMatrix(a_value, b_value, c_value)":[[1,-0.09561394275721463,0.2428695453714412],[-0.09561394275721463,1,0.1730265755453256],[0.2428695453714412,0.1730265755453256,1]],"any(toTypeName(a_value))":"UInt32","any(toTypeName(b_value))":"Float64","any(toTypeName(c_value))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_example3 = r"""
+{"corrMatrix(a_value, b_value, c_value, d_value)":[[1,-0.09561394275721463,0.2428695453714412,0.7455365094064348],[-0.09561394275721463,1,0.1730265755453256,0.10557549732028805],[0.2428695453714412,0.1730265755453256,1,0.2579678390832916],[0.7455365094064348,0.10557549732028805,0.2579678390832916,1]],"any(toTypeName(a_value))":"UInt32","any(toTypeName(b_value))":"Float64","any(toTypeName(c_value))":"Float64","any(toTypeName(d_value))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_first_non_NULL_value = r"""
+{"corrMatrix(x)":[[1]],"any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_inf = r"""
+{"corrMatrix(x)":[[null]],"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_nan = r"""
+{"corrMatrix(x)":[[null]],"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_corrMatrix_return_type = r"""
+{"toTypeName(corrMatrix(number))":"Array(Array(Float64))","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_some_negative_values = r"""
+{"corrMatrix(minus(number, 5))":[[1]],"any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_with_another_aggregate_function = r"""
+{"corrMatrix(x)":[[1]],"max(y)":"you","any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_with_another_aggregate_function_and_group_by = r"""
+{"corrMatrix(x)":[[null]],"max(y)":null,"any(toTypeName(x))":"Nullable(Int8)"}
+{"corrMatrix(x)":[[null]],"max(y)":"hello","any(toTypeName(x))":"Nullable(Int8)"}
+{"corrMatrix(x)":[[null]],"max(y)":"you","any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_corrMatrix_with_group_by = r"""
+{"even":0,"corrMatrix(number)":[[1]],"any(toTypeName(number))":"UInt64"}
+{"even":1,"corrMatrix(number)":[[1]],"any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_corrMatrix_zero_rows = r"""
+{"corrMatrix(number)":[[null]],"any(toTypeName(number))":""}
+"""
+

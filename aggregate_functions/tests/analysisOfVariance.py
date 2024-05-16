@@ -1,4 +1,3 @@
-
 from helpers.tables import is_numeric, is_unsigned_integer, common_columns
 
 from aggregate_functions.tests.steps import *

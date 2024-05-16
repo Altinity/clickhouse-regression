@@ -2,6 +2,7 @@
 import random
 import json
 import time
+import re
 from contextlib import contextmanager
 from platform import processor
 
@@ -13,34 +14,54 @@ from s3.tests.common import s3_storage
 
 
 @TestStep(Given)
-def s3_config(self):
+def disk_config(self):
     """Set up disks and policies for vfs tests."""
-    with Given("I have two S3 disks configured"):
-        disks = {
-            "external": {
-                "type": "s3",
-                "endpoint": f"{self.context.uri}object-storage/storage/",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-            "external_tiered": {
-                "type": "s3",
-                "endpoint": f"{self.context.uri}object-storage/tiered/",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-        }
 
-    with And("""I have a storage policy configured to use the S3 disk"""):
-        policies = {
-            "external": {"volumes": {"external": {"disk": "external"}}},
-            "tiered": {
-                "volumes": {
-                    "default": {"disk": "external"},
-                    "external": {"disk": "external_tiered"},
-                }
-            },
-        }
+    if getattr(self.context, "uri", None):
+        with Given("I have two S3 disks configured"):
+            disks = {
+                "external": {
+                    "type": "s3",
+                    "endpoint": f"{self.context.uri}object-storage/storage/",
+                    "access_key_id": f"{self.context.access_key_id}",
+                    "secret_access_key": f"{self.context.secret_access_key}",
+                },
+                "external_tiered": {
+                    "type": "s3",
+                    "endpoint": f"{self.context.uri}object-storage/tiered/",
+                    "access_key_id": f"{self.context.access_key_id}",
+                    "secret_access_key": f"{self.context.secret_access_key}",
+                },
+            }
+
+        with And("I have storage policies configured to use the S3 disks"):
+            policies = {
+                "external": {"volumes": {"external": {"disk": "external"}}},
+                "tiered": {
+                    "volumes": {
+                        "default": {"disk": "external"},
+                        "external": {"disk": "external_tiered"},
+                    }
+                },
+            }
+
+    else:
+        with Given("I have two jbod disks configured"):
+            disks = {
+                "jbod1": {"path": "/jbod1/"},
+                "jbod2": {"path": "/jbod2/"},
+            }
+
+        with And("I have storage policies configured to use the jbod disks"):
+            policies = {
+                "external": {"volumes": {"external": {"disk": "jbod1"}}},
+                "tiered": {
+                    "volumes": {
+                        "default": {"disk": "jbod1"},
+                        "external": {"disk": "jbod2"},
+                    }
+                },
+            }
 
     return s3_storage(
         disks=disks,
@@ -179,3 +200,49 @@ def wait_for_mutations_to_finish(self, node, timeout=60, delay=5, command_like=N
             time.sleep(delay)
 
         assert r.output == "", error("mutations did not finish in time")
+
+
+@TestStep(Finally)
+def log_failing_mutations(self, nodes=None):
+    """Log failing mutations."""
+    if not nodes:
+        nodes = self.context.ch_nodes
+
+    for node in nodes:
+        with By("querying system.mutations"):
+            r = node.query(
+                "SELECT * FROM system.mutations WHERE is_done=0 FORMAT Vertical",
+                no_checks=True,
+            )
+            if r.output.strip() == "":
+                continue
+
+            note(f"Pending mutations on {node.name}:\n{r.output.strip()}")
+
+        with And("double checking the failed mutations"):
+            r = node.query(
+                "SELECT latest_failed_part, table, latest_fail_reason FROM system.mutations WHERE is_done=0 FORMAT JSONCompactColumns",
+                no_checks=True,
+            )
+            for part, table, fail_reason in json.loads(r.output):
+                if fail_reason == "":
+                    continue
+
+                node.query(
+                    f"SHOW CREATE TABLE {table} INTO OUTFILE '/var/log/clickhouse-server/show_create_{table}.txt'"
+                )
+                r = node.query(
+                    f"SELECT * FROM system.parts WHERE name='{part}' and table='{table}' FORMAT Vertical",
+                    no_checks=True,
+                )
+                if r.output.strip():
+                    note(f"State of {part}:\n{r.output.strip()}")
+
+                if "Not found column" in fail_reason:
+                    column = re.search(r"column (.+):", fail_reason).group(1)
+                    r = node.query(
+                        f"SELECT * FROM system.parts_columns WHERE name='{part}' and table='{table}' and column='{column}' FORMAT Vertical",
+                        no_checks=True,
+                    )
+                    if r.output.strip():
+                        note(f"State of {column}:\n{r.output.strip()}")

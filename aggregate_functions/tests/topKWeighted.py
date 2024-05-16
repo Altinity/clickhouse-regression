@@ -32,7 +32,9 @@ def scenario(self, func="topKWeighted({params})", table=None, snapshot_id=None):
         clickhouse_version = ">=23.2"
 
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if table is None:

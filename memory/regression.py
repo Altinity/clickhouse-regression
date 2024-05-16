@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 from helpers.tables import *
 from helpers.argparser import argparser
 from helpers.cluster import create_cluster
-from helpers.common import check_clickhouse_version, check_current_cpu
+from helpers.common import *
 
 xfails = {
     "/memory/memory leak/*": [
@@ -32,7 +32,7 @@ def regression(
     zookeeper_version=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Memory regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -57,6 +57,10 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Feature(
         run=load(

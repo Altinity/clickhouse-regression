@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 from helpers.tables import *
 from helpers.argparser import argparser
 from helpers.cluster import create_cluster
-from helpers.common import check_clickhouse_version, check_current_cpu
+from helpers.common import *
 
 from aggregate_functions.tests.steps import aggregate_functions, window_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
@@ -319,10 +319,6 @@ ffails = {
         "quantilesGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/sequenceNextNode*Merge/*": (
-        Skip,
-        "sequenceNextNodeMerge needs to be done",
-    ),
     "/aggregate functions/largestTriangleThreeBuckets/*": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
@@ -332,10 +328,6 @@ ffails = {
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
         check_clickhouse_version("<23.10"),
-    ),
-    "/aggregate functions/merge/largestTriangleThreeBucketsMerge/*": (
-        Skip,
-        "largestTriangleThreeBuckets does not work with Merge, need to fix",
     ),
     "/aggregate functions/first_value_respect_nulls/*": (
         Skip,
@@ -429,16 +421,6 @@ ffails = {
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/aggThrow/with group by/*": (
-        Skip,
-        issue_58727,
-        check_clickhouse_version(">=23.11"),
-    ),
-    "/aggregate functions/:/aggThrow*/with group by/*": (
-        Skip,
-        issue_58727,
-        check_clickhouse_version(">=23.11"),
-    ),
     "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": (
         Skip,
         issue_58741,
@@ -449,12 +431,16 @@ ffails = {
         issue_58741,
         check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
-    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan/*": (
+    "/aggregate functions/merge/largestTriangleThreeBucketsMerge": (
+        Skip,
+        "largestTriangleThreeBuckets does not work with Merge, need to fix",
+    ),
+    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan": (
         Skip,
         "need to investigate",
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/finalizeAggregation/largestTriangleThreeBuckets_finalizeAggregation_Merge/*": (
+    "/aggregate functions/finalizeAggregation/largestTriangleThreeBuckets_finalizeAggregation_Merge": (
         Skip,
         "need to investigate (something with zero representation)",
         check_clickhouse_version(">=23.11"),
@@ -498,7 +484,7 @@ def regression(
     zookeeper_version=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Aggregate functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -524,6 +510,10 @@ def regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
     with And("table with all data types"):
         self.context.table = create_table(
             engine="MergeTree",
@@ -534,20 +524,6 @@ def regression(
 
     with And("I populate table with test data"):
         self.context.table.insert_test_data()
-
-    with And("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 

@@ -6,6 +6,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
+from helpers.common import experimental_analyzer
 from helpers.argparser import argparser
 from datetime64_extended_range.requirements import *
 from datetime64_extended_range.common import *
@@ -122,7 +123,7 @@ def regression(
     zookeeper_version=None,
     stress=False,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse DateTime64 Extended Range regression module."""
     nodes = {
@@ -145,6 +146,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     with Pool(2) as pool:
         try:

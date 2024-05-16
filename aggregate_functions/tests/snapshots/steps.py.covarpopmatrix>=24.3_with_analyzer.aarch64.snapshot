@@ -1,0 +1,1663 @@
+_aggregate_functions_covarPopMatrix_NULL_for_all_rows = r"""
+{"covarPopMatrixDistinct(if(modulo(number, 2), NULL, NULL))":null,"any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix__inf = r"""
+{"covarPopMatrix(x)":[[null]],"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_constant = r"""
+{"covarPopMatrix(1)":[[0]],"any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Float32 = r"""
+{"covarPopMatrix(float32, float32)":[[4.2778334457359525e76,4.2778334457359525e76],[4.2778334457359525e76,4.2778334457359525e76]],"any(toTypeName(float32))":"Float32","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Float64 = r"""
+{"covarPopMatrix(float32, float64)":[[4.2778334457359525e76,null],[null,null]],"any(toTypeName(float32))":"Float32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Int16 = r"""
+{"covarPopMatrix(float32, int16)":[[4.2778334457359525e76,1.4152204747641532e42],[1.4152204747641532e42,419355858.84000003]],"any(toTypeName(float32))":"Float32","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Int32 = r"""
+{"covarPopMatrix(float32, int32)":[[4.2778334457359525e76,1.3952827287445588e47],[1.3952827287445588e47,1760613529137539800]],"any(toTypeName(float32))":"Float32","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Int64 = r"""
+{"covarPopMatrix(float32, int64)":[[4.2778334457359525e76,4.897503289108977e56],[4.897503289108977e56,2.3555047752495275e37]],"any(toTypeName(float32))":"Float32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Int8 = r"""
+{"covarPopMatrix(float32, int8)":[[4.2778334457359525e76,6.74349685191917e39],[6.74349685191917e39,8806.689999999999]],"any(toTypeName(float32))":"Float32","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_Float32_ = r"""
+{"covarPopMatrix(float32, nullable_float32_)":[[4.5215730338863233e76,3.184681844758001e76],[3.184681844758001e76,4.628457817793422e76]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_Float64_ = r"""
+{"covarPopMatrix(float32, nullable_float64_)":[[4.5215730338863233e76,null],[null,null]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_Int16_ = r"""
+{"covarPopMatrix(float32, nullable_int16_)":[[4.5215730338863233e76,3.0053052146206984e42],[3.0053052146206984e42,430588624.8888889]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_Int32_ = r"""
+{"covarPopMatrix(float32, nullable_int32_)":[[4.5215730338863233e76,1.6228397425549698e47],[1.6228397425549698e47,1800280176052861000]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_Int64_ = r"""
+{"covarPopMatrix(float32, nullable_int64_)":[[4.5215730338863233e76,2.366446877007417e56],[2.366446877007417e56,4.083752106303592e37]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_Int8_ = r"""
+{"covarPopMatrix(float32, nullable_int8_)":[[4.5215730338863233e76,7.975606469304022e39],[7.975606469304022e39,7133.432098765432]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_UInt16_ = r"""
+{"covarPopMatrix(float32, nullable_uint16_)":[[4.5215730338863233e76,2.4034979164332144e42],[2.4034979164332144e42,468142122.39506173]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_UInt32_ = r"""
+{"covarPopMatrix(float32, nullable_uint32_)":[[4.5215730338863233e76,1.371537319478026e47],[1.371537319478026e47,2460893905148930600]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"covarPopMatrix(float32, nullable_uint64_)":[[4.5215730338863233e76,2.013321247145632e56],[2.013321247145632e56,4.916737898877755e37]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_Nullable_UInt8_ = r"""
+{"covarPopMatrix(float32, nullable_uint8_)":[[4.5215730338863233e76,4.68342284305632e39],[4.68342284305632e39,9205.654320987655]],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_UInt16 = r"""
+{"covarPopMatrix(float32, uint16)":[[4.2778334457359525e76,2.6506248038572284e42],[2.6506248038572284e42,434168100.81000006]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_UInt32 = r"""
+{"covarPopMatrix(float32, uint32)":[[4.2778334457359525e76,1.3177177712807077e47],[1.3177177712807077e47,2152435794872377300]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_UInt64 = r"""
+{"covarPopMatrix(float32, uint64)":[[4.2778334457359525e76,5.012295302092787e56],[5.012295302092787e56,5.013328977733995e37]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float32_UInt8 = r"""
+{"covarPopMatrix(float32, uint8)":[[4.2778334457359525e76,7.777778054752274e39],[7.777778054752274e39,7894.81]],"any(toTypeName(float32))":"Float32","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Float32 = r"""
+{"covarPopMatrix(float64, float32)":[[null,null],[null,4.2778334457359525e76]],"any(toTypeName(float64))":"Float64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Float64 = r"""
+{"covarPopMatrix(float64, float64)":[[null,null],[null,null]],"any(toTypeName(float64))":"Float64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Int16 = r"""
+{"covarPopMatrix(float64, int16)":[[null,null],[null,419355858.84000003]],"any(toTypeName(float64))":"Float64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Int32 = r"""
+{"covarPopMatrix(float64, int32)":[[null,null],[null,1760613529137539800]],"any(toTypeName(float64))":"Float64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Int64 = r"""
+{"covarPopMatrix(float64, int64)":[[null,null],[null,2.3555047752495275e37]],"any(toTypeName(float64))":"Float64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Int8 = r"""
+{"covarPopMatrix(float64, int8)":[[null,null],[null,8806.689999999999]],"any(toTypeName(float64))":"Float64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_Float32_ = r"""
+{"covarPopMatrix(float64, nullable_float32_)":[[null,null],[null,4.628457817793422e76]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_Float64_ = r"""
+{"covarPopMatrix(float64, nullable_float64_)":[[null,null],[null,null]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_Int16_ = r"""
+{"covarPopMatrix(float64, nullable_int16_)":[[null,null],[null,430588624.8888889]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_Int32_ = r"""
+{"covarPopMatrix(float64, nullable_int32_)":[[null,null],[null,1800280176052861000]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_Int64_ = r"""
+{"covarPopMatrix(float64, nullable_int64_)":[[null,null],[null,4.083752106303592e37]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_Int8_ = r"""
+{"covarPopMatrix(float64, nullable_int8_)":[[null,null],[null,7133.432098765432]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_UInt16_ = r"""
+{"covarPopMatrix(float64, nullable_uint16_)":[[null,null],[null,468142122.39506173]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_UInt32_ = r"""
+{"covarPopMatrix(float64, nullable_uint32_)":[[null,null],[null,2460893905148930600]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
+{"covarPopMatrix(float64, nullable_uint64_)":[[null,null],[null,4.916737898877755e37]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_Nullable_UInt8_ = r"""
+{"covarPopMatrix(float64, nullable_uint8_)":[[null,null],[null,9205.654320987655]],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_UInt16 = r"""
+{"covarPopMatrix(float64, uint16)":[[null,null],[null,434168100.81000006]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_UInt32 = r"""
+{"covarPopMatrix(float64, uint32)":[[null,null],[null,2152435794872377300]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_UInt64 = r"""
+{"covarPopMatrix(float64, uint64)":[[null,null],[null,5.013328977733995e37]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Float64_UInt8 = r"""
+{"covarPopMatrix(float64, uint8)":[[null,null],[null,7894.81]],"any(toTypeName(float64))":"Float64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Float32 = r"""
+{"covarPopMatrix(int16, float32)":[[419355858.84000003,1.4152204747641532e42],[1.4152204747641532e42,4.2778334457359525e76]],"any(toTypeName(int16))":"Int16","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Float64 = r"""
+{"covarPopMatrix(int16, float64)":[[419355858.84000003,null],[null,null]],"any(toTypeName(int16))":"Int16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Int16 = r"""
+{"covarPopMatrix(int16, int16)":[[419355858.84000003,419355858.84000003],[419355858.84000003,419355858.84000003]],"any(toTypeName(int16))":"Int16","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Int32 = r"""
+{"covarPopMatrix(int16, int32)":[[419355858.84000003,16797468058044.26],[16797468058044.26,1760613529137539800]],"any(toTypeName(int16))":"Int16","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Int64 = r"""
+{"covarPopMatrix(int16, int64)":[[419355858.84000003,7.323270248751234e22],[7.323270248751234e22,2.3555047752495275e37]],"any(toTypeName(int16))":"Int16","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Int8 = r"""
+{"covarPopMatrix(int16, int8)":[[419355858.84000003,735426.24],[735426.24,8806.689999999999]],"any(toTypeName(int16))":"Int16","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_Float32_ = r"""
+{"covarPopMatrix(int16, nullable_float32_)":[[465943458.83950615,2.950991662465569e42],[2.950991662465569e42,4.628457817793422e76]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_Float64_ = r"""
+{"covarPopMatrix(int16, nullable_float64_)":[[465943458.83950615,null],[null,null]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_Int16_ = r"""
+{"covarPopMatrix(int16, nullable_int16_)":[[465943458.83950615,287165016.7777778],[287165016.7777778,430588624.8888889]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_Int32_ = r"""
+{"covarPopMatrix(int16, nullable_int32_)":[[465943458.83950615,6622234614553.21],[6622234614553.21,1800280176052861000]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_Int64_ = r"""
+{"covarPopMatrix(int16, nullable_int64_)":[[465943458.83950615,8.988528374108443e22],[8.988528374108443e22,4.083752106303592e37]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_Int8_ = r"""
+{"covarPopMatrix(int16, nullable_int8_)":[[465943458.83950615,1257590.913580247],[1257590.913580247,7133.432098765432]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_UInt16_ = r"""
+{"covarPopMatrix(int16, nullable_uint16_)":[[465943458.83950615,261595098.3950617],[261595098.3950617,468142122.39506173]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_UInt32_ = r"""
+{"covarPopMatrix(int16, nullable_uint32_)":[[465943458.83950615,12713336710487.012],[12713336710487.012,2460893905148930600]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_UInt64_ = r"""
+{"covarPopMatrix(int16, nullable_uint64_)":[[465943458.83950615,1.1513000070961912e23],[1.1513000070961912e23,4.916737898877755e37]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_Nullable_UInt8_ = r"""
+{"covarPopMatrix(int16, nullable_uint8_)":[[465943458.83950615,799872.4691358025],[799872.4691358025,9205.654320987655]],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_UInt16 = r"""
+{"covarPopMatrix(int16, uint16)":[[419355858.84000003,163590352.62],[163590352.62,434168100.81000006]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_UInt32 = r"""
+{"covarPopMatrix(int16, uint32)":[[419355858.84000003,14873213398813.041],[14873213398813.041,2152435794872377300]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_UInt64 = r"""
+{"covarPopMatrix(int16, uint64)":[[419355858.84000003,5.295923773886506e22],[5.295923773886506e22,5.013328977733995e37]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int16_UInt8 = r"""
+{"covarPopMatrix(int16, uint8)":[[419355858.84000003,1163850.1199999999],[1163850.1199999999,7894.81]],"any(toTypeName(int16))":"Int16","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Float32 = r"""
+{"covarPopMatrix(int32, float32)":[[1760613529137539800,1.3952827287445588e47],[1.3952827287445588e47,4.2778334457359525e76]],"any(toTypeName(int32))":"Int32","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Float64 = r"""
+{"covarPopMatrix(int32, float64)":[[1760613529137539800,null],[null,null]],"any(toTypeName(int32))":"Int32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Int16 = r"""
+{"covarPopMatrix(int32, int16)":[[1760613529137539800,16797468058044.26],[16797468058044.26,419355858.84000003]],"any(toTypeName(int32))":"Int32","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Int32 = r"""
+{"covarPopMatrix(int32, int32)":[[1760613529137539800,1760613529137539800],[1760613529137539800,1760613529137539800]],"any(toTypeName(int32))":"Int32","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Int64 = r"""
+{"covarPopMatrix(int32, int64)":[[1760613529137539800,2.506747360953425e27],[2.506747360953425e27,2.3555047752495275e37]],"any(toTypeName(int32))":"Int32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Int8 = r"""
+{"covarPopMatrix(int32, int8)":[[1760613529137539800,44435651346.909996],[44435651346.909996,8806.689999999999]],"any(toTypeName(int32))":"Int32","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_Float32_ = r"""
+{"covarPopMatrix(int32, nullable_float32_)":[[1956197234234231000,1.178759364268167e47],[1.178759364268167e47,4.628457817793422e76]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_Float64_ = r"""
+{"covarPopMatrix(int32, nullable_float64_)":[[1956197234234231000,null],[null,null]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_Int16_ = r"""
+{"covarPopMatrix(int32, nullable_int16_)":[[1956197234234231000,13324664010200],[13324664010200,430588624.8888889]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_Int32_ = r"""
+{"covarPopMatrix(int32, nullable_int32_)":[[1956197234234231000,582088773230935700],[582088773230935700,1800280176052861000]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_Int64_ = r"""
+{"covarPopMatrix(int32, nullable_int64_)":[[1956197234234231000,4.583689120394667e27],[4.583689120394667e27,4.083752106303592e37]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_Int8_ = r"""
+{"covarPopMatrix(int32, nullable_int8_)":[[1956197234234231000,79010909719.32098],[79010909719.32098,7133.432098765432]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_UInt16_ = r"""
+{"covarPopMatrix(int32, nullable_uint16_)":[[1956197234234231000,11671041583245.023],[11671041583245.023,468142122.39506173]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_UInt32_ = r"""
+{"covarPopMatrix(int32, nullable_uint32_)":[[1956197234234231000,1035677476294191100],[1035677476294191100,2460893905148930600]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_UInt64_ = r"""
+{"covarPopMatrix(int32, nullable_uint64_)":[[1956197234234231000,2.4321194884599923e27],[2.4321194884599923e27,4.916737898877755e37]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_Nullable_UInt8_ = r"""
+{"covarPopMatrix(int32, nullable_uint8_)":[[1956197234234231000,54183514866.20988],[54183514866.20988,9205.654320987655]],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_UInt16 = r"""
+{"covarPopMatrix(int32, uint16)":[[1760613529137539800,16431246426430.63],[16431246426430.63,434168100.81000006]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_UInt32 = r"""
+{"covarPopMatrix(int32, uint32)":[[1760613529137539800,1142697537640835300],[1142697537640835300,2152435794872377300]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_UInt64 = r"""
+{"covarPopMatrix(int32, uint64)":[[1760613529137539800,1.0234839317986135e27],[1.0234839317986135e27,5.013328977733995e37]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int32_UInt8 = r"""
+{"covarPopMatrix(int32, uint8)":[[1760613529137539800,80598197693.53],[80598197693.53,7894.81]],"any(toTypeName(int32))":"Int32","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Float32 = r"""
+{"covarPopMatrix(int64, float32)":[[2.3555047752495275e37,4.897503289108977e56],[4.897503289108977e56,4.2778334457359525e76]],"any(toTypeName(int64))":"Int64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Float64 = r"""
+{"covarPopMatrix(int64, float64)":[[2.3555047752495275e37,null],[null,null]],"any(toTypeName(int64))":"Int64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Int16 = r"""
+{"covarPopMatrix(int64, int16)":[[2.3555047752495275e37,7.323270248751234e22],[7.323270248751234e22,419355858.84000003]],"any(toTypeName(int64))":"Int64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Int32 = r"""
+{"covarPopMatrix(int64, int32)":[[2.3555047752495275e37,2.506747360953425e27],[2.506747360953425e27,1760613529137539800]],"any(toTypeName(int64))":"Int64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Int64 = r"""
+{"covarPopMatrix(int64, int64)":[[2.3555047752495275e37,2.3555047752495275e37],[2.3555047752495275e37,2.3555047752495275e37]],"any(toTypeName(int64))":"Int64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Int8 = r"""
+{"covarPopMatrix(int64, int8)":[[2.3555047752495275e37,341578240901281500000],[341578240901281500000,8806.689999999999]],"any(toTypeName(int64))":"Int64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_Float32_ = r"""
+{"covarPopMatrix(int64, nullable_float32_)":[[2.605736763119604e37,7.798582314032847e56],[7.798582314032847e56,4.628457817793422e76]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_Float64_ = r"""
+{"covarPopMatrix(int64, nullable_float64_)":[[2.605736763119604e37,null],[null,null]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_Int16_ = r"""
+{"covarPopMatrix(int64, nullable_int16_)":[[2.605736763119604e37,7.893075583743855e22],[7.893075583743855e22,430588624.8888889]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_Int32_ = r"""
+{"covarPopMatrix(int64, nullable_int32_)":[[2.605736763119604e37,5.022858033540113e27],[5.022858033540113e27,1800280176052861000]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_Int64_ = r"""
+{"covarPopMatrix(int64, nullable_int64_)":[[2.605736763119604e37,2.4435542096706547e37],[2.4435542096706547e37,4.083752106303592e37]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_Int8_ = r"""
+{"covarPopMatrix(int64, nullable_int8_)":[[2.605736763119604e37,275734011632071670000],[275734011632071670000,7133.432098765432]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_UInt16_ = r"""
+{"covarPopMatrix(int64, nullable_uint16_)":[[2.605736763119604e37,5.628155040170718e22],[5.628155040170718e22,468142122.39506173]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_UInt32_ = r"""
+{"covarPopMatrix(int64, nullable_uint32_)":[[2.605736763119604e37,5.752624248694595e27],[5.752624248694595e27,2460893905148930600]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"covarPopMatrix(int64, nullable_uint64_)":[[2.605736763119604e37,3.1239998231528703e37],[3.1239998231528703e37,4.916737898877755e37]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_Nullable_UInt8_ = r"""
+{"covarPopMatrix(int64, nullable_uint8_)":[[2.605736763119604e37,309500122356712340000],[309500122356712340000,9205.654320987655]],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_UInt16 = r"""
+{"covarPopMatrix(int64, uint16)":[[2.3555047752495275e37,5.077084288109952e22],[5.077084288109952e22,434168100.81000006]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_UInt32 = r"""
+{"covarPopMatrix(int64, uint32)":[[2.3555047752495275e37,3.5382969481463575e27],[3.5382969481463575e27,2152435794872377300]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_UInt64 = r"""
+{"covarPopMatrix(int64, uint64)":[[2.3555047752495275e37,1.9468723661402416e37],[1.9468723661402416e37,5.013328977733995e37]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int64_UInt8 = r"""
+{"covarPopMatrix(int64, uint8)":[[2.3555047752495275e37,223332951327854700000],[223332951327854700000,7894.81]],"any(toTypeName(int64))":"Int64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Float32 = r"""
+{"covarPopMatrix(int8, float32)":[[8806.689999999999,6.74349685191917e39],[6.74349685191917e39,4.2778334457359525e76]],"any(toTypeName(int8))":"Int8","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Float64 = r"""
+{"covarPopMatrix(int8, float64)":[[8806.689999999999,null],[null,null]],"any(toTypeName(int8))":"Int8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Int16 = r"""
+{"covarPopMatrix(int8, int16)":[[8806.689999999999,735426.24],[735426.24,419355858.84000003]],"any(toTypeName(int8))":"Int8","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Int32 = r"""
+{"covarPopMatrix(int8, int32)":[[8806.689999999999,44435651346.909996],[44435651346.909996,1760613529137539800]],"any(toTypeName(int8))":"Int8","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Int64 = r"""
+{"covarPopMatrix(int8, int64)":[[8806.689999999999,341578240901281500000],[341578240901281500000,2.3555047752495275e37]],"any(toTypeName(int8))":"Int8","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Int8 = r"""
+{"covarPopMatrix(int8, int8)":[[8806.689999999999,8806.689999999999],[8806.689999999999,8806.689999999999]],"any(toTypeName(int8))":"Int8","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_Float32_ = r"""
+{"covarPopMatrix(int8, nullable_float32_)":[[9782,1.2350437655996647e40],[1.2350437655996647e40,4.628457817793422e76]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_Float64_ = r"""
+{"covarPopMatrix(int8, nullable_float64_)":[[9782,null],[null,null]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_Int16_ = r"""
+{"covarPopMatrix(int8, nullable_int16_)":[[9782,928037.6666666666],[928037.6666666666,430588624.8888889]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_Int32_ = r"""
+{"covarPopMatrix(int8, nullable_int32_)":[[9782,102295356763.07407],[102295356763.07407,1800280176052861000]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_Int64_ = r"""
+{"covarPopMatrix(int8, nullable_int64_)":[[9782,401190632570594260000],[401190632570594260000,4.083752106303592e37]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_Int8_ = r"""
+{"covarPopMatrix(int8, nullable_int8_)":[[9782,5526.296296296296],[5526.296296296296,7133.432098765432]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_UInt16_ = r"""
+{"covarPopMatrix(int8, nullable_uint16_)":[[9782,18303.296296296307],[18303.296296296307,468142122.39506173]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_UInt32_ = r"""
+{"covarPopMatrix(int8, nullable_uint32_)":[[9782,151600052620.37036],[151600052620.37036,2460893905148930600]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_UInt64_ = r"""
+{"covarPopMatrix(int8, nullable_uint64_)":[[9782,501767884796980300000],[501767884796980300000,4.916737898877755e37]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_Nullable_UInt8_ = r"""
+{"covarPopMatrix(int8, nullable_uint8_)":[[9782,5636.518518518518],[5636.518518518518,9205.654320987655]],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_UInt16 = r"""
+{"covarPopMatrix(int8, uint16)":[[8806.689999999999,506718.37],[506718.37,434168100.81000006]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_UInt32 = r"""
+{"covarPopMatrix(int8, uint32)":[[8806.689999999999,18661732584.989998],[18661732584.989998,2152435794872377300]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_UInt64 = r"""
+{"covarPopMatrix(int8, uint64)":[[8806.689999999999,154360283928075700000],[154360283928075700000,5.013328977733995e37]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Int8_UInt8 = r"""
+{"covarPopMatrix(int8, uint8)":[[8806.689999999999,2460.07],[2460.07,7894.81]],"any(toTypeName(int8))":"Int8","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Float32 = r"""
+{"covarPopMatrix(nullable_float32_, float32)":[[4.628457817793422e76,3.184681844758001e76],[3.184681844758001e76,4.5215730338863233e76]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Float64 = r"""
+{"covarPopMatrix(nullable_float32_, float64)":[[4.628457817793422e76,null],[null,null]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Int16 = r"""
+{"covarPopMatrix(nullable_float32_, int16)":[[4.628457817793422e76,2.950991662465569e42],[2.950991662465569e42,465943458.83950615]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Int32 = r"""
+{"covarPopMatrix(nullable_float32_, int32)":[[4.628457817793422e76,1.178759364268167e47],[1.178759364268167e47,1956197234234231000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Int64 = r"""
+{"covarPopMatrix(nullable_float32_, int64)":[[4.628457817793422e76,7.798582314032847e56],[7.798582314032847e56,2.605736763119604e37]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Int8 = r"""
+{"covarPopMatrix(nullable_float32_, int8)":[[4.628457817793422e76,1.2350437655996647e40],[1.2350437655996647e40,9782]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_float32_)":[[4.628457817793422e76,4.628457817793422e76],[4.628457817793422e76,4.628457817793422e76]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_float64_)":[[4.628457817793422e76,null],[null,null]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_int16_)":[[4.628457817793422e76,3.16016683035312e42],[3.16016683035312e42,430588624.8888889]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_int32_)":[[4.628457817793422e76,1.777748561807189e47],[1.777748561807189e47,1800280176052861000]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_int64_)":[[4.628457817793422e76,4.204785990547994e56],[4.204785990547994e56,4.083752106303592e37]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_int8_)":[[4.628457817793422e76,1.426725890718336e40],[1.426725890718336e40,7133.432098765432]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_uint16_)":[[4.628457817793422e76,2.70574902759064e42],[2.70574902759064e42,468142122.39506173]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_uint32_)":[[4.628457817793422e76,1.7090578245317171e47],[1.7090578245317171e47,2460893905148930600]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_uint64_)":[[4.628457817793422e76,9.929308342752268e56],[9.929308342752268e56,4.916737898877755e37]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_float32_, nullable_uint8_)":[[4.628457817793422e76,4.3042286532161654e39],[4.3042286532161654e39,9205.654320987655]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__UInt16 = r"""
+{"covarPopMatrix(nullable_float32_, uint16)":[[4.628457817793422e76,1.5479536492453458e42],[1.5479536492453458e42,403033451.5555556]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__UInt32 = r"""
+{"covarPopMatrix(nullable_float32_, uint32)":[[4.628457817793422e76,1.285054519187946e47],[1.285054519187946e47,1721611684091068400]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"covarPopMatrix(nullable_float32_, uint64)":[[4.628457817793422e76,1.0995768563662337e57],[1.0995768563662337e57,4.580617953711504e37]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float32__UInt8 = r"""
+{"covarPopMatrix(nullable_float32_, uint8)":[[4.628457817793422e76,9.489514098783714e39],[9.489514098783714e39,6708]],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Float32 = r"""
+{"covarPopMatrix(nullable_float64_, float32)":[[null,null],[null,4.5215730338863233e76]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Float64 = r"""
+{"covarPopMatrix(nullable_float64_, float64)":[[null,null],[null,null]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Int16 = r"""
+{"covarPopMatrix(nullable_float64_, int16)":[[null,null],[null,465943458.83950615]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Int32 = r"""
+{"covarPopMatrix(nullable_float64_, int32)":[[null,null],[null,1956197234234231000]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Int64 = r"""
+{"covarPopMatrix(nullable_float64_, int64)":[[null,null],[null,2.605736763119604e37]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Int8 = r"""
+{"covarPopMatrix(nullable_float64_, int8)":[[null,null],[null,9782]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_float32_)":[[null,null],[null,4.628457817793422e76]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_float64_)":[[null,null],[null,null]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_int16_)":[[null,null],[null,430588624.8888889]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_int32_)":[[null,null],[null,1800280176052861000]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_int64_)":[[null,null],[null,4.083752106303592e37]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_int8_)":[[null,null],[null,7133.432098765432]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_uint16_)":[[null,null],[null,468142122.39506173]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_uint32_)":[[null,null],[null,2460893905148930600]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_uint64_)":[[null,null],[null,4.916737898877755e37]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_float64_, nullable_uint8_)":[[null,null],[null,9205.654320987655]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__UInt16 = r"""
+{"covarPopMatrix(nullable_float64_, uint16)":[[null,null],[null,403033451.5555556]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__UInt32 = r"""
+{"covarPopMatrix(nullable_float64_, uint32)":[[null,null],[null,1721611684091068400]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__UInt64 = r"""
+{"covarPopMatrix(nullable_float64_, uint64)":[[null,null],[null,4.580617953711504e37]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Float64__UInt8 = r"""
+{"covarPopMatrix(nullable_float64_, uint8)":[[null,null],[null,6708]],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Float32 = r"""
+{"covarPopMatrix(nullable_int16_, float32)":[[430588624.8888889,3.0053052146206984e42],[3.0053052146206984e42,4.5215730338863233e76]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Float64 = r"""
+{"covarPopMatrix(nullable_int16_, float64)":[[430588624.8888889,null],[null,null]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Int16 = r"""
+{"covarPopMatrix(nullable_int16_, int16)":[[430588624.8888889,287165016.7777778],[287165016.7777778,465943458.83950615]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Int32 = r"""
+{"covarPopMatrix(nullable_int16_, int32)":[[430588624.8888889,13324664010200],[13324664010200,1956197234234231000]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Int64 = r"""
+{"covarPopMatrix(nullable_int16_, int64)":[[430588624.8888889,7.893075583743855e22],[7.893075583743855e22,2.605736763119604e37]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Int8 = r"""
+{"covarPopMatrix(nullable_int16_, int8)":[[430588624.8888889,928037.6666666666],[928037.6666666666,9782]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_float32_)":[[430588624.8888889,3.16016683035312e42],[3.16016683035312e42,4.628457817793422e76]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_float64_)":[[430588624.8888889,null],[null,null]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_int16_)":[[430588624.8888889,430588624.8888889],[430588624.8888889,430588624.8888889]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_int32_)":[[430588624.8888889,12392191360274.223],[12392191360274.223,1800280176052861000]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_int64_)":[[430588624.8888889,5.341701713196763e22],[5.341701713196763e22,4.083752106303592e37]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_int8_)":[[430588624.8888889,1273319.3333333333],[1273319.3333333333,7133.432098765432]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_uint16_)":[[430588624.8888889,187315697.66666666],[187315697.66666666,468142122.39506173]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_uint32_)":[[430588624.8888889,13424358851595.111],[13424358851595.111,2460893905148930600]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_uint64_)":[[430588624.8888889,8.077506960740922e22],[8.077506960740922e22,4.916737898877755e37]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_int16_, nullable_uint8_)":[[430588624.8888889,469616.6666666667],[469616.6666666667,9205.654320987655]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__UInt16 = r"""
+{"covarPopMatrix(nullable_int16_, uint16)":[[430588624.8888889,175424899.66666666],[175424899.66666666,403033451.5555556]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__UInt32 = r"""
+{"covarPopMatrix(nullable_int16_, uint32)":[[430588624.8888889,21901580374645.332],[21901580374645.332,1721611684091068400]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__UInt64 = r"""
+{"covarPopMatrix(nullable_int16_, uint64)":[[430588624.8888889,8.456434909149714e22],[8.456434909149714e22,4.580617953711504e37]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int16__UInt8 = r"""
+{"covarPopMatrix(nullable_int16_, uint8)":[[430588624.8888889,874877.4444444445],[874877.4444444445,6708]],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Float32 = r"""
+{"covarPopMatrix(nullable_int32_, float32)":[[1800280176052861000,1.6228397425549698e47],[1.6228397425549698e47,4.5215730338863233e76]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Float64 = r"""
+{"covarPopMatrix(nullable_int32_, float64)":[[1800280176052861000,null],[null,null]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Int16 = r"""
+{"covarPopMatrix(nullable_int32_, int16)":[[1800280176052861000,6622234614553.21],[6622234614553.21,465943458.83950615]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Int32 = r"""
+{"covarPopMatrix(nullable_int32_, int32)":[[1800280176052861000,582088773230935700],[582088773230935700,1956197234234231000]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Int64 = r"""
+{"covarPopMatrix(nullable_int32_, int64)":[[1800280176052861000,5.022858033540113e27],[5.022858033540113e27,2.605736763119604e37]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Int8 = r"""
+{"covarPopMatrix(nullable_int32_, int8)":[[1800280176052861000,102295356763.07407],[102295356763.07407,9782]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_float32_)":[[1800280176052861000,1.777748561807189e47],[1.777748561807189e47,4.628457817793422e76]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_float64_)":[[1800280176052861000,null],[null,null]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_int16_)":[[1800280176052861000,12392191360274.223],[12392191360274.223,430588624.8888889]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_int32_)":[[1800280176052861000,1800280176052861000],[1800280176052861000,1800280176052861000]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_int64_)":[[1800280176052861000,4.021171779568617e27],[4.021171779568617e27,4.083752106303592e37]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_int8_)":[[1800280176052861000,57698293967.50617],[57698293967.50617,7133.432098765432]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_uint16_)":[[1800280176052861000,13012415845280.986],[13012415845280.986,468142122.39506173]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_uint32_)":[[1800280176052861000,1592251511380648700],[1592251511380648700,2460893905148930600]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_uint64_)":[[1800280176052861000,5.106194316605846e27],[5.106194316605846e27,4.916737898877755e37]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_int32_, nullable_uint8_)":[[1800280176052861000,71997388152.7284],[71997388152.7284,9205.654320987655]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__UInt16 = r"""
+{"covarPopMatrix(nullable_int32_, uint16)":[[1800280176052861000,13494102282487.742],[13494102282487.742,403033451.5555556]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__UInt32 = r"""
+{"covarPopMatrix(nullable_int32_, uint32)":[[1800280176052861000,653847436246547800],[653847436246547800,1721611684091068400]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__UInt64 = r"""
+{"covarPopMatrix(nullable_int32_, uint64)":[[1800280176052861000,5.66950299956348e27],[5.66950299956348e27,4.580617953711504e37]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int32__UInt8 = r"""
+{"covarPopMatrix(nullable_int32_, uint8)":[[1800280176052861000,39293922494.18518],[39293922494.18518,6708]],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Float32 = r"""
+{"covarPopMatrix(nullable_int64_, float32)":[[4.083752106303592e37,2.366446877007417e56],[2.366446877007417e56,4.5215730338863233e76]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Float64 = r"""
+{"covarPopMatrix(nullable_int64_, float64)":[[4.083752106303592e37,null],[null,null]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Int16 = r"""
+{"covarPopMatrix(nullable_int64_, int16)":[[4.083752106303592e37,8.988528374108443e22],[8.988528374108443e22,465943458.83950615]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Int32 = r"""
+{"covarPopMatrix(nullable_int64_, int32)":[[4.083752106303592e37,4.583689120394667e27],[4.583689120394667e27,1956197234234231000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Int64 = r"""
+{"covarPopMatrix(nullable_int64_, int64)":[[4.083752106303592e37,2.4435542096706547e37],[2.4435542096706547e37,2.605736763119604e37]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Int8 = r"""
+{"covarPopMatrix(nullable_int64_, int8)":[[4.083752106303592e37,401190632570594260000],[401190632570594260000,9782]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_float32_)":[[4.083752106303592e37,4.204785990547994e56],[4.204785990547994e56,4.628457817793422e76]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_float64_)":[[4.083752106303592e37,null],[null,null]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_int16_)":[[4.083752106303592e37,5.341701713196763e22],[5.341701713196763e22,430588624.8888889]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_int32_)":[[4.083752106303592e37,4.021171779568617e27],[4.021171779568617e27,1800280176052861000]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_int64_)":[[4.083752106303592e37,4.083752106303592e37],[4.083752106303592e37,4.083752106303592e37]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_int8_)":[[4.083752106303592e37,251621244083051820000],[251621244083051820000,7133.432098765432]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_uint16_)":[[4.083752106303592e37,4.2632505404175e22],[4.2632505404175e22,468142122.39506173]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_uint32_)":[[4.083752106303592e37,6.913767335891341e27],[6.913767335891341e27,2460893905148930600]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_uint64_)":[[4.083752106303592e37,3.2200371531433587e37],[3.2200371531433587e37,4.916737898877755e37]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_int64_, nullable_uint8_)":[[4.083752106303592e37,569049688050232200000],[569049688050232200000,9205.654320987655]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__UInt16 = r"""
+{"covarPopMatrix(nullable_int64_, uint16)":[[4.083752106303592e37,5.668051951700175e22],[5.668051951700175e22,403033451.5555556]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__UInt32 = r"""
+{"covarPopMatrix(nullable_int64_, uint32)":[[4.083752106303592e37,2.739028224878463e27],[2.739028224878463e27,1721611684091068400]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"covarPopMatrix(nullable_int64_, uint64)":[[4.083752106303592e37,8.63657376486504e36],[8.63657376486504e36,4.580617953711504e37]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int64__UInt8 = r"""
+{"covarPopMatrix(nullable_int64_, uint8)":[[4.083752106303592e37,175813505631114700000],[175813505631114700000,6708]],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Float32 = r"""
+{"covarPopMatrix(nullable_int8_, float32)":[[7133.432098765432,7.975606469304022e39],[7.975606469304022e39,4.5215730338863233e76]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Float64 = r"""
+{"covarPopMatrix(nullable_int8_, float64)":[[7133.432098765432,null],[null,null]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Int16 = r"""
+{"covarPopMatrix(nullable_int8_, int16)":[[7133.432098765432,1257590.913580247],[1257590.913580247,465943458.83950615]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Int32 = r"""
+{"covarPopMatrix(nullable_int8_, int32)":[[7133.432098765432,79010909719.32098],[79010909719.32098,1956197234234231000]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Int64 = r"""
+{"covarPopMatrix(nullable_int8_, int64)":[[7133.432098765432,275734011632071670000],[275734011632071670000,2.605736763119604e37]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Int8 = r"""
+{"covarPopMatrix(nullable_int8_, int8)":[[7133.432098765432,5526.296296296296],[5526.296296296296,9782]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_float32_)":[[7133.432098765432,1.426725890718336e40],[1.426725890718336e40,4.628457817793422e76]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_float64_)":[[7133.432098765432,null],[null,null]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_int16_)":[[7133.432098765432,1273319.3333333333],[1273319.3333333333,430588624.8888889]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_int32_)":[[7133.432098765432,57698293967.50617],[57698293967.50617,1800280176052861000]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_int64_)":[[7133.432098765432,251621244083051820000],[251621244083051820000,4.083752106303592e37]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_int8_)":[[7133.432098765432,7133.432098765432],[7133.432098765432,7133.432098765432]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_uint16_)":[[7133.432098765432,599970.6913580247],[599970.6913580247,468142122.39506173]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_uint32_)":[[7133.432098765432,81174803078.38272],[81174803078.38272,2460893905148930600]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_uint64_)":[[7133.432098765432,409716454512063600000],[409716454512063600000,4.916737898877755e37]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_int8_, nullable_uint8_)":[[7133.432098765432,2132.987654320988],[2132.987654320988,9205.654320987655]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__UInt16 = r"""
+{"covarPopMatrix(nullable_int8_, uint16)":[[7133.432098765432,345168.07407407404],[345168.07407407404,403033451.5555556]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__UInt32 = r"""
+{"covarPopMatrix(nullable_int8_, uint32)":[[7133.432098765432,62220012234.74074],[62220012234.74074,1721611684091068400]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__UInt64 = r"""
+{"covarPopMatrix(nullable_int8_, uint64)":[[7133.432098765432,297014184464624840000],[297014184464624840000,4.580617953711504e37]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_Int8__UInt8 = r"""
+{"covarPopMatrix(nullable_int8_, uint8)":[[7133.432098765432,3810.407407407407],[3810.407407407407,6708]],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Float32 = r"""
+{"covarPopMatrix(nullable_uint16_, float32)":[[468142122.39506173,2.4034979164332144e42],[2.4034979164332144e42,4.5215730338863233e76]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Float64 = r"""
+{"covarPopMatrix(nullable_uint16_, float64)":[[468142122.39506173,null],[null,null]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Int16 = r"""
+{"covarPopMatrix(nullable_uint16_, int16)":[[468142122.39506173,261595098.3950617],[261595098.3950617,465943458.83950615]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Int32 = r"""
+{"covarPopMatrix(nullable_uint16_, int32)":[[468142122.39506173,11671041583245.023],[11671041583245.023,1956197234234231000]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Int64 = r"""
+{"covarPopMatrix(nullable_uint16_, int64)":[[468142122.39506173,5.628155040170718e22],[5.628155040170718e22,2.605736763119604e37]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Int8 = r"""
+{"covarPopMatrix(nullable_uint16_, int8)":[[468142122.39506173,18303.296296296307],[18303.296296296307,9782]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_float32_)":[[468142122.39506173,2.70574902759064e42],[2.70574902759064e42,4.628457817793422e76]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_float64_)":[[468142122.39506173,null],[null,null]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_int16_)":[[468142122.39506173,187315697.66666666],[187315697.66666666,430588624.8888889]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_int32_)":[[468142122.39506173,13012415845280.986],[13012415845280.986,1800280176052861000]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_int64_)":[[468142122.39506173,4.2632505404175e22],[4.2632505404175e22,4.083752106303592e37]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_int8_)":[[468142122.39506173,599970.6913580247],[599970.6913580247,7133.432098765432]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_uint16_)":[[468142122.39506173,468142122.39506173],[468142122.39506173,468142122.39506173]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_uint32_)":[[468142122.39506173,442950870993.56946],[442950870993.56946,2460893905148930600]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_uint64_)":[[468142122.39506173,5.4186477070313845e22],[5.4186477070313845e22,4.916737898877755e37]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_uint16_, nullable_uint8_)":[[468142122.39506173,624147.6913580248],[624147.6913580248,9205.654320987655]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__UInt16 = r"""
+{"covarPopMatrix(nullable_uint16_, uint16)":[[468142122.39506173,249237453.18518522],[249237453.18518522,403033451.5555556]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__UInt32 = r"""
+{"covarPopMatrix(nullable_uint16_, uint32)":[[468142122.39506173,17542289579076.959],[17542289579076.959,1721611684091068400]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__UInt64 = r"""
+{"covarPopMatrix(nullable_uint16_, uint64)":[[468142122.39506173,1.1688544668184988e23],[1.1688544668184988e23,4.580617953711504e37]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt16__UInt8 = r"""
+{"covarPopMatrix(nullable_uint16_, uint8)":[[468142122.39506173,933202.4074074072],[933202.4074074072,6708]],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Float32 = r"""
+{"covarPopMatrix(nullable_uint32_, float32)":[[2460893905148930600,1.371537319478026e47],[1.371537319478026e47,4.5215730338863233e76]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Float64 = r"""
+{"covarPopMatrix(nullable_uint32_, float64)":[[2460893905148930600,null],[null,null]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Int16 = r"""
+{"covarPopMatrix(nullable_uint32_, int16)":[[2460893905148930600,12713336710487.012],[12713336710487.012,465943458.83950615]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Int32 = r"""
+{"covarPopMatrix(nullable_uint32_, int32)":[[2460893905148930600,1035677476294191100],[1035677476294191100,1956197234234231000]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Int64 = r"""
+{"covarPopMatrix(nullable_uint32_, int64)":[[2460893905148930600,5.752624248694595e27],[5.752624248694595e27,2.605736763119604e37]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Int8 = r"""
+{"covarPopMatrix(nullable_uint32_, int8)":[[2460893905148930600,151600052620.37036],[151600052620.37036,9782]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_float32_)":[[2460893905148930600,1.7090578245317171e47],[1.7090578245317171e47,4.628457817793422e76]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_float64_)":[[2460893905148930600,null],[null,null]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_int16_)":[[2460893905148930600,13424358851595.111],[13424358851595.111,430588624.8888889]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_int32_)":[[2460893905148930600,1592251511380648700],[1592251511380648700,1800280176052861000]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_int64_)":[[2460893905148930600,6.913767335891341e27],[6.913767335891341e27,4.083752106303592e37]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_int8_)":[[2460893905148930600,81174803078.38272],[81174803078.38272,7133.432098765432]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_uint16_)":[[2460893905148930600,442950870993.56946],[442950870993.56946,468142122.39506173]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_uint32_)":[[2460893905148930600,2460893905148930600],[2460893905148930600,2460893905148930600]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_uint64_)":[[2460893905148930600,6.970070151937157e27],[6.970070151937157e27,4.916737898877755e37]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_uint32_, nullable_uint8_)":[[2460893905148930600,102015631453.3827],[102015631453.3827,9205.654320987655]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__UInt16 = r"""
+{"covarPopMatrix(nullable_uint32_, uint16)":[[2460893905148930600,12986334218599.146],[12986334218599.146,403033451.5555556]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__UInt32 = r"""
+{"covarPopMatrix(nullable_uint32_, uint32)":[[2460893905148930600,393873298319468300],[393873298319468300,1721611684091068400]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__UInt64 = r"""
+{"covarPopMatrix(nullable_uint32_, uint64)":[[2460893905148930600,1.5758211637677863e27],[1.5758211637677863e27,4.580617953711504e37]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt32__UInt8 = r"""
+{"covarPopMatrix(nullable_uint32_, uint8)":[[2460893905148930600,50424098821.25928],[50424098821.25928,6708]],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Float32 = r"""
+{"covarPopMatrix(nullable_uint64_, float32)":[[4.916737898877755e37,2.013321247145632e56],[2.013321247145632e56,4.5215730338863233e76]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Float64 = r"""
+{"covarPopMatrix(nullable_uint64_, float64)":[[4.916737898877755e37,null],[null,null]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Int16 = r"""
+{"covarPopMatrix(nullable_uint64_, int16)":[[4.916737898877755e37,1.1513000070961912e23],[1.1513000070961912e23,465943458.83950615]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Int32 = r"""
+{"covarPopMatrix(nullable_uint64_, int32)":[[4.916737898877755e37,2.4321194884599923e27],[2.4321194884599923e27,1956197234234231000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Int64 = r"""
+{"covarPopMatrix(nullable_uint64_, int64)":[[4.916737898877755e37,3.1239998231528703e37],[3.1239998231528703e37,2.605736763119604e37]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Int8 = r"""
+{"covarPopMatrix(nullable_uint64_, int8)":[[4.916737898877755e37,501767884796980300000],[501767884796980300000,9782]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_float32_)":[[4.916737898877755e37,9.929308342752268e56],[9.929308342752268e56,4.628457817793422e76]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_float64_)":[[4.916737898877755e37,null],[null,null]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_int16_)":[[4.916737898877755e37,8.077506960740922e22],[8.077506960740922e22,430588624.8888889]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_int32_)":[[4.916737898877755e37,5.106194316605846e27],[5.106194316605846e27,1800280176052861000]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_int64_)":[[4.916737898877755e37,3.2200371531433587e37],[3.2200371531433587e37,4.083752106303592e37]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_int8_)":[[4.916737898877755e37,409716454512063600000],[409716454512063600000,7133.432098765432]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_uint16_)":[[4.916737898877755e37,5.4186477070313845e22],[5.4186477070313845e22,468142122.39506173]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_uint32_)":[[4.916737898877755e37,6.970070151937157e27],[6.970070151937157e27,2460893905148930600]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_uint64_)":[[4.916737898877755e37,4.916737898877755e37],[4.916737898877755e37,4.916737898877755e37]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_uint64_, nullable_uint8_)":[[4.916737898877755e37,350209542816486400000],[350209542816486400000,9205.654320987655]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__UInt16 = r"""
+{"covarPopMatrix(nullable_uint64_, uint16)":[[4.916737898877755e37,1.5737870218160798e22],[1.5737870218160798e22,403033451.5555556]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__UInt32 = r"""
+{"covarPopMatrix(nullable_uint64_, uint32)":[[4.916737898877755e37,2.4091159555426434e27],[2.4091159555426434e27,1721611684091068400]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"covarPopMatrix(nullable_uint64_, uint64)":[[4.916737898877755e37,2.493506289112182e37],[2.493506289112182e37,4.580617953711504e37]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt64__UInt8 = r"""
+{"covarPopMatrix(nullable_uint64_, uint8)":[[4.916737898877755e37,206803256441207650000],[206803256441207650000,6708]],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Float32 = r"""
+{"covarPopMatrix(nullable_uint8_, float32)":[[9205.654320987655,4.68342284305632e39],[4.68342284305632e39,4.5215730338863233e76]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Float64 = r"""
+{"covarPopMatrix(nullable_uint8_, float64)":[[9205.654320987655,null],[null,null]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Int16 = r"""
+{"covarPopMatrix(nullable_uint8_, int16)":[[9205.654320987655,799872.4691358025],[799872.4691358025,465943458.83950615]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Int32 = r"""
+{"covarPopMatrix(nullable_uint8_, int32)":[[9205.654320987655,54183514866.20988],[54183514866.20988,1956197234234231000]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Int64 = r"""
+{"covarPopMatrix(nullable_uint8_, int64)":[[9205.654320987655,309500122356712340000],[309500122356712340000,2.605736763119604e37]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Int8 = r"""
+{"covarPopMatrix(nullable_uint8_, int8)":[[9205.654320987655,5636.518518518518],[5636.518518518518,9782]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Float32_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_float32_)":[[9205.654320987655,4.3042286532161654e39],[4.3042286532161654e39,4.628457817793422e76]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Float64_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_float64_)":[[9205.654320987655,null],[null,null]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int16_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_int16_)":[[9205.654320987655,469616.6666666667],[469616.6666666667,430588624.8888889]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int32_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_int32_)":[[9205.654320987655,71997388152.7284],[71997388152.7284,1800280176052861000]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int64_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_int64_)":[[9205.654320987655,569049688050232200000],[569049688050232200000,4.083752106303592e37]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_Int8_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_int8_)":[[9205.654320987655,2132.987654320988],[2132.987654320988,7133.432098765432]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt16_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_uint16_)":[[9205.654320987655,624147.6913580248],[624147.6913580248,468142122.39506173]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt32_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_uint32_)":[[9205.654320987655,102015631453.3827],[102015631453.3827,2460893905148930600]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt64_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_uint64_)":[[9205.654320987655,350209542816486400000],[350209542816486400000,4.916737898877755e37]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__Nullable_UInt8_ = r"""
+{"covarPopMatrix(nullable_uint8_, nullable_uint8_)":[[9205.654320987655,9205.654320987655],[9205.654320987655,9205.654320987655]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__UInt16 = r"""
+{"covarPopMatrix(nullable_uint8_, uint16)":[[9205.654320987655,982882.6296296298],[982882.6296296298,403033451.5555556]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__UInt32 = r"""
+{"covarPopMatrix(nullable_uint8_, uint32)":[[9205.654320987655,25430607270.629612],[25430607270.629612,1721611684091068400]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__UInt64 = r"""
+{"covarPopMatrix(nullable_uint8_, uint64)":[[9205.654320987655,116620732861661460000],[116620732861661460000,4.580617953711504e37]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_Nullable_UInt8__UInt8 = r"""
+{"covarPopMatrix(nullable_uint8_, uint8)":[[9205.654320987655,1391.185185185184],[1391.185185185184,6708]],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Float32 = r"""
+{"covarPopMatrix(uint16, float32)":[[434168100.81000006,2.6506248038572284e42],[2.6506248038572284e42,4.2778334457359525e76]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Float64 = r"""
+{"covarPopMatrix(uint16, float64)":[[434168100.81000006,null],[null,null]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Int16 = r"""
+{"covarPopMatrix(uint16, int16)":[[434168100.81000006,163590352.62],[163590352.62,419355858.84000003]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Int32 = r"""
+{"covarPopMatrix(uint16, int32)":[[434168100.81000006,16431246426430.63],[16431246426430.63,1760613529137539800]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Int64 = r"""
+{"covarPopMatrix(uint16, int64)":[[434168100.81000006,5.077084288109952e22],[5.077084288109952e22,2.3555047752495275e37]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Int8 = r"""
+{"covarPopMatrix(uint16, int8)":[[434168100.81000006,506718.37],[506718.37,8806.689999999999]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_Float32_ = r"""
+{"covarPopMatrix(uint16, nullable_float32_)":[[403033451.5555556,1.5479536492453458e42],[1.5479536492453458e42,4.628457817793422e76]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_Float64_ = r"""
+{"covarPopMatrix(uint16, nullable_float64_)":[[403033451.5555556,null],[null,null]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_Int16_ = r"""
+{"covarPopMatrix(uint16, nullable_int16_)":[[403033451.5555556,175424899.66666666],[175424899.66666666,430588624.8888889]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_Int32_ = r"""
+{"covarPopMatrix(uint16, nullable_int32_)":[[403033451.5555556,13494102282487.742],[13494102282487.742,1800280176052861000]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_Int64_ = r"""
+{"covarPopMatrix(uint16, nullable_int64_)":[[403033451.5555556,5.668051951700175e22],[5.668051951700175e22,4.083752106303592e37]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_Int8_ = r"""
+{"covarPopMatrix(uint16, nullable_int8_)":[[403033451.5555556,345168.07407407404],[345168.07407407404,7133.432098765432]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_UInt16_ = r"""
+{"covarPopMatrix(uint16, nullable_uint16_)":[[403033451.5555556,249237453.18518522],[249237453.18518522,468142122.39506173]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_UInt32_ = r"""
+{"covarPopMatrix(uint16, nullable_uint32_)":[[403033451.5555556,12986334218599.146],[12986334218599.146,2460893905148930600]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_UInt64_ = r"""
+{"covarPopMatrix(uint16, nullable_uint64_)":[[403033451.5555556,1.5737870218160798e22],[1.5737870218160798e22,4.916737898877755e37]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_Nullable_UInt8_ = r"""
+{"covarPopMatrix(uint16, nullable_uint8_)":[[403033451.5555556,982882.6296296298],[982882.6296296298,9205.654320987655]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_UInt16 = r"""
+{"covarPopMatrix(uint16, uint16)":[[434168100.81000006,434168100.81000006],[434168100.81000006,434168100.81000006]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_UInt32 = r"""
+{"covarPopMatrix(uint16, uint32)":[[434168100.81000006,22087015093322.477],[22087015093322.477,2152435794872377300]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_UInt64 = r"""
+{"covarPopMatrix(uint16, uint64)":[[434168100.81000006,5.330630499216737e22],[5.330630499216737e22,5.013328977733995e37]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt16_UInt8 = r"""
+{"covarPopMatrix(uint16, uint8)":[[434168100.81000006,1468341.7100000002],[1468341.7100000002,7894.81]],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Float32 = r"""
+{"covarPopMatrix(uint32, float32)":[[2152435794872377300,1.3177177712807077e47],[1.3177177712807077e47,4.2778334457359525e76]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Float64 = r"""
+{"covarPopMatrix(uint32, float64)":[[2152435794872377300,null],[null,null]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Int16 = r"""
+{"covarPopMatrix(uint32, int16)":[[2152435794872377300,14873213398813.041],[14873213398813.041,419355858.84000003]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Int32 = r"""
+{"covarPopMatrix(uint32, int32)":[[2152435794872377300,1142697537640835300],[1142697537640835300,1760613529137539800]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Int64 = r"""
+{"covarPopMatrix(uint32, int64)":[[2152435794872377300,3.5382969481463575e27],[3.5382969481463575e27,2.3555047752495275e37]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Int8 = r"""
+{"covarPopMatrix(uint32, int8)":[[2152435794872377300,18661732584.989998],[18661732584.989998,8806.689999999999]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_Float32_ = r"""
+{"covarPopMatrix(uint32, nullable_float32_)":[[1721611684091068400,1.285054519187946e47],[1.285054519187946e47,4.628457817793422e76]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_Float64_ = r"""
+{"covarPopMatrix(uint32, nullable_float64_)":[[1721611684091068400,null],[null,null]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_Int16_ = r"""
+{"covarPopMatrix(uint32, nullable_int16_)":[[1721611684091068400,21901580374645.332],[21901580374645.332,430588624.8888889]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_Int32_ = r"""
+{"covarPopMatrix(uint32, nullable_int32_)":[[1721611684091068400,653847436246547800],[653847436246547800,1800280176052861000]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_Int64_ = r"""
+{"covarPopMatrix(uint32, nullable_int64_)":[[1721611684091068400,2.739028224878463e27],[2.739028224878463e27,4.083752106303592e37]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_Int8_ = r"""
+{"covarPopMatrix(uint32, nullable_int8_)":[[1721611684091068400,62220012234.74074],[62220012234.74074,7133.432098765432]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_UInt16_ = r"""
+{"covarPopMatrix(uint32, nullable_uint16_)":[[1721611684091068400,17542289579076.959],[17542289579076.959,468142122.39506173]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_UInt32_ = r"""
+{"covarPopMatrix(uint32, nullable_uint32_)":[[1721611684091068400,393873298319468300],[393873298319468300,2460893905148930600]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_UInt64_ = r"""
+{"covarPopMatrix(uint32, nullable_uint64_)":[[1721611684091068400,2.4091159555426434e27],[2.4091159555426434e27,4.916737898877755e37]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_Nullable_UInt8_ = r"""
+{"covarPopMatrix(uint32, nullable_uint8_)":[[1721611684091068400,25430607270.629612],[25430607270.629612,9205.654320987655]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_UInt16 = r"""
+{"covarPopMatrix(uint32, uint16)":[[2152435794872377300,22087015093322.477],[22087015093322.477,434168100.81000006]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_UInt32 = r"""
+{"covarPopMatrix(uint32, uint32)":[[2152435794872377300,2152435794872377300],[2152435794872377300,2152435794872377300]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_UInt64 = r"""
+{"covarPopMatrix(uint32, uint64)":[[2152435794872377300,6.442152346920884e27],[6.442152346920884e27,5.013328977733995e37]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt32_UInt8 = r"""
+{"covarPopMatrix(uint32, uint8)":[[2152435794872377300,101888766007.87003],[101888766007.87003,7894.81]],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Float32 = r"""
+{"covarPopMatrix(uint64, float32)":[[5.013328977733995e37,5.012295302092787e56],[5.012295302092787e56,4.2778334457359525e76]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Float64 = r"""
+{"covarPopMatrix(uint64, float64)":[[5.013328977733995e37,null],[null,null]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Int16 = r"""
+{"covarPopMatrix(uint64, int16)":[[5.013328977733995e37,5.295923773886506e22],[5.295923773886506e22,419355858.84000003]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Int32 = r"""
+{"covarPopMatrix(uint64, int32)":[[5.013328977733995e37,1.0234839317986135e27],[1.0234839317986135e27,1760613529137539800]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Int64 = r"""
+{"covarPopMatrix(uint64, int64)":[[5.013328977733995e37,1.9468723661402416e37],[1.9468723661402416e37,2.3555047752495275e37]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Int8 = r"""
+{"covarPopMatrix(uint64, int8)":[[5.013328977733995e37,154360283928075700000],[154360283928075700000,8806.689999999999]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
+{"covarPopMatrix(uint64, nullable_float32_)":[[4.580617953711504e37,1.0995768563662337e57],[1.0995768563662337e57,4.628457817793422e76]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_Float64_ = r"""
+{"covarPopMatrix(uint64, nullable_float64_)":[[4.580617953711504e37,null],[null,null]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_Int16_ = r"""
+{"covarPopMatrix(uint64, nullable_int16_)":[[4.580617953711504e37,8.456434909149714e22],[8.456434909149714e22,430588624.8888889]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_Int32_ = r"""
+{"covarPopMatrix(uint64, nullable_int32_)":[[4.580617953711504e37,5.66950299956348e27],[5.66950299956348e27,1800280176052861000]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"covarPopMatrix(uint64, nullable_int64_)":[[4.580617953711504e37,8.63657376486504e36],[8.63657376486504e36,4.083752106303592e37]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_Int8_ = r"""
+{"covarPopMatrix(uint64, nullable_int8_)":[[4.580617953711504e37,297014184464624840000],[297014184464624840000,7133.432098765432]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_UInt16_ = r"""
+{"covarPopMatrix(uint64, nullable_uint16_)":[[4.580617953711504e37,1.1688544668184988e23],[1.1688544668184988e23,468142122.39506173]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_UInt32_ = r"""
+{"covarPopMatrix(uint64, nullable_uint32_)":[[4.580617953711504e37,1.5758211637677863e27],[1.5758211637677863e27,2460893905148930600]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"covarPopMatrix(uint64, nullable_uint64_)":[[4.580617953711504e37,2.493506289112182e37],[2.493506289112182e37,4.916737898877755e37]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_Nullable_UInt8_ = r"""
+{"covarPopMatrix(uint64, nullable_uint8_)":[[4.580617953711504e37,116620732861661460000],[116620732861661460000,9205.654320987655]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_UInt16 = r"""
+{"covarPopMatrix(uint64, uint16)":[[5.013328977733995e37,5.330630499216737e22],[5.330630499216737e22,434168100.81000006]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_UInt32 = r"""
+{"covarPopMatrix(uint64, uint32)":[[5.013328977733995e37,6.442152346920884e27],[6.442152346920884e27,2152435794872377300]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_UInt64 = r"""
+{"covarPopMatrix(uint64, uint64)":[[5.013328977733995e37,5.013328977733995e37],[5.013328977733995e37,5.013328977733995e37]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt64_UInt8 = r"""
+{"covarPopMatrix(uint64, uint8)":[[5.013328977733995e37,249715817393615080000],[249715817393615080000,7894.81]],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Float32 = r"""
+{"covarPopMatrix(uint8, float32)":[[7894.81,7.777778054752274e39],[7.777778054752274e39,4.2778334457359525e76]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Float64 = r"""
+{"covarPopMatrix(uint8, float64)":[[7894.81,null],[null,null]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Int16 = r"""
+{"covarPopMatrix(uint8, int16)":[[7894.81,1163850.1199999999],[1163850.1199999999,419355858.84000003]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Int32 = r"""
+{"covarPopMatrix(uint8, int32)":[[7894.81,80598197693.53],[80598197693.53,1760613529137539800]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Int64 = r"""
+{"covarPopMatrix(uint8, int64)":[[7894.81,223332951327854700000],[223332951327854700000,2.3555047752495275e37]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Int8 = r"""
+{"covarPopMatrix(uint8, int8)":[[7894.81,2460.07],[2460.07,8806.689999999999]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_Float32_ = r"""
+{"covarPopMatrix(uint8, nullable_float32_)":[[6708,9.489514098783714e39],[9.489514098783714e39,4.628457817793422e76]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_Float64_ = r"""
+{"covarPopMatrix(uint8, nullable_float64_)":[[6708,null],[null,null]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_Int16_ = r"""
+{"covarPopMatrix(uint8, nullable_int16_)":[[6708,874877.4444444445],[874877.4444444445,430588624.8888889]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_Int32_ = r"""
+{"covarPopMatrix(uint8, nullable_int32_)":[[6708,39293922494.18518],[39293922494.18518,1800280176052861000]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_Int64_ = r"""
+{"covarPopMatrix(uint8, nullable_int64_)":[[6708,175813505631114700000],[175813505631114700000,4.083752106303592e37]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_Int8_ = r"""
+{"covarPopMatrix(uint8, nullable_int8_)":[[6708,3810.407407407407],[3810.407407407407,7133.432098765432]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_UInt16_ = r"""
+{"covarPopMatrix(uint8, nullable_uint16_)":[[6708,933202.4074074072],[933202.4074074072,468142122.39506173]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_UInt32_ = r"""
+{"covarPopMatrix(uint8, nullable_uint32_)":[[6708,50424098821.25928],[50424098821.25928,2460893905148930600]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_UInt64_ = r"""
+{"covarPopMatrix(uint8, nullable_uint64_)":[[6708,206803256441207650000],[206803256441207650000,4.916737898877755e37]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_Nullable_UInt8_ = r"""
+{"covarPopMatrix(uint8, nullable_uint8_)":[[6708,1391.185185185184],[1391.185185185184,9205.654320987655]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_UInt16 = r"""
+{"covarPopMatrix(uint8, uint16)":[[7894.81,1468341.7100000002],[1468341.7100000002,434168100.81000006]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_UInt32 = r"""
+{"covarPopMatrix(uint8, uint32)":[[7894.81,101888766007.87003],[101888766007.87003,2152435794872377300]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_UInt64 = r"""
+{"covarPopMatrix(uint8, uint64)":[[7894.81,249715817393615080000],[249715817393615080000,5.013328977733995e37]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_datatypes_permutations_UInt8_UInt8 = r"""
+{"covarPopMatrix(uint8, uint8)":[[7894.81,7894.81],[7894.81,7894.81]],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_covarPopMatrix_example1 = r"""
+{"covarPopMatrix(a_value, b_value)":[[8.25,-1.7600000000000005],[-1.7600000000000005,41.0704]],"any(toTypeName(a_value))":"UInt32","any(toTypeName(b_value))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_example2 = r"""
+{"covarPopMatrix(a_value, b_value, c_value)":[[8.25,-1.7600000000000005,4.080150000000001],[-1.7600000000000005,41.0704,6.485648],[4.080150000000001,6.485648,34.209930410000005]],"any(toTypeName(a_value))":"UInt32","any(toTypeName(b_value))":"Float64","any(toTypeName(c_value))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_example3 = r"""
+{"covarPopMatrix(a_value, b_value, c_value, d_value)":[[8.25,-1.7600000000000005,4.080150000000001,6.747987499999996],[-1.7600000000000005,41.0704,6.485648,2.132092200000001],[4.080150000000001,6.485648,34.209930410000005,4.7546662815000005],[6.747987499999996,2.132092200000001,4.7546662815000005,9.930171711224997]],"any(toTypeName(a_value))":"UInt32","any(toTypeName(b_value))":"Float64","any(toTypeName(c_value))":"Float64","any(toTypeName(d_value))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_first_non_NULL_value = r"""
+{"covarPopMatrix(x)":[[0.6666666666666666]],"any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_inf = r"""
+{"covarPopMatrix(x)":[[null]],"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_nan = r"""
+{"covarPopMatrix(x)":[[null]],"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_covarPopMatrix_return_type = r"""
+{"toTypeName(covarPopMatrix(number))":"Array(Array(Float64))","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_some_negative_values = r"""
+{"covarPopMatrix(minus(number, 5))":[[8.25]],"any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_with_another_aggregate_function = r"""
+{"covarPopMatrix(x)":[[2.6666666666666665]],"max(y)":"you","any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_with_another_aggregate_function_and_group_by = r"""
+{"covarPopMatrix(x)":[[0]],"max(y)":null,"any(toTypeName(x))":"Nullable(Int8)"}
+{"covarPopMatrix(x)":[[0]],"max(y)":"hello","any(toTypeName(x))":"Nullable(Int8)"}
+{"covarPopMatrix(x)":[[0]],"max(y)":"you","any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_covarPopMatrix_with_group_by = r"""
+{"even":0,"covarPopMatrix(number)":[[8]],"any(toTypeName(number))":"UInt64"}
+{"even":1,"covarPopMatrix(number)":[[8]],"any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_covarPopMatrix_zero_rows = r"""
+{"covarPopMatrix(number)":[[null]],"any(toTypeName(number))":""}
+"""
+

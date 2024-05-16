@@ -202,8 +202,8 @@ RQ_SRS_015_S3_Backup_MinIOBackup = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.10.1.1",
+    level=4,
+    num="4.1.10.1",
 )
 
 RQ_SRS_015_S3_Backup_AWSS3Backup = Requirement(
@@ -218,8 +218,8 @@ RQ_SRS_015_S3_Backup_AWSS3Backup = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.10.2.1",
+    level=4,
+    num="4.1.10.2",
 )
 
 RQ_SRS_015_S3_Backup_GCSBackup = Requirement(
@@ -234,8 +234,8 @@ RQ_SRS_015_S3_Backup_GCSBackup = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.10.3.1",
+    level=4,
+    num="4.1.10.3",
 )
 
 RQ_SRS_015_S3_Backup_StoragePolicies = Requirement(
@@ -254,8 +254,8 @@ RQ_SRS_015_S3_Backup_StoragePolicies = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.10.4.1",
+    level=4,
+    num="4.1.10.4",
 )
 
 RQ_SRS_015_S3_Backup_AlterFreeze = Requirement(
@@ -271,8 +271,8 @@ RQ_SRS_015_S3_Backup_AlterFreeze = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.10.5.1",
+    level=4,
+    num="4.1.10.5",
 )
 
 RQ_SRS_015_S3_Backup_AlterDetach = Requirement(
@@ -287,8 +287,8 @@ RQ_SRS_015_S3_Backup_AlterDetach = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.10.6.1",
+    level=4,
+    num="4.1.10.6",
 )
 
 RQ_SRS_015_S3_Backup_AlterAttach = Requirement(
@@ -304,8 +304,27 @@ RQ_SRS_015_S3_Backup_AlterAttach = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.10.7.1",
+    level=4,
+    num="4.1.10.7",
+)
+
+RQ_SRS_015_S3_Backup_Cleanup = Requirement(
+    name="RQ.SRS-015.S3.Backup.Cleanup",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL clean up local and remote files related to backed up partitions after a table is dropped.\n"
+        "\n"
+        "* Detached partitions SHALL be removed immediately\n"
+        "* Frozen partitions SHALL be removed immediately after SYSTEM UNFREEZE\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.10.8",
 )
 
 RQ_SRS_015_S3_Metadata = Requirement(
@@ -342,8 +361,8 @@ RQ_SRS_015_S3_Metadata_Revisions = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.11.2.1",
+    level=4,
+    num="4.1.11.2",
 )
 
 RQ_SRS_015_S3_Metadata_BadBackupNumber = Requirement(
@@ -355,8 +374,8 @@ RQ_SRS_015_S3_Metadata_BadBackupNumber = Requirement(
     uid=None,
     description=("[ClickHouse] SHALL\n" "\n"),
     link=None,
-    level=5,
-    num="4.1.11.3.1",
+    level=4,
+    num="4.1.11.3",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_RestoreFile = Requirement(
@@ -373,8 +392,8 @@ RQ_SRS_0_5_S3_MetadataRestore_RestoreFile = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.1.1",
+    level=4,
+    num="4.1.12.1",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_BadRestoreFile = Requirement(
@@ -391,8 +410,8 @@ RQ_SRS_0_5_S3_MetadataRestore_BadRestoreFile = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.2.1",
+    level=4,
+    num="4.1.12.2",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_HugeRestoreFile = Requirement(
@@ -409,8 +428,8 @@ RQ_SRS_0_5_S3_MetadataRestore_HugeRestoreFile = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.3.1",
+    level=4,
+    num="4.1.12.3",
 )
 
 RQ_SRS_015_S3_MetadataRestore_NoLocalMetadata = Requirement(
@@ -427,8 +446,8 @@ RQ_SRS_015_S3_MetadataRestore_NoLocalMetadata = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.4.1",
+    level=4,
+    num="4.1.12.4",
 )
 
 RQ_SRS_015_S3_MetadataRestore_BucketPath = Requirement(
@@ -450,8 +469,8 @@ RQ_SRS_015_S3_MetadataRestore_BucketPath = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.5.1",
+    level=4,
+    num="4.1.12.5",
 )
 
 RQ_SRS_015_S3_MetadataRestore_RevisionRestore = Requirement(
@@ -472,8 +491,8 @@ RQ_SRS_015_S3_MetadataRestore_RevisionRestore = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.6.1",
+    level=4,
+    num="4.1.12.6",
 )
 
 RQ_SRS_015_S3_MetadataRestore_Mutations = Requirement(
@@ -488,8 +507,8 @@ RQ_SRS_015_S3_MetadataRestore_Mutations = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.7.1",
+    level=4,
+    num="4.1.12.7",
 )
 
 RQ_SRS_015_S3_MetadataRestore_ParallelMutations = Requirement(
@@ -505,8 +524,8 @@ RQ_SRS_015_S3_MetadataRestore_ParallelMutations = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.8.1",
+    level=4,
+    num="4.1.12.8",
 )
 
 RQ_SRS_015_S3_MetadataRestore_Detached = Requirement(
@@ -527,8 +546,8 @@ RQ_SRS_015_S3_MetadataRestore_Detached = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.1.12.9.1",
+    level=4,
+    num="4.1.12.9",
 )
 
 RQ_SRS_015_S3_AWS = Requirement(
@@ -777,6 +796,28 @@ RQ_SRS_015_S3_Disk_Metadata = Requirement(
     num="4.4.5",
 )
 
+RQ_SRS_015_S3_Disk_DropSync = Requirement(
+    name="RQ.SRS-015.S3.Disk.DropSync",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL immediately remove related files from S3 when a table is dropped with the SYNC keyword.\n"
+        "\n"
+        "Usage:\n"
+        "\n"
+        "```sql\n"
+        "DROP TABLE mytable SYNC\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.6",
+)
+
 RQ_SRS_015_S3_Disk_Configuration = Requirement(
     name="RQ.SRS-015.S3.Disk.Configuration",
     version="1.0",
@@ -792,7 +833,7 @@ RQ_SRS_015_S3_Disk_Configuration = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.1",
+    num="4.4.7.1",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Syntax = Requirement(
@@ -824,7 +865,7 @@ RQ_SRS_015_S3_Disk_Configuration_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.2",
+    num="4.4.7.2",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Invalid = Requirement(
@@ -840,7 +881,7 @@ RQ_SRS_015_S3_Disk_Configuration_Invalid = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.3",
+    num="4.4.7.3",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Changes_NoRestart = Requirement(
@@ -857,7 +898,7 @@ RQ_SRS_015_S3_Disk_Configuration_Changes_NoRestart = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.4",
+    num="4.4.7.4",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Access = Requirement(
@@ -882,7 +923,7 @@ RQ_SRS_015_S3_Disk_Configuration_Access = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.5",
+    num="4.4.7.5",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Access_Default = Requirement(
@@ -899,7 +940,7 @@ RQ_SRS_015_S3_Disk_Configuration_Access_Default = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.6",
+    num="4.4.7.6",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CacheEnabled = Requirement(
@@ -920,7 +961,7 @@ RQ_SRS_015_S3_Disk_Configuration_CacheEnabled = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.7",
+    num="4.4.7.7",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CacheEnabled_Default = Requirement(
@@ -937,7 +978,7 @@ RQ_SRS_015_S3_Disk_Configuration_CacheEnabled_Default = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.8",
+    num="4.4.7.8",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8 = Requirement(
@@ -970,7 +1011,7 @@ RQ_SRS_015_S3_Disk_Configuration_Cache_22_8 = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.9",
+    num="4.4.7.9",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_CacheOnWriteOperations = Requirement(
@@ -987,7 +1028,7 @@ RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_CacheOnWriteOperations = Requirement
     ),
     link=None,
     level=4,
-    num="4.4.6.10",
+    num="4.4.7.10",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_DataCacheMaxSize = Requirement(
@@ -1004,7 +1045,7 @@ RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_DataCacheMaxSize = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.11",
+    num="4.4.7.11",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_EnableCacheHitsThreshold = Requirement(
@@ -1021,7 +1062,7 @@ RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_EnableCacheHitsThreshold = Requireme
     ),
     link=None,
     level=4,
-    num="4.4.6.12",
+    num="4.4.7.12",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_FileSystemQueryCacheLimit = Requirement(
@@ -1038,7 +1079,7 @@ RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_FileSystemQueryCacheLimit = Requirem
     ),
     link=None,
     level=4,
-    num="4.4.6.13",
+    num="4.4.7.13",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CachePath = Requirement(
@@ -1057,7 +1098,7 @@ RQ_SRS_015_S3_Disk_Configuration_CachePath = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.14",
+    num="4.4.7.14",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CachePath_Conflict = Requirement(
@@ -1081,7 +1122,7 @@ RQ_SRS_015_S3_Disk_Configuration_CachePath_Conflict = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.15",
+    num="4.4.7.15",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_MinBytesForSeek = Requirement(
@@ -1100,7 +1141,7 @@ RQ_SRS_015_S3_Disk_Configuration_MinBytesForSeek = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.16",
+    num="4.4.7.16",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_MinBytesForSeek_Syntax = Requirement(
@@ -1119,7 +1160,7 @@ RQ_SRS_015_S3_Disk_Configuration_MinBytesForSeek_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.17",
+    num="4.4.7.17",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_S3MaxSinglePartUploadSize = Requirement(
@@ -1138,7 +1179,7 @@ RQ_SRS_015_S3_Disk_Configuration_S3MaxSinglePartUploadSize = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.18",
+    num="4.4.7.18",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_S3MaxSinglePartUploadSize_Syntax = Requirement(
@@ -1157,7 +1198,7 @@ RQ_SRS_015_S3_Disk_Configuration_S3MaxSinglePartUploadSize_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.19",
+    num="4.4.7.19",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_S3UseEnvironmentCredentials = Requirement(
@@ -1176,7 +1217,7 @@ RQ_SRS_015_S3_Disk_Configuration_S3UseEnvironmentCredentials = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.6.20",
+    num="4.4.7.20",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree = Requirement(
@@ -1193,7 +1234,7 @@ RQ_SRS_015_S3_Disk_MergeTree = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.7.1",
+    num="4.4.8.1",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_MergeTree = Requirement(
@@ -1210,7 +1251,7 @@ RQ_SRS_015_S3_Disk_MergeTree_MergeTree = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.7.2",
+    num="4.4.8.2",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_ReplacingMergeTree = Requirement(
@@ -1227,7 +1268,7 @@ RQ_SRS_015_S3_Disk_MergeTree_ReplacingMergeTree = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.7.3",
+    num="4.4.8.3",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_SummingMergeTree = Requirement(
@@ -1244,7 +1285,7 @@ RQ_SRS_015_S3_Disk_MergeTree_SummingMergeTree = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.7.4",
+    num="4.4.8.4",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AggregatingMergeTree = Requirement(
@@ -1261,7 +1302,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AggregatingMergeTree = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.7.5",
+    num="4.4.8.5",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_CollapsingMergeTree = Requirement(
@@ -1278,7 +1319,7 @@ RQ_SRS_015_S3_Disk_MergeTree_CollapsingMergeTree = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.7.6",
+    num="4.4.8.6",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_VersionedCollapsingMergeTree = Requirement(
@@ -1295,7 +1336,7 @@ RQ_SRS_015_S3_Disk_MergeTree_VersionedCollapsingMergeTree = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.7.7",
+    num="4.4.8.7",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication = Requirement(
@@ -1313,7 +1354,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.1",
+    num="4.4.8.8.1",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Default = Requirement(
@@ -1331,7 +1372,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Default = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.2",
+    num="4.4.8.8.2",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global = Requirement(
@@ -1350,7 +1391,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.3",
+    num="4.4.8.8.3",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Metadata = Requirement(
@@ -1369,7 +1410,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Metadata = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.4",
+    num="4.4.8.8.4",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter = Requirement(
@@ -1388,7 +1429,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.5",
+    num="4.4.8.8.5",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete = Requirement(
@@ -1405,7 +1446,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.6",
+    num="4.4.8.8.6",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DeleteAll = Requirement(
@@ -1422,7 +1463,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DeleteAll = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.7",
+    num="4.4.8.8.7",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation = Requirement(
@@ -1438,7 +1479,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutati
     ),
     link=None,
     level=5,
-    num="4.4.7.8.8",
+    num="4.4.8.8.8",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica = Requirement(
@@ -1457,7 +1498,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica = Requiremen
     ),
     link=None,
     level=5,
-    num="4.4.7.8.9",
+    num="4.4.8.8.9",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica = Requirement(
@@ -1475,7 +1516,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica = Requirement
     ),
     link=None,
     level=5,
-    num="4.4.7.8.10",
+    num="4.4.8.8.10",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication = Requirement(
@@ -1494,7 +1535,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication = Requ
     ),
     link=None,
     level=5,
-    num="4.4.7.8.11",
+    num="4.4.8.8.11",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Move = Requirement(
@@ -1514,7 +1555,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Move = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.12",
+    num="4.4.8.8.12",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Delete = Requirement(
@@ -1532,7 +1573,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Delete = Requirement
     ),
     link=None,
     level=5,
-    num="4.4.7.8.13",
+    num="4.4.8.8.13",
 )
 
 RQ_SRS_015_S3_Policy_Syntax = Requirement(
@@ -1708,11 +1749,11 @@ RQ_SRS_015_S3_TableFunction_Path_Glob = Requirement(
         "\n"
         "> Multiple path components can have globs. For being processed file must exist and match to the whole path pattern (not only suffix or prefix).\n"
         ">\n"
-        ">   - `*` — Substitutes any number of any characters except / including empty string.\n"
-        ">   - `?` — Substitutes any single character.\n"
-        ">   - `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.\n"
-        ">   - `{N..M}` — Substitutes any number in range from N to M including both borders.\n"
-        ">   - `**` - Fetches all files inside the folder recursively.\n"
+        "> * `*` — Substitutes any number of any characters except / including empty string.\n"
+        "> * `?` — Substitutes any single character.\n"
+        "> * `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.\n"
+        "> * `{N..M}` — Substitutes any number in range from N to M including both borders.\n"
+        "> * `**` - Fetches all files inside the folder recursively.\n"
         "\n"
     ),
     link=None,
@@ -1796,6 +1837,34 @@ RQ_SRS_015_S3_TableFunction_Structure = Requirement(
     num="4.6.9",
 )
 
+RQ_SRS_015_S3_TableFunction_MeasureFileSize = Requirement(
+    name="RQ.SRS-015.S3.TableFunction.MeasureFileSize",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL report the accurate size of s3 objects through the `_size`\n"
+        "virtual column of the s3 table function.\n"
+        "\n"
+        "Example:\n"
+        "\n"
+        "```sql\n"
+        "SELECT count() AS files, sum(_size) as bytes\n"
+        "FROM s3('https://s3.us-west-2.amazonaws.com/mybucket/clickhouse/demo2/s3_disk/**', 'One')\n"
+        "\n"
+        "┌─files─┬──────bytes─┐\n"
+        "│   122 │ 1638600424 │\n"
+        "└───────┴────────────┘\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.6.10",
+)
+
 RQ_SRS_015_S3_TableFunction_Compression = Requirement(
     name="RQ.SRS-015.S3.TableFunction.Compression",
     version="1.0",
@@ -1817,7 +1886,7 @@ RQ_SRS_015_S3_TableFunction_Compression = Requirement(
     ),
     link=None,
     level=3,
-    num="4.6.10",
+    num="4.6.11",
 )
 
 RQ_SRS_015_S3_TableFunction_Compression_Auto = Requirement(
@@ -1846,7 +1915,7 @@ RQ_SRS_015_S3_TableFunction_Compression_Auto = Requirement(
     ),
     link=None,
     level=3,
-    num="4.6.11",
+    num="4.6.12",
 )
 
 RQ_SRS_015_S3_TableFunction_S3Cluster = Requirement(
@@ -1867,7 +1936,7 @@ RQ_SRS_015_S3_TableFunction_S3Cluster = Requirement(
     ),
     link=None,
     level=3,
-    num="4.6.12",
+    num="4.6.13",
 )
 
 RQ_SRS_015_S3_MinIO_Disk_Configuration = Requirement(
@@ -2463,75 +2532,52 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         Heading(name="RQ.SRS-015.S3.Security.Encryption", level=3, num="4.1.8"),
         Heading(name="RQ.SRS-015.S3.RemoteHostFilter", level=3, num="4.1.9"),
         Heading(name="Backup", level=3, num="4.1.10"),
-        Heading(name="MinIO Backup", level=4, num="4.1.10.1"),
-        Heading(name="RQ.SRS-015.S3.Backup.MinIOBackup", level=5, num="4.1.10.1.1"),
-        Heading(name="AWS S3 Backup", level=4, num="4.1.10.2"),
-        Heading(name="RQ.SRS-015.S3.Backup.AWSS3Backup", level=5, num="4.1.10.2.1"),
-        Heading(name="GCS Backup", level=4, num="4.1.10.3"),
-        Heading(name="RQ.SRS-015.S3.Backup.GCSBackup", level=5, num="4.1.10.3.1"),
-        Heading(name="Storage Policies", level=4, num="4.1.10.4"),
-        Heading(name="RQ.SRS-015.S3.Backup.StoragePolicies", level=5, num="4.1.10.4.1"),
-        Heading(name="Alter Freeze", level=4, num="4.1.10.5"),
-        Heading(name="RQ.SRS-015.S3.Backup.AlterFreeze", level=5, num="4.1.10.5.1"),
-        Heading(name="Alter Detach", level=4, num="4.1.10.6"),
-        Heading(name="RQ.SRS-015.S3.Backup.AlterDetach", level=5, num="4.1.10.6.1"),
-        Heading(name="Alter Attach", level=4, num="4.1.10.7"),
-        Heading(name="RQ.SRS-015.S3.Backup.AlterAttach", level=5, num="4.1.10.7.1"),
+        Heading(name="RQ.SRS-015.S3.Backup.MinIOBackup", level=4, num="4.1.10.1"),
+        Heading(name="RQ.SRS-015.S3.Backup.AWSS3Backup", level=4, num="4.1.10.2"),
+        Heading(name="RQ.SRS-015.S3.Backup.GCSBackup", level=4, num="4.1.10.3"),
+        Heading(name="RQ.SRS-015.S3.Backup.StoragePolicies", level=4, num="4.1.10.4"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterFreeze", level=4, num="4.1.10.5"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterDetach", level=4, num="4.1.10.6"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterAttach", level=4, num="4.1.10.7"),
+        Heading(name="RQ.SRS-015.S3.Backup.Cleanup", level=4, num="4.1.10.8"),
         Heading(name="Metadata", level=3, num="4.1.11"),
         Heading(name="RQ.SRS-015.S3.Metadata", level=4, num="4.1.11.1"),
-        Heading(name="Revisions", level=4, num="4.1.11.2"),
-        Heading(name="RQ.SRS-015.S3.Metadata.Revisions", level=5, num="4.1.11.2.1"),
-        Heading(name="Bad Backup Number", level=4, num="4.1.11.3"),
-        Heading(
-            name="RQ.SRS-015.S3.Metadata.BadBackupNumber", level=5, num="4.1.11.3.1"
-        ),
+        Heading(name="RQ.SRS-015.S3.Metadata.Revisions", level=4, num="4.1.11.2"),
+        Heading(name="RQ.SRS-015.S3.Metadata.BadBackupNumber", level=4, num="4.1.11.3"),
         Heading(name="Metadata Restore", level=3, num="4.1.12"),
-        Heading(name="Restore File", level=4, num="4.1.12.1"),
         Heading(
-            name="RQ.SRS-0.5.S3.MetadataRestore.RestoreFile", level=5, num="4.1.12.1.1"
+            name="RQ.SRS-0.5.S3.MetadataRestore.RestoreFile", level=4, num="4.1.12.1"
         ),
-        Heading(name="Bad Restore File", level=4, num="4.1.12.2"),
         Heading(
-            name="RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile",
-            level=5,
-            num="4.1.12.2.1",
+            name="RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile", level=4, num="4.1.12.2"
         ),
-        Heading(name="Huge Restore File", level=4, num="4.1.12.3"),
         Heading(
             name="RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile",
-            level=5,
-            num="4.1.12.3.1",
+            level=4,
+            num="4.1.12.3",
         ),
-        Heading(name="No Local Metadata", level=4, num="4.1.12.4"),
         Heading(
             name="RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata",
-            level=5,
-            num="4.1.12.4.1",
+            level=4,
+            num="4.1.12.4",
         ),
-        Heading(name="Bucket Path", level=4, num="4.1.12.5"),
         Heading(
-            name="RQ.SRS-015.S3.MetadataRestore.BucketPath", level=5, num="4.1.12.5.1"
+            name="RQ.SRS-015.S3.MetadataRestore.BucketPath", level=4, num="4.1.12.5"
         ),
-        Heading(name="Revision Restore", level=4, num="4.1.12.6"),
         Heading(
             name="RQ.SRS-015.S3.MetadataRestore.RevisionRestore",
-            level=5,
-            num="4.1.12.6.1",
+            level=4,
+            num="4.1.12.6",
         ),
-        Heading(name="Mutations", level=4, num="4.1.12.7"),
         Heading(
-            name="RQ.SRS-015.S3.MetadataRestore.Mutations", level=5, num="4.1.12.7.1"
+            name="RQ.SRS-015.S3.MetadataRestore.Mutations", level=4, num="4.1.12.7"
         ),
-        Heading(name="Parallel Mutations", level=4, num="4.1.12.8"),
         Heading(
             name="RQ.SRS-015.S3.MetadataRestore.ParallelMutations",
-            level=5,
-            num="4.1.12.8.1",
+            level=4,
+            num="4.1.12.8",
         ),
-        Heading(name="Detached", level=4, num="4.1.12.9"),
-        Heading(
-            name="RQ.SRS-015.S3.MetadataRestore.Detached", level=5, num="4.1.12.9.1"
-        ),
+        Heading(name="RQ.SRS-015.S3.MetadataRestore.Detached", level=4, num="4.1.12.9"),
         Heading(name="RQ.SRS-015.S3.AWS", level=3, num="4.1.13"),
         Heading(name="RQ.SRS-015.S3.MinIO", level=3, num="4.1.14"),
         Heading(name="RQ.SRS-015.S3.GCS", level=3, num="4.1.15"),
@@ -2565,178 +2611,179 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
             num="4.4.4",
         ),
         Heading(name="RQ.SRS-015.S3.Disk.Metadata", level=3, num="4.4.5"),
-        Heading(name="Disk Configuration", level=3, num="4.4.6"),
-        Heading(name="RQ.SRS-015.S3.Disk.Configuration", level=4, num="4.4.6.1"),
-        Heading(name="RQ.SRS-015.S3.Disk.Configuration.Syntax", level=4, num="4.4.6.2"),
+        Heading(name="RQ.SRS-015.S3.Disk.DropSync", level=3, num="4.4.6"),
+        Heading(name="Disk Configuration", level=3, num="4.4.7"),
+        Heading(name="RQ.SRS-015.S3.Disk.Configuration", level=4, num="4.4.7.1"),
+        Heading(name="RQ.SRS-015.S3.Disk.Configuration.Syntax", level=4, num="4.4.7.2"),
         Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.Invalid", level=4, num="4.4.6.3"
+            name="RQ.SRS-015.S3.Disk.Configuration.Invalid", level=4, num="4.4.7.3"
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart",
             level=4,
-            num="4.4.6.4",
+            num="4.4.7.4",
         ),
-        Heading(name="RQ.SRS-015.S3.Disk.Configuration.Access", level=4, num="4.4.6.5"),
+        Heading(name="RQ.SRS-015.S3.Disk.Configuration.Access", level=4, num="4.4.7.5"),
         Heading(
             name="RQ.SRS-015.S3.Disk.Configuration.Access.Default",
-            level=4,
-            num="4.4.6.6",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled", level=4, num="4.4.6.7"
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default",
-            level=4,
-            num="4.4.6.8",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8", level=4, num="4.4.6.9"
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations",
-            level=4,
-            num="4.4.6.10",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize",
-            level=4,
-            num="4.4.6.11",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold",
-            level=4,
-            num="4.4.6.12",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit",
-            level=4,
-            num="4.4.6.13",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.CachePath", level=4, num="4.4.6.14"
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict",
-            level=4,
-            num="4.4.6.15",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek",
-            level=4,
-            num="4.4.6.16",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax",
-            level=4,
-            num="4.4.6.17",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize",
-            level=4,
-            num="4.4.6.18",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax",
-            level=4,
-            num="4.4.6.19",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials",
-            level=4,
-            num="4.4.6.20",
-        ),
-        Heading(name="MergeTree Engine Family", level=3, num="4.4.7"),
-        Heading(name="RQ.SRS-015.S3.Disk.MergeTree", level=4, num="4.4.7.1"),
-        Heading(name="RQ.SRS-015.S3.Disk.MergeTree.MergeTree", level=4, num="4.4.7.2"),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree",
-            level=4,
-            num="4.4.7.3",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree", level=4, num="4.4.7.4"
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree",
-            level=4,
-            num="4.4.7.5",
-        ),
-        Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree",
             level=4,
             num="4.4.7.6",
         ),
         Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled", level=4, num="4.4.7.7"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default",
+            level=4,
+            num="4.4.7.8",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8", level=4, num="4.4.7.9"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations",
+            level=4,
+            num="4.4.7.10",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize",
+            level=4,
+            num="4.4.7.11",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold",
+            level=4,
+            num="4.4.7.12",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit",
+            level=4,
+            num="4.4.7.13",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CachePath", level=4, num="4.4.7.14"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict",
+            level=4,
+            num="4.4.7.15",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek",
+            level=4,
+            num="4.4.7.16",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax",
+            level=4,
+            num="4.4.7.17",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize",
+            level=4,
+            num="4.4.7.18",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax",
+            level=4,
+            num="4.4.7.19",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials",
+            level=4,
+            num="4.4.7.20",
+        ),
+        Heading(name="MergeTree Engine Family", level=3, num="4.4.8"),
+        Heading(name="RQ.SRS-015.S3.Disk.MergeTree", level=4, num="4.4.8.1"),
+        Heading(name="RQ.SRS-015.S3.Disk.MergeTree.MergeTree", level=4, num="4.4.8.2"),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree",
+            level=4,
+            num="4.4.8.3",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree", level=4, num="4.4.8.4"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree",
+            level=4,
+            num="4.4.8.5",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree",
+            level=4,
+            num="4.4.8.6",
+        ),
+        Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree",
             level=4,
-            num="4.4.7.7",
+            num="4.4.8.7",
         ),
-        Heading(name="S3 Zero Copy Replication", level=4, num="4.4.7.8"),
+        Heading(name="S3 Zero Copy Replication", level=4, num="4.4.8.8"),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication",
             level=5,
-            num="4.4.7.8.1",
+            num="4.4.8.8.1",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default",
             level=5,
-            num="4.4.7.8.2",
+            num="4.4.8.8.2",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global",
             level=5,
-            num="4.4.7.8.3",
+            num="4.4.8.8.3",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata",
             level=5,
-            num="4.4.7.8.4",
+            num="4.4.8.8.4",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter",
             level=5,
-            num="4.4.7.8.5",
+            num="4.4.8.8.5",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete",
             level=5,
-            num="4.4.7.8.6",
+            num="4.4.8.8.6",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll",
             level=5,
-            num="4.4.7.8.7",
+            num="4.4.8.8.7",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation",
             level=5,
-            num="4.4.7.8.8",
+            num="4.4.8.8.8",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica",
             level=5,
-            num="4.4.7.8.9",
+            num="4.4.8.8.9",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica",
             level=5,
-            num="4.4.7.8.10",
+            num="4.4.8.8.10",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication",
             level=5,
-            num="4.4.7.8.11",
+            num="4.4.8.8.11",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move",
             level=5,
-            num="4.4.7.8.12",
+            num="4.4.8.8.12",
         ),
         Heading(
             name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete",
             level=5,
-            num="4.4.7.8.13",
+            num="4.4.8.8.13",
         ),
         Heading(name="Policy", level=2, num="4.5"),
         Heading(name="RQ.SRS-015.S3.Policy.Syntax", level=3, num="4.5.1"),
@@ -2760,11 +2807,14 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         Heading(name="RQ.SRS-015.S3.TableFunction.Redirect", level=3, num="4.6.7"),
         Heading(name="RQ.SRS-015.S3.TableFunction.Format", level=3, num="4.6.8"),
         Heading(name="RQ.SRS-015.S3.TableFunction.Structure", level=3, num="4.6.9"),
-        Heading(name="RQ.SRS-015.S3.TableFunction.Compression", level=3, num="4.6.10"),
         Heading(
-            name="RQ.SRS-015.S3.TableFunction.Compression.Auto", level=3, num="4.6.11"
+            name="RQ.SRS-015.S3.TableFunction.MeasureFileSize", level=3, num="4.6.10"
         ),
-        Heading(name="RQ.SRS-015.S3.TableFunction.S3Cluster", level=3, num="4.6.12"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Compression", level=3, num="4.6.11"),
+        Heading(
+            name="RQ.SRS-015.S3.TableFunction.Compression.Auto", level=3, num="4.6.12"
+        ),
+        Heading(name="RQ.SRS-015.S3.TableFunction.S3Cluster", level=3, num="4.6.13"),
         Heading(name="MinIO", level=2, num="4.7"),
         Heading(name="RQ.SRS-015.S3.MinIO.Disk.Configuration", level=3, num="4.7.1"),
         Heading(name="RQ.SRS-015.S3.MinIO.TableFunction", level=3, num="4.7.2"),
@@ -2850,6 +2900,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_Backup_AlterFreeze,
         RQ_SRS_015_S3_Backup_AlterDetach,
         RQ_SRS_015_S3_Backup_AlterAttach,
+        RQ_SRS_015_S3_Backup_Cleanup,
         RQ_SRS_015_S3_Metadata,
         RQ_SRS_015_S3_Metadata_Revisions,
         RQ_SRS_015_S3_Metadata_BadBackupNumber,
@@ -2876,6 +2927,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_Disk_MultipleStorageDevices,
         RQ_SRS_015_S3_Disk_MultipleStorageDevices_NoChangesForQuerying,
         RQ_SRS_015_S3_Disk_Metadata,
+        RQ_SRS_015_S3_Disk_DropSync,
         RQ_SRS_015_S3_Disk_Configuration,
         RQ_SRS_015_S3_Disk_Configuration_Syntax,
         RQ_SRS_015_S3_Disk_Configuration_Invalid,
@@ -2928,6 +2980,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_TableFunction_Redirect,
         RQ_SRS_015_S3_TableFunction_Format,
         RQ_SRS_015_S3_TableFunction_Structure,
+        RQ_SRS_015_S3_TableFunction_MeasureFileSize,
         RQ_SRS_015_S3_TableFunction_Compression,
         RQ_SRS_015_S3_TableFunction_Compression_Auto,
         RQ_SRS_015_S3_TableFunction_S3Cluster,
@@ -2980,45 +3033,28 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
     * 4.1.8 [RQ.SRS-015.S3.Security.Encryption](#rqsrs-015s3securityencryption)
     * 4.1.9 [RQ.SRS-015.S3.RemoteHostFilter](#rqsrs-015s3remotehostfilter)
     * 4.1.10 [Backup](#backup)
-      * 4.1.10.1 [MinIO Backup](#minio-backup)
-        * 4.1.10.1.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
-      * 4.1.10.2 [AWS S3 Backup](#aws-s3-backup)
-        * 4.1.10.2.1 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
-      * 4.1.10.3 [GCS Backup](#gcs-backup)
-        * 4.1.10.3.1 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
-      * 4.1.10.4 [Storage Policies](#storage-policies)
-        * 4.1.10.4.1 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
-      * 4.1.10.5 [Alter Freeze](#alter-freeze)
-        * 4.1.10.5.1 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
-      * 4.1.10.6 [Alter Detach](#alter-detach)
-        * 4.1.10.6.1 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
-      * 4.1.10.7 [Alter Attach](#alter-attach)
-        * 4.1.10.7.1 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
+      * 4.1.10.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
+      * 4.1.10.2 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
+      * 4.1.10.3 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
+      * 4.1.10.4 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
+      * 4.1.10.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
+      * 4.1.10.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
+      * 4.1.10.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
+      * 4.1.10.8 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
     * 4.1.11 [Metadata](#metadata)
       * 4.1.11.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
-      * 4.1.11.2 [Revisions](#revisions)
-        * 4.1.11.2.1 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
-      * 4.1.11.3 [Bad Backup Number](#bad-backup-number)
-        * 4.1.11.3.1 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
+      * 4.1.11.2 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
+      * 4.1.11.3 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
     * 4.1.12 [Metadata Restore](#metadata-restore)
-      * 4.1.12.1 [Restore File](#restore-file)
-        * 4.1.12.1.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
-      * 4.1.12.2 [Bad Restore File](#bad-restore-file)
-        * 4.1.12.2.1 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
-      * 4.1.12.3 [Huge Restore File](#huge-restore-file)
-        * 4.1.12.3.1 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
-      * 4.1.12.4 [No Local Metadata](#no-local-metadata)
-        * 4.1.12.4.1 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
-      * 4.1.12.5 [Bucket Path](#bucket-path)
-        * 4.1.12.5.1 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
-      * 4.1.12.6 [Revision Restore](#revision-restore)
-        * 4.1.12.6.1 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
-      * 4.1.12.7 [Mutations](#mutations)
-        * 4.1.12.7.1 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
-      * 4.1.12.8 [Parallel Mutations](#parallel-mutations)
-        * 4.1.12.8.1 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
-      * 4.1.12.9 [Detached](#detached)
-        * 4.1.12.9.1 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
+      * 4.1.12.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
+      * 4.1.12.2 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
+      * 4.1.12.3 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
+      * 4.1.12.4 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
+      * 4.1.12.5 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
+      * 4.1.12.6 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
+      * 4.1.12.7 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
+      * 4.1.12.8 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
+      * 4.1.12.9 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
     * 4.1.13 [RQ.SRS-015.S3.AWS](#rqsrs-015s3aws)
     * 4.1.14 [RQ.SRS-015.S3.MinIO](#rqsrs-015s3minio)
     * 4.1.15 [RQ.SRS-015.S3.GCS](#rqsrs-015s3gcs)
@@ -3036,49 +3072,50 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
     * 4.4.3 [RQ.SRS-015.S3.Disk.MultipleStorageDevices](#rqsrs-015s3diskmultiplestoragedevices)
     * 4.4.4 [RQ.SRS-015.S3.Disk.MultipleStorageDevices.NoChangesForQuerying](#rqsrs-015s3diskmultiplestoragedevicesnochangesforquerying)
     * 4.4.5 [RQ.SRS-015.S3.Disk.Metadata](#rqsrs-015s3diskmetadata)
-    * 4.4.6 [Disk Configuration](#disk-configuration)
-      * 4.4.6.1 [RQ.SRS-015.S3.Disk.Configuration](#rqsrs-015s3diskconfiguration)
-      * 4.4.6.2 [RQ.SRS-015.S3.Disk.Configuration.Syntax](#rqsrs-015s3diskconfigurationsyntax)
-      * 4.4.6.3 [RQ.SRS-015.S3.Disk.Configuration.Invalid](#rqsrs-015s3diskconfigurationinvalid)
-      * 4.4.6.4 [RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart](#rqsrs-015s3diskconfigurationchangesnorestart)
-      * 4.4.6.5 [RQ.SRS-015.S3.Disk.Configuration.Access](#rqsrs-015s3diskconfigurationaccess)
-      * 4.4.6.6 [RQ.SRS-015.S3.Disk.Configuration.Access.Default](#rqsrs-015s3diskconfigurationaccessdefault)
-      * 4.4.6.7 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled](#rqsrs-015s3diskconfigurationcacheenabled)
-      * 4.4.6.8 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default](#rqsrs-015s3diskconfigurationcacheenableddefault)
-      * 4.4.6.9 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8](#rqsrs-015s3diskconfigurationcache228)
-      * 4.4.6.10 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations](#rqsrs-015s3diskconfigurationcache228cacheonwriteoperations)
-      * 4.4.6.11 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize](#rqsrs-015s3diskconfigurationcache228datacachemaxsize)
-      * 4.4.6.12 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold](#rqsrs-015s3diskconfigurationcache228enablecachehitsthreshold)
-      * 4.4.6.13 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit](#rqsrs-015s3diskconfigurationcache228filesystemquerycachelimit)
-      * 4.4.6.14 [RQ.SRS-015.S3.Disk.Configuration.CachePath](#rqsrs-015s3diskconfigurationcachepath)
-      * 4.4.6.15 [RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict](#rqsrs-015s3diskconfigurationcachepathconflict)
-      * 4.4.6.16 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek](#rqsrs-015s3diskconfigurationminbytesforseek)
-      * 4.4.6.17 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax](#rqsrs-015s3diskconfigurationminbytesforseeksyntax)
-      * 4.4.6.18 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsize)
-      * 4.4.6.19 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsizesyntax)
-      * 4.4.6.20 [RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials](#rqsrs-015s3diskconfigurations3useenvironmentcredentials)
-    * 4.4.7 [MergeTree Engine Family](#mergetree-engine-family)
-      * 4.4.7.1 [RQ.SRS-015.S3.Disk.MergeTree](#rqsrs-015s3diskmergetree)
-      * 4.4.7.2 [RQ.SRS-015.S3.Disk.MergeTree.MergeTree](#rqsrs-015s3diskmergetreemergetree)
-      * 4.4.7.3 [RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree](#rqsrs-015s3diskmergetreereplacingmergetree)
-      * 4.4.7.4 [RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree](#rqsrs-015s3diskmergetreesummingmergetree)
-      * 4.4.7.5 [RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree](#rqsrs-015s3diskmergetreeaggregatingmergetree)
-      * 4.4.7.6 [RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree](#rqsrs-015s3diskmergetreecollapsingmergetree)
-      * 4.4.7.7 [RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree](#rqsrs-015s3diskmergetreeversionedcollapsingmergetree)
-      * 4.4.7.8 [S3 Zero Copy Replication](#s3-zero-copy-replication)
-        * 4.4.7.8.1 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplication)
-        * 4.4.7.8.2 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdefault)
-        * 4.4.7.8.3 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationglobal)
-        * 4.4.7.8.4 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationmetadata)
-        * 4.4.7.8.5 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationalter)
-        * 4.4.7.8.6 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdelete)
-        * 4.4.7.8.7 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdeleteall)
-        * 4.4.7.8.8 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdatapreservedaftermutation)
-        * 4.4.7.8.9 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdropreplica)
-        * 4.4.7.8.10 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationaddreplica)
-        * 4.4.7.8.11 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationnodataduplication)
-        * 4.4.7.8.12 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttlmove)
-        * 4.4.7.8.13 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttldelete)
+    * 4.4.6 [RQ.SRS-015.S3.Disk.DropSync](#rqsrs-015s3diskdropsync)
+    * 4.4.7 [Disk Configuration](#disk-configuration)
+      * 4.4.7.1 [RQ.SRS-015.S3.Disk.Configuration](#rqsrs-015s3diskconfiguration)
+      * 4.4.7.2 [RQ.SRS-015.S3.Disk.Configuration.Syntax](#rqsrs-015s3diskconfigurationsyntax)
+      * 4.4.7.3 [RQ.SRS-015.S3.Disk.Configuration.Invalid](#rqsrs-015s3diskconfigurationinvalid)
+      * 4.4.7.4 [RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart](#rqsrs-015s3diskconfigurationchangesnorestart)
+      * 4.4.7.5 [RQ.SRS-015.S3.Disk.Configuration.Access](#rqsrs-015s3diskconfigurationaccess)
+      * 4.4.7.6 [RQ.SRS-015.S3.Disk.Configuration.Access.Default](#rqsrs-015s3diskconfigurationaccessdefault)
+      * 4.4.7.7 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled](#rqsrs-015s3diskconfigurationcacheenabled)
+      * 4.4.7.8 [RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default](#rqsrs-015s3diskconfigurationcacheenableddefault)
+      * 4.4.7.9 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8](#rqsrs-015s3diskconfigurationcache228)
+      * 4.4.7.10 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations](#rqsrs-015s3diskconfigurationcache228cacheonwriteoperations)
+      * 4.4.7.11 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize](#rqsrs-015s3diskconfigurationcache228datacachemaxsize)
+      * 4.4.7.12 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold](#rqsrs-015s3diskconfigurationcache228enablecachehitsthreshold)
+      * 4.4.7.13 [RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit](#rqsrs-015s3diskconfigurationcache228filesystemquerycachelimit)
+      * 4.4.7.14 [RQ.SRS-015.S3.Disk.Configuration.CachePath](#rqsrs-015s3diskconfigurationcachepath)
+      * 4.4.7.15 [RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict](#rqsrs-015s3diskconfigurationcachepathconflict)
+      * 4.4.7.16 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek](#rqsrs-015s3diskconfigurationminbytesforseek)
+      * 4.4.7.17 [RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax](#rqsrs-015s3diskconfigurationminbytesforseeksyntax)
+      * 4.4.7.18 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsize)
+      * 4.4.7.19 [RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax](#rqsrs-015s3diskconfigurations3maxsinglepartuploadsizesyntax)
+      * 4.4.7.20 [RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials](#rqsrs-015s3diskconfigurations3useenvironmentcredentials)
+    * 4.4.8 [MergeTree Engine Family](#mergetree-engine-family)
+      * 4.4.8.1 [RQ.SRS-015.S3.Disk.MergeTree](#rqsrs-015s3diskmergetree)
+      * 4.4.8.2 [RQ.SRS-015.S3.Disk.MergeTree.MergeTree](#rqsrs-015s3diskmergetreemergetree)
+      * 4.4.8.3 [RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree](#rqsrs-015s3diskmergetreereplacingmergetree)
+      * 4.4.8.4 [RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree](#rqsrs-015s3diskmergetreesummingmergetree)
+      * 4.4.8.5 [RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree](#rqsrs-015s3diskmergetreeaggregatingmergetree)
+      * 4.4.8.6 [RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree](#rqsrs-015s3diskmergetreecollapsingmergetree)
+      * 4.4.8.7 [RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree](#rqsrs-015s3diskmergetreeversionedcollapsingmergetree)
+      * 4.4.8.8 [S3 Zero Copy Replication](#s3-zero-copy-replication)
+        * 4.4.8.8.1 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplication)
+        * 4.4.8.8.2 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdefault)
+        * 4.4.8.8.3 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationglobal)
+        * 4.4.8.8.4 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationmetadata)
+        * 4.4.8.8.5 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationalter)
+        * 4.4.8.8.6 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdelete)
+        * 4.4.8.8.7 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdeleteall)
+        * 4.4.8.8.8 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdatapreservedaftermutation)
+        * 4.4.8.8.9 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationdropreplica)
+        * 4.4.8.8.10 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationaddreplica)
+        * 4.4.8.8.11 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationnodataduplication)
+        * 4.4.8.8.12 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttlmove)
+        * 4.4.8.8.13 [RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete](#rqsrs-015s3diskmergetreeallows3zerocopyreplicationttldelete)
   * 4.5 [Policy](#policy)
     * 4.5.1 [RQ.SRS-015.S3.Policy.Syntax](#rqsrs-015s3policysyntax)
     * 4.5.2 [RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert](#rqsrs-015s3policyperformttlmoveoninsert)
@@ -3093,9 +3130,10 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
     * 4.6.7 [RQ.SRS-015.S3.TableFunction.Redirect](#rqsrs-015s3tablefunctionredirect)
     * 4.6.8 [RQ.SRS-015.S3.TableFunction.Format](#rqsrs-015s3tablefunctionformat)
     * 4.6.9 [RQ.SRS-015.S3.TableFunction.Structure](#rqsrs-015s3tablefunctionstructure)
-    * 4.6.10 [RQ.SRS-015.S3.TableFunction.Compression](#rqsrs-015s3tablefunctioncompression)
-    * 4.6.11 [RQ.SRS-015.S3.TableFunction.Compression.Auto](#rqsrs-015s3tablefunctioncompressionauto)
-    * 4.6.12 [RQ.SRS-015.S3.TableFunction.S3Cluster](#rqsrs-015s3tablefunctions3cluster)
+    * 4.6.10 [RQ.SRS-015.S3.TableFunction.MeasureFileSize](#rqsrs-015s3tablefunctionmeasurefilesize)
+    * 4.6.11 [RQ.SRS-015.S3.TableFunction.Compression](#rqsrs-015s3tablefunctioncompression)
+    * 4.6.12 [RQ.SRS-015.S3.TableFunction.Compression.Auto](#rqsrs-015s3tablefunctioncompressionauto)
+    * 4.6.13 [RQ.SRS-015.S3.TableFunction.S3Cluster](#rqsrs-015s3tablefunctions3cluster)
   * 4.7 [MinIO](#minio)
     * 4.7.1 [RQ.SRS-015.S3.MinIO.Disk.Configuration](#rqsrs-015s3miniodiskconfiguration)
     * 4.7.2 [RQ.SRS-015.S3.MinIO.TableFunction](#rqsrs-015s3miniotablefunction)
@@ -3246,30 +3284,22 @@ addresses. The remote host filter configuration SHALL be similar to the followin
 
 #### Backup
 
-##### MinIO Backup
-
-###### RQ.SRS-015.S3.Backup.MinIOBackup
+##### RQ.SRS-015.S3.Backup.MinIOBackup
 version: 1.0
 
 [ClickHouse] SHALL support manual backups of tables that use minio storage.
 
-##### AWS S3 Backup
-
-###### RQ.SRS-015.S3.Backup.AWSS3Backup
+##### RQ.SRS-015.S3.Backup.AWSS3Backup
 version: 1.0
 
 [ClickHouse] SHALL support manual backups of tables that use aws s3 storage.
 
-##### GCS Backup
-
-###### RQ.SRS-015.S3.Backup.GCSBackup
+##### RQ.SRS-015.S3.Backup.GCSBackup
 version: 1.0
 
 [ClickHouse] SHALL support manual backups of tables that use gcs storage.
 
-##### Storage Policies
-
-###### RQ.SRS-015.S3.Backup.StoragePolicies
+##### RQ.SRS-015.S3.Backup.StoragePolicies
 version: 1.0
 
 [ClickHouse] SHALL support using creating manual backups of tables that use storage policies containing:
@@ -3278,28 +3308,30 @@ version: 1.0
 * one volume with s3 and local disk
 * multiple volumes with s3 and local disks
 
-##### Alter Freeze
-
-###### RQ.SRS-015.S3.Backup.AlterFreeze
+##### RQ.SRS-015.S3.Backup.AlterFreeze
 version: 1.0
 
 [ClickHouse] SHALL support using `ALTER TABLE FREEZE` on tables that use S3 in the storage policy. If the policy includes a local disk,
 the query will create a local backup in the `shadow/` directory of the working ClickHouse directory (`/var/lib/clickhouse` by default).
 
-##### Alter Detach
-
-###### RQ.SRS-015.S3.Backup.AlterDetach
+##### RQ.SRS-015.S3.Backup.AlterDetach
 version: 1.0
 
 [ClickHouse] SHALL support using `ALTER TABLE DETACH PARTITION` on partitions of tables that use S3.
 
-##### Alter Attach
-
-###### RQ.SRS-015.S3.Backup.AlterAttach
+##### RQ.SRS-015.S3.Backup.AlterAttach
 version: 1.0
 
 [ClickHouse] SHALL support restoring backups of tables using `ALTER TABLE ATTACH PARTITION` from data inside
 `/var/lib/clickhouse/data/database/table/detached/`.
+
+##### RQ.SRS-015.S3.Backup.Cleanup
+version: 1.0
+
+[ClickHouse] SHALL clean up local and remote files related to backed up partitions after a table is dropped.
+
+* Detached partitions SHALL be removed immediately
+* Frozen partitions SHALL be removed immediately after SYSTEM UNFREEZE
 
 #### Metadata
 
@@ -3311,9 +3343,7 @@ if and only if they have `<send_metadata>` set to `true` in the disk config.
 The disk metadata is stored in `/var/lib/clickhouse/disks/{disk name}/`.
 The metadata is stored in the s3 bucket.
 
-##### Revisions
-
-###### RQ.SRS-015.S3.Metadata.Revisions
+##### RQ.SRS-015.S3.Metadata.Revisions
 version: 1.0
 
 [ClickHouse] SHALL keep a revision counter for each table and change the counter for
@@ -3321,54 +3351,42 @@ every insert, merge, or remove operation. The revision counter in stored in
 `/var/lib/clickhouse/disks/s3/shadow/{backup number}/revision.txt`, where
 the backup number indicated how many times `ALTER FREEZE` has been used on the table.
 
-##### Bad Backup Number
-
-###### RQ.SRS-015.S3.Metadata.BadBackupNumber
+##### RQ.SRS-015.S3.Metadata.BadBackupNumber
 version: 1.0
 
 [ClickHouse] SHALL
 
 #### Metadata Restore
 
-##### Restore File
-
-###### RQ.SRS-0.5.S3.MetadataRestore.RestoreFile
+##### RQ.SRS-0.5.S3.MetadataRestore.RestoreFile
 version: 1.0
 
 [ClickHouse] SHALL support restoring tables using a restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` and executing
 `SYSTEM RESTART DISK` and reattaching the table.
 
-##### Bad Restore File
-
-###### RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile
+##### RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile
 version: 1.0
 
 [ClickHouse] SHALL not support restoring tables using a restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains
 a wrong bucket, path, or revision value.
 
-##### Huge Restore File
-
-###### RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile
+##### RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile
 version: 1.0
 
 [ClickHouse] SHALL not support restoring tables using a restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains
 a large amount of not usable information.
 
-##### No Local Metadata
-
-###### RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata
+##### RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table from the restore file
 located in `/var/lib/clickhouse/disks/{disk name}/restore` even
 if the local metadata has been purged.
 
-##### Bucket Path
-
-###### RQ.SRS-015.S3.MetadataRestore.BucketPath
+##### RQ.SRS-015.S3.MetadataRestore.BucketPath
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table to a specific bucket and path by indicating them
@@ -3380,9 +3398,7 @@ using the following syntax:
 'source_bucket' = {bucket}
 ```
 
-##### Revision Restore
-
-###### RQ.SRS-015.S3.MetadataRestore.RevisionRestore
+##### RQ.SRS-015.S3.MetadataRestore.RevisionRestore
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table to a specific revision version.
@@ -3393,24 +3409,18 @@ The revision can be indicated in the restore file located in `/var/lib/clickhous
 'revision' = {revision number}
 ```
 
-##### Mutations
-
-###### RQ.SRS-015.S3.MetadataRestore.Mutations
+##### RQ.SRS-015.S3.MetadataRestore.Mutations
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table to a state before, during, or after a mutation.
 
-##### Parallel Mutations
-
-###### RQ.SRS-015.S3.MetadataRestore.ParallelMutations
+##### RQ.SRS-015.S3.MetadataRestore.ParallelMutations
 version: 1.0
 
 [ClickHouse] SHALL support restoring a table correctly even when mutations
 are being added in parallel with the restore process.
 
-##### Detached
-
-###### RQ.SRS-015.S3.MetadataRestore.Detached
+##### RQ.SRS-015.S3.MetadataRestore.Detached
 version: 1.0
 
 [ClickHouse] SHALL support restoring tables with a detached partition and
@@ -3520,6 +3530,17 @@ version: 1.0
 [ClickHouse] SHALL create a metadata file for each [S3] disk which tracks the total
 number of objects stored in the disk, the aggregate size of the objects, and for each
 object stored in the disk, tracks the path to the object and the object size.
+
+#### RQ.SRS-015.S3.Disk.DropSync
+version: 1.0
+
+[ClickHouse] SHALL immediately remove related files from S3 when a table is dropped with the SYNC keyword.
+
+Usage:
+
+```sql
+DROP TABLE mytable SYNC
+```
 
 #### Disk Configuration
 
@@ -3940,11 +3961,11 @@ version: 1.0
 
 > Multiple path components can have globs. For being processed file must exist and match to the whole path pattern (not only suffix or prefix).
 >
->   - `*` — Substitutes any number of any characters except / including empty string.
->   - `?` — Substitutes any single character.
->   - `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.
->   - `{N..M}` — Substitutes any number in range from N to M including both borders.
->   - `**` - Fetches all files inside the folder recursively.
+> * `*` — Substitutes any number of any characters except / including empty string.
+> * `?` — Substitutes any single character.
+> * `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.
+> * `{N..M}` — Substitutes any number in range from N to M including both borders.
+> * `**` - Fetches all files inside the folder recursively.
 
 #### RQ.SRS-015.S3.TableFunction.ReadFromFile
 version: 1.0
@@ -3976,6 +3997,23 @@ specify the structure of the data. The structure SHALL use the following format:
 
 ```xml
 'column1_name column1_type, column2_name column2_type, ...'
+```
+
+#### RQ.SRS-015.S3.TableFunction.MeasureFileSize
+version: 1.0
+
+[ClickHouse] SHALL report the accurate size of s3 objects through the `_size`
+virtual column of the s3 table function.
+
+Example:
+
+```sql
+SELECT count() AS files, sum(_size) as bytes
+FROM s3('https://s3.us-west-2.amazonaws.com/mybucket/clickhouse/demo2/s3_disk/**', 'One')
+
+┌─files─┬──────bytes─┐
+│   122 │ 1638600424 │
+└───────┴────────────┘
 ```
 
 #### RQ.SRS-015.S3.TableFunction.Compression

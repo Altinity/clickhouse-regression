@@ -481,6 +481,44 @@ def remote_host_filter(self):
             )
 
 
+@TestScenario
+@Requirements(RQ_SRS_015_S3_TableFunction_MeasureFileSize("1.0"))
+def measure_file_size(self):
+
+    access_key_id = self.context.access_key_id
+    secret_access_key = self.context.secret_access_key
+    table1_name = "table_" + getuid()
+    uri = self.context.uri + "measure-file-size/"
+    bucket_path = self.context.bucket_path + "/measure-file-size"
+
+    node = current().context.node
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after(bucket_prefix=bucket_path)
+
+    with And("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
+
+    with When("I add data to the table"):
+        standard_inserts(node=node, table_name=table1_name)
+
+    with And(f"I export the data to S3 using the table function"):
+        insert_to_s3_function(
+            filename="measure_me.csv",
+            table_name=table1_name,
+            uri=uri,
+        )
+
+    with And("I get the size of the s3 bucket after adding data"):
+        size_after = get_stable_bucket_size(prefix=bucket_path)
+
+    with Then("I compare the size that clickhouse reports"):
+        r = node.query(
+            f"SELECT sum(_size) FROM s3('{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
+        )
+        assert size_after - size_before == int(r.output.strip()), error()
+
+
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_TableFunction("1.0"))
 def outline(self):
@@ -601,12 +639,14 @@ def ssec(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_TableFunction("1.0"))
 @Name("table function")
-def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
+def aws_s3(self, uri, access_key, key_id, bucket, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
     self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.bucket_name = bucket
+    self.context.bucket_path = "data"
 
     outline()
 
@@ -623,6 +663,8 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
+    self.context.bucket_name = None
+    self.context.bucket_path = None
 
     outline()
 
@@ -636,5 +678,7 @@ def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.uri = uri
     self.context.access_key_id = key
     self.context.secret_access_key = secret
+    self.context.bucket_name = "root"
+    self.context.bucket_path = "data"
 
     outline()

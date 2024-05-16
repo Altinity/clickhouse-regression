@@ -18,13 +18,12 @@ def get_table_name():
 )
 def array_func(self, data_type, node=None):
     """Check array functions with extended precision data types."""
-    clickhouse_version = (
-        ">=23.2" if check_clickhouse_version("<24.3")(self) else ">=24.3"
-    )
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=clickhouse_version)
-
     if node is None:
         node = self.context.node
+
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
+    if is_with_analyzer(node):
+        self.context.snapshot_id += "_with_analyzer"
 
     for func in [
         "arrayPopBack(",
@@ -162,10 +161,12 @@ def array_func(self, data_type, node=None):
 
         else:
             with Scenario(f"Inline - {data_type} - {func})"):
-                if check_clickhouse_version(f">=24.3")(self):
-                    self.context.snapshot_id = f"tests.post24.3"
+                if is_with_analyzer(node) and check_clickhouse_version(">=23.10")(self):
+                    self.context.snapshot_id = f"tests.post23.10_with_analyzer"
                 elif check_clickhouse_version(">=23.10")(self):
                     self.context.snapshot_id = "tests.post23.10"
+                elif is_with_analyzer(node):
+                    self.context.snapshot_id = "tests.with_analyzer"
 
                 execute_query(
                     f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))"
@@ -420,11 +421,11 @@ def tuple_func(self, data_type, node=None):
 def map_func(self, data_type, node=None):
     """Check Map functions with extended precision data types."""
 
-    if check_clickhouse_version(">=24.3")(self):
-        self.context.snapshot_id = f"tests.post24.3"
-
     if node is None:
         node = self.context.node
+
+    if is_with_analyzer(node):
+        self.context.snapshot_id = f"tests.with_analyzer"
 
     with Scenario(f"Creating a map with {data_type}"):
         node.query(

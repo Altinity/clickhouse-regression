@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import allow_experimental_lightweight_delete
 
@@ -102,7 +102,7 @@ def regression(
     stress=None,
     parallel=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Lightweight Delete regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -120,6 +120,10 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
         self.context.stress = stress
+
+        with Given("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
         if parallel is not None:
             self.context.parallel = parallel

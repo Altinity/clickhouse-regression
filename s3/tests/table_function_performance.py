@@ -5,10 +5,11 @@ from testflows.core import *
 from s3.tests.common import *
 from s3.requirements import *
 
+
 @TestFeature
 @Name("setup")
 def s3_create_many_files(self):
-    """Create a folder with many folders and files in S3"""
+    """Create a folder with many folders and files in S3."""
 
     num_folders = 50_000
     start_offset = 0
@@ -50,38 +51,42 @@ def s3_create_many_files(self):
         join()
 
 
-@TestScenario
+@TestOutline(Scenario)
+@Examples(
+    "wildcard expected_time",
+    [
+        ("522029", 20, Name("one folder")),
+        ("{759040,547776,167687,283359}", 60, Name("nums")),
+        ("{759040,547776,167687,abc,283359}", 60, Name("nums one invalid")),
+        ("1500*", 20, Name("star")),
+        ("2500%3F%3F", 20, Name("question encoded")),
+        ("3500??", 20, Name("question")),
+        ("{45000..45099}", 120, Name("range")),
+        ("{abc,efg,hij}", 10, Name("nums no match")),
+        ("abc*", 1, Name("star no match")),
+        ("abc??", 1, Name("question no match")),
+        ("{0..10000}", 120, Name("range no match")),
+    ],
+)
 @Requirements(RQ_SRS_015_S3_Performance_Glob("1.0"))
-def wildcard_performance(self):
+def wildcard(self, wildcard, expected_time):
     """Check the performance of using wildcards in s3 paths."""
-
-    expected_time = 60
 
     node = current().context.node
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
 
-    examples = [
-        ("522029", "one_file"),
-        ("{25000..26000}", "range"),
-        ("{759040,547776,167687,283359}", "nums"),
-        ("{759040,547776,167687,283359,abc}", "nums_one_missing"),
-        # ("*", "star"),
-        # ("%3F", "question"),
-    ]
-
-    for wildcard, name in examples:
-        with Example(name):
-            with Then(f"""I query the data using the wildcard '{wildcard}'"""):
-                t_start = time.time()
-                r = node.query(
-                    f"""SELECT median(d) FROM s3('{self.context.many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
-                    timeout=expected_time,
-                )
-                t_elapsed = time.time() - t_start
-                metric(f"wildcard {name} ({wildcard})", t_elapsed, "s")
-                assert r.output.strip() != "", error()
-                assert t_elapsed < expected_time, error()
+    for i in range(1, 3):
+        with Then(f"""I query S3 using the wildcard '{wildcard}'"""):
+            t_start = time.time()
+            r = node.query(
+                f"""SELECT median(d) FROM s3('{self.context.many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
+                timeout=expected_time,
+            )
+            t_elapsed = time.time() - t_start
+            metric(f"wildcard pattern='{wildcard}', i={i}", t_elapsed, "s")
+            assert r.output.strip() != "", error()
+            assert t_elapsed < expected_time, error()
 
 
 @TestOutline(Feature)

@@ -151,6 +151,33 @@ def delete(self, use_alter_delete=True):
 
 
 @TestScenario
+@Requirements(RQ_SRS_015_S3_Disk_DropSync("1.0"))
+def drop_sync(self):
+    """Check that using SYNC with DROP TABLE immediately cleans up data"""
+
+    name = "table_" + getuid()
+    node = current().context.node
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        size_before = measure_buckets_before_and_after()
+
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume()
+
+    with Given(f"I create table using S3 storage policy external"):
+        simple_table(node=node, name=name)
+
+    with When("I insert data"):
+        standard_inserts(node=node, table_name=name)
+
+    with When("I drop the table"):
+        node.query(f"DROP TABLE {name} SYNC")
+
+    with Then("I check that the size of the s3 bucket is empty"):
+        check_stable_bucket_size(expected_size=size_before, tolerance=5)
+
+
+@TestScenario
 @Requirements(RQ_SRS_015_S3_Import("1.0"))
 def imports(self):
     """Check that ClickHouse can import data from S3 storage using both S3
@@ -2400,13 +2427,13 @@ def disk_tests(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS("1.0"), RQ_SRS_015_S3_AWS_Disk_Configuration("1.0"))
 @Name("disk")
-def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
+def aws_s3(self, uri, access_key, key_id, bucket, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "aws_s3"
-    self.context.uri = uri + 'disk/'
+    self.context.uri = uri + "disk/"
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
-    self.context.bucket_name = "altinity-qa-test"
+    self.context.bucket_name = bucket
     self.context.bucket_path = "data/disk"
 
     disk_tests()
@@ -2439,7 +2466,7 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.storage = "minio"
-    self.context.uri = uri + 'disk/'
+    self.context.uri = uri + "disk/"
     self.context.access_key_id = key
     self.context.secret_access_key = secret
     self.context.bucket_name = "root"

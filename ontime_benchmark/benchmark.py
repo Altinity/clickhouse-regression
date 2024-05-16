@@ -64,7 +64,7 @@ def regression(
     keeper_binary_path=None,
     zookeeper_version=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
     node="clickhouse1",
 ):
     """Storage Benchmark."""
@@ -140,6 +140,11 @@ def regression(
                 self.context.cluster = cluster
                 self.context.node = self.context.cluster.node(node)
                 self.context.clickhouse_version = current().context.clickhouse_version
+
+            with And("I enable or disable experimental analyzer if needed"):
+                experimental_analyzer(
+                    node=self.context.node, with_analyzer=with_analyzer
+                )
 
             with And("I set the nodes to use with replicated tables"):
                 nodes = cluster.nodes["clickhouse"][:2]

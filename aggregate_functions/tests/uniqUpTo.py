@@ -12,7 +12,9 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_UniqUpTo("1.0"))
 def scenario(self, func="uniqUpTo({params})", table=None, snapshot_id=None):
     """Check uniqUpTo aggregate function ."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, add_analyzer=True
+    )
 
     _func = func.replace("({params})", f"(5)({{params}})")
 

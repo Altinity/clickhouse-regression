@@ -26,12 +26,15 @@ def scenario(
     decimal=True,
 ):
     """Check corrMatrix aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    clickhouse_version = None
+    if check_current_cpu("aarch64")(self):
+        clickhouse_version = ">=24.3"
 
-    if current_cpu() == "aarch64":
-        self.context.snapshot_id = get_snapshot_id(
-            snapshot_id=snapshot_id, clickhouse_version=">=24.3"
-        )
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

@@ -92,7 +92,9 @@ def zero_parameters(self, func="count({params})"):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count("1.0"))
 def scenario(self, func="count({params})", table=None, snapshot_id=None):
     """Check count aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id, clickhouse_version=">=23.2", add_analyzer=True
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

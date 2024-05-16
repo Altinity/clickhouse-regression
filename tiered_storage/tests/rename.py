@@ -11,7 +11,7 @@ from testflows.core import TestScenario, Name
 from testflows.core import Given, When, And, By, Then, Finally, current
 from testflows.asserts import error
 
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, is_with_analyzer
 
 
 @TestScenario
@@ -21,7 +21,7 @@ def scenario(self, cluster, node="clickhouse1"):
     count = "50"
 
     table_not_exists_exitcode = 60
-    if check_clickhouse_version(">=24.3")(self):
+    if is_with_analyzer(cluster.node(node)):
         table_not_exists_message = (
             "Exception: Unknown table expression identifier '{table_name}'"
         )

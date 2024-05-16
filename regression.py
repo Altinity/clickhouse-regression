@@ -39,7 +39,7 @@ def regression(
     node="clickhouse1",
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse regression."""
     args = {
@@ -48,6 +48,7 @@ def regression(
         "clickhouse_version": clickhouse_version,
         "stress": stress,
         "collect_service_logs": collect_service_logs,
+        "with_analyzer": with_analyzer,
     }
 
     s3_args = {
@@ -56,6 +57,7 @@ def regression(
         "clickhouse_version": clickhouse_version,
         "stress": stress,
         "collect_service_logs": collect_service_logs,
+        "with_analyzer": with_analyzer,
         "storages": storages,
         "minio_uri": minio_uri,
         "gcs_uri": gcs_uri,

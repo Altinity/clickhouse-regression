@@ -8,7 +8,7 @@ append_path(sys.path, "..", "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from ldap.role_mapping.requirements import *
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 
 
 # Cross-outs of known fails
@@ -85,7 +85,7 @@ def regression(
     zookeeper_version=None,
     stress=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse LDAP role mapping regression module."""
     nodes = {
@@ -108,6 +108,10 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+    
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Scenario(
         run=load("ldap.authentication.tests.sanity", "scenario"), name="ldap sanity"

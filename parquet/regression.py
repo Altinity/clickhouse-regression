@@ -13,6 +13,7 @@ from s3.regression import argparser
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
+from helpers.common import experimental_analyzer
 from parquet.tests.common import start_minio, parquet_test_columns
 
 
@@ -360,7 +361,7 @@ def regression(
     keeper_binary_path=None,
     zookeeper_version=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """Parquet regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -389,21 +390,13 @@ def regression(
         )
         self.context.cluster = cluster
 
-    with And("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(
+                node=cluster.node(node), with_analyzer=with_analyzer
+            )
 
-    with Given("I have a Parquet table definition"):
+    with And("I have a Parquet table definition"):
         columns = (
             cluster.node("clickhouse1")
             .command("cat /var/lib/test_files/clickhouse_table_def.txt")

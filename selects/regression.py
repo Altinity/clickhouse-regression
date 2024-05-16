@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, experimental_analyzer
 
 from selects.requirements import *
 
@@ -92,7 +92,7 @@ def regression(
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
-    allow_experimental_analyzer=False,
+    with_analyzer=False,
 ):
     """ClickHouse SELECT query regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -119,19 +119,9 @@ def regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-    with And("I disable experimental analyzer if needed"):
-        if check_clickhouse_version(">=24.3")(self):
-            if not allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 0))
-        else:
-            if allow_experimental_analyzer:
-                default_query_settings = getsattr(
-                    current().context, "default_query_settings", []
-                )
-                default_query_settings.append(("allow_experimental_analyzer", 1))
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     Feature(run=load("selects.tests.final.feature", "module"))
 
