@@ -25,6 +25,9 @@ def local_storage(
     self,
     local,
     clickhouse_binary_path,
+    keeper_binary_path,
+    zookeeper_version,
+    use_keeper,
     collect_service_logs,
     with_analyzer,
 ):
@@ -38,6 +41,9 @@ def local_storage(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,
@@ -69,6 +75,7 @@ def minio(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     with_analyzer=False,
 ):
     """Setup and run minio tests."""
@@ -84,6 +91,7 @@ def minio(
             collect_service_logs=collect_service_logs,
             keeper_binary_path=keeper_binary_path,
             zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -129,6 +137,7 @@ def aws_s3(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
@@ -167,6 +176,7 @@ def aws_s3(
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
             keeper_binary_path=keeper_binary_path,
+            use_keeper=use_keeper,
             zookeeper_version=zookeeper_version,
             nodes=nodes,
             use_zookeeper_nodes=True,
@@ -203,6 +213,7 @@ def gcs(
     collect_service_logs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     with_analyzer=False,
 ):
     """Setup and run gcs tests."""
@@ -235,6 +246,7 @@ def gcs(
             collect_service_logs=collect_service_logs,
             keeper_binary_path=keeper_binary_path,
             zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -278,6 +290,7 @@ def regression(
     allow_vfs,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     with_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
@@ -296,6 +309,7 @@ def regression(
         collect_service_logs=collect_service_logs,
         keeper_binary_path=keeper_binary_path,
         zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         with_analyzer=with_analyzer,
     )
 

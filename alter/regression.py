@@ -14,7 +14,7 @@ from helpers.datatypes import *
 
 
 def argparser(parser):
-    """Custom argperser that adds a --use-specific-clickhouse-version option."""
+    """Custom argparser that adds a --use-specific-clickhouse-version option."""
     base_argparser(parser)
 
     parser.add_argument(
@@ -166,6 +166,7 @@ def regression(
     use_specific_version,
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -194,6 +195,7 @@ def regression(
             clickhouse_binary_path=clickhouse_binary_path,
             keeper_binary_path=keeper_binary_path,
             zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             configs_dir=current_dir(),

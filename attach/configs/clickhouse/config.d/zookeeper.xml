@@ -2,15 +2,15 @@
 <yandex>
     <zookeeper>
 	    <node index="1">
-		    <host>zookeeper1</host>
+		    <host from_env="COORDINATOR_HOST_1"/>
 		    <port>2181</port>
 	    </node>
 		<node index="2">
-		    <host>zookeeper2</host>
+		    <host from_env="COORDINATOR_HOST_2"/>
 		    <port>2181</port>
 	    </node>
 		<node index="3">
-		    <host>zookeeper3</host>
+		    <host from_env="COORDINATOR_HOST_3"/>
 		    <port>2181</port>
 	    </node>
         <session_timeout_ms>15000</session_timeout_ms>
