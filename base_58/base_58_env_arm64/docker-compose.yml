@@ -1,10 +1,35 @@
 version: '2.3'
 
 services:
-  zookeeper:
+  zookeeper1:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper1
+
+  zookeeper2:
+    extends:
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper2
+
+  zookeeper3:
+    extends:
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper3
+
+  keeper1:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper1
+
+  keeper2:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper2
+
+  keeper3:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper3
 
   clickhouse1:
     extends:
@@ -48,7 +73,7 @@ services:
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:
-    image: ${IMAGE_DEPENDENCY_PROXY}hello-world
+    image: hello-world
     depends_on:
       clickhouse1:
         condition: service_healthy
@@ -56,5 +81,15 @@ services:
         condition: service_healthy
       clickhouse3:
         condition: service_healthy
-      zookeeper:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+      keeper1:
+        condition: service_healthy
+      keeper2:
+        condition: service_healthy
+      keeper3:
         condition: service_healthy

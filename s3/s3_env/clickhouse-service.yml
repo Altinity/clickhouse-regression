@@ -5,10 +5,6 @@ services:
     extends:
       file: ../../helpers/docker/clickhouse-service.yml
       service: clickhouse
-    expose:
-      - "9000"
-      - "9009"
-      - "8123"
     environment:
       - S3_AMAZON_KEY_ID=$S3_AMAZON_KEY_ID
       - S3_AMAZON_ACCESS_KEY=$S3_AMAZON_ACCESS_KEY

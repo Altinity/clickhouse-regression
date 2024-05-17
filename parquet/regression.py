@@ -360,6 +360,7 @@ def regression(
     node="clickhouse1",
     keeper_binary_path=None,
     zookeeper_version=None,
+    use_keeper=False,
     allow_vfs=False,
     with_analyzer=False,
 ):
@@ -384,6 +385,7 @@ def regression(
             clickhouse_binary_path=clickhouse_binary_path,
             keeper_binary_path=keeper_binary_path,
             zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             configs_dir=current_dir(),
