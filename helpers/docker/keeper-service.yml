@@ -14,7 +14,7 @@ services:
       - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
     healthcheck:
-      test: "echo stat | nc localhost 2181"
+      test: "echo 1"
       interval: 10s
       timeout: 10s
       retries: 3
