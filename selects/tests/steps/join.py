@@ -153,13 +153,12 @@ def join_result_check(self, table, tables_auxiliary, join_type="INNER JOIN", nod
         node = self.context.cluster.node("clickhouse1")
 
     with Then("I check that compare results are the same"):
-        default_value = allow_experimental_analyzer()
         with_final_clause = node.query(
             f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
             f" {tables_auxiliary[0].name} {' FINAL' if tables_auxiliary[0].final_modifier_available else ''} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",
-            settings=[("final", 0)],
+            settings=[("final", 0), ("allow_experimental_analyzer", 1)],
+            rewrite_settings=True,
         ).output.strip()
-        set_allow_experimental_analyzer(value=default_value)
         with_final_setting = node.query(
             f"SELECT count() FROM {table.name} {join_type}"
             f" {tables_auxiliary[0].name} on {table.name}.id = {tables_auxiliary[0].name}.id FORMAT TabSeparated",

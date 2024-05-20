@@ -622,7 +622,8 @@ def select_limit_by_parallel_idu(self):
 
     with When("I execute concurrent select, insert, delete, update queries"):
         for table in self.context.tables:
-            with Example(f"{table.name}", flags=TE):
+            test_name = clean_name(table.name)
+            with Example(f"{test_name}", flags=TE):
                 with When("I execute selects concurrently"):
                     run_queries_in_parallel(
                         table=table,
@@ -979,7 +980,8 @@ def select_joins_parallel(self):
             for table_auxiliary in self.context.tables:
                 if table.name != table_auxiliary.name:
                     tables_auxiliary.append(table_auxiliary)
-                    with Example(f"{table.name}", flags=TE):
+                    test_name = clean_name(table.name)
+                    with Example(f"{test_name}", flags=TE):
                         with When("I execute selects concurrently"):
                             run_queries_in_parallel(
                                 table=table,
