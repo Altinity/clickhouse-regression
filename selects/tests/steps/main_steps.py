@@ -44,7 +44,7 @@ join_types = [
 
 @TestStep(Given)
 def allow_experimental_analyzer(self):
-    """Add allow_experimental_analyzer to the default query settings.
+    """Add allow_experimental_analyzer=1 to the default query settings.
     Returns 0 if analyzer was turned off, 1 if it was turned on, None if it was not set.
     """
     default_query_settings = getsattr(current().context, "default_query_settings", [])
@@ -56,6 +56,23 @@ def allow_experimental_analyzer(self):
         return 1
     else:
         experimental_analyzer(node=self.context.node, with_analyzer=True)
+        return None
+
+
+@TestStep(Given)
+def disable_experimental_analyzer(self):
+    """Disable experimental analyzer in the default query settings.
+    Returns 0 if analyzer was turned off, 1 if it was turned on, None if it was not set.
+    """
+    default_query_settings = getsattr(current().context, "default_query_settings", [])
+    if ("allow_experimental_analyzer", 1) in default_query_settings:
+        default_query_settings.remove(("allow_experimental_analyzer", 1))
+        default_query_settings.append(("allow_experimental_analyzer", 0))
+        return 1
+    elif ("allow_experimental_analyzer", 0) in default_query_settings:
+        return 0
+    else:
+        experimental_analyzer(node=self.context.node, with_analyzer=False)
         return None
 
 
@@ -572,7 +589,7 @@ def create_and_populate_distributed_tables(self):
                     symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
                     for symbol in symbols:
                         name = name.replace(symbol[0], symbol[1])
-                    name = f"distr_{name}_table_{getuid()}" + cluster
+                    name = f"distr_{name}_table_{getuid()}_" + cluster
 
                     if engine.startswith("Replacing"):
                         values = [
@@ -869,14 +886,15 @@ def create_all_views(self):
                 )
             )
 
-            if table.final_modifier_available:
-                self.context.tables.append(
-                    create_window_view(
-                        core_table=table.name,
-                        final_modifier_available=table.final_modifier_available,
-                        final=True,
+            if not is_with_analyzer(node=self.context.node):
+                if table.final_modifier_available:
+                    self.context.tables.append(
+                        create_window_view(
+                            core_table=table.name,
+                            final_modifier_available=table.final_modifier_available,
+                            final=True,
+                        )
                     )
-                )
 
 
 @TestStep(Given)
@@ -938,7 +956,7 @@ def create_replicated_table_2shards3replicas(self, node=None):
                     symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
                     for symbol in symbols:
                         name = name.replace(symbol[0], symbol[1])
-                    name = f"distr_{name}_table_{getuid()}" + cluster
+                    name = f"distr_{name}_table_{getuid()}_" + cluster
 
                     if engine.startswith("ReplicatedReplacing"):
                         values = [
@@ -1327,3 +1345,14 @@ def run_queries_in_parallel(
         if not deletes is None:
             for delete in deletes:
                 By(f"{delete.name}", test=delete, parallel=True)(table=table.name)
+
+
+def clean_name(name):
+    """Remove all special characters from the name. 
+    Used to remove uid from table names."""
+    name_parts = name.split("_")
+    clean_name = ""
+    for part in name_parts:
+        if part.isalpha():
+            clean_name += part + "_"
+    return clean_name[:-1]
