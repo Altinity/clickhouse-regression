@@ -85,6 +85,12 @@ def set_allow_experimental_analyzer(self, value=None):
         else:
             value = 0
 
+    default_query_settings = getsattr(self.context, "default_query_settings", [])
+    if ("allow_experimental_analyzer", 0) in default_query_settings:
+        default_query_settings.remove(("allow_experimental_analyzer", 0))
+    if ("allow_experimental_analyzer", 1) in default_query_settings:
+        default_query_settings.remove(("allow_experimental_analyzer", 1))
+        
     experimental_analyzer(node=self.context.node, with_analyzer=value)
 
 
