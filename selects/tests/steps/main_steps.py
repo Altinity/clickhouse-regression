@@ -50,7 +50,7 @@ def allow_experimental_analyzer(self):
     default_query_settings = getsattr(current().context, "default_query_settings", [])
     if ("allow_experimental_analyzer", 0) in default_query_settings:
         default_query_settings.remove(("allow_experimental_analyzer", 0))
-        default_query_settings.append(("allow_experimental_analyzer", 1))
+        experimental_analyzer(node=self.context.node, with_analyzer=True)
         return 0
     elif ("allow_experimental_analyzer", 1) in default_query_settings:
         return 1
@@ -67,7 +67,7 @@ def disable_experimental_analyzer(self):
     default_query_settings = getsattr(current().context, "default_query_settings", [])
     if ("allow_experimental_analyzer", 1) in default_query_settings:
         default_query_settings.remove(("allow_experimental_analyzer", 1))
-        default_query_settings.append(("allow_experimental_analyzer", 0))
+        experimental_analyzer(node=self.context.node, with_analyzer=False)
         return 1
     elif ("allow_experimental_analyzer", 0) in default_query_settings:
         return 0
