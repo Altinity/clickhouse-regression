@@ -869,7 +869,7 @@ def experimental_analyzer(self, node, with_analyzer):
         node=node,
         setting_name="allow_experimental_analyzer",
     )
-    default_query_settings = getsattr(current().context, "default_query_settings", [])
+    default_query_settings = getsattr(self.context, "default_query_settings", [])
     if with_analyzer and default_value == "0":
         default_query_settings.append(("allow_experimental_analyzer", 1))
     elif not with_analyzer and default_value == "1":

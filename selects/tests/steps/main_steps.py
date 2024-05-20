@@ -47,7 +47,7 @@ def allow_experimental_analyzer(self):
     """Add allow_experimental_analyzer=1 to the default query settings.
     Returns 0 if analyzer was turned off, 1 if it was turned on, None if it was not set.
     """
-    default_query_settings = getsattr(current().context, "default_query_settings", [])
+    default_query_settings = getsattr(self.context, "default_query_settings", [])
     if ("allow_experimental_analyzer", 0) in default_query_settings:
         default_query_settings.remove(("allow_experimental_analyzer", 0))
         experimental_analyzer(node=self.context.node, with_analyzer=True)
@@ -64,7 +64,7 @@ def disable_experimental_analyzer(self):
     """Disable experimental analyzer in the default query settings.
     Returns 0 if analyzer was turned off, 1 if it was turned on, None if it was not set.
     """
-    default_query_settings = getsattr(current().context, "default_query_settings", [])
+    default_query_settings = getsattr(self.context, "default_query_settings", [])
     if ("allow_experimental_analyzer", 1) in default_query_settings:
         default_query_settings.remove(("allow_experimental_analyzer", 1))
         experimental_analyzer(node=self.context.node, with_analyzer=False)
@@ -79,13 +79,13 @@ def disable_experimental_analyzer(self):
 @TestStep(Given)
 def set_allow_experimental_analyzer(self, value=None):
     """Set allow_experimental_analyzer to the specified value."""
-    default_query_settings = getattr(current().context, "default_query_settings", [])
-    default_query_settings = [
-        (k, v) for k, v in default_query_settings if k != "allow_experimental_analyzer"
-    ]
-    if value is not None:
-        default_query_settings.append(("allow_experimental_analyzer", value))
-    setattr(current().context, "default_query_settings", default_query_settings)
+    if value is None:
+        if check_clickhouse_version(">=24.3")(self):
+            value = 1
+        else:
+            value = 0
+
+    experimental_analyzer(node=self.context.node, with_analyzer=value)
 
 
 @TestStep(Given)
