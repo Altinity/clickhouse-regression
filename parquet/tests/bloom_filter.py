@@ -1,0 +1,129 @@
+import os
+
+from parquet.requirements import *
+from parquet.tests.outline import import_export
+from parquet.tests.steps import *
+from helpers.common import *
+
+
+@TestScenario
+def read_and_write_file_with_bloom(self):
+    """Read all files from a bloom directory that contains parquet files with bloom filters."""
+    files = [
+        "binary_bloom.gz.parquet",
+        "timestamp_bloom.gz.parquet",
+        "double_bloom.gz.parquet",
+        "integer_bloom.gz.parquet",
+        "decimal_bloom.gz.parquet",
+        "struct_bloom.gz.parquet",
+        "long_bloom.gz.parquet",
+        "date_bloom.gz.parquet",
+        "boolean_bloom.gz.parquet",
+        "map_bloom.gz.parquet",
+        "multi_column_bloom.gz.parquet",
+        "array_bloom.gz.parquet",
+        "float_bloom.gz.parquet",
+    ]
+
+    for file in files:
+        with Given(f"I import and export the parquet file {file}"):
+            import_export(
+                snapshot_name=f"{file}_structure",
+                import_file=os.path.join("bloom", file),
+            )
+
+
+@TestCheck
+def check_parquet_with_bloom(
+    self, file_name, statement, condition, bloom_filter, filter_pushdown
+):
+    """Check if the bloom filter is being used by ClickHouse."""
+
+    with Given(
+        "I read from the parquet file",
+        description=f"Bloom Filter: {bloom_filter}, Filter Pushdown: {filter_pushdown}",
+    ):
+        select_from_parquet(
+            file_name=file_name,
+            statement=statement,
+            condition=condition,
+            settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown}",
+        )
+
+
+@TestSketch(Scenario)
+def read_bloom_filter_parquet_files(self):
+    """Read all files from a bloom directory that contains parquet files with bloom filters."""
+
+    file_name = "multi_column_bloom.gz.parquet"
+    statements = [
+        "*",
+        "f32",
+        "f64",
+        "int",
+        "str",
+        "fixed_str",
+        "array",
+        "f32,f64,int,str,fixed_str,array",
+    ]
+    filter = ["true", "false"]
+    conditions = [
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC'",
+        "f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
+        "WHERE f32=toFloat32(-15.910733) AND fixed_str IN ('BYYC', 'DCXV') ORDER BY f32 ASC",
+        "WHERE f64 IN (toFloat64(22.89182051713945), toFloat64(68.62704389505595)) ORDER BY f32",
+        "where has(array, 69778) order by f32 asc",
+        "where hasAll(array, [69778,58440,2913,64975,92300]) order by f32 asc",
+        "where has(array, toInt32(toString(69778)))",
+        "where hasAny(array, [69778,58440,2913,64975,92300]) order by f32 asc",
+        "WHERE '56' NOT IN 'int'",
+    ]
+
+    check_parquet_with_bloom(
+        file_name=file_name,
+        bloom_filter=either(*filter),
+        filter_pushdown=either(*filter),
+        condition=either(*conditions),
+        statement=either(*statements),
+    )
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter("1.0"))
+@Name("bloom")
+def feature(self, node="clickhouse1"):
+    """Check if we can read from ap parquet file with bloom filter and validate that the bloom filter is being used
+    by ClickHouse.
+
+    The combinations used:
+        - Check that ClickHouse can read and then write back the parquet files that have bloom filter applied to them.
+    Combinatorics:
+        statements:
+            - "*",
+            - "f32",
+            - "f64",
+            - "int",
+            - "str",
+            - "fixed_str",
+            - "array",
+            - "f32,f64,int,str,fixed_str,array",
+        settings:
+            - input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down=true
+            - input_format_parquet_bloom_filter_push_down=false,input_format_parquet_filter_push_down=false
+            - input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down=false
+            - input_format_parquet_bloom_filter_push_down=false,input_format_parquet_filter_push_down=true
+        conditions:
+            - WHERE
+            - OR
+            - AND
+            - IN
+            - NOT IN
+            - has()
+            - hasAny()
+            - hasAll()
+    """
+    self.context.node = self.context.cluster.node(node)
+    self.context.snapshot_id = "bloom"
+
+    # Scenario(run=read_and_write_file_with_bloom)
+    Scenario(run=read_bloom_filter_parquet_files)
