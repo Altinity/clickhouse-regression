@@ -125,5 +125,5 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.snapshot_id = "bloom"
 
-    # Scenario(run=read_and_write_file_with_bloom)
+    Scenario(run=read_and_write_file_with_bloom)
     Scenario(run=read_bloom_filter_parquet_files)
