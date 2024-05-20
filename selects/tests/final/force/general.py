@@ -1062,13 +1062,18 @@ def run_tests(self):
 @TestFeature
 def with_experimental_analyzer(self):
     """Run all tests with experimental analyzer."""
+    note(is_with_analyzer(node=self.context.node))
     with Given("I set allow_experimental_analyzer=1"):
         default_value = allow_experimental_analyzer()
+        note(f"default vlause is {default_value}")
+        note(is_with_analyzer(node=self.context.node))
 
     run_tests()
 
     with Then("I set allow experimental analyzer to default value"):
+        note(f"default vlause is {default_value}")
         set_allow_experimental_analyzer(value=default_value)
+        note(is_with_analyzer(node=self.context.node))
 
 
 @TestFeature
