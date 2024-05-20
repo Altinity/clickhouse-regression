@@ -221,7 +221,8 @@ def log_failing_mutations(self, nodes=None):
 
         with And("double checking the failed mutations"):
             r = node.query(
-                "SELECT latest_failed_part, table, latest_fail_reason FROM system.mutations WHERE is_done=0 FORMAT JSONCompactColumns"
+                "SELECT latest_failed_part, table, latest_fail_reason FROM system.mutations WHERE is_done=0 FORMAT JSONCompactColumns",
+                no_checks=True,
             )
             for part, table, fail_reason in json.loads(r.output):
                 if fail_reason == "":
@@ -232,6 +233,7 @@ def log_failing_mutations(self, nodes=None):
                 )
                 r = node.query(
                     f"SELECT * FROM system.parts WHERE name='{part}' and table='{table}' FORMAT Vertical",
+                    no_checks=True,
                 )
                 if r.output.strip():
                     note(f"State of {part}:\n{r.output.strip()}")
@@ -240,6 +242,7 @@ def log_failing_mutations(self, nodes=None):
                     column = re.search(r"column (.+):", fail_reason).group(1)
                     r = node.query(
                         f"SELECT * FROM system.parts_columns WHERE name='{part}' and table='{table}' and column='{column}' FORMAT Vertical",
+                        no_checks=True,
                     )
                     if r.output.strip():
                         note(f"State of {column}:\n{r.output.strip()}")

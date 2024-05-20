@@ -129,6 +129,8 @@ def alter_combinations(
     insert_keeper_fault_injection_probability=0,
     network_impairment=False,
     limit_disk_space=False,
+    enforce_table_structure=None,
+    kill_stuck_mutations=None,
 ):
     """
     Perform combinations of alter actions, checking that all replicas agree.
@@ -149,6 +151,11 @@ def alter_combinations(
         assert (
             limit_disk_space
         ), "enable limit_disk_space when using fill_disks to avoid unexpected behavior"
+
+    if enforce_table_structure is None:
+        enforce_table_structure = self.flags & TE
+    if kill_stuck_mutations is None:
+        kill_stuck_mutations = self.flags & TE
 
     action_groups = build_action_groups(
         actions=actions,
@@ -192,7 +199,9 @@ def alter_combinations(
                 if modify_random_ttl in actions
                 else None
             )
-            table_settings = "min_bytes_for_wide_part=0" if self.context.wide_parts_only else None
+            table_settings = (
+                "min_bytes_for_wide_part=0" if self.context.wide_parts_only else None
+            )
 
             for i in range(n_tables):
                 table_name = f"table{i}_{self.context.storage_policy}"
@@ -231,31 +240,50 @@ def alter_combinations(
                 title += "," + net_mode.name
 
             with Check(title):
-                if network_impairment:
-                    with Given("a network impairment"):
-                        impaired_network(network_mode=net_mode)
+                try:
+                    if network_impairment:
+                        with Given("a network impairment"):
+                            impaired_network(network_mode=net_mode)
 
-                with When("I perform a group of actions"):
-                    for action in chain(background_actions, chosen_actions):
-                        By(
-                            f"I {action.name}",
-                            run=action,
-                            parallel=run_groups_in_parallel,
-                            flags=TE | ERROR_NOT_COUNTED,
-                        )
+                    with When("I perform a group of actions"):
+                        for action in chain(background_actions, chosen_actions):
+                            By(
+                                f"I {action.name}",
+                                run=action,
+                                parallel=run_groups_in_parallel,
+                                flags=TE | ERROR_NOT_COUNTED,
+                            )
 
-                    for table in self.context.table_names:
-                        By(
-                            f"I OPTIMIZE {table}",
-                            test=optimize_random,
-                            parallel=run_optimize_in_parallel,
-                            flags=TE,
-                        )(table_name=table_name)
+                        for table in self.context.table_names:
+                            By(
+                                f"I OPTIMIZE {table}",
+                                test=optimize_random,
+                                parallel=run_optimize_in_parallel,
+                                flags=TE,
+                            )(table_name=table_name)
 
-                    join()
+                        join()
 
-                with Then("I check that the replicas are consistent", flags=TE):
-                    check_consistency()
+                finally:
+                    with Then("I make sure that the replicas are consistent", flags=TE):
+                        if kill_stuck_mutations:
+                            with By("killing any failing mutations"):
+                                for node in self.context.ch_nodes:
+                                    node.query(
+                                        "SELECT * FROM system.mutations WHERE is_done=0 AND latest_fail_reason != '' FORMAT Vertical",
+                                        no_checks=True,
+                                    )
+                                    r = node.query(
+                                        "KILL MUTATION WHERE latest_fail_reason != ''"
+                                    )
+                                    assert r.output == "", error(
+                                        "An erroring mutation was killed"
+                                    )
+
+                        with By("making sure that replicas agree"):
+                            check_consistency(
+                                restore_consistent_structure=enforce_table_structure
+                            )
 
             note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
 
@@ -429,7 +457,7 @@ def feature(self):
     # https://github.com/ClickHouse/ClickHouse/issues/62459
     self.context.disallow_move_partition_to_self = True
 
-    #https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
+    # https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
     self.context.wide_parts_only = True
 
     with Given("I have S3 disks configured"):
