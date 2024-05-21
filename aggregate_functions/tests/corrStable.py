@@ -5,7 +5,7 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id, check_current_cpu
-from aggregate_functions.tests.corr import scenario as checks
+from aggregate_functions.tests.covarPop import scenario as checks
 
 
 @TestScenario
