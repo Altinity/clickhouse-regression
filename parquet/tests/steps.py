@@ -10,6 +10,7 @@ def select_from_parquet(
     statement="*",
     condition=False,
     settings=None,
+    format=None,
 ):
     """Select from a parquet file."""
     if node is None:
@@ -24,7 +25,10 @@ def select_from_parquet(
         if condition:
             r += f" {condition}"
 
-        r += " FORMAT TabSeparated"
+        if format is None:
+            format = "TabSeparated"
+
+        r += f" FORMAT {format}"
 
         if settings is not None:
             r += f" SETTINGS {settings}"
