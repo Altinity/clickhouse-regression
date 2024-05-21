@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import *
 
 from selects.requirements import *
 
@@ -70,6 +70,103 @@ xfails = {
         (Fail, "column fail for distributed tables")
     ],
     "final/force/alias/as with alias/*": [(Fail, "fails for ARM")],
+    "final/force/general/with experimental analyzer/simple select count/*_wview*": [
+        (
+            Fail,
+            "Experimental WINDOW VIEW feature is not supported in the current infrastructure for query analysis. PR#62367",
+            check_clickhouse_version(">=24.4"),
+        )
+    ],
+    "final/force/alias/count with alias/distr_Log_:/*": [
+        (Fail, "Storage Log doesn't support FINAL. Issue 63960.", check_analyzer())
+    ],
+    "final/force/alias/count with alias/distr_MergeTree_:/*": [
+        (Fail, "Storage MergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/count with alias/distr_StripeLog_:/*": [
+        (Fail, "Storage StripeLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/count with alias/distr_TinyLog_:/*": [
+        (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/count with alias/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+        (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/distinct with alias/distr_Log_:/*": [
+        (Fail, "Storage Log doesn't support FINAL. Issue 63960.", check_analyzer())
+    ],
+    "final/force/alias/distinct with alias/distr_MergeTree_:/*": [
+        (Fail, "Storage MergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/distinct with alias/distr_StripeLog_:/*": [
+        (Fail, "Storage StripeLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/distinct with alias/distr_TinyLog_:/*": [
+        (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/distinct with alias/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+        (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/group by with :/distr_Log_:/*": [
+        (Fail, "Storage Log doesn't support FINAL. Issue 63960.", check_analyzer())
+    ],
+    "final/force/alias/group by with :/distr_MergeTree_:/*": [
+        (Fail, "Storage MergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/group by with :/distr_StripeLog_:/*": [
+        (Fail, "Storage StripeLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/group by with :/distr_TinyLog_:/*": [
+        (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/group by with :/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+        (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/order by :/distr_Log_:/*": [
+        (Fail, "Storage Log doesn't support FINAL. Issue 63960.", check_analyzer())
+    ],
+    "final/force/alias/order by :/distr_MergeTree_:/*": [
+        (Fail, "Storage MergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/order by :/distr_StripeLog_:/*": [
+        (Fail, "Storage StripeLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/order by :/distr_TinyLog_:/*": [
+        (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/order by :/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+        (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/limit :/distr_Log_:/*": [
+        (Fail, "Storage Log doesn't support FINAL. Issue 63960.", check_analyzer())
+    ],
+    "final/force/alias/limit :/distr_MergeTree_:/*": [
+        (Fail, "Storage MergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/limit :/distr_StripeLog_:/*": [
+        (Fail, "Storage StripeLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/limit :/distr_TinyLog_:/*": [
+        (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/limit :/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+        (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/select nested subquery with alias/distr_Log_:/*": [
+        (Fail, "Storage Log doesn't support FINAL. Issue 63960.", check_analyzer())
+    ],
+    "final/force/alias/select nested subquery with alias/distr_MergeTree_:/*": [
+        (Fail, "Storage MergeTree doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/select nested subquery with alias/distr_StripeLog_:/*": [
+        (Fail, "Storage StripeLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/select nested subquery with alias/distr_TinyLog_:/*": [
+        (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
+    ],
+    "final/force/alias/select nested subquery with alias/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+        (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
+    ],
 }
 
 xflags = {}

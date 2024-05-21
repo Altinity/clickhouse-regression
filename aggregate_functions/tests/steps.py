@@ -11,6 +11,7 @@ from helpers.common import (
     getuid,
     current_cpu,
     is_with_analyzer,
+    check_analyzer,
 )
 
 # exhaustive list of all aggregate functions
@@ -260,6 +261,21 @@ def execute_query(
             with Then("I check output against expected"):
                 assert r.output.strip() == expected, error()
         else:
+            with Then("I check only json values if compare_json_values is set"):
+                if getsattr(current().context, "compare_json_values", False):
+                    snapshot_name = snapshot_name.replace(
+                        current().context.replace_part, ""
+                    )
+                    snapshot_value = snapshot(
+                        value="\n" + r.output.strip() + "\n",
+                        id=current().context.snapshot_id + "." + current_cpu(),
+                        name=snapshot_name,
+                        encoder=str,
+                        mode=snapshot.CHECK,
+                    ).snapshot_value
+                    compare_json_values(current=r.output, expected=snapshot_value)
+                    return
+
             with Then("I check output against snapshot"):
                 with values() as that:
                     assert that(
@@ -283,7 +299,18 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None, add_analyzer=Fals
 
     if snapshot_id is None:
         snapshot_id = name.basename(current().name) + id_postfix
-        if is_with_analyzer(node=current().context.node) and add_analyzer:
+        if check_analyzer()(current()) and add_analyzer:
             snapshot_id += "_with_analyzer"
 
     return snapshot_id
+
+
+def compare_json_values(current, expected):
+    """Compare only the value of jsons from a snapshot."""
+    current_list = current.strip().split("\n")
+    expected_list = expected.strip().split("\n")
+
+    for current, expected in zip(current_list, expected_list):
+        current = list(json.loads(current).values())[0]
+        expected = list(json.loads(expected).values())[0]
+        assert current == expected, error()

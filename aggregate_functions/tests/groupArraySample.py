@@ -18,7 +18,7 @@ def scenario(self, func="groupArraySample({params})", table=None, snapshot_id=No
     if table is None:
         table = self.context.table
 
-    params = "({params})"
+    params = "({params}"
 
     func_ = func.replace(params, f"(3, 2){params}")
 

@@ -752,6 +752,7 @@ class ClickHouseNode(Node):
         file_output=None,
         pipe_cmd="echo -e",
         progress=False,
+        rewrite_settings=False,
         *args,
         **kwargs,
     ):
@@ -777,6 +778,9 @@ class ClickHouseNode(Node):
         :param file_output: specifies the file path where the output of the executed command should be stored.
                 if specified, the output will be redirected to the specified file instead of being displayed on the console.
                 default: None
+        :param rewrite_settings: specifies whether to rewrite the default query settings with the provided settings.
+                if set to True, the default query settings will be rewrited by the same settings that are provided in the 'settings' parameter.
+                default: False
         """
         r = None
         retry_count = max(0, int(retry_count))
@@ -791,7 +795,13 @@ class ClickHouseNode(Node):
             messages_to_retry = MESSAGES_TO_RETRY
 
         if hasattr(current().context, "default_query_settings"):
-            query_settings += current().context.default_query_settings
+            if rewrite_settings:
+                settings_names = [name for name, _ in settings]
+                for name, value in current().context.default_query_settings:
+                    if name not in settings_names:
+                        query_settings.append((name, value))
+            else:
+                query_settings += current().context.default_query_settings
 
         if query_id is not None:
             query_settings += [("query_id", f"{query_id}")]

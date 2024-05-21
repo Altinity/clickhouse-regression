@@ -25,7 +25,8 @@ def as_with_alias(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between `SELECT column as new_column` query with `FINAL` clause "
                 "and `SELECT column as new_column` query with --final setting enabled."
@@ -60,7 +61,8 @@ def group_by_with_alias(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between group by query with `FINAL`  clause "
                 "and group by query with --final setting enabled."
@@ -94,7 +96,8 @@ def group_by_with_having(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between group by query with having with `FINAL`  clause "
                 "and group by with having query with --final setting enabled."
@@ -122,7 +125,8 @@ def group_by_with_rollup(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between group by with rollup query with `FINAL`  clause "
                 "and group by with rollup query with --final setting enabled."
@@ -150,7 +154,8 @@ def group_by_with_cube(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between group by with cube query with `FINAL`  clause "
                 "and group by with cube query with --final setting enabled."
@@ -178,7 +183,8 @@ def group_by_with_totals(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between group by with totals query with `FINAL`  clause "
                 "and group by with totals query with --final setting enabled."
@@ -206,7 +212,8 @@ def order_by_with_alias(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between order by query with `FINAL`  clause "
                 "and order by query with --final setting enabled."
@@ -314,7 +321,8 @@ def count_with_alias(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between count() query with expression column as alias with `FINAL`  clause "
                 "and count() query with expression column as alias column with --final setting enabled."
@@ -342,7 +350,8 @@ def distinct_with_alias(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between distinct query with expression column as alias column with `FINAL`  clause "
                 "and distinct query with expression column as alias column with --final setting enabled."
@@ -370,7 +379,8 @@ def limit_by_with_alias(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between `SELECT LIMIT BY` query with expression column as alias with `FINAL`  clause "
                 "and `SELECT LIMIT BY` query with expression column as alias with --final setting enabled."
@@ -399,7 +409,8 @@ def limit_with_alias(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between `SELECT LIMIT` query with expression column as alias with `FINAL` clause "
                 "and `SELECT LIMIT` query with expression column as alias with --final setting enabled."
@@ -604,7 +615,8 @@ def select_nested_subquery_with_alias(self, node=None):
         )
 
     for table in tables:
-        with When(f"{table.name}"):
+        test_name = clean_name(table.name)
+        with When(f"{test_name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                     f"SELECT count()*100 as count_alias FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
@@ -937,4 +949,4 @@ def feature(self):
         )
 
     for scenario in loads(current_module(), Scenario):
-        scenario()
+        Scenario(run=scenario, flags=TE)
