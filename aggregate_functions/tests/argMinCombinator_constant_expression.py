@@ -9,10 +9,8 @@ from aggregate_functions.tests.steps import *
 @TestScenario
 def check_combinator(self, scenario, func, combinator):
     """Check -ArgMin combinator function."""
-    current().name = current().name.replace(
-        f"{combinator}Combinator_constant_expression/", ""
-    )
-    current().context.compare_json_values = True
+    self.context.compare_json_values = True
+    self.context.replace_part = f"{combinator}Combinator_constant_expression/"
     scenario(func=func)
 
 

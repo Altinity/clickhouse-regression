@@ -11,6 +11,7 @@ from helpers.common import (
     getuid,
     current_cpu,
     is_with_analyzer,
+    check_analyzer,
 )
 
 # exhaustive list of all aggregate functions
@@ -262,6 +263,9 @@ def execute_query(
         else:
             with Then("I check only json values if compare_json_values is set"):
                 if getsattr(current().context, "compare_json_values", False):
+                    snapshot_name = snapshot_name.replace(
+                        current().context.replace_part, ""
+                    )
                     snapshot_value = snapshot(
                         value="\n" + r.output.strip() + "\n",
                         id=current().context.snapshot_id + "." + current_cpu(),
@@ -295,7 +299,7 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None, add_analyzer=Fals
 
     if snapshot_id is None:
         snapshot_id = name.basename(current().name) + id_postfix
-        if is_with_analyzer(node=current().context.node) and add_analyzer:
+        if check_analyzer()(current()) and add_analyzer:
             snapshot_id += "_with_analyzer"
 
     return snapshot_id
