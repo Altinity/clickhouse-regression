@@ -29,6 +29,24 @@ def check_current_cpu(arch):
     return check
 
 
+def check_analyzer():
+    """Check if analyzer is enabled."""
+
+    def check(test):
+        default_query_settings = getsattr(
+            current().context, "default_query_settings", []
+        )
+        if ("allow_experimental_analyzer", 1,) in default_query_settings or (
+            check_clickhouse_version(">=24.3")(test)
+            and ("allow_experimental_analyzer", 0) not in default_query_settings
+        ):
+            return True
+        else:
+            return False
+
+    return check
+
+
 def check_clickhouse_version(version):
     """Compare ClickHouse version."""
 
@@ -193,7 +211,11 @@ class KeyWithAttributes:
 
 
 def create_xml_config_content(
-    entries, config_file, config_d_dir="/etc/clickhouse-server/config.d", root="yandex", preprocessed_name="config.xml"
+    entries,
+    config_file,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    root="yandex",
+    preprocessed_name="config.xml",
 ):
     """Create XML configuration file from a dictionary.
 
@@ -847,7 +869,7 @@ def experimental_analyzer(self, node, with_analyzer):
         node=node,
         setting_name="allow_experimental_analyzer",
     )
-    default_query_settings = getsattr(current().context, "default_query_settings", [])
+    default_query_settings = getsattr(self.context, "default_query_settings", [])
     if with_analyzer and default_value == "0":
         default_query_settings.append(("allow_experimental_analyzer", 1))
     elif not with_analyzer and default_value == "1":

@@ -33,7 +33,7 @@ def scenario(self, func="groupArray({params})", table=None, snapshot_id=None):
     if table is None:
         table = self.context.table
 
-    params = "({params})"
+    params = "({params}"
     checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
 
     with Check("max size"):

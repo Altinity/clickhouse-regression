@@ -168,6 +168,10 @@ xfails = {
 xflags = {}
 
 ffails = {
+    "/parquet/bloom": (
+        Skip,
+        "Not done yet"
+    ),
     "/parquet/compression/brotli": (
         Skip,
         "Not implemented before 23.3",
@@ -394,9 +398,7 @@ def regression(
 
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
-            experimental_analyzer(
-                node=cluster.node(node), with_analyzer=with_analyzer
-            )
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     with And("I have a Parquet table definition"):
         columns = (
@@ -554,6 +556,12 @@ def regression(
         )
         Feature(
             run=load("parquet.tests.fastparquet", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.bloom_filter", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,

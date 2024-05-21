@@ -445,22 +445,22 @@ ffails = {
         "need to investigate (something with zero representation)",
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/approx_top_k/*": (
+    "/aggregate functions/approx_top_k": (
         Skip,
         "approx_top_k works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/*/*approx_top_k*/*": (
+    "/aggregate functions/*/*approx_top_k*": (
         Skip,
         "approx_top_k works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/approx_top_sum/*": (
+    "/aggregate functions/approx_top_sum": (
         Skip,
         "approx_top_sum works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/*/*approx_top_sum*/*": (
+    "/aggregate functions/*/*approx_top_sum*": (
         Skip,
         "approx_top_sum works from 24.3",
         check_clickhouse_version("<24.3"),
@@ -546,7 +546,7 @@ def regression(
 
     Feature(run=load("aggregate_functions.tests.state", "feature"))
 
-    with Pool(3) as executor:
+    with Pool(5) as executor:
         Feature(
             test=load("aggregate_functions.tests.merge", "feature"),
             parallel=True,
@@ -559,6 +559,22 @@ def regression(
         )()
         Feature(
             test=load("aggregate_functions.tests.window_functions", "feature"),
+            parallel=True,
+            executor=executor,
+        )()
+        Feature(
+            test=load(
+                "aggregate_functions.tests.argMinCombinator_constant_expression",
+                "feature",
+            ),
+            parallel=True,
+            executor=executor,
+        )()
+        Feature(
+            test=load(
+                "aggregate_functions.tests.argMaxCombinator_constant_expression",
+                "feature",
+            ),
             parallel=True,
             executor=executor,
         )()

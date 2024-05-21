@@ -23,7 +23,8 @@ def simple_select_count(self):
         )
 
     for table in tables:
-        with Example(f"{table.name}", flags=TE):
+        test_name = clean_name(table.name)
+        with Example(f"{test_name}", flags=TE):
             with Then(
                 "Compare results between count() query with `FINAL`  clause "
                 "and count() query with --final setting enabled."
@@ -793,7 +794,8 @@ def select_nested_subquery(self, node=None):
         )
 
     for table in tables:
-        with When(f"{table.name}"):
+        step_name = clean_name(table.name)
+        with When(f"{step_name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
@@ -1059,9 +1061,12 @@ def run_tests(self):
 
 @TestFeature
 def with_experimental_analyzer(self):
-    """Run all tests with allow_experimental_analyzer=1."""
+    """Run all tests with experimental analyzer."""
+    note(is_with_analyzer(node=self.context.node))
     with Given("I set allow_experimental_analyzer=1"):
         default_value = allow_experimental_analyzer()
+        note(f"default vlause is {default_value}")
+        note(is_with_analyzer(node=self.context.node))
 
     run_tests()
 
@@ -1071,8 +1076,14 @@ def with_experimental_analyzer(self):
 
 @TestFeature
 def without_experimental_analyzer(self):
-    """Run all tests without allow_experimental_analyzer set."""
+    """Run all tests without experimental analyzer."""
+    with Given("I disable experimental analyzer"):
+        default_value = disable_experimental_analyzer()
+
     run_tests()
+
+    with Then("I set allow experimental analyzer to default value"):
+        set_allow_experimental_analyzer(value=default_value)
 
 
 @TestFeature

@@ -32,6 +32,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/data/broken:/var/lib/clickhouse/user_files/broken"
       - "${CLICKHOUSE_TESTS_DIR}/data/arrow:/var/lib/clickhouse/user_files/arrow"
       - "${CLICKHOUSE_TESTS_DIR}/data/encrypted:/var/lib/clickhouse/user_files/encrypted"
+      - "${CLICKHOUSE_TESTS_DIR}/data/bloom:/var/lib/clickhouse/user_files/bloom"
       - "${CLICKHOUSE_TESTS_DIR}/data/decimal:/var/lib/clickhouse/user_files/decimal"
       - "${CLICKHOUSE_TESTS_DIR}/data/compression:/var/lib/clickhouse/user_files/compression"
       - "${CLICKHOUSE_TESTS_DIR}/data/cache:/var/lib/clickhouse/user_files/cache"

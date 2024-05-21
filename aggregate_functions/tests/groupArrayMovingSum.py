@@ -5,7 +5,7 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.groupArrayMovingAvg import scenario as checks
+from aggregate_functions.tests.avg import scenario as checks
 
 
 @TestScenario
