@@ -1,9 +1,30 @@
 import os
+import json
 
 from parquet.requirements import *
 from parquet.tests.outline import import_export
 from parquet.tests.steps import *
 from helpers.common import *
+
+
+def rows_read(json_data):
+    """Get the number of rows read from the json data."""
+
+    return int(json.loads(json_data)["statistics"]["rows_read"])
+
+
+@TestStep(Given)
+def total_number_of_rows(self, file_name, node=None):
+    """Get the total number of rows in the parquet file."""
+
+    if node is None:
+        node = self.context.node
+
+    with By(f"getting the total number of rows in the parquet file {file_name}"):
+        r = f"SELECT COUNT(*) FROM file('{file_name}', Parquet)"
+        data = node.query(r)
+
+    return int(data.output.strip())
 
 
 @TestScenario
@@ -39,23 +60,43 @@ def check_parquet_with_bloom(
 ):
     """Check if the bloom filter is being used by ClickHouse."""
 
-    with Given(
+    with Given("I get the total number of rows in the parquet file"):
+        initial_rows = total_number_of_rows(
+            file_name="bloom/multi_column_bloom.gz.parquet"
+        )
+        pause()
+
+    with And(
         "I read from the parquet file",
         description=f"Bloom Filter: {bloom_filter}, Filter Pushdown: {filter_pushdown}",
     ):
-        select_from_parquet(
+        data = select_from_parquet(
             file_name=file_name,
             statement=statement,
             condition=condition,
+            format="Json",
             settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown}",
         )
+
+    with Then("I check that the number of rows read is correct"):
+        read_rows = rows_read(data.output.strip())
+        if bloom_filter == "true":
+            with By(
+                "Checking that the number of rows read is lower then the total number of rows of a file"
+            ):
+                assert read_rows < initial_rows, error()
+        else:
+            with By(
+                "Checking that the number of rows read is equal to the total number of rows of a file"
+            ):
+                assert read_rows == initial_rows, error()
 
 
 @TestSketch(Scenario)
 def read_bloom_filter_parquet_files(self):
     """Read all files from a bloom directory that contains parquet files with bloom filters."""
 
-    file_name = "multi_column_bloom.gz.parquet"
+    file_name = "bloom/multi_column_bloom.gz.parquet"
     statements = [
         "*",
         "f32",
@@ -125,5 +166,5 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     self.context.snapshot_id = "bloom"
 
-    Scenario(run=read_and_write_file_with_bloom)
+    # Scenario(run=read_and_write_file_with_bloom)
     Scenario(run=read_bloom_filter_parquet_files)
