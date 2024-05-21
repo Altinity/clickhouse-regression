@@ -90,7 +90,7 @@ def set_allow_experimental_analyzer(self, value=None):
         default_query_settings.remove(("allow_experimental_analyzer", 0))
     if ("allow_experimental_analyzer", 1) in default_query_settings:
         default_query_settings.remove(("allow_experimental_analyzer", 1))
-        
+
     experimental_analyzer(node=self.context.node, with_analyzer=value)
 
 
@@ -1354,7 +1354,7 @@ def run_queries_in_parallel(
 
 
 def clean_name(name):
-    """Remove all special characters from the name. 
+    """Remove all special characters from the name.
     Used to remove uid from table names."""
     name_parts = name.split("_")
     clean_name = ""
