@@ -39,7 +39,7 @@ def scenario(self, func="groupArrayInsertAt({params})", table=None, snapshot_id=
     if table is None:
         table = self.context.table
 
-    params = "({params})"
+    params = "({params}"
 
     _func = func.replace(params, f"{params}")
 

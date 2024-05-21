@@ -40,7 +40,7 @@ def scenario(self, func="topKWeighted({params})", table=None, snapshot_id=None):
     if table is None:
         table = self.context.table
 
-    params = "({params})"
+    params = "({params}"
 
     _func = func.replace(params, f"(3){params}")
 

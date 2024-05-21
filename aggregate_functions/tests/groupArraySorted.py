@@ -16,7 +16,7 @@ def scenario(self, func="groupArraySorted({params})", table=None, snapshot_id=No
     if table is None:
         table = self.context.table
 
-    params = "({params})"
+    params = "({params}"
     _func = func.replace(params, f"(10){params}")
 
     if "Merge" in self.name:
