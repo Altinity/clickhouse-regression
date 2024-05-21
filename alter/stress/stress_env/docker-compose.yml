@@ -36,7 +36,7 @@ services:
       service: zookeeper3
     volumes:
       - zookeeper_data-limited-3:/data-limited
-      - zookeeper_datalog-limited-4:/datalog-limited
+      - zookeeper_datalog-limited-3:/datalog-limited
 
   keeper1:
     extends:
