@@ -17,7 +17,7 @@ def check_combinator(self, scenario, func, combinator):
 
 
 @TestFeature
-@Name("argMinCombinator_constant_expression")
+@Name("ArgMinCombinator_constant_expression")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin("1.0"))
 def feature(self, combinator="ArgMin"):
     """
