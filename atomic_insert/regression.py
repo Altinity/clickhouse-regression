@@ -76,7 +76,7 @@ def regression(
 ):
     """ClickHouse atomic inserts regression."""
     nodes = {
-        "zookeeper": ("zookeeper",),
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse4"),
     }
 
@@ -103,15 +103,16 @@ def regression(
             ),
         )
         self.context.cluster = cluster
+
+    if check_clickhouse_version("<22.4")(self):
+        skip(reason="only supported on ClickHouse version >= 22.4")
     
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    if check_clickhouse_version("<22.4")(self):
-        skip(reason="only supported on ClickHouse version >= 22.4")
-
-    create_transactions_configuration()
+    with And("I create configs"):
+        create_transactions_configuration()
 
     Feature(run=load("atomic_insert.tests.sanity", "feature"))
     Feature(run=load("atomic_insert.tests.dependent_tables", "feature"))

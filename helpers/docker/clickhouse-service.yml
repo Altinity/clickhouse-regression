@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.clickhouse
+    init: true
     expose:
       - "9000"
       - "9009"
