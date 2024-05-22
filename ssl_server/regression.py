@@ -183,11 +183,11 @@ def regression(
     """ClickHouse security SSL server regression."""
     nodes = {
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
-        "zookeeper": ("zookeeper", "zookeeper-fips"),
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3", "zookeeper-fips"),
     }
 
     if current_cpu() == "aarch64":
-        nodes["zookeeper"] = (("zookeeper"),)
+        nodes["zookeeper"] = ("zookeeper1", "zookeeper2", "zookeeper3")
 
     self.context.clickhouse_version = clickhouse_version
     self.context.fips_mode = False

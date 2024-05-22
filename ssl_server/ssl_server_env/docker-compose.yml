@@ -1,13 +1,35 @@
 version: '2.3'
 
 services:
-  zookeeper:
+  zookeeper1:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper/logs/:/logs/"
+      file: ../../helpers/docker/zookeeper-node-service.yml
+      service: zookeeper1
+
+  zookeeper2:
+    extends:
+      file: ../../helpers/docker/zookeeper-node-service.yml
+      service: zookeeper2
+
+  zookeeper3:
+    extends:
+      file: ../../helpers/docker/zookeeper-node-service.yml
+      service: zookeeper3
+
+  keeper1:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper1
+
+  keeper2:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper2
+
+  keeper3:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper3
 
   zookeeper-fips:
     extends:
@@ -28,7 +50,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/etc/:/etc/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse2:
@@ -42,7 +64,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/etc/:/etc/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse3:
@@ -56,7 +78,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/etc/:/etc/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   non_fips_clickhouse:
@@ -69,7 +91,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/etc/:/etc/clickhouse-server/"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
@@ -85,7 +107,17 @@ services:
         condition: service_healthy
       non_fips_clickhouse:
         condition: service_healthy
-      zookeeper:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+      keeper1:
+        condition: service_healthy
+      keeper2:
+        condition: service_healthy
+      keeper3:
         condition: service_healthy
       zookeeper-fips:
         condition: service_healthy
