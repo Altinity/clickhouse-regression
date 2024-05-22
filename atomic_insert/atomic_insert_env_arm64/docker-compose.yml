@@ -41,7 +41,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse2:
