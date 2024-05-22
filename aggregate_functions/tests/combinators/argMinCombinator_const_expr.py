@@ -22,6 +22,7 @@ def feature(self, combinator="ArgMin"):
     Check that function with -ArgMin combinator and constant
     expression works as function without combinator.
     """
+    self.context.snapshot_id = get_snapshot_id()
     with Pool(15) as executor:
         for function_name in aggregate_functions:
             params = "{params}, 1"
@@ -44,3 +45,19 @@ def feature(self, combinator="ArgMin"):
                     executor=executor,
                 )(func=func, scenario=scenario, combinator=combinator)
         join()
+
+    with Check("Check very long {-ArgMinArgMax} combinator"):
+        combinator = "ArgMinArgMax" * 84
+        expr = ", 1" * 84 * 2
+        query = f"SELECT sum{combinator}(number{expr}) FROM numbers(10)"
+        exitcode, message = (
+            131,
+            "DB::Exception: Too long name of aggregate function, maximum: 1000",
+        )
+        execute_query(query, exitcode=exitcode, message=message)
+
+    with Check("Check long {-ArgMinArgMax} combinator"):
+        combinator = "ArgMinArgMax" * 83
+        expr = ", 1" * 83 * 2
+        query = f"SELECT sum{combinator}(number{expr}) FROM numbers(10)"
+        execute_query(query)
