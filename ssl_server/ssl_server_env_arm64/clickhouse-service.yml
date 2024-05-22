@@ -6,9 +6,6 @@ services:
       file: ../../helpers/docker/clickhouse-service.yml
       service: clickhouse
     expose:
-      - "9000"
-      - "9009"
-      - "8123"
       - "9010"
       - "9440"
       - "8443"
