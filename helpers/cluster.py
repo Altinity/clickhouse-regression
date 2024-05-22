@@ -1081,7 +1081,7 @@ class Cluster(object):
         use_keeper=False,
         thread_fuzzer=False,
         collect_service_logs=False,
-        use_zookeeper_nodes=False,
+        use_zookeeper_nodes=True,
         frame=None,
         use_specific_version=False,
         rm_instances_files=True,
