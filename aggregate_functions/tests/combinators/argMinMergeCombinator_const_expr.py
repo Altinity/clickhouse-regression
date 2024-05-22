@@ -66,7 +66,7 @@ def check(
         )
         if "group_by" in snapshot_name:
             skip("Needs to be fixed")
-            
+
         execute_query(
             f"SELECT {correct_form}{values}",
             snapshot_name=snapshot_name,
@@ -78,6 +78,9 @@ def merge(self, scenario, short_name, is_parametric, combinator="ArgMin"):
     """Check -Merge combinator function."""
 
     snapshot_id, func = scenario()
+    note(snapshot_id)
+    note(func)
+    pause()
     snapshot_id = snapshot_id.lower().replace(
         "merge", "state"
     )  # need state from snapshots of -State combinator
