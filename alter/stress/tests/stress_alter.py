@@ -265,7 +265,7 @@ def alter_combinations(
                         join()
 
                 finally:
-                    with Then("I make sure that the replicas are consistent", flags=TE):
+                    with Finally("I make sure that the replicas are consistent", flags=TE):
                         if kill_stuck_mutations:
                             with By("killing any failing mutations"):
                                 for node in self.context.ch_nodes:
@@ -284,6 +284,14 @@ def alter_combinations(
                             check_consistency(
                                 restore_consistent_structure=enforce_table_structure
                             )
+
+                    with And("I make sure that there is still free disk space on the host"):
+                        r = self.context.cluster.command(None, "df -h .")
+                        if "100%" in r.output:
+                            with When("I drop rows to free up space"):
+                                for table_name in self.context.table_names:
+                                    delete_random_rows(table_name=table_name)
+                                    delete_random_rows(table_name=table_name)
 
             note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
 
