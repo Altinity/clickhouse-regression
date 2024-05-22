@@ -1771,7 +1771,7 @@ class Cluster(object):
 
         with Then("wait all nodes report healthy"):
             if self.use_zookeeper_nodes:
-                for name in self.nodes["zookeeper"]:
+                for name in self.nodes.get("zookeeper", []):
                     self.node(name).wait_healthy()
                     if name.startswith("zookeeper"):
                         self.node(name).start_zookeeper()
