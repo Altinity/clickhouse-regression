@@ -269,7 +269,7 @@ def detach(self):
             elif check_clickhouse_version("<23.8")(self):
                 message = "Exception: Table {table_name} doesn't exist"
             else:
-                message = "Exception: Table {table_name} does not exist"
+                message = "Exception: Table default.{table_name} does not exist"
 
             retry(node.query, timeout=100, delay=1)(
                 f"select * from {table_name} FORMAT TabSeparated",

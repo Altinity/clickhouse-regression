@@ -64,7 +64,6 @@ def check_parquet_with_bloom(
         initial_rows = total_number_of_rows(
             file_name="bloom/multi_column_bloom.gz.parquet"
         )
-        pause()
 
     with And(
         "I read from the parquet file",
