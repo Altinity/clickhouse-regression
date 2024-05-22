@@ -48,7 +48,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse2:
@@ -60,7 +60,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse3:
@@ -72,7 +72,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
