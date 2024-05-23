@@ -264,6 +264,11 @@ def alter_combinations(
 
                         join()
 
+                except:
+                    with Finally("I dump system.part_logs to csv"):
+                        for node in self.context.ch_nodes:
+                            node.query("SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' FORMAT CSV")
+
                 finally:
                     with Finally("I make sure that the replicas are consistent", flags=TE):
                         if kill_stuck_mutations:
