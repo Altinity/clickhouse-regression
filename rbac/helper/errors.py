@@ -176,6 +176,10 @@ def missing_columns(name):
     return (47, f"Exception: Missing columns: '{name}' while processing query")
 
 
+def missing_columns_analyzer(name):
+    return (47, f"Exception: Unknown expression identifier '{name}' in scope")
+
+
 # Errors: wrong name
 
 wrong_name = "Exception: Wrong {type} name. Cannot find {type} `{name}` to drop"
