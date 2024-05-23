@@ -503,12 +503,12 @@ def clear_random_column(self):
 @TestStep
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("delete row")
-def delete_random_rows(self):
+def delete_random_rows(self, table_name=None):
     """Delete a few rows at random."""
-    table_name = get_random_table_name()
+    table_name = table_name or get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     column_name = get_random_column_name(node=node, table_name=table_name)
-    divisor = random.choice([5, 11, 17, 23])
+    divisor = random.choice([2, 3, 5])
     remainder = random.randint(0, divisor - 1)
 
     By(
@@ -534,7 +534,7 @@ def delete_random_rows_lightweight(self):
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     column_name = get_random_column_name(node=node, table_name=table_name)
-    divisor = random.choice([5, 11, 17, 23])
+    divisor = random.choice([2, 3, 5])
     remainder = random.randint(0, divisor - 1)
 
     with By(f"delete rows from {table_name} with {node.name}"):
