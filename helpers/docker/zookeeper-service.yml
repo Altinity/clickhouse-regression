@@ -2,11 +2,7 @@ version: '2.3'
 
 services:
   zookeeper:
-    build:
-      context: .
-      dockerfile: Dockerfile.zookeepernode
-      args:
-        ZOOKEEPER_VERSION: $CLICKHOUSE_TESTS_ZOOKEEPER_VERSION
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     expose:
       - "2181"
     init: true
@@ -14,15 +10,12 @@ services:
       ZOO_TICK_TIME: 500
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
       ZOO_4LW_COMMANDS_WHITELIST: "*"
-    command: tail -f /dev/null
     healthcheck:
-      test: echo 1
+      test: echo stat | nc localhost 2181
       interval: 10s
       timeout: 10s
       retries: 3
       start_period: 300s
-    cap_add:
-      - NET_ADMIN
     security_opt:
       - label:disable
 
