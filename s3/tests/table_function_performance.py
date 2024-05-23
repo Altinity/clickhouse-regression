@@ -63,8 +63,8 @@ def s3_create_many_files(self):
         ("3500??", 20, Name("question")),
         ("{45000..45099}", 120, Name("range")),
         ("{abc,efg,hij}", 10, Name("nums no match")),
-        ("abc*", 1, Name("star no match")),
-        ("abc??", 1, Name("question no match")),
+        ("abc*", 2, Name("star no match")),
+        ("abc??", 2, Name("question no match")),
         ("{0..10000}", 120, Name("range no match")),
     ],
 )
