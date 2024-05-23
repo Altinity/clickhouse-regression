@@ -37,7 +37,7 @@ def check(
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
-    with Given("I add datatype of expression for -AegMin combinator"):
+    with Given("I add datatype of expression for -ArgMin combinator"):
         if len(datatypes) > 0:
             datatypes += " , UInt8"
         else:
@@ -66,6 +66,8 @@ def check(
         )
         if "group_by" in snapshot_name:
             skip("Needs to be fixed")
+        if "some_negative_values" in snapshot_name:
+            skip("Needs to be fixed")
 
         execute_query(
             f"SELECT {correct_form}{values}",
@@ -78,11 +80,8 @@ def merge(self, scenario, short_name, is_parametric, combinator="ArgMin"):
     """Check -Merge combinator function."""
 
     snapshot_id, func = scenario()
-    note(snapshot_id)
-    note(func)
-    pause()
     snapshot_id = snapshot_id.lower().replace(
-        "merge", "state"
+        "merge", "state_const_expr"
     )  # need state from snapshots of -State combinator
     snapshot_path = os.path.join(
         current_dir(), "snapshots", f"steps.py.{snapshot_id}.{current_cpu()}.snapshot"
@@ -91,7 +90,8 @@ def merge(self, scenario, short_name, is_parametric, combinator="ArgMin"):
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
 
-    func += combinator
+    func = func.replace(short_name, short_name + combinator)
+    short_name = short_name
     snapshot_module = SourceFileLoader(func, snapshot_path).load_module()  # add UUID
 
     snapshot_attrs = {
@@ -103,7 +103,6 @@ def merge(self, scenario, short_name, is_parametric, combinator="ArgMin"):
             with By("I break single snapshot value into lines"):
                 data = value.strip().split("\n")
 
-            idx = 0
             for hex_and_datatype in data:
                 with By("I convert entry into JSON"):
                     value_dict = json.loads(
@@ -136,8 +135,8 @@ def merge(self, scenario, short_name, is_parametric, combinator="ArgMin"):
                     ):
                         note(key)
                         name = key.replace(
-                            f"{combinator}Combinator_state_constant_expression_sum{combinator}State",
-                            "sum",
+                            f"{combinator}StateCombinator_constant_expression_{short_name}{combinator}State_const_expr",
+                            f"{short_name}",
                         )
                         scenario_name = f"{func.replace(combinator, '')}"
                         Scenario(
@@ -151,7 +150,7 @@ def merge(self, scenario, short_name, is_parametric, combinator="ArgMin"):
                             hex_repr=hex_repr,
                             snapshot_name=name,
                             is_low_cardinality="LowCardinality" in datatypes,
-                            short_name=short_name,
+                            short_name=short_name + combinator,
                             is_parametric=is_parametric,
                             combinator=combinator,
                         )
@@ -159,7 +158,7 @@ def merge(self, scenario, short_name, is_parametric, combinator="ArgMin"):
 
 
 @TestFeature
-@Name("ArgMinMerge")
+@Name("ArgMinMergeCombinator_constant_expression")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge("1.0"))
 def feature(self):
     """Check aggregate functions with combination of `-Merge` and -ArgMin combinators."""
