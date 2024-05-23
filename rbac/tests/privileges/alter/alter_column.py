@@ -8,6 +8,8 @@ from rbac.helper.common import *
 import rbac.helper.errors as errors
 from rbac.helper.tables import table_types
 
+from helpers.common import check_analyzer
+
 subprivileges = {
     "ADD COLUMN": 1 << 0,
     "CLEAR COLUMN": 1 << 1,
@@ -315,7 +317,10 @@ def check_rename_column_when_privilege_is_granted(table, user, node, column=None
 
     with Then("I verify that the column was successfully renamed"):
         with When("I verify that the original column does not exist"):
-            exitcode, message = errors.missing_columns(column)
+            if check_analyzer()(current()):
+                exitcode, message = errors.missing_columns_analyzer(column)
+            else:
+                exitcode, message = errors.missing_columns(column)
             node.query(
                 f"SELECT {column} FROM {table} FORMAT JSONEachRow",
                 exitcode=exitcode,
