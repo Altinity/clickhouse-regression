@@ -274,16 +274,17 @@ def alter_combinations(
                         if kill_stuck_mutations:
                             with By("killing any failing mutations"):
                                 for node in self.context.ch_nodes:
-                                    node.query(
+                                    r = node.query(
                                         "SELECT * FROM system.mutations WHERE is_done=0 AND latest_fail_reason != '' FORMAT Vertical",
                                         no_checks=True,
                                     )
-                                    r = node.query(
-                                        "KILL MUTATION WHERE latest_fail_reason != ''"
-                                    )
-                                    assert r.output == "", error(
-                                        "An erroring mutation was killed"
-                                    )
+                                    if r.output != "":
+                                        r = node.query(
+                                            "KILL MUTATION WHERE latest_fail_reason != ''"
+                                        )
+                                        assert r.output == "", error(
+                                            "An erroring mutation was killed"
+                                        )
 
                         with By("making sure that replicas agree"):
                             check_consistency(
