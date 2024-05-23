@@ -197,6 +197,43 @@ window_functions = [
     "nonNegativeDerivative",
 ]
 
+parametric = [
+    "approx_top_k",
+    "approx_top_sum",
+    "exponentialMovingAverage",
+    "groupArrayLast",
+    "groupArraySample",
+    "groupArraySorted",
+    "histogram",
+    "kolmogorovSmirnovTest",
+    "mannWhitneyUTest",
+    "meanZTest",
+    "quantileGK",
+    "quantiles",
+    "quantilesBFloat16",
+    "quantilesBFloat16Weighted",
+    "quantilesDeterministic",
+    "quantilesExact",
+    "quantilesExactExclusive",
+    "quantilesExactHigh",
+    "quantilesExactInclusive",
+    "quantilesExactLow",
+    "quantilesExactWeighted",
+    "quantilesGK",
+    "quantilesInterpolatedWeighted",
+    "quantilesTDigest",
+    "quantilesTDigestWeighted",
+    "quantilesTiming",
+    "quantilesTimingWeighted",
+    "sparkbar",
+    "sumMapFiltered",
+    "topK",
+    "topKWeighted",
+    "uniqUpTo",
+    "windowFunnel",
+    "largestTriangleThreeBuckets",
+]
+
 
 def permutations_with_replacement(n, r):
     """Return all possible permutations with replacement."""
@@ -262,10 +299,16 @@ def execute_query(
                 assert r.output.strip() == expected, error()
         else:
             with Then("I check only json values if compare_json_values is set"):
-                if getsattr(current().context, "compare_json_values", False):
-                    snapshot_name = snapshot_name.replace(
-                        current().context.replace_part, ""
-                    )
+                if hasattr(current().context, "compare_json_values"):
+                    if hasattr(current().context, "replace_part"):
+                        current().context.replace_with = getsattr(
+                            current().context, "replace_with", ""
+                        )
+                        snapshot_name = snapshot_name.replace(
+                            current().context.replace_part,
+                            current().context.replace_with,
+                        )
+
                     snapshot_value = snapshot(
                         value="\n" + r.output.strip() + "\n",
                         id=current().context.snapshot_id + "." + current_cpu(),

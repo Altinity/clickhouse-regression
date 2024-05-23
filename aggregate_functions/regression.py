@@ -558,20 +558,44 @@ def regression(
         )()
         Feature(
             test=load(
-                "aggregate_functions.tests.argMinCombinator_constant_expression",
+                "aggregate_functions.tests.combinators.argMinCombinator_const_expr",
                 "feature",
             ),
             parallel=True,
             executor=executor,
         )()
+        # Feature(
+        #     test=load(
+        #         "aggregate_functions.tests.combinators.argMinStateCombinator_const_expr",
+        #         "feature",
+        #     ),
+        #     parallel=True,
+        #     executor=executor,
+        # )()
+        # Feature(
+        #     test=load(
+        #         "aggregate_functions.tests.argMinMergeCombinator_const_expr",
+        #         "feature",
+        #     ),
+        #     parallel=True,
+        #     executor=executor,
+        # )()
         Feature(
             test=load(
-                "aggregate_functions.tests.argMaxCombinator_constant_expression",
+                "aggregate_functions.tests.combinators.argMaxCombinator_const_expr",
                 "feature",
             ),
             parallel=True,
             executor=executor,
         )()
+        # Feature(
+        #     test=load(
+        #         "aggregate_functions.tests.combinators.argMaxStateCombinator_const_expr",
+        #         "feature",
+        #     ),
+        #     parallel=True,
+        #     executor=executor,
+        # )()
         join()
 
 
