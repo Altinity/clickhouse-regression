@@ -267,7 +267,7 @@ def alter_combinations(
                 except:
                     with Finally("I dump system.part_logs to csv"):
                         for node in self.context.ch_nodes:
-                            node.query("SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' FORMAT CSV")
+                            node.query("SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' TRUNCATE FORMAT CSV")
 
                 finally:
                     with Finally("I make sure that the replicas are consistent", flags=TE):
@@ -325,6 +325,7 @@ def safe(self):
     alter_combinations(
         actions=build_action_list(),
         limit=None if self.context.stress else 20,
+        kill_stuck_mutations=False, # KILL may have unsafe side effects
     )
 
 
