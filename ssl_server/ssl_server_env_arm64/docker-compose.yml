@@ -31,14 +31,6 @@ services:
       file: ../../helpers/docker/keeper-service.yml
       service: keeper3
 
-  zookeeper-fips:
-    extends:
-      file: zookeeper-fips-service.yml
-      service: zookeeper-fips
-    hostname: zookeeper-fips
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper-fips/logs/:/logs/"
-
   clickhouse1:
     extends:
       file: clickhouse-service.yml
