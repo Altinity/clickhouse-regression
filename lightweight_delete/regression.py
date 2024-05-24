@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
-from helpers.argparser import argparser as argparser_base
+from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import allow_experimental_lightweight_delete
@@ -89,17 +89,13 @@ def argparser(parser):
     RQ_SRS_023_ClickHouse_LightweightDelete_DeleteStatement("1.0"),
     RQ_SRS_023_ClickHouse_LightweightDelete_SupportedTableEngines("1.0"),
 )
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     use_alter_delete=False,
     force_run=False,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     stress=None,
     parallel=None,
     allow_vfs=False,
@@ -112,12 +108,7 @@ def regression(
     self.context.use_alter_delete = use_alter_delete
 
     with Cluster(
-        local,
-        clickhouse_binary_path,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
-        collect_service_logs=collect_service_logs,
+        **cluster_args,
         nodes=nodes,
     ) as cluster:
         self.context.cluster = cluster

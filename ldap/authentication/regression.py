@@ -6,7 +6,7 @@ from testflows.core import *
 append_path(sys.path, "..", "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 from ldap.authentication.requirements import *
 
@@ -53,15 +53,11 @@ xfails = {
 @Specifications(SRS_007_ClickHouse_Authentication_of_Users_via_LDAP)
 @Requirements(RQ_SRS_007_LDAP_Authentication("1.0"))
 @XFails(xfails)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -78,12 +74,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )

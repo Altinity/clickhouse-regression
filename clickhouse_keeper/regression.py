@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser as base_argparser
+from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.common import *
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
@@ -158,15 +158,11 @@ ffails = {
 @Name("clickhouse keeper")
 @Requirements(RQ_SRS_024_ClickHouse_Keeper("1.0"))
 @Specifications(SRS024_ClickHouse_Keeper)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     ssl=None,
     stress=None,
     allow_vfs=False,
@@ -221,12 +217,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )

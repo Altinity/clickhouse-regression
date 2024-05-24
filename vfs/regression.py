@@ -7,7 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, experimental_analyzer
-from s3.regression import argparser
+from s3.regression import argparser, CaptureClusterArgs
 from s3.tests.common import start_minio
 
 from vfs.requirements import *
@@ -42,12 +42,7 @@ def minio(
     uri,
     root_user,
     root_password,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run minio tests."""
@@ -58,12 +53,7 @@ def minio(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -116,12 +106,7 @@ def aws_s3(
     access_key,
     bucket,
     region,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
@@ -156,12 +141,7 @@ def aws_s3(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -205,12 +185,7 @@ def gcs(
     uri,
     key_id,
     access_key,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run gcs tests."""
@@ -238,12 +213,7 @@ def gcs(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -282,10 +252,8 @@ def gcs(
 @FFails(ffails)
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     storages,
     minio_uri,
     gcs_uri,
@@ -299,9 +267,6 @@ def regression(
     gcs_key_id,
     stress,
     allow_vfs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     with_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
@@ -319,12 +284,7 @@ def regression(
         storages = ["minio"]
 
     module_kwargs = dict(
-        local=local,
-        clickhouse_binary_path=clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
+        **cluster_args,
         with_analyzer=with_analyzer,
     )
 

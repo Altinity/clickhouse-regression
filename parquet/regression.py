@@ -9,7 +9,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from s3.regression import argparser
+from s3.regression import argparser, CaptureClusterArgs
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
@@ -343,12 +343,11 @@ ffails = {
 @Name("parquet")
 @Specifications(SRS032_ClickHouse_Parquet_Data_Format)
 @Requirements(RQ_SRS_032_ClickHouse_Parquet("1.0"))
+@CaptureClusterArgs
 def regression(
     self,
-    local,
+    cluster_args,
     clickhouse_version,
-    clickhouse_binary_path,
-    collect_service_logs,
     storages,
     stress,
     minio_uri,
@@ -362,9 +361,6 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     node="clickhouse1",
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     allow_vfs=False,
     with_analyzer=False,
 ):
@@ -385,12 +381,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )
