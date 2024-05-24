@@ -33,7 +33,7 @@ services:
 
   mysql1:
     extends:
-      file: ../../helpers/docker/mysql-service.yml
+      file: mysql-service.yml
       service: mysql
     hostname: mysql1
     volumes:
