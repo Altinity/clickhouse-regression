@@ -147,6 +147,25 @@ services:
     extends:
       file: ../../helpers/docker/zookeeper-service.yml
       service: zookeeper1
+    volumes:
+      - clickhouse1_jbod1:/clickhouse1_jbod1
+      - clickhouse1_jbod2:/clickhouse1_jbod2
+      - clickhouse1_jbod3:/clickhouse1_jbod3
+      - clickhouse1_jbod4:/clickhouse1_jbod4
+      - clickhouse1_external:/clickhouse1_external
+      - clickhouse1_external2:/clickhouse1_external2
+      - clickhouse2_jbod1:/clickhouse2_jbod1
+      - clickhouse2_jbod2:/clickhouse2_jbod2
+      - clickhouse2_jbod3:/clickhouse2_jbod3
+      - clickhouse2_jbod4:/clickhouse2_jbod4
+      - clickhouse2_external:/clickhouse2_external
+      - clickhouse2_external2:/clickhouse2_external2
+      - clickhouse3_jbod1:/clickhouse3_jbod1
+      - clickhouse3_jbod2:/clickhouse3_jbod2
+      - clickhouse3_jbod3:/clickhouse3_jbod3
+      - clickhouse3_jbod4:/clickhouse3_jbod4
+      - clickhouse3_external:/clickhouse3_external
+      - clickhouse3_external2:/clickhouse3_external2
 
   zookeeper2:
     extends:
