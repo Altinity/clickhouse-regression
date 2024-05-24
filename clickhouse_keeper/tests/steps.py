@@ -1512,7 +1512,7 @@ def start_standalone_keeper(
                     message=f"{'F' if ssl else 'imok'}",
                 )
 
-        with And("I start rest ClickHouse server nodes"):
+        with And("I start the remaining ClickHouse server nodes"):
             for name in cluster_nodes:
                 retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
 
