@@ -111,5 +111,3 @@ services:
         condition: service_healthy
       keeper3:
         condition: service_healthy
-      zookeeper-fips:
-        condition: service_healthy
