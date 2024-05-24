@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser as argparser_base
+from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import *
 
 from ssl_server.requirements import SRS017_ClickHouse_SSL
@@ -166,16 +166,12 @@ ffails = {
 @FFails(ffails)
 @Name("ssl server")
 @Specifications(SRS017_ClickHouse_SSL)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     force_fips,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -197,12 +193,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),

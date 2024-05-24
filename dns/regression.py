@@ -9,7 +9,7 @@ append_path(sys.path, "..", pos=0)
 
 from helpers.cluster import create_cluster
 from helpers.common import *
-from helpers.argparser import argparser
+from helpers.argparser import argparser, CaptureClusterArgs
 
 xfails = {
     "lookup": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/17202")],
@@ -24,15 +24,11 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("dns")
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    clickhouse_version=None,
-    use_keeper=False,
+    cluster_args,
+    clickhouse_version,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -47,12 +43,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )

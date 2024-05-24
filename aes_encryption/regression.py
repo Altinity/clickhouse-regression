@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.common import experimental_analyzer
 from helpers.cluster import create_cluster, check_clickhouse_version
-from helpers.argparser import argparser
+from helpers.argparser import argparser, CaptureClusterArgs
 from aes_encryption.requirements import *
 
 issue_18249 = "https://github.com/ClickHouse/ClickHouse/issues/18249"
@@ -91,15 +91,11 @@ xfails = {
     RQ_SRS008_AES_Functions("1.0"), RQ_SRS008_AES_Functions_DifferentModes("1.0")
 )
 @XFails(xfails)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -116,12 +112,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            keeper_binary_path=keeper_binary_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )
