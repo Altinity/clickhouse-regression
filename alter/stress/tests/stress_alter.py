@@ -264,21 +264,27 @@ def alter_combinations(
 
                         join()
 
+                except:
+                    with Finally("I dump system.part_logs to csv"):
+                        for node in self.context.ch_nodes:
+                            node.query("SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' TRUNCATE FORMAT CSV")
+
                 finally:
                     with Finally("I make sure that the replicas are consistent", flags=TE):
                         if kill_stuck_mutations:
                             with By("killing any failing mutations"):
                                 for node in self.context.ch_nodes:
-                                    node.query(
+                                    r = node.query(
                                         "SELECT * FROM system.mutations WHERE is_done=0 AND latest_fail_reason != '' FORMAT Vertical",
                                         no_checks=True,
                                     )
-                                    r = node.query(
-                                        "KILL MUTATION WHERE latest_fail_reason != ''"
-                                    )
-                                    assert r.output == "", error(
-                                        "An erroring mutation was killed"
-                                    )
+                                    if r.output != "":
+                                        r = node.query(
+                                            "KILL MUTATION WHERE latest_fail_reason != ''"
+                                        )
+                                        assert r.output == "", error(
+                                            "An erroring mutation was killed"
+                                        )
 
                         with By("making sure that replicas agree"):
                             check_consistency(
@@ -319,6 +325,7 @@ def safe(self):
     alter_combinations(
         actions=build_action_list(),
         limit=None if self.context.stress else 20,
+        kill_stuck_mutations=False, # KILL may have unsafe side effects
     )
 
 
