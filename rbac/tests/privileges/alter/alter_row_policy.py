@@ -138,10 +138,28 @@ def alter_row_policy(self, privilege, grant_target_name, user_name, node=None):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
             with Then("I check the user can alter a row policy"):
-                node.query(
-                    f"ALTER ROW POLICY {alter_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
-                    settings=[("user", f"{user_name}")],
-                )
+                if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
+                    node.query(
+                        f"ALTER ROW POLICY {alter_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
+                        settings=[("user", f"{user_name}")],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"ALTER ROW POLICY {alter_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
+                        settings=[("user", f"{user_name}")],
+                    )
+
+            with And(
+                "I grant on cluster privilege and check the user can alter a row policy"
+            ):
+                if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
+                    grant_cluster(user=grant_target_name, node=node)
+                    node.query(
+                        f"ALTER ROW POLICY {alter_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
+                        settings=[("user", f"{user_name}")],
+                    )
 
         finally:
             with Finally("I drop the user"):
@@ -198,14 +216,18 @@ def no_grants(self, node=None):
             node.query(f"INSERT INTO {table_name} (y) VALUES (1)")
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
         with When("I alter the row policy to have a condition"):
             node.query(f"ALTER POLICY {pol_name} ON {table_name} FOR SELECT USING 1")
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
 
@@ -235,7 +257,9 @@ def permissive(self, node=None):
             )
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output and "2" not in output, error()
 
 
@@ -272,7 +296,9 @@ def restrictive(self, node=None):
             node.query(f"INSERT INTO {table_name} (y) VALUES (1), (2)")
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output and "2" not in output, error()
 
 
@@ -302,7 +328,9 @@ def for_select(self, node=None):
             )
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
 
@@ -330,7 +358,9 @@ def condition(self, node=None):
             )
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
 
@@ -363,7 +393,9 @@ def remove_condition(self, node=None):
             )
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
 
@@ -391,7 +423,9 @@ def if_exists(self, node=None):
             )
 
         with Then("I select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
 
@@ -426,7 +460,9 @@ def rename(self, node=None):
                 )
 
             with Then("I select from the table"):
-                output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output, error()
 
         finally:
@@ -469,11 +505,15 @@ def on_cluster(self, node=None):
             )
 
         with Then("I select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
         with And("I select from another node on the cluster"):
-            output = node2.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node2.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
     finally:
@@ -520,11 +560,15 @@ def diff_policies_on_diff_nodes(self, node=None):
             )
 
         with Then("I select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
         with And("I select from another node on the cluster"):
-            output = node2.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node2.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
     finally:
@@ -566,7 +610,9 @@ def assignment(self, node=None):
             node.query(f"ALTER ROW POLICY {pol_name} ON {table_name} TO default")
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
 
@@ -599,7 +645,9 @@ def assignment_none(self, node=None):
             node.query(f"ALTER ROW POLICY {pol_name} ON {table_name} TO NONE")
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
 
@@ -632,7 +680,9 @@ def assignment_all(self, node=None):
             node.query(f"ALTER ROW POLICY {pol_name} ON {table_name} TO ALL")
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
 
@@ -667,7 +717,9 @@ def assignment_all_except(self, node=None):
             )
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
 
@@ -702,7 +754,9 @@ def nested_view(self, node=None):
                 )
 
             with Then("I try to select from the view"):
-                output = node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output and "2" not in output, error()
 
         finally:
@@ -751,7 +805,9 @@ def nested_live_view_before_policy(self, node=None):
                 )
 
             with Then("I try to select from the view"):
-                output = node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output and "2" not in output, error()
 
         finally:
@@ -814,7 +870,9 @@ def nested_live_view_after_policy(self, node=None):
                 )
 
             with Then("I try to select from the view"):
-                output = node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output and "2" not in output, error()
 
         finally:
@@ -869,7 +927,9 @@ def nested_mat_view_before_policy(self, node=None):
                 )
 
             with Then("I try to select from the view"):
-                output = node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output and "2" not in output, error()
 
         finally:
@@ -910,7 +970,9 @@ def nested_mat_view_after_policy(self, node=None):
                 node.query(f"INSERT INTO {table_name} (y) VALUES (1),(2)")
 
             with Then("I try to select from the view"):
-                output = node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output and "2" not in output, error()
 
         finally:
@@ -951,7 +1013,9 @@ def populate_mat_view(self, node=None):
                 )
 
             with Then("I try to select from the view"):
-                output = node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output and "2" not in output, error()
 
         finally:
@@ -999,7 +1063,9 @@ def dist_table(self, node=None):
             )
 
         with Then("I select from the distributed table"):
-            output = node.query(f"SELECT * FROM {dist_table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {dist_table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
     finally:
@@ -1056,7 +1122,9 @@ def dist_table_diff_policies_on_diff_nodes(self, node=None):
             )
 
         with Then("I select from the distributed table"):
-            output = node.query(f"SELECT * FROM {dist_table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {dist_table_name} FORMAT TabSeparated"
+            ).output
             assert "1" not in output and "2" in output, error()
 
     finally:
@@ -1118,7 +1186,9 @@ def dist_table_on_dist_table(self, node=None):
             )
 
         with Then("I select from the second distributed table"):
-            output = node.query(f"SELECT * FROM {dist_table_2_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {dist_table_2_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
     finally:
@@ -1163,7 +1233,9 @@ def policy_before_table(self, node=None):
             node.query(f"INSERT INTO {table_name} (y) VALUES (1), (2)")
 
         with Then("I try to select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output and "2" not in output, error()
 
 
