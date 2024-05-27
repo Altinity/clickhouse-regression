@@ -96,6 +96,38 @@ def row_policy(self, name, table, node=None):
             node.query(f"DROP ROW POLICY IF EXISTS {name} ON {table}")
 
 
+@TestStep(Given)
+def grant_select(self, user, table, node=None):
+    """Grant select on a given table to a given user."""
+    if node is None:
+        node = self.context.node
+
+    try:
+        with Given(f"I grant select om table"):
+            node.query(f"GRANT SELECT ON {table} TO {user}")
+        yield
+
+    finally:
+        with Finally(f"I revoke select on table"):
+            node.query(f"REVOKE SELECT ON {table} FROM {user}")
+
+
+@TestStep(Given)
+def grant_cluster(self, user, node=None):
+    """Grant CLUSTER ON *.* to a given user."""
+    if node is None:
+        node = self.context.node
+
+    try:
+        with Given(f"I grant CLUSTER privilege"):
+            node.query(f"GRANT CLUSTER ON *.* TO {user}")
+        yield
+
+    finally:
+        with Finally(f"I revoke CLUSTER privilege"):
+            node.query(f"REVOKE CLUSTER ON *.* FROM {user}")
+
+
 tables = {
     "table0": 1 << 0,
     "table1": 1 << 1,
