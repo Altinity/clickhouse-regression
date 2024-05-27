@@ -157,7 +157,9 @@ xfails = {
     "privileges/show dictionaries/:/check privilege/:/exists/EXISTS with privilege": [
         (Fail, issue_17655)
     ],
-    "privileges/public tables/sensitive tables": [(Fail, issue_18110)],
+    "privileges/public tables/sensitive tables": [
+        (Fail, issue_18110, check_clickhouse_version("<24.4"))
+    ],
     "privileges/: row policy/nested live:": [(Fail, issue_21083)],
     "privileges/: row policy/nested mat:": [(Fail, issue_21084)],
     "privileges/show dictionaries/:/check privilege/check privilege=SHOW DICTIONARIES/show dict/SHOW DICTIONARIES with privilege": [
@@ -209,6 +211,8 @@ xfails = {
     "/rbac/SQL security/view with definer/check default sql security with definer/I try to select from view with user/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
     ],
+    "privileges/: row policy/no grants/*": [(Fail, "Need to check https://github.com/ClickHouse/ClickHouse/issues/64486")],
+    "privileges/create row policy/or replace/*": [(Fail, "Need to check https://github.com/ClickHouse/ClickHouse/issues/64486")],
 }
 
 xflags = {
