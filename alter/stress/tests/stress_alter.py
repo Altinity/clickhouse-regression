@@ -200,7 +200,9 @@ def alter_combinations(
                 else None
             )
             table_settings = (
-                "min_bytes_for_wide_part=0" if self.context.wide_parts_only else None
+                "min_bytes_for_wide_part=0"
+                if self.context.workarounds["wide_parts_only"]
+                else None
             )
 
             for i in range(n_tables):
@@ -267,10 +269,14 @@ def alter_combinations(
                 except:
                     with Finally("I dump system.part_logs to csv"):
                         for node in self.context.ch_nodes:
-                            node.query("SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' TRUNCATE FORMAT CSV")
+                            node.query(
+                                "SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' TRUNCATE FORMAT CSV"
+                            )
 
                 finally:
-                    with Finally("I make sure that the replicas are consistent", flags=TE):
+                    with Finally(
+                        "I make sure that the replicas are consistent", flags=TE
+                    ):
                         if kill_stuck_mutations:
                             with By("killing any failing mutations"):
                                 for node in self.context.ch_nodes:
@@ -291,7 +297,9 @@ def alter_combinations(
                                 restore_consistent_structure=enforce_table_structure
                             )
 
-                    with And("I make sure that there is still free disk space on the host"):
+                    with And(
+                        "I make sure that there is still free disk space on the host"
+                    ):
                         r = self.context.cluster.command(None, "df -h .")
                         if "100%" in r.output:
                             with When("I drop rows to free up space"):
@@ -325,7 +333,7 @@ def safe(self):
     alter_combinations(
         actions=build_action_list(),
         limit=None if self.context.stress else 20,
-        kill_stuck_mutations=False, # KILL may have unsafe side effects
+        kill_stuck_mutations=False,  # KILL may have unsafe side effects
     )
 
 
@@ -341,6 +349,7 @@ def columns(self):
         ),
         limit=None if self.context.stress else 20,
     )
+
 
 @TestScenario
 def parts(self):
@@ -369,12 +378,13 @@ def columns_and_indexes(self):
         limit=None if self.context.stress else 20,
     )
 
+
 @TestScenario
 def columns_and_indexes_unsafe(self):
     """
     Perform only actions that manipulate columns and indexes, disable related workarounds.
     """
-    self.context.wide_parts_only = False
+    self.context.workarounds["wide_parts_only"] = False
 
     alter_combinations(
         actions=build_action_list(
@@ -382,6 +392,7 @@ def columns_and_indexes_unsafe(self):
         ),
         limit=None if self.context.stress else 20,
     )
+
 
 @TestScenario
 def columns_and_parts(self):
@@ -395,6 +406,7 @@ def columns_and_parts(self):
         ),
         limit=None if self.context.stress else 20,
     )
+
 
 @TestScenario
 def indexes_and_projections(self):
@@ -508,15 +520,16 @@ def feature(self):
     """Stress test with many alters."""
 
     # Workarounds
+    self.context.workarounds = {}
     # https://github.com/ClickHouse/ClickHouse/issues/62459
-    self.context.disallow_move_partition_to_self = True
+    self.context.workarounds["disallow_move_partition_to_self"] = True
 
     # https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
-    self.context.wide_parts_only = True
+    self.context.workarounds["wide_parts_only"] = True
 
     # SELECT count() fails sporadically when column and part manipulation are combined
     # Use SELECT count(key) instead when we actually need to know the row count
-    self.context.use_key_column_for_count = True
+    self.context.workarounds["use_key_column_for_count"] = True
 
     with Given("I have S3 disks configured"):
         disk_config()
