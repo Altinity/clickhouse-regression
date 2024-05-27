@@ -6342,6 +6342,10 @@ _aggregate_functions_argMin_datatypes_String_Array_Int8__ = r"""
 {"argMin(string, array_int8_)":"","any(toTypeName(string))":"String","any(toTypeName(array_int8_))":"Array(Int8)"}
 """
 
+_aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Bool___ = r"""
+{"argMin(string, array_lowcardinality_bool__)":"","any(toTypeName(string))":"String","any(toTypeName(array_lowcardinality_bool__))":"Array(LowCardinality(Bool))"}
+"""
+
 _aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Bool___cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
 {"argMin(string, array_lowcardinality_bool__)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(array_lowcardinality_bool__))":"Array(LowCardinality(Bool))"}
 """
@@ -6386,6 +6390,10 @@ _aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Int8___ = r"""
 {"argMin(string, array_lowcardinality_int8__)":"","any(toTypeName(string))":"String","any(toTypeName(array_lowcardinality_int8__))":"Array(LowCardinality(Int8))"}
 """
 
+_aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Nullable_Bool____ = r"""
+{"argMin(string, array_lowcardinality_nullable_bool___)":"","any(toTypeName(string))":"String","any(toTypeName(array_lowcardinality_nullable_bool___))":"Array(LowCardinality(Nullable(Bool)))"}
+"""
+
 _aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Nullable_Bool____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
 {"argMin(string, array_lowcardinality_nullable_bool___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(array_lowcardinality_nullable_bool___))":"Array(LowCardinality(Nullable(Bool)))"}
 """
@@ -6408,6 +6416,10 @@ _aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Nullable_Float
 
 _aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Nullable_Float64____ = r"""
 {"argMin(string, array_lowcardinality_nullable_float64___)":"","any(toTypeName(string))":"String","any(toTypeName(array_lowcardinality_nullable_float64___))":"Array(LowCardinality(Nullable(Float64)))"}
+"""
+
+_aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Nullable_Int128____ = r"""
+{"argMin(string, array_lowcardinality_nullable_int128___)":"","any(toTypeName(string))":"String","any(toTypeName(array_lowcardinality_nullable_int128___))":"Array(LowCardinality(Nullable(Int128)))"}
 """
 
 _aggregate_functions_argMin_datatypes_String_Array_LowCardinality_Nullable_Int128____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -6490,6 +6502,10 @@ _aggregate_functions_argMin_datatypes_String_Array_Map_String_LowCardinality_Flo
 {"argMin(string, array_map_string_lowcardinality_float64___)":"","any(toTypeName(string))":"String","any(toTypeName(array_map_string_lowcardinality_float64___))":"Array(Map(String, LowCardinality(Float64)))"}
 """
 
+_aggregate_functions_argMin_datatypes_String_Array_Nullable_Bool___ = r"""
+{"argMin(string, array_nullable_bool__)":"","any(toTypeName(string))":"String","any(toTypeName(array_nullable_bool__))":"Array(Nullable(Bool))"}
+"""
+
 _aggregate_functions_argMin_datatypes_String_Array_Nullable_Bool___cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
 {"argMin(string, array_nullable_bool__)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(array_nullable_bool__))":"Array(Nullable(Bool))"}
 """
@@ -6520,6 +6536,10 @@ _aggregate_functions_argMin_datatypes_String_Array_Nullable_Float32___ = r"""
 
 _aggregate_functions_argMin_datatypes_String_Array_Nullable_Float64___ = r"""
 {"argMin(string, array_nullable_float64__)":"","any(toTypeName(string))":"String","any(toTypeName(array_nullable_float64__))":"Array(Nullable(Float64))"}
+"""
+
+_aggregate_functions_argMin_datatypes_String_Array_Nullable_Int128___ = r"""
+{"argMin(string, array_nullable_int128__)":"","any(toTypeName(string))":"String","any(toTypeName(array_nullable_int128__))":"Array(Nullable(Int128))"}
 """
 
 _aggregate_functions_argMin_datatypes_String_Array_Nullable_Int128___abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -6602,6 +6622,10 @@ _aggregate_functions_argMin_datatypes_String_Array_UUID__ = r"""
 {"argMin(string, array_uuid_)":"","any(toTypeName(string))":"String","any(toTypeName(array_uuid_))":"Array(UUID)"}
 """
 
+_aggregate_functions_argMin_datatypes_String_Bool_ = r"""
+{"argMin(string, bool)":"","any(toTypeName(string))":"String","any(toTypeName(bool))":"Bool"}
+"""
+
 _aggregate_functions_argMin_datatypes_String_Bool_gggggggggggggggggggggggggggggggggggg = r"""
 {"argMin(string, bool)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(bool))":"Bool"}
 """
@@ -6652,6 +6676,10 @@ _aggregate_functions_argMin_datatypes_String_Int64_ = r"""
 
 _aggregate_functions_argMin_datatypes_String_Int8_ = r"""
 {"argMin(string, int8)":"","any(toTypeName(string))":"String","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_argMin_datatypes_String_LowCardinality_Bool__ = r"""
+{"argMin(string, lowcardinality_bool_)":"","any(toTypeName(string))":"String","any(toTypeName(lowcardinality_bool_))":"LowCardinality(Bool)"}
 """
 
 _aggregate_functions_argMin_datatypes_String_LowCardinality_Bool__NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
@@ -6802,6 +6830,10 @@ _aggregate_functions_argMin_datatypes_String_Map_Bool_Array_String___ = r"""
 {"argMin(string, map_bool_array_string__)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_array_string__))":"Map(Bool, Array(String))"}
 """
 
+_aggregate_functions_argMin_datatypes_String_Map_Bool_Bool__ = r"""
+{"argMin(string, map_bool_bool_)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_bool_))":"Map(Bool, Bool)"}
+"""
+
 _aggregate_functions_argMin_datatypes_String_Map_Bool_Bool__NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
 {"argMin(string, map_bool_bool_)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_bool_bool_))":"Map(Bool, Bool)"}
 """
@@ -6898,6 +6930,10 @@ _aggregate_functions_argMin_datatypes_String_Map_Bool_LowCardinality_Int8___ = r
 {"argMin(string, map_bool_lowcardinality_int8__)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_lowcardinality_int8__))":"Map(Bool, LowCardinality(Int8))"}
 """
 
+_aggregate_functions_argMin_datatypes_String_Map_Bool_LowCardinality_Nullable_Bool____ = r"""
+{"argMin(string, map_bool_lowcardinality_nullable_bool___)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_lowcardinality_nullable_bool___))":"Map(Bool, LowCardinality(Nullable(Bool)))"}
+"""
+
 _aggregate_functions_argMin_datatypes_String_Map_Bool_LowCardinality_Nullable_Bool____iiiii = r"""
 {"argMin(string, map_bool_lowcardinality_nullable_bool___)":"iiiii","any(toTypeName(string))":"String","any(toTypeName(map_bool_lowcardinality_nullable_bool___))":"Map(Bool, LowCardinality(Nullable(Bool)))"}
 """
@@ -6920,6 +6956,10 @@ _aggregate_functions_argMin_datatypes_String_Map_Bool_LowCardinality_Nullable_Fl
 
 _aggregate_functions_argMin_datatypes_String_Map_Bool_LowCardinality_Nullable_Float64____ = r"""
 {"argMin(string, map_bool_lowcardinality_nullable_float64___)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_lowcardinality_nullable_float64___))":"Map(Bool, LowCardinality(Nullable(Float64)))"}
+"""
+
+_aggregate_functions_argMin_datatypes_String_Map_Bool_LowCardinality_Nullable_Int128____ = r"""
+{"argMin(string, map_bool_lowcardinality_nullable_int128___)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_lowcardinality_nullable_int128___))":"Map(Bool, LowCardinality(Nullable(Int128)))"}
 """
 
 _aggregate_functions_argMin_datatypes_String_Map_Bool_LowCardinality_Nullable_Int128____gggggggggggggggggggggggggggggggggggg = r"""
@@ -7002,6 +7042,10 @@ _aggregate_functions_argMin_datatypes_String_Map_Bool_Map_String_LowCardinality_
 {"argMin(string, map_bool_map_string_lowcardinality_float64___)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_map_string_lowcardinality_float64___))":"Map(Bool, Map(String, LowCardinality(Float64)))"}
 """
 
+_aggregate_functions_argMin_datatypes_String_Map_Bool_Nullable_Bool___ = r"""
+{"argMin(string, map_bool_nullable_bool__)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_nullable_bool__))":"Map(Bool, Nullable(Bool))"}
+"""
+
 _aggregate_functions_argMin_datatypes_String_Map_Bool_Nullable_Bool___NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
 {"argMin(string, map_bool_nullable_bool__)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_bool_nullable_bool__))":"Map(Bool, Nullable(Bool))"}
 """
@@ -7032,6 +7076,10 @@ _aggregate_functions_argMin_datatypes_String_Map_Bool_Nullable_Float32___ = r"""
 
 _aggregate_functions_argMin_datatypes_String_Map_Bool_Nullable_Float64___ = r"""
 {"argMin(string, map_bool_nullable_float64__)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_nullable_float64__))":"Map(Bool, Nullable(Float64))"}
+"""
+
+_aggregate_functions_argMin_datatypes_String_Map_Bool_Nullable_Int128___ = r"""
+{"argMin(string, map_bool_nullable_int128__)":"","any(toTypeName(string))":"String","any(toTypeName(map_bool_nullable_int128__))":"Map(Bool, Nullable(Int128))"}
 """
 
 _aggregate_functions_argMin_datatypes_String_Map_Bool_Nullable_Int128___gggggggggggggggggggggggggggggggggggg = r"""
@@ -12898,8 +12946,16 @@ _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__DateTime_0 = r
 {"argMin(decimal128_38_, datetime)":0,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Decimal128_38__DateTime__1_0 = r"""
+{"argMin(decimal128_38_, datetime)":-0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__Date_0 = r"""
 {"argMin(decimal128_38_, date)":0,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Decimal128_38__Date__1_0 = r"""
+{"argMin(decimal128_38_, date)":-0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__Decimal128_38___1_0 = r"""
@@ -12922,8 +12978,16 @@ _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality
 {"argMin(decimal128_38_, lowcardinality_datetime_)":0,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality_DateTime___1_0 = r"""
+{"argMin(decimal128_38_, lowcardinality_datetime_)":-0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality_Date__0 = r"""
 {"argMin(decimal128_38_, lowcardinality_date_)":0,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality_Date___1_0 = r"""
+{"argMin(decimal128_38_, lowcardinality_date_)":-0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality_Float32___1_0 = r"""
@@ -12940,6 +13004,10 @@ _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality
 
 _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality_UInt64__0 = r"""
 {"argMin(decimal128_38_, lowcardinality_uint64_)":0,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Decimal128_38__LowCardinality_UInt64___1_0 = r"""
+{"argMin(decimal128_38_, lowcardinality_uint64_)":-0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__Map_String_LowCardinality_Float64____1_0 = r"""
@@ -12978,6 +13046,10 @@ _aggregate_functions_argMin_datatypes_permutations_Decimal128_38__UInt64_0 = r""
 {"argMin(decimal128_38_, uint64)":0,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint64))":"UInt64"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Decimal128_38__UInt64__1_0 = r"""
+{"argMin(decimal128_38_, uint64)":-0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint64))":"UInt64"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Float32_Array_String___3_4028235e_38 = r"""
 {"argMin(float32, array_string_)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(array_string_))":"Array(String)"}
 """
@@ -12986,8 +13058,16 @@ _aggregate_functions_argMin_datatypes_permutations_Float32_DateTime_0 = r"""
 {"argMin(float32, datetime)":0,"any(toTypeName(float32))":"Float32","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Float32_DateTime__3_4028235e_38 = r"""
+{"argMin(float32, datetime)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Float32_Date_0 = r"""
 {"argMin(float32, date)":0,"any(toTypeName(float32))":"Float32","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Float32_Date__3_4028235e_38 = r"""
+{"argMin(float32, date)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Float32_Decimal128_38___3_4028235e_38 = r"""
@@ -13010,8 +13090,16 @@ _aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_DateTi
 {"argMin(float32, lowcardinality_datetime_)":0,"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_DateTime___3_4028235e_38 = r"""
+{"argMin(float32, lowcardinality_datetime_)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_Date__0 = r"""
 {"argMin(float32, lowcardinality_date_)":0,"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_Date___3_4028235e_38 = r"""
+{"argMin(float32, lowcardinality_date_)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_Float32___3_4028235e_38 = r"""
@@ -13028,6 +13116,10 @@ _aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_Int64_
 
 _aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_UInt64__0 = r"""
 {"argMin(float32, lowcardinality_uint64_)":0,"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Float32_LowCardinality_UInt64___3_4028235e_38 = r"""
+{"argMin(float32, lowcardinality_uint64_)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Float32_Map_String_LowCardinality_Float64____3_4028235e_38 = r"""
@@ -13066,6 +13158,10 @@ _aggregate_functions_argMin_datatypes_permutations_Float32_UInt64_0 = r"""
 {"argMin(float32, uint64)":0,"any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Float32_UInt64__3_4028235e_38 = r"""
+{"argMin(float32, uint64)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Float64_Array_String___1_7976909999999999e_308 = r"""
 {"argMin(float64, array_string_)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(array_string_))":"Array(String)"}
 """
@@ -13074,8 +13170,16 @@ _aggregate_functions_argMin_datatypes_permutations_Float64_DateTime_0 = r"""
 {"argMin(float64, datetime)":0,"any(toTypeName(float64))":"Float64","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Float64_DateTime__1_7976909999999999e_308 = r"""
+{"argMin(float64, datetime)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Float64_Date_0 = r"""
 {"argMin(float64, date)":0,"any(toTypeName(float64))":"Float64","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Float64_Date__1_7976909999999999e_308 = r"""
+{"argMin(float64, date)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Float64_Decimal128_38___1_7976909999999999e_308 = r"""
@@ -13098,8 +13202,16 @@ _aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_DateTi
 {"argMin(float64, lowcardinality_datetime_)":0,"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_DateTime___1_7976909999999999e_308 = r"""
+{"argMin(float64, lowcardinality_datetime_)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_Date__0 = r"""
 {"argMin(float64, lowcardinality_date_)":0,"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_Date___1_7976909999999999e_308 = r"""
+{"argMin(float64, lowcardinality_date_)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_Float32___1_7976909999999999e_308 = r"""
@@ -13116,6 +13228,10 @@ _aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_Int64_
 
 _aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_UInt64__0 = r"""
 {"argMin(float64, lowcardinality_uint64_)":0,"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Float64_LowCardinality_UInt64___1_7976909999999999e_308 = r"""
+{"argMin(float64, lowcardinality_uint64_)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Float64_Map_String_LowCardinality_Float64____1_7976909999999999e_308 = r"""
@@ -13154,6 +13270,10 @@ _aggregate_functions_argMin_datatypes_permutations_Float64_UInt64_0 = r"""
 {"argMin(float64, uint64)":0,"any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Float64_UInt64__1_7976909999999999e_308 = r"""
+{"argMin(float64, uint64)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Int64_Array_String___9223372036854775808 = r"""
 {"argMin(int64, array_string_)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(array_string_))":"Array(String)"}
 """
@@ -13162,8 +13282,16 @@ _aggregate_functions_argMin_datatypes_permutations_Int64_DateTime_0 = r"""
 {"argMin(int64, datetime)":"0","any(toTypeName(int64))":"Int64","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Int64_DateTime__9223372036854775808 = r"""
+{"argMin(int64, datetime)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Int64_Date_0 = r"""
 {"argMin(int64, date)":"0","any(toTypeName(int64))":"Int64","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Int64_Date__9223372036854775808 = r"""
+{"argMin(int64, date)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Int64_Decimal128_38___9223372036854775808 = r"""
@@ -13186,8 +13314,16 @@ _aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_DateTime
 {"argMin(int64, lowcardinality_datetime_)":"0","any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_DateTime___9223372036854775808 = r"""
+{"argMin(int64, lowcardinality_datetime_)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_Date__0 = r"""
 {"argMin(int64, lowcardinality_date_)":"0","any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_Date___9223372036854775808 = r"""
+{"argMin(int64, lowcardinality_date_)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_Float32___9223372036854775808 = r"""
@@ -13204,6 +13340,10 @@ _aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_Int64___
 
 _aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_UInt64__0 = r"""
 {"argMin(int64, lowcardinality_uint64_)":"0","any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Int64_LowCardinality_UInt64___9223372036854775808 = r"""
+{"argMin(int64, lowcardinality_uint64_)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Int64_Map_String_LowCardinality_Float64____9223372036854775808 = r"""
@@ -13240,6 +13380,10 @@ _aggregate_functions_argMin_datatypes_permutations_Int64_Nullable_UInt64___92233
 
 _aggregate_functions_argMin_datatypes_permutations_Int64_UInt64_0 = r"""
 {"argMin(int64, uint64)":"0","any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Int64_UInt64__9223372036854775808 = r"""
+{"argMin(int64, uint64)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_DateTime__Array_String__1970_01_01_01_00_00 = r"""
@@ -13426,8 +13570,16 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__DateT
 {"argMin(lowcardinality_float32_, datetime)":0,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__DateTime__3_4028235e_38 = r"""
+{"argMin(lowcardinality_float32_, datetime)":-3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__Date_0 = r"""
 {"argMin(lowcardinality_float32_, date)":0,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__Date__3_4028235e_38 = r"""
+{"argMin(lowcardinality_float32_, date)":-3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__Decimal128_38___3_4028235e_38 = r"""
@@ -13450,8 +13602,16 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCa
 {"argMin(lowcardinality_float32_, lowcardinality_datetime_)":0,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCardinality_DateTime___3_4028235e_38 = r"""
+{"argMin(lowcardinality_float32_, lowcardinality_datetime_)":-3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCardinality_Date__0 = r"""
 {"argMin(lowcardinality_float32_, lowcardinality_date_)":0,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCardinality_Date___3_4028235e_38 = r"""
+{"argMin(lowcardinality_float32_, lowcardinality_date_)":-3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32___3_4028235e_38 = r"""
@@ -13468,6 +13628,10 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCa
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64__0 = r"""
 {"argMin(lowcardinality_float32_, lowcardinality_uint64_)":0,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64___3_4028235e_38 = r"""
+{"argMin(lowcardinality_float32_, lowcardinality_uint64_)":-3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__Map_String_LowCardinality_Float64____3_4028235e_38 = r"""
@@ -13506,6 +13670,10 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__UInt6
 {"argMin(lowcardinality_float32_, uint64)":0,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint64))":"UInt64"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float32__UInt64__3_4028235e_38 = r"""
+{"argMin(lowcardinality_float32_, uint64)":-3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__Array_String___1_7976909999999999e_308 = r"""
 {"argMin(lowcardinality_float64_, array_string_)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(array_string_))":"Array(String)"}
 """
@@ -13514,8 +13682,16 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__DateT
 {"argMin(lowcardinality_float64_, datetime)":0,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__DateTime__1_7976909999999999e_308 = r"""
+{"argMin(lowcardinality_float64_, datetime)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__Date_0 = r"""
 {"argMin(lowcardinality_float64_, date)":0,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__Date__1_7976909999999999e_308 = r"""
+{"argMin(lowcardinality_float64_, date)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__Decimal128_38___1_7976909999999999e_308 = r"""
@@ -13538,8 +13714,16 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCa
 {"argMin(lowcardinality_float64_, lowcardinality_datetime_)":0,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCardinality_DateTime___1_7976909999999999e_308 = r"""
+{"argMin(lowcardinality_float64_, lowcardinality_datetime_)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCardinality_Date__0 = r"""
 {"argMin(lowcardinality_float64_, lowcardinality_date_)":0,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCardinality_Date___1_7976909999999999e_308 = r"""
+{"argMin(lowcardinality_float64_, lowcardinality_date_)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float32___1_7976909999999999e_308 = r"""
@@ -13556,6 +13740,10 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCa
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCardinality_UInt64__0 = r"""
 {"argMin(lowcardinality_float64_, lowcardinality_uint64_)":0,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__LowCardinality_UInt64___1_7976909999999999e_308 = r"""
+{"argMin(lowcardinality_float64_, lowcardinality_uint64_)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__Map_String_LowCardinality_Float64____1_7976909999999999e_308 = r"""
@@ -13594,6 +13782,10 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__UInt6
 {"argMin(lowcardinality_float64_, uint64)":0,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(uint64))":"UInt64"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Float64__UInt64__1_7976909999999999e_308 = r"""
+{"argMin(lowcardinality_float64_, uint64)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__Array_String___9223372036854775808 = r"""
 {"argMin(lowcardinality_int64_, array_string_)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(array_string_))":"Array(String)"}
 """
@@ -13602,8 +13794,16 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__DateTim
 {"argMin(lowcardinality_int64_, datetime)":"0","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__DateTime__9223372036854775808 = r"""
+{"argMin(lowcardinality_int64_, datetime)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__Date_0 = r"""
 {"argMin(lowcardinality_int64_, date)":"0","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__Date__9223372036854775808 = r"""
+{"argMin(lowcardinality_int64_, date)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__Decimal128_38___9223372036854775808 = r"""
@@ -13626,8 +13826,16 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCard
 {"argMin(lowcardinality_int64_, lowcardinality_datetime_)":"0","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCardinality_DateTime___9223372036854775808 = r"""
+{"argMin(lowcardinality_int64_, lowcardinality_datetime_)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCardinality_Date__0 = r"""
 {"argMin(lowcardinality_int64_, lowcardinality_date_)":"0","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCardinality_Date___9223372036854775808 = r"""
+{"argMin(lowcardinality_int64_, lowcardinality_date_)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32___9223372036854775808 = r"""
@@ -13644,6 +13852,10 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCard
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64__0 = r"""
 {"argMin(lowcardinality_int64_, lowcardinality_uint64_)":"0","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64___9223372036854775808 = r"""
+{"argMin(lowcardinality_int64_, lowcardinality_uint64_)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__Map_String_LowCardinality_Float64____9223372036854775808 = r"""
@@ -13680,6 +13892,10 @@ _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__Nullabl
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__UInt64_0 = r"""
 {"argMin(lowcardinality_int64_, uint64)":"0","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_LowCardinality_Int64__UInt64__9223372036854775808 = r"""
+{"argMin(lowcardinality_int64_, uint64)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_LowCardinality_UInt64__Array_String__0 = r"""
@@ -13778,8 +13994,16 @@ _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Flo
 {"argMin(map_string_lowcardinality_float64__, datetime)":{"":0},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___DateTime_______1_7976909999999999e_308_ = r"""
+{"argMin(map_string_lowcardinality_float64__, datetime)":{"":-1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(datetime))":"DateTime"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___Date______0_ = r"""
 {"argMin(map_string_lowcardinality_float64__, date)":{"":0},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___Date_______1_7976909999999999e_308_ = r"""
+{"argMin(map_string_lowcardinality_float64__, date)":{"":-1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___Decimal128_38________1_7976909999999999e_308_ = r"""
@@ -13802,8 +14026,16 @@ _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Flo
 {"argMin(map_string_lowcardinality_float64__, lowcardinality_datetime_)":{"":0},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___LowCardinality_DateTime________1_7976909999999999e_308_ = r"""
+{"argMin(map_string_lowcardinality_float64__, lowcardinality_datetime_)":{"":-1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___LowCardinality_Date_______0_ = r"""
 {"argMin(map_string_lowcardinality_float64__, lowcardinality_date_)":{"":0},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___LowCardinality_Date________1_7976909999999999e_308_ = r"""
+{"argMin(map_string_lowcardinality_float64__, lowcardinality_date_)":{"":-1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___LowCardinality_Float32________1_7976909999999999e_308_ = r"""
@@ -13820,6 +14052,10 @@ _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Flo
 
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___LowCardinality_UInt64_______0_ = r"""
 {"argMin(map_string_lowcardinality_float64__, lowcardinality_uint64_)":{"":0},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___LowCardinality_UInt64________1_7976909999999999e_308_ = r"""
+{"argMin(map_string_lowcardinality_float64__, lowcardinality_uint64_)":{"":-1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___Map_String_LowCardinality_Float64_________1_7976909999999999e_308_ = r"""
@@ -13856,6 +14092,10 @@ _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Flo
 
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___UInt64______0_ = r"""
 {"argMin(map_string_lowcardinality_float64__, uint64)":{"":0},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___UInt64_______1_7976909999999999e_308_ = r"""
+{"argMin(map_string_lowcardinality_float64__, uint64)":{"":-1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Nullable_DateTime__Array_String__1970_01_01_01_00_00 = r"""
@@ -14600,6 +14840,10 @@ _aggregate_functions_argMin_inf___inf__nan_nan_inf = r"""
 
 _aggregate_functions_argMin_inf___inf__nan_nan_nan = r"""
 {"argMin(x, y)":0,"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_argMin_string_that_ends_with__0_1 = r"""
+{"argMin(x, y)":"1","any(toTypeName(x))":"String","any(toTypeName(y))":"String"}
 """
 
 _aggregate_functions_argMin_string_that_ends_with__0_hello = r"""

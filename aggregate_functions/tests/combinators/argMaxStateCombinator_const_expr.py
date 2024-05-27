@@ -1,17 +1,17 @@
 from testflows.core import *
 
 from aggregate_functions.requirements import (
-    RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin,
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMax,
 )
 from aggregate_functions.tests.steps import *
 
 
 @TestFeature
-@Name("ArgMinStateCombinator_constant_expression")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin("1.0"))
-def feature(self, combinator="ArgMin"):
+@Name("ArgMaxStateCombinator_constant_expression")
+@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMax("1.0"))
+def feature(self, combinator="ArgMax"):
     """
-    Check that function with -ArgMinState combinator and constant
+    Check that function with -ArgMaxState combinator and constant
     expression works as function with only -State combinator.
     """
     self.context.snapshot_id = get_snapshot_id()
