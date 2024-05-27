@@ -17,8 +17,11 @@ on:
         type: choice
         options:
           - safe
+          - parts
           - columns
           - columns and indexes
+          - columns and indexes unsafe
+          - columns and parts
           - indexes and projections
           - add remove replicas
           - restarts
