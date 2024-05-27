@@ -22,6 +22,21 @@ def no_privilege(self, node=None):
                     node.query(f"GRANT USAGE ON *.* TO {user_name}")
 
                 with Then("I attempt to kill mutation on table"):
+                    exitcode, message = None, None
+                    if check_clickhouse_version(">=24.4")(self):
+                        exitcode, message = errors.not_enough_privileges(name=user_name)
+                    node.query(
+                        f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
+                        settings=[("user", user_name)],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+
+                with And(
+                    "I grant the user SELECT privilege on system.mutations and try to kill mutation on table"
+                ):
+                    if check_clickhouse_version(">=24.4")(self):
+                        grant_select(user=user_name, table="system.mutations")
                     node.query(
                         f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
                         settings=[("user", user_name)],
@@ -130,6 +145,24 @@ def update(self, user_name, grant_target_name, node=None):
                 node.query(f"GRANT ALTER UPDATE ON {table_name} TO {grant_target_name}")
 
             with Then("I try to KILL MUTATION"):
+                if check_clickhouse_version(">=24.4")(self):
+                    node.query(
+                        f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
+                        settings=[("user", user_name)],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
+                        settings=[("user", user_name)],
+                    )
+
+            with And(
+                "I grant the user SELECT privilege on system.mutations and try to KILL MUTATION"
+            ):
+                if check_clickhouse_version(">=24.4")(self):
+                    grant_select(user=grant_target_name, table="system.mutations")
                 node.query(
                     f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
                     settings=[("user", user_name)],
@@ -242,6 +275,24 @@ def delete(self, user_name, grant_target_name, node=None):
                 node.query(f"GRANT ALTER DELETE ON {table_name} TO {grant_target_name}")
 
             with Then("I try to KILL MUTATION"):
+                if check_clickhouse_version(">=24.4")(self):
+                    node.query(
+                        f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
+                        settings=[("user", user_name)],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
+                        settings=[("user", user_name)],
+                    )
+
+            with And(
+                "I grant the user SELECT privilege on system.mutations and try to KILL MUTATION"
+            ):
+                if check_clickhouse_version(">=24.4")(self):
+                    grant_select(user=grant_target_name, table="system.mutations")
                 node.query(
                     f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
                     settings=[("user", user_name)],
@@ -356,6 +407,24 @@ def drop_column(self, user_name, grant_target_name, node=None):
                 )
 
             with Then("I try to KILL MUTATION"):
+                if check_clickhouse_version(">=24.4")(self):
+                    node.query(
+                        f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
+                        settings=[("user", user_name)],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
+                        settings=[("user", user_name)],
+                    )
+
+            with And(
+                "I grant the user SELECT privilege on system.mutations and try to KILL MUTATION"
+            ):
+                if check_clickhouse_version(">=24.4")(self):
+                    grant_select(user=grant_target_name, table="system.mutations")
                 node.query(
                     f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
                     settings=[("user", user_name)],

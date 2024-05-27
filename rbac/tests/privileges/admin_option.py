@@ -98,10 +98,27 @@ def grant_role(self, grant_target_name, user_name, node=None):
                 )
 
             with Then("I check the user can grant a role"):
-                node.query(
-                    f"GRANT {grant_role_name} TO {target_user_name} ON CLUSTER sharded_cluster",
-                    settings=[("user", f"{user_name}")],
-                )
+                if check_clickhouse_version(">=24.4")(self):
+                    exitcode2, message2 = errors.not_enough_privileges(name=user_name)
+                    node.query(
+                        f"GRANT {grant_role_name} TO {target_user_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", f"{user_name}")],
+                        exitcode=exitcode2,
+                        message=message2,
+                    )
+                else:
+                    node.query(
+                        f"GRANT {grant_role_name} TO {target_user_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", f"{user_name}")],
+                    )
+
+            with And("I grant user CLUSTER privilege"):
+                if check_clickhouse_version(">=24.4")(self):
+                    grant_cluster(node=node, user=grant_target_name)
+                    node.query(
+                        f"GRANT {grant_role_name} TO {target_user_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", f"{user_name}")],
+                    )
 
         finally:
             with Finally("I drop the user"):

@@ -116,6 +116,10 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
         with table(node, table_name, table_type):
             with When("I grant the truncate privilege"):
                 node.query(f"GRANT TRUNCATE ON {table_name} TO {grant_target_name}")
+            
+            with And("I grant the user CLUSTER privilege"):
+                if check_clickhouse_version(">=24.4")(current()):
+                    grant_cluster(node=node, user=grant_target_name)
 
             with Then("I attempt to truncate a table"):
                 node.query(

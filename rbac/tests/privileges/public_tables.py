@@ -5,6 +5,7 @@ from testflows.asserts import error
 
 from rbac.requirements import *
 from rbac.helper.common import *
+import rbac.helper.errors as errors
 
 
 @TestScenario
@@ -20,12 +21,19 @@ def public_tables(self, node=None):
     with user(node, f"{user_name}"):
         with When("I check the user is able to select on system.one"):
             node.query(
-                "SELECT count(*) FROM system.one FORMAT TabSeparated", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.one FORMAT TabSeparated",
+                settings=[("user", user_name)],
             )
 
         with And("I check the user is able to select on system.numbers"):
+            exitcode, message = None, None
+            if check_clickhouse_version(">=24.4")(self):
+                exitcode, message = errors.not_enough_privileges(name=user_name)
             node.query(
-                "SELECT * FROM system.numbers LIMIT 1 FORMAT TabSeparated", settings=[("user", user_name)]
+                "SELECT * FROM system.numbers LIMIT 1 FORMAT TabSeparated",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
             )
 
         with And("I check the user is able to select on system.contributors"):
@@ -36,7 +44,8 @@ def public_tables(self, node=None):
 
         with And("I check the user is able to select on system.functions"):
             node.query(
-                "SELECT count(*) FROM system.functions FORMAT TabSeparated", settings=[("user", user_name)]
+                "SELECT count(*) FROM system.functions FORMAT TabSeparated",
+                settings=[("user", user_name)],
             )
 
 
@@ -47,6 +56,7 @@ def public_tables(self, node=None):
 def sensitive_tables(self, node=None):
     """Check that a user with no privilege is not able to see from these tables."""
     user_name = f"user_{getuid()}"
+    exitcode, message = errors.not_enough_privileges(name=user_name)
     if node is None:
         node = self.context.node
 
@@ -55,82 +65,185 @@ def sensitive_tables(self, node=None):
             node.query("SELECT 1 FORMAT TabSeparated")
 
         with When("I select from processes"):
-            output = node.query(
-                "SELECT count(*) FROM system.processes FORMAT TabSeparated", settings=[("user", user_name)]
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.processes FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.processes FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from query_log"):
-            output = node.query(
-                "SELECT count(*) FROM system.query_log FORMAT TabSeparated", settings=[("user", user_name)]
-            ).output
-            assert output == 0, error()
+            node.query("SYSTEM FLUSH LOGS")
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.query_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.query_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from query_thread_log"):
-            output = node.query(
-                "SELECT count(*) FROM system.query_thread_log FORMAT TabSeparated",
-                settings=[("user", user_name)],
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.query_thread_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.query_thread_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from query_views_log"):
-            output = node.query(
-                "SELECT count(*) FROM system.query_views_log FORMAT TabSeparated",
-                settings=[("user", user_name)],
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.query_views_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.query_views_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from clusters"):
-            output = node.query(
-                "SELECT count(*) FROM system.clusters FORMAT TabSeparated", settings=[("user", user_name)]
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.clusters FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.clusters FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from events"):
-            output = node.query(
-                "SELECT count(*) FROM system.events FORMAT TabSeparated", settings=[("user", user_name)]
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.events FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.events FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from graphite_retentions"):
-            output = node.query(
-                "SELECT count(*) FROM system.graphite_retentions FORMAT TabSeparated",
-                settings=[("user", user_name)],
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.graphite_retentions FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.graphite_retentions FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from stack_trace"):
-            output = node.query(
-                "SELECT count(*) FROM system.stack_trace FORMAT TabSeparated",
-                settings=[("user", user_name)],
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.stack_trace FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.stack_trace FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from trace_log"):
-            output = node.query(
-                "SELECT count(*) FROM system.trace_log FORMAT TabSeparated", settings=[("user", user_name)]
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                output = node.query(
+                    "SELECT count(*) FROM system.trace_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.trace_log FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from user_directories"):
-            output = node.query(
-                "SELECT count(*) FROM system.user_directories FORMAT TabSeparated",
-                settings=[("user", user_name)],
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.user_directories FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.user_directories FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from zookeeper"):
-            output = node.query(
-                "SELECT count(*) FROM system.zookeeper WHERE path = '/clickhouse' FORMAT TabSeparated",
-                settings=[("user", user_name)],
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.zookeeper WHERE path = '/clickhouse' FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.zookeeper WHERE path = '/clickhouse' FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
         with And("I select from macros"):
-            output = node.query(
-                "SELECT count(*) FROM system.macros FORMAT TabSeparated", settings=[("user", user_name)]
-            ).output
-            assert output == 0, error()
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    "SELECT count(*) FROM system.macros FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                    exitcode=exitcode,
+                    message=message,
+                )
+            else:
+                output = node.query(
+                    "SELECT count(*) FROM system.macros FORMAT TabSeparated",
+                    settings=[("user", user_name)],
+                ).output
+                assert output == 0, error()
 
 
 @TestFeature
