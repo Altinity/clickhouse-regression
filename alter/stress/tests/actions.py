@@ -959,6 +959,11 @@ def check_consistency(
                                     node=node,
                                     table_name=table_name,
                                     timeout=60,
+                                    column=(
+                                        "key"
+                                        if self.context.use_key_column_for_count
+                                        else None
+                                    ),
                                 )
                                 column_names[node.name] = get_column_names(
                                     node=node, table_name=table_name

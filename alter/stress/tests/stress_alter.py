@@ -342,6 +342,19 @@ def columns(self):
         limit=None if self.context.stress else 20,
     )
 
+@TestScenario
+def parts(self):
+    """
+    Perform only actions that manipulate parts.
+    """
+
+    alter_combinations(
+        actions=build_action_list(
+            columns=False, part_manipulation=True, ttl=False, indexes=False
+        ),
+        limit=None if self.context.stress else 20,
+    )
+
 
 @TestScenario
 def columns_and_indexes(self):
@@ -356,6 +369,32 @@ def columns_and_indexes(self):
         limit=None if self.context.stress else 20,
     )
 
+@TestScenario
+def columns_and_indexes_unsafe(self):
+    """
+    Perform only actions that manipulate columns and indexes, disable related workarounds.
+    """
+    self.context.wide_parts_only = False
+
+    alter_combinations(
+        actions=build_action_list(
+            columns=True, part_manipulation=False, ttl=False, indexes=True
+        ),
+        limit=None if self.context.stress else 20,
+    )
+
+@TestScenario
+def columns_and_parts(self):
+    """
+    Perform only actions that manipulate columns and parts.
+    """
+
+    alter_combinations(
+        actions=build_action_list(
+            columns=True, part_manipulation=True, ttl=False, indexes=False
+        ),
+        limit=None if self.context.stress else 20,
+    )
 
 @TestScenario
 def indexes_and_projections(self):
@@ -474,6 +513,10 @@ def feature(self):
 
     # https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
     self.context.wide_parts_only = True
+
+    # SELECT count() fails sporadically when column and part manipulation are combined
+    # Use SELECT count(key) instead when we actually need to know the row count
+    self.context.use_key_column_for_count = True
 
     with Given("I have S3 disks configured"):
         disk_config()
