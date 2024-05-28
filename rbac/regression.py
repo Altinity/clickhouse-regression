@@ -211,17 +211,12 @@ xfails = {
     "/rbac/SQL security/view with definer/check default sql security with definer/I try to select from view with user/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
     ],
-    "privileges/: row policy/no grants/*": [
-        (Fail, "Need to check https://github.com/ClickHouse/ClickHouse/issues/64486")
-    ],
     "privileges/create row policy/or replace/*": [
-        (Fail, "Need to check https://github.com/ClickHouse/ClickHouse/issues/64486")
-    ],
-    "privileges/alter row policy/on cluster/*": [
-        (Fail, "Need to check https://github.com/ClickHouse/ClickHouse/issues/64486")
-    ],
-    "privileges/create row policy/on cluster/*": [
-        (Fail, "Need to check https://github.com/ClickHouse/ClickHouse/issues/64486")
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/64486",
+            check_clickhouse_version("<24.4"),
+        ),
     ],
 }
 

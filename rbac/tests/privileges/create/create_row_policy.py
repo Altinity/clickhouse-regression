@@ -140,11 +140,11 @@ def create_row_policy(self, privilege, grant_target_name, user_name, node=None):
                         settings=[("user", f"{user_name}")],
                     )
 
-            with And("I grant CLUSTER privilege and check the user can create a row policy"):
+            with And(
+                "I grant CLUSTER privilege and check the user can create a row policy"
+            ):
                 if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
-                    node.query(
-                        f"GRANT CLUSTER ON *.* TO {grant_target_name}"
-                    )
+                    node.query(f"GRANT CLUSTER ON *.* TO {grant_target_name}")
                     node.query(
                         f"CREATE ROW POLICY {create_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
                         settings=[("user", f"{user_name}")],
@@ -156,9 +156,7 @@ def create_row_policy(self, privilege, grant_target_name, user_name, node=None):
                     f"DROP ROW POLICY IF EXISTS {create_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}"
                 )
                 if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
-                    node.query(
-                        f"REVOKE CLUSTER ON *.* FROM {grant_target_name}"
-                    )
+                    node.query(f"REVOKE CLUSTER ON *.* FROM {grant_target_name}")
 
     with Scenario("CREATE ROW POLICY with revoked privilege"):
         create_row_policy_name = f"create_row_policy_{getuid()}"
@@ -222,7 +220,10 @@ def no_grants(self, node=None):
                 output = node.query(
                     f"SELECT * FROM {table_name} FORMAT TabSeparated"
                 ).output
-                assert "" == output, error()
+                if check_clickhouse_version(">=24.4")(self):
+                    assert "1" in output, error()
+                else:
+                    assert "" == output, error()
 
         finally:
             with Finally("I drop the row policy"):
@@ -437,7 +438,9 @@ def or_replace(self, node=None):
                 node.query(f"INSERT INTO {table_name} (y) VALUES (1)")
 
             with Then("I select from the table"):
-                output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated"
+                ).output
                 assert "1" in output, error()
 
             with When(
@@ -448,8 +451,10 @@ def or_replace(self, node=None):
                 )
 
             with Then("I can no longer select from the table"):
-                output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
-                assert output == "", error()
+                output = node.query(
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated"
+                ).output
+                assert "1" in output, error()
 
         finally:
             with Finally("I drop the row policy"):
@@ -475,9 +480,14 @@ def on_cluster(self, node=None):
             )
 
         with And("I have a row policy"):
-            node.query(
-                f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 0 to default"
+                )
+            else:
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
+                )
 
         with When("I insert some values into the table on the first node"):
             node.query(f"INSERT INTO {table_name} (x) VALUES (1)")
@@ -525,9 +535,14 @@ def diff_policies_on_diff_nodes(self, node=None):
             )
 
         with And("I have a row policy on one node"):
-            node.query(
-                f"CREATE ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 0 to default"
+                )
+            else:
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
+                )
 
         with When("I insert some values into the table on the first node"):
             node.query(f"INSERT INTO {table_name} (x) VALUES (1)")
@@ -616,7 +631,10 @@ def assignment_none(self, node=None):
                 output = node.query(
                     f"SELECT * FROM {table_name} FORMAT TabSeparated"
                 ).output
-                assert "" == output, error()
+                if check_clickhouse_version(">=24.4")(self):
+                    assert "1" in output, error()
+                else:
+                    assert "" == output, error()
 
         finally:
             with Finally("I drop the row policy"):
@@ -684,7 +702,10 @@ def assignment_all_except(self, node=None):
                 output = node.query(
                     f"SELECT * FROM {table_name} FORMAT TabSeparated"
                 ).output
-                assert "" == output, error()
+                if check_clickhouse_version(">=24.4")(self):
+                    assert "1" in output, error()
+                else:
+                    assert "" == output, error()
 
         finally:
             with Finally("I drop the row policy"):
@@ -1010,9 +1031,14 @@ def dist_table(self, node=None):
             )
 
         with And("I have a row policy"):
-            node.query(
-                f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 0 to default"
+                )
+            else:
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
+                )
 
         with And("I have a distributed table"):
             node.query(
@@ -1061,9 +1087,14 @@ def dist_table_diff_policies_on_diff_nodes(self, node=None):
             )
 
         with And("I have a row policy"):
-            node.query(
-                f"CREATE ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 0 to default"
+                )
+            else:
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
+                )
 
         with And("I have a distributed table"):
             node.query(
@@ -1116,9 +1147,14 @@ def dist_table_on_dist_table(self, node=None):
             )
 
         with And("I have a row policy"):
-            node.query(
-                f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 0 to default"
+                )
+            else:
+                node.query(
+                    f"CREATE ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
+                )
 
         with And("I have a distributed table on a cluster"):
             node.query(

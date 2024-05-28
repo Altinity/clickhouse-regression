@@ -222,7 +222,14 @@ def no_grants(self, node=None):
             assert "1" in output, error()
 
         with When("I alter the row policy to have a condition"):
-            node.query(f"ALTER POLICY {pol_name} ON {table_name} FOR SELECT USING 1")
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 0 TO default"
+                )
+            else:
+                node.query(
+                    f"ALTER POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
+                )
 
         with Then("I try to select from the table"):
             output = node.query(
@@ -500,9 +507,14 @@ def on_cluster(self, node=None):
             node2.query(f"INSERT INTO {table_name} (x) VALUES (1)")
 
         with When("I alter the row policy to have a condition"):
-            node.query(
-                f"ALTER ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 0 TO default"
+                )
+            else:
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON CLUSTER sharded_cluster ON {table_name} FOR SELECT USING 1"
+                )
 
         with Then("I select from the table"):
             output = node.query(
@@ -555,9 +567,14 @@ def diff_policies_on_diff_nodes(self, node=None):
             node2.query(f"INSERT INTO {table_name} (x) VALUES (1)")
 
         with When("I alter the row policy on the first node"):
-            node.query(
-                f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 0 TO default"
+                )
+            else:
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
+                )
 
         with Then("I select from the table"):
             output = node.query(
@@ -648,7 +665,10 @@ def assignment_none(self, node=None):
             output = node.query(
                 f"SELECT * FROM {table_name} FORMAT TabSeparated"
             ).output
-            assert "" == output, error()
+            if check_clickhouse_version(">=24.4")(self):
+                assert "1" in output, error()
+            else:
+                assert "" == output, error()
 
 
 @TestScenario
@@ -720,7 +740,10 @@ def assignment_all_except(self, node=None):
             output = node.query(
                 f"SELECT * FROM {table_name} FORMAT TabSeparated"
             ).output
-            assert "" == output, error()
+            if check_clickhouse_version(">=24.4")(self):
+                assert "1" in output, error()
+            else:
+                assert "" == output, error()
 
 
 @TestScenario
@@ -1058,9 +1081,14 @@ def dist_table(self, node=None):
             node.query(f"INSERT INTO {table_name} (x) VALUES (1)")
 
         with When("I alter the row policy to be permissive"):
-            node.query(
-                f"ALTER ROW POLICY {pol_name} ON {table_name} ON CLUSTER sharded_cluster FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} ON CLUSTER sharded_cluster FOR SELECT USING 0 TO default"
+                )
+            else:
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} ON CLUSTER sharded_cluster FOR SELECT USING 1"
+                )
 
         with Then("I select from the distributed table"):
             output = node.query(
@@ -1117,9 +1145,14 @@ def dist_table_diff_policies_on_diff_nodes(self, node=None):
             node2.query(f"INSERT INTO {table_name} (x) VALUES (2)")
 
         with When("I alter the row policy to be permissive on the first node"):
-            node.query(
-                f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 0 TO default"
+                )
+            else:
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
+                )
 
         with Then("I select from the distributed table"):
             output = node.query(
@@ -1181,9 +1214,14 @@ def dist_table_on_dist_table(self, node=None):
             node.query(f"INSERT INTO {table_name} (x) VALUES (1)")
 
         with When("I alter the row policy to be permissive on the first node"):
-            node.query(
-                f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 0 TO default"
+                )
+            else:
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
+                )
 
         with Then("I select from the second distributed table"):
             output = node.query(
