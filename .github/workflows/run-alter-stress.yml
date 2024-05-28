@@ -18,16 +18,38 @@ on:
         options:
           - safe
           - parts
-          - columns
-          - columns and indexes
           - columns and indexes unsafe
-          - columns and parts
-          - indexes and projections
           - add remove replicas
           - restarts
           - full disk
           - network faults
-          - insert faults
+          - one by one
+          - pairs/columns and part manipulation
+          - pairs/columns and ttl
+          - pairs/columns and projections
+          - pairs/columns and indexes
+          - pairs/columns and restarts
+          - pairs/columns and add remove replicas
+          - pairs/part manipulation and ttl
+          - pairs/part manipulation and projections
+          - pairs/part manipulation and indexes
+          - pairs/part manipulation and restarts
+          - pairs/part manipulation and network restarts
+          - pairs/ttl and projections
+          - pairs/ttl and indexes
+          - pairs/ttl and restarts
+          - pairs/ttl and network restarts
+          - pairs/ttl and add remove replicas
+          - pairs/projections and indexes
+          - pairs/projections and restarts
+          - pairs/projections and network restarts
+          - pairs/projections and add remove replicas
+          - pairs/indexes and restarts
+          - pairs/indexes and network restarts
+          - pairs/indexes and add remove replicas
+          - pairs/restarts and network restarts
+          - pairs/restarts and add remove replicas
+          - pairs/network restarts and add remove replicas
       storage_provider:
         description: "Storage Provider to use (default: minio)"
         type: choice

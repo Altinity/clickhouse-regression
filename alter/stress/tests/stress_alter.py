@@ -2,6 +2,7 @@
 import random
 from itertools import chain
 import time
+import inspect
 
 from testflows.core import *
 from testflows.combinatorics import combinations
@@ -322,6 +323,57 @@ def alter_combinations(
                         node=node, table_name=table_name, timeout=120
                     )
             join()
+
+
+@TestScenario
+def one_by_one(self):
+    """
+    Perform only one subset of actions at a time.
+    """
+
+    action_subsets = inspect.getfullargspec(build_action_list).args
+    all_disabled = {action: False for action in action_subsets}
+
+    for action in action_subsets:
+        with Example(action):
+            action_list_args = all_disabled.copy()
+            action_list_args[action] = True
+
+            action_list = build_action_list(**action_list_args)
+
+            # If the list is short, multiply it to get more combinations
+            if len(action_list) <= 4:
+                action_list *= 3
+
+            alter_combinations(
+                actions=action_list,
+                limit=None if self.context.stress else 20,
+                limit_disk_space=(action=="fill_disks"),
+            )
+
+@TestScenario
+def pairs(self):
+    """
+    Perform a mix of two subsets of actions.
+    """
+
+    action_subsets = inspect.getfullargspec(build_action_list).args
+    all_disabled = {action: False for action in action_subsets}
+
+    for action1, action2 in combinations(action_subsets, 2):
+        with Example(f"{action1} and {action2}".replace("_", " ")):
+            if "fill_disks" in [action1, action2]:
+                skip("TODO: investigate fill_disks behavior")
+
+            action_list_args = all_disabled.copy()
+            action_list_args[action1] = True
+            action_list_args[action2] = True
+
+            alter_combinations(
+                actions=build_action_list(**action_list_args),
+                limit=None if self.context.stress else 20,
+                limit_disk_space=("fill_disks" in [action1, action2]),
+            )
 
 
 @TestScenario
