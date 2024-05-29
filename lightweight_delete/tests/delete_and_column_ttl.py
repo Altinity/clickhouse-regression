@@ -111,7 +111,9 @@ def column_ttl_after_delete(self, node=None):
         "I expect rows are deleted",
         description="600 rows half of them should be deleted",
     ):
-        r = node.query(f"SELECT count() FROM {table_name} WHERE a = 777 FORMAT TabSeparated")
+        r = node.query(
+            f"SELECT count() FROM {table_name} WHERE a = 777 FORMAT TabSeparated"
+        )
         assert int(r.output) == 30, error()
 
 

@@ -170,7 +170,9 @@ def feature(
 
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
-                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
 
         with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
             with Feature(object_storage_mode):

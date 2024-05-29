@@ -131,7 +131,9 @@ def check_materialized_view_with_definer(
             definer=user_name_definer,
             sql_security="DEFINER",
         )
-        populate_mv_table(node=node, mv_table_name=mv_target_table_name, table_name=source_table_name)
+        populate_mv_table(
+            node=node, mv_table_name=mv_target_table_name, table_name=source_table_name
+        )
 
     with And(
         "I grant privileges to source and target tables to definer user either directly or via role"
@@ -177,7 +179,6 @@ def check_materialized_view_with_definer(
             object=view_name,
             user=select_user_name,
         )
-    
 
     with Then("I try to select from materialized view with second user"):
         check_select_from_mv(
@@ -205,8 +206,10 @@ def check_materialized_view_with_definer(
             user_target_table_privilege=user_target_table_privilege,
             view_user_privilege=user_view_privilege,
         )
-    
-    with And("I try to insert into source table, which triggers materialized view update"):
+
+    with And(
+        "I try to insert into source table, which triggers materialized view update"
+    ):
         pass
 
 

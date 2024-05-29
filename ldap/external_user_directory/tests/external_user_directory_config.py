@@ -333,7 +333,7 @@ def defined_twice_roles(self):
                         f"I login as {user['username']} again and try to read from the second table"
                     ):
                         current().context.node.query(
-                            f"SELECT * FROM {table0_name} LIMIT 1 FORMAT TabSeparated" ,
+                            f"SELECT * FROM {table0_name} LIMIT 1 FORMAT TabSeparated",
                             settings=[
                                 ("user", user["username"]),
                                 ("password", user["password"]),

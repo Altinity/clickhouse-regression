@@ -274,7 +274,9 @@ def move_part_and_return(
         with retr:
             part = (
                 cluster.node(node_name2)
-                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated")
+                .query(
+                    f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated"
+                )
                 .output.strip()
             )
 
@@ -330,7 +332,9 @@ def move_part_and_return_stopped_replica(
         with retr:
             part = (
                 self.context.cluster.node(node_name2)
-                .query(f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated")
+                .query(
+                    f"SELECT name FROM system.parts where uuid = '{part_uuid}' FORMAT TabSeparated"
+                )
                 .output.strip()
             )
 

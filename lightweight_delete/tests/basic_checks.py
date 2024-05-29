@@ -56,7 +56,9 @@ def delete_all_rows(self, table_name, node=None):
         assert output == "", error()
 
     with Then("I check row count"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == "0", error()
 
     with And("I restart clickhouse"):
@@ -69,7 +71,9 @@ def delete_all_rows(self, table_name, node=None):
         assert output == "", error()
 
     with Then("I check row count after restart"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == "0", error()
 
 
@@ -83,8 +87,12 @@ def delete_small_subset(self, table_name, node=None):
     if node is None:
         node = self.context.node
 
-    count_all = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
-    count_del = node.query(f"SELECT count(*) FROM {table_name} WHERE x < 10 FORMAT TabSeparated").output
+    count_all = node.query(
+        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+    ).output
+    count_del = node.query(
+        f"SELECT count(*) FROM {table_name} WHERE x < 10 FORMAT TabSeparated"
+    ).output
     expected_count = str(int(count_all) - int(count_del))
 
     with When(f"I delete all rows from {table_name}"):
@@ -97,7 +105,9 @@ def delete_small_subset(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == expected_count, error()
 
     with And("I restart clickhouse"):
@@ -110,7 +120,9 @@ def delete_small_subset(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count after restart"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == expected_count, error()
 
 
@@ -124,8 +136,12 @@ def delete_large_subset(self, table_name, node=None):
     if node is None:
         node = self.context.node
 
-    count_all = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
-    count_del = node.query(f"SELECT count(*) FROM {table_name} WHERE x > 10 FORMAT TabSeparated").output
+    count_all = node.query(
+        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+    ).output
+    count_del = node.query(
+        f"SELECT count(*) FROM {table_name} WHERE x > 10 FORMAT TabSeparated"
+    ).output
     expected_count = str(int(count_all) - int(count_del))
 
     with When(f"I delete all rows from {table_name}"):
@@ -138,7 +154,9 @@ def delete_large_subset(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == expected_count, error()
 
     with And("I restart clickhouse"):
@@ -151,7 +169,9 @@ def delete_large_subset(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count after restart"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == expected_count, error()
 
 
@@ -165,8 +185,12 @@ def delete_all_rows_from_half_of_parts(self, table_name, node=None):
     if node is None:
         node = self.context.node
 
-    count_all = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
-    count_del = node.query(f"SELECT count(*) FROM {table_name} WHERE id < 5 FORMAT TabSeparated").output
+    count_all = node.query(
+        f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+    ).output
+    count_del = node.query(
+        f"SELECT count(*) FROM {table_name} WHERE id < 5 FORMAT TabSeparated"
+    ).output
     expected_count = str(int(count_all) - int(count_del))
 
     with When(f"I delete all rows from {table_name}"):
@@ -179,7 +203,9 @@ def delete_all_rows_from_half_of_parts(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == expected_count, error()
 
     with And("I restart clickhouse"):
@@ -192,7 +218,9 @@ def delete_all_rows_from_half_of_parts(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count after restart"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == expected_count, error()
 
 
@@ -238,7 +266,9 @@ def delete_one_row(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == count_all, error()
 
     with And("I restart clickhouse"):
@@ -251,7 +281,9 @@ def delete_one_row(self, table_name, node=None):
         assert output == "", error()
 
     with Then(f"I check row count after restart"):
-        output = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
         assert output == count_all, error()
 
 
