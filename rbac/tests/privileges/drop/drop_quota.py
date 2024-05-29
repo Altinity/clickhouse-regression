@@ -130,10 +130,26 @@ def drop_quota(self, privilege, grant_target_name, user_name, node=None):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
             with Then("I check the user can drop a quota"):
-                node.query(
-                    f"DROP QUOTA {drop_row_policy_name} ON CLUSTER sharded_cluster",
-                    settings=[("user", f"{user_name}")],
-                )
+                if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
+                    node.query(
+                        f"DROP QUOTA {drop_row_policy_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", f"{user_name}")],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"DROP QUOTA {drop_row_policy_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", f"{user_name}")],
+                    )
+            
+            with And("I grant CLUSTER privilege and check the user can drop a quota"):
+                if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
+                    grant_cluster(user=grant_target_name)
+                    node.query(
+                        f"DROP QUOTA {drop_row_policy_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", f"{user_name}")],
+                    )
 
         finally:
             with Finally("I drop the user"):
