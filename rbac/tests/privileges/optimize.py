@@ -123,16 +123,36 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
                 node.query(f"GRANT OPTIMIZE ON {table_name} TO {grant_target_name}")
 
             with Then("I attempt to optimize a table"):
-                node.query(
-                    f"OPTIMIZE TABLE {table_name} ON CLUSTER sharded_cluster",
-                    settings=[("user", user_name)],
-                )
+                if check_clickhouse_version(">=24.4")(current()):
+                    node.query(
+                        f"OPTIMIZE TABLE {table_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", user_name)],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"OPTIMIZE TABLE {table_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", user_name)],
+                    )
+
+            with And("I grant the user CLUSTER privilege"):
+                if check_clickhouse_version(">=24.4")(current()):
+                    node.query(f"GRANT CLUSTER ON *.* TO {grant_target_name}")
+                    node.query(
+                        f"OPTIMIZE TABLE {table_name} ON CLUSTER sharded_cluster",
+                        settings=[("user", user_name)],
+                    )
 
         finally:
             with Finally("I drop the table from the cluster"):
                 node.query(
                     f"DROP TABLE IF EXISTS {table_name} ON CLUSTER sharded_cluster"
                 )
+
+            with And("I revoke CLUSTER privilege"):
+                if check_clickhouse_version(">=24.4")(current()):
+                    node.query(f"REVOKE CLUSTER ON *.* FROM {grant_target_name}")
 
     with Scenario("user with ALL privilege"):
         table_name = f"merge_tree_{getuid()}"

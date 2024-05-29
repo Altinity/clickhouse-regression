@@ -456,7 +456,7 @@ def remote_host_filter(self):
     urls = None
 
     with Given("I have a list of urls to allow access"):
-        urls = {"host_regexp": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$"}
+        urls = {"host_regexp": r"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$"}
 
     with remote_host_filter_config(urls=urls, restart=True):
         with Given("I create a table"):

@@ -137,6 +137,25 @@ def show_dict(self, privilege, on, grant_target_name, user_name, dict_name, node
                 node.query(f"GRANT USAGE ON *.* TO {grant_target_name}")
 
             with Then("I check the user doesn't see the dictionary"):
+                if check_clickhouse_version(">=24.4")(self):
+                    node.query(
+                        "SHOW DICTIONARIES",
+                        settings=[("user", f"{user_name}")],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    output = node.query(
+                        "SHOW DICTIONARIES", settings=[("user", f"{user_name}")]
+                    ).output
+                    assert output == "", error()
+
+            with And(
+                "I grant select on system.dictionaries and check the user does not see the dictionary"
+            ):
+                grant_select(
+                    user=grant_target_name, table="system.dictionaries", node=node
+                )
                 output = node.query(
                     "SHOW DICTIONARIES", settings=[("user", f"{user_name}")]
                 ).output
@@ -147,6 +166,25 @@ def show_dict(self, privilege, on, grant_target_name, user_name, dict_name, node
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
             with Then("I check the user does see a dictionary"):
+                if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
+                    node.query(
+                        "SHOW DICTIONARIES",
+                        settings=[("user", f"{user_name}")],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        "SHOW DICTIONARIES",
+                        settings=[("user", f"{user_name}")],
+                        message=f"{dict_name}",
+                    )
+            with And(
+                "I grant select on system.dictionaries and check the user does see the dictionary"
+            ):
+                grant_select(
+                    user=grant_target_name, table="system.dictionaries", node=node
+                )
                 node.query(
                     "SHOW DICTIONARIES",
                     settings=[("user", f"{user_name}")],
@@ -161,10 +199,18 @@ def show_dict(self, privilege, on, grant_target_name, user_name, dict_name, node
                 node.query(f"REVOKE {privilege} ON {on} FROM {grant_target_name}")
 
             with Then("I check the user does not see a dictionary"):
-                output = node.query(
-                    "SHOW DICTIONARIES", settings=[("user", f"{user_name}")]
-                ).output
-                assert output == f"", error()
+                if check_clickhouse_version(">=24.4")(self):
+                    node.query(
+                        "SHOW DICTIONARIES",
+                        settings=[("user", f"{user_name}")],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    output = node.query(
+                        "SHOW DICTIONARIES", settings=[("user", f"{user_name}")]
+                    ).output
+                    assert output == f"", error()
 
     finally:
         with Finally("I drop the dictionary"):
