@@ -13,7 +13,7 @@ sudo rm -rf /tmp/*
 
 echo "Install Python modules..."
 sudo apt-get clean
-./retry.sh 60 2 "sudo pip install -r requirements.txt"
+./retry.sh 60 2 "sudo pip install -r requirements.txt --break-system-packages"
 sudo apt-get update
 
 echo "Install docker-compose..."
