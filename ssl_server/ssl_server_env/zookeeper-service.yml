@@ -5,8 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.zookeeper
-      args:
-        ZOOKEEPER_VERSION: $CLICKHOUSE_TESTS_ZOOKEEPER_VERSION
     init: true
     expose:
       - "2181"
