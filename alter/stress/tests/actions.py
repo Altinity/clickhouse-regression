@@ -354,7 +354,7 @@ def move_random_partition_to_random_table(self):
 
     with table_schema_lock:
 
-        if getattr(self.context, "disallow_move_partition_to_self", True):
+        if self.context.workarounds.get("disallow_move_partition_to_self"):
             destination_table_name, source_table_name = get_random_table_names(
                 choices=2, replacement=False
             )
@@ -959,6 +959,13 @@ def check_consistency(
                                     node=node,
                                     table_name=table_name,
                                     timeout=60,
+                                    column=(
+                                        "key"
+                                        if self.context.workarounds.get(
+                                            "use_key_column_for_count"
+                                        )
+                                        else None
+                                    ),
                                 )
                                 column_names[node.name] = get_column_names(
                                     node=node, table_name=table_name

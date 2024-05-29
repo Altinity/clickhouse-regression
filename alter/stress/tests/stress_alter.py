@@ -2,6 +2,7 @@
 import random
 from itertools import chain
 import time
+import inspect
 
 from testflows.core import *
 from testflows.combinatorics import combinations
@@ -200,7 +201,9 @@ def alter_combinations(
                 else None
             )
             table_settings = (
-                "min_bytes_for_wide_part=0" if self.context.wide_parts_only else None
+                "min_bytes_for_wide_part=0"
+                if self.context.workarounds["wide_parts_only"]
+                else None
             )
 
             for i in range(n_tables):
@@ -264,28 +267,40 @@ def alter_combinations(
 
                         join()
 
+                except:
+                    with Finally("I dump system.part_logs to csv"):
+                        for node in self.context.ch_nodes:
+                            node.query(
+                                "SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' TRUNCATE FORMAT CSV"
+                            )
+
                 finally:
-                    with Finally("I make sure that the replicas are consistent", flags=TE):
+                    with Finally(
+                        "I make sure that the replicas are consistent", flags=TE
+                    ):
                         if kill_stuck_mutations:
                             with By("killing any failing mutations"):
                                 for node in self.context.ch_nodes:
-                                    node.query(
+                                    r = node.query(
                                         "SELECT * FROM system.mutations WHERE is_done=0 AND latest_fail_reason != '' FORMAT Vertical",
                                         no_checks=True,
                                     )
-                                    r = node.query(
-                                        "KILL MUTATION WHERE latest_fail_reason != ''"
-                                    )
-                                    assert r.output == "", error(
-                                        "An erroring mutation was killed"
-                                    )
+                                    if r.output != "":
+                                        r = node.query(
+                                            "KILL MUTATION WHERE latest_fail_reason != ''"
+                                        )
+                                        assert r.output == "", error(
+                                            "An erroring mutation was killed"
+                                        )
 
                         with By("making sure that replicas agree"):
                             check_consistency(
                                 restore_consistent_structure=enforce_table_structure
                             )
 
-                    with And("I make sure that there is still free disk space on the host"):
+                    with And(
+                        "I make sure that there is still free disk space on the host"
+                    ):
                         r = self.context.cluster.command(None, "df -h .")
                         if "100%" in r.output:
                             with When("I drop rows to free up space"):
@@ -311,6 +326,57 @@ def alter_combinations(
 
 
 @TestScenario
+def one_by_one(self):
+    """
+    Perform only one subset of actions at a time.
+    """
+
+    action_subsets = inspect.getfullargspec(build_action_list).args
+    all_disabled = {action: False for action in action_subsets}
+
+    for action in action_subsets:
+        with Example(action):
+            action_list_args = all_disabled.copy()
+            action_list_args[action] = True
+
+            action_list = build_action_list(**action_list_args)
+
+            # If the list is short, multiply it to get more combinations
+            if len(action_list) <= 4:
+                action_list *= 3
+
+            alter_combinations(
+                actions=action_list,
+                limit=None if self.context.stress else 20,
+                limit_disk_space=(action=="fill_disks"),
+            )
+
+@TestScenario
+def pairs(self):
+    """
+    Perform a mix of two subsets of actions.
+    """
+
+    action_subsets = inspect.getfullargspec(build_action_list).args
+    all_disabled = {action: False for action in action_subsets}
+
+    for action1, action2 in combinations(action_subsets, 2):
+        with Example(f"{action1} and {action2}".replace("_", " ")):
+            if "fill_disks" in [action1, action2]:
+                skip("TODO: investigate fill_disks behavior")
+
+            action_list_args = all_disabled.copy()
+            action_list_args[action1] = True
+            action_list_args[action2] = True
+
+            alter_combinations(
+                actions=build_action_list(**action_list_args),
+                limit=None if self.context.stress else 20,
+                limit_disk_space=("fill_disks" in [action1, action2]),
+            )
+
+
+@TestScenario
 def safe(self):
     """
     Perform only actions that are relatively unlikely to cause crashes.
@@ -319,6 +385,7 @@ def safe(self):
     alter_combinations(
         actions=build_action_list(),
         limit=None if self.context.stress else 20,
+        kill_stuck_mutations=False,  # KILL may have unsafe side effects
     )
 
 
@@ -337,6 +404,20 @@ def columns(self):
 
 
 @TestScenario
+def parts(self):
+    """
+    Perform only actions that manipulate parts.
+    """
+
+    alter_combinations(
+        actions=build_action_list(
+            columns=False, part_manipulation=True, ttl=False, indexes=False
+        ),
+        limit=None if self.context.stress else 20,
+    )
+
+
+@TestScenario
 def columns_and_indexes(self):
     """
     Perform only actions that manipulate columns and indexes.
@@ -345,6 +426,35 @@ def columns_and_indexes(self):
     alter_combinations(
         actions=build_action_list(
             columns=True, part_manipulation=False, ttl=False, indexes=True
+        ),
+        limit=None if self.context.stress else 20,
+    )
+
+
+@TestScenario
+def columns_and_indexes_unsafe(self):
+    """
+    Perform only actions that manipulate columns and indexes, disable related workarounds.
+    """
+    self.context.workarounds["wide_parts_only"] = False
+
+    alter_combinations(
+        actions=build_action_list(
+            columns=True, part_manipulation=False, ttl=False, indexes=True
+        ),
+        limit=None if self.context.stress else 20,
+    )
+
+
+@TestScenario
+def columns_and_parts(self):
+    """
+    Perform only actions that manipulate columns and parts.
+    """
+
+    alter_combinations(
+        actions=build_action_list(
+            columns=True, part_manipulation=True, ttl=False, indexes=False
         ),
         limit=None if self.context.stress else 20,
     )
@@ -462,11 +572,16 @@ def feature(self):
     """Stress test with many alters."""
 
     # Workarounds
+    self.context.workarounds = {}
     # https://github.com/ClickHouse/ClickHouse/issues/62459
-    self.context.disallow_move_partition_to_self = True
+    self.context.workarounds["disallow_move_partition_to_self"] = True
 
     # https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
-    self.context.wide_parts_only = True
+    self.context.workarounds["wide_parts_only"] = True
+
+    # SELECT count() fails sporadically when column and part manipulation are combined
+    # Use SELECT count(key) instead when we actually need to know the row count
+    self.context.workarounds["use_key_column_for_count"] = True
 
     with Given("I have S3 disks configured"):
         disk_config()
