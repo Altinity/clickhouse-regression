@@ -13,4 +13,3 @@ base58==2.1.1
 werkzeug==2.3.7
 flask==2.3.2
 matplotlib
-requests==2.31.0
