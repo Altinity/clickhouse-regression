@@ -6199,7 +6199,7 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UUID_UUID__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_NULL_for_all_rows_0 = r"""
-{"uniqUpToMerge(5)(CAST(unhex('00'), 'AggregateFunction(uniqUpTo(5), UInt64)'))":"0"}
+{"uniqUpToMerge(5)(CAST(unhex('00'), 'AggregateFunction(uniqUpTo(5), Nullable(Nothing))'))":"0"}
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Nullable_Bool__0 = r"""
