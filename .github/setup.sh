@@ -13,8 +13,15 @@ sudo rm -rf /tmp/*
 
 echo "Install Python modules..."
 sudo apt-get clean
-./retry.sh 60 2 "sudo pip install -r requirements.txt --force-reinstall --break-system-packages"
 sudo apt-get update
+sudo apt-get install python3.12-venv
+
+echo "Create and activate Python virtual environment..."
+python3 -m venv venv
+source venv/bin/activate
+echo PATH=$PATH >> $GITHUB_ENV
+
+./retry.sh 60 2 "sudo pip install -r requirements.txt --force-reinstall --break-system-packages"
 
 echo "Install docker-compose..."
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
