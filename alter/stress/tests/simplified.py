@@ -186,7 +186,7 @@ def rename_column_select(self):
         insert_random(node=nodes[0], table_name=table_name, rows=100, columns=columns)
         insert_random(node=nodes[1], table_name=table_name, rows=100, columns=columns)
 
-    with When("I add a column"):
+    with When("I rename a column"):
         nodes[2].query(f"ALTER TABLE {table_name} RENAME COLUMN b TO d")
 
     with Then("I select continuously from the table"):
@@ -197,6 +197,74 @@ def rename_column_select(self):
                 nodes[0].query(
                     f"SELECT count() FROM {table_name}", exitcode=0, timeout=60
                 )
+
+@TestScenario
+def select_all_missing_column(self):
+    """
+    SELECT count() can fail after detaching and attaching a partition where a column has been dropped
+    """
+
+    @TestStep(When)
+    def drop_column(self, table_name):
+        nodes[0].query(f"ALTER TABLE {table_name} DROP COLUMN c10")
+
+    @TestStep(When)
+    def replace_partition(self, table1_name, table2_name):
+        nodes[1].query(f"ALTER TABLE {table1_name} REPLACE PARTITION 3 FROM {table2_name}")
+
+    with Given("I have ClickHouse nodes"):
+        nodes = self.context.ch_nodes
+
+    with Given("I have a replicated table"):
+        table1_name = "table0"
+        columns = ", ".join([f"c{i} UInt64" for i in range(50)])
+        replicated_table_cluster(
+            table_name=table1_name,
+            storage_policy="external",
+            columns=columns,
+            partition_by="c0 % 4",
+            settings="min_bytes_for_wide_part=0",
+        )
+
+    with Given("I have a another replicated table"):
+        table2_name = "table1"
+        replicated_table_cluster(
+            table_name=table2_name,
+            storage_policy="external",
+            columns=columns,
+            partition_by="c0 % 4",
+            settings="min_bytes_for_wide_part=0",
+        )
+
+    with When("I insert lots of data into the tables"):
+        insert_random(node=nodes[0], table_name=table1_name, rows=2_000_000, columns=columns)
+        insert_random(node=nodes[0], table_name=table2_name, rows=2_000_000, columns=columns)
+
+    with When("I drop a column and replace a partition"):
+        By(test=drop_column, parallel=True)(table_name=table1_name)
+        By(test=drop_column, parallel=True)(table_name=table2_name)
+        time.sleep(1)
+        By(test=replace_partition, parallel=True)(table1_name=table1_name, table2_name=table2_name)
+        By(test=replace_partition, parallel=True)(table1_name=table2_name, table2_name=table1_name)
+
+        with By("I check system.mutations"):
+            for node in nodes:
+                node.query("SELECT * FROM system.mutations FORMAT Vertical", exitcode=0, timeout=60)
+
+        join()   
+
+    with When("I detach and attach a different partition"):
+        nodes[1].query(f"ALTER TABLE {table1_name} DETACH PARTITION 0")
+        nodes[1].query(f"ALTER TABLE {table2_name} DETACH PARTITION 0")
+
+        time.sleep(0.5)
+        nodes[1].query(f"ALTER TABLE {table1_name} ATTACH PARTITION 0")
+        nodes[1].query(f"ALTER TABLE {table2_name} ATTACH PARTITION 0")
+
+    with Then("I select from the table"):
+        for node in nodes:
+            node.query(f"SELECT count() FROM {table1_name}", exitcode=0, timeout=60)
+            node.query(f"SELECT count() FROM {table2_name}", exitcode=0, timeout=60)
 
 
 @TestFeature
