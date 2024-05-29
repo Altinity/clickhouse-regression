@@ -65,12 +65,22 @@ def get_active_partition_ids(
 
 
 @TestStep
-def get_row_count(self, node: ClickHouseNode, table_name: str, timeout=30) -> int:
-    """Get the number of rows in the given table."""
+def get_row_count(
+    self, node: ClickHouseNode, table_name: str, timeout=30, column: str = None
+) -> int:
+    """
+    Get the number of rows in the given table.
+
+    """
+    if column is None:
+        column = ""
+
     r = node.query(
-        f"SELECT count() FROM {table_name} FORMAT JSONColumns", exitcode=0, timeout=timeout
+        f"SELECT count({column}) FROM {table_name} FORMAT JSONCompactEachRow",
+        exitcode=0,
+        timeout=timeout,
     )
-    return int(json.loads(r.output)["count()"][0])
+    return int(json.loads(r.output)[0])
 
 
 @TestStep
