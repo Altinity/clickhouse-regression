@@ -348,8 +348,9 @@ def one_by_one(self):
             alter_combinations(
                 actions=action_list,
                 limit=None if self.context.stress else 20,
-                limit_disk_space=(action=="fill_disks"),
+                limit_disk_space=(action == "fill_disks"),
             )
+
 
 @TestScenario
 def pairs(self):
@@ -384,8 +385,8 @@ def safe(self):
 
     alter_combinations(
         actions=build_action_list(
-            columns=False, # column operations trigger issues in other alters
-            projections=False, # projection operations have issues when combined with other alters
+            columns=False,  # column operations trigger issues in other alters
+            projections=False,  # projection operations have issues when combined with other alters
         ),
         limit=None if self.context.stress else 20,
         kill_stuck_mutations=False,  # KILL may have unsafe side effects

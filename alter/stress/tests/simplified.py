@@ -198,6 +198,7 @@ def rename_column_select(self):
                     f"SELECT count() FROM {table_name}", exitcode=0, timeout=60
                 )
 
+
 @TestScenario
 def select_all_missing_column(self):
     """
@@ -210,7 +211,9 @@ def select_all_missing_column(self):
 
     @TestStep(When)
     def replace_partition(self, table1_name, table2_name):
-        nodes[1].query(f"ALTER TABLE {table1_name} REPLACE PARTITION 3 FROM {table2_name}")
+        nodes[1].query(
+            f"ALTER TABLE {table1_name} REPLACE PARTITION 3 FROM {table2_name}"
+        )
 
     with Given("I have ClickHouse nodes"):
         nodes = self.context.ch_nodes
@@ -237,21 +240,33 @@ def select_all_missing_column(self):
         )
 
     with When("I insert lots of data into the tables"):
-        insert_random(node=nodes[0], table_name=table1_name, rows=2_000_000, columns=columns)
-        insert_random(node=nodes[0], table_name=table2_name, rows=2_000_000, columns=columns)
+        insert_random(
+            node=nodes[0], table_name=table1_name, rows=2_000_000, columns=columns
+        )
+        insert_random(
+            node=nodes[0], table_name=table2_name, rows=2_000_000, columns=columns
+        )
 
     with When("I drop a column and replace a partition"):
         By(test=drop_column, parallel=True)(table_name=table1_name)
         By(test=drop_column, parallel=True)(table_name=table2_name)
         time.sleep(1)
-        By(test=replace_partition, parallel=True)(table1_name=table1_name, table2_name=table2_name)
-        By(test=replace_partition, parallel=True)(table1_name=table2_name, table2_name=table1_name)
+        By(test=replace_partition, parallel=True)(
+            table1_name=table1_name, table2_name=table2_name
+        )
+        By(test=replace_partition, parallel=True)(
+            table1_name=table2_name, table2_name=table1_name
+        )
 
         with By("I check system.mutations"):
             for node in nodes:
-                node.query("SELECT * FROM system.mutations FORMAT Vertical", exitcode=0, timeout=60)
+                node.query(
+                    "SELECT * FROM system.mutations FORMAT Vertical",
+                    exitcode=0,
+                    timeout=60,
+                )
 
-        join()   
+        join()
 
     with When("I detach and attach a different partition"):
         nodes[1].query(f"ALTER TABLE {table1_name} DETACH PARTITION 0")

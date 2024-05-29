@@ -300,7 +300,6 @@ def zero_copy_replication(self, format=None):
 
         mergetree_config(settings=settings)
 
-
     benchmark(
         table_name="zero_copy_replication",
         table_settings=table_settings,

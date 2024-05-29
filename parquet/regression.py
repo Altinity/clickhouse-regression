@@ -168,10 +168,7 @@ xfails = {
 xflags = {}
 
 ffails = {
-    "/parquet/bloom": (
-        Skip,
-        "Not done yet"
-    ),
+    "/parquet/bloom": (Skip, "Not done yet"),
     "/parquet/compression/brotli": (
         Skip,
         "Not implemented before 23.3",
