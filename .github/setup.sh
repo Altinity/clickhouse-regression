@@ -21,7 +21,7 @@ python3 -m venv venv
 source venv/bin/activate
 echo PATH=$PATH >> $GITHUB_ENV
 
-./retry.sh 60 2 "sudo pip install -r requirements.txt"
+./retry.sh 60 2 "pip install -r requirements.txt"
 
 echo "Install docker-compose..."
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
