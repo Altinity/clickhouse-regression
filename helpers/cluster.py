@@ -136,7 +136,7 @@ class Node(object):
         return self.cluster.command(self.name, *args, **kwargs)
 
     class QueryHandler:
-        def __init__(self, command_context, prompt="\[clickhouse1\] :\) "):
+        def __init__(self, command_context, prompt=r"\[clickhouse1\] :\) "):
             self.command_context = command_context
             self.prompt = prompt
 
