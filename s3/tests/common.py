@@ -650,7 +650,7 @@ def get_random_string(cluster, length, steps=True, *args, **kwargs):
     with tempfile.NamedTemporaryFile("w+", encoding="utf-8") as fd:
         cluster.command(
             None,
-            f"cat /dev/urandom | tr -dc 'A-Za-z0-9#$&()*+,-./:;<=>?@[\]^_~' | head -c {length} > {fd.name}",
+            rf"cat /dev/urandom | tr -dc 'A-Za-z0-9#$&()*+,-./:;<=>?@[\]^_~' | head -c {length} > {fd.name}",
             steps=steps,
             no_checks=True,
             *args,
