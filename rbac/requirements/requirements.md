@@ -3402,6 +3402,14 @@ The following table show which rights are required for which user in order to se
 |`INVOKER` |	User must have a `SELECT` grant for the view's source table. |	`SQL SECURITY INVOKER` can't be specified for materialized views. |
 |`NONE` |	- | -
 
+The following table show which rights are required for which user in order to insert into view. In every case it is **required** to have `GRANT INSERT ON <view>` in order to write into it.
+
+| SQL security option | View | Materialized View | 
+| --------------------|------|-------------------|
+| `DEFINER alice` | It is not possible to write into normal views	 | `alice` must have a `INSERT` grant for the view's target table. |
+|`INVOKER` | It is not possible to write into normal views	 |	`SQL SECURITY INVOKER` can't be specified for materialized views. |
+|`NONE` |	It is not possible to write into normal views | -
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity
 version: 1.0  
 [ClickHouse] SHALL support the `ALTER TABLE MODIFY SQL SECURITY` statement to change the SQL security for an existing view.
