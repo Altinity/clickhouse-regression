@@ -3508,7 +3508,7 @@ version: 1.0
 [ClickHouse] SHALL only succesfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and **`SELECT`** privilege for the view's **source** table.
 
 
-##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.Definer
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.Definer
 version: 1.0  
 
 | SQL security  | DEFINER       | Operation         | 
@@ -3528,6 +3528,26 @@ version: 1.0
 [ClickHouse] SHALL set `SQL SECURITY` to the value from `default_normal_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only succesfully `SELECT` from a normal view with described SQL security options if and only if all privileges are granted according to the SQL security options.
 
 If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security SHALL behave like they did before.  
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | alice         | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**ToDO**
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | not specified | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**ToDO**
   
 <br/><br/> 
   
@@ -3615,6 +3635,26 @@ version: 1.0
 
 If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security SHALL behave like they did before.  
 
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | alice         | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**ToDO**
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | not specified | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**ToDO**
+
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer
 version: 1.0  
@@ -3672,6 +3712,26 @@ version: 1.0
 [ClickHouse] SHALL set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.
 
 If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security will behave like they did before.  
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | alice         | `INSERT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**ToDO**
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | not specified | `INSERT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**ToDO**
 
 
 #### Live View
