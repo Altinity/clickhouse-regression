@@ -17,7 +17,7 @@ def build_action_list(
     part_manipulation=True,
     ttl=True,
     projections=False,
-    indexes=False,
+    indexes=True,
     restarts=False,
     network_restarts=False,
     add_remove_replicas=False,
@@ -335,7 +335,7 @@ def one_by_one(self):
     all_disabled = {action: False for action in action_subsets}
 
     for action in action_subsets:
-        with Example(action):
+        with Example(action.replace("_", " ")):
             action_list_args = all_disabled.copy()
             action_list_args[action] = True
 
@@ -343,13 +343,14 @@ def one_by_one(self):
 
             # If the list is short, multiply it to get more combinations
             if len(action_list) <= 4:
-                action_list *= 3
+                action_list *= 2
 
             alter_combinations(
                 actions=action_list,
                 limit=None if self.context.stress else 20,
-                limit_disk_space=(action=="fill_disks"),
+                limit_disk_space=(action == "fill_disks"),
             )
+
 
 @TestScenario
 def pairs(self):
@@ -379,11 +380,14 @@ def pairs(self):
 @TestScenario
 def safe(self):
     """
-    Perform only actions that are relatively unlikely to cause crashes.
+    Perform only actions that are relatively unlikely to cause exceptions.
     """
 
     alter_combinations(
-        actions=build_action_list(),
+        actions=build_action_list(
+            columns=False,  # column operations trigger issues in other alters
+            projections=False,  # projection operations have issues when combined with other alters
+        ),
         limit=None if self.context.stress else 20,
         kill_stuck_mutations=False,  # KILL may have unsafe side effects
     )

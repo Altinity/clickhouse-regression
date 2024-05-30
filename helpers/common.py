@@ -36,7 +36,10 @@ def check_analyzer():
         default_query_settings = getsattr(
             current().context, "default_query_settings", []
         )
-        if ("allow_experimental_analyzer", 1,) in default_query_settings or (
+        if (
+            "allow_experimental_analyzer",
+            1,
+        ) in default_query_settings or (
             check_clickhouse_version(">=24.3")(test)
             and ("allow_experimental_analyzer", 0) not in default_query_settings
         ):

@@ -131,7 +131,7 @@ def create_quota(self, privilege, grant_target_name, user_name, node=None):
                         f"CREATE QUOTA {create_quota_name} ON CLUSTER sharded_cluster",
                         settings=[("user", f"{user_name}")],
                     )
-            
+
             with And("I grant CLUSTER privilege and check the user can create a quota"):
                 if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
                     grant_cluster(node=node, user=grant_target_name)
@@ -139,7 +139,7 @@ def create_quota(self, privilege, grant_target_name, user_name, node=None):
                         f"CREATE QUOTA {create_quota_name} ON CLUSTER sharded_cluster",
                         settings=[("user", f"{user_name}")],
                     )
-                    
+
         finally:
             with Finally("I drop the quota"):
                 node.query(

@@ -8,6 +8,4 @@ def feature(self):
     """Check SQL security feature."""
     Feature(run=load("rbac.tests.sql_security.materialized_view", "feature"))
     Feature(run=load("rbac.tests.sql_security.view", "feature"))
-    #Feature(run=load("rbac.tests.sql_security.cluster", "feature"))
- 
-
+    # Feature(run=load("rbac.tests.sql_security.cluster", "feature"))

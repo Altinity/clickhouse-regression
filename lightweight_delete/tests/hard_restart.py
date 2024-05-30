@@ -49,7 +49,9 @@ def hard_restart(self, signal="SIGKILL", node=None):
         output1 = node.query(
             f"SELECT count(*) FROM {table_name} WHERE NOT(id>0) FORMAT TabSeparated"
         ).output
-        output2 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated").output
+        output2 = node.query(
+            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+        ).output
 
     with When("I delete table and kill clickhouse server process in parallel"):
         By(name="executing delete operation", test=delete, parallel=True)(

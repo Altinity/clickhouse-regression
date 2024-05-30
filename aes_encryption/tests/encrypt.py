@@ -194,7 +194,7 @@ def invalid_parameters(self):
             exitcode, message = 36, "DB::Exception: Invalid mode: aes-128-cfb8"
             if check_clickhouse_version(">=24.4")(self):
                 exitcode, message = None, None
-                
+
             encrypt(
                 plaintext="'hello there'",
                 key="'0123456789123456'",

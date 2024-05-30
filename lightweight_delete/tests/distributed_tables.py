@@ -56,7 +56,9 @@ def distributed_table_replicated(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully inserted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated"
+                )
                 assert r.output == "1000", error()
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -70,7 +72,9 @@ def distributed_table_replicated(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated"
+                )
                 assert r.output == "500", error()
 
 
@@ -131,7 +135,9 @@ def distributed_table_sharded(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully inserted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated"
+                )
                 assert r.output == "1000", error()
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -145,7 +151,9 @@ def distributed_table_sharded(self):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name}_distributed FORMAT TabSeparated"
+                )
                 assert int(r.output) >= 500, error()
 
 

@@ -81,7 +81,9 @@ def normal_view(self, node=None):
         r1 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         r2 = node.query(f"SELECT * FROM {view_name_1} FORMAT TabSeparated")
         assert r1.output == r2.output
-        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated")
+        r1 = node.query(
+            f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated"
+        )
         r2 = node.query(f"SELECT * FROM {view_name_2} FORMAT TabSeparated")
         assert r1.output == r2.output
 
@@ -126,7 +128,9 @@ def live_view(self, node=None):
         r1 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         r2 = node.query(f"SELECT * FROM {view_name_1} FORMAT TabSeparated")
         assert r1.output == r2.output
-        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated")
+        r1 = node.query(
+            f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated"
+        )
         r2 = node.query(f"SELECT * FROM {view_name_2} FORMAT TabSeparated")
         assert r1.output == r2.output
 
@@ -225,7 +229,9 @@ def materialized_view(self, node=None):
         r1 = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         r2 = node.query(f"SELECT * FROM {view_name_1} FORMAT TabSeparated")
         assert r1.output == r2.output
-        r1 = node.query(f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated")
+        r1 = node.query(
+            f"SELECT count() FROM {table_name} group by id order by id FORMAT TabSeparated"
+        )
         r2 = node.query(f"SELECT * FROM {view_name_2} FORMAT TabSeparated")
         assert r1.output == r2.output
 

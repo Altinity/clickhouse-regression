@@ -65,7 +65,9 @@ def performance_without_primary_key(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that spent on select query"):
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x % 2 = 0 FORMAT TabSeparated")
+        r = node.query(
+            f"SELECT count(*) FROM {table_name} WHERE x % 2 = 0 FORMAT TabSeparated"
+        )
 
     execution_time1 = time.time() - start_time
 
@@ -108,7 +110,9 @@ def performance_with_primary_key_many_partitions(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that was spent on select query"):
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0 FORMAT TabSeparated")
+        r = node.query(
+            f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0 FORMAT TabSeparated"
+        )
 
     execution_time1 = time.time() - start_time
 
@@ -153,7 +157,9 @@ def performance_with_primary_key_many_parts(self, node=None):
     start_time = time.time()
 
     with When(f"I mark the time that was spent on select query"):
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0 FORMAT TabSeparated")
+        r = node.query(
+            f"SELECT count(*) FROM {table_name} WHERE id % 2 = 0 FORMAT TabSeparated"
+        )
 
     execution_time1 = time.time() - start_time
 
