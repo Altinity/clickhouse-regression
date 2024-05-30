@@ -173,6 +173,9 @@ def check_materialized_view_with_definer(
         populate_mv_table(
             node=node, mv_table_name=mv_target_table_name, table_name=source_table_name
         )
+        populate_mv_table(
+            node=node, mv_table_name=mv_target_table_name, table_name=source_table_name
+        )
 
     with And(
         "I grant privileges to source and target tables to definer user either directly or via role"

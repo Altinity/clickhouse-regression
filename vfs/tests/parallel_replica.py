@@ -157,7 +157,9 @@ def optimize(self, node, table_name):
 @TestStep(When)
 def select(self, node, table_name):
     """SELECT count() with no checks."""
-    r = node.query(f"SELECT count() FROM {table_name} FORMAT TabSeparated", no_checks=True)
+    r = node.query(
+        f"SELECT count() FROM {table_name} FORMAT TabSeparated", no_checks=True
+    )
 
 
 @TestOutline(Example)

@@ -51,7 +51,7 @@ def regression(
         )
         self.context.cluster = cluster
         self.context.stress = stress
-    
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)

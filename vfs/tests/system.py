@@ -229,7 +229,9 @@ def compact_parts(self):
 @TestStep
 def get_active_part_count(self, node, table_name):
     """Get the number of active parts for a table."""
-    r = node.query(f"SELECT sum(active) FROM system.parts where table='{table_name}' FORMAT TabSeparated")
+    r = node.query(
+        f"SELECT sum(active) FROM system.parts where table='{table_name}' FORMAT TabSeparated"
+    )
     return int(r.output)
 
 
@@ -336,7 +338,9 @@ def vfs_events(self):
         optimize(node=node, table_name=table_name, final=True)
 
     with When("I query for vfs events"):
-        r = node.query("SELECT event FROM system.events WHERE event like 'VFS%' FORMAT TabSeparated")
+        r = node.query(
+            "SELECT event FROM system.events WHERE event like 'VFS%' FORMAT TabSeparated"
+        )
 
     for event in vfs_events:
         with Check(event):

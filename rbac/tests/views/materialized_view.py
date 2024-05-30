@@ -281,7 +281,9 @@ def create_with_source_table_privilege(self, user_name, grant_target_name, node=
                 )
 
             with Then("I check the view"):
-                output = node.query(f"SELECT count(*) FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT count(*) FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert output == "0", error()
 
         finally:
@@ -1916,7 +1918,8 @@ def select_without_target_table_privilege(
             node.query(f"GRANT SELECT ON {view_name} TO {grant_target_name}")
         with Then("I attempt to select from a view as the user"):
             node.query(
-                f"SELECT * FROM {view_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {view_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
     finally:
@@ -2079,7 +2082,8 @@ def select_from_explicit_target_table(self, grant_target_name, user_name, node=N
                 node.query(f"GRANT SELECT ON {table_name} TO {grant_target_name}")
             with Then("I attempt to SELECT from the explicit target table as the user"):
                 node.query(
-                    f"SELECT * FROM {table_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                    f"SELECT * FROM {table_name} FORMAT TabSeparated",
+                    settings=[("user", f"{user_name}")],
                 )
 
         finally:
@@ -2217,7 +2221,11 @@ def drop_with_privilege(self, grant_target_name, user_name, node=None):
             node.query(f"DROP VIEW {view_name}", settings=[("user", f"{user_name}")])
 
         with Then("I check the table does not exist"):
-            node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated", exitcode=exitcode, message=message)
+            node.query(
+                f"SELECT * FROM {view_name} FORMAT TabSeparated",
+                exitcode=exitcode,
+                message=message,
+            )
 
     finally:
         with Finally("I drop the view"):

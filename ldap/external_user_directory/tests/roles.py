@@ -493,7 +493,9 @@ def not_present_role_added(self, server):
                             client.app.expect("clickhouse1 :\) ")
 
                             with When("I execute select on the table"):
-                                client.app.send(f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated")
+                                client.app.send(
+                                    f"SELECT * FROM {table_name} LIMIT 1 FORMAT TabSeparated"
+                                )
 
                             with Then("I expect to get not enough privileges error"):
                                 client.app.expect("Not enough privileges")

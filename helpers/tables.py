@@ -400,8 +400,12 @@ def create_table(
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
     if order_by_all_columns:
-        non_nullable_columns = [column for column in columns if "Nullable" not in column.datatype.name]
-        order_by = "(" + ",".join([column.name for column in non_nullable_columns]) + ")"
+        non_nullable_columns = [
+            column for column in columns if "Nullable" not in column.datatype.name
+        ]
+        order_by = (
+            "(" + ",".join([column.name for column in non_nullable_columns]) + ")"
+        )
 
     if if_not_exists:
         if_not_exists = "IF NOT EXISTS "

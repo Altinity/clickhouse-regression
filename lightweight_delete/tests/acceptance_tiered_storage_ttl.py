@@ -93,7 +93,9 @@ def delete_with_tiered_storage_ttl_move(
         assert time_without_ttl * 20 > time_with_ttl, error()
 
     with Then("I check rows are deleted"):
-        r = node.query(f"SELECT count(*) from {table_name_2} FORMAT TabSeparated").output
+        r = node.query(
+            f"SELECT count(*) from {table_name_2} FORMAT TabSeparated"
+        ).output
         assert r == expected_output, error()
 
 
@@ -157,7 +159,9 @@ def delete_with_tiered_storage_ttl_delete(
         assert time_without_ttl * 20 > time_with_ttl, error()
 
     with Then("I check rows are deleted"):
-        r = node.query(f"SELECT count(*) from {table_name_2} FORMAT TabSeparated").output
+        r = node.query(
+            f"SELECT count(*) from {table_name_2} FORMAT TabSeparated"
+        ).output
         assert r == expected_output, error()
 
 

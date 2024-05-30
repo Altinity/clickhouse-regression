@@ -409,7 +409,8 @@ def select_with_privilege(self, user_name, grant_target_name, node=None):
 
         with Then("I attempt to select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
     finally:
@@ -475,7 +476,8 @@ def select_with_privilege(self, user_name, grant_target_name, node=None):
 
         with Then("I attempt to select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
     finally:
@@ -789,7 +791,8 @@ def select_with_table_on_materialized_view(
 
         with Then("I attempt to select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
         with When("I revoke ALL privileges"):
@@ -808,7 +811,8 @@ def select_with_table_on_materialized_view(
 
         with Then("I attempt to select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
     finally:
@@ -918,7 +922,8 @@ def select_with_table_on_source_table_of_materialized_view(
 
         with Then("I attempt to select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
         with When("I revoke ALL privileges"):
@@ -937,7 +942,8 @@ def select_with_table_on_source_table_of_materialized_view(
 
         with Then("I attempt to select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
     finally:
@@ -1068,7 +1074,8 @@ def select_with_table_on_distributed_table(
 
         with Then("I attempt to select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table2_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table2_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
     finally:
@@ -1548,7 +1555,8 @@ def local_user(self, cluster, node=None):
 
         with Then("I select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
         with When("I revoke ALL privileges"):
@@ -1559,7 +1567,8 @@ def local_user(self, cluster, node=None):
 
         with Then("I select from the distributed table as the user"):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
     finally:
@@ -1612,7 +1621,8 @@ def multiple_node_user(self, node=None):
             "I select from the distributed table on the node where the user has privileges"
         ):
             node.query(
-                f"SELECT * FROM {table1_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT * FROM {table1_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             )
 
         with And(

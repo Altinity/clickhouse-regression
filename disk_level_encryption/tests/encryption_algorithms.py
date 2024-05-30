@@ -141,9 +141,9 @@ def check_changing_encryption_algorithm(
 
     with Then("I try to change algorithm"):
         wrong_entries = copy.deepcopy(entries_in_this_test)
-        wrong_entries["storage_configuration"]["disks"][1]["encrypted_local"][
-            "key"
-        ] = key[0:number_of_symbols_2]
+        wrong_entries["storage_configuration"]["disks"][1]["encrypted_local"]["key"] = (
+            key[0:number_of_symbols_2]
+        )
         if second_algorithm is not None:
             wrong_entries["storage_configuration"]["disks"][1]["encrypted_local"][
                 "algorithm"

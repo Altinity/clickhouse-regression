@@ -156,9 +156,7 @@ def million_extensions(self):
 def fastparquet_globs(self):
     """Importing multiple Parquet files using the glob patterns from a single directory."""
     for example in self.examples:
-        select_with_glob(
-            query=example[0], snapshot_name=example[1], order_by="ALL"
-        )
+        select_with_glob(query=example[0], snapshot_name=example[1], order_by="ALL")
 
 
 @TestFeature

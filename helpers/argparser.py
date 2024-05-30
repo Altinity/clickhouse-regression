@@ -54,5 +54,3 @@ def argparser(parser):
         default=False,
         help="Use experimental analyzer.",
     )
-
-
