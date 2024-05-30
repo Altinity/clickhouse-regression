@@ -3341,6 +3341,8 @@ View Type:
       - Select from mv table
       - Insert into mv
       - Insert into mv table
+      - Select from source table
+      - Insert into source table
     SQL SECURITY:
       - DEFINER
       - NONE
@@ -3365,7 +3367,7 @@ View Type:
       - none
       - create
       # Add other grants here if needed
-    view destination table grants:
+    view target table grants:
       - select
       - insert
       - none
