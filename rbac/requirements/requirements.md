@@ -3501,6 +3501,15 @@ version: 1.0
 
 [ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. 
 
+##### RQ.SRS-006.RBAC.SQLSecurity.View.SqlSecurityNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       |  
+| --------------|---------------|
+| not specified | alice         |
+
+[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.Definer
 version: 1.0  
 
@@ -3517,7 +3526,7 @@ version: 1.0
 | -------------|---------------|-------------------|
 | `DEFINER`    | not specified | `SELECT`          |
 
-[ClickHouse] set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified.  
+[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified.  
 [ClickHouse] SHALL only succesfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (`CURRENT_USER`) has **`SELECT`** privilege for the view's **source** table.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer
@@ -3546,7 +3555,7 @@ version: 1.0
 | --------------|---------------|-------------------|
 | not specified | alice         | `SELECT`          |
 
-[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
+[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
 [ClickHouse] SHALL only succesfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the view's **source** table.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified
@@ -3595,6 +3604,17 @@ CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]na
 AS SELECT ...
 ```
 
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster
+version: 1.0  
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW ON CLUSTER` statement.
+
+Syntax:
+```sql
+CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]name] [ENGINE = engine] [POPULATE] 
+[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
+AS SELECT ...
+```
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues
 version: 1.0  
 In [ClickHouse], the default values for `default_materialized_view_sql_security` and `default_view_definer` shall be set to `DEFINER` and `CURRENT_USER`, respectively.
@@ -3608,16 +3628,15 @@ version: 1.0
 
 [ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. 
 
-##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.SqlSecurityNotSpecified
 version: 1.0  
-[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW ON CLUSTER` statement.
 
-Syntax:
-```sql
-CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]name] [ENGINE = engine] [POPULATE] 
-[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
-AS SELECT ...
-```
+| SQL security  | DEFINER       | 
+| --------------|---------------|
+| not specified | alice         | 
+
+[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
+
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer
 version: 1.0  
@@ -3635,7 +3654,7 @@ version: 1.0
 | --------------|---------------|-------------------|
 | `DEFINER`     | not specified | `SELECT`          |
 
-[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only succesfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user(`CURRENT_USER`) has **`SELECT`** privilege for the materialized view's **source and target** tables.
+[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only succesfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user(`CURRENT_USER`) has **`SELECT`** privilege for the materialized view's **source and target** tables.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer
 version: 1.0  
@@ -3662,7 +3681,7 @@ version: 1.0
 | --------------|---------------|-------------------|
 | not specified | alice         | `SELECT`          |
 
-[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only succesfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the materialized view's **source and target** tables.
+[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only succesfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the materialized view's **source and target** tables.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified
 version: 1.0  
@@ -3671,7 +3690,7 @@ version: 1.0
 | --------------|---------------|-------------------|
 | not specified | not_specified | `SELECT`          |
 
-[ClickHouse] SHALL set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only succesfully `SELECT` from a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.
+[ClickHouse] set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only succesfully `SELECT` from a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.
 
 If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security SHALL behave like they did before.  
 
@@ -3713,7 +3732,7 @@ version: 1.0
 | --------------|---------------|-------------------|
 | `DEFINER`     | not specified | `INSERT`          |
 
-[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user has **`INSERT`** privilege for the materialized view's **target** table.
+[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user has **`INSERT`** privilege for the materialized view's **target** table.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer
 version: 1.0  
@@ -3740,7 +3759,7 @@ version: 1.0
 | -------------|---------------|-------------------|
 |not specified | alice         | `INSERT`          |
 
-[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table.
+[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified
 version: 1.0  
@@ -3749,7 +3768,7 @@ version: 1.0
 | --------------|---------------|-------------------|
 | not specified | not_specified | `INSERT`          |
 
-[ClickHouse] SHALL set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.
+[ClickHouse] set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only succesfully `INSERT` into a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.
 
 If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security will behave like they did before.  
 
