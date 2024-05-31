@@ -3416,8 +3416,6 @@ View Type:
 
 DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three valid values: `DEFINER`, `INVOKER`, or `NONE`. [Clickhouse] allows to specify any existing user or `CURRENT_USER` in the DEFINER clause.
 
-The following table show which rights are required for which user in order to select from view. In every case it is **required** to have `GRANT SELECT ON <view>` in order to read from it.
-
 Examples:
 ```sql
 CREATE test_view
@@ -3429,6 +3427,8 @@ CREATE test_view
 SQL SECURITY INVOKER
 AS SELECT ...
 ```
+
+The following table show which rights are required for which user in order to select from view. In every case it is **required** to have `GRANT SELECT ON <view>` in order to read from it.
 
 | SQL security option | View | Materialized View | 
 | --------------------|------|-------------------|
