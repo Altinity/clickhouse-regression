@@ -11,26 +11,48 @@ from helpers.common import getuid
 
 
 @TestStep(Given)
-def create_simple_MergeTree_table(self, node, table_name=None, column_name="x"):
-    """Create a MergeTree table that uses a given storage policy with column ttl."""
+def create_simple_MergeTree_table(
+    self, node=None, table_name=None, column_name="x", cluster=None, rows=0
+):
+    """Create simple MergeTree table with one UInt32 column."""
     if table_name is None:
         table_name = "table_" + getuid()
+
     if node is None:
         node = self.context.node
+
+    query = f"CREATE TABLE {table_name} "
+
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} (x UInt32) ENGINE = ReplicatedMergeTree ORDER BY {column_name}"
+    else:
+        query += f"({column_name} UInt32) ENGINE = MergeTree ORDER BY {column_name}"
+
     try:
-        node.query(
-            f"CREATE TABLE {table_name} (x UInt32) ENGINE = MergeTree() ORDER BY {column_name}"
-        )
+        node.query(query)
+
+        if rows > 0:
+            node.query(f"INSERT INTO {table_name} SELECT number FROM numbers({rows})")
+
         yield table_name
 
     finally:
         with Finally("I drop the table if exists"):
-            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+            if cluster is not None:
+                node.query(
+                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster} SYNC"
+                )
+            else:
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestStep(Given)
-def create_user(self, node, user_name=None):
-    """Create user."""
+def create_user(self, node=None, user_name=None):
+    """Create user with given name. If name is not provided, it will be generated."""
+
+    if node is None:
+        node = self.context.node
+
     if user_name is None:
         user_name = "user_" + getuid()
     try:
@@ -49,15 +71,21 @@ def grant_privilege(self, node, privilege, object, user):
 
 
 @TestStep(Given)
-def grant_privileges_directly(self, node, privileges, object, user):
+def grant_privileges_directly(self, privileges, object, user, node=None):
     """Grant privilege on table/view/database to user directly."""
+    if node is None:
+        node = self.context.node
+
     for privilege in privileges:
         node.query(f"GRANT {privilege} ON {object} TO {user}")
 
 
 @TestStep(Given)
-def grant_privileges_via_role(self, node, privileges, object, user):
+def grant_privileges_via_role(self, privileges, object, user, node=None):
     """Grant privilege on table/view/database to user via role."""
+    if node is None:
+        node = self.context.node
+
     role = create_role()
     for privilege in privileges:
         node.query(f"GRANT {privilege} ON {object} TO {role}")
@@ -67,20 +95,29 @@ def grant_privileges_via_role(self, node, privileges, object, user):
 @TestStep(Given)
 def create_materialized_view(
     self,
-    node,
-    view_name,
-    mv_table_name,
-    select_table_name,
+    source_table_name,
+    node=None,
+    view_name=None,
+    target_table_name=None,
     definer=None,
     sql_security=None,
     if_not_exists=False,
-    on_cluster=None,
+    cluster=None,
     select_columns="*",
     settings=None,
     exitcode=None,
     message=None,
+    order_by=None,
+    engine=None,
+    populate=False,
 ):
     """Create materialized view."""
+
+    if node is None:
+        node = self.context.node
+
+    if view_name is None:
+        view_name = "mv_" + getuid()
 
     query = f"CREATE MATERIALIZED VIEW "
 
@@ -89,10 +126,20 @@ def create_materialized_view(
 
     query += f"{view_name} "
 
-    if on_cluster is not None:
-        query += f"ON CLUSTER {on_cluster} "
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} "
 
-    query += f"TO {mv_table_name} "
+    if target_table_name is not None:
+        query += f"TO {target_table_name} "
+
+    if engine is not None:
+        query += f"ENGINE = {engine} "
+
+    if order_by is not None:
+        query += f"ORDER BY {order_by} "
+
+    if populate:
+        query += "POPULATE "
 
     if definer is not None:
         query += f"DEFINER = {definer} "
@@ -100,7 +147,7 @@ def create_materialized_view(
     if sql_security is not None:
         query += f"SQL SECURITY {sql_security} "
 
-    query += f"AS SELECT {select_columns} FROM {select_table_name}"
+    query += f"AS SELECT {select_columns} FROM {source_table_name}"
 
     try:
         if settings is not None:
@@ -115,9 +162,16 @@ def create_materialized_view(
 
 
 @TestStep(Given)
-def populate_mv_table(self, node, mv_table_name, table_name, select_columns="*"):
-    """Insert data into materialized view table."""
-    node.query(f"INSERT INTO {mv_table_name} SELECT {select_columns} FROM {table_name}")
+def populate_table(
+    self, destination_table_name, source_table_name, node=None, select_columns="*"
+):
+    """Insert data into table."""
+    if node is None:
+        node = self.context.node
+
+    node.query(
+        f"INSERT INTO {destination_table_name} SELECT {select_columns} FROM {source_table_name}"
+    )
 
 
 @TestStep(Given)
@@ -161,8 +215,11 @@ def create_view(
             node.query(f"DROP VIEW IF EXISTS {view_name}")
 
 
-def insert_data_from_numbers(node, table_name, rows=10):
-    """Insert data into table from numbers."""
+def insert_data_from_numbers(table_name, rows=10, node=None):
+    """Insert data into table from numbers table function."""
+    if node is None:
+        node = current().context.node
+
     node.query(f"INSERT INTO {table_name} SELECT number FROM numbers({rows})")
 
 
@@ -189,7 +246,7 @@ def create_role(self, privilege=None, object=None, role_name=None, node=None):
 
 @TestStep(Given)
 def change_core_settings(
-    self, entries, xml_symbols=True, modify=False, restart=True, format=None, user=None
+    self, entries, modify=False, restart=True, format=None, user=None
 ):
     """Create configuration file and add it to the server."""
     with By("converting config file content to xml"):
@@ -202,5 +259,20 @@ def change_core_settings(
         if format is not None:
             for key, value in format.items():
                 config.content = config.content.replace(key, value)
+
     with And("adding xml config file to the server"):
         return add_config(config, restart=restart, modify=modify, user=user)
+
+
+@TestStep(Given)
+def create_user_on_cluster(self, node, cluster, user_name=None):
+    """Create user on cluster."""
+    if user_name is None:
+        user_name = "user_" + getuid()
+    try:
+        node.query(f"CREATE USER {user_name} ON CLUSTER {cluster}")
+        yield user_name
+
+    finally:
+        with Finally("I drop the user if exists"):
+            node.query(f"DROP USER IF EXISTS {user_name} ON CLUSTER {cluster}")
