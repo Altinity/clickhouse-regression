@@ -6646,6 +6646,28 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefaultValues = Requirement(
     num="5.18.5.2",
 )
 
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | \n"
+        "| --------------|---------------|\n"
+        "| `DEFINER`     | not specified | \n"
+        "\n"
+        "[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.3",
+)
+
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_OnCluster = Requirement(
     name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster",
     version="1.0",
@@ -6667,7 +6689,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_OnCluster = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.5.3",
+    num="5.18.5.4",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer = Requirement(
@@ -6689,7 +6711,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer =
     ),
     link=None,
     level=4,
-    num="5.18.5.4",
+    num="5.18.5.5",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_DefinerNotSpecified = Requirement(
@@ -6711,7 +6733,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_DefinerNo
     ),
     link=None,
     level=4,
-    num="5.18.5.5",
+    num="5.18.5.6",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_Definer = Requirement(
@@ -6733,7 +6755,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_Definer =
     ),
     link=None,
     level=4,
-    num="5.18.5.6",
+    num="5.18.5.7",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_DefinerNotSpecified = Requirement(
@@ -6755,7 +6777,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_DefinerNo
     ),
     link=None,
     level=4,
-    num="5.18.5.7",
+    num="5.18.5.8",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_Definer = Requirement(
@@ -6777,7 +6799,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_Defi
     ),
     link=None,
     level=4,
-    num="5.18.5.8",
+    num="5.18.5.9",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_DefinerNotSpecified = Requirement(
@@ -6801,7 +6823,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_Defi
     ),
     link=None,
     level=4,
-    num="5.18.5.9",
+    num="5.18.5.10",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_Definer = Requirement(
@@ -6824,7 +6846,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_Definer = Re
     ),
     link=None,
     level=4,
-    num="5.18.5.10",
+    num="5.18.5.11",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_DefinerNotSpecified = Requirement(
@@ -6848,7 +6870,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_DefinerNotSp
     ),
     link=None,
     level=4,
-    num="5.18.5.11",
+    num="5.18.5.12",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_Definer = Requirement(
@@ -6871,7 +6893,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_Definer =
     ),
     link=None,
     level=4,
-    num="5.18.5.12",
+    num="5.18.5.13",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_DefinerNotSpecified = Requirement(
@@ -6893,7 +6915,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_DefinerNo
     ),
     link=None,
     level=4,
-    num="5.18.5.13",
+    num="5.18.5.14",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_Definer = Requirement(
@@ -6915,7 +6937,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_Definer =
     ),
     link=None,
     level=4,
-    num="5.18.5.14",
+    num="5.18.5.15",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_DefinerNotSpecified = Requirement(
@@ -6937,7 +6959,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_DefinerNo
     ),
     link=None,
     level=4,
-    num="5.18.5.15",
+    num="5.18.5.16",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_Definer = Requirement(
@@ -6959,7 +6981,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_Defi
     ),
     link=None,
     level=4,
-    num="5.18.5.16",
+    num="5.18.5.17",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_DefinerNotSpecified = Requirement(
@@ -6983,7 +7005,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_Defi
     ),
     link=None,
     level=4,
-    num="5.18.5.17",
+    num="5.18.5.18",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_Definer = Requirement(
@@ -7006,7 +7028,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_Definer = Re
     ),
     link=None,
     level=4,
-    num="5.18.5.18",
+    num="5.18.5.19",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSpecified = Requirement(
@@ -7030,7 +7052,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSp
     ),
     link=None,
     level=4,
-    num="5.18.5.19",
+    num="5.18.5.20",
 )
 
 RQ_SRS_006_RBAC_LiveView = Requirement(
@@ -11675,89 +11697,94 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             num="5.18.5.2",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified",
             level=4,
             num="5.18.5.3",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster",
             level=4,
             num="5.18.5.4",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer",
             level=4,
             num="5.18.5.5",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified",
             level=4,
             num="5.18.5.6",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer",
             level=4,
             num="5.18.5.7",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified",
             level=4,
             num="5.18.5.8",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer",
             level=4,
             num="5.18.5.9",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified",
             level=4,
             num="5.18.5.10",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer",
             level=4,
             num="5.18.5.11",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified",
             level=4,
             num="5.18.5.12",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer",
             level=4,
             num="5.18.5.13",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified",
             level=4,
             num="5.18.5.14",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer",
             level=4,
             num="5.18.5.15",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified",
             level=4,
             num="5.18.5.16",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer",
             level=4,
             num="5.18.5.17",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified",
             level=4,
             num="5.18.5.18",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer",
             level=4,
             num="5.18.5.19",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.20",
         ),
         Heading(name="Live View", level=3, num="5.18.6"),
         Heading(name="RQ.SRS-006.RBAC.LiveView", level=4, num="5.18.6.1"),
@@ -12781,6 +12808,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CreateMaterializedView,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefaultValues,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_OnCluster,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_DefinerNotSpecified,
@@ -16386,7 +16414,7 @@ View Type:
     source table:
       - table or multiple tables
       - distributed table
-      - table function
+      - table function (not supported)
       - view
       - materialized view
     view source table grants:
@@ -16591,6 +16619,15 @@ AS SELECT ...
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues
 version: 1.0  
 In [ClickHouse], the default values for `default_materialized_view_sql_security` and `default_view_definer` shall be set to `DEFINER` and `CURRENT_USER`, respectively.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | 
+| --------------|---------------|
+| `DEFINER`     | not specified | 
+
+[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. 
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster
 version: 1.0  
