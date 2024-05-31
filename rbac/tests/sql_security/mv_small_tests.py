@@ -88,6 +88,95 @@ def create_mv_on_cluster(self):
 
 @TestScenario
 @Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified("1.0"),
+)
+def definer_not_specified(
+    self,
+):
+    """
+    =======      | =======
+    SQL security | Definer
+    =======      | =======
+    DEFINER      | not_specified
+    =======      | =======
+
+    Check that definer is set to CURRENT_USER if definer is not specified and
+    sql security is set to DEFINER by changing default view definer setting to
+    user without any privileges and checking that default user was used as definer.
+    """
+    node = self.context.node
+    default_default_view_definer = get_settings_value(
+        node=node, setting_name="default_view_definer"
+    )
+    try:
+        with Given("I create view's source and target tables"):
+            source_table_name = create_simple_MergeTree_table(column_name="x")
+            target_table_name = create_simple_MergeTree_table(column_name="x")
+            insert_data_from_numbers(table_name=target_table_name)
+
+        with And("I create user to set him as default view definer"):
+            new_default_user_name = "new_default_user_" + getuid()
+            create_user(user_name=new_default_user_name)
+
+        with And("I change user setting for default user"):
+            entries = {
+                "profiles": {
+                    "default": {
+                        "default_view_definer": f"{new_default_user_name}",
+                    }
+                }
+            }
+            change_core_settings(modify=True, restart=True, entries=entries)
+
+        with And("I check that setting was changed"):
+            assert (
+                get_settings_value(node=node, setting_name="default_view_definer")
+                == f"{new_default_user_name}"
+            )
+
+        with And("I create materialized view only specifying SQL SECURITY"):
+            mv_name = create_materialized_view(
+                source_table_name=source_table_name,
+                target_table_name=target_table_name,
+                sql_security="DEFINER",
+            )
+
+        with When("I create user and grant select privilege for mv"):
+            user_name = "user_" + getuid()
+            create_user(user_name=user_name)
+            grant_privileges_directly(
+                user=user_name,
+                object=mv_name,
+                privileges=["SELECT"],
+            )
+
+        with Then("I check if user can select from mv"):
+            output = node.query(
+                f"SELECT sum(x) FROM {mv_name}",
+                settings=[("user", user_name)],
+            ).output
+            assert output == "45", error()
+
+    finally:
+        with Finally("I restore default view definer setting"):
+            entries = {
+                "profiles": {
+                    "default": {
+                        "default_view_definer": f"{default_default_view_definer}",
+                    }
+                }
+            }
+            change_core_settings(modify=True, restart=True, entries=entries)
+
+        with And("I check that settings were restored"):
+            assert (
+                get_settings_value(node=node, setting_name="default_view_definer")
+                == f"{default_default_view_definer}"
+            )
+
+
+@TestScenario
+@Requirements(
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer(
         "1.0"
     ),
@@ -351,95 +440,6 @@ def select_sql_security_definer_definer_not_specified(self):
         join()
 
 
-@TestScenario
-@Requirements(
-    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified("1.0"),
-)
-def definer_not_specified(
-    self,
-):
-    """
-    =======      | =======
-    SQL security | Definer
-    =======      | =======
-    DEFINER      | not_specified
-    =======      | =======
-
-    Check that definer is set to CURRENT_USER if definer is not specified and
-    sql security is set to DEFINER by changing default view definer setting to
-    user without any privileges and checking that default user was used as definer.
-    """
-    node = self.context.node
-    default_default_view_definer = get_settings_value(
-        node=node, setting_name="default_view_definer"
-    )
-    try:
-        with Given("I create view's source and target tables"):
-            source_table_name = create_simple_MergeTree_table(column_name="x")
-            target_table_name = create_simple_MergeTree_table(column_name="x")
-            insert_data_from_numbers(table_name=target_table_name)
-
-        with And("I create user to set him as default view definer"):
-            new_default_user_name = "new_default_user_" + getuid()
-            create_user(user_name=new_default_user_name)
-
-        with And("I change user setting for default user"):
-            entries = {
-                "profiles": {
-                    "default": {
-                        "default_view_definer": f"{new_default_user_name}",
-                    }
-                }
-            }
-            change_core_settings(modify=True, restart=True, entries=entries)
-
-        with And("I check that setting was changed"):
-            assert (
-                get_settings_value(node=node, setting_name="default_view_definer")
-                == f"{new_default_user_name}"
-            )
-
-        with And("I create materialized view setting only SQL SECURITY"):
-            mv_name = create_materialized_view(
-                source_table_name=source_table_name,
-                target_table_name=target_table_name,
-                sql_security="DEFINER",
-            )
-
-        with When("I create user and grant select privilege for mv"):
-            user_name = "user_" + getuid()
-            create_user(user_name=user_name)
-            grant_privileges_directly(
-                user=user_name,
-                object=mv_name,
-                privileges=["SELECT"],
-            )
-
-        with Then("I check if user can select from mv"):
-            output = node.query(
-                f"SELECT sum(x) FROM {mv_name}",
-                settings=[("user", user_name)],
-            ).output
-            assert output == "45", error()
-
-    finally:
-        with Finally("I restore default view definer setting"):
-            entries = {
-                "profiles": {
-                    "default": {
-                        "default_view_definer": f"{default_default_view_definer}",
-                    }
-                }
-            }
-            change_core_settings(modify=True, restart=True, entries=entries)
-
-        with And("I check that settings were restored"):
-            assert (
-                get_settings_value(node=node, setting_name="default_view_definer")
-                == f"{default_default_view_definer}"
-            )
-
-
 @TestFeature
 @Name("materialized view SQL security")
 def feature(self):
@@ -464,6 +464,6 @@ def feature(self):
             executor=executor,
         )()
         join()
-    
+
     Scenario(test=definer_not_specified)()
     Scenario(test=check_default_values)()

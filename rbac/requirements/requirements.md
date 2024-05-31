@@ -3487,7 +3487,7 @@ AS SELECT ...
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.DefaultValues
 version: 1.0  
-In [ClickHouse], the default values for `default_normal_view_sql_security` and `default_view_definer` shall be set to `INVOKER` and `CURRENT_USER`, respectively.
+In [ClickHouse], the default values for `default_normal_view_sql_security` and `default_view_definer` settings SHALL be set to `INVOKER` and `CURRENT_USER`, respectively.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.DefinerNotSpecified
 version: 1.0  
@@ -3622,7 +3622,7 @@ AS SELECT ...
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues
 version: 1.0  
-In [ClickHouse], the default values for `default_materialized_view_sql_security` and `default_view_definer` shall be set to `DEFINER` and `CURRENT_USER`, respectively.
+In [ClickHouse], the default values for `default_materialized_view_sql_security` and `default_view_definer` settings SHALL be set to `DEFINER` and `CURRENT_USER`, respectively.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified
 version: 1.0  
