@@ -420,23 +420,24 @@
         * 5.18.5 [Materialized View SQL Security](#materialized-view-sql-security)
             * 5.18.5.1 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CreateMaterializedView](#rqsrs-006rbacsqlsecuritymaterializedviewcreatematerializedview)
             * 5.18.5.2 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues](#rqsrs-006rbacsqlsecuritymaterializedviewdefaultvalues)
-            * 5.18.5.3 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster](#rqsrs-006rbacsqlsecuritymaterializedviewoncluster)
-            * 5.18.5.4 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefiner)
-            * 5.18.5.5 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefinernotspecified)
-            * 5.18.5.6 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefiner)
-            * 5.18.5.7 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefinernotspecified)
-            * 5.18.5.8 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynotspecifieddefiner)
-            * 5.18.5.9 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynotspecifieddefinernotspecified)
-            * 5.18.5.10 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynonedefiner)
-            * 5.18.5.11 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynonedefinernotspecified)
-            * 5.18.5.12 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritydefinerdefiner)
-            * 5.18.5.13 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritydefinerdefinernotspecified)
-            * 5.18.5.14 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecurityinvokerdefiner)
-            * 5.18.5.15 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecurityinvokerdefinernotspecified)
-            * 5.18.5.16 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynotspecifieddefiner)
-            * 5.18.5.17 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynotspecifieddefinernotspecified)
-            * 5.18.5.18 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefiner)
-            * 5.18.5.19 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefinernotspecified)
+            * 5.18.5.3 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewdefinernotspecified)
+            * 5.18.5.4 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster](#rqsrs-006rbacsqlsecuritymaterializedviewoncluster)
+            * 5.18.5.5 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefiner)
+            * 5.18.5.6 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefinernotspecified)
+            * 5.18.5.7 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefiner)
+            * 5.18.5.8 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefinernotspecified)
+            * 5.18.5.9 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynotspecifieddefiner)
+            * 5.18.5.10 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynotspecifieddefinernotspecified)
+            * 5.18.5.11 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynonedefiner)
+            * 5.18.5.12 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynonedefinernotspecified)
+            * 5.18.5.13 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritydefinerdefiner)
+            * 5.18.5.14 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritydefinerdefinernotspecified)
+            * 5.18.5.15 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecurityinvokerdefiner)
+            * 5.18.5.16 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecurityinvokerdefinernotspecified)
+            * 5.18.5.17 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynotspecifieddefiner)
+            * 5.18.5.18 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynotspecifieddefinernotspecified)
+            * 5.18.5.19 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefiner)
+            * 5.18.5.20 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefinernotspecified)
         * 5.18.6 [Live View](#live-view)
             * 5.18.6.1 [RQ.SRS-006.RBAC.LiveView](#rqsrs-006rbacliveview)
             * 5.18.6.2 [RQ.SRS-006.RBAC.LiveView.Create](#rqsrs-006rbacliveviewcreate)
@@ -3383,7 +3384,7 @@ View Type:
     source table:
       - table or multiple tables
       - distributed table
-      - table function
+      - table function (not supported)
       - view
       - materialized view
     view source table grants:
@@ -3588,6 +3589,15 @@ AS SELECT ...
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues
 version: 1.0  
 In [ClickHouse], the default values for `default_materialized_view_sql_security` and `default_view_definer` shall be set to `DEFINER` and `CURRENT_USER`, respectively.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | 
+| --------------|---------------|
+| `DEFINER`     | not specified | 
+
+[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. 
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster
 version: 1.0  
