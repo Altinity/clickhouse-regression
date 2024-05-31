@@ -3492,6 +3492,15 @@ AS SELECT ...
 version: 1.0  
 In [ClickHouse], the default values for `default_normal_view_sql_security` and `default_view_definer` shall be set to `INVOKER` and `CURRENT_USER`, respectively.
 
+##### RQ.SRS-006.RBAC.SQLSecurity.View.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | 
+| --------------|---------------|
+| `DEFINER`     | not specified | 
+
+[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. 
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.Definer
 version: 1.0  
 
@@ -3508,7 +3517,7 @@ version: 1.0
 | -------------|---------------|-------------------|
 | `DEFINER`    | not specified | `SELECT`          |
 
-[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified.  
+[ClickHouse] set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified.  
 [ClickHouse] SHALL only succesfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (`CURRENT_USER`) has **`SELECT`** privilege for the view's **source** table.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer
