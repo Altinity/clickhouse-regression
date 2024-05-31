@@ -53,23 +53,23 @@ def s3_create_many_files(self):
 
 @TestOutline(Scenario)
 @Examples(
-    "wildcard expected_time",
+    "wildcard expected_time expect_result",
     [
-        ("522029", 20, Name("one folder")),
-        ("{759040,547776,167687,283359}", 60, Name("nums")),
-        ("{759040,547776,167687,abc,283359}", 60, Name("nums one invalid")),
-        ("1500*", 20, Name("star")),
-        ("2500%3F%3F", 20, Name("question encoded")),
-        ("3500??", 20, Name("question")),
-        ("{45000..45099}", 120, Name("range")),
-        ("{abc,efg,hij}", 10, Name("nums no match")),
-        ("abc*", 2, Name("star no match")),
-        ("abc??", 2, Name("question no match")),
-        ("{0..10000}", 120, Name("range no match")),
+        ("522029", 20, True, Name("one folder")),
+        ("{759040,547776,167687,283359}", 120, True, Name("nums")),
+        ("{759040,547776,167687,abc,283359}", 120, True, Name("nums one invalid")),
+        ("1500*", 20, True, Name("star")),
+        ("2500%3F%3F", 20, True, Name("question encoded")),
+        ("3500??", 20, True, Name("question")),
+        ("{450000..450099}", 120, True, Name("range")),
+        ("{abc,efg,hij}", 120, False, Name("nums no match")),
+        ("abc*", 2, False, Name("star no match")),
+        ("abc??", 2, False, Name("question no match")),
+        ("{0..10000}", 120, False, Name("range no match")),
     ],
 )
 @Requirements(RQ_SRS_015_S3_Performance_Glob("1.0"))
-def wildcard(self, wildcard, expected_time):
+def wildcard(self, wildcard, expected_time, expect_result):
     """Check the performance of using wildcards in s3 paths."""
 
     node = current().context.node
@@ -85,7 +85,7 @@ def wildcard(self, wildcard, expected_time):
             )
             t_elapsed = time.time() - t_start
             metric(f"wildcard pattern='{wildcard}', i={i}", t_elapsed, "s")
-            assert r.output.strip() != "", error()
+            assert r.output.strip().replace(".", "").isdigit() == expect_result, error()
             assert t_elapsed < expected_time, error()
 
 
