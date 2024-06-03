@@ -18,6 +18,11 @@ def error_using_non_window_function(self):
         message = (
             "DB::Exception: Aggregate function with name 'numbers' does not exists."
         )
+        if check_clickhouse_version(">=24.5")(self):
+            exitcode = 63
+            message = (
+                "DB::Exception: Aggregate function with name 'numbers' does not exist."
+            )
 
     sql = "SELECT numbers(1, 100) OVER () FROM empsalary FORMAT TabSeparated"
 
