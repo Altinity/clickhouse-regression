@@ -18,6 +18,9 @@ from parquet.tests.common import start_minio, parquet_test_columns
 
 
 xfails = {
+    "/parquet/bloom/native reader array bloom": [
+        (Fail, "Array not supported by native reader yet")
+    ],
     "chunked array": [(Fail, "Not supported")],
     "gcs": [(Fail, "Not implemented")],
     "/parquet/encoding/dictionary/*": [
@@ -176,7 +179,6 @@ xfails = {
 xflags = {}
 
 ffails = {
-    "/parquet/bloom": (Skip, "Not done yet"),
     "/parquet/compression/brotli": (
         Skip,
         "Not implemented before 23.3",
