@@ -27,7 +27,7 @@ def s3_create_many_files(self):
         node.query(
             f"""INSERT INTO TABLE FUNCTION 
             s3('{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
-            PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} 
+            PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} SETTINGS s3_truncate_on_insert=1 
             -- {iteration}/{num_folders}"""
         )
 
@@ -38,14 +38,14 @@ def s3_create_many_files(self):
     with Given("I have many folders with files in S3"):
         executor = Pool(100, thread_name_prefix="s3_insert")
         for j in range(num_folders):
-            i = my_random.randint(100_000, 999_999)
+            folder_id = my_random.randint(100_000, 999_999)
 
             # skip ahead through random number generation
             if j < start_offset:
                 continue
 
             By(test=insert_files, parallel=True, executor=executor)(
-                folder_id=i, iteration=j
+                folder_id=folder_id, iteration=j
             )
 
         join()
