@@ -20,7 +20,7 @@ def s3_create_many_files(self):
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     table_name = "table_" + getuid()
-    random.seed("many_files")
+    my_random = random.Random("many_files")
 
     @TestStep(When)
     def insert_files(self, folder_id, iteration):
@@ -38,7 +38,7 @@ def s3_create_many_files(self):
     with Given("I have many folders with files in S3"):
         executor = Pool(100, thread_name_prefix="s3_insert")
         for j in range(num_folders):
-            i = random.randint(100_000, 999_999)
+            i = my_random.randint(100_000, 999_999)
 
             # skip ahead through random number generation
             if j < start_offset:
