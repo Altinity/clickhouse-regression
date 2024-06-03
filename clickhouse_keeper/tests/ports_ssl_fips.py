@@ -23,7 +23,7 @@ def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
 
 
 @TestFeature
-def openssl_all_ports(self, node=None, message="New, TLSv1.2, Cipher is "):
+def openssl_all_ports(self, node=None):
     """Check that ClickHouse's connection to ClickHouse Keeper on all ports is SSL."""
 
     if node is None:
@@ -38,10 +38,12 @@ def openssl_all_ports(self, node=None, message="New, TLSv1.2, Cipher is "):
     for port in ports_list:
         with Check(f"port:{port}"):
             with Then(f"I make openssl check"):
-                node.command(
+                response = node.command(
                     f'openssl s_client -connect clickhouse1:{port} <<< "Q"',
-                    message=message,
-                )
+                ).output
+                assert ("New, TLSv1.3, Cipher is TLS_" in response) or (
+                    "New, TLSv1.2, Cipher is ECDHE-" in response
+                ), error()
 
 
 @TestFeature

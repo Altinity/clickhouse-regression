@@ -613,7 +613,9 @@ def part_move_parallel_with_insert(
     with When("I move parts and parallel make insert"):
         part_uuid = (
             self.context.cluster.node("clickhouse1")
-            .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
+            .query(
+                f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated"
+            )
             .output.strip()
         )
         for i in range(iterations):
@@ -787,7 +789,9 @@ def part_move_parallel_with_big_insert(self, iterations=1, number=100):
             for i in range(iterations):
                 part_uuid = (
                     self.context.cluster.node("clickhouse1")
-                    .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
+                    .query(
+                        f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated"
+                    )
                     .output.strip()
                 )
                 part = ""

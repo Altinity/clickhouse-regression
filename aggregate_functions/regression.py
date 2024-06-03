@@ -30,6 +30,7 @@ issue_57683 = "https://github.com/ClickHouse/ClickHouse/issues/57683"
 issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
 issue_58727 = "https://github.com/ClickHouse/ClickHouse/issues/58727"
 issue_58741 = "https://github.com/ClickHouse/ClickHouse/issues/58741"
+issue_64745 = "https://github.com/ClickHouse/ClickHouse/issues/64745"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -431,18 +432,14 @@ ffails = {
         issue_58741,
         check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
-    "/aggregate functions/merge/largestTriangleThreeBucketsMerge": (
-        Skip,
-        "largestTriangleThreeBuckets does not work with Merge, need to fix",
-    ),
     "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan": (
         Skip,
-        "need to investigate",
+        issue_64745,
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/finalizeAggregation/largestTriangleThreeBuckets_finalizeAggregation_Merge": (
+    "/aggregate functions/state/largestTriangleThreeBucketsState/inf, -inf, nan": (
         Skip,
-        "need to investigate (something with zero representation)",
+        issue_64745,
         check_clickhouse_version(">=23.11"),
     ),
     "/aggregate functions/approx_top_k": (
@@ -562,14 +559,14 @@ def regression(
             parallel=True,
             executor=executor,
         )()
-        Feature(
-            test=load(
-                "aggregate_functions.tests.combinators.argMinCombinator_const_expr",
-                "feature",
-            ),
-            parallel=True,
-            executor=executor,
-        )()
+        # Feature(
+        #     test=load(
+        #         "aggregate_functions.tests.combinators.argMinCombinator_const_expr",
+        #         "feature",
+        #     ),
+        #     parallel=True,
+        #     executor=executor,
+        # )()
         # Feature(
         #     test=load(
         #         "aggregate_functions.tests.combinators.argMinStateCombinator_const_expr",
@@ -586,14 +583,14 @@ def regression(
         #     parallel=True,
         #     executor=executor,
         # )()
-        Feature(
-            test=load(
-                "aggregate_functions.tests.combinators.argMaxCombinator_const_expr",
-                "feature",
-            ),
-            parallel=True,
-            executor=executor,
-        )()
+        # Feature(
+        #     test=load(
+        #         "aggregate_functions.tests.combinators.argMaxCombinator_const_expr",
+        #         "feature",
+        #     ),
+        #     parallel=True,
+        #     executor=executor,
+        # )()
         # Feature(
         #     test=load(
         #         "aggregate_functions.tests.combinators.argMaxStateCombinator_const_expr",

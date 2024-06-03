@@ -25,7 +25,9 @@ def delete_most_of_the_table(self, node=None):
         )
 
     with When("I compute expected output"):
-        output = node.query(f"SELECT count(*) FROM {table_name} WHERE NOT(id>0) FORMAT TabSeparated").output
+        output = node.query(
+            f"SELECT count(*) FROM {table_name} WHERE NOT(id>0) FORMAT TabSeparated"
+        ).output
 
     start_time = time.time()
 

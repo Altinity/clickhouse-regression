@@ -57,7 +57,9 @@ def multi_disk_volume(self, number_of_disks=2, node=None):
     with Then("I expect data is successfully deleted"):
         r = node.query(f"select count(*) from {table_name} FORMAT TabSeparated")
         assert r.output == "5000", error()
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x >=50 FORMAT TabSeparated")
+        r = node.query(
+            f"SELECT count(*) FROM {table_name} WHERE x >=50 FORMAT TabSeparated"
+        )
         assert r.output == "0", error
 
 

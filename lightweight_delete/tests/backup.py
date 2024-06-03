@@ -50,7 +50,9 @@ def backup_concurrent_delete(
             with attempt:
                 r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
-                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated"
+                )
                 assert int(r.output) == 0, error()
 
 
@@ -107,7 +109,9 @@ def backup_after_delete(
             with attempt:
                 r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
-                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated"
+                )
                 assert int(r.output) == 0, error()
 
 
@@ -160,7 +164,9 @@ def backup_concurrent_delete_partitions(
             with attempt:
                 r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert int(r.output) == 800000, error()
-                r = node.query(f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count(*) FROM {table_name} where x < 20 FORMAT TabSeparated"
+                )
                 assert int(r.output) == 0, error()
 
 

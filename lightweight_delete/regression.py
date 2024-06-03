@@ -125,7 +125,9 @@ def regression(
 
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
-                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
 
         if parallel is not None:
             self.context.parallel = parallel

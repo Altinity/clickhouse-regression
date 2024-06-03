@@ -107,6 +107,7 @@ def regression(
     if check_clickhouse_version("<22.4")(self):
         skip(reason="only supported on ClickHouse version >= 22.4")
     
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)

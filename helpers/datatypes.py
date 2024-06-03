@@ -232,11 +232,11 @@ class Decimal128(Decimal):
         else:
             limit = "9" * (38 - scale) + "." + "9" * scale
         super().__init__(
-            f"Decimal128({scale})", 
+            f"Decimal128({scale})",
             is_extended_precision=True,
-            max=limit, 
-            min="-" + limit, 
-            scale=scale
+            max=limit,
+            min="-" + limit,
+            scale=scale,
         )
 
 
@@ -324,15 +324,19 @@ class DateTime64(DateTime):
         super().__init__(
             f"DateTime64({self.precision})",
             max=(
-                "'2283-11-11 23:59:59.99999999'"
+                (
+                    "'2283-11-11 23:59:59.99999999'"
+                    if check_clickhouse_version("<22.8")(current())
+                    else "'2299-12-31 23:59:59.99999999'"
+                )
+                if precision != 9
+                else "'2262-04-11 23:47:16'"
+            ),
+            min=(
+                "'1925-01-01 00:00:00.00000000'"
                 if check_clickhouse_version("<22.8")(current())
-                else "'2299-12-31 23:59:59.99999999'"
-            )
-            if precision != 9
-            else "'2262-04-11 23:47:16'",
-            min="'1925-01-01 00:00:00.00000000'"
-            if check_clickhouse_version("<22.8")(current())
-            else "'1900-01-01 00:00:00.00000000'",
+                else "'1900-01-01 00:00:00.00000000'"
+            ),
             supports_low_cardinality=False,
             is_valid_map_key=False,
         )

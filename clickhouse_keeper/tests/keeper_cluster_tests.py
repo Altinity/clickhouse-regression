@@ -72,7 +72,7 @@ def mixed_keepers_5(self):
                 retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -150,7 +150,7 @@ def mixed_keepers_4(self):
                 retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -226,7 +226,7 @@ def mixed_keepers_3(self):
                 retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -300,7 +300,7 @@ def mixed_keepers_2(self):
                 retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -373,7 +373,7 @@ def mixed_keepers_1(self):
                 retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -519,7 +519,7 @@ def standalone_keepers_3(self):
                 retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -590,7 +590,7 @@ def standalone_keepers_2(self):
                 retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -661,7 +661,7 @@ def standalone_keepers_1(self):
                 retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F" if self.context.ssl == "true" else "imok",
+                    message=None if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):

@@ -73,9 +73,11 @@ def check_counts(counts, timeout, node="clickhouse1", steps=True):
     sql = "SELECT count(), uniqExact(id) FROM dummy FORMAT TabSeparated"
 
     try:
-        with When(
-            f"I repeatedly execute command until counts match or timeout"
-        ) if steps else NullStep():
+        with (
+            When(f"I repeatedly execute command until counts match or timeout")
+            if steps
+            else NullStep()
+        ):
             for retry in retries(timeout=timeout, delay=1):
                 with retry:
                     cmd = node.query(sql, parser=parser)
@@ -83,9 +85,13 @@ def check_counts(counts, timeout, node="clickhouse1", steps=True):
                         cmd.values["count"] >= counts or cmd.values["unique"] >= counts
                     )
     except Exception:
-        with Finally(
-            "I see that counts did not match then I re-execute query for debugging"
-        ) if steps else NullStep():
+        with (
+            Finally(
+                "I see that counts did not match then I re-execute query for debugging"
+            )
+            if steps
+            else NullStep()
+        ):
             sql = "SELECT host, count(), uniqExact(id) FROM dummy GROUP BY host FORMAT TabSeparated"
             node.query(sql)
         raise

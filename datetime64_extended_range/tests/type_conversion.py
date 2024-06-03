@@ -541,7 +541,7 @@ def to_unix_timestamp64_milli_micro_nano(self, scale):
                     with And("converting DateTime to UTC"):
                         dt = dt.astimezone(pytz.timezone("UTC"))
                     with And("computing the expected result using python"):
-                        expected = int(dt.timestamp() * (10 ** scale))
+                        expected = int(dt.timestamp() * (10**scale))
                         if expected >= 0:
                             expected += dt.microsecond * 10 ** (scale - 6)
                         else:
@@ -610,7 +610,7 @@ def from_unix_timestamp64_milli_micro_nano(self, scale):
                     with And("converting DateTime64 to UTC"):
                         dt = dt.astimezone(pytz.timezone("UTC"))
                     with And("computing the expected result using python"):
-                        ts = int(dt.timestamp() * (10 ** scale))
+                        ts = int(dt.timestamp() * (10**scale))
                         if ts >= 0:
                             ts += dt.microsecond * 10 ** (scale - 6)
                         else:

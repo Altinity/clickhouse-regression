@@ -88,6 +88,45 @@ def check_insert_into_mv(
         )
 
 
+@TestStep(Then)
+def check_insert_into_source_table(
+    self,
+    definer_view_source_table_privilege,
+    definer_view_target_table_privilege,
+    user_source_table_privilege,
+    user_target_table_privilege,
+    view_user_privilege,
+    definer_user,
+    user_name,
+    source_table_name,
+    node,
+    data_before_insert=None,
+):
+    """Check insert into mv source table."""
+
+    if (
+        ("INSERT" in view_user_privilege)
+        and ("INSERT" in definer_view_target_table_privilege)
+        and ("INSERT" in user_source_table_privilege)
+    ):
+        result = node.query(
+            f"INSERT INTO {source_table_name} VALUES (1)",
+            settings=[("user", user_name)],
+        )
+        assert result.output != data_before_insert
+    else:
+        if "INSERT" not in view_user_privilege or "INSERT" not in user_source_table_privilege:
+            exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
+        else:
+            exitcode, message = errors.not_enough_privileges(name=f"{definer_user}")
+        node.query(
+            f"INSERT INTO {source_table_name} VALUES (1)",
+            settings=[("user", user_name)],
+            exitcode=exitcode,
+            message=message,
+        )
+
+
 @TestScenario
 def check_materialized_view_with_definer(
     self,
@@ -131,7 +170,12 @@ def check_materialized_view_with_definer(
             definer=user_name_definer,
             sql_security="DEFINER",
         )
-        populate_mv_table(node=node, mv_table_name=mv_target_table_name, table_name=source_table_name)
+        populate_mv_table(
+            node=node, mv_table_name=mv_target_table_name, table_name=source_table_name
+        )
+        populate_mv_table(
+            node=node, mv_table_name=mv_target_table_name, table_name=source_table_name
+        )
 
     with And(
         "I grant privileges to source and target tables to definer user either directly or via role"
@@ -177,7 +221,6 @@ def check_materialized_view_with_definer(
             object=view_name,
             user=select_user_name,
         )
-    
 
     with Then("I try to select from materialized view with second user"):
         check_select_from_mv(
@@ -204,10 +247,24 @@ def check_materialized_view_with_definer(
             user_source_table_privilege=user_source_table_privilege,
             user_target_table_privilege=user_target_table_privilege,
             view_user_privilege=user_view_privilege,
+            data_before_insert=data,
         )
-    
-    with And("I try to insert into source table, which triggers materialized view update"):
-        pass
+
+    with And(
+        "I try to insert into source table, which triggers materialized view update"
+    ):
+        check_insert_into_source_table(
+            node=node,
+            definer_user=user_name_definer,
+            user_name=select_user_name,
+            source_table_name=source_table_name,
+            definer_view_source_table_privilege=definer_view_source_table_privilege,
+            definer_view_target_table_privilege=definer_view_target_table_privilege,
+            user_source_table_privilege=user_source_table_privilege,
+            user_target_table_privilege=user_target_table_privilege,
+            view_user_privilege=user_view_privilege,
+            data_before_insert=data,
+        )
 
 
 @TestScenario

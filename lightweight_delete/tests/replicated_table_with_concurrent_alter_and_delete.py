@@ -63,7 +63,9 @@ def concurrent_delete_attach_detach_partition_in_replicated_table_on_single_node
             with Then(f"I expect data is successfully deleted on {name} node"):
                 for attempt in retries(timeout=30, delay=1):
                     with attempt:
-                        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
+                        r = node.query(
+                            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                        )
                         assert r.output in (expected_output1, expected_output2), error()
 
 
@@ -120,7 +122,8 @@ def concurrent_add_drop_column_and_delete_in_replicated_table_on_single_node(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+        output=expected_output,
     )
 
 
@@ -175,7 +178,8 @@ def concurrent_modify_column_and_delete_in_replicated_table_on_single_node(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+        output=expected_output,
     )
 
 
@@ -230,7 +234,8 @@ def concurrent_clear_update_and_delete_in_replicated_table_on_single_node(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+        output=expected_output,
     )
 
 
@@ -287,8 +292,12 @@ def concurrent_delete_attach_detach_partition_in_replicated_table_on_two_nodes(
             with Then(f"I expect data is successfully deleted on {name} node"):
                 for attempt in retries(timeout=30, delay=1):
                     with attempt:
-                        node.query(f"select * from {table_name} order by id,x FORMAT TabSeparated")
-                        r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
+                        node.query(
+                            f"select * from {table_name} order by id,x FORMAT TabSeparated"
+                        )
+                        r = node.query(
+                            f"SELECT count(*) FROM {table_name} FORMAT TabSeparated"
+                        )
                         assert r.output in (expected_output1, expected_output2), error()
 
 
@@ -345,7 +354,8 @@ def concurrent_add_drop_column_and_delete_in_replicated_table_on_two_nodes(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+        output=expected_output,
     )
 
 
@@ -400,7 +410,8 @@ def concurrent_modify_column_and_delete_in_replicated_table_on_two_nodes(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+        output=expected_output,
     )
 
 
@@ -456,7 +467,8 @@ def concurrent_clear_update_and_delete_in_replicated_table_on_two_nodes(
         )
 
     check_query_on_all_nodes(
-        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+        query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+        output=expected_output,
     )
 
 

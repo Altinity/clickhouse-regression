@@ -18,6 +18,9 @@ from parquet.tests.common import start_minio, parquet_test_columns
 
 
 xfails = {
+    "/parquet/bloom/native reader array bloom": [
+        (Fail, "Array not supported by native reader yet")
+    ],
     "chunked array": [(Fail, "Not supported")],
     "gcs": [(Fail, "Not implemented")],
     "/parquet/encoding/dictionary/*": [
@@ -164,14 +167,18 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/59330",
         )
     ],
+    "/parquet/column related errors/check error with 500 columns": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/63701",
+        )
+    ],
 }
+
+
 xflags = {}
 
 ffails = {
-    "/parquet/bloom": (
-        Skip,
-        "Not done yet"
-    ),
     "/parquet/compression/brotli": (
         Skip,
         "Not implemented before 23.3",
@@ -568,6 +575,12 @@ def regression(
         )
         Feature(
             run=load("parquet.tests.read_and_write", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.columns", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,

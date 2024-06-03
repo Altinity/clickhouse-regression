@@ -132,6 +132,7 @@ def alter_combinations(
     limit_disk_space=False,
     enforce_table_structure=None,
     kill_stuck_mutations=None,
+    always_wait_for_mutations_to_finish=False,
 ):
     """
     Perform combinations of alter actions, checking that all replicas agree.
@@ -267,6 +268,10 @@ def alter_combinations(
 
                         join()
 
+                    if always_wait_for_mutations_to_finish:
+                        with And("I wait for all mutations to finish"):
+                            wait_for_mutations_to_finish(timeout=300)
+
                 except:
                     with Finally("I dump system.part_logs to csv"):
                         for node in self.context.ch_nodes:
@@ -348,8 +353,9 @@ def one_by_one(self):
             alter_combinations(
                 actions=action_list,
                 limit=None if self.context.stress else 20,
-                limit_disk_space=(action=="fill_disks"),
+                limit_disk_space=(action == "fill_disks"),
             )
+
 
 @TestScenario
 def pairs(self):
@@ -384,8 +390,8 @@ def safe(self):
 
     alter_combinations(
         actions=build_action_list(
-            columns=False, # column operations trigger issues in other alters
-            projections=False, # projection operations have issues when combined with other alters
+            columns=False,  # column operations trigger issues in other alters
+            projections=False,  # projection operations have issues when combined with other alters
         ),
         limit=None if self.context.stress else 20,
         kill_stuck_mutations=False,  # KILL may have unsafe side effects

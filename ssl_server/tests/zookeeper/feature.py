@@ -78,8 +78,13 @@ def secure_connection_without_client_certificate(self):
     with Then(
         "I check ClickHouse connection to zookeeper fails with bad certificate error"
     ):
+        if check_clickhouse_version("<24.4")(self):
+            message = "Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
+        else:
+            message = "SSL Exception: error:0A000412:SSL routines::ssl/tls alert bad certificate"
+
         check_clickhouse_connection_to_zookeeper(
-            message="Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
+            message=message,
         )
 
 
@@ -124,8 +129,13 @@ def secure_connection_with_unsigned_client_certificate(self):
     with Then(
         "I check ClickHouse connection to zookeeper fails with unknown certificate error"
     ):
+        if check_clickhouse_version("<24.4")(self):
+            message = "Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN"
+        else:
+            message = "SSL Exception: error:0A000416:SSL routines::ssl/tls alert certificate unknown"
+
         check_clickhouse_connection_to_zookeeper(
-            message="Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN",
+            message=message,
         )
 
 

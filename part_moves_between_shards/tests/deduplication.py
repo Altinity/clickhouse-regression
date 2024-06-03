@@ -172,7 +172,9 @@ def distributed_table(self):
         with And("I move same part between shards and check data in distributed table"):
             part_uuid = (
                 self.context.cluster.node("clickhouse1")
-                .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
+                .query(
+                    f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated"
+                )
                 .output.strip()
             )
             for i in range(10):
@@ -267,7 +269,9 @@ def distributed_table_stopped_replica(self):
         with And("I move same part between shards and check data in distributed table"):
             part_uuid = (
                 self.context.cluster.node("clickhouse1")
-                .query(f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated")
+                .query(
+                    f"SELECT uuid FROM system.parts where name = 'all_0_0_0' FORMAT TabSeparated"
+                )
                 .output.strip()
             )
             for i in range(5):
