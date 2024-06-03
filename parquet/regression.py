@@ -164,7 +164,15 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/59330",
         )
     ],
+    "/parquet/column related errors/check error with 500 columns": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/63701",
+        )
+    ],
 }
+
+
 xflags = {}
 
 ffails = {
@@ -559,6 +567,12 @@ def regression(
         )
         Feature(
             run=load("parquet.tests.read_and_write", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.columns", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,
