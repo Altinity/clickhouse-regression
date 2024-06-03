@@ -1626,42 +1626,6 @@ _aggregate_functions_merge_largestTriangleThreeBucketsMerge_example_0 = r"""
 {"largestTriangleThreeBucketsMerge(4)(CAST(unhex('06069A9999999999B93FC3F5285C8FC2D53F295C8FC2F528EC3FAE47E17A14AEF3BF6666666666660AC09A999999999915400000000000000000000000000000F03F0000000000000040000000000000084000000000000010400000000000001440'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Int8)'))":[[-3.3,4],[0.1,0],[0.88,2],[5.4,5]]}
 """
 
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan__inf__inf_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('06060000000000000000000000000000F03F000000000000F0FFCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F6666666666660240000000000000F0FF00000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[null,null],[0,1],[4,4],[6.7,3]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan__inf_inf_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('06060000000000000000000000000000F03F000000000000F0FFCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F6666666666660240000000000000F07F00000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[null,null],[0,1],[4,4],[6.7,3]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan__inf_nan_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('06050000000000000000000000000000F03F000000000000F0FFCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F666666666666024000000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[null,3],[0,1],[5,5.180026e-318],[6.7,5.180026e-318]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan_inf__inf_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('06060000000000000000000000000000F03F000000000000F07FCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F6666666666660240000000000000F0FF00000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[0,1],[4,4],[5,1],[null,null]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan_inf_inf_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('06060000000000000000000000000000F03F000000000000F07FCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F6666666666660240000000000000F07F00000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[0,1],[4,4],[5,1],[null,null]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan_inf_nan_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('06050000000000000000000000000000F03F000000000000F07FCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F666666666666024000000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[0,1],[1,2.3],[5,2.0237e-320],[null,4]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan_nan__inf_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('05060000000000000000000000000000F03FCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F6666666666660240000000000000F0FF00000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[0,1],[1,2.3],[4,3],[6.7,1]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan_nan_inf_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('05060000000000000000000000000000F03FCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F6666666666660240000000000000F07F00000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[0,1],[1,2.3],[4,3],[6.7,1]]}
-"""
-
-_aggregate_functions_merge_largestTriangleThreeBucketsMerge_inf___inf__nan_nan_nan_0 = r"""
-{"largestTriangleThreeBucketsMerge(4)(CAST(unhex('05050000000000000000000000000000F03FCDCCCCCCCCCC1A4000000000000010400000000000001440000000000000F03F666666666666024000000000000008400000000000001040000000000000F03F'), 'AggregateFunction(largestTriangleThreeBuckets(4), Float64 ,Float64)'))":[[0,1],[1,2.3],[5,1],[6.7,3]]}
-"""
-
 _aggregate_functions_merge_largestTriangleThreeBucketsMerge_single_NULL_value_0 = r"""
 {"largestTriangleThreeBucketsMerge(4)(CAST(unhex('010000'), 'AggregateFunction(largestTriangleThreeBuckets(4), Nullable(Int8) ,Nullable(Int8))'))":[]}
 """
