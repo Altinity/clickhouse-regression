@@ -1373,9 +1373,9 @@ def add_ssec_s3_option(self, ssec_key=None):
             "adding 'server_side_encryption_customer_key_base64' S3 option",
             description=f"key={ssec_key}",
         ):
-            self.context.s3_options[
-                "server_side_encryption_customer_key_base64"
-            ] = ssec_key
+            self.context.s3_options["server_side_encryption_customer_key_base64"] = (
+                ssec_key
+            )
         yield
 
     finally:

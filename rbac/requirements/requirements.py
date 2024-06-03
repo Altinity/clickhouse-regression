@@ -5483,7 +5483,7 @@ RQ_SRS_006_RBAC_Revoke_Privilege_Multiple = Requirement(
     description=(
         "[ClickHouse] SHALL support revoking MULTIPLE **privileges** to one or more users or roles\n"
         "for a database or a table using the `REVOKE privilege1, privilege2...` statement.\n"
-        "**privileges** refers to any set of Clickhouse defined privilege, whose hierarchy includes\n"
+        "**privileges** refers to any set of ClickHouse defined privilege, whose hierarchy includes\n"
         "SELECT, INSERT, ALTER, CREATE, DROP, TRUNCATE, OPTIMIZE, SHOW, KILL QUERY, ACCESS MANAGEMENT,\n"
         "SYSTEM, INTROSPECTION, SOURCES, dictGet and all of their sub-privileges.\n"
         "\n"
@@ -5825,7 +5825,7 @@ RQ_SRS_006_RBAC_Show_Grants_Syntax = Requirement(
     type=None,
     uid=None,
     description=(
-        "[Clickhouse] SHALL use the following syntax for the `SHOW GRANTS` statement\n"
+        "[ClickHouse] SHALL use the following syntax for the `SHOW GRANTS` statement\n"
         "\n"
         "``` sql\n"
         "SHOW GRANTS [FOR user_or_role]\n"
@@ -6266,7 +6266,7 @@ RQ_SRS_006_RBAC_MaterializedView_Insert = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL only succesfully `INSERT` into a materialized view if and only if\n"
+        "[ClickHouse] SHALL only successfully `INSERT` into a materialized view if and only if\n"
         "the user has `INSERT` privilege on the view, either explicitly or through a role.\n"
         "\n"
     ),
@@ -6283,7 +6283,7 @@ RQ_SRS_006_RBAC_MaterializedView_Insert_SourceTable = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL only succesfully `INSERT` into a source table of a materialized view if and only if\n"
+        "[ClickHouse] SHALL only successfully `INSERT` into a source table of a materialized view if and only if\n"
         "the user has `INSERT` privilege on the source table, either explicitly or through a role.\n"
         "\n"
     ),
@@ -6300,7 +6300,7 @@ RQ_SRS_006_RBAC_MaterializedView_Insert_TargetTable = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL only succesfully `INSERT` into a target table of a materialized view if and only if\n"
+        "[ClickHouse] SHALL only successfully `INSERT` into a target table of a materialized view if and only if\n"
         "the user has `INSERT` privelege on the target table, either explicitly or through a role.\n"
         "\n"
     ),
@@ -6320,10 +6320,15 @@ RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity = Requirement(
         "  \n"
         "[ClickHouse] SHALL support the `ALTER TABLE MODIFY SQL SECURITY` statement to change the SQL security for an existing view.\n"
         "\n"
+        "Syntax:\n"
+        "```sql\n"
+        "ALTER TABLE [ON CLUSTER] MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user | CURRENT_USER }]\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num="5.18.3.1",
+    num="5.18.3.2",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity_OnCluster = Requirement(
@@ -6341,23 +6346,8 @@ RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity_OnCluster = Requirement(
         "```sql\n"
         "ALTER TABLE [ON CLUSTER] MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user | CURRENT_USER }]\n"
         "```\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="5.18.3.2",
-)
-
-RQ_SRS_006_RBAC_SQLSecurity_Default_Definer = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.Default.Definer",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
         "  \n"
-        "[ClickHouse] SHALL set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified.\n"
+        "<br/><br/> \n"
         "\n"
     ),
     link=None,
@@ -6389,8 +6379,8 @@ RQ_SRS_006_RBAC_SQLSecurity_View_CreateView = Requirement(
     num="5.18.4.1",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_View_Default = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.View.Default",
+RQ_SRS_006_RBAC_SQLSecurity_View_OnCluster = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.OnCluster",
     version="1.0",
     priority=None,
     group=None,
@@ -6398,7 +6388,14 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Default = Requirement(
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if SQL SECURITY is not specified.\n"
+        "[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW ON CLUSTER` statement.\n"
+        "\n"
+        "Syntax:\n"
+        "```sql\n"
+        "CREATE [OR REPLACE] VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster_name] \n"
+        "[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] \n"
+        "AS SELECT ...\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -6406,8 +6403,8 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Default = Requirement(
     num="5.18.4.2",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_View_Definer_Select = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select",
+RQ_SRS_006_RBAC_SQLSecurity_View_DefaultValues = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.DefaultValues",
     version="1.0",
     priority=None,
     group=None,
@@ -6415,7 +6412,7 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Definer_Select = Requirement(
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL only succesfully `SELECT` from a view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role\n"
+        "In [ClickHouse], the default values for `default_normal_view_sql_security` and `default_view_definer` settings SHALL be set to `INVOKER` and `CURRENT_USER`, respectively.\n"
         "\n"
     ),
     link=None,
@@ -6423,8 +6420,8 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Definer_Select = Requirement(
     num="5.18.4.3",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_View_Invoker_Select = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select",
+RQ_SRS_006_RBAC_SQLSecurity_View_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.DefinerNotSpecified",
     version="1.0",
     priority=None,
     group=None,
@@ -6432,13 +6429,224 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Invoker_Select = Requirement(
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL only succesfully `SELECT` from a view with INVOKER security mode if and only if the invoker user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role\n"
         "\n"
+        "| SQL security  | DEFINER       | \n"
+        "| --------------|---------------|\n"
+        "| `DEFINER`     | not specified | \n"
+        "\n"
+        "[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. \n"
         "\n"
     ),
     link=None,
     level=4,
     num="5.18.4.4",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_SqlSecurityNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.SqlSecurityNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       |  \n"
+        "| --------------|---------------|\n"
+        "| not specified | `alice`       |\n"
+        "\n"
+        "[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.5",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefiner_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER | Operation         | \n"
+        "| -------------|---------|-------------------|\n"
+        "| `DEFINER`    | `alice` | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the view's **source** table.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.7",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefiner_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER       | Operation         | \n"
+        "| -------------|---------------|-------------------|\n"
+        "| `DEFINER`    | not specified | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified.  \n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (`CURRENT_USER`) has **`SELECT`** privilege for the view's **source** table.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.8",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityInvoker_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER | Operation         | \n"
+        "| -------------|---------|-------------------|\n"
+        "| `INVOKER`    | `alice` | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and **`SELECT`** privilege for the view's **source** table.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.9",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityInvoker_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER        | Operation         | \n"
+        "| -------------|----------------|-------------------|\n"
+        "| `INVOKER`    |  not specified | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and **`SELECT`** privilege for the view's **source** table.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.10",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNotSpecified_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| not specified | `alice`       | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. \n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the view's **source** table.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.11",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefinerNotSpecified_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| not specified | not specified | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL set `SQL SECURITY` to the value from `default_normal_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if all privileges are granted according to the SQL security options.\n"
+        "\n"
+        "If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security SHALL behave like they did before.  \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.12",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `NONE`        | `alice`       | `SELECT`          |\n"
+        "\n"
+        "SQL SECURITY NONE is a deprecated option.\n"
+        "**To be continued**\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.13",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `NONE`        | not specified | `SELECT`          |\n"
+        "\n"
+        "SQL SECURITY NONE is a deprecated option.\n"
+        "**To be continued**\n"
+        "  \n"
+        "<br/><br/> \n"
+        "  \n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.4.14",
 )
 
 RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CreateMaterializedView = Requirement(
@@ -6465,8 +6673,8 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CreateMaterializedView = Requiremen
     num="5.18.5.1",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Default = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default",
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_OnCluster = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster",
     version="1.0",
     priority=None,
     group=None,
@@ -6474,7 +6682,14 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Default = Requirement(
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` for materialized views if SQL SECURITY is not specified.\n"
+        "[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW ON CLUSTER` statement.\n"
+        "\n"
+        "Syntax:\n"
+        "```sql\n"
+        "CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]name] [ENGINE = engine] [POPULATE] \n"
+        "[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] \n"
+        "AS SELECT ...\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -6482,8 +6697,8 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Default = Requirement(
     num="5.18.5.2",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Select = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select",
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefaultValues = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues",
     version="1.0",
     priority=None,
     group=None,
@@ -6491,7 +6706,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Select = Requirement(
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL only succesfully `SELECT` from a materialized view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table and target table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role.\n"
+        "In [ClickHouse], the default values for `default_materialized_view_sql_security` and `default_view_definer` settings SHALL be set to `DEFINER` and `CURRENT_USER`, respectively.\n"
         "\n"
     ),
     link=None,
@@ -6499,8 +6714,8 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Select = Requirement(
     num="5.18.5.3",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Insert = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert",
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified",
     version="1.0",
     priority=None,
     group=None,
@@ -6508,7 +6723,12 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Insert = Requirement(
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL only succesfully `INSERT` into a materialized view with DEFINER security mode if and only if the definer user has `INSERT` privilege on the target table, either explicitly or through a role and invoker user has `INSERT` privileges on the view, either explicitly or through a role.\n"
+        "\n"
+        "| SQL security  | DEFINER       | \n"
+        "| --------------|---------------|\n"
+        "| `DEFINER`     | not specified | \n"
+        "\n"
+        "[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. \n"
         "\n"
     ),
     link=None,
@@ -6516,8 +6736,8 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Insert = Requirement(
     num="5.18.5.4",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Invoker = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker",
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_SqlSecurityNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.SqlSecurityNotSpecified",
     version="1.0",
     priority=None,
     group=None,
@@ -6525,13 +6745,380 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Invoker = Requirement(
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.\n"
         "\n"
+        "| SQL security  | DEFINER       | \n"
+        "| --------------|---------------|\n"
+        "| not specified | `alice`       | \n"
+        "\n"
+        "[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. \n"
         "\n"
     ),
     link=None,
     level=4,
     num="5.18.5.5",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER | Operation         | \n"
+        "| -------------|---------|-------------------|\n"
+        "| `DEFINER`    | `alice` | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the materialized view's **source and target** tables.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.7",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `DEFINER`     | not specified | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (`CURRENT_USER`) has **`SELECT`** privilege for the materialized view's **source and target** tables.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.8",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `INVOKER`     | `alice`       | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.9",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `INVOKER`     | not specified | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.10",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| not specified | `alice`       | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the materialized view's **source and target** tables.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.11",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| not specified | not_specified | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.\n"
+        "\n"
+        "If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security SHALL behave like they did before.  \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.12",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `NONE`        | `alice`       | `SELECT`          |\n"
+        "\n"
+        "SQL SECURITY NONE is a deprecated option.\n"
+        "**To be continued**\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.13",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `NONE`        | not specified | `SELECT`          |\n"
+        "\n"
+        "SQL SECURITY NONE is a deprecated option.\n"
+        "**To be continued**\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.14",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER | Operation         | \n"
+        "| -------------|---------|-------------------|\n"
+        "| `DEFINER`    | `alice` | `INSERT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.15",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `DEFINER`     | not specified | `INSERT`          |\n"
+        "\n"
+        "[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (`CURRENT_USER`) has **`INSERT`** privilege for the materialized view's **target** table.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.16",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER | Operation         | \n"
+        "| -------------|---------|-------------------|\n"
+        "| `INVOKER`    | `alice` | `INSERT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.17",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER       | Operation         | \n"
+        "| -------------|---------------|-------------------|\n"
+        "| `INVOKER`    | not specified | `INSERT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.18",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER       | Operation         | \n"
+        "| -------------|---------------|-------------------|\n"
+        "|not specified | `alice`       | `INSERT`          |\n"
+        "\n"
+        "[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.19",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| not specified | not_specified | `INSERT`          |\n"
+        "\n"
+        "[ClickHouse] set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.\n"
+        "\n"
+        "If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security will behave like they did before.  \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.20",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `NONE`        | `alice`       | `INSERT`          |\n"
+        "\n"
+        "SQL SECURITY NONE is a deprecated option.\n"
+        "**To be continued**\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.21",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security  | DEFINER       | Operation         | \n"
+        "| --------------|---------------|-------------------|\n"
+        "| `NONE`        | not specified | `INSERT`          |\n"
+        "\n"
+        "SQL SECURITY NONE is a deprecated option.\n"
+        "**To be continued**\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.5.22",
 )
 
 RQ_SRS_006_RBAC_LiveView = Requirement(
@@ -11101,35 +11688,83 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             num="5.18.2.10",
         ),
         Heading(name="SQL Security", level=3, num="5.18.3"),
+        Heading(name="Schema", level=4, num="5.18.3.1"),
         Heading(
             name="RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity",
-            level=4,
-            num="5.18.3.1",
-        ),
-        Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity.OnCluster",
             level=4,
             num="5.18.3.2",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.Default.Definer", level=4, num="5.18.3.3"
+            name="RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity.OnCluster",
+            level=4,
+            num="5.18.3.3",
         ),
         Heading(name="View SQL Security", level=3, num="5.18.4"),
         Heading(
             name="RQ.SRS-006.RBAC.SQLSecurity.View.CreateView", level=4, num="5.18.4.1"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.View.Default", level=4, num="5.18.4.2"
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.OnCluster", level=4, num="5.18.4.2"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select",
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.DefaultValues",
             level=4,
             num="5.18.4.3",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select",
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.DefinerNotSpecified",
             level=4,
             num="5.18.4.4",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.SqlSecurityNotSpecified",
+            level=4,
+            num="5.18.4.5",
+        ),
+        Heading(
+            name="`RQ.SRS-006.RBAC.SQLSecurity.View.CascadingViews",
+            level=4,
+            num="5.18.4.6",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.Definer",
+            level=4,
+            num="5.18.4.7",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.DefinerNotSpecified",
+            level=4,
+            num="5.18.4.8",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer",
+            level=4,
+            num="5.18.4.9",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.DefinerNotSpecified",
+            level=4,
+            num="5.18.4.10",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.Definer",
+            level=4,
+            num="5.18.4.11",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified",
+            level=4,
+            num="5.18.4.12",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.Definer",
+            level=4,
+            num="5.18.4.13",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified",
+            level=4,
+            num="5.18.4.14",
         ),
         Heading(name="Materialized View SQL Security", level=3, num="5.18.5"),
         Heading(
@@ -11138,24 +11773,109 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             num="5.18.5.1",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster",
             level=4,
             num="5.18.5.2",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues",
             level=4,
             num="5.18.5.3",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified",
             level=4,
             num="5.18.5.4",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.SqlSecurityNotSpecified",
             level=4,
             num="5.18.5.5",
+        ),
+        Heading(
+            name="`RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews",
+            level=4,
+            num="5.18.5.6",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer",
+            level=4,
+            num="5.18.5.7",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.8",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer",
+            level=4,
+            num="5.18.5.9",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.10",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer",
+            level=4,
+            num="5.18.5.11",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.12",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer",
+            level=4,
+            num="5.18.5.13",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.14",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer",
+            level=4,
+            num="5.18.5.15",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.16",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer",
+            level=4,
+            num="5.18.5.17",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.18",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer",
+            level=4,
+            num="5.18.5.19",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.20",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer",
+            level=4,
+            num="5.18.5.21",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified",
+            level=4,
+            num="5.18.5.22",
         ),
         Heading(name="Live View", level=3, num="5.18.6"),
         Heading(name="RQ.SRS-006.RBAC.LiveView", level=4, num="5.18.6.1"),
@@ -12166,16 +12886,40 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_MaterializedView_Insert_TargetTable,
         RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity,
         RQ_SRS_006_RBAC_SQLSecurity_ModifySQLSecurity_OnCluster,
-        RQ_SRS_006_RBAC_SQLSecurity_Default_Definer,
         RQ_SRS_006_RBAC_SQLSecurity_View_CreateView,
-        RQ_SRS_006_RBAC_SQLSecurity_View_Default,
-        RQ_SRS_006_RBAC_SQLSecurity_View_Definer_Select,
-        RQ_SRS_006_RBAC_SQLSecurity_View_Invoker_Select,
+        RQ_SRS_006_RBAC_SQLSecurity_View_OnCluster,
+        RQ_SRS_006_RBAC_SQLSecurity_View_DefaultValues,
+        RQ_SRS_006_RBAC_SQLSecurity_View_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_View_SqlSecurityNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefiner_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefiner_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityInvoker_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityInvoker_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNotSpecified_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefinerNotSpecified_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CreateMaterializedView,
-        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Default,
-        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Select,
-        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Definer_Insert,
-        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Invoker,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_OnCluster,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefaultValues,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_SqlSecurityNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_Definer,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSpecified,
         RQ_SRS_006_RBAC_LiveView,
         RQ_SRS_006_RBAC_LiveView_Create,
         RQ_SRS_006_RBAC_LiveView_Select,
@@ -12389,632 +13133,674 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
 * 3 [Terminology](#terminology)
 * 4 [Privilege Definitions](#privilege-definitions)
 * 5 [Requirements](#requirements)
-  * 5.1 [Generic](#generic)
-    * 5.1.1 [RQ.SRS-006.RBAC](#rqsrs-006rbac)
-  * 5.2 [Login](#login)
-    * 5.2.1 [RQ.SRS-006.RBAC.Login](#rqsrs-006rbaclogin)
-    * 5.2.2 [RQ.SRS-006.RBAC.Login.DefaultUser](#rqsrs-006rbaclogindefaultuser)
-  * 5.3 [User](#user)
-    * 5.3.1 [RQ.SRS-006.RBAC.User](#rqsrs-006rbacuser)
-    * 5.3.2 [RQ.SRS-006.RBAC.User.Roles](#rqsrs-006rbacuserroles)
-    * 5.3.3 [RQ.SRS-006.RBAC.User.Privileges](#rqsrs-006rbacuserprivileges)
-    * 5.3.4 [RQ.SRS-006.RBAC.User.Variables](#rqsrs-006rbacuservariables)
-    * 5.3.5 [RQ.SRS-006.RBAC.User.Variables.Constraints](#rqsrs-006rbacuservariablesconstraints)
-    * 5.3.6 [RQ.SRS-006.RBAC.User.SettingsProfile](#rqsrs-006rbacusersettingsprofile)
-    * 5.3.7 [RQ.SRS-006.RBAC.User.Quotas](#rqsrs-006rbacuserquotas)
-    * 5.3.8 [RQ.SRS-006.RBAC.User.RowPolicies](#rqsrs-006rbacuserrowpolicies)
-    * 5.3.9 [RQ.SRS-006.RBAC.User.DefaultRole](#rqsrs-006rbacuserdefaultrole)
-    * 5.3.10 [RQ.SRS-006.RBAC.User.RoleSelection](#rqsrs-006rbacuserroleselection)
-    * 5.3.11 [RQ.SRS-006.RBAC.User.ShowCreate](#rqsrs-006rbacusershowcreate)
-    * 5.3.12 [RQ.SRS-006.RBAC.User.ShowPrivileges](#rqsrs-006rbacusershowprivileges)
-    * 5.3.13 [RQ.SRS-006.RBAC.User.Use.DefaultRole](#rqsrs-006rbacuserusedefaultrole)
-    * 5.3.14 [RQ.SRS-006.RBAC.User.Use.AllRolesWhenNoDefaultRole](#rqsrs-006rbacuseruseallroleswhennodefaultrole)
-    * 5.3.15 [Create User](#create-user)
-      * 5.3.15.1 [RQ.SRS-006.RBAC.User.Create](#rqsrs-006rbacusercreate)
-      * 5.3.15.2 [RQ.SRS-006.RBAC.User.Create.IfNotExists](#rqsrs-006rbacusercreateifnotexists)
-      * 5.3.15.3 [RQ.SRS-006.RBAC.User.Create.Replace](#rqsrs-006rbacusercreatereplace)
-      * 5.3.15.4 [RQ.SRS-006.RBAC.User.Create.Password.NoPassword](#rqsrs-006rbacusercreatepasswordnopassword)
-      * 5.3.15.5 [RQ.SRS-006.RBAC.User.Create.Password.NoPassword.Login](#rqsrs-006rbacusercreatepasswordnopasswordlogin)
-      * 5.3.15.6 [RQ.SRS-006.RBAC.User.Create.Password.PlainText](#rqsrs-006rbacusercreatepasswordplaintext)
-      * 5.3.15.7 [RQ.SRS-006.RBAC.User.Create.Password.PlainText.Login](#rqsrs-006rbacusercreatepasswordplaintextlogin)
-      * 5.3.15.8 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Password](#rqsrs-006rbacusercreatepasswordsha256password)
-      * 5.3.15.9 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Password.Login](#rqsrs-006rbacusercreatepasswordsha256passwordlogin)
-      * 5.3.15.10 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Hash](#rqsrs-006rbacusercreatepasswordsha256hash)
-      * 5.3.15.11 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Hash.Login](#rqsrs-006rbacusercreatepasswordsha256hashlogin)
-      * 5.3.15.12 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Password](#rqsrs-006rbacusercreatepassworddoublesha1password)
-      * 5.3.15.13 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Password.Login](#rqsrs-006rbacusercreatepassworddoublesha1passwordlogin)
-      * 5.3.15.14 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Hash](#rqsrs-006rbacusercreatepassworddoublesha1hash)
-      * 5.3.15.15 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Hash.Login](#rqsrs-006rbacusercreatepassworddoublesha1hashlogin)
-      * 5.3.15.16 [RQ.SRS-006.RBAC.User.Create.Host.Name](#rqsrs-006rbacusercreatehostname)
-      * 5.3.15.17 [RQ.SRS-006.RBAC.User.Create.Host.Regexp](#rqsrs-006rbacusercreatehostregexp)
-      * 5.3.15.18 [RQ.SRS-006.RBAC.User.Create.Host.IP](#rqsrs-006rbacusercreatehostip)
-      * 5.3.15.19 [RQ.SRS-006.RBAC.User.Create.Host.Any](#rqsrs-006rbacusercreatehostany)
-      * 5.3.15.20 [RQ.SRS-006.RBAC.User.Create.Host.None](#rqsrs-006rbacusercreatehostnone)
-      * 5.3.15.21 [RQ.SRS-006.RBAC.User.Create.Host.Local](#rqsrs-006rbacusercreatehostlocal)
-      * 5.3.15.22 [RQ.SRS-006.RBAC.User.Create.Host.Like](#rqsrs-006rbacusercreatehostlike)
-      * 5.3.15.23 [RQ.SRS-006.RBAC.User.Create.Host.Default](#rqsrs-006rbacusercreatehostdefault)
-      * 5.3.15.24 [RQ.SRS-006.RBAC.User.Create.DefaultRole](#rqsrs-006rbacusercreatedefaultrole)
-      * 5.3.15.25 [RQ.SRS-006.RBAC.User.Create.DefaultRole.None](#rqsrs-006rbacusercreatedefaultrolenone)
-      * 5.3.15.26 [RQ.SRS-006.RBAC.User.Create.DefaultRole.All](#rqsrs-006rbacusercreatedefaultroleall)
-      * 5.3.15.27 [RQ.SRS-006.RBAC.User.Create.Settings](#rqsrs-006rbacusercreatesettings)
-      * 5.3.15.28 [RQ.SRS-006.RBAC.User.Create.OnCluster](#rqsrs-006rbacusercreateoncluster)
-      * 5.3.15.29 [RQ.SRS-006.RBAC.User.Create.Syntax](#rqsrs-006rbacusercreatesyntax)
-    * 5.3.16 [Alter User](#alter-user)
-      * 5.3.16.1 [RQ.SRS-006.RBAC.User.Alter](#rqsrs-006rbacuseralter)
-      * 5.3.16.2 [RQ.SRS-006.RBAC.User.Alter.OrderOfEvaluation](#rqsrs-006rbacuseralterorderofevaluation)
-      * 5.3.16.3 [RQ.SRS-006.RBAC.User.Alter.IfExists](#rqsrs-006rbacuseralterifexists)
-      * 5.3.16.4 [RQ.SRS-006.RBAC.User.Alter.Cluster](#rqsrs-006rbacuseraltercluster)
-      * 5.3.16.5 [RQ.SRS-006.RBAC.User.Alter.Rename](#rqsrs-006rbacuseralterrename)
-      * 5.3.16.6 [RQ.SRS-006.RBAC.User.Alter.Password.PlainText](#rqsrs-006rbacuseralterpasswordplaintext)
-      * 5.3.16.7 [RQ.SRS-006.RBAC.User.Alter.Password.Sha256Password](#rqsrs-006rbacuseralterpasswordsha256password)
-      * 5.3.16.8 [RQ.SRS-006.RBAC.User.Alter.Password.DoubleSha1Password](#rqsrs-006rbacuseralterpassworddoublesha1password)
-      * 5.3.16.9 [RQ.SRS-006.RBAC.User.Alter.Host.AddDrop](#rqsrs-006rbacuseralterhostadddrop)
-      * 5.3.16.10 [RQ.SRS-006.RBAC.User.Alter.Host.Local](#rqsrs-006rbacuseralterhostlocal)
-      * 5.3.16.11 [RQ.SRS-006.RBAC.User.Alter.Host.Name](#rqsrs-006rbacuseralterhostname)
-      * 5.3.16.12 [RQ.SRS-006.RBAC.User.Alter.Host.Regexp](#rqsrs-006rbacuseralterhostregexp)
-      * 5.3.16.13 [RQ.SRS-006.RBAC.User.Alter.Host.IP](#rqsrs-006rbacuseralterhostip)
-      * 5.3.16.14 [RQ.SRS-006.RBAC.User.Alter.Host.Like](#rqsrs-006rbacuseralterhostlike)
-      * 5.3.16.15 [RQ.SRS-006.RBAC.User.Alter.Host.Any](#rqsrs-006rbacuseralterhostany)
-      * 5.3.16.16 [RQ.SRS-006.RBAC.User.Alter.Host.None](#rqsrs-006rbacuseralterhostnone)
-      * 5.3.16.17 [RQ.SRS-006.RBAC.User.Alter.DefaultRole](#rqsrs-006rbacuseralterdefaultrole)
-      * 5.3.16.18 [RQ.SRS-006.RBAC.User.Alter.DefaultRole.All](#rqsrs-006rbacuseralterdefaultroleall)
-      * 5.3.16.19 [RQ.SRS-006.RBAC.User.Alter.DefaultRole.AllExcept](#rqsrs-006rbacuseralterdefaultroleallexcept)
-      * 5.3.16.20 [RQ.SRS-006.RBAC.User.Alter.Settings](#rqsrs-006rbacuseraltersettings)
-      * 5.3.16.21 [RQ.SRS-006.RBAC.User.Alter.Settings.Min](#rqsrs-006rbacuseraltersettingsmin)
-      * 5.3.16.22 [RQ.SRS-006.RBAC.User.Alter.Settings.Max](#rqsrs-006rbacuseraltersettingsmax)
-      * 5.3.16.23 [RQ.SRS-006.RBAC.User.Alter.Settings.Profile](#rqsrs-006rbacuseraltersettingsprofile)
-      * 5.3.16.24 [RQ.SRS-006.RBAC.User.Alter.Syntax](#rqsrs-006rbacuseraltersyntax)
-    * 5.3.17 [Show Create User](#show-create-user)
-      * 5.3.17.1 [RQ.SRS-006.RBAC.User.ShowCreateUser](#rqsrs-006rbacusershowcreateuser)
-      * 5.3.17.2 [RQ.SRS-006.RBAC.User.ShowCreateUser.For](#rqsrs-006rbacusershowcreateuserfor)
-      * 5.3.17.3 [RQ.SRS-006.RBAC.User.ShowCreateUser.Syntax](#rqsrs-006rbacusershowcreateusersyntax)
-    * 5.3.18 [Drop User](#drop-user)
-      * 5.3.18.1 [RQ.SRS-006.RBAC.User.Drop](#rqsrs-006rbacuserdrop)
-      * 5.3.18.2 [RQ.SRS-006.RBAC.User.Drop.IfExists](#rqsrs-006rbacuserdropifexists)
-      * 5.3.18.3 [RQ.SRS-006.RBAC.User.Drop.OnCluster](#rqsrs-006rbacuserdroponcluster)
-      * 5.3.18.4 [RQ.SRS-006.RBAC.User.Drop.Syntax](#rqsrs-006rbacuserdropsyntax)
-  * 5.4 [Role](#role)
-    * 5.4.1 [RQ.SRS-006.RBAC.Role](#rqsrs-006rbacrole)
-    * 5.4.2 [RQ.SRS-006.RBAC.Role.Privileges](#rqsrs-006rbacroleprivileges)
-    * 5.4.3 [RQ.SRS-006.RBAC.Role.Variables](#rqsrs-006rbacrolevariables)
-    * 5.4.4 [RQ.SRS-006.RBAC.Role.SettingsProfile](#rqsrs-006rbacrolesettingsprofile)
-    * 5.4.5 [RQ.SRS-006.RBAC.Role.Quotas](#rqsrs-006rbacrolequotas)
-    * 5.4.6 [RQ.SRS-006.RBAC.Role.RowPolicies](#rqsrs-006rbacrolerowpolicies)
-    * 5.4.7 [Create Role](#create-role)
-      * 5.4.7.1 [RQ.SRS-006.RBAC.Role.Create](#rqsrs-006rbacrolecreate)
-      * 5.4.7.2 [RQ.SRS-006.RBAC.Role.Create.IfNotExists](#rqsrs-006rbacrolecreateifnotexists)
-      * 5.4.7.3 [RQ.SRS-006.RBAC.Role.Create.Replace](#rqsrs-006rbacrolecreatereplace)
-      * 5.4.7.4 [RQ.SRS-006.RBAC.Role.Create.Settings](#rqsrs-006rbacrolecreatesettings)
-      * 5.4.7.5 [RQ.SRS-006.RBAC.Role.Create.Syntax](#rqsrs-006rbacrolecreatesyntax)
-    * 5.4.8 [Alter Role](#alter-role)
-      * 5.4.8.1 [RQ.SRS-006.RBAC.Role.Alter](#rqsrs-006rbacrolealter)
-      * 5.4.8.2 [RQ.SRS-006.RBAC.Role.Alter.IfExists](#rqsrs-006rbacrolealterifexists)
-      * 5.4.8.3 [RQ.SRS-006.RBAC.Role.Alter.Cluster](#rqsrs-006rbacrolealtercluster)
-      * 5.4.8.4 [RQ.SRS-006.RBAC.Role.Alter.Rename](#rqsrs-006rbacrolealterrename)
-      * 5.4.8.5 [RQ.SRS-006.RBAC.Role.Alter.Settings](#rqsrs-006rbacrolealtersettings)
-      * 5.4.8.6 [RQ.SRS-006.RBAC.Role.Alter.Syntax](#rqsrs-006rbacrolealtersyntax)
-    * 5.4.9 [Drop Role](#drop-role)
-      * 5.4.9.1 [RQ.SRS-006.RBAC.Role.Drop](#rqsrs-006rbacroledrop)
-      * 5.4.9.2 [RQ.SRS-006.RBAC.Role.Drop.IfExists](#rqsrs-006rbacroledropifexists)
-      * 5.4.9.3 [RQ.SRS-006.RBAC.Role.Drop.Cluster](#rqsrs-006rbacroledropcluster)
-      * 5.4.9.4 [RQ.SRS-006.RBAC.Role.Drop.Syntax](#rqsrs-006rbacroledropsyntax)
-    * 5.4.10 [Show Create Role](#show-create-role)
-      * 5.4.10.1 [RQ.SRS-006.RBAC.Role.ShowCreate](#rqsrs-006rbacroleshowcreate)
-      * 5.4.10.2 [RQ.SRS-006.RBAC.Role.ShowCreate.Syntax](#rqsrs-006rbacroleshowcreatesyntax)
-  * 5.5 [Partial Revokes](#partial-revokes)
-    * 5.5.1 [RQ.SRS-006.RBAC.PartialRevokes](#rqsrs-006rbacpartialrevokes)
-    * 5.5.2 [RQ.SRS-006.RBAC.PartialRevoke.Syntax](#rqsrs-006rbacpartialrevokesyntax)
-  * 5.6 [Settings Profile](#settings-profile)
-    * 5.6.1 [RQ.SRS-006.RBAC.SettingsProfile](#rqsrs-006rbacsettingsprofile)
-    * 5.6.2 [RQ.SRS-006.RBAC.SettingsProfile.Constraints](#rqsrs-006rbacsettingsprofileconstraints)
-    * 5.6.3 [Create Settings Profile](#create-settings-profile)
-      * 5.6.3.1 [RQ.SRS-006.RBAC.SettingsProfile.Create](#rqsrs-006rbacsettingsprofilecreate)
-      * 5.6.3.2 [RQ.SRS-006.RBAC.SettingsProfile.Create.IfNotExists](#rqsrs-006rbacsettingsprofilecreateifnotexists)
-      * 5.6.3.3 [RQ.SRS-006.RBAC.SettingsProfile.Create.Replace](#rqsrs-006rbacsettingsprofilecreatereplace)
-      * 5.6.3.4 [RQ.SRS-006.RBAC.SettingsProfile.Create.Variables](#rqsrs-006rbacsettingsprofilecreatevariables)
-      * 5.6.3.5 [RQ.SRS-006.RBAC.SettingsProfile.Create.Variables.Value](#rqsrs-006rbacsettingsprofilecreatevariablesvalue)
-      * 5.6.3.6 [RQ.SRS-006.RBAC.SettingsProfile.Create.Variables.Constraints](#rqsrs-006rbacsettingsprofilecreatevariablesconstraints)
-      * 5.6.3.7 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment](#rqsrs-006rbacsettingsprofilecreateassignment)
-      * 5.6.3.8 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment.None](#rqsrs-006rbacsettingsprofilecreateassignmentnone)
-      * 5.6.3.9 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment.All](#rqsrs-006rbacsettingsprofilecreateassignmentall)
-      * 5.6.3.10 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment.AllExcept](#rqsrs-006rbacsettingsprofilecreateassignmentallexcept)
-      * 5.6.3.11 [RQ.SRS-006.RBAC.SettingsProfile.Create.Inherit](#rqsrs-006rbacsettingsprofilecreateinherit)
-      * 5.6.3.12 [RQ.SRS-006.RBAC.SettingsProfile.Create.OnCluster](#rqsrs-006rbacsettingsprofilecreateoncluster)
-      * 5.6.3.13 [RQ.SRS-006.RBAC.SettingsProfile.Create.Syntax](#rqsrs-006rbacsettingsprofilecreatesyntax)
-    * 5.6.4 [Alter Settings Profile](#alter-settings-profile)
-      * 5.6.4.1 [RQ.SRS-006.RBAC.SettingsProfile.Alter](#rqsrs-006rbacsettingsprofilealter)
-      * 5.6.4.2 [RQ.SRS-006.RBAC.SettingsProfile.Alter.IfExists](#rqsrs-006rbacsettingsprofilealterifexists)
-      * 5.6.4.3 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Rename](#rqsrs-006rbacsettingsprofilealterrename)
-      * 5.6.4.4 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables](#rqsrs-006rbacsettingsprofilealtervariables)
-      * 5.6.4.5 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables.Value](#rqsrs-006rbacsettingsprofilealtervariablesvalue)
-      * 5.6.4.6 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables.Constraints](#rqsrs-006rbacsettingsprofilealtervariablesconstraints)
-      * 5.6.4.7 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment](#rqsrs-006rbacsettingsprofilealterassignment)
-      * 5.6.4.8 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.None](#rqsrs-006rbacsettingsprofilealterassignmentnone)
-      * 5.6.4.9 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.All](#rqsrs-006rbacsettingsprofilealterassignmentall)
-      * 5.6.4.10 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.AllExcept](#rqsrs-006rbacsettingsprofilealterassignmentallexcept)
-      * 5.6.4.11 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.Inherit](#rqsrs-006rbacsettingsprofilealterassignmentinherit)
-      * 5.6.4.12 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.OnCluster](#rqsrs-006rbacsettingsprofilealterassignmentoncluster)
-      * 5.6.4.13 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Syntax](#rqsrs-006rbacsettingsprofilealtersyntax)
-    * 5.6.5 [Drop Settings Profile](#drop-settings-profile)
-      * 5.6.5.1 [RQ.SRS-006.RBAC.SettingsProfile.Drop](#rqsrs-006rbacsettingsprofiledrop)
-      * 5.6.5.2 [RQ.SRS-006.RBAC.SettingsProfile.Drop.IfExists](#rqsrs-006rbacsettingsprofiledropifexists)
-      * 5.6.5.3 [RQ.SRS-006.RBAC.SettingsProfile.Drop.OnCluster](#rqsrs-006rbacsettingsprofiledroponcluster)
-      * 5.6.5.4 [RQ.SRS-006.RBAC.SettingsProfile.Drop.Syntax](#rqsrs-006rbacsettingsprofiledropsyntax)
-    * 5.6.6 [Show Create Settings Profile](#show-create-settings-profile)
-      * 5.6.6.1 [RQ.SRS-006.RBAC.SettingsProfile.ShowCreateSettingsProfile](#rqsrs-006rbacsettingsprofileshowcreatesettingsprofile)
-  * 5.7 [Quotas](#quotas)
-    * 5.7.1 [RQ.SRS-006.RBAC.Quotas](#rqsrs-006rbacquotas)
-    * 5.7.2 [RQ.SRS-006.RBAC.Quotas.Keyed](#rqsrs-006rbacquotaskeyed)
-    * 5.7.3 [RQ.SRS-006.RBAC.Quotas.Queries](#rqsrs-006rbacquotasqueries)
-    * 5.7.4 [RQ.SRS-006.RBAC.Quotas.Errors](#rqsrs-006rbacquotaserrors)
-    * 5.7.5 [RQ.SRS-006.RBAC.Quotas.ResultRows](#rqsrs-006rbacquotasresultrows)
-    * 5.7.6 [RQ.SRS-006.RBAC.Quotas.ReadRows](#rqsrs-006rbacquotasreadrows)
-    * 5.7.7 [RQ.SRS-006.RBAC.Quotas.ResultBytes](#rqsrs-006rbacquotasresultbytes)
-    * 5.7.8 [RQ.SRS-006.RBAC.Quotas.ReadBytes](#rqsrs-006rbacquotasreadbytes)
-    * 5.7.9 [RQ.SRS-006.RBAC.Quotas.ExecutionTime](#rqsrs-006rbacquotasexecutiontime)
-    * 5.7.10 [Create Quotas](#create-quotas)
-      * 5.7.10.1 [RQ.SRS-006.RBAC.Quota.Create](#rqsrs-006rbacquotacreate)
-      * 5.7.10.2 [RQ.SRS-006.RBAC.Quota.Create.IfNotExists](#rqsrs-006rbacquotacreateifnotexists)
-      * 5.7.10.3 [RQ.SRS-006.RBAC.Quota.Create.Replace](#rqsrs-006rbacquotacreatereplace)
-      * 5.7.10.4 [RQ.SRS-006.RBAC.Quota.Create.Cluster](#rqsrs-006rbacquotacreatecluster)
-      * 5.7.10.5 [RQ.SRS-006.RBAC.Quota.Create.Interval](#rqsrs-006rbacquotacreateinterval)
-      * 5.7.10.6 [RQ.SRS-006.RBAC.Quota.Create.Interval.Randomized](#rqsrs-006rbacquotacreateintervalrandomized)
-      * 5.7.10.7 [RQ.SRS-006.RBAC.Quota.Create.Queries](#rqsrs-006rbacquotacreatequeries)
-      * 5.7.10.8 [RQ.SRS-006.RBAC.Quota.Create.Errors](#rqsrs-006rbacquotacreateerrors)
-      * 5.7.10.9 [RQ.SRS-006.RBAC.Quota.Create.ResultRows](#rqsrs-006rbacquotacreateresultrows)
-      * 5.7.10.10 [RQ.SRS-006.RBAC.Quota.Create.ReadRows](#rqsrs-006rbacquotacreatereadrows)
-      * 5.7.10.11 [RQ.SRS-006.RBAC.Quota.Create.ResultBytes](#rqsrs-006rbacquotacreateresultbytes)
-      * 5.7.10.12 [RQ.SRS-006.RBAC.Quota.Create.ReadBytes](#rqsrs-006rbacquotacreatereadbytes)
-      * 5.7.10.13 [RQ.SRS-006.RBAC.Quota.Create.ExecutionTime](#rqsrs-006rbacquotacreateexecutiontime)
-      * 5.7.10.14 [RQ.SRS-006.RBAC.Quota.Create.NoLimits](#rqsrs-006rbacquotacreatenolimits)
-      * 5.7.10.15 [RQ.SRS-006.RBAC.Quota.Create.TrackingOnly](#rqsrs-006rbacquotacreatetrackingonly)
-      * 5.7.10.16 [RQ.SRS-006.RBAC.Quota.Create.KeyedBy](#rqsrs-006rbacquotacreatekeyedby)
-      * 5.7.10.17 [RQ.SRS-006.RBAC.Quota.Create.KeyedByOptions](#rqsrs-006rbacquotacreatekeyedbyoptions)
-      * 5.7.10.18 [RQ.SRS-006.RBAC.Quota.Create.Assignment](#rqsrs-006rbacquotacreateassignment)
-      * 5.7.10.19 [RQ.SRS-006.RBAC.Quota.Create.Assignment.None](#rqsrs-006rbacquotacreateassignmentnone)
-      * 5.7.10.20 [RQ.SRS-006.RBAC.Quota.Create.Assignment.All](#rqsrs-006rbacquotacreateassignmentall)
-      * 5.7.10.21 [RQ.SRS-006.RBAC.Quota.Create.Assignment.Except](#rqsrs-006rbacquotacreateassignmentexcept)
-      * 5.7.10.22 [RQ.SRS-006.RBAC.Quota.Create.Syntax](#rqsrs-006rbacquotacreatesyntax)
-    * 5.7.11 [Alter Quota](#alter-quota)
-      * 5.7.11.1 [RQ.SRS-006.RBAC.Quota.Alter](#rqsrs-006rbacquotaalter)
-      * 5.7.11.2 [RQ.SRS-006.RBAC.Quota.Alter.IfExists](#rqsrs-006rbacquotaalterifexists)
-      * 5.7.11.3 [RQ.SRS-006.RBAC.Quota.Alter.Rename](#rqsrs-006rbacquotaalterrename)
-      * 5.7.11.4 [RQ.SRS-006.RBAC.Quota.Alter.Cluster](#rqsrs-006rbacquotaaltercluster)
-      * 5.7.11.5 [RQ.SRS-006.RBAC.Quota.Alter.Interval](#rqsrs-006rbacquotaalterinterval)
-      * 5.7.11.6 [RQ.SRS-006.RBAC.Quota.Alter.Interval.Randomized](#rqsrs-006rbacquotaalterintervalrandomized)
-      * 5.7.11.7 [RQ.SRS-006.RBAC.Quota.Alter.Queries](#rqsrs-006rbacquotaalterqueries)
-      * 5.7.11.8 [RQ.SRS-006.RBAC.Quota.Alter.Errors](#rqsrs-006rbacquotaaltererrors)
-      * 5.7.11.9 [RQ.SRS-006.RBAC.Quota.Alter.ResultRows](#rqsrs-006rbacquotaalterresultrows)
-      * 5.7.11.10 [RQ.SRS-006.RBAC.Quota.Alter.ReadRows](#rqsrs-006rbacquotaalterreadrows)
-      * 5.7.11.11 [RQ.SRS-006.RBAC.Quota.ALter.ResultBytes](#rqsrs-006rbacquotaalterresultbytes)
-      * 5.7.11.12 [RQ.SRS-006.RBAC.Quota.Alter.ReadBytes](#rqsrs-006rbacquotaalterreadbytes)
-      * 5.7.11.13 [RQ.SRS-006.RBAC.Quota.Alter.ExecutionTime](#rqsrs-006rbacquotaalterexecutiontime)
-      * 5.7.11.14 [RQ.SRS-006.RBAC.Quota.Alter.NoLimits](#rqsrs-006rbacquotaalternolimits)
-      * 5.7.11.15 [RQ.SRS-006.RBAC.Quota.Alter.TrackingOnly](#rqsrs-006rbacquotaaltertrackingonly)
-      * 5.7.11.16 [RQ.SRS-006.RBAC.Quota.Alter.KeyedBy](#rqsrs-006rbacquotaalterkeyedby)
-      * 5.7.11.17 [RQ.SRS-006.RBAC.Quota.Alter.KeyedByOptions](#rqsrs-006rbacquotaalterkeyedbyoptions)
-      * 5.7.11.18 [RQ.SRS-006.RBAC.Quota.Alter.Assignment](#rqsrs-006rbacquotaalterassignment)
-      * 5.7.11.19 [RQ.SRS-006.RBAC.Quota.Alter.Assignment.None](#rqsrs-006rbacquotaalterassignmentnone)
-      * 5.7.11.20 [RQ.SRS-006.RBAC.Quota.Alter.Assignment.All](#rqsrs-006rbacquotaalterassignmentall)
-      * 5.7.11.21 [RQ.SRS-006.RBAC.Quota.Alter.Assignment.Except](#rqsrs-006rbacquotaalterassignmentexcept)
-      * 5.7.11.22 [RQ.SRS-006.RBAC.Quota.Alter.Syntax](#rqsrs-006rbacquotaaltersyntax)
-    * 5.7.12 [Drop Quota](#drop-quota)
-      * 5.7.12.1 [RQ.SRS-006.RBAC.Quota.Drop](#rqsrs-006rbacquotadrop)
-      * 5.7.12.2 [RQ.SRS-006.RBAC.Quota.Drop.IfExists](#rqsrs-006rbacquotadropifexists)
-      * 5.7.12.3 [RQ.SRS-006.RBAC.Quota.Drop.Cluster](#rqsrs-006rbacquotadropcluster)
-      * 5.7.12.4 [RQ.SRS-006.RBAC.Quota.Drop.Syntax](#rqsrs-006rbacquotadropsyntax)
-    * 5.7.13 [Show Quotas](#show-quotas)
-      * 5.7.13.1 [RQ.SRS-006.RBAC.Quota.ShowQuotas](#rqsrs-006rbacquotashowquotas)
-      * 5.7.13.2 [RQ.SRS-006.RBAC.Quota.ShowQuotas.IntoOutfile](#rqsrs-006rbacquotashowquotasintooutfile)
-      * 5.7.13.3 [RQ.SRS-006.RBAC.Quota.ShowQuotas.Format](#rqsrs-006rbacquotashowquotasformat)
-      * 5.7.13.4 [RQ.SRS-006.RBAC.Quota.ShowQuotas.Settings](#rqsrs-006rbacquotashowquotassettings)
-      * 5.7.13.5 [RQ.SRS-006.RBAC.Quota.ShowQuotas.Syntax](#rqsrs-006rbacquotashowquotassyntax)
-    * 5.7.14 [Show Create Quota](#show-create-quota)
-      * 5.7.14.1 [RQ.SRS-006.RBAC.Quota.ShowCreateQuota.Name](#rqsrs-006rbacquotashowcreatequotaname)
-      * 5.7.14.2 [RQ.SRS-006.RBAC.Quota.ShowCreateQuota.Current](#rqsrs-006rbacquotashowcreatequotacurrent)
-      * 5.7.14.3 [RQ.SRS-006.RBAC.Quota.ShowCreateQuota.Syntax](#rqsrs-006rbacquotashowcreatequotasyntax)
-  * 5.8 [Row Policy](#row-policy)
-    * 5.8.1 [Feature Diagram](#feature-diagram)
-    * 5.8.2 [RQ.SRS-006.RBAC.RowPolicy](#rqsrs-006rbacrowpolicy)
-    * 5.8.3 [RQ.SRS-006.RBAC.RowPolicy.Condition](#rqsrs-006rbacrowpolicycondition)
-    * 5.8.4 [RQ.SRS-006.RBAC.RowPolicy.Restriction](#rqsrs-006rbacrowpolicyrestriction)
-    * 5.8.5 [RQ.SRS-006.RBAC.RowPolicy.Nesting](#rqsrs-006rbacrowpolicynesting)
-    * 5.8.6 [RQ.SRS-006.RBAC.RowPolicy.Parts](#rqsrs-006rbacrowpolicyparts)
-    * 5.8.7 [RQ.SRS-006.RBAC.RowPolicy.Columns](#rqsrs-006rbacrowpolicycolumns)
-    * 5.8.8 [RQ.SRS-006.RBAC.RowPolicy.MultiIf](#rqsrs-006rbacrowpolicymultiif)
-    * 5.8.9 [RQ.SRS-006.RBAC.RowPolicy.MultiIfLength](#rqsrs-006rbacrowpolicymultiiflength)
-    * 5.8.10 [RQ.SRS-006.RBAC.RowPolicy.Rows](#rqsrs-006rbacrowpolicyrows)
-    * 5.8.11 [RQ.SRS-006.RBAC.RowPolicy.Dictionary](#rqsrs-006rbacrowpolicydictionary)
-    * 5.8.12 [RQ.SRS-006.RBAC.RowPolicy.MaterializedView](#rqsrs-006rbacrowpolicymaterializedview)
-    * 5.8.13 [RQ.SRS-006.RBAC.RowPolicy.DistributedTable](#rqsrs-006rbacrowpolicydistributedtable)
-    * 5.8.14 [RQ.SRS-006.RBAC.RowPolicy.Copy](#rqsrs-006rbacrowpolicycopy)
-    * 5.8.15 [RQ.SRS-006.RBAC.RowPolicy.Rename](#rqsrs-006rbacrowpolicyrename)
-    * 5.8.16 [RQ.SRS-006.RBAC.RowPolicy.Window](#rqsrs-006rbacrowpolicywindow)
-    * 5.8.17 [RQ.SRS-006.RBAC.RowPolicy.Neighbor](#rqsrs-006rbacrowpolicyneighbor)
-    * 5.8.18 [RQ.SRS-006.RBAC.RowPolicy.Partitions](#rqsrs-006rbacrowpolicypartitions)
-    * 5.8.19 [Create Row Policy](#create-row-policy)
-      * 5.8.19.1 [RQ.SRS-006.RBAC.RowPolicy.Create](#rqsrs-006rbacrowpolicycreate)
-      * 5.8.19.2 [RQ.SRS-006.RBAC.RowPolicy.Create.IfNotExists](#rqsrs-006rbacrowpolicycreateifnotexists)
-      * 5.8.19.3 [RQ.SRS-006.RBAC.RowPolicy.Create.Replace](#rqsrs-006rbacrowpolicycreatereplace)
-      * 5.8.19.4 [RQ.SRS-006.RBAC.RowPolicy.Create.OnCluster](#rqsrs-006rbacrowpolicycreateoncluster)
-      * 5.8.19.5 [RQ.SRS-006.RBAC.RowPolicy.Create.On](#rqsrs-006rbacrowpolicycreateon)
-      * 5.8.19.6 [RQ.SRS-006.RBAC.RowPolicy.Create.Access](#rqsrs-006rbacrowpolicycreateaccess)
-      * 5.8.19.7 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Permissive](#rqsrs-006rbacrowpolicycreateaccesspermissive)
-      * 5.8.19.8 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Restrictive](#rqsrs-006rbacrowpolicycreateaccessrestrictive)
-      * 5.8.19.9 [RQ.SRS-006.RBAC.RowPolicy.Create.ForSelect](#rqsrs-006rbacrowpolicycreateforselect)
-      * 5.8.19.10 [RQ.SRS-006.RBAC.RowPolicy.Create.Condition](#rqsrs-006rbacrowpolicycreatecondition)
-      * 5.8.19.11 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment](#rqsrs-006rbacrowpolicycreateassignment)
-      * 5.8.19.12 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.None](#rqsrs-006rbacrowpolicycreateassignmentnone)
-      * 5.8.19.13 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.All](#rqsrs-006rbacrowpolicycreateassignmentall)
-      * 5.8.19.14 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.AllExcept](#rqsrs-006rbacrowpolicycreateassignmentallexcept)
-      * 5.8.19.15 [RQ.SRS-006.RBAC.RowPolicy.Create.Syntax](#rqsrs-006rbacrowpolicycreatesyntax)
-    * 5.8.20 [Alter Row Policy](#alter-row-policy)
-      * 5.8.20.1 [RQ.SRS-006.RBAC.RowPolicy.Alter](#rqsrs-006rbacrowpolicyalter)
-      * 5.8.20.2 [RQ.SRS-006.RBAC.RowPolicy.Alter.IfExists](#rqsrs-006rbacrowpolicyalterifexists)
-      * 5.8.20.3 [RQ.SRS-006.RBAC.RowPolicy.Alter.ForSelect](#rqsrs-006rbacrowpolicyalterforselect)
-      * 5.8.20.4 [RQ.SRS-006.RBAC.RowPolicy.Alter.OnCluster](#rqsrs-006rbacrowpolicyalteroncluster)
-      * 5.8.20.5 [RQ.SRS-006.RBAC.RowPolicy.Alter.On](#rqsrs-006rbacrowpolicyalteron)
-      * 5.8.20.6 [RQ.SRS-006.RBAC.RowPolicy.Alter.Rename](#rqsrs-006rbacrowpolicyalterrename)
-      * 5.8.20.7 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access](#rqsrs-006rbacrowpolicyalteraccess)
-      * 5.8.20.8 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Permissive](#rqsrs-006rbacrowpolicyalteraccesspermissive)
-      * 5.8.20.9 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Restrictive](#rqsrs-006rbacrowpolicyalteraccessrestrictive)
-      * 5.8.20.10 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition](#rqsrs-006rbacrowpolicyaltercondition)
-      * 5.8.20.11 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition.None](#rqsrs-006rbacrowpolicyalterconditionnone)
-      * 5.8.20.12 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment](#rqsrs-006rbacrowpolicyalterassignment)
-      * 5.8.20.13 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.None](#rqsrs-006rbacrowpolicyalterassignmentnone)
-      * 5.8.20.14 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.All](#rqsrs-006rbacrowpolicyalterassignmentall)
-      * 5.8.20.15 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.AllExcept](#rqsrs-006rbacrowpolicyalterassignmentallexcept)
-      * 5.8.20.16 [RQ.SRS-006.RBAC.RowPolicy.Alter.Syntax](#rqsrs-006rbacrowpolicyaltersyntax)
-    * 5.8.21 [Drop Row Policy](#drop-row-policy)
-      * 5.8.21.1 [RQ.SRS-006.RBAC.RowPolicy.Drop](#rqsrs-006rbacrowpolicydrop)
-      * 5.8.21.2 [RQ.SRS-006.RBAC.RowPolicy.Drop.IfExists](#rqsrs-006rbacrowpolicydropifexists)
-      * 5.8.21.3 [RQ.SRS-006.RBAC.RowPolicy.Drop.On](#rqsrs-006rbacrowpolicydropon)
-      * 5.8.21.4 [RQ.SRS-006.RBAC.RowPolicy.Drop.OnCluster](#rqsrs-006rbacrowpolicydroponcluster)
-      * 5.8.21.5 [RQ.SRS-006.RBAC.RowPolicy.Drop.Syntax](#rqsrs-006rbacrowpolicydropsyntax)
-    * 5.8.22 [Show Create Row Policy](#show-create-row-policy)
-      * 5.8.22.1 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy](#rqsrs-006rbacrowpolicyshowcreaterowpolicy)
-      * 5.8.22.2 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.On](#rqsrs-006rbacrowpolicyshowcreaterowpolicyon)
-      * 5.8.22.3 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.Syntax](#rqsrs-006rbacrowpolicyshowcreaterowpolicysyntax)
-      * 5.8.22.4 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies](#rqsrs-006rbacrowpolicyshowrowpolicies)
-      * 5.8.22.5 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.On](#rqsrs-006rbacrowpolicyshowrowpolicieson)
-      * 5.8.22.6 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.Syntax](#rqsrs-006rbacrowpolicyshowrowpoliciessyntax)
-  * 5.9 [Set Default Role](#set-default-role)
-    * 5.9.1 [RQ.SRS-006.RBAC.SetDefaultRole](#rqsrs-006rbacsetdefaultrole)
-    * 5.9.2 [RQ.SRS-006.RBAC.SetDefaultRole.CurrentUser](#rqsrs-006rbacsetdefaultrolecurrentuser)
-    * 5.9.3 [RQ.SRS-006.RBAC.SetDefaultRole.All](#rqsrs-006rbacsetdefaultroleall)
-    * 5.9.4 [RQ.SRS-006.RBAC.SetDefaultRole.AllExcept](#rqsrs-006rbacsetdefaultroleallexcept)
-    * 5.9.5 [RQ.SRS-006.RBAC.SetDefaultRole.None](#rqsrs-006rbacsetdefaultrolenone)
-    * 5.9.6 [RQ.SRS-006.RBAC.SetDefaultRole.Syntax](#rqsrs-006rbacsetdefaultrolesyntax)
-  * 5.10 [Set Role](#set-role)
-    * 5.10.1 [RQ.SRS-006.RBAC.SetRole](#rqsrs-006rbacsetrole)
-    * 5.10.2 [RQ.SRS-006.RBAC.SetRole.Default](#rqsrs-006rbacsetroledefault)
-    * 5.10.3 [RQ.SRS-006.RBAC.SetRole.None](#rqsrs-006rbacsetrolenone)
-    * 5.10.4 [RQ.SRS-006.RBAC.SetRole.All](#rqsrs-006rbacsetroleall)
-    * 5.10.5 [RQ.SRS-006.RBAC.SetRole.AllExcept](#rqsrs-006rbacsetroleallexcept)
-    * 5.10.6 [RQ.SRS-006.RBAC.SetRole.Syntax](#rqsrs-006rbacsetrolesyntax)
-  * 5.11 [Grant](#grant)
-    * 5.11.1 [RQ.SRS-006.RBAC.Grant.Privilege.To](#rqsrs-006rbacgrantprivilegeto)
-    * 5.11.2 [RQ.SRS-006.RBAC.Grant.Privilege.ToCurrentUser](#rqsrs-006rbacgrantprivilegetocurrentuser)
-    * 5.11.3 [RQ.SRS-006.RBAC.Grant.Privilege.Select](#rqsrs-006rbacgrantprivilegeselect)
-    * 5.11.4 [RQ.SRS-006.RBAC.Grant.Privilege.Insert](#rqsrs-006rbacgrantprivilegeinsert)
-    * 5.11.5 [RQ.SRS-006.RBAC.Grant.Privilege.Alter](#rqsrs-006rbacgrantprivilegealter)
-    * 5.11.6 [RQ.SRS-006.RBAC.Grant.Privilege.Create](#rqsrs-006rbacgrantprivilegecreate)
-    * 5.11.7 [RQ.SRS-006.RBAC.Grant.Privilege.Drop](#rqsrs-006rbacgrantprivilegedrop)
-    * 5.11.8 [RQ.SRS-006.RBAC.Grant.Privilege.Truncate](#rqsrs-006rbacgrantprivilegetruncate)
-    * 5.11.9 [RQ.SRS-006.RBAC.Grant.Privilege.Optimize](#rqsrs-006rbacgrantprivilegeoptimize)
-    * 5.11.10 [RQ.SRS-006.RBAC.Grant.Privilege.Show](#rqsrs-006rbacgrantprivilegeshow)
-    * 5.11.11 [RQ.SRS-006.RBAC.Grant.Privilege.KillQuery](#rqsrs-006rbacgrantprivilegekillquery)
-    * 5.11.12 [RQ.SRS-006.RBAC.Grant.Privilege.AccessManagement](#rqsrs-006rbacgrantprivilegeaccessmanagement)
-    * 5.11.13 [RQ.SRS-006.RBAC.Grant.Privilege.System](#rqsrs-006rbacgrantprivilegesystem)
-    * 5.11.14 [RQ.SRS-006.RBAC.Grant.Privilege.Introspection](#rqsrs-006rbacgrantprivilegeintrospection)
-    * 5.11.15 [RQ.SRS-006.RBAC.Grant.Privilege.Sources](#rqsrs-006rbacgrantprivilegesources)
-    * 5.11.16 [RQ.SRS-006.RBAC.Grant.Privilege.DictGet](#rqsrs-006rbacgrantprivilegedictget)
-    * 5.11.17 [RQ.SRS-006.RBAC.Grant.Privilege.None](#rqsrs-006rbacgrantprivilegenone)
-    * 5.11.18 [RQ.SRS-006.RBAC.Grant.Privilege.All](#rqsrs-006rbacgrantprivilegeall)
-    * 5.11.19 [RQ.SRS-006.RBAC.Grant.Privilege.GrantOption](#rqsrs-006rbacgrantprivilegegrantoption)
-    * 5.11.20 [RQ.SRS-006.RBAC.Grant.Privilege.On](#rqsrs-006rbacgrantprivilegeon)
-    * 5.11.21 [RQ.SRS-006.RBAC.Grant.Privilege.PrivilegeColumns](#rqsrs-006rbacgrantprivilegeprivilegecolumns)
-    * 5.11.22 [RQ.SRS-006.RBAC.Grant.Privilege.OnCluster](#rqsrs-006rbacgrantprivilegeoncluster)
-    * 5.11.23 [RQ.SRS-006.RBAC.Grant.Privilege.Syntax](#rqsrs-006rbacgrantprivilegesyntax)
-  * 5.12 [Revoke](#revoke)
-    * 5.12.1 [RQ.SRS-006.RBAC.Revoke.Privilege.Cluster](#rqsrs-006rbacrevokeprivilegecluster)
-    * 5.12.2 [RQ.SRS-006.RBAC.Revoke.Privilege.Select](#rqsrs-006rbacrevokeprivilegeselect)
-    * 5.12.3 [RQ.SRS-006.RBAC.Revoke.Privilege.Insert](#rqsrs-006rbacrevokeprivilegeinsert)
-    * 5.12.4 [RQ.SRS-006.RBAC.Revoke.Privilege.Alter](#rqsrs-006rbacrevokeprivilegealter)
-    * 5.12.5 [RQ.SRS-006.RBAC.Revoke.Privilege.Create](#rqsrs-006rbacrevokeprivilegecreate)
-    * 5.12.6 [RQ.SRS-006.RBAC.Revoke.Privilege.Drop](#rqsrs-006rbacrevokeprivilegedrop)
-    * 5.12.7 [RQ.SRS-006.RBAC.Revoke.Privilege.Truncate](#rqsrs-006rbacrevokeprivilegetruncate)
-    * 5.12.8 [RQ.SRS-006.RBAC.Revoke.Privilege.Optimize](#rqsrs-006rbacrevokeprivilegeoptimize)
-    * 5.12.9 [RQ.SRS-006.RBAC.Revoke.Privilege.Show](#rqsrs-006rbacrevokeprivilegeshow)
-    * 5.12.10 [RQ.SRS-006.RBAC.Revoke.Privilege.KillQuery](#rqsrs-006rbacrevokeprivilegekillquery)
-    * 5.12.11 [RQ.SRS-006.RBAC.Revoke.Privilege.AccessManagement](#rqsrs-006rbacrevokeprivilegeaccessmanagement)
-    * 5.12.12 [RQ.SRS-006.RBAC.Revoke.Privilege.System](#rqsrs-006rbacrevokeprivilegesystem)
-    * 5.12.13 [RQ.SRS-006.RBAC.Revoke.Privilege.Introspection](#rqsrs-006rbacrevokeprivilegeintrospection)
-    * 5.12.14 [RQ.SRS-006.RBAC.Revoke.Privilege.Sources](#rqsrs-006rbacrevokeprivilegesources)
-    * 5.12.15 [RQ.SRS-006.RBAC.Revoke.Privilege.DictGet](#rqsrs-006rbacrevokeprivilegedictget)
-    * 5.12.16 [RQ.SRS-006.RBAC.Revoke.Privilege.PrivilegeColumns](#rqsrs-006rbacrevokeprivilegeprivilegecolumns)
-    * 5.12.17 [RQ.SRS-006.RBAC.Revoke.Privilege.Multiple](#rqsrs-006rbacrevokeprivilegemultiple)
-    * 5.12.18 [RQ.SRS-006.RBAC.Revoke.Privilege.All](#rqsrs-006rbacrevokeprivilegeall)
-    * 5.12.19 [RQ.SRS-006.RBAC.Revoke.Privilege.None](#rqsrs-006rbacrevokeprivilegenone)
-    * 5.12.20 [RQ.SRS-006.RBAC.Revoke.Privilege.On](#rqsrs-006rbacrevokeprivilegeon)
-    * 5.12.21 [RQ.SRS-006.RBAC.Revoke.Privilege.From](#rqsrs-006rbacrevokeprivilegefrom)
-    * 5.12.22 [RQ.SRS-006.RBAC.Revoke.Privilege.Syntax](#rqsrs-006rbacrevokeprivilegesyntax)
-  * 5.13 [Grant Role](#grant-role)
-    * 5.13.1 [RQ.SRS-006.RBAC.Grant.Role](#rqsrs-006rbacgrantrole)
-    * 5.13.2 [RQ.SRS-006.RBAC.Grant.Role.CurrentUser](#rqsrs-006rbacgrantrolecurrentuser)
-    * 5.13.3 [RQ.SRS-006.RBAC.Grant.Role.AdminOption](#rqsrs-006rbacgrantroleadminoption)
-    * 5.13.4 [RQ.SRS-006.RBAC.Grant.Role.OnCluster](#rqsrs-006rbacgrantroleoncluster)
-    * 5.13.5 [RQ.SRS-006.RBAC.Grant.Role.Syntax](#rqsrs-006rbacgrantrolesyntax)
-  * 5.14 [Revoke Role](#revoke-role)
-    * 5.14.1 [RQ.SRS-006.RBAC.Revoke.Role](#rqsrs-006rbacrevokerole)
-    * 5.14.2 [RQ.SRS-006.RBAC.Revoke.Role.Keywords](#rqsrs-006rbacrevokerolekeywords)
-    * 5.14.3 [RQ.SRS-006.RBAC.Revoke.Role.Cluster](#rqsrs-006rbacrevokerolecluster)
-    * 5.14.4 [RQ.SRS-006.RBAC.Revoke.AdminOption](#rqsrs-006rbacrevokeadminoption)
-    * 5.14.5 [RQ.SRS-006.RBAC.Revoke.Role.Syntax](#rqsrs-006rbacrevokerolesyntax)
-  * 5.15 [Show Grants](#show-grants)
-    * 5.15.1 [RQ.SRS-006.RBAC.Show.Grants](#rqsrs-006rbacshowgrants)
-    * 5.15.2 [RQ.SRS-006.RBAC.Show.Grants.For](#rqsrs-006rbacshowgrantsfor)
-    * 5.15.3 [RQ.SRS-006.RBAC.Show.Grants.Syntax](#rqsrs-006rbacshowgrantssyntax)
-  * 5.16 [Table Privileges](#table-privileges)
-    * 5.16.1 [RQ.SRS-006.RBAC.Table.PublicTables](#rqsrs-006rbactablepublictables)
-    * 5.16.2 [RQ.SRS-006.RBAC.Table.SensitiveTables](#rqsrs-006rbactablesensitivetables)
-  * 5.17 [Distributed Tables](#distributed-tables)
-    * 5.17.1 [RQ.SRS-006.RBAC.DistributedTable.Create](#rqsrs-006rbacdistributedtablecreate)
-    * 5.17.2 [RQ.SRS-006.RBAC.DistributedTable.Select](#rqsrs-006rbacdistributedtableselect)
-    * 5.17.3 [RQ.SRS-006.RBAC.DistributedTable.Insert](#rqsrs-006rbacdistributedtableinsert)
-    * 5.17.4 [RQ.SRS-006.RBAC.DistributedTable.SpecialTables](#rqsrs-006rbacdistributedtablespecialtables)
-    * 5.17.5 [RQ.SRS-006.RBAC.DistributedTable.LocalUser](#rqsrs-006rbacdistributedtablelocaluser)
-    * 5.17.6 [RQ.SRS-006.RBAC.DistributedTable.SameUserDifferentNodesDifferentPrivileges](#rqsrs-006rbacdistributedtablesameuserdifferentnodesdifferentprivileges)
-  * 5.18 [Views](#views)
-    * 5.18.1 [View](#view)
-      * 5.18.1.1 [RQ.SRS-006.RBAC.View](#rqsrs-006rbacview)
-      * 5.18.1.2 [RQ.SRS-006.RBAC.View.Create](#rqsrs-006rbacviewcreate)
-      * 5.18.1.3 [RQ.SRS-006.RBAC.View.Select](#rqsrs-006rbacviewselect)
-      * 5.18.1.4 [RQ.SRS-006.RBAC.View.Drop](#rqsrs-006rbacviewdrop)
-    * 5.18.2 [Materialized View](#materialized-view)
-      * 5.18.2.1 [RQ.SRS-006.RBAC.MaterializedView](#rqsrs-006rbacmaterializedview)
-      * 5.18.2.2 [RQ.SRS-006.RBAC.MaterializedView.Create](#rqsrs-006rbacmaterializedviewcreate)
-      * 5.18.2.3 [RQ.SRS-006.RBAC.MaterializedView.Select](#rqsrs-006rbacmaterializedviewselect)
-      * 5.18.2.4 [RQ.SRS-006.RBAC.MaterializedView.Select.TargetTable](#rqsrs-006rbacmaterializedviewselecttargettable)
-      * 5.18.2.5 [RQ.SRS-006.RBAC.MaterializedView.Select.SourceTable](#rqsrs-006rbacmaterializedviewselectsourcetable)
-      * 5.18.2.6 [RQ.SRS-006.RBAC.MaterializedView.Drop](#rqsrs-006rbacmaterializedviewdrop)
-      * 5.18.2.7 [RQ.SRS-006.RBAC.MaterializedView.ModifyQuery](#rqsrs-006rbacmaterializedviewmodifyquery)
-      * 5.18.2.8 [RQ.SRS-006.RBAC.MaterializedView.Insert](#rqsrs-006rbacmaterializedviewinsert)
-      * 5.18.2.9 [RQ.SRS-006.RBAC.MaterializedView.Insert.SourceTable](#rqsrs-006rbacmaterializedviewinsertsourcetable)
-      * 5.18.2.10 [RQ.SRS-006.RBAC.MaterializedView.Insert.TargetTable](#rqsrs-006rbacmaterializedviewinserttargettable)
-    * 5.18.3 [Live View](#live-view)
-      * 5.18.3.1 [RQ.SRS-006.RBAC.LiveView](#rqsrs-006rbacliveview)
-      * 5.18.3.2 [RQ.SRS-006.RBAC.LiveView.Create](#rqsrs-006rbacliveviewcreate)
-      * 5.18.3.3 [RQ.SRS-006.RBAC.LiveView.Select](#rqsrs-006rbacliveviewselect)
-      * 5.18.3.4 [RQ.SRS-006.RBAC.LiveView.Drop](#rqsrs-006rbacliveviewdrop)
-      * 5.18.3.5 [RQ.SRS-006.RBAC.LiveView.Refresh](#rqsrs-006rbacliveviewrefresh)
-  * 5.19 [Select](#select)
-    * 5.19.1 [RQ.SRS-006.RBAC.Select](#rqsrs-006rbacselect)
-    * 5.19.2 [RQ.SRS-006.RBAC.Select.Column](#rqsrs-006rbacselectcolumn)
-    * 5.19.3 [RQ.SRS-006.RBAC.Select.Cluster](#rqsrs-006rbacselectcluster)
-    * 5.19.4 [RQ.SRS-006.RBAC.Select.TableEngines](#rqsrs-006rbacselecttableengines)
-    * 5.19.5 [Table Functions](#table-functions)
-      * 5.19.5.1 [RQ.SRS-006.RBAC.Select.TableFunctions.Remote](#rqsrs-006rbacselecttablefunctionsremote)
-      * 5.19.5.2 [RQ.SRS-006.RBAC.Select.TableFunctions.Cluster](#rqsrs-006rbacselecttablefunctionscluster)
-  * 5.20 [Insert](#insert)
-    * 5.20.1 [RQ.SRS-006.RBAC.Insert](#rqsrs-006rbacinsert)
-    * 5.20.2 [RQ.SRS-006.RBAC.Insert.Column](#rqsrs-006rbacinsertcolumn)
-    * 5.20.3 [RQ.SRS-006.RBAC.Insert.Cluster](#rqsrs-006rbacinsertcluster)
-    * 5.20.4 [RQ.SRS-006.RBAC.Insert.TableEngines](#rqsrs-006rbacinserttableengines)
-  * 5.21 [Alter](#alter)
-    * 5.21.1 [Alter Column](#alter-column)
-      * 5.21.1.1 [RQ.SRS-006.RBAC.Privileges.AlterColumn](#rqsrs-006rbacprivilegesaltercolumn)
-      * 5.21.1.2 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Grant](#rqsrs-006rbacprivilegesaltercolumngrant)
-      * 5.21.1.3 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Revoke](#rqsrs-006rbacprivilegesaltercolumnrevoke)
-      * 5.21.1.4 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Column](#rqsrs-006rbacprivilegesaltercolumncolumn)
-      * 5.21.1.5 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Cluster](#rqsrs-006rbacprivilegesaltercolumncluster)
-      * 5.21.1.6 [RQ.SRS-006.RBAC.Privileges.AlterColumn.TableEngines](#rqsrs-006rbacprivilegesaltercolumntableengines)
-    * 5.21.2 [Alter Index](#alter-index)
-      * 5.21.2.1 [RQ.SRS-006.RBAC.Privileges.AlterIndex](#rqsrs-006rbacprivilegesalterindex)
-      * 5.21.2.2 [RQ.SRS-006.RBAC.Privileges.AlterIndex.Grant](#rqsrs-006rbacprivilegesalterindexgrant)
-      * 5.21.2.3 [RQ.SRS-006.RBAC.Privileges.AlterIndex.Revoke](#rqsrs-006rbacprivilegesalterindexrevoke)
-      * 5.21.2.4 [RQ.SRS-006.RBAC.Privileges.AlterIndex.Cluster](#rqsrs-006rbacprivilegesalterindexcluster)
-      * 5.21.2.5 [RQ.SRS-006.RBAC.Privileges.AlterIndex.TableEngines](#rqsrs-006rbacprivilegesalterindextableengines)
-    * 5.21.3 [Alter Constraint](#alter-constraint)
-      * 5.21.3.1 [RQ.SRS-006.RBAC.Privileges.AlterConstraint](#rqsrs-006rbacprivilegesalterconstraint)
-      * 5.21.3.2 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.Grant](#rqsrs-006rbacprivilegesalterconstraintgrant)
-      * 5.21.3.3 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.Revoke](#rqsrs-006rbacprivilegesalterconstraintrevoke)
-      * 5.21.3.4 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.Cluster](#rqsrs-006rbacprivilegesalterconstraintcluster)
-      * 5.21.3.5 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.TableEngines](#rqsrs-006rbacprivilegesalterconstrainttableengines)
-    * 5.21.4 [Alter TTL](#alter-ttl)
-      * 5.21.4.1 [RQ.SRS-006.RBAC.Privileges.AlterTTL](#rqsrs-006rbacprivilegesalterttl)
-      * 5.21.4.2 [RQ.SRS-006.RBAC.Privileges.AlterTTL.Grant](#rqsrs-006rbacprivilegesalterttlgrant)
-      * 5.21.4.3 [RQ.SRS-006.RBAC.Privileges.AlterTTL.Revoke](#rqsrs-006rbacprivilegesalterttlrevoke)
-      * 5.21.4.4 [RQ.SRS-006.RBAC.Privileges.AlterTTL.Cluster](#rqsrs-006rbacprivilegesalterttlcluster)
-      * 5.21.4.5 [RQ.SRS-006.RBAC.Privileges.AlterTTL.TableEngines](#rqsrs-006rbacprivilegesalterttltableengines)
-    * 5.21.5 [Alter Settings](#alter-settings)
-      * 5.21.5.1 [RQ.SRS-006.RBAC.Privileges.AlterSettings](#rqsrs-006rbacprivilegesaltersettings)
-      * 5.21.5.2 [RQ.SRS-006.RBAC.Privileges.AlterSettings.Grant](#rqsrs-006rbacprivilegesaltersettingsgrant)
-      * 5.21.5.3 [RQ.SRS-006.RBAC.Privileges.AlterSettings.Revoke](#rqsrs-006rbacprivilegesaltersettingsrevoke)
-      * 5.21.5.4 [RQ.SRS-006.RBAC.Privileges.AlterSettings.Cluster](#rqsrs-006rbacprivilegesaltersettingscluster)
-      * 5.21.5.5 [RQ.SRS-006.RBAC.Privileges.AlterSettings.TableEngines](#rqsrs-006rbacprivilegesaltersettingstableengines)
-    * 5.21.6 [Alter Update](#alter-update)
-      * 5.21.6.1 [RQ.SRS-006.RBAC.Privileges.AlterUpdate](#rqsrs-006rbacprivilegesalterupdate)
-      * 5.21.6.2 [RQ.SRS-006.RBAC.Privileges.AlterUpdate.Grant](#rqsrs-006rbacprivilegesalterupdategrant)
-      * 5.21.6.3 [RQ.SRS-006.RBAC.Privileges.AlterUpdate.Revoke](#rqsrs-006rbacprivilegesalterupdaterevoke)
-      * 5.21.6.4 [RQ.SRS-006.RBAC.Privileges.AlterUpdate.TableEngines](#rqsrs-006rbacprivilegesalterupdatetableengines)
-    * 5.21.7 [Alter Delete](#alter-delete)
-      * 5.21.7.1 [RQ.SRS-006.RBAC.Privileges.AlterDelete](#rqsrs-006rbacprivilegesalterdelete)
-      * 5.21.7.2 [RQ.SRS-006.RBAC.Privileges.AlterDelete.Grant](#rqsrs-006rbacprivilegesalterdeletegrant)
-      * 5.21.7.3 [RQ.SRS-006.RBAC.Privileges.AlterDelete.Revoke](#rqsrs-006rbacprivilegesalterdeleterevoke)
-      * 5.21.7.4 [RQ.SRS-006.RBAC.Privileges.AlterDelete.TableEngines](#rqsrs-006rbacprivilegesalterdeletetableengines)
-    * 5.21.8 [Alter Freeze Partition](#alter-freeze-partition)
-      * 5.21.8.1 [RQ.SRS-006.RBAC.Privileges.AlterFreeze](#rqsrs-006rbacprivilegesalterfreeze)
-      * 5.21.8.2 [RQ.SRS-006.RBAC.Privileges.AlterFreeze.Grant](#rqsrs-006rbacprivilegesalterfreezegrant)
-      * 5.21.8.3 [RQ.SRS-006.RBAC.Privileges.AlterFreeze.Revoke](#rqsrs-006rbacprivilegesalterfreezerevoke)
-      * 5.21.8.4 [RQ.SRS-006.RBAC.Privileges.AlterFreeze.TableEngines](#rqsrs-006rbacprivilegesalterfreezetableengines)
-    * 5.21.9 [Alter Fetch Partition](#alter-fetch-partition)
-      * 5.21.9.1 [RQ.SRS-006.RBAC.Privileges.AlterFetch](#rqsrs-006rbacprivilegesalterfetch)
-      * 5.21.9.2 [RQ.SRS-006.RBAC.Privileges.AlterFetch.Grant](#rqsrs-006rbacprivilegesalterfetchgrant)
-      * 5.21.9.3 [RQ.SRS-006.RBAC.Privileges.AlterFetch.Revoke](#rqsrs-006rbacprivilegesalterfetchrevoke)
-      * 5.21.9.4 [RQ.SRS-006.RBAC.Privileges.AlterFetch.TableEngines](#rqsrs-006rbacprivilegesalterfetchtableengines)
-    * 5.21.10 [Alter Move Partition](#alter-move-partition)
-      * 5.21.10.1 [RQ.SRS-006.RBAC.Privileges.AlterMove](#rqsrs-006rbacprivilegesaltermove)
-      * 5.21.10.2 [RQ.SRS-006.RBAC.Privileges.AlterMove.Grant](#rqsrs-006rbacprivilegesaltermovegrant)
-      * 5.21.10.3 [RQ.SRS-006.RBAC.Privileges.AlterMove.Revoke](#rqsrs-006rbacprivilegesaltermoverevoke)
-      * 5.21.10.4 [RQ.SRS-006.RBAC.Privileges.AlterMove.TableEngines](#rqsrs-006rbacprivilegesaltermovetableengines)
-    * 5.21.11 [Alter Projection](#alter-projection)
-      * 5.21.11.1 [RQ.SRS-006.RBAC.Privileges.AlterProjection](#rqsrs-006rbacprivilegesalterprojection)
-      * 5.21.11.2 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Add](#rqsrs-006rbacprivilegesalterprojectionadd)
-      * 5.21.11.3 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Drop](#rqsrs-006rbacprivilegesalterprojectiondrop)
-      * 5.21.11.4 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Materialize](#rqsrs-006rbacprivilegesalterprojectionmaterialize)
-      * 5.21.11.5 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Clear](#rqsrs-006rbacprivilegesalterprojectionclear)
-    * 5.21.12 [Alter Database](#alter-database)
-      * 5.21.12.1 [RQ.SRS-006.RBAC.Privileges.AlterDatabase](#rqsrs-006rbacprivilegesalterdatabase)
-      * 5.21.12.2 [RQ.SRS-006.RBAC.Privileges.AlterDatabase.Settings](#rqsrs-006rbacprivilegesalterdatabasesettings)
-  * 5.22 [Create](#create)
-    * 5.22.1 [RQ.SRS-006.RBAC.Privileges.Create](#rqsrs-006rbacprivilegescreate)
-    * 5.22.2 [RQ.SRS-006.RBAC.Privileges.CreateTable](#rqsrs-006rbacprivilegescreatetable)
-    * 5.22.3 [RQ.SRS-006.RBAC.Privileges.CreateDatabase](#rqsrs-006rbacprivilegescreatedatabase)
-    * 5.22.4 [RQ.SRS-006.RBAC.Privileges.CreateDictionary](#rqsrs-006rbacprivilegescreatedictionary)
-    * 5.22.5 [RQ.SRS-006.RBAC.Privileges.CreateTemporaryTable](#rqsrs-006rbacprivilegescreatetemporarytable)
-    * 5.22.6 [RQ.SRS-006.RBAC.Privileges.CreateFunction](#rqsrs-006rbacprivilegescreatefunction)
-  * 5.23 [Attach](#attach)
-    * 5.23.1 [RQ.SRS-006.RBAC.Privileges.AttachDatabase](#rqsrs-006rbacprivilegesattachdatabase)
-    * 5.23.2 [RQ.SRS-006.RBAC.Privileges.AttachDictionary](#rqsrs-006rbacprivilegesattachdictionary)
-    * 5.23.3 [RQ.SRS-006.RBAC.Privileges.AttachTemporaryTable](#rqsrs-006rbacprivilegesattachtemporarytable)
-    * 5.23.4 [RQ.SRS-006.RBAC.Privileges.AttachTable](#rqsrs-006rbacprivilegesattachtable)
-  * 5.24 [Drop](#drop)
-    * 5.24.1 [RQ.SRS-006.RBAC.Privileges.Drop](#rqsrs-006rbacprivilegesdrop)
-    * 5.24.2 [RQ.SRS-006.RBAC.Privileges.DropTable](#rqsrs-006rbacprivilegesdroptable)
-    * 5.24.3 [RQ.SRS-006.RBAC.Privileges.DropDatabase](#rqsrs-006rbacprivilegesdropdatabase)
-    * 5.24.4 [RQ.SRS-006.RBAC.Privileges.DropDictionary](#rqsrs-006rbacprivilegesdropdictionary)
-    * 5.24.5 [RQ.SRS-006.RBAC.Privileges.DropFunction](#rqsrs-006rbacprivilegesdropfunction)
-  * 5.25 [Detach](#detach)
-    * 5.25.1 [RQ.SRS-006.RBAC.Privileges.DetachTable](#rqsrs-006rbacprivilegesdetachtable)
-    * 5.25.2 [RQ.SRS-006.RBAC.Privileges.DetachView](#rqsrs-006rbacprivilegesdetachview)
-    * 5.25.3 [RQ.SRS-006.RBAC.Privileges.DetachDatabase](#rqsrs-006rbacprivilegesdetachdatabase)
-    * 5.25.4 [RQ.SRS-006.RBAC.Privileges.DetachDictionary](#rqsrs-006rbacprivilegesdetachdictionary)
-  * 5.26 [Truncate](#truncate)
-    * 5.26.1 [RQ.SRS-006.RBAC.Privileges.Truncate](#rqsrs-006rbacprivilegestruncate)
-  * 5.27 [Optimize](#optimize)
-    * 5.27.1 [RQ.SRS-006.RBAC.Privileges.Optimize](#rqsrs-006rbacprivilegesoptimize)
-  * 5.28 [Kill Query](#kill-query)
-    * 5.28.1 [RQ.SRS-006.RBAC.Privileges.KillQuery](#rqsrs-006rbacprivilegeskillquery)
-  * 5.29 [Kill Mutation](#kill-mutation)
-    * 5.29.1 [RQ.SRS-006.RBAC.Privileges.KillMutation](#rqsrs-006rbacprivilegeskillmutation)
-    * 5.29.2 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterUpdate](#rqsrs-006rbacprivilegeskillmutationalterupdate)
-    * 5.29.3 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterDelete](#rqsrs-006rbacprivilegeskillmutationalterdelete)
-    * 5.29.4 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterDropColumn](#rqsrs-006rbacprivilegeskillmutationalterdropcolumn)
-  * 5.30 [Show](#show)
-    * 5.30.1 [RQ.SRS-006.RBAC.ShowTables.Privilege](#rqsrs-006rbacshowtablesprivilege)
-    * 5.30.2 [RQ.SRS-006.RBAC.ShowTables.RequiredPrivilege](#rqsrs-006rbacshowtablesrequiredprivilege)
-    * 5.30.3 [RQ.SRS-006.RBAC.ExistsTable.RequiredPrivilege](#rqsrs-006rbacexiststablerequiredprivilege)
-    * 5.30.4 [RQ.SRS-006.RBAC.CheckTable.RequiredPrivilege](#rqsrs-006rbacchecktablerequiredprivilege)
-    * 5.30.5 [RQ.SRS-006.RBAC.ShowDatabases.Privilege](#rqsrs-006rbacshowdatabasesprivilege)
-    * 5.30.6 [RQ.SRS-006.RBAC.ShowDatabases.RequiredPrivilege](#rqsrs-006rbacshowdatabasesrequiredprivilege)
-    * 5.30.7 [RQ.SRS-006.RBAC.ShowCreateDatabase.RequiredPrivilege](#rqsrs-006rbacshowcreatedatabaserequiredprivilege)
-    * 5.30.8 [RQ.SRS-006.RBAC.UseDatabase.RequiredPrivilege](#rqsrs-006rbacusedatabaserequiredprivilege)
-    * 5.30.9 [RQ.SRS-006.RBAC.ShowColumns.Privilege](#rqsrs-006rbacshowcolumnsprivilege)
-    * 5.30.10 [RQ.SRS-006.RBAC.ShowCreateTable.RequiredPrivilege](#rqsrs-006rbacshowcreatetablerequiredprivilege)
-    * 5.30.11 [RQ.SRS-006.RBAC.DescribeTable.RequiredPrivilege](#rqsrs-006rbacdescribetablerequiredprivilege)
-    * 5.30.12 [RQ.SRS-006.RBAC.ShowDictionaries.Privilege](#rqsrs-006rbacshowdictionariesprivilege)
-    * 5.30.13 [RQ.SRS-006.RBAC.ShowDictionaries.RequiredPrivilege](#rqsrs-006rbacshowdictionariesrequiredprivilege)
-    * 5.30.14 [RQ.SRS-006.RBAC.ShowCreateDictionary.RequiredPrivilege](#rqsrs-006rbacshowcreatedictionaryrequiredprivilege)
-    * 5.30.15 [RQ.SRS-006.RBAC.ExistsDictionary.RequiredPrivilege](#rqsrs-006rbacexistsdictionaryrequiredprivilege)
-  * 5.31 [Access Management](#access-management)
-    * 5.31.1 [RQ.SRS-006.RBAC.Privileges.CreateUser](#rqsrs-006rbacprivilegescreateuser)
-    * 5.31.2 [RQ.SRS-006.RBAC.Privileges.CreateUser.DefaultRole](#rqsrs-006rbacprivilegescreateuserdefaultrole)
-    * 5.31.3 [RQ.SRS-006.RBAC.Privileges.AlterUser](#rqsrs-006rbacprivilegesalteruser)
-    * 5.31.4 [RQ.SRS-006.RBAC.Privileges.DropUser](#rqsrs-006rbacprivilegesdropuser)
-    * 5.31.5 [RQ.SRS-006.RBAC.Privileges.CreateRole](#rqsrs-006rbacprivilegescreaterole)
-    * 5.31.6 [RQ.SRS-006.RBAC.Privileges.AlterRole](#rqsrs-006rbacprivilegesalterrole)
-    * 5.31.7 [RQ.SRS-006.RBAC.Privileges.DropRole](#rqsrs-006rbacprivilegesdroprole)
-    * 5.31.8 [RQ.SRS-006.RBAC.Privileges.CreateRowPolicy](#rqsrs-006rbacprivilegescreaterowpolicy)
-    * 5.31.9 [RQ.SRS-006.RBAC.Privileges.AlterRowPolicy](#rqsrs-006rbacprivilegesalterrowpolicy)
-    * 5.31.10 [RQ.SRS-006.RBAC.Privileges.DropRowPolicy](#rqsrs-006rbacprivilegesdroprowpolicy)
-    * 5.31.11 [RQ.SRS-006.RBAC.Privileges.CreateQuota](#rqsrs-006rbacprivilegescreatequota)
-    * 5.31.12 [RQ.SRS-006.RBAC.Privileges.AlterQuota](#rqsrs-006rbacprivilegesalterquota)
-    * 5.31.13 [RQ.SRS-006.RBAC.Privileges.DropQuota](#rqsrs-006rbacprivilegesdropquota)
-    * 5.31.14 [RQ.SRS-006.RBAC.Privileges.CreateSettingsProfile](#rqsrs-006rbacprivilegescreatesettingsprofile)
-    * 5.31.15 [RQ.SRS-006.RBAC.Privileges.AlterSettingsProfile](#rqsrs-006rbacprivilegesaltersettingsprofile)
-    * 5.31.16 [RQ.SRS-006.RBAC.Privileges.DropSettingsProfile](#rqsrs-006rbacprivilegesdropsettingsprofile)
-    * 5.31.17 [RQ.SRS-006.RBAC.Privileges.RoleAdmin](#rqsrs-006rbacprivilegesroleadmin)
-    * 5.31.18 [Show Access](#show-access)
-      * 5.31.18.1 [RQ.SRS-006.RBAC.ShowUsers.Privilege](#rqsrs-006rbacshowusersprivilege)
-      * 5.31.18.2 [RQ.SRS-006.RBAC.ShowUsers.RequiredPrivilege](#rqsrs-006rbacshowusersrequiredprivilege)
-      * 5.31.18.3 [RQ.SRS-006.RBAC.ShowCreateUser.RequiredPrivilege](#rqsrs-006rbacshowcreateuserrequiredprivilege)
-      * 5.31.18.4 [RQ.SRS-006.RBAC.ShowRoles.Privilege](#rqsrs-006rbacshowrolesprivilege)
-      * 5.31.18.5 [RQ.SRS-006.RBAC.ShowRoles.RequiredPrivilege](#rqsrs-006rbacshowrolesrequiredprivilege)
-      * 5.31.18.6 [RQ.SRS-006.RBAC.ShowCreateRole.RequiredPrivilege](#rqsrs-006rbacshowcreaterolerequiredprivilege)
-      * 5.31.18.7 [RQ.SRS-006.RBAC.ShowRowPolicies.Privilege](#rqsrs-006rbacshowrowpoliciesprivilege)
-      * 5.31.18.8 [RQ.SRS-006.RBAC.ShowRowPolicies.RequiredPrivilege](#rqsrs-006rbacshowrowpoliciesrequiredprivilege)
-      * 5.31.18.9 [RQ.SRS-006.RBAC.ShowCreateRowPolicy.RequiredPrivilege](#rqsrs-006rbacshowcreaterowpolicyrequiredprivilege)
-      * 5.31.18.10 [RQ.SRS-006.RBAC.ShowQuotas.Privilege](#rqsrs-006rbacshowquotasprivilege)
-      * 5.31.18.11 [RQ.SRS-006.RBAC.ShowQuotas.RequiredPrivilege](#rqsrs-006rbacshowquotasrequiredprivilege)
-      * 5.31.18.12 [RQ.SRS-006.RBAC.ShowCreateQuota.RequiredPrivilege](#rqsrs-006rbacshowcreatequotarequiredprivilege)
-      * 5.31.18.13 [RQ.SRS-006.RBAC.ShowSettingsProfiles.Privilege](#rqsrs-006rbacshowsettingsprofilesprivilege)
-      * 5.31.18.14 [RQ.SRS-006.RBAC.ShowSettingsProfiles.RequiredPrivilege](#rqsrs-006rbacshowsettingsprofilesrequiredprivilege)
-      * 5.31.18.15 [RQ.SRS-006.RBAC.ShowCreateSettingsProfile.RequiredPrivilege](#rqsrs-006rbacshowcreatesettingsprofilerequiredprivilege)
-  * 5.32 [dictGet](#dictget)
-    * 5.32.1 [RQ.SRS-006.RBAC.dictGet.Privilege](#rqsrs-006rbacdictgetprivilege)
-    * 5.32.2 [RQ.SRS-006.RBAC.dictGet.RequiredPrivilege](#rqsrs-006rbacdictgetrequiredprivilege)
-    * 5.32.3 [RQ.SRS-006.RBAC.dictGet.Type.RequiredPrivilege](#rqsrs-006rbacdictgettyperequiredprivilege)
-    * 5.32.4 [RQ.SRS-006.RBAC.dictGet.OrDefault.RequiredPrivilege](#rqsrs-006rbacdictgetordefaultrequiredprivilege)
-    * 5.32.5 [RQ.SRS-006.RBAC.dictHas.RequiredPrivilege](#rqsrs-006rbacdicthasrequiredprivilege)
-    * 5.32.6 [RQ.SRS-006.RBAC.dictGetHierarchy.RequiredPrivilege](#rqsrs-006rbacdictgethierarchyrequiredprivilege)
-    * 5.32.7 [RQ.SRS-006.RBAC.dictIsIn.RequiredPrivilege](#rqsrs-006rbacdictisinrequiredprivilege)
-  * 5.33 [Introspection](#introspection)
-    * 5.33.1 [RQ.SRS-006.RBAC.Privileges.Introspection](#rqsrs-006rbacprivilegesintrospection)
-    * 5.33.2 [RQ.SRS-006.RBAC.Privileges.Introspection.addressToLine](#rqsrs-006rbacprivilegesintrospectionaddresstoline)
-    * 5.33.3 [RQ.SRS-006.RBAC.Privileges.Introspection.addressToLineWithInlines](#rqsrs-006rbacprivilegesintrospectionaddresstolinewithinlines)
-    * 5.33.4 [RQ.SRS-006.RBAC.Privileges.Introspection.addressToSymbol](#rqsrs-006rbacprivilegesintrospectionaddresstosymbol)
-    * 5.33.5 [RQ.SRS-006.RBAC.Privileges.Introspection.demangle](#rqsrs-006rbacprivilegesintrospectiondemangle)
-  * 5.34 [System](#system)
-    * 5.34.1 [RQ.SRS-006.RBAC.Privileges.System.Shutdown](#rqsrs-006rbacprivilegessystemshutdown)
-    * 5.34.2 [RQ.SRS-006.RBAC.Privileges.System.DropCache](#rqsrs-006rbacprivilegessystemdropcache)
-    * 5.34.3 [RQ.SRS-006.RBAC.Privileges.System.DropCache.DNS](#rqsrs-006rbacprivilegessystemdropcachedns)
-    * 5.34.4 [RQ.SRS-006.RBAC.Privileges.System.DropCache.Mark](#rqsrs-006rbacprivilegessystemdropcachemark)
-    * 5.34.5 [RQ.SRS-006.RBAC.Privileges.System.DropCache.Uncompressed](#rqsrs-006rbacprivilegessystemdropcacheuncompressed)
-    * 5.34.6 [RQ.SRS-006.RBAC.Privileges.System.DropCache.Mmap](#rqsrs-006rbacprivilegessystemdropcachemmap)
-    * 5.34.7 [RQ.SRS-006.RBAC.Privileges.System.DropCache.CompiledExpression](#rqsrs-006rbacprivilegessystemdropcachecompiledexpression)
-    * 5.34.8 [RQ.SRS-006.RBAC.Privileges.System.Reload](#rqsrs-006rbacprivilegessystemreload)
-    * 5.34.9 [RQ.SRS-006.RBAC.Privileges.System.Reload.Config](#rqsrs-006rbacprivilegessystemreloadconfig)
-    * 5.34.10 [RQ.SRS-006.RBAC.Privileges.System.Reload.Dictionary](#rqsrs-006rbacprivilegessystemreloaddictionary)
-    * 5.34.11 [RQ.SRS-006.RBAC.Privileges.System.Reload.Dictionaries](#rqsrs-006rbacprivilegessystemreloaddictionaries)
-    * 5.34.12 [RQ.SRS-006.RBAC.Privileges.System.Reload.EmbeddedDictionaries](#rqsrs-006rbacprivilegessystemreloadembeddeddictionaries)
-    * 5.34.13 [RQ.SRS-006.RBAC.Privileges.System.Reload.Symbols](#rqsrs-006rbacprivilegessystemreloadsymbols)
-    * 5.34.14 [RQ.SRS-006.RBAC.Privileges.System.Reload.Function](#rqsrs-006rbacprivilegessystemreloadfunction)
-    * 5.34.15 [RQ.SRS-006.RBAC.Privileges.System.RestartDisk](#rqsrs-006rbacprivilegessystemrestartdisk)
-    * 5.34.16 [RQ.SRS-006.RBAC.Privileges.System.ThreadFuzzer](#rqsrs-006rbacprivilegessystemthreadfuzzer)
-    * 5.34.17 [RQ.SRS-006.RBAC.Privileges.System.Merges](#rqsrs-006rbacprivilegessystemmerges)
-    * 5.34.18 [RQ.SRS-006.RBAC.Privileges.System.TTLMerges](#rqsrs-006rbacprivilegessystemttlmerges)
-    * 5.34.19 [RQ.SRS-006.RBAC.Privileges.System.Fetches](#rqsrs-006rbacprivilegessystemfetches)
-    * 5.34.20 [RQ.SRS-006.RBAC.Privileges.System.Moves](#rqsrs-006rbacprivilegessystemmoves)
-    * 5.34.21 [RQ.SRS-006.RBAC.Privileges.System.Sends](#rqsrs-006rbacprivilegessystemsends)
-    * 5.34.22 [RQ.SRS-006.RBAC.Privileges.System.Sends.Distributed](#rqsrs-006rbacprivilegessystemsendsdistributed)
-    * 5.34.23 [RQ.SRS-006.RBAC.Privileges.System.Sends.Replicated](#rqsrs-006rbacprivilegessystemsendsreplicated)
-    * 5.34.24 [RQ.SRS-006.RBAC.Privileges.System.ReplicationQueues](#rqsrs-006rbacprivilegessystemreplicationqueues)
-    * 5.34.25 [RQ.SRS-006.RBAC.Privileges.System.SyncReplica](#rqsrs-006rbacprivilegessystemsyncreplica)
-    * 5.34.26 [RQ.SRS-006.RBAC.Privileges.System.RestartReplica](#rqsrs-006rbacprivilegessystemrestartreplica)
-    * 5.34.27 [RQ.SRS-006.RBAC.Privileges.System.DropReplica](#rqsrs-006rbacprivilegessystemdropreplica)
-    * 5.34.28 [RQ.SRS-006.RBAC.Privileges.System.RestoreReplica](#rqsrs-006rbacprivilegessystemrestorereplica)
-    * 5.34.29 [RQ.SRS-006.RBAC.Privileges.System.Flush](#rqsrs-006rbacprivilegessystemflush)
-    * 5.34.30 [RQ.SRS-006.RBAC.Privileges.System.Flush.Distributed](#rqsrs-006rbacprivilegessystemflushdistributed)
-    * 5.34.31 [RQ.SRS-006.RBAC.Privileges.System.Flush.Logs](#rqsrs-006rbacprivilegessystemflushlogs)
-  * 5.35 [Sources](#sources)
-    * 5.35.1 [RQ.SRS-006.RBAC.Privileges.Sources](#rqsrs-006rbacprivilegessources)
-    * 5.35.2 [RQ.SRS-006.RBAC.Privileges.Sources.File](#rqsrs-006rbacprivilegessourcesfile)
-    * 5.35.3 [RQ.SRS-006.RBAC.Privileges.Sources.URL](#rqsrs-006rbacprivilegessourcesurl)
-    * 5.35.4 [RQ.SRS-006.RBAC.Privileges.Sources.Remote](#rqsrs-006rbacprivilegessourcesremote)
-    * 5.35.5 [RQ.SRS-006.RBAC.Privileges.Sources.MySQL](#rqsrs-006rbacprivilegessourcesmysql)
-    * 5.35.6 [RQ.SRS-006.RBAC.Privileges.Sources.ODBC](#rqsrs-006rbacprivilegessourcesodbc)
-    * 5.35.7 [RQ.SRS-006.RBAC.Privileges.Sources.JDBC](#rqsrs-006rbacprivilegessourcesjdbc)
-    * 5.35.8 [RQ.SRS-006.RBAC.Privileges.Sources.HDFS](#rqsrs-006rbacprivilegessourceshdfs)
-    * 5.35.9 [RQ.SRS-006.RBAC.Privileges.Sources.S3](#rqsrs-006rbacprivilegessourcess3)
-    * 5.35.10 [RQ.SRS-006.RBAC.Privileges.Sources.Mongo](#rqsrs-006rbacprivilegessourcesmongo)
-    * 5.35.11 [RQ.SRS-006.RBAC.Privileges.Sources.Postgres](#rqsrs-006rbacprivilegessourcespostgres)
-    * 5.35.12 [RQ.SRS-006.RBAC.Privileges.Sources.Sqlite](#rqsrs-006rbacprivilegessourcessqlite)
-  * 5.36 [RQ.SRS-006.RBAC.Privileges.GrantOption](#rqsrs-006rbacprivilegesgrantoption)
-  * 5.37 [RQ.SRS-006.RBAC.Privileges.All](#rqsrs-006rbacprivilegesall)
-  * 5.38 [RQ.SRS-006.RBAC.Privileges.RoleAll](#rqsrs-006rbacprivilegesroleall)
-  * 5.39 [RQ.SRS-006.RBAC.Privileges.None](#rqsrs-006rbacprivilegesnone)
-  * 5.40 [RQ.SRS-006.RBAC.Privileges.AdminOption](#rqsrs-006rbacprivilegesadminoption)
+    * 5.1 [Generic](#generic)
+        * 5.1.1 [RQ.SRS-006.RBAC](#rqsrs-006rbac)
+    * 5.2 [Login](#login)
+        * 5.2.1 [RQ.SRS-006.RBAC.Login](#rqsrs-006rbaclogin)
+        * 5.2.2 [RQ.SRS-006.RBAC.Login.DefaultUser](#rqsrs-006rbaclogindefaultuser)
+    * 5.3 [User](#user)
+        * 5.3.1 [RQ.SRS-006.RBAC.User](#rqsrs-006rbacuser)
+        * 5.3.2 [RQ.SRS-006.RBAC.User.Roles](#rqsrs-006rbacuserroles)
+        * 5.3.3 [RQ.SRS-006.RBAC.User.Privileges](#rqsrs-006rbacuserprivileges)
+        * 5.3.4 [RQ.SRS-006.RBAC.User.Variables](#rqsrs-006rbacuservariables)
+        * 5.3.5 [RQ.SRS-006.RBAC.User.Variables.Constraints](#rqsrs-006rbacuservariablesconstraints)
+        * 5.3.6 [RQ.SRS-006.RBAC.User.SettingsProfile](#rqsrs-006rbacusersettingsprofile)
+        * 5.3.7 [RQ.SRS-006.RBAC.User.Quotas](#rqsrs-006rbacuserquotas)
+        * 5.3.8 [RQ.SRS-006.RBAC.User.RowPolicies](#rqsrs-006rbacuserrowpolicies)
+        * 5.3.9 [RQ.SRS-006.RBAC.User.DefaultRole](#rqsrs-006rbacuserdefaultrole)
+        * 5.3.10 [RQ.SRS-006.RBAC.User.RoleSelection](#rqsrs-006rbacuserroleselection)
+        * 5.3.11 [RQ.SRS-006.RBAC.User.ShowCreate](#rqsrs-006rbacusershowcreate)
+        * 5.3.12 [RQ.SRS-006.RBAC.User.ShowPrivileges](#rqsrs-006rbacusershowprivileges)
+        * 5.3.13 [RQ.SRS-006.RBAC.User.Use.DefaultRole](#rqsrs-006rbacuserusedefaultrole)
+        * 5.3.14 [RQ.SRS-006.RBAC.User.Use.AllRolesWhenNoDefaultRole](#rqsrs-006rbacuseruseallroleswhennodefaultrole)
+        * 5.3.15 [Create User](#create-user)
+            * 5.3.15.1 [RQ.SRS-006.RBAC.User.Create](#rqsrs-006rbacusercreate)
+            * 5.3.15.2 [RQ.SRS-006.RBAC.User.Create.IfNotExists](#rqsrs-006rbacusercreateifnotexists)
+            * 5.3.15.3 [RQ.SRS-006.RBAC.User.Create.Replace](#rqsrs-006rbacusercreatereplace)
+            * 5.3.15.4 [RQ.SRS-006.RBAC.User.Create.Password.NoPassword](#rqsrs-006rbacusercreatepasswordnopassword)
+            * 5.3.15.5 [RQ.SRS-006.RBAC.User.Create.Password.NoPassword.Login](#rqsrs-006rbacusercreatepasswordnopasswordlogin)
+            * 5.3.15.6 [RQ.SRS-006.RBAC.User.Create.Password.PlainText](#rqsrs-006rbacusercreatepasswordplaintext)
+            * 5.3.15.7 [RQ.SRS-006.RBAC.User.Create.Password.PlainText.Login](#rqsrs-006rbacusercreatepasswordplaintextlogin)
+            * 5.3.15.8 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Password](#rqsrs-006rbacusercreatepasswordsha256password)
+            * 5.3.15.9 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Password.Login](#rqsrs-006rbacusercreatepasswordsha256passwordlogin)
+            * 5.3.15.10 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Hash](#rqsrs-006rbacusercreatepasswordsha256hash)
+            * 5.3.15.11 [RQ.SRS-006.RBAC.User.Create.Password.Sha256Hash.Login](#rqsrs-006rbacusercreatepasswordsha256hashlogin)
+            * 5.3.15.12 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Password](#rqsrs-006rbacusercreatepassworddoublesha1password)
+            * 5.3.15.13 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Password.Login](#rqsrs-006rbacusercreatepassworddoublesha1passwordlogin)
+            * 5.3.15.14 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Hash](#rqsrs-006rbacusercreatepassworddoublesha1hash)
+            * 5.3.15.15 [RQ.SRS-006.RBAC.User.Create.Password.DoubleSha1Hash.Login](#rqsrs-006rbacusercreatepassworddoublesha1hashlogin)
+            * 5.3.15.16 [RQ.SRS-006.RBAC.User.Create.Host.Name](#rqsrs-006rbacusercreatehostname)
+            * 5.3.15.17 [RQ.SRS-006.RBAC.User.Create.Host.Regexp](#rqsrs-006rbacusercreatehostregexp)
+            * 5.3.15.18 [RQ.SRS-006.RBAC.User.Create.Host.IP](#rqsrs-006rbacusercreatehostip)
+            * 5.3.15.19 [RQ.SRS-006.RBAC.User.Create.Host.Any](#rqsrs-006rbacusercreatehostany)
+            * 5.3.15.20 [RQ.SRS-006.RBAC.User.Create.Host.None](#rqsrs-006rbacusercreatehostnone)
+            * 5.3.15.21 [RQ.SRS-006.RBAC.User.Create.Host.Local](#rqsrs-006rbacusercreatehostlocal)
+            * 5.3.15.22 [RQ.SRS-006.RBAC.User.Create.Host.Like](#rqsrs-006rbacusercreatehostlike)
+            * 5.3.15.23 [RQ.SRS-006.RBAC.User.Create.Host.Default](#rqsrs-006rbacusercreatehostdefault)
+            * 5.3.15.24 [RQ.SRS-006.RBAC.User.Create.DefaultRole](#rqsrs-006rbacusercreatedefaultrole)
+            * 5.3.15.25 [RQ.SRS-006.RBAC.User.Create.DefaultRole.None](#rqsrs-006rbacusercreatedefaultrolenone)
+            * 5.3.15.26 [RQ.SRS-006.RBAC.User.Create.DefaultRole.All](#rqsrs-006rbacusercreatedefaultroleall)
+            * 5.3.15.27 [RQ.SRS-006.RBAC.User.Create.Settings](#rqsrs-006rbacusercreatesettings)
+            * 5.3.15.28 [RQ.SRS-006.RBAC.User.Create.OnCluster](#rqsrs-006rbacusercreateoncluster)
+            * 5.3.15.29 [RQ.SRS-006.RBAC.User.Create.Syntax](#rqsrs-006rbacusercreatesyntax)
+        * 5.3.16 [Alter User](#alter-user)
+            * 5.3.16.1 [RQ.SRS-006.RBAC.User.Alter](#rqsrs-006rbacuseralter)
+            * 5.3.16.2 [RQ.SRS-006.RBAC.User.Alter.OrderOfEvaluation](#rqsrs-006rbacuseralterorderofevaluation)
+            * 5.3.16.3 [RQ.SRS-006.RBAC.User.Alter.IfExists](#rqsrs-006rbacuseralterifexists)
+            * 5.3.16.4 [RQ.SRS-006.RBAC.User.Alter.Cluster](#rqsrs-006rbacuseraltercluster)
+            * 5.3.16.5 [RQ.SRS-006.RBAC.User.Alter.Rename](#rqsrs-006rbacuseralterrename)
+            * 5.3.16.6 [RQ.SRS-006.RBAC.User.Alter.Password.PlainText](#rqsrs-006rbacuseralterpasswordplaintext)
+            * 5.3.16.7 [RQ.SRS-006.RBAC.User.Alter.Password.Sha256Password](#rqsrs-006rbacuseralterpasswordsha256password)
+            * 5.3.16.8 [RQ.SRS-006.RBAC.User.Alter.Password.DoubleSha1Password](#rqsrs-006rbacuseralterpassworddoublesha1password)
+            * 5.3.16.9 [RQ.SRS-006.RBAC.User.Alter.Host.AddDrop](#rqsrs-006rbacuseralterhostadddrop)
+            * 5.3.16.10 [RQ.SRS-006.RBAC.User.Alter.Host.Local](#rqsrs-006rbacuseralterhostlocal)
+            * 5.3.16.11 [RQ.SRS-006.RBAC.User.Alter.Host.Name](#rqsrs-006rbacuseralterhostname)
+            * 5.3.16.12 [RQ.SRS-006.RBAC.User.Alter.Host.Regexp](#rqsrs-006rbacuseralterhostregexp)
+            * 5.3.16.13 [RQ.SRS-006.RBAC.User.Alter.Host.IP](#rqsrs-006rbacuseralterhostip)
+            * 5.3.16.14 [RQ.SRS-006.RBAC.User.Alter.Host.Like](#rqsrs-006rbacuseralterhostlike)
+            * 5.3.16.15 [RQ.SRS-006.RBAC.User.Alter.Host.Any](#rqsrs-006rbacuseralterhostany)
+            * 5.3.16.16 [RQ.SRS-006.RBAC.User.Alter.Host.None](#rqsrs-006rbacuseralterhostnone)
+            * 5.3.16.17 [RQ.SRS-006.RBAC.User.Alter.DefaultRole](#rqsrs-006rbacuseralterdefaultrole)
+            * 5.3.16.18 [RQ.SRS-006.RBAC.User.Alter.DefaultRole.All](#rqsrs-006rbacuseralterdefaultroleall)
+            * 5.3.16.19 [RQ.SRS-006.RBAC.User.Alter.DefaultRole.AllExcept](#rqsrs-006rbacuseralterdefaultroleallexcept)
+            * 5.3.16.20 [RQ.SRS-006.RBAC.User.Alter.Settings](#rqsrs-006rbacuseraltersettings)
+            * 5.3.16.21 [RQ.SRS-006.RBAC.User.Alter.Settings.Min](#rqsrs-006rbacuseraltersettingsmin)
+            * 5.3.16.22 [RQ.SRS-006.RBAC.User.Alter.Settings.Max](#rqsrs-006rbacuseraltersettingsmax)
+            * 5.3.16.23 [RQ.SRS-006.RBAC.User.Alter.Settings.Profile](#rqsrs-006rbacuseraltersettingsprofile)
+            * 5.3.16.24 [RQ.SRS-006.RBAC.User.Alter.Syntax](#rqsrs-006rbacuseraltersyntax)
+        * 5.3.17 [Show Create User](#show-create-user)
+            * 5.3.17.1 [RQ.SRS-006.RBAC.User.ShowCreateUser](#rqsrs-006rbacusershowcreateuser)
+            * 5.3.17.2 [RQ.SRS-006.RBAC.User.ShowCreateUser.For](#rqsrs-006rbacusershowcreateuserfor)
+            * 5.3.17.3 [RQ.SRS-006.RBAC.User.ShowCreateUser.Syntax](#rqsrs-006rbacusershowcreateusersyntax)
+        * 5.3.18 [Drop User](#drop-user)
+            * 5.3.18.1 [RQ.SRS-006.RBAC.User.Drop](#rqsrs-006rbacuserdrop)
+            * 5.3.18.2 [RQ.SRS-006.RBAC.User.Drop.IfExists](#rqsrs-006rbacuserdropifexists)
+            * 5.3.18.3 [RQ.SRS-006.RBAC.User.Drop.OnCluster](#rqsrs-006rbacuserdroponcluster)
+            * 5.3.18.4 [RQ.SRS-006.RBAC.User.Drop.Syntax](#rqsrs-006rbacuserdropsyntax)
+    * 5.4 [Role](#role)
+        * 5.4.1 [RQ.SRS-006.RBAC.Role](#rqsrs-006rbacrole)
+        * 5.4.2 [RQ.SRS-006.RBAC.Role.Privileges](#rqsrs-006rbacroleprivileges)
+        * 5.4.3 [RQ.SRS-006.RBAC.Role.Variables](#rqsrs-006rbacrolevariables)
+        * 5.4.4 [RQ.SRS-006.RBAC.Role.SettingsProfile](#rqsrs-006rbacrolesettingsprofile)
+        * 5.4.5 [RQ.SRS-006.RBAC.Role.Quotas](#rqsrs-006rbacrolequotas)
+        * 5.4.6 [RQ.SRS-006.RBAC.Role.RowPolicies](#rqsrs-006rbacrolerowpolicies)
+        * 5.4.7 [Create Role](#create-role)
+            * 5.4.7.1 [RQ.SRS-006.RBAC.Role.Create](#rqsrs-006rbacrolecreate)
+            * 5.4.7.2 [RQ.SRS-006.RBAC.Role.Create.IfNotExists](#rqsrs-006rbacrolecreateifnotexists)
+            * 5.4.7.3 [RQ.SRS-006.RBAC.Role.Create.Replace](#rqsrs-006rbacrolecreatereplace)
+            * 5.4.7.4 [RQ.SRS-006.RBAC.Role.Create.Settings](#rqsrs-006rbacrolecreatesettings)
+            * 5.4.7.5 [RQ.SRS-006.RBAC.Role.Create.Syntax](#rqsrs-006rbacrolecreatesyntax)
+        * 5.4.8 [Alter Role](#alter-role)
+            * 5.4.8.1 [RQ.SRS-006.RBAC.Role.Alter](#rqsrs-006rbacrolealter)
+            * 5.4.8.2 [RQ.SRS-006.RBAC.Role.Alter.IfExists](#rqsrs-006rbacrolealterifexists)
+            * 5.4.8.3 [RQ.SRS-006.RBAC.Role.Alter.Cluster](#rqsrs-006rbacrolealtercluster)
+            * 5.4.8.4 [RQ.SRS-006.RBAC.Role.Alter.Rename](#rqsrs-006rbacrolealterrename)
+            * 5.4.8.5 [RQ.SRS-006.RBAC.Role.Alter.Settings](#rqsrs-006rbacrolealtersettings)
+            * 5.4.8.6 [RQ.SRS-006.RBAC.Role.Alter.Syntax](#rqsrs-006rbacrolealtersyntax)
+        * 5.4.9 [Drop Role](#drop-role)
+            * 5.4.9.1 [RQ.SRS-006.RBAC.Role.Drop](#rqsrs-006rbacroledrop)
+            * 5.4.9.2 [RQ.SRS-006.RBAC.Role.Drop.IfExists](#rqsrs-006rbacroledropifexists)
+            * 5.4.9.3 [RQ.SRS-006.RBAC.Role.Drop.Cluster](#rqsrs-006rbacroledropcluster)
+            * 5.4.9.4 [RQ.SRS-006.RBAC.Role.Drop.Syntax](#rqsrs-006rbacroledropsyntax)
+        * 5.4.10 [Show Create Role](#show-create-role)
+            * 5.4.10.1 [RQ.SRS-006.RBAC.Role.ShowCreate](#rqsrs-006rbacroleshowcreate)
+            * 5.4.10.2 [RQ.SRS-006.RBAC.Role.ShowCreate.Syntax](#rqsrs-006rbacroleshowcreatesyntax)
+    * 5.5 [Partial Revokes](#partial-revokes)
+        * 5.5.1 [RQ.SRS-006.RBAC.PartialRevokes](#rqsrs-006rbacpartialrevokes)
+        * 5.5.2 [RQ.SRS-006.RBAC.PartialRevoke.Syntax](#rqsrs-006rbacpartialrevokesyntax)
+    * 5.6 [Settings Profile](#settings-profile)
+        * 5.6.1 [RQ.SRS-006.RBAC.SettingsProfile](#rqsrs-006rbacsettingsprofile)
+        * 5.6.2 [RQ.SRS-006.RBAC.SettingsProfile.Constraints](#rqsrs-006rbacsettingsprofileconstraints)
+        * 5.6.3 [Create Settings Profile](#create-settings-profile)
+            * 5.6.3.1 [RQ.SRS-006.RBAC.SettingsProfile.Create](#rqsrs-006rbacsettingsprofilecreate)
+            * 5.6.3.2 [RQ.SRS-006.RBAC.SettingsProfile.Create.IfNotExists](#rqsrs-006rbacsettingsprofilecreateifnotexists)
+            * 5.6.3.3 [RQ.SRS-006.RBAC.SettingsProfile.Create.Replace](#rqsrs-006rbacsettingsprofilecreatereplace)
+            * 5.6.3.4 [RQ.SRS-006.RBAC.SettingsProfile.Create.Variables](#rqsrs-006rbacsettingsprofilecreatevariables)
+            * 5.6.3.5 [RQ.SRS-006.RBAC.SettingsProfile.Create.Variables.Value](#rqsrs-006rbacsettingsprofilecreatevariablesvalue)
+            * 5.6.3.6 [RQ.SRS-006.RBAC.SettingsProfile.Create.Variables.Constraints](#rqsrs-006rbacsettingsprofilecreatevariablesconstraints)
+            * 5.6.3.7 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment](#rqsrs-006rbacsettingsprofilecreateassignment)
+            * 5.6.3.8 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment.None](#rqsrs-006rbacsettingsprofilecreateassignmentnone)
+            * 5.6.3.9 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment.All](#rqsrs-006rbacsettingsprofilecreateassignmentall)
+            * 5.6.3.10 [RQ.SRS-006.RBAC.SettingsProfile.Create.Assignment.AllExcept](#rqsrs-006rbacsettingsprofilecreateassignmentallexcept)
+            * 5.6.3.11 [RQ.SRS-006.RBAC.SettingsProfile.Create.Inherit](#rqsrs-006rbacsettingsprofilecreateinherit)
+            * 5.6.3.12 [RQ.SRS-006.RBAC.SettingsProfile.Create.OnCluster](#rqsrs-006rbacsettingsprofilecreateoncluster)
+            * 5.6.3.13 [RQ.SRS-006.RBAC.SettingsProfile.Create.Syntax](#rqsrs-006rbacsettingsprofilecreatesyntax)
+        * 5.6.4 [Alter Settings Profile](#alter-settings-profile)
+            * 5.6.4.1 [RQ.SRS-006.RBAC.SettingsProfile.Alter](#rqsrs-006rbacsettingsprofilealter)
+            * 5.6.4.2 [RQ.SRS-006.RBAC.SettingsProfile.Alter.IfExists](#rqsrs-006rbacsettingsprofilealterifexists)
+            * 5.6.4.3 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Rename](#rqsrs-006rbacsettingsprofilealterrename)
+            * 5.6.4.4 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables](#rqsrs-006rbacsettingsprofilealtervariables)
+            * 5.6.4.5 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables.Value](#rqsrs-006rbacsettingsprofilealtervariablesvalue)
+            * 5.6.4.6 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables.Constraints](#rqsrs-006rbacsettingsprofilealtervariablesconstraints)
+            * 5.6.4.7 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment](#rqsrs-006rbacsettingsprofilealterassignment)
+            * 5.6.4.8 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.None](#rqsrs-006rbacsettingsprofilealterassignmentnone)
+            * 5.6.4.9 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.All](#rqsrs-006rbacsettingsprofilealterassignmentall)
+            * 5.6.4.10 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.AllExcept](#rqsrs-006rbacsettingsprofilealterassignmentallexcept)
+            * 5.6.4.11 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.Inherit](#rqsrs-006rbacsettingsprofilealterassignmentinherit)
+            * 5.6.4.12 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Assignment.OnCluster](#rqsrs-006rbacsettingsprofilealterassignmentoncluster)
+            * 5.6.4.13 [RQ.SRS-006.RBAC.SettingsProfile.Alter.Syntax](#rqsrs-006rbacsettingsprofilealtersyntax)
+        * 5.6.5 [Drop Settings Profile](#drop-settings-profile)
+            * 5.6.5.1 [RQ.SRS-006.RBAC.SettingsProfile.Drop](#rqsrs-006rbacsettingsprofiledrop)
+            * 5.6.5.2 [RQ.SRS-006.RBAC.SettingsProfile.Drop.IfExists](#rqsrs-006rbacsettingsprofiledropifexists)
+            * 5.6.5.3 [RQ.SRS-006.RBAC.SettingsProfile.Drop.OnCluster](#rqsrs-006rbacsettingsprofiledroponcluster)
+            * 5.6.5.4 [RQ.SRS-006.RBAC.SettingsProfile.Drop.Syntax](#rqsrs-006rbacsettingsprofiledropsyntax)
+        * 5.6.6 [Show Create Settings Profile](#show-create-settings-profile)
+            * 5.6.6.1 [RQ.SRS-006.RBAC.SettingsProfile.ShowCreateSettingsProfile](#rqsrs-006rbacsettingsprofileshowcreatesettingsprofile)
+    * 5.7 [Quotas](#quotas)
+        * 5.7.1 [RQ.SRS-006.RBAC.Quotas](#rqsrs-006rbacquotas)
+        * 5.7.2 [RQ.SRS-006.RBAC.Quotas.Keyed](#rqsrs-006rbacquotaskeyed)
+        * 5.7.3 [RQ.SRS-006.RBAC.Quotas.Queries](#rqsrs-006rbacquotasqueries)
+        * 5.7.4 [RQ.SRS-006.RBAC.Quotas.Errors](#rqsrs-006rbacquotaserrors)
+        * 5.7.5 [RQ.SRS-006.RBAC.Quotas.ResultRows](#rqsrs-006rbacquotasresultrows)
+        * 5.7.6 [RQ.SRS-006.RBAC.Quotas.ReadRows](#rqsrs-006rbacquotasreadrows)
+        * 5.7.7 [RQ.SRS-006.RBAC.Quotas.ResultBytes](#rqsrs-006rbacquotasresultbytes)
+        * 5.7.8 [RQ.SRS-006.RBAC.Quotas.ReadBytes](#rqsrs-006rbacquotasreadbytes)
+        * 5.7.9 [RQ.SRS-006.RBAC.Quotas.ExecutionTime](#rqsrs-006rbacquotasexecutiontime)
+        * 5.7.10 [Create Quotas](#create-quotas)
+            * 5.7.10.1 [RQ.SRS-006.RBAC.Quota.Create](#rqsrs-006rbacquotacreate)
+            * 5.7.10.2 [RQ.SRS-006.RBAC.Quota.Create.IfNotExists](#rqsrs-006rbacquotacreateifnotexists)
+            * 5.7.10.3 [RQ.SRS-006.RBAC.Quota.Create.Replace](#rqsrs-006rbacquotacreatereplace)
+            * 5.7.10.4 [RQ.SRS-006.RBAC.Quota.Create.Cluster](#rqsrs-006rbacquotacreatecluster)
+            * 5.7.10.5 [RQ.SRS-006.RBAC.Quota.Create.Interval](#rqsrs-006rbacquotacreateinterval)
+            * 5.7.10.6 [RQ.SRS-006.RBAC.Quota.Create.Interval.Randomized](#rqsrs-006rbacquotacreateintervalrandomized)
+            * 5.7.10.7 [RQ.SRS-006.RBAC.Quota.Create.Queries](#rqsrs-006rbacquotacreatequeries)
+            * 5.7.10.8 [RQ.SRS-006.RBAC.Quota.Create.Errors](#rqsrs-006rbacquotacreateerrors)
+            * 5.7.10.9 [RQ.SRS-006.RBAC.Quota.Create.ResultRows](#rqsrs-006rbacquotacreateresultrows)
+            * 5.7.10.10 [RQ.SRS-006.RBAC.Quota.Create.ReadRows](#rqsrs-006rbacquotacreatereadrows)
+            * 5.7.10.11 [RQ.SRS-006.RBAC.Quota.Create.ResultBytes](#rqsrs-006rbacquotacreateresultbytes)
+            * 5.7.10.12 [RQ.SRS-006.RBAC.Quota.Create.ReadBytes](#rqsrs-006rbacquotacreatereadbytes)
+            * 5.7.10.13 [RQ.SRS-006.RBAC.Quota.Create.ExecutionTime](#rqsrs-006rbacquotacreateexecutiontime)
+            * 5.7.10.14 [RQ.SRS-006.RBAC.Quota.Create.NoLimits](#rqsrs-006rbacquotacreatenolimits)
+            * 5.7.10.15 [RQ.SRS-006.RBAC.Quota.Create.TrackingOnly](#rqsrs-006rbacquotacreatetrackingonly)
+            * 5.7.10.16 [RQ.SRS-006.RBAC.Quota.Create.KeyedBy](#rqsrs-006rbacquotacreatekeyedby)
+            * 5.7.10.17 [RQ.SRS-006.RBAC.Quota.Create.KeyedByOptions](#rqsrs-006rbacquotacreatekeyedbyoptions)
+            * 5.7.10.18 [RQ.SRS-006.RBAC.Quota.Create.Assignment](#rqsrs-006rbacquotacreateassignment)
+            * 5.7.10.19 [RQ.SRS-006.RBAC.Quota.Create.Assignment.None](#rqsrs-006rbacquotacreateassignmentnone)
+            * 5.7.10.20 [RQ.SRS-006.RBAC.Quota.Create.Assignment.All](#rqsrs-006rbacquotacreateassignmentall)
+            * 5.7.10.21 [RQ.SRS-006.RBAC.Quota.Create.Assignment.Except](#rqsrs-006rbacquotacreateassignmentexcept)
+            * 5.7.10.22 [RQ.SRS-006.RBAC.Quota.Create.Syntax](#rqsrs-006rbacquotacreatesyntax)
+        * 5.7.11 [Alter Quota](#alter-quota)
+            * 5.7.11.1 [RQ.SRS-006.RBAC.Quota.Alter](#rqsrs-006rbacquotaalter)
+            * 5.7.11.2 [RQ.SRS-006.RBAC.Quota.Alter.IfExists](#rqsrs-006rbacquotaalterifexists)
+            * 5.7.11.3 [RQ.SRS-006.RBAC.Quota.Alter.Rename](#rqsrs-006rbacquotaalterrename)
+            * 5.7.11.4 [RQ.SRS-006.RBAC.Quota.Alter.Cluster](#rqsrs-006rbacquotaaltercluster)
+            * 5.7.11.5 [RQ.SRS-006.RBAC.Quota.Alter.Interval](#rqsrs-006rbacquotaalterinterval)
+            * 5.7.11.6 [RQ.SRS-006.RBAC.Quota.Alter.Interval.Randomized](#rqsrs-006rbacquotaalterintervalrandomized)
+            * 5.7.11.7 [RQ.SRS-006.RBAC.Quota.Alter.Queries](#rqsrs-006rbacquotaalterqueries)
+            * 5.7.11.8 [RQ.SRS-006.RBAC.Quota.Alter.Errors](#rqsrs-006rbacquotaaltererrors)
+            * 5.7.11.9 [RQ.SRS-006.RBAC.Quota.Alter.ResultRows](#rqsrs-006rbacquotaalterresultrows)
+            * 5.7.11.10 [RQ.SRS-006.RBAC.Quota.Alter.ReadRows](#rqsrs-006rbacquotaalterreadrows)
+            * 5.7.11.11 [RQ.SRS-006.RBAC.Quota.ALter.ResultBytes](#rqsrs-006rbacquotaalterresultbytes)
+            * 5.7.11.12 [RQ.SRS-006.RBAC.Quota.Alter.ReadBytes](#rqsrs-006rbacquotaalterreadbytes)
+            * 5.7.11.13 [RQ.SRS-006.RBAC.Quota.Alter.ExecutionTime](#rqsrs-006rbacquotaalterexecutiontime)
+            * 5.7.11.14 [RQ.SRS-006.RBAC.Quota.Alter.NoLimits](#rqsrs-006rbacquotaalternolimits)
+            * 5.7.11.15 [RQ.SRS-006.RBAC.Quota.Alter.TrackingOnly](#rqsrs-006rbacquotaaltertrackingonly)
+            * 5.7.11.16 [RQ.SRS-006.RBAC.Quota.Alter.KeyedBy](#rqsrs-006rbacquotaalterkeyedby)
+            * 5.7.11.17 [RQ.SRS-006.RBAC.Quota.Alter.KeyedByOptions](#rqsrs-006rbacquotaalterkeyedbyoptions)
+            * 5.7.11.18 [RQ.SRS-006.RBAC.Quota.Alter.Assignment](#rqsrs-006rbacquotaalterassignment)
+            * 5.7.11.19 [RQ.SRS-006.RBAC.Quota.Alter.Assignment.None](#rqsrs-006rbacquotaalterassignmentnone)
+            * 5.7.11.20 [RQ.SRS-006.RBAC.Quota.Alter.Assignment.All](#rqsrs-006rbacquotaalterassignmentall)
+            * 5.7.11.21 [RQ.SRS-006.RBAC.Quota.Alter.Assignment.Except](#rqsrs-006rbacquotaalterassignmentexcept)
+            * 5.7.11.22 [RQ.SRS-006.RBAC.Quota.Alter.Syntax](#rqsrs-006rbacquotaaltersyntax)
+        * 5.7.12 [Drop Quota](#drop-quota)
+            * 5.7.12.1 [RQ.SRS-006.RBAC.Quota.Drop](#rqsrs-006rbacquotadrop)
+            * 5.7.12.2 [RQ.SRS-006.RBAC.Quota.Drop.IfExists](#rqsrs-006rbacquotadropifexists)
+            * 5.7.12.3 [RQ.SRS-006.RBAC.Quota.Drop.Cluster](#rqsrs-006rbacquotadropcluster)
+            * 5.7.12.4 [RQ.SRS-006.RBAC.Quota.Drop.Syntax](#rqsrs-006rbacquotadropsyntax)
+        * 5.7.13 [Show Quotas](#show-quotas)
+            * 5.7.13.1 [RQ.SRS-006.RBAC.Quota.ShowQuotas](#rqsrs-006rbacquotashowquotas)
+            * 5.7.13.2 [RQ.SRS-006.RBAC.Quota.ShowQuotas.IntoOutfile](#rqsrs-006rbacquotashowquotasintooutfile)
+            * 5.7.13.3 [RQ.SRS-006.RBAC.Quota.ShowQuotas.Format](#rqsrs-006rbacquotashowquotasformat)
+            * 5.7.13.4 [RQ.SRS-006.RBAC.Quota.ShowQuotas.Settings](#rqsrs-006rbacquotashowquotassettings)
+            * 5.7.13.5 [RQ.SRS-006.RBAC.Quota.ShowQuotas.Syntax](#rqsrs-006rbacquotashowquotassyntax)
+        * 5.7.14 [Show Create Quota](#show-create-quota)
+            * 5.7.14.1 [RQ.SRS-006.RBAC.Quota.ShowCreateQuota.Name](#rqsrs-006rbacquotashowcreatequotaname)
+            * 5.7.14.2 [RQ.SRS-006.RBAC.Quota.ShowCreateQuota.Current](#rqsrs-006rbacquotashowcreatequotacurrent)
+            * 5.7.14.3 [RQ.SRS-006.RBAC.Quota.ShowCreateQuota.Syntax](#rqsrs-006rbacquotashowcreatequotasyntax)
+    * 5.8 [Row Policy](#row-policy)
+        * 5.8.1 [Feature Diagram](#feature-diagram)
+        * 5.8.2 [RQ.SRS-006.RBAC.RowPolicy](#rqsrs-006rbacrowpolicy)
+        * 5.8.3 [RQ.SRS-006.RBAC.RowPolicy.Condition](#rqsrs-006rbacrowpolicycondition)
+        * 5.8.4 [RQ.SRS-006.RBAC.RowPolicy.Restriction](#rqsrs-006rbacrowpolicyrestriction)
+        * 5.8.5 [RQ.SRS-006.RBAC.RowPolicy.Nesting](#rqsrs-006rbacrowpolicynesting)
+        * 5.8.6 [RQ.SRS-006.RBAC.RowPolicy.Parts](#rqsrs-006rbacrowpolicyparts)
+        * 5.8.7 [RQ.SRS-006.RBAC.RowPolicy.Columns](#rqsrs-006rbacrowpolicycolumns)
+        * 5.8.8 [RQ.SRS-006.RBAC.RowPolicy.MultiIf](#rqsrs-006rbacrowpolicymultiif)
+        * 5.8.9 [RQ.SRS-006.RBAC.RowPolicy.MultiIfLength](#rqsrs-006rbacrowpolicymultiiflength)
+        * 5.8.10 [RQ.SRS-006.RBAC.RowPolicy.Rows](#rqsrs-006rbacrowpolicyrows)
+        * 5.8.11 [RQ.SRS-006.RBAC.RowPolicy.Dictionary](#rqsrs-006rbacrowpolicydictionary)
+        * 5.8.12 [RQ.SRS-006.RBAC.RowPolicy.MaterializedView](#rqsrs-006rbacrowpolicymaterializedview)
+        * 5.8.13 [RQ.SRS-006.RBAC.RowPolicy.DistributedTable](#rqsrs-006rbacrowpolicydistributedtable)
+        * 5.8.14 [RQ.SRS-006.RBAC.RowPolicy.Copy](#rqsrs-006rbacrowpolicycopy)
+        * 5.8.15 [RQ.SRS-006.RBAC.RowPolicy.Rename](#rqsrs-006rbacrowpolicyrename)
+        * 5.8.16 [RQ.SRS-006.RBAC.RowPolicy.Window](#rqsrs-006rbacrowpolicywindow)
+        * 5.8.17 [RQ.SRS-006.RBAC.RowPolicy.Neighbor](#rqsrs-006rbacrowpolicyneighbor)
+        * 5.8.18 [RQ.SRS-006.RBAC.RowPolicy.Partitions](#rqsrs-006rbacrowpolicypartitions)
+        * 5.8.19 [Create Row Policy](#create-row-policy)
+            * 5.8.19.1 [RQ.SRS-006.RBAC.RowPolicy.Create](#rqsrs-006rbacrowpolicycreate)
+            * 5.8.19.2 [RQ.SRS-006.RBAC.RowPolicy.Create.IfNotExists](#rqsrs-006rbacrowpolicycreateifnotexists)
+            * 5.8.19.3 [RQ.SRS-006.RBAC.RowPolicy.Create.Replace](#rqsrs-006rbacrowpolicycreatereplace)
+            * 5.8.19.4 [RQ.SRS-006.RBAC.RowPolicy.Create.OnCluster](#rqsrs-006rbacrowpolicycreateoncluster)
+            * 5.8.19.5 [RQ.SRS-006.RBAC.RowPolicy.Create.On](#rqsrs-006rbacrowpolicycreateon)
+            * 5.8.19.6 [RQ.SRS-006.RBAC.RowPolicy.Create.Access](#rqsrs-006rbacrowpolicycreateaccess)
+            * 5.8.19.7 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Permissive](#rqsrs-006rbacrowpolicycreateaccesspermissive)
+            * 5.8.19.8 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Restrictive](#rqsrs-006rbacrowpolicycreateaccessrestrictive)
+            * 5.8.19.9 [RQ.SRS-006.RBAC.RowPolicy.Create.ForSelect](#rqsrs-006rbacrowpolicycreateforselect)
+            * 5.8.19.10 [RQ.SRS-006.RBAC.RowPolicy.Create.Condition](#rqsrs-006rbacrowpolicycreatecondition)
+            * 5.8.19.11 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment](#rqsrs-006rbacrowpolicycreateassignment)
+            * 5.8.19.12 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.None](#rqsrs-006rbacrowpolicycreateassignmentnone)
+            * 5.8.19.13 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.All](#rqsrs-006rbacrowpolicycreateassignmentall)
+            * 5.8.19.14 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.AllExcept](#rqsrs-006rbacrowpolicycreateassignmentallexcept)
+            * 5.8.19.15 [RQ.SRS-006.RBAC.RowPolicy.Create.Syntax](#rqsrs-006rbacrowpolicycreatesyntax)
+        * 5.8.20 [Alter Row Policy](#alter-row-policy)
+            * 5.8.20.1 [RQ.SRS-006.RBAC.RowPolicy.Alter](#rqsrs-006rbacrowpolicyalter)
+            * 5.8.20.2 [RQ.SRS-006.RBAC.RowPolicy.Alter.IfExists](#rqsrs-006rbacrowpolicyalterifexists)
+            * 5.8.20.3 [RQ.SRS-006.RBAC.RowPolicy.Alter.ForSelect](#rqsrs-006rbacrowpolicyalterforselect)
+            * 5.8.20.4 [RQ.SRS-006.RBAC.RowPolicy.Alter.OnCluster](#rqsrs-006rbacrowpolicyalteroncluster)
+            * 5.8.20.5 [RQ.SRS-006.RBAC.RowPolicy.Alter.On](#rqsrs-006rbacrowpolicyalteron)
+            * 5.8.20.6 [RQ.SRS-006.RBAC.RowPolicy.Alter.Rename](#rqsrs-006rbacrowpolicyalterrename)
+            * 5.8.20.7 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access](#rqsrs-006rbacrowpolicyalteraccess)
+            * 5.8.20.8 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Permissive](#rqsrs-006rbacrowpolicyalteraccesspermissive)
+            * 5.8.20.9 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Restrictive](#rqsrs-006rbacrowpolicyalteraccessrestrictive)
+            * 5.8.20.10 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition](#rqsrs-006rbacrowpolicyaltercondition)
+            * 5.8.20.11 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition.None](#rqsrs-006rbacrowpolicyalterconditionnone)
+            * 5.8.20.12 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment](#rqsrs-006rbacrowpolicyalterassignment)
+            * 5.8.20.13 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.None](#rqsrs-006rbacrowpolicyalterassignmentnone)
+            * 5.8.20.14 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.All](#rqsrs-006rbacrowpolicyalterassignmentall)
+            * 5.8.20.15 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.AllExcept](#rqsrs-006rbacrowpolicyalterassignmentallexcept)
+            * 5.8.20.16 [RQ.SRS-006.RBAC.RowPolicy.Alter.Syntax](#rqsrs-006rbacrowpolicyaltersyntax)
+        * 5.8.21 [Drop Row Policy](#drop-row-policy)
+            * 5.8.21.1 [RQ.SRS-006.RBAC.RowPolicy.Drop](#rqsrs-006rbacrowpolicydrop)
+            * 5.8.21.2 [RQ.SRS-006.RBAC.RowPolicy.Drop.IfExists](#rqsrs-006rbacrowpolicydropifexists)
+            * 5.8.21.3 [RQ.SRS-006.RBAC.RowPolicy.Drop.On](#rqsrs-006rbacrowpolicydropon)
+            * 5.8.21.4 [RQ.SRS-006.RBAC.RowPolicy.Drop.OnCluster](#rqsrs-006rbacrowpolicydroponcluster)
+            * 5.8.21.5 [RQ.SRS-006.RBAC.RowPolicy.Drop.Syntax](#rqsrs-006rbacrowpolicydropsyntax)
+        * 5.8.22 [Show Create Row Policy](#show-create-row-policy)
+            * 5.8.22.1 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy](#rqsrs-006rbacrowpolicyshowcreaterowpolicy)
+            * 5.8.22.2 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.On](#rqsrs-006rbacrowpolicyshowcreaterowpolicyon)
+            * 5.8.22.3 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.Syntax](#rqsrs-006rbacrowpolicyshowcreaterowpolicysyntax)
+            * 5.8.22.4 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies](#rqsrs-006rbacrowpolicyshowrowpolicies)
+            * 5.8.22.5 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.On](#rqsrs-006rbacrowpolicyshowrowpolicieson)
+            * 5.8.22.6 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.Syntax](#rqsrs-006rbacrowpolicyshowrowpoliciessyntax)
+    * 5.9 [Set Default Role](#set-default-role)
+        * 5.9.1 [RQ.SRS-006.RBAC.SetDefaultRole](#rqsrs-006rbacsetdefaultrole)
+        * 5.9.2 [RQ.SRS-006.RBAC.SetDefaultRole.CurrentUser](#rqsrs-006rbacsetdefaultrolecurrentuser)
+        * 5.9.3 [RQ.SRS-006.RBAC.SetDefaultRole.All](#rqsrs-006rbacsetdefaultroleall)
+        * 5.9.4 [RQ.SRS-006.RBAC.SetDefaultRole.AllExcept](#rqsrs-006rbacsetdefaultroleallexcept)
+        * 5.9.5 [RQ.SRS-006.RBAC.SetDefaultRole.None](#rqsrs-006rbacsetdefaultrolenone)
+        * 5.9.6 [RQ.SRS-006.RBAC.SetDefaultRole.Syntax](#rqsrs-006rbacsetdefaultrolesyntax)
+    * 5.10 [Set Role](#set-role)
+        * 5.10.1 [RQ.SRS-006.RBAC.SetRole](#rqsrs-006rbacsetrole)
+        * 5.10.2 [RQ.SRS-006.RBAC.SetRole.Default](#rqsrs-006rbacsetroledefault)
+        * 5.10.3 [RQ.SRS-006.RBAC.SetRole.None](#rqsrs-006rbacsetrolenone)
+        * 5.10.4 [RQ.SRS-006.RBAC.SetRole.All](#rqsrs-006rbacsetroleall)
+        * 5.10.5 [RQ.SRS-006.RBAC.SetRole.AllExcept](#rqsrs-006rbacsetroleallexcept)
+        * 5.10.6 [RQ.SRS-006.RBAC.SetRole.Syntax](#rqsrs-006rbacsetrolesyntax)
+    * 5.11 [Grant](#grant)
+        * 5.11.1 [RQ.SRS-006.RBAC.Grant.Privilege.To](#rqsrs-006rbacgrantprivilegeto)
+        * 5.11.2 [RQ.SRS-006.RBAC.Grant.Privilege.ToCurrentUser](#rqsrs-006rbacgrantprivilegetocurrentuser)
+        * 5.11.3 [RQ.SRS-006.RBAC.Grant.Privilege.Select](#rqsrs-006rbacgrantprivilegeselect)
+        * 5.11.4 [RQ.SRS-006.RBAC.Grant.Privilege.Insert](#rqsrs-006rbacgrantprivilegeinsert)
+        * 5.11.5 [RQ.SRS-006.RBAC.Grant.Privilege.Alter](#rqsrs-006rbacgrantprivilegealter)
+        * 5.11.6 [RQ.SRS-006.RBAC.Grant.Privilege.Create](#rqsrs-006rbacgrantprivilegecreate)
+        * 5.11.7 [RQ.SRS-006.RBAC.Grant.Privilege.Drop](#rqsrs-006rbacgrantprivilegedrop)
+        * 5.11.8 [RQ.SRS-006.RBAC.Grant.Privilege.Truncate](#rqsrs-006rbacgrantprivilegetruncate)
+        * 5.11.9 [RQ.SRS-006.RBAC.Grant.Privilege.Optimize](#rqsrs-006rbacgrantprivilegeoptimize)
+        * 5.11.10 [RQ.SRS-006.RBAC.Grant.Privilege.Show](#rqsrs-006rbacgrantprivilegeshow)
+        * 5.11.11 [RQ.SRS-006.RBAC.Grant.Privilege.KillQuery](#rqsrs-006rbacgrantprivilegekillquery)
+        * 5.11.12 [RQ.SRS-006.RBAC.Grant.Privilege.AccessManagement](#rqsrs-006rbacgrantprivilegeaccessmanagement)
+        * 5.11.13 [RQ.SRS-006.RBAC.Grant.Privilege.System](#rqsrs-006rbacgrantprivilegesystem)
+        * 5.11.14 [RQ.SRS-006.RBAC.Grant.Privilege.Introspection](#rqsrs-006rbacgrantprivilegeintrospection)
+        * 5.11.15 [RQ.SRS-006.RBAC.Grant.Privilege.Sources](#rqsrs-006rbacgrantprivilegesources)
+        * 5.11.16 [RQ.SRS-006.RBAC.Grant.Privilege.DictGet](#rqsrs-006rbacgrantprivilegedictget)
+        * 5.11.17 [RQ.SRS-006.RBAC.Grant.Privilege.None](#rqsrs-006rbacgrantprivilegenone)
+        * 5.11.18 [RQ.SRS-006.RBAC.Grant.Privilege.All](#rqsrs-006rbacgrantprivilegeall)
+        * 5.11.19 [RQ.SRS-006.RBAC.Grant.Privilege.GrantOption](#rqsrs-006rbacgrantprivilegegrantoption)
+        * 5.11.20 [RQ.SRS-006.RBAC.Grant.Privilege.On](#rqsrs-006rbacgrantprivilegeon)
+        * 5.11.21 [RQ.SRS-006.RBAC.Grant.Privilege.PrivilegeColumns](#rqsrs-006rbacgrantprivilegeprivilegecolumns)
+        * 5.11.22 [RQ.SRS-006.RBAC.Grant.Privilege.OnCluster](#rqsrs-006rbacgrantprivilegeoncluster)
+        * 5.11.23 [RQ.SRS-006.RBAC.Grant.Privilege.Syntax](#rqsrs-006rbacgrantprivilegesyntax)
+    * 5.12 [Revoke](#revoke)
+        * 5.12.1 [RQ.SRS-006.RBAC.Revoke.Privilege.Cluster](#rqsrs-006rbacrevokeprivilegecluster)
+        * 5.12.2 [RQ.SRS-006.RBAC.Revoke.Privilege.Select](#rqsrs-006rbacrevokeprivilegeselect)
+        * 5.12.3 [RQ.SRS-006.RBAC.Revoke.Privilege.Insert](#rqsrs-006rbacrevokeprivilegeinsert)
+        * 5.12.4 [RQ.SRS-006.RBAC.Revoke.Privilege.Alter](#rqsrs-006rbacrevokeprivilegealter)
+        * 5.12.5 [RQ.SRS-006.RBAC.Revoke.Privilege.Create](#rqsrs-006rbacrevokeprivilegecreate)
+        * 5.12.6 [RQ.SRS-006.RBAC.Revoke.Privilege.Drop](#rqsrs-006rbacrevokeprivilegedrop)
+        * 5.12.7 [RQ.SRS-006.RBAC.Revoke.Privilege.Truncate](#rqsrs-006rbacrevokeprivilegetruncate)
+        * 5.12.8 [RQ.SRS-006.RBAC.Revoke.Privilege.Optimize](#rqsrs-006rbacrevokeprivilegeoptimize)
+        * 5.12.9 [RQ.SRS-006.RBAC.Revoke.Privilege.Show](#rqsrs-006rbacrevokeprivilegeshow)
+        * 5.12.10 [RQ.SRS-006.RBAC.Revoke.Privilege.KillQuery](#rqsrs-006rbacrevokeprivilegekillquery)
+        * 5.12.11 [RQ.SRS-006.RBAC.Revoke.Privilege.AccessManagement](#rqsrs-006rbacrevokeprivilegeaccessmanagement)
+        * 5.12.12 [RQ.SRS-006.RBAC.Revoke.Privilege.System](#rqsrs-006rbacrevokeprivilegesystem)
+        * 5.12.13 [RQ.SRS-006.RBAC.Revoke.Privilege.Introspection](#rqsrs-006rbacrevokeprivilegeintrospection)
+        * 5.12.14 [RQ.SRS-006.RBAC.Revoke.Privilege.Sources](#rqsrs-006rbacrevokeprivilegesources)
+        * 5.12.15 [RQ.SRS-006.RBAC.Revoke.Privilege.DictGet](#rqsrs-006rbacrevokeprivilegedictget)
+        * 5.12.16 [RQ.SRS-006.RBAC.Revoke.Privilege.PrivilegeColumns](#rqsrs-006rbacrevokeprivilegeprivilegecolumns)
+        * 5.12.17 [RQ.SRS-006.RBAC.Revoke.Privilege.Multiple](#rqsrs-006rbacrevokeprivilegemultiple)
+        * 5.12.18 [RQ.SRS-006.RBAC.Revoke.Privilege.All](#rqsrs-006rbacrevokeprivilegeall)
+        * 5.12.19 [RQ.SRS-006.RBAC.Revoke.Privilege.None](#rqsrs-006rbacrevokeprivilegenone)
+        * 5.12.20 [RQ.SRS-006.RBAC.Revoke.Privilege.On](#rqsrs-006rbacrevokeprivilegeon)
+        * 5.12.21 [RQ.SRS-006.RBAC.Revoke.Privilege.From](#rqsrs-006rbacrevokeprivilegefrom)
+        * 5.12.22 [RQ.SRS-006.RBAC.Revoke.Privilege.Syntax](#rqsrs-006rbacrevokeprivilegesyntax)
+    * 5.13 [Grant Role](#grant-role)
+        * 5.13.1 [RQ.SRS-006.RBAC.Grant.Role](#rqsrs-006rbacgrantrole)
+        * 5.13.2 [RQ.SRS-006.RBAC.Grant.Role.CurrentUser](#rqsrs-006rbacgrantrolecurrentuser)
+        * 5.13.3 [RQ.SRS-006.RBAC.Grant.Role.AdminOption](#rqsrs-006rbacgrantroleadminoption)
+        * 5.13.4 [RQ.SRS-006.RBAC.Grant.Role.OnCluster](#rqsrs-006rbacgrantroleoncluster)
+        * 5.13.5 [RQ.SRS-006.RBAC.Grant.Role.Syntax](#rqsrs-006rbacgrantrolesyntax)
+    * 5.14 [Revoke Role](#revoke-role)
+        * 5.14.1 [RQ.SRS-006.RBAC.Revoke.Role](#rqsrs-006rbacrevokerole)
+        * 5.14.2 [RQ.SRS-006.RBAC.Revoke.Role.Keywords](#rqsrs-006rbacrevokerolekeywords)
+        * 5.14.3 [RQ.SRS-006.RBAC.Revoke.Role.Cluster](#rqsrs-006rbacrevokerolecluster)
+        * 5.14.4 [RQ.SRS-006.RBAC.Revoke.AdminOption](#rqsrs-006rbacrevokeadminoption)
+        * 5.14.5 [RQ.SRS-006.RBAC.Revoke.Role.Syntax](#rqsrs-006rbacrevokerolesyntax)
+    * 5.15 [Show Grants](#show-grants)
+        * 5.15.1 [RQ.SRS-006.RBAC.Show.Grants](#rqsrs-006rbacshowgrants)
+        * 5.15.2 [RQ.SRS-006.RBAC.Show.Grants.For](#rqsrs-006rbacshowgrantsfor)
+        * 5.15.3 [RQ.SRS-006.RBAC.Show.Grants.Syntax](#rqsrs-006rbacshowgrantssyntax)
+    * 5.16 [Table Privileges](#table-privileges)
+        * 5.16.1 [RQ.SRS-006.RBAC.Table.PublicTables](#rqsrs-006rbactablepublictables)
+        * 5.16.2 [RQ.SRS-006.RBAC.Table.SensitiveTables](#rqsrs-006rbactablesensitivetables)
+    * 5.17 [Distributed Tables](#distributed-tables)
+        * 5.17.1 [RQ.SRS-006.RBAC.DistributedTable.Create](#rqsrs-006rbacdistributedtablecreate)
+        * 5.17.2 [RQ.SRS-006.RBAC.DistributedTable.Select](#rqsrs-006rbacdistributedtableselect)
+        * 5.17.3 [RQ.SRS-006.RBAC.DistributedTable.Insert](#rqsrs-006rbacdistributedtableinsert)
+        * 5.17.4 [RQ.SRS-006.RBAC.DistributedTable.SpecialTables](#rqsrs-006rbacdistributedtablespecialtables)
+        * 5.17.5 [RQ.SRS-006.RBAC.DistributedTable.LocalUser](#rqsrs-006rbacdistributedtablelocaluser)
+        * 5.17.6 [RQ.SRS-006.RBAC.DistributedTable.SameUserDifferentNodesDifferentPrivileges](#rqsrs-006rbacdistributedtablesameuserdifferentnodesdifferentprivileges)
+    * 5.18 [Views](#views)
+        * 5.18.1 [View](#view)
+            * 5.18.1.1 [RQ.SRS-006.RBAC.View](#rqsrs-006rbacview)
+            * 5.18.1.2 [RQ.SRS-006.RBAC.View.Create](#rqsrs-006rbacviewcreate)
+            * 5.18.1.3 [RQ.SRS-006.RBAC.View.Select](#rqsrs-006rbacviewselect)
+            * 5.18.1.4 [RQ.SRS-006.RBAC.View.Drop](#rqsrs-006rbacviewdrop)
+        * 5.18.2 [Materialized View](#materialized-view)
+            * 5.18.2.1 [RQ.SRS-006.RBAC.MaterializedView](#rqsrs-006rbacmaterializedview)
+            * 5.18.2.2 [RQ.SRS-006.RBAC.MaterializedView.Create](#rqsrs-006rbacmaterializedviewcreate)
+            * 5.18.2.3 [RQ.SRS-006.RBAC.MaterializedView.Select](#rqsrs-006rbacmaterializedviewselect)
+            * 5.18.2.4 [RQ.SRS-006.RBAC.MaterializedView.Select.TargetTable](#rqsrs-006rbacmaterializedviewselecttargettable)
+            * 5.18.2.5 [RQ.SRS-006.RBAC.MaterializedView.Select.SourceTable](#rqsrs-006rbacmaterializedviewselectsourcetable)
+            * 5.18.2.6 [RQ.SRS-006.RBAC.MaterializedView.Drop](#rqsrs-006rbacmaterializedviewdrop)
+            * 5.18.2.7 [RQ.SRS-006.RBAC.MaterializedView.ModifyQuery](#rqsrs-006rbacmaterializedviewmodifyquery)
+            * 5.18.2.8 [RQ.SRS-006.RBAC.MaterializedView.Insert](#rqsrs-006rbacmaterializedviewinsert)
+            * 5.18.2.9 [RQ.SRS-006.RBAC.MaterializedView.Insert.SourceTable](#rqsrs-006rbacmaterializedviewinsertsourcetable)
+            * 5.18.2.10 [RQ.SRS-006.RBAC.MaterializedView.Insert.TargetTable](#rqsrs-006rbacmaterializedviewinserttargettable)
+        * 5.18.3 [SQL Security](#sql-security)
+            * 5.18.3.1 [Schema](#schema)
+            * 5.18.3.2 [RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity](#rqsrs-006rbacsqlsecuritymodifysqlsecurity)
+            * 5.18.3.3 [RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity.OnCluster](#rqsrs-006rbacsqlsecuritymodifysqlsecurityoncluster)
+        * 5.18.4 [View SQL Security](#view-sql-security)
+            * 5.18.4.1 [RQ.SRS-006.RBAC.SQLSecurity.View.CreateView](#rqsrs-006rbacsqlsecurityviewcreateview)
+            * 5.18.4.2 [RQ.SRS-006.RBAC.SQLSecurity.View.OnCluster](#rqsrs-006rbacsqlsecurityviewoncluster)
+            * 5.18.4.3 [RQ.SRS-006.RBAC.SQLSecurity.View.DefaultValues](#rqsrs-006rbacsqlsecurityviewdefaultvalues)
+            * 5.18.4.4 [RQ.SRS-006.RBAC.SQLSecurity.View.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewdefinernotspecified)
+            * 5.18.4.5 [RQ.SRS-006.RBAC.SQLSecurity.View.SqlSecurityNotSpecified](#rqsrs-006rbacsqlsecurityviewsqlsecuritynotspecified)
+            * 5.18.4.6 [`RQ.SRS-006.RBAC.SQLSecurity.View.CascadingViews](#rqsrs-006rbacsqlsecurityviewcascadingviews)
+            * 5.18.4.7 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritydefinerdefiner)
+            * 5.18.4.8 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritydefinerdefinernotspecified)
+            * 5.18.4.9 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecurityinvokerdefiner)
+            * 5.18.4.10 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecurityinvokerdefinernotspecified)
+            * 5.18.4.11 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynotspecifieddefiner)
+            * 5.18.4.12 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritydefinernotspecifieddefinernotspecified)
+            * 5.18.4.13 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynonedefiner)
+            * 5.18.4.14 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynonedefinernotspecified)
+        * 5.18.5 [Materialized View SQL Security](#materialized-view-sql-security)
+            * 5.18.5.1 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CreateMaterializedView](#rqsrs-006rbacsqlsecuritymaterializedviewcreatematerializedview)
+            * 5.18.5.2 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster](#rqsrs-006rbacsqlsecuritymaterializedviewoncluster)
+            * 5.18.5.3 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues](#rqsrs-006rbacsqlsecuritymaterializedviewdefaultvalues)
+            * 5.18.5.4 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewdefinernotspecified)
+            * 5.18.5.5 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.SqlSecurityNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewsqlsecuritynotspecified)
+            * 5.18.5.6 [`RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews](#rqsrs-006rbacsqlsecuritymaterializedviewcascadingviews)
+            * 5.18.5.7 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefiner)
+            * 5.18.5.8 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefinernotspecified)
+            * 5.18.5.9 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefiner)
+            * 5.18.5.10 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefinernotspecified)
+            * 5.18.5.11 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynotspecifieddefiner)
+            * 5.18.5.12 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynotspecifieddefinernotspecified)
+            * 5.18.5.13 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynonedefiner)
+            * 5.18.5.14 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritynonedefinernotspecified)
+            * 5.18.5.15 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritydefinerdefiner)
+            * 5.18.5.16 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritydefinerdefinernotspecified)
+            * 5.18.5.17 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecurityinvokerdefiner)
+            * 5.18.5.18 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecurityinvokerdefinernotspecified)
+            * 5.18.5.19 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynotspecifieddefiner)
+            * 5.18.5.20 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynotspecifieddefinernotspecified)
+            * 5.18.5.21 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefiner)
+            * 5.18.5.22 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefinernotspecified)
+        * 5.18.6 [Live View](#live-view)
+            * 5.18.6.1 [RQ.SRS-006.RBAC.LiveView](#rqsrs-006rbacliveview)
+            * 5.18.6.2 [RQ.SRS-006.RBAC.LiveView.Create](#rqsrs-006rbacliveviewcreate)
+            * 5.18.6.3 [RQ.SRS-006.RBAC.LiveView.Select](#rqsrs-006rbacliveviewselect)
+            * 5.18.6.4 [RQ.SRS-006.RBAC.LiveView.Drop](#rqsrs-006rbacliveviewdrop)
+            * 5.18.6.5 [RQ.SRS-006.RBAC.LiveView.Refresh](#rqsrs-006rbacliveviewrefresh)
+    * 5.19 [Select](#select)
+        * 5.19.1 [RQ.SRS-006.RBAC.Select](#rqsrs-006rbacselect)
+        * 5.19.2 [RQ.SRS-006.RBAC.Select.Column](#rqsrs-006rbacselectcolumn)
+        * 5.19.3 [RQ.SRS-006.RBAC.Select.Cluster](#rqsrs-006rbacselectcluster)
+        * 5.19.4 [RQ.SRS-006.RBAC.Select.TableEngines](#rqsrs-006rbacselecttableengines)
+        * 5.19.5 [Table Functions](#table-functions)
+            * 5.19.5.1 [RQ.SRS-006.RBAC.Select.TableFunctions.Remote](#rqsrs-006rbacselecttablefunctionsremote)
+            * 5.19.5.2 [RQ.SRS-006.RBAC.Select.TableFunctions.Cluster](#rqsrs-006rbacselecttablefunctionscluster)
+    * 5.20 [Insert](#insert)
+        * 5.20.1 [RQ.SRS-006.RBAC.Insert](#rqsrs-006rbacinsert)
+        * 5.20.2 [RQ.SRS-006.RBAC.Insert.Column](#rqsrs-006rbacinsertcolumn)
+        * 5.20.3 [RQ.SRS-006.RBAC.Insert.Cluster](#rqsrs-006rbacinsertcluster)
+        * 5.20.4 [RQ.SRS-006.RBAC.Insert.TableEngines](#rqsrs-006rbacinserttableengines)
+    * 5.21 [Alter](#alter)
+        * 5.21.1 [Alter Column](#alter-column)
+            * 5.21.1.1 [RQ.SRS-006.RBAC.Privileges.AlterColumn](#rqsrs-006rbacprivilegesaltercolumn)
+            * 5.21.1.2 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Grant](#rqsrs-006rbacprivilegesaltercolumngrant)
+            * 5.21.1.3 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Revoke](#rqsrs-006rbacprivilegesaltercolumnrevoke)
+            * 5.21.1.4 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Column](#rqsrs-006rbacprivilegesaltercolumncolumn)
+            * 5.21.1.5 [RQ.SRS-006.RBAC.Privileges.AlterColumn.Cluster](#rqsrs-006rbacprivilegesaltercolumncluster)
+            * 5.21.1.6 [RQ.SRS-006.RBAC.Privileges.AlterColumn.TableEngines](#rqsrs-006rbacprivilegesaltercolumntableengines)
+        * 5.21.2 [Alter Index](#alter-index)
+            * 5.21.2.1 [RQ.SRS-006.RBAC.Privileges.AlterIndex](#rqsrs-006rbacprivilegesalterindex)
+            * 5.21.2.2 [RQ.SRS-006.RBAC.Privileges.AlterIndex.Grant](#rqsrs-006rbacprivilegesalterindexgrant)
+            * 5.21.2.3 [RQ.SRS-006.RBAC.Privileges.AlterIndex.Revoke](#rqsrs-006rbacprivilegesalterindexrevoke)
+            * 5.21.2.4 [RQ.SRS-006.RBAC.Privileges.AlterIndex.Cluster](#rqsrs-006rbacprivilegesalterindexcluster)
+            * 5.21.2.5 [RQ.SRS-006.RBAC.Privileges.AlterIndex.TableEngines](#rqsrs-006rbacprivilegesalterindextableengines)
+        * 5.21.3 [Alter Constraint](#alter-constraint)
+            * 5.21.3.1 [RQ.SRS-006.RBAC.Privileges.AlterConstraint](#rqsrs-006rbacprivilegesalterconstraint)
+            * 5.21.3.2 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.Grant](#rqsrs-006rbacprivilegesalterconstraintgrant)
+            * 5.21.3.3 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.Revoke](#rqsrs-006rbacprivilegesalterconstraintrevoke)
+            * 5.21.3.4 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.Cluster](#rqsrs-006rbacprivilegesalterconstraintcluster)
+            * 5.21.3.5 [RQ.SRS-006.RBAC.Privileges.AlterConstraint.TableEngines](#rqsrs-006rbacprivilegesalterconstrainttableengines)
+        * 5.21.4 [Alter TTL](#alter-ttl)
+            * 5.21.4.1 [RQ.SRS-006.RBAC.Privileges.AlterTTL](#rqsrs-006rbacprivilegesalterttl)
+            * 5.21.4.2 [RQ.SRS-006.RBAC.Privileges.AlterTTL.Grant](#rqsrs-006rbacprivilegesalterttlgrant)
+            * 5.21.4.3 [RQ.SRS-006.RBAC.Privileges.AlterTTL.Revoke](#rqsrs-006rbacprivilegesalterttlrevoke)
+            * 5.21.4.4 [RQ.SRS-006.RBAC.Privileges.AlterTTL.Cluster](#rqsrs-006rbacprivilegesalterttlcluster)
+            * 5.21.4.5 [RQ.SRS-006.RBAC.Privileges.AlterTTL.TableEngines](#rqsrs-006rbacprivilegesalterttltableengines)
+        * 5.21.5 [Alter Settings](#alter-settings)
+            * 5.21.5.1 [RQ.SRS-006.RBAC.Privileges.AlterSettings](#rqsrs-006rbacprivilegesaltersettings)
+            * 5.21.5.2 [RQ.SRS-006.RBAC.Privileges.AlterSettings.Grant](#rqsrs-006rbacprivilegesaltersettingsgrant)
+            * 5.21.5.3 [RQ.SRS-006.RBAC.Privileges.AlterSettings.Revoke](#rqsrs-006rbacprivilegesaltersettingsrevoke)
+            * 5.21.5.4 [RQ.SRS-006.RBAC.Privileges.AlterSettings.Cluster](#rqsrs-006rbacprivilegesaltersettingscluster)
+            * 5.21.5.5 [RQ.SRS-006.RBAC.Privileges.AlterSettings.TableEngines](#rqsrs-006rbacprivilegesaltersettingstableengines)
+        * 5.21.6 [Alter Update](#alter-update)
+            * 5.21.6.1 [RQ.SRS-006.RBAC.Privileges.AlterUpdate](#rqsrs-006rbacprivilegesalterupdate)
+            * 5.21.6.2 [RQ.SRS-006.RBAC.Privileges.AlterUpdate.Grant](#rqsrs-006rbacprivilegesalterupdategrant)
+            * 5.21.6.3 [RQ.SRS-006.RBAC.Privileges.AlterUpdate.Revoke](#rqsrs-006rbacprivilegesalterupdaterevoke)
+            * 5.21.6.4 [RQ.SRS-006.RBAC.Privileges.AlterUpdate.TableEngines](#rqsrs-006rbacprivilegesalterupdatetableengines)
+        * 5.21.7 [Alter Delete](#alter-delete)
+            * 5.21.7.1 [RQ.SRS-006.RBAC.Privileges.AlterDelete](#rqsrs-006rbacprivilegesalterdelete)
+            * 5.21.7.2 [RQ.SRS-006.RBAC.Privileges.AlterDelete.Grant](#rqsrs-006rbacprivilegesalterdeletegrant)
+            * 5.21.7.3 [RQ.SRS-006.RBAC.Privileges.AlterDelete.Revoke](#rqsrs-006rbacprivilegesalterdeleterevoke)
+            * 5.21.7.4 [RQ.SRS-006.RBAC.Privileges.AlterDelete.TableEngines](#rqsrs-006rbacprivilegesalterdeletetableengines)
+        * 5.21.8 [Alter Freeze Partition](#alter-freeze-partition)
+            * 5.21.8.1 [RQ.SRS-006.RBAC.Privileges.AlterFreeze](#rqsrs-006rbacprivilegesalterfreeze)
+            * 5.21.8.2 [RQ.SRS-006.RBAC.Privileges.AlterFreeze.Grant](#rqsrs-006rbacprivilegesalterfreezegrant)
+            * 5.21.8.3 [RQ.SRS-006.RBAC.Privileges.AlterFreeze.Revoke](#rqsrs-006rbacprivilegesalterfreezerevoke)
+            * 5.21.8.4 [RQ.SRS-006.RBAC.Privileges.AlterFreeze.TableEngines](#rqsrs-006rbacprivilegesalterfreezetableengines)
+        * 5.21.9 [Alter Fetch Partition](#alter-fetch-partition)
+            * 5.21.9.1 [RQ.SRS-006.RBAC.Privileges.AlterFetch](#rqsrs-006rbacprivilegesalterfetch)
+            * 5.21.9.2 [RQ.SRS-006.RBAC.Privileges.AlterFetch.Grant](#rqsrs-006rbacprivilegesalterfetchgrant)
+            * 5.21.9.3 [RQ.SRS-006.RBAC.Privileges.AlterFetch.Revoke](#rqsrs-006rbacprivilegesalterfetchrevoke)
+            * 5.21.9.4 [RQ.SRS-006.RBAC.Privileges.AlterFetch.TableEngines](#rqsrs-006rbacprivilegesalterfetchtableengines)
+        * 5.21.10 [Alter Move Partition](#alter-move-partition)
+            * 5.21.10.1 [RQ.SRS-006.RBAC.Privileges.AlterMove](#rqsrs-006rbacprivilegesaltermove)
+            * 5.21.10.2 [RQ.SRS-006.RBAC.Privileges.AlterMove.Grant](#rqsrs-006rbacprivilegesaltermovegrant)
+            * 5.21.10.3 [RQ.SRS-006.RBAC.Privileges.AlterMove.Revoke](#rqsrs-006rbacprivilegesaltermoverevoke)
+            * 5.21.10.4 [RQ.SRS-006.RBAC.Privileges.AlterMove.TableEngines](#rqsrs-006rbacprivilegesaltermovetableengines)
+        * 5.21.11 [Alter Projection](#alter-projection)
+            * 5.21.11.1 [RQ.SRS-006.RBAC.Privileges.AlterProjection](#rqsrs-006rbacprivilegesalterprojection)
+            * 5.21.11.2 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Add](#rqsrs-006rbacprivilegesalterprojectionadd)
+            * 5.21.11.3 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Drop](#rqsrs-006rbacprivilegesalterprojectiondrop)
+            * 5.21.11.4 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Materialize](#rqsrs-006rbacprivilegesalterprojectionmaterialize)
+            * 5.21.11.5 [RQ.SRS-006.RBAC.Privileges.AlterProjection.Clear](#rqsrs-006rbacprivilegesalterprojectionclear)
+        * 5.21.12 [Alter Database](#alter-database)
+            * 5.21.12.1 [RQ.SRS-006.RBAC.Privileges.AlterDatabase](#rqsrs-006rbacprivilegesalterdatabase)
+            * 5.21.12.2 [RQ.SRS-006.RBAC.Privileges.AlterDatabase.Settings](#rqsrs-006rbacprivilegesalterdatabasesettings)
+    * 5.22 [Create](#create)
+        * 5.22.1 [RQ.SRS-006.RBAC.Privileges.Create](#rqsrs-006rbacprivilegescreate)
+        * 5.22.2 [RQ.SRS-006.RBAC.Privileges.CreateTable](#rqsrs-006rbacprivilegescreatetable)
+        * 5.22.3 [RQ.SRS-006.RBAC.Privileges.CreateDatabase](#rqsrs-006rbacprivilegescreatedatabase)
+        * 5.22.4 [RQ.SRS-006.RBAC.Privileges.CreateDictionary](#rqsrs-006rbacprivilegescreatedictionary)
+        * 5.22.5 [RQ.SRS-006.RBAC.Privileges.CreateTemporaryTable](#rqsrs-006rbacprivilegescreatetemporarytable)
+        * 5.22.6 [RQ.SRS-006.RBAC.Privileges.CreateFunction](#rqsrs-006rbacprivilegescreatefunction)
+    * 5.23 [Attach](#attach)
+        * 5.23.1 [RQ.SRS-006.RBAC.Privileges.AttachDatabase](#rqsrs-006rbacprivilegesattachdatabase)
+        * 5.23.2 [RQ.SRS-006.RBAC.Privileges.AttachDictionary](#rqsrs-006rbacprivilegesattachdictionary)
+        * 5.23.3 [RQ.SRS-006.RBAC.Privileges.AttachTemporaryTable](#rqsrs-006rbacprivilegesattachtemporarytable)
+        * 5.23.4 [RQ.SRS-006.RBAC.Privileges.AttachTable](#rqsrs-006rbacprivilegesattachtable)
+    * 5.24 [Drop](#drop)
+        * 5.24.1 [RQ.SRS-006.RBAC.Privileges.Drop](#rqsrs-006rbacprivilegesdrop)
+        * 5.24.2 [RQ.SRS-006.RBAC.Privileges.DropTable](#rqsrs-006rbacprivilegesdroptable)
+        * 5.24.3 [RQ.SRS-006.RBAC.Privileges.DropDatabase](#rqsrs-006rbacprivilegesdropdatabase)
+        * 5.24.4 [RQ.SRS-006.RBAC.Privileges.DropDictionary](#rqsrs-006rbacprivilegesdropdictionary)
+        * 5.24.5 [RQ.SRS-006.RBAC.Privileges.DropFunction](#rqsrs-006rbacprivilegesdropfunction)
+    * 5.25 [Detach](#detach)
+        * 5.25.1 [RQ.SRS-006.RBAC.Privileges.DetachTable](#rqsrs-006rbacprivilegesdetachtable)
+        * 5.25.2 [RQ.SRS-006.RBAC.Privileges.DetachView](#rqsrs-006rbacprivilegesdetachview)
+        * 5.25.3 [RQ.SRS-006.RBAC.Privileges.DetachDatabase](#rqsrs-006rbacprivilegesdetachdatabase)
+        * 5.25.4 [RQ.SRS-006.RBAC.Privileges.DetachDictionary](#rqsrs-006rbacprivilegesdetachdictionary)
+    * 5.26 [Truncate](#truncate)
+        * 5.26.1 [RQ.SRS-006.RBAC.Privileges.Truncate](#rqsrs-006rbacprivilegestruncate)
+    * 5.27 [Optimize](#optimize)
+        * 5.27.1 [RQ.SRS-006.RBAC.Privileges.Optimize](#rqsrs-006rbacprivilegesoptimize)
+    * 5.28 [Kill Query](#kill-query)
+        * 5.28.1 [RQ.SRS-006.RBAC.Privileges.KillQuery](#rqsrs-006rbacprivilegeskillquery)
+    * 5.29 [Kill Mutation](#kill-mutation)
+        * 5.29.1 [RQ.SRS-006.RBAC.Privileges.KillMutation](#rqsrs-006rbacprivilegeskillmutation)
+        * 5.29.2 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterUpdate](#rqsrs-006rbacprivilegeskillmutationalterupdate)
+        * 5.29.3 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterDelete](#rqsrs-006rbacprivilegeskillmutationalterdelete)
+        * 5.29.4 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterDropColumn](#rqsrs-006rbacprivilegeskillmutationalterdropcolumn)
+    * 5.30 [Show](#show)
+        * 5.30.1 [RQ.SRS-006.RBAC.ShowTables.Privilege](#rqsrs-006rbacshowtablesprivilege)
+        * 5.30.2 [RQ.SRS-006.RBAC.ShowTables.RequiredPrivilege](#rqsrs-006rbacshowtablesrequiredprivilege)
+        * 5.30.3 [RQ.SRS-006.RBAC.ExistsTable.RequiredPrivilege](#rqsrs-006rbacexiststablerequiredprivilege)
+        * 5.30.4 [RQ.SRS-006.RBAC.CheckTable.RequiredPrivilege](#rqsrs-006rbacchecktablerequiredprivilege)
+        * 5.30.5 [RQ.SRS-006.RBAC.ShowDatabases.Privilege](#rqsrs-006rbacshowdatabasesprivilege)
+        * 5.30.6 [RQ.SRS-006.RBAC.ShowDatabases.RequiredPrivilege](#rqsrs-006rbacshowdatabasesrequiredprivilege)
+        * 5.30.7 [RQ.SRS-006.RBAC.ShowCreateDatabase.RequiredPrivilege](#rqsrs-006rbacshowcreatedatabaserequiredprivilege)
+        * 5.30.8 [RQ.SRS-006.RBAC.UseDatabase.RequiredPrivilege](#rqsrs-006rbacusedatabaserequiredprivilege)
+        * 5.30.9 [RQ.SRS-006.RBAC.ShowColumns.Privilege](#rqsrs-006rbacshowcolumnsprivilege)
+        * 5.30.10 [RQ.SRS-006.RBAC.ShowCreateTable.RequiredPrivilege](#rqsrs-006rbacshowcreatetablerequiredprivilege)
+        * 5.30.11 [RQ.SRS-006.RBAC.DescribeTable.RequiredPrivilege](#rqsrs-006rbacdescribetablerequiredprivilege)
+        * 5.30.12 [RQ.SRS-006.RBAC.ShowDictionaries.Privilege](#rqsrs-006rbacshowdictionariesprivilege)
+        * 5.30.13 [RQ.SRS-006.RBAC.ShowDictionaries.RequiredPrivilege](#rqsrs-006rbacshowdictionariesrequiredprivilege)
+        * 5.30.14 [RQ.SRS-006.RBAC.ShowCreateDictionary.RequiredPrivilege](#rqsrs-006rbacshowcreatedictionaryrequiredprivilege)
+        * 5.30.15 [RQ.SRS-006.RBAC.ExistsDictionary.RequiredPrivilege](#rqsrs-006rbacexistsdictionaryrequiredprivilege)
+    * 5.31 [Access Management](#access-management)
+        * 5.31.1 [RQ.SRS-006.RBAC.Privileges.CreateUser](#rqsrs-006rbacprivilegescreateuser)
+        * 5.31.2 [RQ.SRS-006.RBAC.Privileges.CreateUser.DefaultRole](#rqsrs-006rbacprivilegescreateuserdefaultrole)
+        * 5.31.3 [RQ.SRS-006.RBAC.Privileges.AlterUser](#rqsrs-006rbacprivilegesalteruser)
+        * 5.31.4 [RQ.SRS-006.RBAC.Privileges.DropUser](#rqsrs-006rbacprivilegesdropuser)
+        * 5.31.5 [RQ.SRS-006.RBAC.Privileges.CreateRole](#rqsrs-006rbacprivilegescreaterole)
+        * 5.31.6 [RQ.SRS-006.RBAC.Privileges.AlterRole](#rqsrs-006rbacprivilegesalterrole)
+        * 5.31.7 [RQ.SRS-006.RBAC.Privileges.DropRole](#rqsrs-006rbacprivilegesdroprole)
+        * 5.31.8 [RQ.SRS-006.RBAC.Privileges.CreateRowPolicy](#rqsrs-006rbacprivilegescreaterowpolicy)
+        * 5.31.9 [RQ.SRS-006.RBAC.Privileges.AlterRowPolicy](#rqsrs-006rbacprivilegesalterrowpolicy)
+        * 5.31.10 [RQ.SRS-006.RBAC.Privileges.DropRowPolicy](#rqsrs-006rbacprivilegesdroprowpolicy)
+        * 5.31.11 [RQ.SRS-006.RBAC.Privileges.CreateQuota](#rqsrs-006rbacprivilegescreatequota)
+        * 5.31.12 [RQ.SRS-006.RBAC.Privileges.AlterQuota](#rqsrs-006rbacprivilegesalterquota)
+        * 5.31.13 [RQ.SRS-006.RBAC.Privileges.DropQuota](#rqsrs-006rbacprivilegesdropquota)
+        * 5.31.14 [RQ.SRS-006.RBAC.Privileges.CreateSettingsProfile](#rqsrs-006rbacprivilegescreatesettingsprofile)
+        * 5.31.15 [RQ.SRS-006.RBAC.Privileges.AlterSettingsProfile](#rqsrs-006rbacprivilegesaltersettingsprofile)
+        * 5.31.16 [RQ.SRS-006.RBAC.Privileges.DropSettingsProfile](#rqsrs-006rbacprivilegesdropsettingsprofile)
+        * 5.31.17 [RQ.SRS-006.RBAC.Privileges.RoleAdmin](#rqsrs-006rbacprivilegesroleadmin)
+        * 5.31.18 [Show Access](#show-access)
+            * 5.31.18.1 [RQ.SRS-006.RBAC.ShowUsers.Privilege](#rqsrs-006rbacshowusersprivilege)
+            * 5.31.18.2 [RQ.SRS-006.RBAC.ShowUsers.RequiredPrivilege](#rqsrs-006rbacshowusersrequiredprivilege)
+            * 5.31.18.3 [RQ.SRS-006.RBAC.ShowCreateUser.RequiredPrivilege](#rqsrs-006rbacshowcreateuserrequiredprivilege)
+            * 5.31.18.4 [RQ.SRS-006.RBAC.ShowRoles.Privilege](#rqsrs-006rbacshowrolesprivilege)
+            * 5.31.18.5 [RQ.SRS-006.RBAC.ShowRoles.RequiredPrivilege](#rqsrs-006rbacshowrolesrequiredprivilege)
+            * 5.31.18.6 [RQ.SRS-006.RBAC.ShowCreateRole.RequiredPrivilege](#rqsrs-006rbacshowcreaterolerequiredprivilege)
+            * 5.31.18.7 [RQ.SRS-006.RBAC.ShowRowPolicies.Privilege](#rqsrs-006rbacshowrowpoliciesprivilege)
+            * 5.31.18.8 [RQ.SRS-006.RBAC.ShowRowPolicies.RequiredPrivilege](#rqsrs-006rbacshowrowpoliciesrequiredprivilege)
+            * 5.31.18.9 [RQ.SRS-006.RBAC.ShowCreateRowPolicy.RequiredPrivilege](#rqsrs-006rbacshowcreaterowpolicyrequiredprivilege)
+            * 5.31.18.10 [RQ.SRS-006.RBAC.ShowQuotas.Privilege](#rqsrs-006rbacshowquotasprivilege)
+            * 5.31.18.11 [RQ.SRS-006.RBAC.ShowQuotas.RequiredPrivilege](#rqsrs-006rbacshowquotasrequiredprivilege)
+            * 5.31.18.12 [RQ.SRS-006.RBAC.ShowCreateQuota.RequiredPrivilege](#rqsrs-006rbacshowcreatequotarequiredprivilege)
+            * 5.31.18.13 [RQ.SRS-006.RBAC.ShowSettingsProfiles.Privilege](#rqsrs-006rbacshowsettingsprofilesprivilege)
+            * 5.31.18.14 [RQ.SRS-006.RBAC.ShowSettingsProfiles.RequiredPrivilege](#rqsrs-006rbacshowsettingsprofilesrequiredprivilege)
+            * 5.31.18.15 [RQ.SRS-006.RBAC.ShowCreateSettingsProfile.RequiredPrivilege](#rqsrs-006rbacshowcreatesettingsprofilerequiredprivilege)
+    * 5.32 [dictGet](#dictget)
+        * 5.32.1 [RQ.SRS-006.RBAC.dictGet.Privilege](#rqsrs-006rbacdictgetprivilege)
+        * 5.32.2 [RQ.SRS-006.RBAC.dictGet.RequiredPrivilege](#rqsrs-006rbacdictgetrequiredprivilege)
+        * 5.32.3 [RQ.SRS-006.RBAC.dictGet.Type.RequiredPrivilege](#rqsrs-006rbacdictgettyperequiredprivilege)
+        * 5.32.4 [RQ.SRS-006.RBAC.dictGet.OrDefault.RequiredPrivilege](#rqsrs-006rbacdictgetordefaultrequiredprivilege)
+        * 5.32.5 [RQ.SRS-006.RBAC.dictHas.RequiredPrivilege](#rqsrs-006rbacdicthasrequiredprivilege)
+        * 5.32.6 [RQ.SRS-006.RBAC.dictGetHierarchy.RequiredPrivilege](#rqsrs-006rbacdictgethierarchyrequiredprivilege)
+        * 5.32.7 [RQ.SRS-006.RBAC.dictIsIn.RequiredPrivilege](#rqsrs-006rbacdictisinrequiredprivilege)
+    * 5.33 [Introspection](#introspection)
+        * 5.33.1 [RQ.SRS-006.RBAC.Privileges.Introspection](#rqsrs-006rbacprivilegesintrospection)
+        * 5.33.2 [RQ.SRS-006.RBAC.Privileges.Introspection.addressToLine](#rqsrs-006rbacprivilegesintrospectionaddresstoline)
+        * 5.33.3 [RQ.SRS-006.RBAC.Privileges.Introspection.addressToLineWithInlines](#rqsrs-006rbacprivilegesintrospectionaddresstolinewithinlines)
+        * 5.33.4 [RQ.SRS-006.RBAC.Privileges.Introspection.addressToSymbol](#rqsrs-006rbacprivilegesintrospectionaddresstosymbol)
+        * 5.33.5 [RQ.SRS-006.RBAC.Privileges.Introspection.demangle](#rqsrs-006rbacprivilegesintrospectiondemangle)
+    * 5.34 [System](#system)
+        * 5.34.1 [RQ.SRS-006.RBAC.Privileges.System.Shutdown](#rqsrs-006rbacprivilegessystemshutdown)
+        * 5.34.2 [RQ.SRS-006.RBAC.Privileges.System.DropCache](#rqsrs-006rbacprivilegessystemdropcache)
+        * 5.34.3 [RQ.SRS-006.RBAC.Privileges.System.DropCache.DNS](#rqsrs-006rbacprivilegessystemdropcachedns)
+        * 5.34.4 [RQ.SRS-006.RBAC.Privileges.System.DropCache.Mark](#rqsrs-006rbacprivilegessystemdropcachemark)
+        * 5.34.5 [RQ.SRS-006.RBAC.Privileges.System.DropCache.Uncompressed](#rqsrs-006rbacprivilegessystemdropcacheuncompressed)
+        * 5.34.6 [RQ.SRS-006.RBAC.Privileges.System.DropCache.Mmap](#rqsrs-006rbacprivilegessystemdropcachemmap)
+        * 5.34.7 [RQ.SRS-006.RBAC.Privileges.System.DropCache.CompiledExpression](#rqsrs-006rbacprivilegessystemdropcachecompiledexpression)
+        * 5.34.8 [RQ.SRS-006.RBAC.Privileges.System.Reload](#rqsrs-006rbacprivilegessystemreload)
+        * 5.34.9 [RQ.SRS-006.RBAC.Privileges.System.Reload.Config](#rqsrs-006rbacprivilegessystemreloadconfig)
+        * 5.34.10 [RQ.SRS-006.RBAC.Privileges.System.Reload.Dictionary](#rqsrs-006rbacprivilegessystemreloaddictionary)
+        * 5.34.11 [RQ.SRS-006.RBAC.Privileges.System.Reload.Dictionaries](#rqsrs-006rbacprivilegessystemreloaddictionaries)
+        * 5.34.12 [RQ.SRS-006.RBAC.Privileges.System.Reload.EmbeddedDictionaries](#rqsrs-006rbacprivilegessystemreloadembeddeddictionaries)
+        * 5.34.13 [RQ.SRS-006.RBAC.Privileges.System.Reload.Symbols](#rqsrs-006rbacprivilegessystemreloadsymbols)
+        * 5.34.14 [RQ.SRS-006.RBAC.Privileges.System.Reload.Function](#rqsrs-006rbacprivilegessystemreloadfunction)
+        * 5.34.15 [RQ.SRS-006.RBAC.Privileges.System.RestartDisk](#rqsrs-006rbacprivilegessystemrestartdisk)
+        * 5.34.16 [RQ.SRS-006.RBAC.Privileges.System.ThreadFuzzer](#rqsrs-006rbacprivilegessystemthreadfuzzer)
+        * 5.34.17 [RQ.SRS-006.RBAC.Privileges.System.Merges](#rqsrs-006rbacprivilegessystemmerges)
+        * 5.34.18 [RQ.SRS-006.RBAC.Privileges.System.TTLMerges](#rqsrs-006rbacprivilegessystemttlmerges)
+        * 5.34.19 [RQ.SRS-006.RBAC.Privileges.System.Fetches](#rqsrs-006rbacprivilegessystemfetches)
+        * 5.34.20 [RQ.SRS-006.RBAC.Privileges.System.Moves](#rqsrs-006rbacprivilegessystemmoves)
+        * 5.34.21 [RQ.SRS-006.RBAC.Privileges.System.Sends](#rqsrs-006rbacprivilegessystemsends)
+        * 5.34.22 [RQ.SRS-006.RBAC.Privileges.System.Sends.Distributed](#rqsrs-006rbacprivilegessystemsendsdistributed)
+        * 5.34.23 [RQ.SRS-006.RBAC.Privileges.System.Sends.Replicated](#rqsrs-006rbacprivilegessystemsendsreplicated)
+        * 5.34.24 [RQ.SRS-006.RBAC.Privileges.System.ReplicationQueues](#rqsrs-006rbacprivilegessystemreplicationqueues)
+        * 5.34.25 [RQ.SRS-006.RBAC.Privileges.System.SyncReplica](#rqsrs-006rbacprivilegessystemsyncreplica)
+        * 5.34.26 [RQ.SRS-006.RBAC.Privileges.System.RestartReplica](#rqsrs-006rbacprivilegessystemrestartreplica)
+        * 5.34.27 [RQ.SRS-006.RBAC.Privileges.System.DropReplica](#rqsrs-006rbacprivilegessystemdropreplica)
+        * 5.34.28 [RQ.SRS-006.RBAC.Privileges.System.RestoreReplica](#rqsrs-006rbacprivilegessystemrestorereplica)
+        * 5.34.29 [RQ.SRS-006.RBAC.Privileges.System.Flush](#rqsrs-006rbacprivilegessystemflush)
+        * 5.34.30 [RQ.SRS-006.RBAC.Privileges.System.Flush.Distributed](#rqsrs-006rbacprivilegessystemflushdistributed)
+        * 5.34.31 [RQ.SRS-006.RBAC.Privileges.System.Flush.Logs](#rqsrs-006rbacprivilegessystemflushlogs)
+    * 5.35 [Sources](#sources)
+        * 5.35.1 [RQ.SRS-006.RBAC.Privileges.Sources](#rqsrs-006rbacprivilegessources)
+        * 5.35.2 [RQ.SRS-006.RBAC.Privileges.Sources.File](#rqsrs-006rbacprivilegessourcesfile)
+        * 5.35.3 [RQ.SRS-006.RBAC.Privileges.Sources.URL](#rqsrs-006rbacprivilegessourcesurl)
+        * 5.35.4 [RQ.SRS-006.RBAC.Privileges.Sources.Remote](#rqsrs-006rbacprivilegessourcesremote)
+        * 5.35.5 [RQ.SRS-006.RBAC.Privileges.Sources.MySQL](#rqsrs-006rbacprivilegessourcesmysql)
+        * 5.35.6 [RQ.SRS-006.RBAC.Privileges.Sources.ODBC](#rqsrs-006rbacprivilegessourcesodbc)
+        * 5.35.7 [RQ.SRS-006.RBAC.Privileges.Sources.JDBC](#rqsrs-006rbacprivilegessourcesjdbc)
+        * 5.35.8 [RQ.SRS-006.RBAC.Privileges.Sources.HDFS](#rqsrs-006rbacprivilegessourceshdfs)
+        * 5.35.9 [RQ.SRS-006.RBAC.Privileges.Sources.S3](#rqsrs-006rbacprivilegessourcess3)
+        * 5.35.10 [RQ.SRS-006.RBAC.Privileges.Sources.Mongo](#rqsrs-006rbacprivilegessourcesmongo)
+        * 5.35.11 [RQ.SRS-006.RBAC.Privileges.Sources.Postgres](#rqsrs-006rbacprivilegessourcespostgres)
+        * 5.35.12 [RQ.SRS-006.RBAC.Privileges.Sources.Sqlite](#rqsrs-006rbacprivilegessourcessqlite)
+    * 5.36 [RQ.SRS-006.RBAC.Privileges.GrantOption](#rqsrs-006rbacprivilegesgrantoption)
+    * 5.37 [RQ.SRS-006.RBAC.Privileges.All](#rqsrs-006rbacprivilegesall)
+    * 5.38 [RQ.SRS-006.RBAC.Privileges.RoleAll](#rqsrs-006rbacprivilegesroleall)
+    * 5.39 [RQ.SRS-006.RBAC.Privileges.None](#rqsrs-006rbacprivilegesnone)
+    * 5.40 [RQ.SRS-006.RBAC.Privileges.AdminOption](#rqsrs-006rbacprivilegesadminoption)
 * 6 [References](#references)
 
 ## Revision History
@@ -15266,7 +16052,7 @@ version: 1.0
 
 [ClickHouse] SHALL support revoking MULTIPLE **privileges** to one or more users or roles
 for a database or a table using the `REVOKE privilege1, privilege2...` statement.
-**privileges** refers to any set of Clickhouse defined privilege, whose hierarchy includes
+**privileges** refers to any set of ClickHouse defined privilege, whose hierarchy includes
 SELECT, INSERT, ALTER, CREATE, DROP, TRUNCATE, OPTIMIZE, SHOW, KILL QUERY, ACCESS MANAGEMENT,
 SYSTEM, INTROSPECTION, SOURCES, dictGet and all of their sub-privileges.
 
@@ -15416,7 +16202,7 @@ using the `FOR` clause in the `SHOW GRANTS` statement.
 #### RQ.SRS-006.RBAC.Show.Grants.Syntax
 version: 1.0
 
-[Clickhouse] SHALL use the following syntax for the `SHOW GRANTS` statement
+[ClickHouse] SHALL use the following syntax for the `SHOW GRANTS` statement
 
 ``` sql
 SHOW GRANTS [FOR user_or_role]
@@ -15647,26 +16433,124 @@ ALTER TABLE view MODIFY QUERY SELECT * FROM source_table
 ##### RQ.SRS-006.RBAC.MaterializedView.Insert
 version: 1.0
 
-[ClickHouse] SHALL only succesfully `INSERT` into a materialized view if and only if
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view if and only if
 the user has `INSERT` privilege on the view, either explicitly or through a role.
 
 ##### RQ.SRS-006.RBAC.MaterializedView.Insert.SourceTable
 version: 1.0
 
-[ClickHouse] SHALL only succesfully `INSERT` into a source table of a materialized view if and only if
+[ClickHouse] SHALL only successfully `INSERT` into a source table of a materialized view if and only if
 the user has `INSERT` privilege on the source table, either explicitly or through a role.
 
 ##### RQ.SRS-006.RBAC.MaterializedView.Insert.TargetTable
 version: 1.0
 
-[ClickHouse] SHALL only succesfully `INSERT` into a target table of a materialized view if and only if
+[ClickHouse] SHALL only successfully `INSERT` into a target table of a materialized view if and only if
 the user has `INSERT` privelege on the target table, either explicitly or through a role.
 
 #### SQL Security
 
-DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three legal values: `DEFINER`, `INVOKER`, or `NONE`. [Clickhouse] allows to specify any existing user or CURRENT_USER in the DEFINER clause.
+##### Schema
+---
+```yaml
+View Type:
+  Normal View:
+    Operations:
+      - Select from view
+    SQL SECURITY:
+      - DEFINER
+      - INVOKER
+      - NONE
+      - not specified
+    DEFINER:
+      - user
+      - CURRENT_USER
+      - not specified
+    grant privileges:
+      - directly
+      - via role
+    cluster:
+      - on cluster
+      - not on cluster
+    view source table:
+      - table or multiple tables
+      - distributed table
+      - table function
+      - view
+      - materialized view
+    view source table grants:
+      - select
+      - insert
+      - none
+      - create
+      # Add other grants here if needed
+    view grants:
+      - select
+      - none
+      - create
+      # Add other grants here if needed
+  Materialized View:
+    Operations:
+      - Select from mv
+      - Select from mv table
+      - Insert into mv
+      - Insert into mv table
+      - Select from source table
+      - Insert into source table
+    SQL SECURITY:
+      - DEFINER
+      - NONE
+      - not specified
+    DEFINER:
+      - user
+      - CURRENT_USER
+      - not specified
+    grant privileges:
+      - directly
+      - via role
+    cluster:
+      - on cluster
+      - not on cluster
+    source table:
+      - table or multiple tables
+      - distributed table
+      - view
+      - materialized view
+    view source table grants:
+      - select
+      - insert
+      - none
+      - create
+      # Add other grants here if needed
+    view target table grants:
+      - select
+      - insert
+      - none
+      - create
+      # Add other grants here if needed
+    materialized view grants:
+      - select
+      - none
+      - create
+      # Add other grants here if needed
 
-The following table show which rights are required for which user in order to select from view. In every case it is **required** to have `GRANT SELECT ON <view>` in order to read from it.
+```
+
+DEFINER and SQL SECURITY allow to specify which ClickHouse user to use when executing the view's underlying query. SQL SECURITY has three valid values: `DEFINER`, `INVOKER`, or `NONE`. [ClickHouse] allows to specify any existing user or `CURRENT_USER` in the DEFINER clause.
+
+Examples:
+```sql
+CREATE test_view
+DEFINER = alice SQL SECURITY DEFINER
+AS SELECT ...
+```
+```sql
+CREATE test_view
+SQL SECURITY INVOKER
+AS SELECT ...
+```
+
+The following table shows which rights are required for which user in order to select from view. In every case it is **required** to have `GRANT SELECT ON <view>` in order to read from it.
 
 | SQL security option | View | Materialized View | 
 | --------------------|------|-------------------|
@@ -15674,9 +16558,22 @@ The following table show which rights are required for which user in order to se
 |`INVOKER` |	User must have a `SELECT` grant for the view's source table. |	`SQL SECURITY INVOKER` can't be specified for materialized views. |
 |`NONE` |	- | -
 
+The following table shows which rights are required for which user in order to insert into view. In every case it is **required** to have `GRANT INSERT ON <view>` in order to write into it.
+
+| SQL security option | View | Materialized View | 
+| --------------------|------|-------------------|
+| `DEFINER alice` | It is not possible to write into normal views	 | `alice` must have a `INSERT` grant for the view's target table. |
+|`INVOKER` | It is not possible to write into normal views	 |	`SQL SECURITY INVOKER` can't be specified for materialized views. |
+|`NONE` |	It is not possible to write into normal views | -
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity
 version: 1.0  
 [ClickHouse] SHALL support the `ALTER TABLE MODIFY SQL SECURITY` statement to change the SQL security for an existing view.
+
+Syntax:
+```sql
+ALTER TABLE [ON CLUSTER] MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user | CURRENT_USER }]
+```
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.ModifySQLSecurity.OnCluster
 version: 1.0  
@@ -15686,10 +16583,8 @@ Syntax:
 ```sql
 ALTER TABLE [ON CLUSTER] MODIFY SQL SECURITY { DEFINER | INVOKER | NONE } [DEFINER = { user | CURRENT_USER }]
 ```
-
-##### RQ.SRS-006.RBAC.SQLSecurity.Default.Definer
-version: 1.0  
-[ClickHouse] SHALL set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified.
+  
+<br/><br/> 
 
 #### View SQL Security
 
@@ -15704,19 +16599,128 @@ CREATE [OR REPLACE] VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster_nam
 AS SELECT ...
 ```
 
-##### RQ.SRS-006.RBAC.SQLSecurity.View.Default
+##### RQ.SRS-006.RBAC.SQLSecurity.View.OnCluster
 version: 1.0  
-[ClickHouse] SHALL set `SQL SECURITY` to `INVOKER` for normal views if SQL SECURITY is not specified.
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE VIEW ON CLUSTER` statement.
 
-##### RQ.SRS-006.RBAC.SQLSecurity.View.Definer.Select
+Syntax:
+```sql
+CREATE [OR REPLACE] VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster_name] 
+[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
+AS SELECT ...
+```
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.DefaultValues
 version: 1.0  
-[ClickHouse] SHALL only succesfully `SELECT` from a view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
+In [ClickHouse], the default values for `default_normal_view_sql_security` and `default_view_definer` settings SHALL be set to `INVOKER` and `CURRENT_USER`, respectively.
 
-##### RQ.SRS-006.RBAC.SQLSecurity.View.Invoker.Select
+##### RQ.SRS-006.RBAC.SQLSecurity.View.DefinerNotSpecified
 version: 1.0  
-[ClickHouse] SHALL only succesfully `SELECT` from a view with INVOKER security mode if and only if the invoker user has `SELECT` privilege on the source table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role
+
+| SQL security  | DEFINER       | 
+| --------------|---------------|
+| `DEFINER`     | not specified | 
+
+[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. 
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.SqlSecurityNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       |  
+| --------------|---------------|
+| not specified | `alice`       |
+
+[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
+
+##### `RQ.SRS-006.RBAC.SQLSecurity.View.CascadingViews
+**To be continued**
+* cascading views (3)
+    * mv -> mv -> v
+    * v -> nan -> nan
+    * v -> v -> nan
+    * ...
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the view's **source** table.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefiner.DefinerNotSpecified
+version: 1.0  
+
+| SQL security | DEFINER       | Operation         | 
+| -------------|---------------|-------------------|
+| `DEFINER`    | not specified | `SELECT`          |
+
+[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified.  
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (`CURRENT_USER`) has **`SELECT`** privilege for the view's **source** table.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `INVOKER`    | `alice` | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and **`SELECT`** privilege for the view's **source** table.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.DefinerNotSpecified
+version: 1.0  
+
+| SQL security | DEFINER        | Operation         | 
+| -------------|----------------|-------------------|
+| `INVOKER`    |  not specified | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and **`SELECT`** privilege for the view's **source** table.
 
 
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| not specified | `alice`       | `SELECT`          |
+
+[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the view's **source** table.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| not specified | not specified | `SELECT`          |
+
+[ClickHouse] SHALL set `SQL SECURITY` to the value from `default_normal_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if all privileges are granted according to the SQL security options.
+
+If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security SHALL behave like they did before.  
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | `alice`       | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**To be continued**
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | not specified | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**To be continued**
+  
+<br/><br/> 
+  
 #### Materialized View SQL Security
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CreateMaterializedView
@@ -15730,21 +16734,201 @@ CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]na
 AS SELECT ...
 ```
 
-##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Default
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.OnCluster
 version: 1.0  
-[ClickHouse] SHALL set `SQL SECURITY` to `DEFINER` for materialized views if SQL SECURITY is not specified.
+[ClickHouse] SHALL support the `DEFINER` and `SQL SECURITY` clauses in the `CREATE MATERIALIZED VIEW ON CLUSTER` statement.
 
-##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Select
-version: 1.0  
-[ClickHouse] SHALL only succesfully `SELECT` from a materialized view with DEFINER security mode if and only if the definer user has `SELECT` privilege on the source table and target table, either explicitly or through a role and invoker user has `SELECT` privileges on the view, either explicitly or through a role.
+Syntax:
+```sql
+CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db.]table_name [ON CLUSTER] [TO[db.]name] [ENGINE = engine] [POPULATE] 
+[DEFINER = { user | CURRENT_USER }] [SQL SECURITY { DEFINER | INVOKER | NONE }] 
+AS SELECT ...
+```
 
-##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Definer.Insert
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues
 version: 1.0  
-[ClickHouse] SHALL only succesfully `INSERT` into a materialized view with DEFINER security mode if and only if the definer user has `INSERT` privilege on the target table, either explicitly or through a role and invoker user has `INSERT` privileges on the view, either explicitly or through a role.
+In [ClickHouse], the default values for `default_materialized_view_sql_security` and `default_view_definer` settings SHALL be set to `DEFINER` and `CURRENT_USER`, respectively.
 
-##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Invoker
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified
 version: 1.0  
+
+| SQL security  | DEFINER       | 
+| --------------|---------------|
+| `DEFINER`     | not specified | 
+
+[ClickHouse] SHALL automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. 
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.SqlSecurityNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | 
+| --------------|---------------|
+| not specified | `alice`       | 
+
+[ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
+
+##### `RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews
+**To be continued**
+* cascading views (3)
+    * mv -> mv -> v
+    * v -> nan -> nan
+    * v -> v -> nan
+    * ...
+
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the materialized view's **source and target** tables.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `DEFINER`     | not specified | `SELECT`          |
+
+[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (`CURRENT_USER`) has **`SELECT`** privilege for the materialized view's **source and target** tables.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `INVOKER`     | `alice`       | `SELECT`          |
+
 [ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `INVOKER`     | not specified | `SELECT`          |
+
+[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| not specified | `alice`       | `SELECT`          |
+
+[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the materialized view's **source and target** tables.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNotSpecified.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| not specified | not_specified | `SELECT`          |
+
+[ClickHouse] set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.
+
+If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security SHALL behave like they did before.  
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | `alice`       | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**To be continued**
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | not specified | `SELECT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**To be continued**
+
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `INSERT`          |
+
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table.
+
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `DEFINER`     | not specified | `INSERT`          |
+
+[ClickHouse] automatically set `DEFINER` to `CURRENT_USER` if `DEFINER` is not specified and `SQL SECURITY` `DEFINER` is specified. [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (`CURRENT_USER`) has **`INSERT`** privilege for the materialized view's **target** table.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `INVOKER`    | `alice` | `INSERT`          |
+
+[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityInvoker.DefinerNotSpecified
+version: 1.0  
+
+| SQL security | DEFINER       | Operation         | 
+| -------------|---------------|-------------------|
+| `INVOKER`    | not specified | `INSERT`          |
+
+[ClickHouse] SHALL not allow to specify `SQL SECURITY INVOKER` for materialized views.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.Definer
+version: 1.0  
+
+| SQL security | DEFINER       | Operation         | 
+| -------------|---------------|-------------------|
+|not specified | `alice`       | `INSERT`          |
+
+[ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| not specified | not_specified | `INSERT`          |
+
+[ClickHouse] set `SQL SECURITY` to the value from `default_materialized_view_sql_security` setting and `DEFINER` to the value from `default_view_definer` setting if `SQL SECURITY` and `DEFINER` were not specified and `ignore_empty_sql_security_in_create_view_query` is set to **false**. [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if all privileges are granted according to the SQL security options.
+
+If `ignore_empty_sql_security_in_create_view_query` is set to true, newly created views without SQL security will behave like they did before.  
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | `alice`       | `INSERT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**To be continued**
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified
+version: 1.0  
+
+| SQL security  | DEFINER       | Operation         | 
+| --------------|---------------|-------------------|
+| `NONE`        | not specified | `INSERT`          |
+
+SQL SECURITY NONE is a deprecated option.
+**To be continued**
 
 
 #### Live View

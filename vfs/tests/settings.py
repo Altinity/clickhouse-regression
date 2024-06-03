@@ -353,7 +353,9 @@ def select(self, table_name, settings=None):
         settings = "SETTINGS " + settings
     for _ in range(random.randint(3, 10)):
         with By(f"count rows in {table_name} on {node.name}"):
-            node.query(f"SELECT count() FROM {table_name} {settings} FORMAT TabSeparated")
+            node.query(
+                f"SELECT count() FROM {table_name} {settings} FORMAT TabSeparated"
+            )
 
 
 def combinations_all_lengths(items, min_size=1, max_size=None):

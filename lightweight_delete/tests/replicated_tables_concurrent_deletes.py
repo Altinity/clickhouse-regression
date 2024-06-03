@@ -47,7 +47,8 @@ def replicated_table_deleting_with_without_overlap(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+                output=expected_output,
             )
 
 
@@ -101,7 +102,8 @@ def replicated_table_deleting_without_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+                output=expected_output,
             )
 
 
@@ -156,7 +158,8 @@ def replicated_table_deleting_with_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+                output=expected_output,
             )
 
 
@@ -216,7 +219,8 @@ def replicated_table_deleting_in_loop_with_without_overlap(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+                output=expected_output,
             )
 
 
@@ -285,7 +289,8 @@ def replicated_table_deleting_in_loop_without_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+                output=expected_output,
             )
 
 
@@ -342,7 +347,8 @@ def replicated_table_deleting_in_loop_with_overlap_entire_table(
     for attempt in retries(delay=1, timeout=30):
         with attempt:
             check_query_on_all_nodes(
-                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+                query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+                output=expected_output,
             )
 
 

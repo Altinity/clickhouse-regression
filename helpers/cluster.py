@@ -1159,13 +1159,13 @@ class Cluster(object):
                     self.use_specific_version
                 )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
+                    self.specific_clickhouse_binary_path
+                )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
+                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
+                    self.clickhouse_specific_odbc_binary
+                )
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
@@ -1664,14 +1664,15 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
+                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
+                    self.clickhouse_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
+                    self.clickhouse_odbc_bridge_binary_path
+                    or os.path.join(
+                        os.path.dirname(self.clickhouse_binary_path),
+                        "clickhouse-odbc-bridge",
+                    )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""

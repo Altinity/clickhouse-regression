@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 from testflows.core import *
 
-from clickhouse_keeper.requirements import RQ_SRS_024_ClickHouse_Keeper_Disaster_Recovery_ManualRecovery
+from clickhouse_keeper.requirements import (
+    RQ_SRS_024_ClickHouse_Keeper_Disaster_Recovery_ManualRecovery,
+)
 
 from clickhouse_keeper_failover.tests.steps import *
 
@@ -49,7 +51,7 @@ def feature(self, restart_on_reconfig=False):
 
     with When("I send 'rcvr' to the recovery node"):
         r = recovery_node.command("echo rcvr | nc localhost 9181", no_checks=True)
-        assert r.exitcode in [0, 1], error('Unexpected code from nc')
+        assert r.exitcode in [0, 1], error("Unexpected code from nc")
 
     with Then("I wait for the node to enter recovery mode"):
         retry(check_logs, timeout=60, delay=2)(

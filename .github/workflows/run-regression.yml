@@ -229,6 +229,7 @@ jobs:
     timeout-minutes: 300
     env:
       SUITE: alter
+      STORAGE: /replace_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
     steps:
       - name: Checkout
@@ -262,6 +263,7 @@ jobs:
     timeout-minutes: 3000
     env:
       SUITE: alter
+      STORAGE: /attach_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
     steps:
       - name: Checkout
@@ -295,6 +297,7 @@ jobs:
     timeout-minutes: 3000
     env:
       SUITE: alter
+      STORAGE: /move_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
     steps:
       - name: Checkout

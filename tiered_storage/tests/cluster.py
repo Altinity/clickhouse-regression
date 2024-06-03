@@ -117,9 +117,11 @@ class ClickHouseNode(Node):
                     echo -e \"{sql[:100]}...\" > {query.name}
                     {command}
                 """
-                with By(
-                    "executing command", description=description
-                ) if steps else NullStep():
+                with (
+                    By("executing command", description=description)
+                    if steps
+                    else NullStep()
+                ):
                     try:
                         r = self.cluster.bash(None)(command, *args, **kwargs)
                     except ExpectTimeoutError as e:
@@ -144,9 +146,11 @@ class ClickHouseNode(Node):
                 assert r.exitcode == exitcode, error(r.output)
 
         if message is not None:
-            with Then(
-                f"output should contain message", description=message
-            ) if steps else NullStep():
+            with (
+                Then(f"output should contain message", description=message)
+                if steps
+                else NullStep()
+            ):
                 assert message in r.output, error(r.output)
 
         if message is None or "Exception:" not in message:
@@ -338,8 +342,10 @@ class Cluster(object):
             with Then(f"exitcode should be {exitcode}") if steps else NullStep():
                 assert r.exitcode == exitcode, error(r.output)
         if message is not None:
-            with Then(
-                f"output should contain message", description=message
-            ) if steps else NullStep():
+            with (
+                Then(f"output should contain message", description=message)
+                if steps
+                else NullStep()
+            ):
                 assert message in r.output, error(r.output)
         return r
