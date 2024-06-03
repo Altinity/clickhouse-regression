@@ -1385,12 +1385,13 @@ def start_mixed_keeper_ssl(
                     wait_healthy=False
                 )
 
+        # pause()
         with And(f"I check that ruok returns imok"):
             for name in control_nodes:
                 retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="F",
+                    message=None,
                 )
 
         if rest_cluster_nodes != "no_rest_nodes":
@@ -1509,7 +1510,7 @@ def start_standalone_keeper(
                 retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message=f"{'F' if ssl else 'imok'}",
+                    message=None if ssl else "imok",
                 )
 
         with And("I start rest ClickHouse server nodes"):
