@@ -219,3 +219,10 @@ def aggregate_function_throw(name=None):
         247,
         f"DB::Exception: Aggregate function aggThrow has thrown exception successfully",
     )
+
+
+def invoker_not_allowed():
+    return (
+        141,
+        "DB::Exception: SQL SECURITY INVOKER can't be specified for MATERIALIZED VIEW.",
+    )
