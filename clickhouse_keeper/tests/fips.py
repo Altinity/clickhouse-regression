@@ -652,7 +652,9 @@ def feature(self, node="clickhouse1"):
             for zookeeper_node in self.context.cluster.nodes["zookeeper"]:
                 for retry in retries(timeout=10, delay=1):
                     with retry:
-                        cmd = bash(f"docker ps | grep {zookeeper_node}")
+                        cmd = bash(
+                            f"docker ps | grep clickhouse_keeper | grep {zookeeper_node}"
+                        )
                         assert cmd.exitcode == 1
 
             assert self.context.node.query(

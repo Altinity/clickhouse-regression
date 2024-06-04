@@ -1470,12 +1470,14 @@ def insert_from_s3_function(
 
 @TestStep(Given)
 def measure_buckets_before_and_after(
-    self, bucket_prefix=None, bucket_name=None, tolerance=5
+    self, bucket_prefix=None, bucket_name=None, tolerance=5, delay=10
 ):
     """Return the current bucket size and assert that it is the same after cleanup."""
 
     with When("I get the size of the s3 bucket before adding data"):
-        size_before = get_stable_bucket_size(prefix=bucket_prefix, name=bucket_name)
+        size_before = get_stable_bucket_size(
+            prefix=bucket_prefix, name=bucket_name, delay=delay
+        )
 
     yield size_before
 
@@ -1488,4 +1490,5 @@ def measure_buckets_before_and_after(
             name=bucket_name,
             expected_size=size_before,
             tolerance=tolerance,
+            delay=delay,
         )
