@@ -86,7 +86,9 @@ def wildcard(self, wildcard, expected_time, expect_result):
             t_elapsed = time.time() - t_start
             metric(f"wildcard pattern='{wildcard}', i={i}", t_elapsed, "s")
             is_number = r.output.strip().replace(".", "").isdigit()
-            assert is_number == expect_result, error(r.output)
+            assert is_number == expect_result, error(
+                f"Expected a number, got {r.output}"
+            )
             assert t_elapsed < expected_time, error()
 
 
