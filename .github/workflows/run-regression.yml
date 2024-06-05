@@ -380,10 +380,9 @@ jobs:
             -u ${{ env.SUITE }}/regression.py \
             --clickhouse-binary-path ${{ env.clickhouse_binary_path }} \
             --clickhouse-version ${{ env.version }} \
-            ${{ env.args }} || true
-            python_exit_code=$?
+            ${{ env.args }};
 
-            .github/add_link_to_logs.sh  || exit $python_exit_code
+            .github/add_link_to_logs.sh 
 
       - name: Create and upload logs
         if: always()
