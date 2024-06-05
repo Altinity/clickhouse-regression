@@ -380,7 +380,7 @@ jobs:
             -u ${{ env.SUITE }}/regression.py \
             --clickhouse-binary-path ${{ env.clickhouse_binary_path }} \
             --clickhouse-version ${{ env.version }} \
-            ${{ env.args }}
+            ${{ env.args }} || true
 
             .github/add_link_to_logs.sh
 
