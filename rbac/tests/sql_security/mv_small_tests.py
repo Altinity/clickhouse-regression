@@ -43,15 +43,11 @@ def check_create_mv(self):
 def check_default_values(self):
     """Check that default values of SQL SECURITY settings are correct."""
     assert (
-        get_settings_value(
-            node=self.context.node,
-            setting_name="default_materialized_view_sql_security",
-        )
+        get_settings_value(setting_name="default_materialized_view_sql_security")
         == "DEFINER"
     ), error()
     assert (
-        get_settings_value(node=self.context.node, setting_name="default_view_definer")
-        == "CURRENT_USER"
+        get_settings_value(setting_name="default_view_definer") == "CURRENT_USER"
     ), error()
 
 
@@ -106,7 +102,7 @@ def definer_not_specified(
     """
     node = self.context.node
     default_default_view_definer = get_settings_value(
-        node=node, setting_name="default_view_definer"
+        setting_name="default_view_definer"
     )
     try:
         with Given("I create view's source and target tables"):
@@ -114,7 +110,7 @@ def definer_not_specified(
             target_table_name = create_simple_MergeTree_table(column_name="x")
             insert_data_from_numbers(table_name=target_table_name)
 
-        with And("I create user that will be set as default view definer"):
+        with And("I create user that will be set as default_view_definer"):
             new_default_user_name = "new_default_user_" + getuid()
             create_user(user_name=new_default_user_name)
 
@@ -132,9 +128,9 @@ def definer_not_specified(
 
         with And("I check that setting was changed"):
             assert (
-                get_settings_value(node=node, setting_name="default_view_definer")
+                get_settings_value(setting_name="default_view_definer")
                 == f"{new_default_user_name}"
-            )
+            ), error()
 
         with And("I create materialized view only specifying SQL SECURITY"):
             mv_name = create_materialized_view(
@@ -178,9 +174,9 @@ def definer_not_specified(
 
         with And("I check that setting was restored"):
             assert (
-                get_settings_value(node=node, setting_name="default_view_definer")
+                get_settings_value(setting_name="default_view_definer")
                 == f"{default_default_view_definer}"
-            )
+            ), error()
 
 
 @TestScenario
@@ -203,7 +199,7 @@ def sql_security_not_specified(
     """
     node = self.context.node
     default_default_mv_sql_security = get_settings_value(
-        node=node, setting_name="default_materialized_view_sql_security"
+        setting_name="default_materialized_view_sql_security"
     )
     try:
         with Given("I create view's source and target tables"):
@@ -226,10 +222,10 @@ def sql_security_not_specified(
         with And("I check that setting was changed"):
             assert (
                 get_settings_value(
-                    node=node, setting_name="default_materialized_view_sql_security"
+                    setting_name="default_materialized_view_sql_security"
                 )
                 == "INVOKER"
-            )
+            ), error()
 
         with And("I create definer user and grant privileges"):
             definer_user = "alice_" + getuid()
@@ -282,10 +278,10 @@ def sql_security_not_specified(
         with And("I check that setting was restored"):
             assert (
                 get_settings_value(
-                    node=node, setting_name="default_materialized_view_sql_security"
+                    setting_name="default_materialized_view_sql_security"
                 )
                 == f"{default_default_mv_sql_security}"
-            )
+            ), error()
 
 
 @TestScenario
@@ -293,8 +289,11 @@ def sql_security_not_specified(
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer(
         "1.0"
     ),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_Definer(
+        "1.0"
+    ),
 )
-def check_select_sql_security_definer_definer(
+def check_select_insert_sql_security_definer_definer(
     self,
     user_view_privilege,
     user_source_table_privilege,
@@ -304,15 +303,18 @@ def check_select_sql_security_definer_definer(
     grant_privilege,
 ):
     """
-    =======      | =======
-    SQL security | Definer
-    =======      | =======
-    DEFINER      | alice
-    =======      | =======
+    =======      | =======   | =======
+    SQL security | Definer   | Operation
+    =======      | =======   | =======
+    DEFINER      | alice     | SELECT/INSERT
+    =======      | =======   | =======
 
     Check that user can select from materialized view with given SQL SECURITY
     options when user has SELECT privilege for mv and definer user has SELECT
     privilege for mv's source and target tables.
+    Check that user can insert into materialized view with given SQL SECURITY
+    options when user has INSERT privilege for mv and definer user has INSERT
+    privilege for mv's target table.
     """
     node = self.context.node
 
@@ -392,10 +394,41 @@ def check_select_sql_security_definer_definer(
                 message=message,
             )
 
+    with And(
+        """I check that user can insert into mv if he has INSERT privilege for mv and
+            definer user has INSERT privilege 
+            for mv's target tables"""
+    ):
+        if (
+            "INSERT" in user_view_privilege
+            and "INSERT" in definer_target_table_privilege
+        ):
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+            )
+            if (
+                "SELECT" in definer_source_table_privilege
+                and "SELECT" in definer_target_table_privilege
+            ):
+                output = node.query(f"SELECT sum(x) FROM {mv_name}").output
+                assert output == "55", error()
+        else:
+            if "INSERT" not in user_view_privilege:
+                exitcode, message = errors.not_enough_privileges(name=user_name)
+            else:
+                exitcode, message = errors.not_enough_privileges(name=definer_user)
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
 
 @TestScenario
-def select_sql_security_definer_definer(self):
-    """Run test with different privileges for definer and user."""
+def select_insert_sql_security_definer_definer(self):
+    """Run check_select_insert_sql_security_definer_definer with different privileges for definer and user."""
     grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
     privileges = ["SELECT", "INSERT", "ALTER", "CREATE", "NONE"]
 
@@ -430,7 +463,7 @@ def select_sql_security_definer_definer(self):
             )
             Scenario(
                 test_name,
-                test=check_select_sql_security_definer_definer,
+                test=check_select_insert_sql_security_definer_definer,
                 parallel=True,
                 executor=executor,
             )(
@@ -449,8 +482,11 @@ def select_sql_security_definer_definer(self):
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_DefinerNotSpecified(
         "1.0"
     ),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityDefiner_DefinerNotSpecified(
+        "1.0"
+    ),
 )
-def check_select_sql_security_definer_definer_not_specified(
+def check_select_insert_sql_security_definer_definer_not_specified(
     self,
     user_view_privilege,
     user_source_table_privilege,
@@ -458,16 +494,19 @@ def check_select_sql_security_definer_definer_not_specified(
     grant_privilege,
 ):
     """
-    =======      | =======
-    SQL security | Definer
-    =======      | =======
-    DEFINER      | not specified
-    =======      | =======
+    =======      | =======       | =======
+    SQL security | Definer       | Operation
+    =======      | =======       | =======
+    DEFINER      | not specified | SELECT/INSERT
+    =======      | =======       | =======
 
+    If definer is not specified then it should be set to CURRENT_USER.
     Check that user can select from materialized view with given SQL SECURITY
     options when user has SELECT privilege for mv and definer user has SELECT
-    privilege for mv's source and target tables. If definer is not specified
-    then it should be set to CURRENT_USER.
+    privilege for mv's source and target tables.
+    Check that user can insert into materialized view with given SQL SECURITY
+    options when user has INSERT privilege for mv and definer user has INSERT
+    privilege for mv's target table.
     """
     node = self.context.node
 
@@ -504,7 +543,7 @@ def check_select_sql_security_definer_definer_not_specified(
             privileges=user_target_table_privilege,
         )
 
-    with Then("I check if user can select from mv if he has SELECT privilege for mv"):
+    with Then("I check that user can select from mv if he has SELECT privilege for mv"):
         if "SELECT" in user_view_privilege:
             output = node.query(
                 f"SELECT sum(x) FROM {mv_name}",
@@ -520,10 +559,27 @@ def check_select_sql_security_definer_definer_not_specified(
                 message=message,
             )
 
+    with And("I check that user can insert into mv if he has INSERT privilege for mv"):
+        if "INSERT" in user_view_privilege:
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+            )
+            output = node.query(f"SELECT sum(x) FROM {mv_name}").output
+            assert output == "55", error()
+        else:
+            exitcode, message = errors.not_enough_privileges(name=user_name)
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
 
 @TestScenario
-def select_sql_security_definer_definer_not_specified(self):
-    """Run check_select_sql_security_definer_definer_not_specified
+def select_insert_sql_security_definer_definer_not_specified(self):
+    """Run check_select_insert_sql_security_definer_definer_not_specified
     with different privileges for user.
     """
     grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
@@ -556,7 +612,7 @@ def select_sql_security_definer_definer_not_specified(self):
             )
             Scenario(
                 test_name,
-                test=check_select_sql_security_definer_definer_not_specified,
+                test=check_select_insert_sql_security_definer_definer_not_specified,
                 parallel=True,
                 executor=executor,
             )(
@@ -573,16 +629,19 @@ def select_sql_security_definer_definer_not_specified(self):
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_Definer(
         "1.0"
     ),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_Definer(
+        "1.0"
+    ),
 )
-def check_select_sql_security_invoker_definer(self):
+def check_select_insert_sql_security_invoker_definer(self):
     """
-    =======      | =======
-    SQL security | Definer
-    =======      | =======
-    INVOKER      | alice
-    =======      | =======
+    =======      | =======       | =======
+    SQL security | Definer       | Operation
+    =======      | =======       | =======
+    INVOKER      | alice         | SELECT/INSERT
+    =======      | =======       | =======
 
-    Check that SQL security INVOKER is not allowed for materialized views.
+    Check that SQL security INVOKER can't be specified for materialized views.
     """
     with Given("I create view's source and target tables"):
         source_table_name = create_simple_MergeTree_table(column_name="x")
@@ -609,16 +668,19 @@ def check_select_sql_security_invoker_definer(self):
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_DefinerNotSpecified(
         "1.0"
     ),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityInvoker_DefinerNotSpecified(
+        "1.0"
+    ),
 )
-def check_select_sql_security_invoker_definer_not_specified(self):
+def check_select_insert_sql_security_invoker_definer_not_specified(self):
     """
-    =======      | =======
-    SQL security | Definer
-    =======      | =======
-    INVOKER      | not specified
-    =======      | =======
+    =======      | =======       | =======
+    SQL security | Definer       | Operation
+    =======      | =======       | =======
+    INVOKER      | not specified | SELECT/INSERT
+    =======      | =======       | =======
 
-    Check that SQL security INVOKER is not allowed for materialized views.
+    Check that SQL security INVOKER can't be specified for materialized views.
     """
     with Given("I create view's source and target tables"):
         source_table_name = create_simple_MergeTree_table(column_name="x")
@@ -640,8 +702,11 @@ def check_select_sql_security_invoker_definer_not_specified(self):
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_Definer(
         "1.0"
     ),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_Definer(
+        "1.0"
+    ),
 )
-def check_select_sql_security_not_specified_definer(
+def check_select_insert_sql_security_not_specified_definer(
     self,
     user_view_privilege,
     user_source_table_privilege,
@@ -651,16 +716,19 @@ def check_select_sql_security_not_specified_definer(
     grant_privilege,
 ):
     """
-    =======       | =======
-    SQL security  | Definer
-    =======       | =======
-    not specified | alice
-    =======       | =======
+    =======       | =======       | =======
+    SQL security  | Definer       | Operation
+    =======       | =======       | =======
+    not specified | alice         | SELECT/INSERT
+    =======       | =======       | =======
 
+    SQL security should be set to DEFINER by default.
     Check that user can select from materialized view with given SQL SECURITY
     options when user has SELECT privilege for mv and definer user has SELECT
-    privilege for mv's source and target tables. SQL security should be set to
-    DEFINER by default.
+    privilege for mv's source and target tables.
+    Check that user can insert into materialized view with given SQL SECURITY
+    options when user has INSERT privilege for mv and definer user has INSERT
+    privilege for mv's target table.
     """
     node = self.context.node
 
@@ -739,10 +807,40 @@ def check_select_sql_security_not_specified_definer(
                 message=message,
             )
 
+    with And(
+        """I check that user can insert into mv if he has INSERT privilege for mv and
+             definer user has INSERT for mv's target tables"""
+    ):
+        if (
+            "INSERT" in user_view_privilege
+            and "INSERT" in definer_target_table_privilege
+        ):
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+            )
+            if (
+                "SELECT" in definer_source_table_privilege
+                and "SELECT" in definer_target_table_privilege
+            ):
+                output = node.query(f"SELECT sum(x) FROM {mv_name}").output
+                assert output == "55", error()
+        else:
+            if "INSERT" not in user_view_privilege:
+                exitcode, message = errors.not_enough_privileges(name=user_name)
+            else:
+                exitcode, message = errors.not_enough_privileges(name=definer_user)
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
 
 @TestScenario
-def select_sql_security_not_specified_definer(self):
-    """Run check_select_sql_security_not_specified_definer
+def select_insert_sql_security_not_specified_definer(self):
+    """Run check_select_insert_sql_security_not_specified_definer
     with different privileges for user.
     """
     grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
@@ -779,7 +877,7 @@ def select_sql_security_not_specified_definer(self):
             )
             Scenario(
                 test_name,
-                test=check_select_sql_security_not_specified_definer,
+                test=check_select_insert_sql_security_not_specified_definer,
                 parallel=True,
                 executor=executor,
             )(
@@ -798,28 +896,36 @@ def select_sql_security_not_specified_definer(self):
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNotSpecified_DefinerNotSpecified(
         "1.0"
     ),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_DefinerNotSpecified(
+        "1.0"
+    ),
 )
-def select_sql_security_not_specified_definer_not_specified(self):
+def select_insert_sql_security_not_specified_definer_not_specified(self):
     """
-    =======       | =======
-    SQL security  | Definer
-    =======       | =======
-    not specified | not specified
-    =======       | =======
+    =======       | =======       | =======
+    SQL security  | Definer       | Operation
+    =======       | =======       | =======
+    not specified | not specified | SELECT/INSERT
+    =======       | =======       | =======
 
+
+    SQL security is set to the value from `default_materialized_view_sql_security`
+    setting and definer is set to the value from `default_view_definer` setting.
     Check that user can select from materialized view with given SQL SECURITY
     options when user has SELECT privilege for mv and definer user has SELECT
-    privilege for mv's source and target tables. SQL security is set to the value
-    from `default_materialized_view_sql_security` setting and definer to the value
-    from `default_view_definer` setting.
+    privilege for mv's source and target tables.
+    Check that user can insert into materialized view with given SQL SECURITY
+    options when user has INSERT privilege for mv and definer user has INSERT
+    privilege for mv's target table.
     """
     node = self.context.node
     default_default_view_definer = get_settings_value(
-        node=node, setting_name="default_view_definer"
+        setting_name="default_view_definer"
     )
-    default_ignore_empty_sql_security_in_create_view_query = node.query(
-        f"SELECT value FROM system.server_settings WHERE name = 'ignore_empty_sql_security_in_create_view_query' FORMAT TabSeparated"
-    ).output
+    default_ignore_empty_sql_security_in_create_view_query = get_settings_value(
+        setting_name="ignore_empty_sql_security_in_create_view_query",
+        table="system.server_settings",
+    )
 
     try:
         with Given("I create view's source and target tables"):
@@ -828,7 +934,7 @@ def select_sql_security_not_specified_definer_not_specified(self):
             insert_data_from_numbers(table_name=target_table_name)
 
         with And(
-            "I create definer user and grant him privileges to mv's source and target tables"
+            "I create definer user and grant him SELECT privilege for mv's source and target tables"
         ):
             definer_user = "alice_" + getuid()
             create_user(user_name=definer_user)
@@ -857,7 +963,7 @@ def select_sql_security_not_specified_definer_not_specified(self):
                 )
 
         with And(
-            f"I change default_view_definer setting to definer_user for default user"
+            f"I change default_view_definer setting to {definer_user} for default user"
         ):
             entries = {
                 "profiles": {
@@ -870,17 +976,17 @@ def select_sql_security_not_specified_definer_not_specified(self):
 
         with And("I check that setting was changed"):
             assert (
-                get_settings_value(node=node, setting_name="default_view_definer")
+                get_settings_value(setting_name="default_view_definer")
                 == f"{definer_user}"
-            )
+            ), error()
 
         with And("I check that default SQL security is DEFINER"):
             assert (
                 get_settings_value(
-                    node=node, setting_name="default_materialized_view_sql_security"
+                    setting_name="default_materialized_view_sql_security"
                 )
                 == "DEFINER"
-            )
+            ), error()
 
         with And(
             "I create materialized view without specifying definer and sql security"
@@ -891,7 +997,9 @@ def select_sql_security_not_specified_definer_not_specified(self):
             )
 
         with And("I check that values from settings were used while creating mv"):
-            output = node.query(f"SHOW CREATE TABLE {mv_name}").output
+            output = node.query(
+                f"SHOW CREATE TABLE {mv_name} FORMAT TabSeparated"
+            ).output
             assert f"DEFINER = {definer_user} SQL SECURITY DEFINER" in output, error()
 
         with When("I create user and grant him SELECT privilege for mv"):
@@ -905,13 +1013,35 @@ def select_sql_security_not_specified_definer_not_specified(self):
 
         with Then(
             """I check that user can select from mv if he has SELECT privilege for mv and
-            definer user has SELECT for mv's source and target tables"""
+            definer user has SELECT privilege for mv's source and target tables"""
         ):
             output = node.query(
                 f"SELECT sum(x) FROM {mv_name}",
                 settings=[("user", user_name)],
             ).output
             assert output == "45", error()
+
+        with And(
+            "I grant user INSERT privilege for mv and to definer user INSERT privilege for target table"
+        ):
+            grant_privileges_directly(
+                user=definer_user,
+                object=target_table_name,
+                privileges=["INSERT"],
+            )
+            grant_privileges_directly(
+                user=user_name,
+                object=mv_name,
+                privileges=["INSERT"],
+            )
+
+        with And("I check that user can insert into mv"):
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+            )
+            output = node.query(f"SELECT sum(x) FROM {mv_name}").output
+            assert output == "55", error()
 
     finally:
         with Finally("I restore default_view_definer setting"):
@@ -925,12 +1055,11 @@ def select_sql_security_not_specified_definer_not_specified(self):
             change_core_settings(modify=True, restart=True, entries=entries)
 
         with And("I restore ignore_empty_sql_security_in_create_view_query setting"):
-            changed = node.query(
-                f"""SELECT changed FROM system.server_settings 
-                    WHERE name = 'ignore_empty_sql_security_in_create_view_query' 
-                    FORMAT TabSeparated
-                """
-            ).output
+            changed = get_settings_value(
+                setting_name="ignore_empty_sql_security_in_create_view_query",
+                table="system.server_settings",
+                column="changed",
+            )
             if changed:
                 entries = {
                     "ignore_empty_sql_security_in_create_view_query": f"{default_ignore_empty_sql_security_in_create_view_query}"
@@ -945,15 +1074,16 @@ def select_sql_security_not_specified_definer_not_specified(self):
 
         with And("I check that settings were restored"):
             assert (
-                get_settings_value(node=node, setting_name="default_view_definer")
+                get_settings_value(setting_name="default_view_definer")
                 == f"{default_default_view_definer}"
-            )
+            ), error()
             assert (
-                node.query(
-                    f"SELECT value FROM system.server_settings WHERE name = 'ignore_empty_sql_security_in_create_view_query' FORMAT TabSeparated"
-                ).output
+                get_settings_value(
+                    setting_name="default_materialized_view_sql_security",
+                    table="system.server_settings",
+                )
                 == f"{default_ignore_empty_sql_security_in_create_view_query}"
-            )
+            ), error()
 
 
 @TestFeature
@@ -970,27 +1100,27 @@ def feature(self):
         Scenario(test=create_mv_on_cluster, parallel=True, executor=executor)()
         Scenario(test=check_default_values, parallel=True, executor=executor)()
         Scenario(
-            test=select_sql_security_definer_definer,
+            test=select_insert_sql_security_definer_definer,
             parallel=True,
             executor=executor,
         )()
         Scenario(
-            test=select_sql_security_definer_definer_not_specified,
+            test=select_insert_sql_security_definer_definer_not_specified,
             parallel=True,
             executor=executor,
         )()
         Scenario(
-            test=check_select_sql_security_invoker_definer,
+            test=check_select_insert_sql_security_invoker_definer,
             parallel=True,
             executor=executor,
         )()
         Scenario(
-            test=check_select_sql_security_invoker_definer_not_specified,
+            test=check_select_insert_sql_security_invoker_definer_not_specified,
             parallel=True,
             executor=executor,
         )()
         Scenario(
-            test=select_sql_security_not_specified_definer,
+            test=select_insert_sql_security_not_specified_definer,
             parallel=True,
             executor=executor,
         )()
@@ -999,5 +1129,5 @@ def feature(self):
     Scenario(run=definer_not_specified)
     Scenario(run=sql_security_not_specified)
     Scenario(run=check_default_values)
-    Scenario(run=select_sql_security_not_specified_definer_not_specified)
+    Scenario(run=select_insert_sql_security_not_specified_definer_not_specified)
     Scenario(run=check_default_values)
