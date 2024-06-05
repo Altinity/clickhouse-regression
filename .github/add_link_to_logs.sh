@@ -20,5 +20,5 @@ elif [[ $artifacts == 'builds' ]]; then
 
 fi
 
-link="https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/"
+link="Artifacts will be uploaded to https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/"
 echo $link
