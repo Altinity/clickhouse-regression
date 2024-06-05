@@ -86,7 +86,7 @@ def scenario(self, engine):
             with Pool(15) as p:
                 tasks = []
                 for i in range(5):
-                    tasks.append(p.submit(insert, (200,)))
+                    tasks.append(p.submit(insert, (400,)))
                     tasks.append(p.submit(alter_move, (100,)))
                     tasks.append(p.submit(alter_drop, (100,)))
 
