@@ -48,7 +48,7 @@ def openssl_all_ports(self, node=None):
 
 @TestFeature
 def openssl_all_ports_different_protocols_cyphers(self, node=None):
-    """Check that ClickHouse's SSL connection on all ports is working correctly with different protocols and cypher combinations."""
+    """Check that ClickHouse's SSL connection on all ports is working correctly with different protocols and cipher combinations."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
