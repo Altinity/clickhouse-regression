@@ -967,7 +967,7 @@ class ClickHouseKeeperNode(Node):
     def start_keeper(
         self,
         timeout=100,
-        user="clickhouse",
+        user=None,
         force_recovery=False,
         check_version=True,
     ):
@@ -1009,7 +1009,7 @@ class ClickHouseKeeperNode(Node):
                     ):
                         fail("no pid file yet")
 
-    def restart_keeper(self, timeout=100, user="clickhouse"):
+    def restart_keeper(self, timeout=100, user=None):
         """Restart ClickHouse Keeper."""
         if self.keeper_pid():
             self.stop_keeper(timeout=timeout)
@@ -1031,7 +1031,7 @@ class ClickHouseKeeperNode(Node):
         start_keeper=True,
         wait_healthy=True,
         retry_count=5,
-        user="clickhouse",
+        user=None,
     ):
         """Start node."""
         super(ClickHouseKeeperNode, self).start(
