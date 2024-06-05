@@ -11,3 +11,4 @@ def feature(self):
     # Feature(run=load("rbac.tests.sql_security.cluster", "feature"))
 
     Feature(run=load("rbac.tests.sql_security.mv_small_tests", "feature"))
+    Feature(run=load("rbac.tests.sql_security.modify", "feature"))

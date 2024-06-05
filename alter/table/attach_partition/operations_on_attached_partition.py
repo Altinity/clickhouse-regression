@@ -88,7 +88,9 @@ def get_valid_partition_key(self, source_partition_key):
     ]
     random.shuffle(partition_keys)
     for i in partition_keys:
-        if check_clickhouse_version(">=24.5")(self):
+        if check_clickhouse_version(
+            f">={version_when_attach_partition_with_different_keys_merged}"
+        )(self):
             if valid_partition_key_pair(source_partition_key, i)[0]:
                 return i
         else:
@@ -155,7 +157,9 @@ def attach_partition_from_table(
     """Check `attach partition from` with different types of source and destination tables
     and different partition keys. Return table name with newly attached partitions."""
 
-    if check_clickhouse_version("<24.5")(self):
+    if check_clickhouse_version(
+        f"<{version_when_attach_partition_with_different_keys_merged}"
+    )(self):
         if source_partition_key != destination_partition_key:
             return None
 
@@ -187,7 +191,9 @@ def attach_partition_from_table(
             node=self.context.node_1,
         )
 
-    if check_clickhouse_version(">=24.5")(self):
+    if check_clickhouse_version(
+        f">={version_when_attach_partition_with_different_keys_merged}"
+    )(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):
@@ -575,7 +581,9 @@ def check_move_partition(
             partition_by=move_partition_key,
             node=self.context.node_1,
         )
-        if check_clickhouse_version(">=24.5")(self):
+        if check_clickhouse_version(
+            f">={version_when_attach_partition_with_different_keys_merged}"
+        )(self):
             self.context.node_1.query(
                 f"ALTER TABLE {move_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
             )
@@ -656,7 +664,9 @@ def check_multiple_attach_move_partition(
                 partition_by=new_destination_partition_key,
                 node=self.context.node_1,
             )
-            if check_clickhouse_version(">=24.5")(self):
+            if check_clickhouse_version(
+                f">={version_when_attach_partition_with_different_keys_merged}"
+            )(self):
                 self.context.node_1.query(
                     f"ALTER TABLE {new_destination_table_name} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
                 )

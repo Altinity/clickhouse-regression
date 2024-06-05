@@ -5,6 +5,9 @@ from alter.table.replace_partition.common import (
     create_merge_tree_and_memory_tables,
     create_table_partitioned_by_column_with_data,
 )
+from alter.table.attach_partition.common import (
+    version_when_attach_partition_with_different_keys_merged,
+)
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, replace_partition, check_clickhouse_version
 from helpers.datatypes import UInt64, UInt8
@@ -292,7 +295,9 @@ def partition_by(self):
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
-    if check_clickhouse_version(">=24.5")(self):
+    if check_clickhouse_version(
+        f">={version_when_attach_partition_with_different_keys_merged}"
+    )(self):
         exitcode, message = io_error_message(
             exitcode=36,
             message="Destination table partition expression columns must be a subset of source table partition expression columns",

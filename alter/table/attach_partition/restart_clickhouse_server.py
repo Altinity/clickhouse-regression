@@ -8,6 +8,7 @@ from helpers.datatypes import UInt64, UInt16
 
 from alter.table.attach_partition.common import (
     create_partitioned_table_with_data,
+    version_when_attach_partition_with_different_keys_merged,
 )
 from alter.table.attach_partition.requirements.requirements import *
 from alter.table.attach_partition.partition_key import valid_partition_key_pair
@@ -18,10 +19,12 @@ def check_restart_clickhouse_server(
     self, node=None, source_partition_key="a", destination_partition_key="a"
 ):
     """Check that I can use newly attached data after restart ClickHouse server."""
-    if check_clickhouse_version("<24.5")(self):
+    if check_clickhouse_version(
+        f"<{version_when_attach_partition_with_different_keys_merged}"
+    )(self):
         if source_partition_key != destination_partition_key:
             skip(
-                "`attach partition from` with tables that have different partition keys are not supported before 24.5"
+                f"`attach partition from` with tables that have different partition keys are not supported before {version_when_attach_partition_with_different_keys_merged}"
             )
 
     if node is None:
@@ -40,7 +43,9 @@ def check_restart_clickhouse_server(
             partition_by=source_partition_key,
         )
 
-    if check_clickhouse_version(">=24.5")(self):
+    if check_clickhouse_version(
+        f">={version_when_attach_partition_with_different_keys_merged}"
+    )(self):
         with And(
             "I add setting to allow alter partition with different partition keys"
         ):
