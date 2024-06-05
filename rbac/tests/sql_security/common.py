@@ -246,15 +246,22 @@ def create_role(self, privilege=None, object=None, role_name=None, node=None):
 
 @TestStep(Given)
 def change_core_settings(
-    self, entries, modify=False, restart=True, format=None, user=None
+    self,
+    entries,
+    modify=False,
+    restart=True,
+    format=None,
+    user=None,
+    config_d_dir="/etc/clickhouse-server/users.d",
+    preprocessed_name="users.xml",
 ):
     """Create configuration file and add it to the server."""
     with By("converting config file content to xml"):
         config = create_xml_config_content(
             entries,
             "change_settings.xml",
-            config_d_dir="/etc/clickhouse-server/users.d",
-            preprocessed_name="users.xml",
+            config_d_dir=config_d_dir,
+            preprocessed_name=preprocessed_name,
         )
         if format is not None:
             for key, value in format.items():

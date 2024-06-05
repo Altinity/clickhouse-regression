@@ -1595,9 +1595,11 @@ class Cluster(object):
                 return
 
         r = self.command(
-            node=None, command=f"docker inspect {container_id}", exitcode=0
+            node=None,
+            command=f"docker inspect {container_id} | jq -M '[.[0].Mounts[] | select(.Source | contains(\"_instances\")) | {{Source, Destination}}]'",
+            exitcode=0,
         )
-        mounts = json.loads(r.output)[0]["Mounts"]
+        mounts = json.loads(r.output)
         docker_exposed_dirs = [
             m["Destination"] for m in mounts if "_instances" in m["Source"]
         ]
