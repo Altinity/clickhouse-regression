@@ -224,7 +224,7 @@ def log_failing_mutations(self, nodes=None):
                 "SELECT latest_failed_part, table, latest_fail_reason FROM system.mutations WHERE is_done=0 FORMAT JSONCompactColumns",
                 no_checks=True,
             )
-            for part, table, fail_reason in json.loads(r.output):
+            for part, table, fail_reason in zip(*json.loads(r.output)):
                 if fail_reason == "":
                     continue
 
