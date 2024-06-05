@@ -381,6 +381,7 @@ jobs:
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
+              .github/add_link_to_logs.sh
 
       - name: Create and upload logs
         if: always()
