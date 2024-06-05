@@ -1109,7 +1109,7 @@ def mergetree(self, engine):
         default_s3_disk_and_volume()
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after(delay=30)
+        size_before = measure_buckets_before_and_after(delay=15)
 
     try:
         with Given(
@@ -1160,7 +1160,7 @@ def mergetree_collapsing(self):
         default_s3_disk_and_volume()
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after(delay=30)
+        size_before = measure_buckets_before_and_after(delay=15)
 
     try:
         with Given(
@@ -1238,7 +1238,7 @@ def mergetree_versionedcollapsing(self):
         default_s3_disk_and_volume()
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after(delay=30)
+        size_before = measure_buckets_before_and_after(delay=15)
 
     try:
         with Given(
@@ -1318,7 +1318,7 @@ def log(self, engine):
         default_s3_disk_and_volume()
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after(delay=30)
+        size_before = measure_buckets_before_and_after(delay=15)
 
     try:
         with Given(
