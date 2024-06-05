@@ -9,6 +9,7 @@ from helpers.datatypes import UInt64, UInt16
 from alter.table.attach_partition.common import (
     create_partitioned_table_with_data,
     create_empty_partitioned_table,
+    version_when_attach_partition_with_different_keys_merged,
 )
 from alter.table.attach_partition.requirements.requirements import *
 
@@ -233,7 +234,9 @@ def check_storage_policy(self, source_storage_policy, destination_storage_policy
     ):
         if (
             source_storage_policy == destination_storage_policy
-            or check_clickhouse_version(">=24.5")(self)
+            or check_clickhouse_version(
+                f">={version_when_attach_partition_with_different_keys_merged}"
+            )(self)
         ):
             exitcode, message = None, None
         else:
