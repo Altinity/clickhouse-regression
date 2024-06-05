@@ -1079,7 +1079,7 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
             ), error()
             assert (
                 get_settings_value(
-                    setting_name="default_materialized_view_sql_security",
+                    setting_name="ignore_empty_sql_security_in_create_view_query",
                     table="system.server_settings",
                 )
                 == f"{default_ignore_empty_sql_security_in_create_view_query}"
