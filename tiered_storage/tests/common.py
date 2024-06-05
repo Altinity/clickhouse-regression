@@ -94,7 +94,7 @@ def produce_alter_move(
             except QueryRuntimeException:
                 pass
         else:
-            raise Exception("Cannot select from system.parts")
+            raise Exception("Failed to find a part to move")
 
         assert "" not in parts, error()
 
