@@ -149,7 +149,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -181,7 +183,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -213,7 +217,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -247,7 +253,9 @@ jobs:
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               --only "/alter/replace partition/*"
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -281,7 +289,9 @@ jobs:
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               --only "/alter/attach partition/*"
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -315,7 +325,9 @@ jobs:
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               --only "/alter/move partition/*"
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -348,7 +360,9 @@ jobs:
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               --only "/attach/*"
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -380,8 +394,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
-              .github/add_link_to_logs.sh
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -419,7 +434,9 @@ jobs:
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -456,7 +473,9 @@ jobs:
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -490,7 +509,9 @@ jobs:
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -523,7 +544,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -557,7 +580,9 @@ jobs:
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               --ssl
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -590,7 +615,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -622,7 +649,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -654,7 +683,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -686,7 +717,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -718,7 +751,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -750,7 +785,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -782,7 +819,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -814,7 +853,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -846,7 +887,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -874,7 +917,9 @@ jobs:
   #             -u ${{ env.SUITE }}/functional.py
   #             --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
   #             --clickhouse-version ${{ env.version }}
-  #             ${{ env.args }}
+  #             ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
   #     - name: Create and upload logs
   #       if: always()
@@ -906,7 +951,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -938,7 +985,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -969,7 +1018,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1000,7 +1051,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1032,7 +1085,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1064,7 +1119,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1096,7 +1153,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1128,7 +1187,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1161,7 +1222,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1196,7 +1259,9 @@ jobs:
               --clickhouse-version ${{ env.version }}
               --storage minio
               --only "/parquet/minio/*"
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1235,7 +1300,9 @@ jobs:
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --only "/parquet/aws s3/*"
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1267,7 +1334,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1299,7 +1368,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1337,7 +1408,9 @@ jobs:
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1374,7 +1447,9 @@ jobs:
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1408,7 +1483,9 @@ jobs:
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1440,7 +1517,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1472,7 +1551,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1504,7 +1585,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1541,7 +1624,9 @@ jobs:
               --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1578,7 +1663,9 @@ jobs:
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1610,7 +1697,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1644,7 +1733,9 @@ jobs:
               --with-minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
@@ -1676,7 +1767,9 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
 
       - name: Create and upload logs
         if: always()
