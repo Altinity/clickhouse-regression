@@ -917,10 +917,8 @@ jobs:
   #             -u ${{ env.SUITE }}/functional.py
   #             --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
   #             --clickhouse-version ${{ env.version }}
-  #             ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
+  #             ${{ env.args }} 
+  
   #     - name: Create and upload logs
   #       if: always()
   #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
