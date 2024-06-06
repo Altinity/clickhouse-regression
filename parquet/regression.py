@@ -212,7 +212,7 @@ ffails = {
     "/parquet/encrypted/": (
         Skip,
         "Different error message on 23.8 and above",
-        check_clickhouse_version("<=24.4"),
+        check_clickhouse_version("<=24.6"),
     ),
     "/parquet/compression/*": (
         Skip,
@@ -338,6 +338,11 @@ ffails = {
         Skip,
         "Multi directory globs are not introduced for these versions",
         check_clickhouse_version("<23.8"),
+    ),
+    "/parquet/bloom": (
+        Skip,
+        "Not implemented yet",
+        check_clickhouse_version("<24.6"),
     ),
 }
 
