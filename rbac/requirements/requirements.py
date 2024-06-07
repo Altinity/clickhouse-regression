@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240111.1210833.
+# document by TestFlows v2.0.240606.1023545.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -6577,8 +6577,8 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNotSpecified_Definer = Requir
     num="5.18.4.11",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefinerNotSpecified_DefinerNotSpecified = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified",
+RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNotSpecified_DefinerNotSpecified = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.DefinerNotSpecified",
     version="1.0",
     priority=None,
     group=None,
@@ -11752,7 +11752,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             num="5.18.4.11",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified",
+            name="RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.DefinerNotSpecified",
             level=4,
             num="5.18.4.12",
         ),
@@ -12896,7 +12896,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityInvoker_Definer,
         RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityInvoker_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNotSpecified_Definer,
-        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityDefinerNotSpecified_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNotSpecified_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_Definer,
         RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CreateMaterializedView,
@@ -16688,7 +16688,7 @@ version: 1.0
 [ClickHouse] automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
 [ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the view's **source** table.
 
-##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified
+##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.DefinerNotSpecified
 version: 1.0  
 
 | SQL security  | DEFINER       | Operation         | 
