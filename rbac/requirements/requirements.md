@@ -417,7 +417,7 @@
             * 5.18.4.9 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecurityinvokerdefiner)
             * 5.18.4.10 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecurityinvokerdefinernotspecified)
             * 5.18.4.11 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynotspecifieddefiner)
-            * 5.18.4.12 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritydefinernotspecifieddefinernotspecified)
+            * 5.18.4.12 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynotspecifieddefinernotspecified)
             * 5.18.4.13 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynonedefiner)
             * 5.18.4.14 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynonedefinernotspecified)
         * 5.18.5 [Materialized View SQL Security](#materialized-view-sql-security)
@@ -1551,7 +1551,7 @@ CREATE SETTINGS PROFILE [IF NOT EXISTS | OR REPLACE] name
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter
 version: 1.0
 
-[ClickHouse] SHALL support altering settings profile using the `ALTER STETTINGS PROFILE` statement.
+[ClickHouse] SHALL support altering settings profile using the `ALTER SETTINGS PROFILE` statement.
 
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter.IfExists
 version: 1.0
@@ -1564,7 +1564,7 @@ raised if a settings profile does not exist.
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter.Rename
 version: 1.0
 
-[ClickHouse] SHALL support renaming settings profile using the `RANAME TO` clause
+[ClickHouse] SHALL support renaming settings profile using the `RENAME TO` clause
 in the `ALTER SETTINGS PROFILE` statement.
 
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables
@@ -2190,7 +2190,7 @@ flowchart LR;
                 Copy_table[Copy of a table]
                 subgraph Views[Views]
                     View
-                    Mv[Materialied View]
+                    Mv[Materialized View]
                     Lv[Live view]
                 end
                 Wf[Window Function]
@@ -2240,7 +2240,7 @@ version: 1.0
 #### RQ.SRS-006.RBAC.RowPolicy.MultiIf
 version: 1.0
 
-[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the mulfiIf alias is unique.
+[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the multiIf alias is unique.
 
 #### RQ.SRS-006.RBAC.RowPolicy.MultiIfLength
 version: 1.0
@@ -3321,7 +3321,7 @@ the user has `INSERT` privilege on the source table, either explicitly or throug
 version: 1.0
 
 [ClickHouse] SHALL only successfully `INSERT` into a target table of a materialized view if and only if
-the user has `INSERT` privelege on the target table, either explicitly or through a role.
+the user has `INSERT` privilege on the target table, either explicitly or through a role.
 
 #### SQL Security
 
@@ -3582,6 +3582,7 @@ version: 1.0
 | `NONE`        | `alice`       | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view.
 **To be continued**
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified
@@ -3592,7 +3593,7 @@ version: 1.0
 | `NONE`        | not specified | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view.
   
 <br/><br/> 
   
@@ -3715,7 +3716,7 @@ version: 1.0
 | `NONE`        | `alice`       | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the materialized view.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified
 version: 1.0  
@@ -3725,7 +3726,7 @@ version: 1.0
 | `NONE`        | not specified | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the materialized view.
 
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer
@@ -3793,7 +3794,7 @@ version: 1.0
 | `NONE`        | `alice`       | `INSERT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified
 version: 1.0  
@@ -3803,7 +3804,7 @@ version: 1.0
 | `NONE`        | not specified | `INSERT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.
 
 
 #### Live View
@@ -4740,7 +4741,7 @@ either directly or through a role.
 #### RQ.SRS-006.RBAC.ShowDictionaries.Privilege
 version: 1.0
 
-[ClickHouse] SHALL grant **show dictionaries** privilege on a dictionary to a user if that user has recieved any grant,
+[ClickHouse] SHALL grant **show dictionaries** privilege on a dictionary to a user if that user has received any grant,
 including `SHOW DICTIONARIES`, on that dictionary, either directly or through a role.
 
 #### RQ.SRS-006.RBAC.ShowDictionaries.RequiredPrivilege
