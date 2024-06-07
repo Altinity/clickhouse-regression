@@ -41,7 +41,10 @@ def read_bloom(self, file_name, condition=None, bloom_filter="true"):
             f"use_cache_for_count_from_files=false",
         )
 
-    return data.output.strip(), condition
+    with And("I get the total number of rows from this file"):
+        total_rows = count_rows_in_parquet(file_name=file_name)
+
+    return data.output.strip(), condition, total_rows
 
 
 @TestOutline
@@ -54,7 +57,7 @@ def collect_benchmark_data(self, file_name, predicate_conditions):
         results[file_name][predicate_condition] = {}
         for bloom_filter in ["with_bloom_filter", "without_bloom_filter"]:
             with Given("I read from the parquet file with few and large row groups"):
-                output, query = read_bloom(
+                output, query, total_rows = read_bloom(
                     file_name=os.path.join("bloom_test_files", f"{file_name}"),
                     bloom_filter=bloom_filter,
                     condition=predicate_condition,
@@ -67,8 +70,11 @@ def collect_benchmark_data(self, file_name, predicate_conditions):
                     elapsed = elapsed_time(json_data=output)
 
             with Then("I collect the data"):
+                rows_skipped = total_rows - int(rows)
+
                 benchmark_data = {
-                    "rows_skipped": rows,
+                    "rows_skipped": rows_skipped,
+                    "total_rows": total_rows,
                     "elapsed": elapsed,
                     "query": query,
                 }
