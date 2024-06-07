@@ -101,7 +101,9 @@ def regression(
     Feature(test=load("parquet.performance.tests.bloom.feature", "feature"))()
 
     generate_bloom_report(
-        data=self.context.results, filename="results/bloom_filter/README.md"
+        data=self.context.results,
+        filename="results/bloom_filter/README.md",
+        csv_filename="results/bloom_filter/bloom_report.csv",
     )
 
 
