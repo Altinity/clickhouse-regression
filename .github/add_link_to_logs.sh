@@ -21,6 +21,6 @@ elif [[ $artifacts == 'builds' ]]; then
 fi
 
 echo ""
-echo "Artifacts will be uploaded to https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/"
+echo "Artifacts will be uploaded to https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/"
 echo "Review new fails (brisk) at https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/brisk-new-fails.log.txt"
 echo "Review new fails (nice) at https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/nice-new-fails.log.txt"
