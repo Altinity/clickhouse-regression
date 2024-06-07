@@ -38,21 +38,6 @@ def check_create_mv(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefaultValues("1.0"),
-)
-def check_default_values(self):
-    """Check that default values of SQL SECURITY settings are correct."""
-    assert (
-        get_settings_value(setting_name="default_materialized_view_sql_security")
-        == "DEFINER"
-    ), error()
-    assert (
-        get_settings_value(setting_name="default_view_definer") == "CURRENT_USER"
-    ), error()
-
-
-@TestScenario
-@Requirements(
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_OnCluster("1.0"),
 )
 def create_mv_on_cluster(self):
@@ -84,6 +69,21 @@ def create_mv_on_cluster(self):
 
 @TestScenario
 @Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefaultValues("1.0"),
+)
+def check_default_values(self):
+    """Check that default values of SQL SECURITY settings are correct."""
+    assert (
+        get_settings_value(setting_name="default_materialized_view_sql_security")
+        == "DEFINER"
+    ), error()
+    assert (
+        get_settings_value(setting_name="default_view_definer") == "CURRENT_USER"
+    ), error()
+
+
+@TestScenario
+@Requirements(
     RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified("1.0"),
 )
 def definer_not_specified(
@@ -105,10 +105,11 @@ def definer_not_specified(
         setting_name="default_view_definer"
     )
     try:
-        with Given("I create view's source and target tables"):
+        with Given(
+            "I create view's source and target tables and insert data into target table"
+        ):
             source_table_name = create_simple_MergeTree_table(column_name="x")
-            target_table_name = create_simple_MergeTree_table(column_name="x")
-            insert_data_from_numbers(table_name=target_table_name)
+            target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
 
         with And("I create user that will be set as default_view_definer"):
             new_default_user_name = "new_default_user_" + getuid()
@@ -124,7 +125,7 @@ def definer_not_specified(
                     }
                 }
             }
-            change_core_settings(modify=True, restart=True, entries=entries)
+            change_core_settings(restart=True, entries=entries)
 
         with And("I check that setting was changed"):
             assert (
@@ -158,7 +159,9 @@ def definer_not_specified(
         with Then(
             "I check that DEFINER = default(CURRENT_USER) was used while creating mv"
         ):
-            output = node.query(f"SHOW CREATE TABLE {mv_name}").output
+            output = node.query(
+                f"SHOW CREATE TABLE {mv_name} FORMAT TabSeparated"
+            ).output
             assert "DEFINER = default" in output, error()
 
     finally:
@@ -170,7 +173,7 @@ def definer_not_specified(
                     }
                 }
             }
-            change_core_settings(modify=True, restart=True, entries=entries)
+            change_core_settings(restart=True, entries=entries)
 
         with And("I check that setting was restored"):
             assert (
@@ -202,10 +205,11 @@ def sql_security_not_specified(
         setting_name="default_materialized_view_sql_security"
     )
     try:
-        with Given("I create view's source and target tables"):
+        with Given(
+            "I create view's source and target tables and insert data into target table"
+        ):
             source_table_name = create_simple_MergeTree_table(column_name="x")
-            target_table_name = create_simple_MergeTree_table(column_name="x")
-            insert_data_from_numbers(table_name=target_table_name)
+            target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
 
         with And(
             "I change default_materialized_view_sql_security setting to INVOKER for default user"
@@ -217,7 +221,7 @@ def sql_security_not_specified(
                     }
                 }
             }
-            change_core_settings(modify=True, restart=True, entries=entries)
+            change_core_settings(restart=True, entries=entries)
 
         with And("I check that setting was changed"):
             assert (
@@ -227,7 +231,9 @@ def sql_security_not_specified(
                 == "INVOKER"
             ), error()
 
-        with And("I create definer user and grant privileges"):
+        with And(
+            "I create definer user and grant him SELECT privilege for source and target tables"
+        ):
             definer_user = "alice_" + getuid()
             create_user(user_name=definer_user)
             grant_privileges_directly(
@@ -244,7 +250,7 @@ def sql_security_not_specified(
                 definer=definer_user,
             )
 
-        with When("I create user and grant select privilege for mv"):
+        with When("I create user and grant him select privilege for mv"):
             user_name = "user_" + getuid()
             create_user(user_name=user_name)
             grant_privileges_directly(
@@ -260,8 +266,10 @@ def sql_security_not_specified(
             ).output
             assert output == "45", error()
 
-        with Then("I check that SQL SECURITY DEFINER was used while creating mv"):
-            output = node.query(f"SHOW CREATE TABLE {mv_name}").output
+        with Then("I check that SQL SECURITY DEFINER is in create view statement"):
+            output = node.query(
+                f"SHOW CREATE TABLE {mv_name} FORMAT TabSeparated"
+            ).output
             assert "SQL SECURITY DEFINER" in output, error()
 
     finally:
@@ -273,7 +281,7 @@ def sql_security_not_specified(
                     }
                 }
             }
-            change_core_settings(modify=True, restart=True, entries=entries)
+            change_core_settings(restart=True, entries=entries)
 
         with And("I check that setting was restored"):
             assert (
@@ -318,10 +326,11 @@ def check_select_insert_sql_security_definer_definer(
     """
     node = self.context.node
 
-    with Given("I create view's source and target tables"):
+    with Given(
+        "I create view's source and target tables and insert data into target table"
+    ):
         source_table_name = create_simple_MergeTree_table(column_name="x")
-        target_table_name = create_simple_MergeTree_table(column_name="x")
-        insert_data_from_numbers(table_name=target_table_name)
+        target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
 
     with And(
         "I create definer user and grant him privileges to mv's source and target tables"
@@ -510,10 +519,11 @@ def check_select_insert_sql_security_definer_definer_not_specified(
     """
     node = self.context.node
 
-    with Given("I create view's source and target tables"):
+    with Given(
+        "I create view's source and target tables and insert data into target table"
+    ):
         source_table_name = create_simple_MergeTree_table(column_name="x")
-        target_table_name = create_simple_MergeTree_table(column_name="x")
-        insert_data_from_numbers(table_name=target_table_name)
+        target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
 
     with And("I create materialized view only specifying SQL SECURITY"):
         mv_name = create_materialized_view(
@@ -732,10 +742,11 @@ def check_select_insert_sql_security_not_specified_definer(
     """
     node = self.context.node
 
-    with Given("I create view's source and target tables"):
+    with Given(
+        "I create view's source and target tables and insert data into target table"
+    ):
         source_table_name = create_simple_MergeTree_table(column_name="x")
-        target_table_name = create_simple_MergeTree_table(column_name="x")
-        insert_data_from_numbers(table_name=target_table_name)
+        target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
 
     with And(
         "I create definer user and grant him privileges to mv's source and target tables"
@@ -753,7 +764,7 @@ def check_select_insert_sql_security_not_specified_definer(
             privileges=definer_target_table_privilege,
         )
 
-    with And("I create materialized view only specifying DEFINER"):
+    with And("I create materialized view only specifying definer"):
         mv_name = create_materialized_view(
             source_table_name=source_table_name,
             target_table_name=target_table_name,
@@ -783,7 +794,7 @@ def check_select_insert_sql_security_not_specified_definer(
 
     with Then(
         """I check that user can select from mv if he has SELECT privilege for mv and
-            definer user has SELECT for mv's source and target tables"""
+            definer user has SELECT privilege for mv's source and target tables"""
     ):
         if (
             "SELECT" in user_view_privilege
@@ -928,10 +939,11 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
     )
 
     try:
-        with Given("I create view's source and target tables"):
+        with Given(
+            "I create view's source and target tables and insert data into target table"
+        ):
             source_table_name = create_simple_MergeTree_table(column_name="x")
-            target_table_name = create_simple_MergeTree_table(column_name="x")
-            insert_data_from_numbers(table_name=target_table_name)
+            target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
 
         with And(
             "I create definer user and grant him SELECT privilege for mv's source and target tables"
@@ -950,12 +962,12 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
             )
 
         with And(
-            "I change ignore_empty_sql_security_in_create_view_query to 0 so defaults will be used"
+            """I set ignore_empty_sql_security_in_create_view_query to 0 to use values from 
+            default_view_definer and default_materialized_view_sql_security settings"""
         ):
             if default_ignore_empty_sql_security_in_create_view_query == "1":
                 entries = {"ignore_empty_sql_security_in_create_view_query": "0"}
                 change_core_settings(
-                    modify=True,
                     restart=True,
                     entries=entries,
                     config_d_dir="/etc/clickhouse-server/config.d",
@@ -972,7 +984,7 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
                     }
                 }
             }
-            change_core_settings(modify=True, restart=True, entries=entries)
+            change_core_settings(restart=True, entries=entries)
 
         with And("I check that setting was changed"):
             assert (
@@ -1052,7 +1064,7 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
                     }
                 }
             }
-            change_core_settings(modify=True, restart=True, entries=entries)
+            change_core_settings(restart=True, entries=entries)
 
         with And("I restore ignore_empty_sql_security_in_create_view_query setting"):
             changed = get_settings_value(
@@ -1065,7 +1077,6 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
                     "ignore_empty_sql_security_in_create_view_query": f"{default_ignore_empty_sql_security_in_create_view_query}"
                 }
                 change_core_settings(
-                    modify=True,
                     restart=True,
                     entries=entries,
                     config_d_dir="/etc/clickhouse-server/config.d",
@@ -1084,6 +1095,313 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
                 )
                 == f"{default_ignore_empty_sql_security_in_create_view_query}"
             ), error()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_Definer("1.0"),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_Definer("1.0"),
+)
+def check_select_insert_sql_security_none_definer(
+    self,
+    user_view_privilege,
+    user_source_table_privilege,
+    user_target_table_privilege,
+    definer_source_table_privilege,
+    definer_target_table_privilege,
+    grant_privilege,
+):
+    """
+    =======      | =======   | =======
+    SQL security | Definer   | Operation
+    =======      | =======   | =======
+    NONE         | alice     | SELECT/INSERT
+    =======      | =======   | =======
+
+    Check that user can select from materialized view with given SQL SECURITY
+    options when user has SELECT privilege for mv.
+    Check that user can insert into materialized view with given SQL SECURITY
+    options when user has INSERT privilege for mv.
+    """
+    node = self.context.node
+
+    with Given(
+        "I create view's source and target tables and insert 10 rows to target table"
+    ):
+        source_table_name = create_simple_MergeTree_table(column_name="x")
+        target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
+
+    with And(
+        "I create definer user and grant him privileges to mv's source and target tables"
+    ):
+        definer_user = "alice_" + getuid()
+        create_user(user_name=definer_user)
+        grant_privilege(
+            user=definer_user,
+            object=source_table_name,
+            privileges=definer_source_table_privilege,
+        )
+        grant_privilege(
+            user=definer_user,
+            object=target_table_name,
+            privileges=definer_target_table_privilege,
+        )
+
+    with And("I create materialized view specifying SQL security NONE and definer"):
+        mv_name = create_materialized_view(
+            source_table_name=source_table_name,
+            target_table_name=target_table_name,
+            sql_security="NONE",
+            definer=definer_user,
+        )
+
+    with When(
+        "I create user and grant privileges to mv and mv's source and target tables"
+    ):
+        user_name = "user_" + getuid()
+        create_user(user_name=user_name)
+        grant_privilege(
+            user=user_name,
+            object=mv_name,
+            privileges=user_view_privilege,
+        )
+        grant_privilege(
+            user=user_name,
+            object=source_table_name,
+            privileges=user_source_table_privilege,
+        )
+        grant_privilege(
+            user=user_name,
+            object=target_table_name,
+            privileges=user_target_table_privilege,
+        )
+
+    with Then("I check that user can select from mv if he has SELECT privilege for mv"):
+        if "SELECT" in user_view_privilege:
+            output = node.query(
+                f"SELECT sum(x) FROM {mv_name}",
+                settings=[("user", user_name)],
+            ).output
+            assert output == "45", error()
+        else:
+            exitcode, message = errors.not_enough_privileges(name=user_name)
+            node.query(
+                f"SELECT sum(x) FROM {mv_name}",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
+    with And("I check that user can insert into mv if he has INSERT privilege for mv"):
+        if "INSERT" in user_view_privilege:
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+            )
+            output = node.query(f"SELECT sum(x) FROM {mv_name}").output
+            assert output == "55", error()
+        else:
+            exitcode, message = errors.not_enough_privileges(name=user_name)
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
+
+@TestScenario
+def select_insert_sql_security_none_definer(self):
+    """Run check_select_insert_sql_security_none_definer with different privileges for definer and user."""
+    grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
+    privileges = ["SELECT", "INSERT", "ALTER", "CREATE", "NONE"]
+
+    if not self.context.stress:
+        privileges = ["SELECT", "INSERT", "NONE"]
+        grant_privileges = [grant_privileges_directly]
+
+    privileges_combinations = list(combinations(privileges, 2)) + [["NONE"]]
+
+    with Pool(5) as executor:
+        for (
+            user_view_privilege,
+            user_source_table_privilege,
+            user_target_table_privilege,
+            definer_source_table_privilege,
+            definer_target_table_privilege,
+            grant_privilege,
+        ) in product(
+            privileges_combinations,
+            privileges_combinations,
+            privileges_combinations,
+            privileges_combinations,
+            privileges_combinations,
+            grant_privileges,
+        ):
+            test_name = f"{user_view_privilege}_{user_source_table_privilege}_{user_target_table_privilege}_{definer_source_table_privilege}_{definer_target_table_privilege}_{grant_privilege.__name__}"
+            test_name = (
+                test_name.replace("[", "_")
+                .replace("]", "_")
+                .replace(")", "/")
+                .replace("(", "/")
+            )
+            Scenario(
+                test_name,
+                test=check_select_insert_sql_security_none_definer,
+                parallel=True,
+                executor=executor,
+            )(
+                user_view_privilege=user_view_privilege,
+                user_source_table_privilege=user_source_table_privilege,
+                user_target_table_privilege=user_target_table_privilege,
+                definer_source_table_privilege=definer_source_table_privilege,
+                definer_target_table_privilege=definer_target_table_privilege,
+                grant_privilege=grant_privilege,
+            )
+        join()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_DefinerNotSpecified(
+        "1.0"
+    ),
+    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSpecified(
+        "1.0"
+    ),
+)
+def check_select_insert_sql_security_none_definer_not_specified(
+    self,
+    user_view_privilege,
+    user_source_table_privilege,
+    user_target_table_privilege,
+    grant_privilege,
+):
+    """
+    =======      | =======       | =======
+    SQL security | Definer       | Operation
+    =======      | =======       | =======
+    NONE         | not specified | SELECT/INSERT
+    =======      | =======       | =======
+
+    Check that user can select from materialized view with given SQL SECURITY
+    options when user has SELECT privilege for mv.
+    Check that user can insert into materialized view with given SQL SECURITY
+    options when user has INSERT privilege for mv.
+    """
+    node = self.context.node
+
+    with Given(
+        "I create view's source and target tables and insert 10 rows to target table"
+    ):
+        source_table_name = create_simple_MergeTree_table(column_name="x")
+        target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
+
+    with And("I create materialized view specifying only SQL security NONE"):
+        mv_name = create_materialized_view(
+            source_table_name=source_table_name,
+            target_table_name=target_table_name,
+            sql_security="NONE",
+        )
+
+    with When(
+        "I create user and grant privileges to mv and mv's source and target tables"
+    ):
+        user_name = "user_" + getuid()
+        create_user(user_name=user_name)
+        grant_privilege(
+            user=user_name,
+            object=mv_name,
+            privileges=user_view_privilege,
+        )
+        grant_privilege(
+            user=user_name,
+            object=source_table_name,
+            privileges=user_source_table_privilege,
+        )
+        grant_privilege(
+            user=user_name,
+            object=target_table_name,
+            privileges=user_target_table_privilege,
+        )
+
+    with Then("I check that user can select from mv if he has SELECT privilege for mv"):
+        if "SELECT" in user_view_privilege:
+            output = node.query(
+                f"SELECT sum(x) FROM {mv_name}",
+                settings=[("user", user_name)],
+            ).output
+            assert output == "45", error()
+        else:
+            exitcode, message = errors.not_enough_privileges(name=user_name)
+            node.query(
+                f"SELECT sum(x) FROM {mv_name}",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
+    with And("I check that user can insert into mv if he has INSERT privilege for mv"):
+        if "INSERT" in user_view_privilege:
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+            )
+            output = node.query(f"SELECT sum(x) FROM {mv_name}").output
+            assert output == "55", error()
+        else:
+            exitcode, message = errors.not_enough_privileges(name=user_name)
+            node.query(
+                f"INSERT INTO {mv_name} VALUES (10)",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
+
+@TestScenario
+def select_insert_sql_security_none_definer_not_specified(self):
+    """Run check_select_insert_sql_security_none_definer_not_specified with different privileges for definer and user."""
+    grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
+    privileges = ["SELECT", "INSERT", "ALTER", "CREATE", "NONE"]
+
+    if not self.context.stress:
+        privileges = ["SELECT", "INSERT", "NONE"]
+        grant_privileges = [grant_privileges_directly]
+
+    privileges_combinations = list(combinations(privileges, 2)) + [["NONE"]]
+
+    with Pool(5) as executor:
+        for (
+            user_view_privilege,
+            user_source_table_privilege,
+            user_target_table_privilege,
+            grant_privilege,
+        ) in product(
+            privileges_combinations,
+            privileges_combinations,
+            privileges_combinations,
+            grant_privileges,
+        ):
+            test_name = f"{user_view_privilege}_{user_source_table_privilege}_{user_target_table_privilege}_{grant_privilege.__name__}"
+            test_name = (
+                test_name.replace("[", "_")
+                .replace("]", "_")
+                .replace(")", "/")
+                .replace("(", "/")
+            )
+            Scenario(
+                test_name,
+                test=check_select_insert_sql_security_none_definer_not_specified,
+                parallel=True,
+                executor=executor,
+            )(
+                user_view_privilege=user_view_privilege,
+                user_source_table_privilege=user_source_table_privilege,
+                user_target_table_privilege=user_target_table_privilege,
+                grant_privilege=grant_privilege,
+            )
+        join()
 
 
 @TestFeature
@@ -1121,6 +1439,16 @@ def feature(self):
         )()
         Scenario(
             test=select_insert_sql_security_not_specified_definer,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(
+            test=select_insert_sql_security_none_definer,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(
+            test=select_insert_sql_security_none_definer_not_specified,
             parallel=True,
             executor=executor,
         )()

@@ -2073,7 +2073,7 @@ RQ_SRS_006_RBAC_SettingsProfile_Alter = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support altering settings profile using the `ALTER STETTINGS PROFILE` statement.\n"
+        "[ClickHouse] SHALL support altering settings profile using the `ALTER SETTINGS PROFILE` statement.\n"
         "\n"
     ),
     link=None,
@@ -2108,7 +2108,7 @@ RQ_SRS_006_RBAC_SettingsProfile_Alter_Rename = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support renaming settings profile using the `RANAME TO` clause\n"
+        "[ClickHouse] SHALL support renaming settings profile using the `RENAME TO` clause\n"
         "in the `ALTER SETTINGS PROFILE` statement.\n"
         "\n"
     ),
@@ -3668,7 +3668,7 @@ RQ_SRS_006_RBAC_RowPolicy_MultiIf = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the mulfiIf alias is unique.\n"
+        "[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the multiIf alias is unique.\n"
         "\n"
     ),
     link=None,
@@ -6301,7 +6301,7 @@ RQ_SRS_006_RBAC_MaterializedView_Insert_TargetTable = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL only successfully `INSERT` into a target table of a materialized view if and only if\n"
-        "the user has `INSERT` privelege on the target table, either explicitly or through a role.\n"
+        "the user has `INSERT` privilege on the target table, either explicitly or through a role.\n"
         "\n"
     ),
     link=None,
@@ -6616,6 +6616,7 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_Definer = Requirement(
         "| `NONE`        | `alice`       | `SELECT`          |\n"
         "\n"
         "SQL SECURITY NONE is a deprecated option.\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view.\n"
         "**To be continued**\n"
         "\n"
     ),
@@ -6639,7 +6640,7 @@ RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_DefinerNotSpecified = Re
         "| `NONE`        | not specified | `SELECT`          |\n"
         "\n"
         "SQL SECURITY NONE is a deprecated option.\n"
-        "**To be continued**\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view.\n"
         "  \n"
         "<br/><br/> \n"
         "  \n"
@@ -6907,7 +6908,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_Definer = Re
         "| `NONE`        | `alice`       | `SELECT`          |\n"
         "\n"
         "SQL SECURITY NONE is a deprecated option.\n"
-        "**To be continued**\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the materialized view.\n"
         "\n"
     ),
     link=None,
@@ -6930,7 +6931,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityNone_DefinerNotSp
         "| `NONE`        | not specified | `SELECT`          |\n"
         "\n"
         "SQL SECURITY NONE is a deprecated option.\n"
-        "**To be continued**\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the materialized view.\n"
         "\n"
         "\n"
     ),
@@ -7089,7 +7090,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_Definer = Re
         "| `NONE`        | `alice`       | `INSERT`          |\n"
         "\n"
         "SQL SECURITY NONE is a deprecated option.\n"
-        "**To be continued**\n"
+        "[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.\n"
         "\n"
     ),
     link=None,
@@ -7112,7 +7113,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSp
         "| `NONE`        | not specified | `INSERT`          |\n"
         "\n"
         "SQL SECURITY NONE is a deprecated option.\n"
-        "**To be continued**\n"
+        "[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.\n"
         "\n"
         "\n"
     ),
@@ -9167,7 +9168,7 @@ RQ_SRS_006_RBAC_ShowDictionaries_Privilege = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL grant **show dictionaries** privilege on a dictionary to a user if that user has recieved any grant,\n"
+        "[ClickHouse] SHALL grant **show dictionaries** privilege on a dictionary to a user if that user has received any grant,\n"
         "including `SHOW DICTIONARIES`, on that dictionary, either directly or through a role.\n"
         "\n"
     ),
@@ -13542,7 +13543,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             * 5.18.4.9 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecurityinvokerdefiner)
             * 5.18.4.10 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityInvoker.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecurityinvokerdefinernotspecified)
             * 5.18.4.11 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynotspecifieddefiner)
-            * 5.18.4.12 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityDefinerNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritydefinernotspecifieddefinernotspecified)
+            * 5.18.4.12 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynotspecifieddefinernotspecified)
             * 5.18.4.13 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynonedefiner)
             * 5.18.4.14 [RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecurityviewselectsqlsecuritynonedefinernotspecified)
         * 5.18.5 [Materialized View SQL Security](#materialized-view-sql-security)
@@ -14676,7 +14677,7 @@ CREATE SETTINGS PROFILE [IF NOT EXISTS | OR REPLACE] name
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter
 version: 1.0
 
-[ClickHouse] SHALL support altering settings profile using the `ALTER STETTINGS PROFILE` statement.
+[ClickHouse] SHALL support altering settings profile using the `ALTER SETTINGS PROFILE` statement.
 
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter.IfExists
 version: 1.0
@@ -14689,7 +14690,7 @@ raised if a settings profile does not exist.
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter.Rename
 version: 1.0
 
-[ClickHouse] SHALL support renaming settings profile using the `RANAME TO` clause
+[ClickHouse] SHALL support renaming settings profile using the `RENAME TO` clause
 in the `ALTER SETTINGS PROFILE` statement.
 
 ##### RQ.SRS-006.RBAC.SettingsProfile.Alter.Variables
@@ -15315,7 +15316,7 @@ flowchart LR;
                 Copy_table[Copy of a table]
                 subgraph Views[Views]
                     View
-                    Mv[Materialied View]
+                    Mv[Materialized View]
                     Lv[Live view]
                 end
                 Wf[Window Function]
@@ -15365,7 +15366,7 @@ version: 1.0
 #### RQ.SRS-006.RBAC.RowPolicy.MultiIf
 version: 1.0
 
-[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the mulfiIf alias is unique.
+[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the multiIf alias is unique.
 
 #### RQ.SRS-006.RBAC.RowPolicy.MultiIfLength
 version: 1.0
@@ -16446,7 +16447,7 @@ the user has `INSERT` privilege on the source table, either explicitly or throug
 version: 1.0
 
 [ClickHouse] SHALL only successfully `INSERT` into a target table of a materialized view if and only if
-the user has `INSERT` privelege on the target table, either explicitly or through a role.
+the user has `INSERT` privilege on the target table, either explicitly or through a role.
 
 #### SQL Security
 
@@ -16707,6 +16708,7 @@ version: 1.0
 | `NONE`        | `alice`       | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view.
 **To be continued**
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.View.Select.SqlSecurityNone.DefinerNotSpecified
@@ -16717,7 +16719,7 @@ version: 1.0
 | `NONE`        | not specified | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with described SQL security options if and only if the user has `SELECT` privilege for the view.
   
 <br/><br/> 
   
@@ -16840,7 +16842,7 @@ version: 1.0
 | `NONE`        | `alice`       | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the materialized view.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityNone.DefinerNotSpecified
 version: 1.0  
@@ -16850,7 +16852,7 @@ version: 1.0
 | `NONE`        | not specified | `SELECT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view with described SQL security options if and only if the user has `SELECT` privilege for the materialized view.
 
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityDefiner.Definer
@@ -16918,7 +16920,7 @@ version: 1.0
 | `NONE`        | `alice`       | `INSERT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified
 version: 1.0  
@@ -16928,7 +16930,7 @@ version: 1.0
 | `NONE`        | not specified | `INSERT`          |
 
 SQL SECURITY NONE is a deprecated option.
-**To be continued**
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.
 
 
 #### Live View
@@ -17865,7 +17867,7 @@ either directly or through a role.
 #### RQ.SRS-006.RBAC.ShowDictionaries.Privilege
 version: 1.0
 
-[ClickHouse] SHALL grant **show dictionaries** privilege on a dictionary to a user if that user has recieved any grant,
+[ClickHouse] SHALL grant **show dictionaries** privilege on a dictionary to a user if that user has received any grant,
 including `SHOW DICTIONARIES`, on that dictionary, either directly or through a role.
 
 #### RQ.SRS-006.RBAC.ShowDictionaries.RequiredPrivilege
