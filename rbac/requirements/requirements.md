@@ -978,7 +978,7 @@ to indicate that user can access the server from any host.
 ##### RQ.SRS-006.RBAC.User.Create.Host.None
 version: 1.0
 
-[ClickHouse] SHALL support fobidding access from any host using `HOST NONE` clause in the
+[ClickHouse] SHALL support forbidding access from any host using `HOST NONE` clause in the
 `CREATE USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Create.Host.Local
@@ -1144,7 +1144,7 @@ to indicate that user can access the server from any host.
 ##### RQ.SRS-006.RBAC.User.Alter.Host.None
 version: 1.0
 
-[ClickHouse] SHALL support fobidding access from any host using `HOST NONE` clause in the
+[ClickHouse] SHALL support forbidding access from any host using `HOST NONE` clause in the
 `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.DefaultRole
@@ -1174,17 +1174,17 @@ using `SETTINGS` clause in the `ALTER USER` statement.
 ##### RQ.SRS-006.RBAC.User.Alter.Settings.Min
 version: 1.0
 
-[ClickHouse] SHALL support specifying a minimum value for the variable specifed using `SETTINGS` with `MIN` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support specifying a minimum value for the variable specified using `SETTINGS` with `MIN` clause in the `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.Settings.Max
 version: 1.0
 
-[ClickHouse] SHALL support specifying a maximum value for the variable specifed using `SETTINGS` with `MAX` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support specifying a maximum value for the variable specified using `SETTINGS` with `MAX` clause in the `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.Settings.Profile
 version: 1.0
 
-[ClickHouse] SHALL support specifying the name of a profile for the variable specifed using `SETTINGS` with `PROFILE` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support specifying the name of a profile for the variable specified using `SETTINGS` with `PROFILE` clause in the `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.Syntax
 version: 1.0
@@ -4700,7 +4700,7 @@ or any privilege on the table either directly or through a role.
 #### RQ.SRS-006.RBAC.ShowDatabases.Privilege
 version: 1.0
 
-[ClickHouse] SHALL grant **show databases** privilege on a database to a user if that user has recieved any grant,
+[ClickHouse] SHALL grant **show databases** privilege on a database to a user if that user has received any grant,
 including `SHOW DATABASES`, on that table, either directly or through a role.
 
 #### RQ.SRS-006.RBAC.ShowDatabases.RequiredPrivilege
