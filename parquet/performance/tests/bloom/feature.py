@@ -1,0 +1,136 @@
+import os
+import json
+
+from testflows.core import *
+from helpers.common import getuid
+from parquet.tests.steps import *
+
+
+def rows_read(json_data):
+    """Get the number of rows read from the json data."""
+
+    return str(json.loads(json_data)["statistics"]["rows_read"])
+
+
+def elapsed_time(json_data):
+    """Get the elapsed time from the query run."""
+
+    return str(json.loads(json_data)["statistics"]["elapsed"])
+
+
+@TestStep
+def read_bloom(self, file_name, condition=None, bloom_filter="true"):
+    """Read a parquet file with bloom filter."""
+
+    if condition is None:
+        condition = "WHERE t2 = 'third-99999'"
+
+    if bloom_filter == "with_bloom_filter":
+        bloom_filter = "true"
+    else:
+        bloom_filter = "false"
+
+    with Given(f"I read a parquet file with bloom filter {file_name}"):
+        data = select_from_parquet(
+            file_name=file_name,
+            statement="*",
+            condition=condition,
+            format="Json",
+            settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},"
+            f"input_format_parquet_filter_push_down=false,"
+            f"use_cache_for_count_from_files=false",
+        )
+
+    return data.output.strip(), condition
+
+
+@TestOutline
+def collect_benchmark_data(self, file_name, predicate_conditions):
+    """Collect benchmark data for a parquet file with bloom filter."""
+    results = self.context.results
+    results[file_name] = {}
+
+    for predicate_condition in predicate_conditions:
+        results[file_name][predicate_condition] = {}
+        for bloom_filter in ["with_bloom_filter", "without_bloom_filter"]:
+            with Given("I read from the parquet file with few and large row groups"):
+                output, query = read_bloom(
+                    file_name=os.path.join("bloom_test_files", f"{file_name}"),
+                    bloom_filter=bloom_filter,
+                    condition=predicate_condition,
+                )
+
+            with When("I collect data"):
+                with By("getting the number of rows read"):
+                    rows = rows_read(json_data=output)
+                with And("getting the elapsed time"):
+                    elapsed = elapsed_time(json_data=output)
+
+            with Then("I collect the data"):
+                benchmark_data = {
+                    "rows_skipped": rows,
+                    "elapsed": elapsed,
+                    "query": query,
+                }
+
+                results[file_name][predicate_condition][bloom_filter] = benchmark_data
+
+
+@TestScenario
+def file_with_10_million_rows_and_10_row_groups(self, predicate_conditions):
+    """Read a parquet file with 10 million rows and 10 row groups."""
+    collect_benchmark_data(
+        file_name="10M_rows_10_row_groups.parquet",
+        predicate_conditions=predicate_conditions,
+    )
+
+
+@TestScenario
+def few_and_large_row_groups(self, predicate_conditions):
+    """Read a parquet file with few and large row groups."""
+    collect_benchmark_data(
+        file_name="few_and_large_row_groups.parquet",
+        predicate_conditions=predicate_conditions,
+    )
+
+
+@TestScenario
+def few_and_small_row_groups(self, predicate_conditions):
+    """Read a parquet file with few and small row groups."""
+    collect_benchmark_data(
+        file_name="few_and_small_row_groups.parquet",
+        predicate_conditions=predicate_conditions,
+    )
+
+
+@TestScenario
+def many_and_large_row_groups(self, predicate_conditions):
+    """Read a parquet file with many and large row groups."""
+    collect_benchmark_data(
+        file_name="lots_of_row_groups_large.parquet",
+        predicate_conditions=predicate_conditions,
+    )
+
+
+@TestScenario
+def many_and_small_row_groups(self, predicate_conditions):
+    """Read a parquet file with many and small row groups."""
+    collect_benchmark_data(
+        file_name="lots_of_row_groups_small.parquet",
+        predicate_conditions=predicate_conditions,
+    )
+
+
+@TestFeature
+@Name("bloom filter")
+def feature(self, rows=None, row_groups=None):
+    """Check benchmarks for parquet files with bloom filters."""
+    self.context.node = self.context.cluster.node("clickhouse1")
+
+    conditions = [
+        "WHERE t2 = 'third-99999'",
+        "WHERE t2 = 'third-99999' OR t2 = 'third-99998'",
+    ]
+
+    for scenario in loads(current_module(), Scenario):
+        Scenario(test=scenario)(predicate_conditions=conditions)
