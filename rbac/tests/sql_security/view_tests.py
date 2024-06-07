@@ -665,8 +665,7 @@ def check_select_sql_security_invoker_definer_not_specified(
 
 @TestScenario
 def select_sql_security_invoker_definer_not_specified(self):
-    """Run check_select_sql_security_invoker_definer_not_specified with different
-    privileges for definer and user."""
+    """Run check_select_sql_security_invoker_definer_not_specified with different user privileges."""
     grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
     privileges = ["SELECT", "INSERT", "ALTER", "CREATE", "NONE"]
 
@@ -1008,6 +1007,232 @@ def select_sql_security_not_specified_definer_not_specified(self):
             ), error()
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_Definer("1.0"),
+)
+def check_select_sql_security_none_definer(
+    self,
+    user_view_privilege,
+    user_source_table_privilege,
+    definer_source_table_privilege,
+    grant_privilege,
+):
+    """
+    =======      | =======   | =======
+    SQL security | Definer   | Operation
+    =======      | =======   | =======
+    NONE         | alice     | SELECT
+    =======      | =======   | =======
+
+    Check that user can select from normal view with given SQL SECURITY
+    options when user has SELECT privilege for view.
+    """
+    node = self.context.node
+
+    with Given("I create view's source table and insert 10 rows in it"):
+        source_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
+
+    with And("I create definer user and grant him privileges to view's source table"):
+        definer_user = "alice_" + getuid()
+        create_user(user_name=definer_user)
+        grant_privilege(
+            user=definer_user,
+            object=source_table_name,
+            privileges=definer_source_table_privilege,
+        )
+
+    with And("I create normal view specifying SQL security NONE and definer"):
+        view_name = create_view(
+            source_table_name=source_table_name,
+            sql_security="NONE",
+            definer=definer_user,
+        )
+
+    with When("I create user and grant privileges to view"):
+        user_name = "user_" + getuid()
+        create_user(user_name=user_name)
+        grant_privilege(
+            user=user_name,
+            object=view_name,
+            privileges=user_view_privilege,
+        )
+        grant_privilege(
+            user=user_name,
+            object=source_table_name,
+            privileges=user_source_table_privilege,
+        )
+
+    with Then(
+        "I check that user can select from view if he has SELECT privilege for view"
+    ):
+        if "SELECT" in user_view_privilege:
+            output = node.query(
+                f"SELECT sum(x) FROM {view_name}",
+                settings=[("user", user_name)],
+            ).output
+            assert output == "45", error()
+        else:
+            exitcode, message = errors.not_enough_privileges(name=user_name)
+            node.query(
+                f"SELECT sum(x) FROM {view_name}",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
+
+@TestScenario
+def select_sql_security_none_definer(self):
+    """Run check_select_sql_security_none_definer with different privileges for definer and user."""
+    grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
+    privileges = ["SELECT", "INSERT", "ALTER", "CREATE", "NONE"]
+
+    if not self.context.stress:
+        privileges = ["SELECT", "INSERT", "NONE"]
+        grant_privileges = [grant_privileges_directly]
+
+    privileges_combinations = list(combinations(privileges, 2)) + [["NONE"]]
+
+    with Pool(5) as executor:
+        for (
+            user_view_privilege,
+            user_source_table_privilege,
+            definer_source_table_privilege,
+            grant_privilege,
+        ) in product(
+            privileges_combinations,
+            privileges_combinations,
+            privileges_combinations,
+            grant_privileges,
+        ):
+            test_name = f"{user_view_privilege}_{user_source_table_privilege}_{definer_source_table_privilege}_{grant_privilege.__name__}"
+            test_name = (
+                test_name.replace("[", "_")
+                .replace("]", "_")
+                .replace(")", "/")
+                .replace("(", "/")
+            )
+            Scenario(
+                test_name,
+                test=check_select_sql_security_none_definer,
+                parallel=True,
+                executor=executor,
+            )(
+                user_view_privilege=user_view_privilege,
+                user_source_table_privilege=user_source_table_privilege,
+                definer_source_table_privilege=definer_source_table_privilege,
+                grant_privilege=grant_privilege,
+            )
+        join()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_SQLSecurity_View_Select_SqlSecurityNone_DefinerNotSpecified("1.0"),
+)
+def check_select_sql_security_none_definer_not_specified(
+    self,
+    user_view_privilege,
+    user_source_table_privilege,
+    grant_privilege,
+):
+    """
+    =======      | =======       | =======
+    SQL security | Definer       | Operation
+    =======      | =======       | =======
+    NONE         | not specified | SELECT
+    =======      | =======       | =======
+
+    Check that user can select from normal view with given SQL SECURITY
+    options when user has SELECT privilege for view.
+    """
+    node = self.context.node
+
+    with Given("I create view's source table and insert 10 rows in it"):
+        source_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
+
+    with And("I create normal view specifying only SQL security NONE"):
+        view_name = create_view(
+            source_table_name=source_table_name,
+            sql_security="NONE",
+        )
+
+    with When("I create user and grant privileges to view"):
+        user_name = "user_" + getuid()
+        create_user(user_name=user_name)
+        grant_privilege(
+            user=user_name,
+            object=view_name,
+            privileges=user_view_privilege,
+        )
+        grant_privilege(
+            user=user_name,
+            object=source_table_name,
+            privileges=user_source_table_privilege,
+        )
+
+    with Then(
+        "I check that user can select from view if he has SELECT privilege for view"
+    ):
+        if "SELECT" in user_view_privilege:
+            output = node.query(
+                f"SELECT sum(x) FROM {view_name}",
+                settings=[("user", user_name)],
+            ).output
+            assert output == "45", error()
+        else:
+            exitcode, message = errors.not_enough_privileges(name=user_name)
+            node.query(
+                f"SELECT sum(x) FROM {view_name}",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
+
+@TestScenario
+def select_sql_security_none_definer_not_specified(self):
+    """Run check_select_sql_security_none_definer_not_specified with different user privileges."""
+    grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
+    privileges = ["SELECT", "INSERT", "ALTER", "CREATE", "NONE"]
+
+    if not self.context.stress:
+        privileges = ["SELECT", "INSERT", "NONE"]
+        grant_privileges = [grant_privileges_directly]
+
+    privileges_combinations = list(combinations(privileges, 2)) + [["NONE"]]
+
+    with Pool(5) as executor:
+        for (
+            user_view_privilege,
+            user_source_table_privilege,
+            grant_privilege,
+        ) in product(
+            privileges_combinations,
+            privileges_combinations,
+            grant_privileges,
+        ):
+            test_name = f"{user_view_privilege}_{user_source_table_privilege}_{grant_privilege.__name__}"
+            test_name = (
+                test_name.replace("[", "_")
+                .replace("]", "_")
+                .replace(")", "/")
+                .replace("(", "/")
+            )
+            Scenario(
+                test_name,
+                test=check_select_sql_security_none_definer_not_specified,
+                parallel=True,
+                executor=executor,
+            )(
+                user_view_privilege=user_view_privilege,
+                user_source_table_privilege=user_source_table_privilege,
+                grant_privilege=grant_privilege,
+            )
+        join()
+
+
 @TestFeature
 @Name("normal view SQL security")
 def feature(self):
@@ -1040,6 +1265,16 @@ def feature(self):
         )
         Scenario(
             run=select_sql_security_not_specified_definer,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=select_sql_security_none_definer,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=select_sql_security_none_definer_not_specified,
             parallel=True,
             executor=executor,
         )
