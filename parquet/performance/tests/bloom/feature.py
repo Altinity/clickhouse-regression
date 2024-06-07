@@ -56,20 +56,23 @@ def collect_benchmark_data(self, file_name, predicate_conditions):
     for predicate_condition in predicate_conditions:
         results[file_name][predicate_condition] = {}
         for bloom_filter in ["with_bloom_filter", "without_bloom_filter"]:
-            with Given("I read from the parquet file with few and large row groups"):
+            with Given(
+                "I read from the parquet with given predicate condition and bloom filter",
+                description=f"{bloom_filter, predicate_condition}",
+            ):
                 output, query, total_rows = read_bloom(
                     file_name=os.path.join("bloom_test_files", f"{file_name}"),
                     bloom_filter=bloom_filter,
                     condition=predicate_condition,
                 )
 
-            with When("I collect data"):
+            with When("I collect benchmark data"):
                 with By("getting the number of rows read"):
                     rows = rows_read(json_data=output)
                 with And("getting the elapsed time"):
                     elapsed = elapsed_time(json_data=output)
 
-            with Then("I collect the data"):
+            with Then("I append data into the dictionary to generate a report"):
                 rows_skipped = total_rows - int(rows)
 
                 benchmark_data = {
