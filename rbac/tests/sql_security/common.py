@@ -65,6 +65,23 @@ def create_user(self, node=None, user_name=None):
 
 
 @TestStep(Given)
+def create_user_on_cluster(self, cluster, node=None, user_name=None):
+    """Create user on cluster."""
+    if node is None:
+        node = self.context.node
+
+    if user_name is None:
+        user_name = "user_" + getuid()
+    try:
+        node.query(f"CREATE USER {user_name} ON CLUSTER {cluster}")
+        yield user_name
+
+    finally:
+        with Finally("I drop the user if exists"):
+            node.query(f"DROP USER IF EXISTS {user_name} ON CLUSTER {cluster}")
+
+
+@TestStep(Given)
 def grant_privilege(self, node, privilege, object, user):
     """Grant privilege on table/view/database to user."""
     node.query(f"GRANT {privilege} ON {object} TO {user}")
@@ -90,6 +107,16 @@ def grant_privileges_via_role(self, privileges, object, user, node=None):
     for privilege in privileges:
         node.query(f"GRANT {privilege} ON {object} TO {role}")
     node.query(f"GRANT {role} TO {user}")
+
+
+@TestStep(Given)
+def grant_privileges_on_cluster(self, cluster, privileges, object, user, node=None):
+    """Grant privileges on table/view/database to user on cluster."""
+    if node is None:
+        node = self.context.node
+
+    for privilege in privileges:
+        node.query(f"GRANT ON CLUSTER {cluster} {privilege} ON {object} TO {user}")
 
 
 @TestStep(Given)
@@ -177,26 +204,32 @@ def populate_table(
 @TestStep(Given)
 def create_view(
     self,
-    node,
-    view_name,
-    select_table_name,
+    source_table_name,
+    view_name=None,
+    node=None,
     definer=None,
     sql_security=None,
     if_not_exists=False,
-    on_cluster=None,
+    cluster=None,
     select_columns="*",
 ):
     """Create view."""
+
+    if node is None:
+        node = self.context.node
 
     query = f"CREATE VIEW "
 
     if if_not_exists:
         query += "IF NOT EXISTS "
 
+    if view_name is None:
+        view_name = "view_" + getuid()
+
     query += f"{view_name} "
 
-    if on_cluster is not None:
-        query += f"ON CLUSTER {on_cluster} "
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} "
 
     if definer is not None:
         query += f"DEFINER = {definer} "
@@ -204,7 +237,7 @@ def create_view(
     if sql_security is not None:
         query += f"SQL SECURITY {sql_security} "
 
-    query += f"AS SELECT {select_columns} FROM {select_table_name}"
+    query += f"AS SELECT {select_columns} FROM {source_table_name}"
 
     try:
         node.query(query)
@@ -254,6 +287,7 @@ def change_core_settings(
     user=None,
     config_d_dir="/etc/clickhouse-server/users.d",
     preprocessed_name="users.xml",
+    node=None,
 ):
     """Create configuration file and add it to the server."""
     with By("converting config file content to xml"):
@@ -268,18 +302,4 @@ def change_core_settings(
                 config.content = config.content.replace(key, value)
 
     with And("adding xml config file to the server"):
-        return add_config(config, restart=restart, modify=modify, user=user)
-
-
-@TestStep(Given)
-def create_user_on_cluster(self, node, cluster, user_name=None):
-    """Create user on cluster."""
-    if user_name is None:
-        user_name = "user_" + getuid()
-    try:
-        node.query(f"CREATE USER {user_name} ON CLUSTER {cluster}")
-        yield user_name
-
-    finally:
-        with Finally("I drop the user if exists"):
-            node.query(f"DROP USER IF EXISTS {user_name} ON CLUSTER {cluster}")
+        return add_config(config, restart=restart, modify=modify, user=user, node=node)
