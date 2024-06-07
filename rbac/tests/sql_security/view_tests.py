@@ -384,7 +384,7 @@ def check_select_sql_security_definer_definer_not_specified(
     If definer is not specified then it should be set to CURRENT_USER.
     Check that user can select from normal view with given SQL SECURITY
     options when user has SELECT privilege for view and definer user has SELECT
-    privilege for view's source tbale.
+    privilege for view's source table.
     """
     node = self.context.node
 
