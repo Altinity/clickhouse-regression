@@ -102,8 +102,8 @@ def regression(
 
     generate_bloom_report(
         data=self.context.results,
-        filename="results/bloom_filter/README.md",
-        csv_filename="results/bloom_filter/bloom_report.csv",
+        filename=os.path.join("results", "bloom_filter", "README.md"),
+        csv_filename=os.path.join("results", "bloom_filter", "bloom_report.csv"),
     )
 
 
