@@ -39,7 +39,7 @@ def generate_bloom_report(data, filename=None, csv_filename="bloom_report.csv"):
         f.write("# Bloom Filter Performance Report\n")
         for file, group in df.groupby("file"):
             f.write(f"\n## {file}\n")
-            markdown_table = group.to_markdown()
+            markdown_table = group.to_markdown(index=False)
             f.write(markdown_table)
             f.write("\n")
 
