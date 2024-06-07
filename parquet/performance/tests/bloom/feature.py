@@ -129,7 +129,16 @@ def feature(self, rows=None, row_groups=None):
 
     conditions = [
         "WHERE t2 = 'third-99999'",
-        "WHERE t2 = 'third-99999' OR t2 = 'third-99998'",
+        "WHERE t2 = 'third-90000'",
+        "WHERE t2 = 'third-80000'",
+        "WHERE t2 = 'third-70000'",
+        "WHERE t2 = 'third-60000'",
+        "WHERE t2 = 'third-50000'",
+        "WHERE t2 = 'third-40000'",
+        "WHERE t2 = 'third-30000'",
+        "WHERE t2 = 'third-20000'",
+        "WHERE t2 = 'third-10000'",
+        "WHERE t2 = 'third-00000'",
     ]
 
     for scenario in loads(current_module(), Scenario):
