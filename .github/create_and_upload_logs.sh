@@ -32,7 +32,7 @@ echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pip
 tfs --debug --no-colors transform compact raw.log compact.log
 tfs --debug --no-colors transform nice raw.log nice.log.txt 
 tfs --debug --no-colors transform short raw.log short.log.txt
-tfs --debug --no-colors transform brisk-new-fails raw.log brisk-new-fails.log.txt
+tfs --debug --no-colors transform brisk-new-fails raw.log brisk-new-fails-log.txt
 tfs --debug --no-colors transform nice-new-fails raw.log nice-new-fails.log.txt
 tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
 tfs --debug --no-colors report results -a "https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#$artifact_s3_dir/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
@@ -48,8 +48,8 @@ then
     ./retry.sh 5 30 aws s3 cp compact.log s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/compact.log
     ./retry.sh 5 30 aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/nice.log.txt --content-type "text/plain; charset=utf-8"
     ./retry.sh 5 30 aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/short.log.txt --content-type "text/plain; charset=utf-8"
-    ./retry.sh 5 30 aws s3 cp brisk-new-fails.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/brisk-new-fails.log.txt --content-type "text/plain;"
-    ./retry.sh 5 30 aws s3 cp nice-new-fails.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/nice-new-fails.log.txt --content-type "text/plain;"
+    ./retry.sh 5 30 aws s3 cp brisk-new-fails-log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/brisk-new-fails-log.txt --content-type "text/plain; charset=utf-8"
+    ./retry.sh 5 30 aws s3 cp nice-new-fails.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/nice-new-fails.log.txt --content-type "text/plain; charset=utf-8"
     ./retry.sh 5 30 aws s3 cp report.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/report.html
     ./retry.sh 5 30 aws s3 cp compare.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/compare.html
     ./retry.sh 5 30 aws s3 cp coverage.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/coverage.html
