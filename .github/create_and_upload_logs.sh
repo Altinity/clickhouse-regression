@@ -48,8 +48,8 @@ then
     ./retry.sh 5 30 aws s3 cp compact.log s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/compact.log
     ./retry.sh 5 30 aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/nice.log.txt --content-type "text/plain; charset=utf-8"
     ./retry.sh 5 30 aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/short.log.txt --content-type "text/plain; charset=utf-8"
-    ./retry.sh 5 30 aws s3 cp brisk-new-fails.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/brisk-new-fails.log.txt --content-type "text/plain; charset=utf-8"
-    ./retry.sh 5 30 aws s3 cp nice-new-fails.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/nice-new-fails.log.txt --content-type "text/plain; charset=utf-8"
+    ./retry.sh 5 30 aws s3 cp brisk-new-fails.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/brisk-new-fails.log.txt --content-type "text/html; charset=utf-8"
+    ./retry.sh 5 30 aws s3 cp nice-new-fails.log.txt s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/nice-new-fails.log.txt --content-type "text/html; charset=utf-8"
     ./retry.sh 5 30 aws s3 cp report.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/report.html
     ./retry.sh 5 30 aws s3 cp compare.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/compare.html
     ./retry.sh 5 30 aws s3 cp coverage.html s3://$artifact_s3_bucket_path/$artifact_s3_dir/$(uname -i)/$SUITE$STORAGE/coverage.html
