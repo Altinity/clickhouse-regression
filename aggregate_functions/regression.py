@@ -516,7 +516,7 @@ def regression(
         )
 
     with And("I populate table with test data"):
-        self.context.table.insert_test_data()
+        self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 
