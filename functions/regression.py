@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.tables import *
-from helpers.argparser import argparser
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.cluster import create_cluster
 from helpers.common import experimental_analyzer
 
@@ -38,6 +38,7 @@ ffails = {
 @Name("functions")
 @XFails(xfails)
 @FFails(ffails)
+@CaptureClusterArgs
 def regression(
     self,
     cluster_args,
