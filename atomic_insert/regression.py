@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser as base_argparser
+from helpers.argparser import CaptureClusterArgs, argparser as base_argparser
 from helpers.common import check_clickhouse_version
 from atomic_insert.requirements import *
 
@@ -60,12 +60,11 @@ xfails = {
 @Name("atomic insert")
 @Requirements(RQ_SRS_028_ClickHouse_AtomicInserts("1.0"))
 @Specifications(SRS028_ClickHouse_Atomic_Inserts)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
@@ -73,7 +72,7 @@ def regression(
 ):
     """ClickHouse atomic inserts regression."""
     nodes = {
-        "zookeeper": ("zookeeper",),
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse4"),
     }
 
@@ -86,9 +85,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             thread_fuzzer=thread_fuzzer,
             nodes=nodes,
             configs_dir=current_dir(),
@@ -98,14 +95,15 @@ def regression(
         )
         self.context.cluster = cluster
 
+    if check_clickhouse_version("<22.4")(self):
+        skip(reason="only supported on ClickHouse version >= 22.4")
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    if check_clickhouse_version("<22.4")(self):
-        skip(reason="only supported on ClickHouse version >= 22.4")
-
-    create_transactions_configuration()
+    with And("I create configs"):
+        create_transactions_configuration()
 
     Feature(run=load("atomic_insert.tests.sanity", "feature"))
     Feature(run=load("atomic_insert.tests.dependent_tables", "feature"))

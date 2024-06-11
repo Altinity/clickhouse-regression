@@ -1,10 +1,35 @@
 version: '2.3'
 
 services:
-  zookeeper:
+  zookeeper1:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper1
+
+  zookeeper2:
+    extends:
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper2
+
+  zookeeper3:
+    extends:
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper3
+
+  keeper1:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper1
+
+  keeper2:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper2
+
+  keeper3:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper3
 
   clickhouse1:
     extends:
@@ -17,7 +42,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/users.d:/etc/clickhouse-server/users.d"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
@@ -27,5 +52,15 @@ services:
     depends_on:
       clickhouse1:
         condition: service_healthy
-      zookeeper:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+      keeper1:
+        condition: service_healthy
+      keeper2:
+        condition: service_healthy
+      keeper3:
         condition: service_healthy

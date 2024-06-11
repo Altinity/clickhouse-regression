@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
   zookeeper:
-    image: zookeeper:3.6.2
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     restart: always
     expose:
       - "2181"
@@ -11,11 +11,12 @@ services:
       ZOO_TICK_TIME: 1000
       ZOO_SYNC_LIMIT: 4
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: "*"
     healthcheck:
       test: echo stat | nc localhost 2181
-      interval: 3s
-      timeout: 2s
-      retries: 5
-      start_period: 2s
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
     security_opt:
       - label:disable

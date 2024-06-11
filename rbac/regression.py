@@ -8,7 +8,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 from rbac.requirements import SRS_006_ClickHouse_Role_Based_Access_Control
 from rbac.helper.common import add_rbac_config_file
@@ -314,12 +314,11 @@ ffails = {
 @FFails(ffails)
 @Name("rbac")
 @Specifications(SRS_006_ClickHouse_Role_Based_Access_Control)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -334,9 +333,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )

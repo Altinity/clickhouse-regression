@@ -7,7 +7,7 @@ append_path(sys.path, "../..")
 
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, experimental_analyzer
-from s3.regression import argparser
+from s3.regression import argparser, CaptureClusterArgs
 from s3.tests.common import start_minio
 
 xfails = {
@@ -25,6 +25,9 @@ def local_storage(
     self,
     local,
     clickhouse_binary_path,
+    keeper_binary_path,
+    zookeeper_version,
+    use_keeper,
     collect_service_logs,
     with_analyzer,
 ):
@@ -38,6 +41,9 @@ def local_storage(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,
@@ -67,7 +73,10 @@ def minio(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    with_analyzer,
+    keeper_binary_path=None,
+    zookeeper_version=None,
+    use_keeper=False,
+    with_analyzer=False,
 ):
     """Setup and run minio tests."""
     nodes = {
@@ -80,6 +89,9 @@ def minio(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -123,7 +135,10 @@ def aws_s3(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    with_analyzer,
+    keeper_binary_path=None,
+    zookeeper_version=None,
+    use_keeper=False,
+    with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
     nodes = {
@@ -160,6 +175,9 @@ def aws_s3(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
+            keeper_binary_path=keeper_binary_path,
+            use_keeper=use_keeper,
+            zookeeper_version=zookeeper_version,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -193,7 +211,10 @@ def gcs(
     local,
     clickhouse_binary_path,
     collect_service_logs,
-    with_analyzer,
+    keeper_binary_path=None,
+    zookeeper_version=None,
+    use_keeper=False,
+    with_analyzer=False,
 ):
     """Setup and run gcs tests."""
     nodes = {
@@ -223,6 +244,9 @@ def gcs(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
             collect_service_logs=collect_service_logs,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -245,12 +269,11 @@ def gcs(
 @ArgumentParser(argparser)
 @XFails(xfails)
 @FFails(ffails)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     storages,
     minio_uri,
     gcs_uri,
@@ -276,46 +299,39 @@ def regression(
     if storages is None:
         storages = ["minio"]
 
+    module_args = dict(
+        **cluster_args,
+        with_analyzer=with_analyzer,
+    )
+
     if "aws_s3" in storages:
         Module(test=aws_s3)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             bucket=aws_s3_bucket,
             region=aws_s3_region,
             key_id=aws_s3_key_id,
             access_key=aws_s3_access_key,
-            with_analyzer=with_analyzer,
+            **module_args,
         )
 
     if "gcs" in storages:
         Module(test=gcs)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             uri=gcs_uri,
             key_id=gcs_key_id,
             access_key=gcs_key_secret,
-            with_analyzer=with_analyzer,
+            **module_args,
         )
 
     if "minio" in storages:
         Module(test=minio)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
-            with_analyzer=with_analyzer,
+            **module_args,
         )
 
     if "local" in storages:
         Module(test=local_storage)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
-            with_analyzer=with_analyzer,
+            **module_args,
         )
 
 

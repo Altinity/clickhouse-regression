@@ -1,0 +1,45 @@
+version: '2.3'
+
+services:
+  zookeeper:
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
+    expose:
+      - "2181"
+    init: true
+    environment:
+      ZOO_TICK_TIME: 500
+      ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: "*"
+    healthcheck:
+      test: echo stat | nc localhost 2181
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    security_opt:
+      - label:disable
+
+  zookeeper-alone:
+    extends: zookeeper
+    hostname: zookeeper
+    environment:
+      ZOO_MY_ID: 0
+      ZOO_SERVERS: server.0=localhost:2888:3888;2181
+
+  zookeeper1:
+    extends: zookeeper
+    hostname: zookeeper1
+    environment:
+      ZOO_MY_ID: 1
+
+  zookeeper2:
+    extends: zookeeper
+    hostname: zookeeper2
+    environment:
+      ZOO_MY_ID: 2
+
+  zookeeper3:
+    extends: zookeeper
+    hostname: zookeeper3
+    environment:
+      ZOO_MY_ID: 3

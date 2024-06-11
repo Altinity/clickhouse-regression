@@ -7,7 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, experimental_analyzer
-from s3.regression import argparser
+from s3.regression import argparser, CaptureClusterArgs
 from s3.tests.common import start_minio
 
 from vfs.requirements import *
@@ -42,10 +42,8 @@ def minio(
     uri,
     root_user,
     root_password,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    with_analyzer,
+    cluster_args,
+    with_analyzer=False,
 ):
     """Setup and run minio tests."""
     nodes = {
@@ -55,9 +53,7 @@ def minio(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -110,10 +106,8 @@ def aws_s3(
     access_key,
     bucket,
     region,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    with_analyzer,
+    cluster_args,
+    with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
     nodes = {
@@ -147,9 +141,7 @@ def aws_s3(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -193,10 +185,8 @@ def gcs(
     uri,
     key_id,
     access_key,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    with_analyzer,
+    cluster_args,
+    with_analyzer=False,
 ):
     """Setup and run gcs tests."""
     nodes = {
@@ -223,9 +213,7 @@ def gcs(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -264,10 +252,8 @@ def gcs(
 @FFails(ffails)
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     storages,
     minio_uri,
     gcs_uri,
@@ -297,38 +283,34 @@ def regression(
     if storages is None:
         storages = ["minio"]
 
+    module_kwargs = dict(
+        **cluster_args,
+        with_analyzer=with_analyzer,
+    )
+
     if "aws_s3" in storages:
         Module(test=aws_s3)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             bucket=aws_s3_bucket,
             region=aws_s3_region,
             key_id=aws_s3_key_id,
             access_key=aws_s3_access_key,
-            with_analyzer=with_analyzer,
+            **module_kwargs,
         )
 
     if "gcs" in storages:
         Module(test=gcs)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             uri=gcs_uri,
             key_id=gcs_key_id,
             access_key=gcs_key_secret,
-            with_analyzer=with_analyzer,
+            **module_kwargs,
         )
 
     if "minio" in storages:
         Module(test=minio)(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
-            with_analyzer=with_analyzer,
+            **module_kwargs,
         )
 
 

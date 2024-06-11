@@ -9,12 +9,12 @@ from alter.requirements.requirements import *
 
 from helpers.cluster import create_cluster
 from helpers.common import experimental_analyzer
-from helpers.argparser import argparser as base_argparser
+from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.datatypes import *
 
 
 def argparser(parser):
-    """Custom argperser that adds a --use-specific-clickhouse-version option."""
+    """Custom argparser that adds a --use-specific-clickhouse-version option."""
     base_argparser(parser)
 
     parser.add_argument(
@@ -157,12 +157,11 @@ ffails = {
 @FFails(ffails)
 @Specifications(SRS032_ClickHouse_Alter)
 @Name("alter")
+@CaptureClusterArgs
 def regression(
     self,
-    local,
+    cluster_args,
     clickhouse_version,
-    clickhouse_binary_path,
-    collect_service_logs,
     use_specific_version,
     stress=None,
     allow_vfs=False,
@@ -188,9 +187,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
             use_specific_version=use_specific_version,

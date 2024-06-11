@@ -7,7 +7,7 @@ from platform import processor as current_cpu
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import experimental_analyzer
 from kerberos.requirements.requirements import *
 
@@ -23,12 +23,11 @@ xfails = {
 @ArgumentParser(argparser)
 @Requirements(RQ_SRS_016_Kerberos("1.0"))
 @XFails(xfails)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -53,9 +52,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )

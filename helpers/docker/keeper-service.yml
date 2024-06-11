@@ -1,0 +1,47 @@
+version: "2.3"
+
+services:
+  keeper:
+    build:
+      context: .
+      dockerfile: Dockerfile.keeper
+    expose:
+      - "2181"
+    init: true
+    environment:
+      - KEEPER_SERVER_ID=1
+    volumes:
+      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
+    healthcheck:
+      test: "echo 1"
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+
+  keeper1:
+    extends: keeper
+    hostname: keeper1
+    environment:
+      - KEEPER_SERVER_ID=1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/data/:/var/lib/clickhouse"
+  keeper2:
+    extends: keeper
+    hostname: keeper2
+    environment:
+      - KEEPER_SERVER_ID=2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/data/:/var/lib/clickhouse"
+
+  keeper3:
+    extends: keeper
+    hostname: keeper3
+    environment:
+      - KEEPER_SERVER_ID=3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/logs/:/var/log/clickhouse-keeper"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/data/:/var/lib/clickhouse"
