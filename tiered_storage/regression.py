@@ -399,7 +399,7 @@ def regression(
         name = "with s3gcs"
 
     Feature(name, test=feature)(
-        **cluster_args,
+        cluster_args=cluster_args,
         with_minio=with_minio,
         with_s3amazon=with_s3amazon,
         with_s3gcs=with_s3gcs,
