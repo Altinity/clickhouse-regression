@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster, create_cluster
-from s3.regression import argparser as argparser_base
+from s3.regression import argparser as argparser_base, CaptureClusterArgs
 
 from s3.tests.common import *
 
@@ -42,12 +42,11 @@ def argparser(parser):
 @Name("benchmark")
 @XFails(xfails)
 @FFails(ffails)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
+    cluster_args,
     clickhouse_version,
-    clickhouse_binary_path,
-    collect_service_logs,
     storages,
     stress,
     minio_uri,
@@ -61,9 +60,6 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     format,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     allow_vfs=False,
     with_analyzer=False,
     node="clickhouse1",
@@ -126,12 +122,7 @@ def regression(
 
             with Given("docker-compose cluster a"):
                 cluster = create_cluster(
-                    local=local,
-                    clickhouse_binary_path=clickhouse_binary_path,
-                    keeper_binary_path=keeper_binary_path,
-                    zookeeper_version=zookeeper_version,
-                    use_keeper=use_keeper,
-                    collect_service_logs=collect_service_logs,
+                    **cluster_args,
                     nodes=nodes,
                     docker_compose_project_dir=os.path.join(
                         current_dir(), os.path.basename(current_dir()) + "_env"

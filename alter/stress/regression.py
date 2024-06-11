@@ -7,7 +7,7 @@ append_path(sys.path, "../..")
 
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, experimental_analyzer
-from s3.regression import argparser
+from s3.regression import argparser, CaptureClusterArgs
 from s3.tests.common import start_minio
 
 xfails = {
@@ -269,12 +269,11 @@ def gcs(
 @ArgumentParser(argparser)
 @XFails(xfails)
 @FFails(ffails)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     storages,
     minio_uri,
     gcs_uri,
@@ -288,9 +287,6 @@ def regression(
     gcs_key_id,
     stress,
     allow_vfs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     with_analyzer=False,
 ):
     """Disk Object Storage VFS regression."""
@@ -304,12 +300,7 @@ def regression(
         storages = ["minio"]
 
     module_args = dict(
-        local=local,
-        clickhouse_binary_path=clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
+        **cluster_args,
         with_analyzer=with_analyzer,
     )
 
