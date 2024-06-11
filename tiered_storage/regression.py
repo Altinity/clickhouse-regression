@@ -145,15 +145,11 @@ def feature(
     with_s3gcs=False,
     allow_vfs=False,
     environ=None,
-    use_keeper=False,
 ):
     """Execute tests for tiered storage feature."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    with Cluster(
-        **cluster_args,
-        use_keeper=use_keeper,
-    ) as cluster:
+    with Cluster(**cluster_args) as cluster:
         cluster.with_minio = with_minio
         cluster.with_s3amazon = with_s3amazon
         cluster.with_s3gcs = with_s3gcs
