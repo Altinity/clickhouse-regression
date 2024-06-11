@@ -238,7 +238,7 @@ def config_find_and_replace(
 
     try:
         with Given(f"{find} is replaced by {replace} in {config_path} on {node.name}"):
-            node.command(f"sed -i -e 's/{find}\//{replace}\//' {config_path}")
+            node.command(rf"sed -i -e 's/{find}\//{replace}\//' {config_path}")
 
         if restart:
             with Given("ClickHouse is restarted"):
@@ -247,7 +247,7 @@ def config_find_and_replace(
         with Finally(
             f"{replace} is replaced by {find} in {config_path} on {node.name}", flags=TE
         ):
-            node.command(f"sed -i -e 's/{replace}\//{find}\//' {config_path}")
+            node.command(rf"sed -i -e 's/{replace}\//{find}\//' {config_path}")
 
         if restart:
             with Finally("ClickHouse is restarted"):
@@ -709,8 +709,8 @@ def metadata_non_restorable_schema(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find="<send_metadata>true<\/send_metadata>",
-            replace="<send_metadata>false<\/send_metadata>",
+            find=r"<send_metadata>true<\/send_metadata>",
+            replace=r"<send_metadata>false<\/send_metadata>",
             config_name="storage.xml",
         )
 

@@ -1045,7 +1045,7 @@ def check_refcount_after_mutation(self):
 
         with Then("Check refs"):
             output = node.command(
-                "grep -A 1 r00000000000000000000 -R /var/lib/clickhouse/disks/external/store/ | grep -B 1 '\-0' | grep r00000000000000000000 | sort -k 2 | uniq -df 1"
+                r"grep -A 1 r00000000000000000000 -R /var/lib/clickhouse/disks/external/store/ | grep -B 1 '\-0' | grep r00000000000000000000 | sort -k 2 | uniq -df 1"
             ).output
             assert output == "", error()
 

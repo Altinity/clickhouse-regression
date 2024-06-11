@@ -6199,7 +6199,7 @@ _aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_Map_UUID_UU
 """
 
 _aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_NULL_for_all_rows_0 = r"""
-{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(uniqUpTo(5), UInt64)'))":"0"}
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(uniqUpTo(5), Nullable(Nothing))'))":"0"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqUpTofinalizeAggregation_Nullable_Bool__0 = r"""

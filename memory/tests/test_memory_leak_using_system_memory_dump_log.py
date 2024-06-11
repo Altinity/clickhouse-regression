@@ -16,8 +16,8 @@ def create_and_drop_table(self, number_of_tables=100):
 
 @TestScenario
 def check_leak_with_system_memory_dump_log(self, node=None):
-    if check_clickhouse_version("<24.5")(self):
-        skip("system.memory_dump_log is available from 24.5")
+    if check_clickhouse_version("<24.6")(self):
+        skip("pr that introduces system.memory_dump_log is not yet merged")
 
     if node is None:
         node = self.context.node

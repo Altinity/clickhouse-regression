@@ -10,7 +10,13 @@ from testflows.combinatorics import combinations
 from helpers.common import getuid, check_clickhouse_version
 from helpers.queries import *
 
-from s3.tests.common import s3_storage, check_bucket_size, get_bucket_size, get_stable_bucket_size, check_stable_bucket_size
+from s3.tests.common import (
+    s3_storage,
+    check_bucket_size,
+    get_bucket_size,
+    get_stable_bucket_size,
+    check_stable_bucket_size,
+)
 
 DEFAULT_COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"

@@ -3,7 +3,10 @@ import random
 from testflows.core import *
 from testflows.combinatorics import product
 
-from alter.table.attach_partition.common import partitioned_MergeTree
+from alter.table.attach_partition.common import (
+    partitioned_MergeTree,
+    version_when_attach_partition_with_different_keys_merged,
+)
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, check_clickhouse_version
 
@@ -83,7 +86,9 @@ def get_exitcode_and_message(self, source_partition_key, destination_partition_k
         exitcode = 248
         message = "DB::Exception: Wrong number of fields"
     else:
-        if check_clickhouse_version(">=24.5")(self):
+        if check_clickhouse_version(
+            f">={version_when_attach_partition_with_different_keys_merged}"
+        )(self):
             exitcode = 36
             message = "DB::Exception: Cannot replace partition"
         else:
@@ -112,7 +117,9 @@ def check_replace_partition(self, source_partition_key, destination_partition_ke
             partition_by=destination_partition_key,
             node=node,
         )
-        if check_clickhouse_version(">=24.5")(self):
+        if check_clickhouse_version(
+            f">={version_when_attach_partition_with_different_keys_merged}"
+        )(self):
             node.query(
                 f"ALTER TABLE {destination_table} MODIFY SETTING allow_experimental_alter_partition_with_different_key=1"
             )

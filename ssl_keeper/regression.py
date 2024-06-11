@@ -71,10 +71,12 @@ def regression(
 
         if check_clickhouse_version("<22.4")(self):
             skip(reason="only supported on ClickHouse version >= 22.4")
-        
+
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
-                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
 
         Feature(run=load("ssl_keeper.tests.sanity", "feature"))
         Feature(run=load("ssl_keeper.tests.fips_ssl", "feature"))

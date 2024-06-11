@@ -60,7 +60,8 @@ def user_with_privilege(self, table_type, node=None):
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated",
+                    settings=[("user", user_name)],
                 )
 
                 default = node.query(f"SELECT d FROM {table_name}")
@@ -87,7 +88,8 @@ def user_with_all_privilege(self, table_type, node=None):
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated",
+                    settings=[("user", user_name)],
                 )
 
                 default = node.query(f"SELECT d FROM {table_name} FORMAT TabSeparated")
@@ -273,7 +275,8 @@ def role_with_privilege(self, table_type, node=None):
 
                 with Then("I verify SELECT command"):
                     user_select = node.query(
-                        f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
+                        f"SELECT d FROM {table_name} FORMAT TabSeparated",
+                        settings=[("user", user_name)],
                     )
                     default = node.query(f"SELECT d FROM {table_name}")
                     assert user_select.output == default.output, error()
@@ -422,7 +425,8 @@ def role_column_privileges(
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated",
+                    settings=[("user", user_name)],
                 )
                 default = node.query(f"SELECT d FROM {table_name}")
                 assert user_select.output == default.output, error()
@@ -475,7 +479,8 @@ def user_with_privilege_on_cluster(self, table_type, node=None):
 
             with Then("I verify SELECT command"):
                 user_select = node.query(
-                    f"SELECT d FROM {table_name} FORMAT TabSeparated", settings=[("user", user_name)]
+                    f"SELECT d FROM {table_name} FORMAT TabSeparated",
+                    settings=[("user", user_name)],
                 )
                 default = node.query(f"SELECT d FROM {table_name} FORMAT TabSeparated")
                 assert user_select.output == default.output, error()

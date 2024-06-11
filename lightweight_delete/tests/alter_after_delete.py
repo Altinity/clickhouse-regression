@@ -354,7 +354,9 @@ def move_partition_after_delete(
         )
 
     with When("I compute expected output"):
-        output11 = node.query(f"SELECT count(*) FROM {table_name_2} FORMAT TabSeparated").output
+        output11 = node.query(
+            f"SELECT count(*) FROM {table_name_2} FORMAT TabSeparated"
+        ).output
         output12 = node.query(
             f"SELECT count(*) FROM {table_name_1} WHERE NOT(x % 2 == 0 OR id != 3) FORMAT TabSeparated"
         ).output

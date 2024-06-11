@@ -22,6 +22,9 @@ def performance_cluster(
     clickhouse_binary_path,
     stress,
     clickhouse_version,
+    docker_compose_project_dir=os.path.join(
+        current_dir(), "env", "compare_performance_env"
+    ),
     allow_vfs=False,
 ):
     nodes = {"clickhouse": ("clickhouse1",), "duckdb": ("duckdb1",)}
@@ -67,6 +70,7 @@ def performance_cluster(
         nodes=nodes,
         clickhouse_binary_path=clickhouse_binary_path,
         environ={"DUCKDB_TESTS_BIN_PATH": duckdb_binary_path},
+        docker_compose_project_dir=docker_compose_project_dir,
     ) as cluster:
         yield cluster
 
@@ -93,6 +97,8 @@ def module(
     rerun_queries,
     test_machine,
     clickhouse_binary_path=None,
+    allow_vfs=False,
+    with_analyzer=False,
 ):
     """Running performance tests for ClickHouse"""
     with Given("I bring up the performance cluster environment"):

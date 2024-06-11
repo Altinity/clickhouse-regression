@@ -686,9 +686,9 @@ def sign_intermediate_ca_certificate(
                 if ca_passphrase:
                     cmd.app.expect("Enter pass phrase for.*?:")
                     cmd.app.send(ca_passphrase)
-                cmd.app.expect("Sign the certificate\?")
+                cmd.app.expect(r"Sign the certificate\?")
                 cmd.app.send("y")
-                cmd.app.expect("certificate requests certified, commit\?")
+                cmd.app.expect(r"certificate requests certified, commit\?")
                 cmd.app.send("y")
                 cmd.app.expect("Data Base Updated")
             assert cmd.exitcode == 0, error()

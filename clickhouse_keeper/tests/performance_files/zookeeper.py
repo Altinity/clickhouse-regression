@@ -27,9 +27,9 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
         with Then(
             "I collect the configuration and minimum insert time value from the performance test."
         ):
-            self.context.configurations_insert_time_values[
-                configuration
-            ] = performance_check()
+            self.context.configurations_insert_time_values[configuration] = (
+                performance_check()
+            )
 
     finally:
         with Finally("I start all stopped ZooKeeper nodes"):
@@ -62,9 +62,9 @@ def three_node(self, number_clickhouse_cluster_nodes=9):
         with Then(
             "I collect the coordination cluster configuration and minimum insert time value from the performance test."
         ):
-            self.context.configurations_insert_time_values[
-                configuration
-            ] = performance_check()
+            self.context.configurations_insert_time_values[configuration] = (
+                performance_check()
+            )
     finally:
         with Finally("I start all stopped zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][3:4]:

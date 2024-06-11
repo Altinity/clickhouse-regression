@@ -146,9 +146,11 @@ class Node(object):
         """
 
         command = f"{cmd}"
-        with step(
-            "executing command", description=command, format_description=False
-        ) if steps else NullStep():
+        with (
+            step("executing command", description=command, format_description=False)
+            if steps
+            else NullStep()
+        ):
             try:
                 r = self.cluster.bash(self.name, command=shell_command)(
                     command, *args, **kwargs
@@ -165,9 +167,11 @@ class Node(object):
                 assert r.exitcode == exitcode, error(r.output)
 
         if message is not None:
-            with Then(
-                f"output should contain message", description=message
-            ) if steps else NullStep():
+            with (
+                Then(f"output should contain message", description=message)
+                if steps
+                else NullStep()
+            ):
                 assert message in r.output, error(r.output)
 
         return r
@@ -507,11 +511,15 @@ class ClickHouseNode(Node):
                             {pipe_cmd} \"{sql[:100]}...\" > {query.name}
                             {command}
                         """
-                with step(
-                    "executing command",
-                    description=description,
-                    format_description=False,
-                ) if steps else NullStep():
+                with (
+                    step(
+                        "executing command",
+                        description=description,
+                        format_description=False,
+                    )
+                    if steps
+                    else NullStep()
+                ):
                     try:
                         r = self.cluster.bash(None)(command, *args, **kwargs)
                     except ExpectTimeoutError:
@@ -523,9 +531,11 @@ class ClickHouseNode(Node):
             for setting in query_settings:
                 name, value = setting
                 command += f' --{name} "{value}"'
-            with step(
-                "executing command", description=command, format_description=False
-            ) if steps else NullStep():
+            with (
+                step("executing command", description=command, format_description=False)
+                if steps
+                else NullStep()
+            ):
                 try:
                     r = self.cluster.bash(self.name)(command, *args, **kwargs)
                 except ExpectTimeoutError:
@@ -583,11 +593,15 @@ class ClickHouseNode(Node):
                     {pipe_cmd} \"{sql[:100]}...\" > {query.name}
                     {command}
                 """
-                with step(
-                    "executing command",
-                    description=description,
-                    format_description=False,
-                ) if steps else NullStep():
+                with (
+                    step(
+                        "executing command",
+                        description=description,
+                        format_description=False,
+                    )
+                    if steps
+                    else NullStep()
+                ):
                     try:
                         r = self.cluster.bash(None)(command, *args, **kwargs)
                     except ExpectTimeoutError:
@@ -597,9 +611,11 @@ class ClickHouseNode(Node):
             for setting in query_settings:
                 name, value = setting
                 command += f' --{name} "{value}"'
-            with step(
-                "executing command", description=command, format_description=False
-            ) if steps else NullStep():
+            with (
+                step("executing command", description=command, format_description=False)
+                if steps
+                else NullStep()
+            ):
                 try:
                     r = self.cluster.bash(None)(command, *args, **kwargs)
                 except ExpectTimeoutError:
@@ -690,11 +706,15 @@ class ClickHouseNode(Node):
                     {pipe_cmd} \"{sql[:100]}...\" > {query.name}
                     {command}
                 """
-                with step(
-                    "executing command",
-                    description=description,
-                    format_description=False,
-                ) if steps else NullStep():
+                with (
+                    step(
+                        "executing command",
+                        description=description,
+                        format_description=False,
+                    )
+                    if steps
+                    else NullStep()
+                ):
                     try:
                         r = self.cluster.bash(None)(command, *args, **kwargs)
                     except ExpectTimeoutError:
@@ -714,9 +734,11 @@ class ClickHouseNode(Node):
                 else:
                     command = f'{pipe_cmd} "{sql}" | {client}{client_options} 2>&1'
 
-            with step(
-                "executing command", description=command, format_description=False
-            ) if steps else NullStep():
+            with (
+                step("executing command", description=command, format_description=False)
+                if steps
+                else NullStep()
+            ):
                 try:
                     r = self.cluster.bash(self.name)(command, *args, **kwargs)
                 except ExpectTimeoutError:
@@ -752,9 +774,11 @@ class ClickHouseNode(Node):
                 assert r.exitcode == exitcode, error(r.output)
 
         if message is not None:
-            with Then(
-                f"output should contain message", description=message
-            ) if steps else NullStep():
+            with (
+                Then(f"output should contain message", description=message)
+                if steps
+                else NullStep()
+            ):
                 assert message in r.output, error(r.output)
 
         if not ignore_exception:
@@ -1236,14 +1260,15 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
+                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
+                    self.clickhouse_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
+                    self.clickhouse_odbc_bridge_binary_path
+                    or os.path.join(
+                        os.path.dirname(self.clickhouse_binary_path),
+                        "clickhouse-odbc-bridge",
+                    )
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
@@ -1353,9 +1378,11 @@ class Cluster(object):
         :param exitcode: expected exitcode, default: None
         :param steps: don't break command into steps, default: True
         """
-        with By(
-            "executing command", description=command, format_description=False
-        ) if steps else NullStep():
+        with (
+            By("executing command", description=command, format_description=False)
+            if steps
+            else NullStep()
+        ):
             if bash is None:
                 bash = self.bash(node)
             try:
@@ -1368,9 +1395,11 @@ class Cluster(object):
             return r
 
         if exitcode is not None:
-            with Then(
-                f"exitcode should be {exitcode}", format_name=False
-            ) if steps else NullStep():
+            with (
+                Then(f"exitcode should be {exitcode}", format_name=False)
+                if steps
+                else NullStep()
+            ):
                 if str(exitcode).startswith("!="):
                     exitcode = int(str(exitcode).split("!=", 1)[-1].strip())
                     assert r.exitcode != exitcode, error(r.output)
@@ -1384,11 +1413,15 @@ class Cluster(object):
             messages = [message] + messages
 
         for i, message in enumerate(messages):
-            with Then(
-                f"output should contain message{' #' + str(i) if i > 0 else ''}",
-                description=message,
-                format_description=False,
-            ) if steps else NullStep():
+            with (
+                Then(
+                    f"output should contain message{' #' + str(i) if i > 0 else ''}",
+                    description=message,
+                    format_description=False,
+                )
+                if steps
+                else NullStep()
+            ):
                 assert message in r.output, error(r.output)
 
         return r

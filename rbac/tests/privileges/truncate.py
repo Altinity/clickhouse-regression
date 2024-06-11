@@ -117,11 +117,19 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
             with When("I grant the truncate privilege"):
                 node.query(f"GRANT TRUNCATE ON {table_name} TO {grant_target_name}")
 
+            with And("I grant the user CLUSTER privilege"):
+                if check_clickhouse_version(">=24.4")(current()):
+                    node.query(f"GRANT CLUSTER ON *.* TO {grant_target_name}")
+
             with Then("I attempt to truncate a table"):
                 node.query(
                     f"TRUNCATE TABLE IF EXISTS {table_name} ON CLUSTER sharded_cluster",
                     settings=[("user", user_name)],
                 )
+
+            with And("I revoke CLUSTER privilege"):
+                if check_clickhouse_version(">=24.4")(current()):
+                    node.query(f"REVOKE CLUSTER ON *.* FROM {grant_target_name}")
 
     with Scenario("user with ALL privilege"):
         table_name = f"merge_tree_{getuid()}"

@@ -62,7 +62,9 @@ def s3(self, node=None, allow_vfs=False):
     with Then("I expect data is successfully deleted"):
         r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == "250", error()
-        r = node.query(f"SELECT count(*) FROM {table_name} WHERE x < 50 FORMAT TabSeparated")
+        r = node.query(
+            f"SELECT count(*) FROM {table_name} WHERE x < 50 FORMAT TabSeparated"
+        )
         assert r.output == "0", error()
 
 

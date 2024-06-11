@@ -52,7 +52,7 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
             )
 
             table_values = node.query(
-                f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                f"SELECT * FROM {table_name} ORDER BY ALL FORMAT TabSeparated"
             )
 
         with Then("I check that the output is correct"):
@@ -156,9 +156,7 @@ def million_extensions(self):
 def fastparquet_globs(self):
     """Importing multiple Parquet files using the glob patterns from a single directory."""
     for example in self.examples:
-        select_with_glob(
-            query=example[0], snapshot_name=example[1], order_by="tuple(*)"
-        )
+        select_with_glob(query=example[0], snapshot_name=example[1], order_by="ALL")
 
 
 @TestFeature
