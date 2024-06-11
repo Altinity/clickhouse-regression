@@ -44,6 +44,65 @@ def short_hash(s):
     return hashlib.sha1(s.encode("utf-8")).hexdigest()[:10]
 
 
+def download_http_binary(binary_source):
+    """Download binary from http source and return path to the downloaded file."""
+    file_name = f"{short_hash(binary_source)}-{binary_source.rsplit('/', 1)[-1]}"
+    file_dir = f"{current_dir()}/../binaries/"
+    os.makedirs(file_dir, exist_ok=True)
+    file_path = file_dir + file_name
+    if not os.path.exists(file_path):
+        with Shell() as bash:
+            bash.timeout = 300
+            try:
+                note(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
+                cmd = bash(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
+                assert cmd.exitcode == 0
+            except BaseException:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                raise
+
+    return file_path
+
+
+def filter_version(version):
+    """Filter version from string."""
+    return "".join([c for c in version.strip(".") if c in ".0123456789"])
+
+
+def parse_version_from_docker_path(docker_path):
+    """Parse version from docker path."""
+    return filter_version(docker_path.rsplit(":", 1)[-1])
+
+
+def unpack_deb(deb_binary_path, program_name):
+    """Unpack deb binary and return path to the binary."""
+    deb_binary_dir = deb_binary_path.rsplit(".deb", 1)[0]
+    os.makedirs(deb_binary_dir, exist_ok=True)
+    with Shell() as bash:
+        bash.timeout = 300
+        if not os.path.exists(f"{deb_binary_dir}/{program_name}"):
+            bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
+            bash(
+                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}""'
+            )
+            bash(f'chmod +x "{deb_binary_dir}/{program_name}"')
+
+    return f"{deb_binary_dir}/{program_name}"
+
+
+def unpack_tar_gz(tar_path):
+    """Unpack tar.gz file and return path to the result."""
+    tar_dest_dir = tar_path.rsplit(".tar.gz", 1)[0]
+    os.makedirs(tar_dest_dir, exist_ok=True)
+    with Shell() as bash:
+        bash.timeout = 300
+        bash(f'tar -xzf "{tar_path}" -C "{tar_dest_dir}" --strip-components=1')
+        bash(f'chmod +x "{tar_dest_dir}/bin/*"')
+
+    return f"{tar_dest_dir}"
+
+
 class Shell(ShellBase):
     def __exit__(self, type, value, traceback):
         # send exit and Ctrl-D repeatedly
@@ -201,19 +260,20 @@ class ZooKeeperNode(Node):
     """Node with ZooKeeper server."""
 
     SERVER_ENV = ""
+    version_regex = re.compile(r"version ([.0-9]+)")
+
+    def zk_server_command(self, command, **kwargs):
+        return self.command(
+            f"{self.SERVER_ENV}zkServer.sh {command}",
+            steps=False,
+            **kwargs,
+        )
 
     def wait_zookeeper_healthy(self, timeout=300):
         with By(f"waiting until ZooKeeper server on {self.name} is healthy"):
             for attempt in retries(timeout=timeout, delay=1):
                 with attempt:
-                    if (
-                        self.command(
-                            f"{self.SERVER_ENV}zkServer.sh status",
-                            no_checks=1,
-                            steps=False,
-                        ).exitcode
-                        != 0
-                    ):
+                    if self.zk_server_command("status", no_checks=1).exitcode != 0:
                         fail("ZooKeeper server is not healthy")
 
     def zookeeper_pid(self):
@@ -240,21 +300,23 @@ class ZooKeeperNode(Node):
         """Stop ZooKeeper server."""
 
         with By(f"stopping {self.name}"):
-            self.command(f"{self.SERVER_ENV}zkServer.sh stop", exitcode=0, steps=False)
+            self.zk_server_command("stop")
 
-    def start_zookeeper(self, timeout=300):
+    def start_zookeeper(self, timeout=300, check_version=True):
         """Start ZooKeeper server."""
+        if check_version:
+            r = self.zk_server_command("version")
+            version = self.version_regex.search(r.output).group(1)
+            current().context.zookeeper_version = version
 
         with By(f"starting {self.name}"):
-            self.command(f"{self.SERVER_ENV}zkServer.sh start", exitcode=0, steps=False)
+            self.zk_server_command("start", exitcode=0)
 
     def restart_zookeeper(self, timeout=300):
         """Restart ZooKeeper server."""
 
         with By(f"restarting {self.name}"):
-            self.command(
-                f"{self.SERVER_ENV}zkServer.sh restart", exitcode=0, steps=False
-            )
+            self.zk_server_command("restart", exitcode=0)
 
     def stop(self, timeout=300, retry_count=5):
         """Stop node."""
@@ -905,10 +967,15 @@ class ClickHouseKeeperNode(Node):
     def start_keeper(
         self,
         timeout=100,
-        user="clickhouse",
+        user=None,
         force_recovery=False,
+        check_version=True,
     ):
         """Start ClickHouse Keeper."""
+        if check_version:
+            r = self.command("/usr/bin/clickhouse-keeper --version", steps=False)
+            current().context.keeper_version = filter_version(r.output.strip())
+
         pid = self.keeper_pid()
         if pid:
             raise RuntimeError(f"ClickHouse Keeper already running with pid {pid}")
@@ -942,7 +1009,7 @@ class ClickHouseKeeperNode(Node):
                     ):
                         fail("no pid file yet")
 
-    def restart_keeper(self, timeout=100, user="clickhouse"):
+    def restart_keeper(self, timeout=100, user=None):
         """Restart ClickHouse Keeper."""
         if self.keeper_pid():
             self.stop_keeper(timeout=timeout)
@@ -964,7 +1031,7 @@ class ClickHouseKeeperNode(Node):
         start_keeper=True,
         wait_healthy=True,
         retry_count=5,
-        user="clickhouse",
+        user=None,
     ):
         """Start node."""
         super(ClickHouseKeeperNode, self).start(
@@ -1009,6 +1076,9 @@ class Cluster(object):
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
+        keeper_binary_path=None,
+        zookeeper_version=None,
+        use_keeper=False,
         thread_fuzzer=False,
         collect_service_logs=False,
         use_zookeeper_nodes=False,
@@ -1021,6 +1091,9 @@ class Cluster(object):
         self.environ = {} if (environ is None) else environ
         self.clickhouse_binary_path = clickhouse_binary_path
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
+        self.keeper_binary_path = keeper_binary_path
+        self.zookeeper_version = zookeeper_version
+        self.use_keeper = use_keeper
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -1079,11 +1152,18 @@ class Cluster(object):
 
         if self.clickhouse_binary_path:
             if self.use_specific_version:
-                (
-                    self.specific_clickhouse_binary_path,
-                    self.clickhouse_specific_odbc_binary,
-                ) = self.get_clickhouse_binary_from_docker_container(
-                    self.use_specific_version
+                self.specific_clickhouse_binary_path = (
+                    self.get_binary_from_docker_container(
+                        docker_image=self.use_specific_version,
+                        container_binary_path="/usr/bin/clickhouse",
+                    )
+                )
+                self.clickhouse_specific_odbc_binary = (
+                    self.get_binary_from_docker_container(
+                        docker_image=self.use_specific_version,
+                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                        host_binary_path_suffix="_odbc_bridge",
+                    )
                 )
 
                 self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
@@ -1096,74 +1176,49 @@ class Cluster(object):
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
-                    "I download ClickHouse server binary using wget",
+                    "I download ClickHouse server binary",
                     description=f"{self.clickhouse_binary_path}",
                 ):
-                    file_name = f"{short_hash(self.clickhouse_binary_path)}-{self.clickhouse_binary_path.rsplit('/', 1)[-1]}"
-                    file_dir = f"{current_dir()}/../binaries/"
-                    os.makedirs(file_dir, exist_ok=True)
-                    file_path = file_dir + file_name
-                    if not os.path.exists(file_path):
-                        with Shell() as bash:
-                            bash.timeout = 300
-                            try:
-                                cmd = bash(
-                                    f'wget --progress dot:giga "{self.clickhouse_binary_path}" -O {file_path}'
-                                )
-                                assert cmd.exitcode == 0
-                            except BaseException:
-                                if os.path.exists(file_path):
-                                    os.remove(file_path)
-                                raise
-                    self.clickhouse_binary_path = file_path
+                    self.clickhouse_binary_path = download_http_binary(
+                        binary_source=self.clickhouse_binary_path
+                    )
 
             elif self.clickhouse_binary_path.startswith("docker://"):
                 if current().context.clickhouse_version is None:
-                    parsed_version = ""
-                    for c in self.clickhouse_binary_path.rsplit(":", 1)[-1]:
-                        if c in ".0123456789":
-                            parsed_version += c
-                        else:
-                            break
+                    parsed_version = parse_version_from_docker_path(
+                        self.clickhouse_binary_path
+                    )
                     if parsed_version:
-                        if not (
+                        if not (  # What case are we trying to catch here?
                             parsed_version.startswith(".")
                             or parsed_version.endswith(".")
                         ):
                             current().context.clickhouse_version = parsed_version
 
-                (
-                    self.clickhouse_binary_path,
-                    self.clickhouse_odbc_bridge_binary_path,
-                ) = self.get_clickhouse_binary_from_docker_container(
-                    self.clickhouse_binary_path
+                self.clickhouse_binary_path = self.get_binary_from_docker_container(
+                    docker_image=self.clickhouse_binary_path,
+                    container_binary_path="/usr/bin/clickhouse",
+                )
+                self.clickhouse_odbc_bridge_binary_path = (
+                    self.get_binary_from_docker_container(
+                        docker_image=self.clickhouse_binary_path,
+                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                        host_binary_path_suffix="_odbc_bridge",
+                    )
                 )
 
             if self.clickhouse_binary_path.endswith(".deb"):
                 with Given(
                     "unpack deb package", description=f"{self.clickhouse_binary_path}"
                 ):
-                    deb_binary_dir = self.clickhouse_binary_path.rsplit(".deb", 1)[0]
-                    os.makedirs(deb_binary_dir, exist_ok=True)
-                    with Shell() as bash:
-                        bash.timeout = 300
-                        if not os.path.exists(
-                            f"{deb_binary_dir}/clickhouse"
-                        ) or not os.path.exists(
-                            f"{deb_binary_dir}/clickhouse-odbc-bridge"
-                        ):
-                            bash(
-                                f'ar x "{self.clickhouse_binary_path}" --output "{deb_binary_dir}"'
-                            )
-                            bash(
-                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse -O > "{deb_binary_dir}/clickhouse"'
-                            )
-                            bash(f'chmod +x "{deb_binary_dir}/clickhouse"')
-                            bash(
-                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse-odbc-bridge -O > "{deb_binary_dir}/clickhouse-odbc-bridge"'
-                            )
-                            bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
-                    self.clickhouse_binary_path = f"{deb_binary_dir}/clickhouse"
+                    self.clickhouse_binary_path = unpack_deb(
+                        deb_binary_path=self.clickhouse_binary_path,
+                        program_name="clickhouse",
+                    )
+                    unpack_deb(
+                        deb_binary_path=self.clickhouse_binary_path,
+                        program_name="clickhouse-odbc-bridge",
+                    )
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
@@ -1171,36 +1226,81 @@ class Cluster(object):
                 bash.timeout = 300
                 bash(f"chmod +x {self.clickhouse_binary_path}")
 
+        if self.keeper_binary_path:
+            if self.keeper_binary_path.startswith(("http://", "https://")):
+                with Given(
+                    "I download ClickHouse Keeper server binary",
+                    description=f"{self.keeper_binary_path}",
+                ):
+                    self.keeper_binary_path = download_http_binary(
+                        binary_source=self.keeper_binary_path
+                    )
+
+            elif self.keeper_binary_path.startswith("docker://"):
+                if getsattr(current().context, "keeper_version", None) is None:
+                    parsed_version = parse_version_from_docker_path(
+                        self.keeper_binary_path
+                    )
+                    if parsed_version:
+                        if not (
+                            parsed_version.startswith(".")
+                            or parsed_version.endswith(".")
+                        ):
+                            current().context.keeper_version = parsed_version
+
+                self.keeper_binary_path = self.get_binary_from_docker_container(
+                    docker_image=self.keeper_binary_path,
+                    container_binary_path="/usr/bin/clickhouse-keeper",
+                )
+
+            if self.keeper_binary_path.endswith(".deb"):
+                with Given(
+                    "unpack deb package", description=f"{self.keeper_binary_path}"
+                ):
+                    self.keeper_binary_path = unpack_deb(
+                        deb_binary_path=self.keeper_binary_path,
+                        program_name="clickhouse-keeper",
+                    )
+
+            self.keeper_binary_path = os.path.abspath(self.keeper_binary_path)
+
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(f"chmod +x {self.keeper_binary_path}")
+
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
 
-    def get_clickhouse_binary_from_docker_container(
+    def get_binary_from_docker_container(
         self,
         docker_image,
-        container_clickhouse_binary_path="/usr/bin/clickhouse",
-        container_clickhouse_odbc_bridge_binary_path="/usr/bin/clickhouse-odbc-bridge",
-        host_clickhouse_binary_path=None,
-        host_clickhouse_odbc_bridge_binary_path=None,
+        container_binary_path="/usr/bin/clickhouse",
+        host_binary_path=None,
+        host_binary_path_suffix=None,
     ):
-        """Get clickhouse-server and clickhouse-odbc-bridge binaries
-        from some Docker container.
         """
+        Get clickhouse-keeper binary from some Docker container.
+
+        Args:
+            docker_image: docker image name
+            container_binary_path: path to link the binary in the container
+            host_binary_path: path to store the binary on the host
+            host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
+        """
+
         docker_image = docker_image.split("docker://", 1)[-1]
         docker_container_name = str(uuid.uuid1())
 
-        if host_clickhouse_binary_path is None:
-            host_clickhouse_binary_path = os.path.join(
+        if host_binary_path is None:
+            host_binary_path = os.path.join(
                 tempfile.gettempdir(),
                 f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
             )
-
-        if host_clickhouse_odbc_bridge_binary_path is None:
-            host_clickhouse_odbc_bridge_binary_path = (
-                host_clickhouse_binary_path + "_odbc_bridge"
-            )
+            if host_binary_path_suffix:
+                host_binary_path += host_binary_path_suffix
 
         with Given(
-            "I get ClickHouse server binary from docker container",
+            "I get ClickHouse Keeper binary from docker container",
             description=f"{docker_image}",
         ):
             with Shell() as bash:
@@ -1209,19 +1309,16 @@ class Cluster(object):
                     f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
                 )
                 bash(
-                    f'docker cp "{docker_container_name}:{container_clickhouse_binary_path}" "{host_clickhouse_binary_path}"'
-                )
-                bash(
-                    f'docker cp "{docker_container_name}:{container_clickhouse_odbc_bridge_binary_path}" "{host_clickhouse_odbc_bridge_binary_path}"'
+                    f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
                 )
                 bash(f'docker stop "{docker_container_name}"')
 
         with And("debug"):
             with Shell() as bash:
                 bash.timeout = 300
-                bash(f"ls -la {host_clickhouse_binary_path}")
+                bash(f"ls -la {host_binary_path}")
 
-        return host_clickhouse_binary_path, host_clickhouse_odbc_bridge_binary_path
+        return host_binary_path
 
     @property
     def control_shell(self, timeout=300):
@@ -1546,6 +1643,15 @@ class Cluster(object):
                         "clickhouse-odbc-bridge",
                     )
                 )
+                self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
+                    self.keeper_binary_path or ""
+                )
+                self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
+                    self.zookeeper_version or ""
+                )
+                self.environ["CLICKHOUSE_TESTS_COORDINATOR"] = (
+                    "keeper" if self.use_keeper else "zookeeper"
+                )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
             with And("I list environment variables to show their values"):
@@ -1601,7 +1707,7 @@ class Cluster(object):
                             with attempt:
                                 cmd = self.command(
                                     None,
-                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
+                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --build --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
                                     exitcode=0,
                                 )
@@ -1743,6 +1849,9 @@ def create_cluster(
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,
+    keeper_binary_path=None,
+    zookeeper_version=None,
+    use_keeper=False,
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
@@ -1759,6 +1868,9 @@ def create_cluster(
         docker_compose_project_dir=docker_compose_project_dir,
         docker_compose_file=docker_compose_file,
         environ=environ,
+        keeper_binary_path=keeper_binary_path,
+        zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,

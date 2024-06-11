@@ -52,7 +52,7 @@ def create_transactions_configuration(
 ):
     """Create ClickHouse SSL servers configuration.
 
-    :param config_d_dir: path to CLickHouse config.d folder
+    :param config_d_dir: path to ClickHouse config.d folder
     :param config_file: name of config file
     :param nodes: nodes which will use remote config section
     :param entries: inside config information

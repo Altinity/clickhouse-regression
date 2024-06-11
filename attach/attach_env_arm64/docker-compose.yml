@@ -90,42 +90,33 @@ volumes:
 services:
   zookeeper1:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper1
-    environment:
-      ZOO_MY_ID: 1
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper1/datalog/:/datalog"
-      - zookeeper_data-limited-1:/data-limited
-      - zookeeper_datalog-limited-1:/datalog-limited
+      file: ../../helpers/docker/zookeeper-node-service.yml
+      service: zookeeper1
 
   zookeeper2:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper2
-    environment:
-      ZOO_MY_ID: 2
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper2/datalog/:/datalog/"
-      - zookeeper_data-limited-2:/data-limited
-      - zookeeper_datalog-limited-2:/datalog-limited
+      file: ../../helpers/docker/zookeeper-node-service.yml
+      service: zookeeper2
 
   zookeeper3:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
-    hostname: zookeeper3
-    environment:
-      ZOO_MY_ID: 3
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/data/:/data/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper3/datalog/:/datalog/"
-      - zookeeper_data-limited-3:/data-limited
-      - zookeeper_datalog-limited-3:/datalog-limited
+      file: ../../helpers/docker/zookeeper-node-service.yml
+      service: zookeeper3
+
+  keeper1:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper1
+
+  keeper2:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper2
+
+  keeper3:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper3
 
   clickhouse1:
     extends:
@@ -182,4 +173,10 @@ services:
       zookeeper2:
         condition: service_healthy
       zookeeper3:
+        condition: service_healthy
+      keeper1:
+        condition: service_healthy
+      keeper2:
+        condition: service_healthy
+      keeper3:
         condition: service_healthy

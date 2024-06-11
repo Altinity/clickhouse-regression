@@ -1,10 +1,35 @@
 version: '2.3'
 
 services:
-  zookeeper:
+  zookeeper1:
     extends:
-      file: zookeeper-service.yml
-      service: zookeeper
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper1
+
+  zookeeper2:
+    extends:
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper2
+
+  zookeeper3:
+    extends:
+      file: ../../helpers/docker/zookeeper-service.yml
+      service: zookeeper3
+
+  keeper1:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper1
+
+  keeper2:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper2
+
+  keeper3:
+    extends:
+      file: ../../helpers/docker/keeper-service.yml
+      service: keeper3
 
   mysql1:
     extends:
@@ -22,14 +47,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse2:
@@ -40,14 +59,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse3:
@@ -58,14 +71,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
     depends_on:
-      zookeeper:
+      zookeeper1:
         condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
@@ -81,5 +88,15 @@ services:
         condition: service_healthy
       clickhouse3:
         condition: service_healthy
-      zookeeper:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+      keeper1:
+        condition: service_healthy
+      keeper2:
+        condition: service_healthy
+      keeper3:
         condition: service_healthy

@@ -147,6 +147,9 @@ def feature(
     with_s3gcs=False,
     allow_vfs=False,
     environ=None,
+    keeper_binary_path=None,
+    zookeeper_version=None,
+    use_keeper=False,
 ):
     """Execute tests for tiered storage feature."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -157,6 +160,9 @@ def feature(
         collect_service_logs=collect_service_logs,
         nodes=nodes,
         environ=environ,
+        keeper_binary_path=keeper_binary_path,
+        zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
     ) as cluster:
         cluster.with_minio = with_minio
         cluster.with_s3amazon = with_s3amazon
@@ -345,6 +351,9 @@ def regression(
     clickhouse_binary_path,
     clickhouse_version,
     collect_service_logs,
+    keeper_binary_path=None,
+    zookeeper_version=None,
+    use_keeper=False,
     stress=None,
     with_minio=False,
     with_s3amazon=False,
@@ -410,6 +419,9 @@ def regression(
         with_minio=with_minio,
         with_s3amazon=with_s3amazon,
         with_s3gcs=with_s3gcs,
+        keeper_binary_path=keeper_binary_path,
+        zookeeper_version=zookeeper_version,
+        use_keeper=use_keeper,
         environ=environ,
         allow_vfs=allow_vfs,
         with_analyzer=with_analyzer,
