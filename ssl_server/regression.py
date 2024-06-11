@@ -185,7 +185,7 @@ def regression(
     if current_cpu() == "aarch64":
         nodes["zookeeper"] = (("zookeeper"),)
 
-    if zookeeper_version:
+    if cluster_args.get("zookeeper_version"):
         skip("ssl_server suite does not support specifying zookeeper version")
 
     self.context.clickhouse_version = clickhouse_version

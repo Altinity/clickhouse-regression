@@ -335,6 +335,7 @@ def feature(
 @Requirements(RQ_SRS_004_TieredStorage("1.0"))
 @XFails(xfails)
 @FFails(ffails)
+@CaptureClusterArgs
 def regression(
     self,
     cluster_args,

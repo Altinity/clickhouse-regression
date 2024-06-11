@@ -540,7 +540,7 @@ def regression(
 
     assert storage_module is not None
     Module(test=storage_module)(
-        **cluster_args,
+        cluster_args=cluster_args,
         with_analyzer=with_analyzer,
         **storage_module_kwargs,
     )
