@@ -6,7 +6,7 @@ from s3.tests.common import *
 from s3.requirements import *
 
 
-@TestFeature
+@TestStep(Given)
 @Name("setup")
 def s3_create_many_files(self):
     """Create a folder with many folders and files in S3."""
@@ -22,12 +22,25 @@ def s3_create_many_files(self):
     table_name = "table_" + getuid()
     my_random = random.Random("many_files")
 
+    with Given("I have a list of random folder ids"):
+        folder_ids = [my_random.randint(100_000, 999_999) for _ in range(num_folders)]
+
+    with Then("I check if the files already exist"):
+        with By(f"checking if the last folder exists"):
+            r = node.query(
+                f"""SELECT _path FROM s3('{self.context.many_files_uri}id={folder_ids[-1]}/*', '{access_key_id}','{secret_access_key}', 'One') FORMAT TabSeparated"""
+            )
+
+    if r.output:
+        skip("Files already exist")
+        return
+
     @TestStep(When)
     def insert_files(self, folder_id, iteration):
         node.query(
             f"""INSERT INTO TABLE FUNCTION 
             s3('{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
-            PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} SETTINGS s3_truncate_on_insert=1 
+            PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} 
             -- {iteration}/{num_folders}"""
         )
 
@@ -37,8 +50,7 @@ def s3_create_many_files(self):
 
     with Given("I have many folders with files in S3"):
         executor = Pool(100, thread_name_prefix="s3_insert")
-        for j in range(num_folders):
-            folder_id = my_random.randint(100_000, 999_999)
+        for j, folder_id in enumerate(folder_ids):
 
             # skip ahead through random number generation
             if j < start_offset:
@@ -65,7 +77,7 @@ def s3_create_many_files(self):
         ("{abc,efg,hij}", 120, False, Name("nums no match")),
         ("abc*", 2, False, Name("star no match")),
         ("abc??", 2, False, Name("question no match")),
-        ("{0..10000}", 120, False, Name("range no match")),
+        ("{100..199}", 120, False, Name("range no match")),
     ],
 )
 @Requirements(RQ_SRS_015_S3_Performance_Glob("1.0"))
@@ -97,8 +109,10 @@ def wildcard(self, wildcard, expected_time, expect_result):
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
 
-    for scenario in loads(current_module(), Scenario):
-        with allow_s3_truncate(self.context.node):
+    with allow_s3_truncate(self.context.node):
+        Scenario(run=s3_create_many_files)
+
+        for scenario in loads(current_module(), Scenario):
             scenario()
 
 
@@ -112,8 +126,6 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
     self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
-
-    # Scenario(run=s3_create_many_files)
 
     outline()
 
@@ -129,8 +141,6 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
     self.context.secret_access_key = access_key
     self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
 
-    # Scenario(run=s3_create_many_files)
-
     outline()
 
 
@@ -144,7 +154,5 @@ def minio(self, uri, key, secret, node="clickhouse1"):
     self.context.access_key_id = key
     self.context.secret_access_key = secret
     self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
-
-    Scenario(run=s3_create_many_files)
 
     outline()

@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from ssl_keeper.helpers.cluster import Cluster
-from helpers.argparser import argparser as base_argparser
+from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 
 
@@ -39,12 +39,11 @@ xflags = {}
 @XFails(xfails)
 @XFlags(xflags)
 @Name("ssl keeper")
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     stress=None,
     thread_fuzzer=None,
     allow_vfs=False,
@@ -64,9 +63,7 @@ def regression(
         self.context.stress = stress
 
     with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
+        **cluster_args,
         thread_fuzzer=thread_fuzzer,
         nodes=nodes,
     ) as cluster:
