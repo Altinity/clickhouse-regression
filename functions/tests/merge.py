@@ -66,7 +66,7 @@ def merge(self):
     with And("I select count() with using `merge` and expect the same result"):
         incorrect_query = f"""
                 SELECT count()
-                FROM merge('default', '^{distributed_table_name}$')
+                FROM merge('default', '{distributed_table_name}')
                 WHERE name GLOBAL IN (
                 SELECT name
                 FROM default.{distributed_table_name}

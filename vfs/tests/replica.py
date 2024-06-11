@@ -83,7 +83,7 @@ def no_duplication(self):
                 name=bucket_name,
                 prefix=bucket_path,
                 expected_size=expected_size,
-                tolerance=int(expected_size*0.00005),
+                tolerance=int(expected_size * 0.00005),
                 minio_enabled=self.context.minio_enabled,
             )
 
@@ -329,7 +329,11 @@ def add_remove_one_node(self):
             table_name=table_name, storage_policy=storage_policy, columns="d UInt64"
         )
 
-    When("I start inserts on the second node", test=insert_random, parallel=parallel,)(
+    When(
+        "I start inserts on the second node",
+        test=insert_random,
+        parallel=parallel,
+    )(
         node=nodes[1],
         table_name=table_name,
         columns="d UInt64",
@@ -348,7 +352,11 @@ def add_remove_one_node(self):
         parallel=parallel,
     )(node=nodes[2], table_name=table_name)
 
-    When("I start inserts on the first node", test=insert_random, parallel=parallel,)(
+    When(
+        "I start inserts on the first node",
+        test=insert_random,
+        parallel=parallel,
+    )(
         node=nodes[0],
         table_name=table_name,
         columns="d UInt64",
@@ -592,11 +600,15 @@ def command_combinations_outline(self, table_name, shuffle_seed=None, allow_vfs=
     @TestStep(When)
     def select(self, node):
         for _ in range(random.randint(2, 10)):
-            node.query(f"SELECT count() FROM {table_name} FORMAT TabSeparated", no_checks=True)
+            node.query(
+                f"SELECT count() FROM {table_name} FORMAT TabSeparated", no_checks=True
+            )
 
     @TestStep(When)
     def truncate(self, node):
-        node.query(f"TRUNCATE TABLE IF EXISTS {table_name} FORMAT TabSeparated", no_checks=True)
+        node.query(
+            f"TRUNCATE TABLE IF EXISTS {table_name} FORMAT TabSeparated", no_checks=True
+        )
 
     @TestStep(Then)
     @Retry(timeout=60, delay=0.5)

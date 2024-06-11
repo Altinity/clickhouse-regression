@@ -138,10 +138,28 @@ def drop_row_policy(self, privilege, grant_target_name, user_name, node=None):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
             with Then("I check the user can drop a row policy"):
-                node.query(
-                    f"DROP ROW POLICY {drop_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
-                    settings=[("user", f"{user_name}")],
-                )
+                if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
+                    node.query(
+                        f"DROP ROW POLICY {drop_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
+                        settings=[("user", f"{user_name}")],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"DROP ROW POLICY {drop_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
+                        settings=[("user", f"{user_name}")],
+                    )
+
+            with And(
+                "I grant CLUSTER privilege and check the user can drop a row policy"
+            ):
+                if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
+                    grant_cluster(user=grant_target_name)
+                    node.query(
+                        f"DROP ROW POLICY {drop_row_policy_name} ON CLUSTER sharded_cluster ON {table_name}",
+                        settings=[("user", f"{user_name}")],
+                    )
 
         finally:
             with Finally("I drop the user"):
@@ -193,22 +211,31 @@ def drop_all_pol_with_conditions(self, node=None):
             row_policy(name=pol_name, table=table_name)
 
         with And("The row policy has a condition"):
-            node.query(
-                f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
-            )
+            if check_clickhouse_version(">=24.4")(self):
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 0 TO default"
+                )
+            else:
+                node.query(
+                    f"ALTER ROW POLICY {pol_name} ON {table_name} FOR SELECT USING 1"
+                )
 
         with And("The table has some values"):
             node.query(f"INSERT INTO {table_name} (y) VALUES (1),(2)")
 
         with And("I can't see any of the rows on the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "" == output, error()
 
         with When("I drop the row policy"):
             node.query(f"DROP ROW POLICY {pol_name} ON {table_name}")
 
         with Then("I select all the rows from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output and "2" in output, error()
 
 
@@ -238,14 +265,18 @@ def drop_on(self, node=None):
             node.query(f"INSERT INTO {table_name} (y) VALUES (1),(2)")
 
         with And("I can't see one of the rows on the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output and "2" not in output, error()
 
         with When("I drop the row policy"):
             node.query(f"DROP ROW POLICY {pol_name} ON {table_name}")
 
         with Then("I select all the rows from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output and "2" in output, error()
 
 
@@ -286,11 +317,15 @@ def drop_on_cluster(self, node=None):
             )
 
         with Then("I select from the table"):
-            output = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
         with And("I select from another node on the cluster"):
-            output = node2.query(f"SELECT * FROM {table_name} FORMAT TabSeparated").output
+            output = node2.query(
+                f"SELECT * FROM {table_name} FORMAT TabSeparated"
+            ).output
             assert "1" in output, error()
 
     finally:

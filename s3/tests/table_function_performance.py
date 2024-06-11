@@ -20,14 +20,14 @@ def s3_create_many_files(self):
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     table_name = "table_" + getuid()
-    random.seed("many_files")
+    my_random = random.Random("many_files")
 
     @TestStep(When)
     def insert_files(self, folder_id, iteration):
         node.query(
             f"""INSERT INTO TABLE FUNCTION 
             s3('{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
-            PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} 
+            PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} SETTINGS s3_truncate_on_insert=1 
             -- {iteration}/{num_folders}"""
         )
 
@@ -38,14 +38,14 @@ def s3_create_many_files(self):
     with Given("I have many folders with files in S3"):
         executor = Pool(100, thread_name_prefix="s3_insert")
         for j in range(num_folders):
-            i = random.randint(100_000, 999_999)
+            folder_id = my_random.randint(100_000, 999_999)
 
             # skip ahead through random number generation
             if j < start_offset:
                 continue
 
             By(test=insert_files, parallel=True, executor=executor)(
-                folder_id=i, iteration=j
+                folder_id=folder_id, iteration=j
             )
 
         join()
@@ -53,23 +53,23 @@ def s3_create_many_files(self):
 
 @TestOutline(Scenario)
 @Examples(
-    "wildcard expected_time",
+    "wildcard expected_time expect_result",
     [
-        ("522029", 20, Name("one folder")),
-        ("{759040,547776,167687,283359}", 60, Name("nums")),
-        ("{759040,547776,167687,abc,283359}", 60, Name("nums one invalid")),
-        ("1500*", 20, Name("star")),
-        ("2500%3F%3F", 20, Name("question encoded")),
-        ("3500??", 20, Name("question")),
-        ("{45000..45099}", 120, Name("range")),
-        ("{abc,efg,hij}", 10, Name("nums no match")),
-        ("abc*", 2, Name("star no match")),
-        ("abc??", 2, Name("question no match")),
-        ("{0..10000}", 120, Name("range no match")),
+        ("522029", 20, True, Name("one folder")),
+        ("{759040,547776,167687,283359}", 120, True, Name("nums")),
+        ("{759040,547776,167687,abc,283359}", 120, True, Name("nums one invalid")),
+        ("1500*", 20, True, Name("star")),
+        ("2500%3F%3F", 20, True, Name("question encoded")),
+        ("3500??", 20, True, Name("question")),
+        ("{450000..450099}", 120, True, Name("range")),
+        ("{abc,efg,hij}", 120, False, Name("nums no match")),
+        ("abc*", 2, False, Name("star no match")),
+        ("abc??", 2, False, Name("question no match")),
+        ("{0..10000}", 120, False, Name("range no match")),
     ],
 )
 @Requirements(RQ_SRS_015_S3_Performance_Glob("1.0"))
-def wildcard(self, wildcard, expected_time):
+def wildcard(self, wildcard, expected_time, expect_result):
     """Check the performance of using wildcards in s3 paths."""
 
     node = current().context.node
@@ -85,7 +85,10 @@ def wildcard(self, wildcard, expected_time):
             )
             t_elapsed = time.time() - t_start
             metric(f"wildcard pattern='{wildcard}', i={i}", t_elapsed, "s")
-            assert r.output.strip() != "", error()
+            is_number = r.output.strip().replace(".", "").isdigit()
+            assert is_number == expect_result, error(
+                f"Expected a number, got {r.output}"
+            )
             assert t_elapsed < expected_time, error()
 
 

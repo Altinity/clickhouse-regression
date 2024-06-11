@@ -1522,7 +1522,9 @@ def clear_column_after_delete_in_the_table(
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully deleted on {name} node"):
-                r = node.query(f"SELECT count() FROM {table_name} where x=0 FORMAT TabSeparated")
+                r = node.query(
+                    f"SELECT count() FROM {table_name} where x=0 FORMAT TabSeparated"
+                )
                 assert r.output == output1, error()
                 r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
                 assert r.output == output2, error()

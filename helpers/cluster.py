@@ -195,7 +195,7 @@ class Node(object):
         return self.cluster.command(self.name, *args, **kwargs)
 
     class QueryHandler:
-        def __init__(self, command_context, prompt="\[clickhouse1\] :\) "):
+        def __init__(self, command_context, prompt=r"\[clickhouse1\] :\) "):
             self.command_context = command_context
             self.prompt = prompt
 
@@ -967,7 +967,7 @@ class ClickHouseKeeperNode(Node):
     def start_keeper(
         self,
         timeout=100,
-        user="clickhouse",
+        user=None,
         force_recovery=False,
         check_version=True,
     ):
@@ -1009,7 +1009,7 @@ class ClickHouseKeeperNode(Node):
                     ):
                         fail("no pid file yet")
 
-    def restart_keeper(self, timeout=100, user="clickhouse"):
+    def restart_keeper(self, timeout=100, user=None):
         """Restart ClickHouse Keeper."""
         if self.keeper_pid():
             self.stop_keeper(timeout=timeout)
@@ -1031,7 +1031,7 @@ class ClickHouseKeeperNode(Node):
         start_keeper=True,
         wait_healthy=True,
         retry_count=5,
-        user="clickhouse",
+        user=None,
     ):
         """Start node."""
         super(ClickHouseKeeperNode, self).start(
@@ -1152,20 +1152,27 @@ class Cluster(object):
 
         if self.clickhouse_binary_path:
             if self.use_specific_version:
-                (
-                    self.specific_clickhouse_binary_path,
-                    self.clickhouse_specific_odbc_binary,
-                ) = self.get_clickhouse_binary_from_docker_container(
-                    self.use_specific_version
+                self.specific_clickhouse_binary_path = (
+                    self.get_binary_from_docker_container(
+                        docker_image=self.use_specific_version,
+                        container_binary_path="/usr/bin/clickhouse",
+                    )
+                )
+                self.clickhouse_specific_odbc_binary = (
+                    self.get_binary_from_docker_container(
+                        docker_image=self.use_specific_version,
+                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                        host_binary_path_suffix="_odbc_bridge",
+                    )
                 )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
+                    self.specific_clickhouse_binary_path
+                )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
+                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
+                    self.clickhouse_specific_odbc_binary
+                )
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 with Given(
@@ -1188,11 +1195,16 @@ class Cluster(object):
                         ):
                             current().context.clickhouse_version = parsed_version
 
-                (
-                    self.clickhouse_binary_path,
-                    self.clickhouse_odbc_bridge_binary_path,
-                ) = self.get_clickhouse_binary_from_docker_container(
-                    self.clickhouse_binary_path
+                self.clickhouse_binary_path = self.get_binary_from_docker_container(
+                    docker_image=self.clickhouse_binary_path,
+                    container_binary_path="/usr/bin/clickhouse",
+                )
+                self.clickhouse_odbc_bridge_binary_path = (
+                    self.get_binary_from_docker_container(
+                        docker_image=self.clickhouse_binary_path,
+                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                        host_binary_path_suffix="_odbc_bridge",
+                    )
                 )
 
             if self.clickhouse_binary_path.endswith(".deb"):
@@ -1259,60 +1271,12 @@ class Cluster(object):
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
 
-    def get_clickhouse_binary_from_docker_container(
-        self,
-        docker_image,
-        container_clickhouse_binary_path="/usr/bin/clickhouse",
-        container_clickhouse_odbc_bridge_binary_path="/usr/bin/clickhouse-odbc-bridge",
-        host_clickhouse_binary_path=None,
-        host_clickhouse_odbc_bridge_binary_path=None,
-    ):
-        """Get clickhouse-server and clickhouse-odbc-bridge binaries
-        from some Docker container.
-        """
-        docker_image = docker_image.split("docker://", 1)[-1]
-        docker_container_name = str(uuid.uuid1())
-
-        if host_clickhouse_binary_path is None:
-            host_clickhouse_binary_path = os.path.join(
-                tempfile.gettempdir(),
-                f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
-            )
-
-        if host_clickhouse_odbc_bridge_binary_path is None:
-            host_clickhouse_odbc_bridge_binary_path = (
-                host_clickhouse_binary_path + "_odbc_bridge"
-            )
-
-        with Given(
-            "I get ClickHouse server binary from docker container",
-            description=f"{docker_image}",
-        ):
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(
-                    f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
-                )
-                bash(
-                    f'docker cp "{docker_container_name}:{container_clickhouse_binary_path}" "{host_clickhouse_binary_path}"'
-                )
-                bash(
-                    f'docker cp "{docker_container_name}:{container_clickhouse_odbc_bridge_binary_path}" "{host_clickhouse_odbc_bridge_binary_path}"'
-                )
-                bash(f'docker stop "{docker_container_name}"')
-
-        with And("debug"):
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"ls -la {host_clickhouse_binary_path}")
-
-        return host_clickhouse_binary_path, host_clickhouse_odbc_bridge_binary_path
-
     def get_binary_from_docker_container(
         self,
         docker_image,
         container_binary_path="/usr/bin/clickhouse",
         host_binary_path=None,
+        host_binary_path_suffix=None,
     ):
         """
         Get clickhouse-keeper binary from some Docker container.
@@ -1321,6 +1285,7 @@ class Cluster(object):
             docker_image: docker image name
             container_binary_path: path to link the binary in the container
             host_binary_path: path to store the binary on the host
+            host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
         """
 
         docker_image = docker_image.split("docker://", 1)[-1]
@@ -1331,6 +1296,8 @@ class Cluster(object):
                 tempfile.gettempdir(),
                 f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
             )
+            if host_binary_path_suffix:
+                host_binary_path += host_binary_path_suffix
 
         with Given(
             "I get ClickHouse Keeper binary from docker container",
@@ -1628,9 +1595,11 @@ class Cluster(object):
                 return
 
         r = self.command(
-            node=None, command=f"docker inspect {container_id}", exitcode=0
+            node=None,
+            command=f"docker inspect {container_id} | jq -M '[.[0].Mounts[] | select(.Source | contains(\"_instances\")) | {{Source, Destination}}]'",
+            exitcode=0,
         )
-        mounts = json.loads(r.output)[0]["Mounts"]
+        mounts = json.loads(r.output)
         docker_exposed_dirs = [
             m["Destination"] for m in mounts if "_instances" in m["Source"]
         ]
@@ -1664,14 +1633,15 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
+                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
+                    self.clickhouse_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
+                    self.clickhouse_odbc_bridge_binary_path
+                    or os.path.join(
+                        os.path.dirname(self.clickhouse_binary_path),
+                        "clickhouse-odbc-bridge",
+                    )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""
@@ -1679,7 +1649,9 @@ class Cluster(object):
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     self.zookeeper_version or ""
                 )
-                self.environ["CLICKHOUSE_TESTS_COORDINATOR"] = "keeper" if self.use_keeper else "zookeeper"
+                self.environ["CLICKHOUSE_TESTS_COORDINATOR"] = (
+                    "keeper" if self.use_keeper else "zookeeper"
+                )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
             with And("I list environment variables to show their values"):

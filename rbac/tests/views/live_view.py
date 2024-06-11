@@ -267,7 +267,9 @@ def create_with_source_table_privilege(self, user_name, grant_target_name, node=
                 )
 
             with Then("I check the view"):
-                output = node.query(f"SELECT count(*) FROM {view_name} FORMAT TabSeparated").output
+                output = node.query(
+                    f"SELECT count(*) FROM {view_name} FORMAT TabSeparated"
+                ).output
                 assert output == "0", error()
 
         finally:
@@ -844,7 +846,8 @@ def select_with_select_privilege(self, user_name, grant_target_name, node=None):
 
         with Then("I attempt to select from view with privilege as the user"):
             output = node.query(
-                f"SELECT count(*) FROM {view_name} FORMAT TabSeparated", settings=[("user", f"{user_name}")]
+                f"SELECT count(*) FROM {view_name} FORMAT TabSeparated",
+                settings=[("user", f"{user_name}")],
             ).output
             assert output == "1", error()
 
@@ -1451,7 +1454,11 @@ def drop_with_privilege(self, grant_target_name, user_name, node=None):
             node.query(f"DROP VIEW {view_name}", settings=[("user", f"{user_name}")])
 
         with Then("I check the table does not exist"):
-            node.query(f"SELECT * FROM {view_name} FORMAT TabSeparated", exitcode=exitcode, message=message)
+            node.query(
+                f"SELECT * FROM {view_name} FORMAT TabSeparated",
+                exitcode=exitcode,
+                message=message,
+            )
 
     finally:
         with Finally("I drop the view"):

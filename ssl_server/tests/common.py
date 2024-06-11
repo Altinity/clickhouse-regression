@@ -665,6 +665,8 @@ def sign_intermediate_ca_certificate(
     """Sign intermediate CA certificate."""
     bash = self.context.cluster.bash(node=node)
 
+    assert not ca_passphrase, "TODO: Double check how to use passphrase with -batch"
+
     with stashed.filepath(
         outfile,
         id=stashed.hash(csr, ca_config, ca_passphrase, type, hash, days),
@@ -673,7 +675,7 @@ def sign_intermediate_ca_certificate(
         try:
             command = (
                 f"openssl {type} -config {ca_config} -extensions {extensions} "
-                f"-in {csr} -out {outfile} -days {days} -notext"
+                f"-in {csr} -out {outfile} -days {days} -notext -batch"
             )
 
             with bash(
@@ -684,11 +686,7 @@ def sign_intermediate_ca_certificate(
                 if ca_passphrase:
                     cmd.app.expect("Enter pass phrase for.*?:")
                     cmd.app.send(ca_passphrase)
-                cmd.app.expect("Sign the certificate\?")
-                cmd.app.send("y")
-                cmd.app.expect("certificate requests certified, commit\?")
-                cmd.app.send("y")
-                cmd.app.expect("Data Base Updated")
+
             assert cmd.exitcode == 0, error()
             stash(outfile)
         finally:

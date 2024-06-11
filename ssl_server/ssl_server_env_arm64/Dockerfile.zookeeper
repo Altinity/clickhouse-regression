@@ -1,5 +1,4 @@
-ARG ZOOKEEPER_VERSION
-FROM zookeeper:${ZOOKEEPER_VERSION:-3.8.4}
+FROM zookeeper:3.6.2
 
 RUN apt-get update
 RUN apt-get install --yes procps

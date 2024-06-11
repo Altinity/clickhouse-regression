@@ -27,7 +27,8 @@ def replication_queue(self, node=None):
 
     with When("I compute expected output"):
         expected_output = node.query(
-            f"SELECT count(*) FROM {table_name}" f" WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
+            f"SELECT count(*) FROM {table_name}"
+            f" WHERE NOT(x % 2 == 0) FORMAT TabSeparated"
         ).output
 
     with Then("I delete odd rows from table on clickhouse1 node"):
@@ -63,7 +64,8 @@ def replication_queue(self, node=None):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
                 check_query_on_all_nodes(
-                    query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated", output=expected_output
+                    query=f"SELECT count(*) FROM {table_name} FORMAT TabSeparated",
+                    output=expected_output,
                 )
 
 

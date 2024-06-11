@@ -36,3 +36,14 @@ def select_from_parquet(
         output = node.query(r)
 
     return output
+
+@TestStep(Given)
+def count_rows_in_parquet(self, file_name, node=None):
+    """Count rows in a parquet file."""
+    if node is None:
+        node = self.context.node
+
+    with Given(f"I count the rows in the parquet file {file_name}"):
+        output = select_from_parquet(file_name=file_name, node=node, statement="count(*)")
+
+    return int(output.output.strip())

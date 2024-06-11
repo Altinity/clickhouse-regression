@@ -122,6 +122,9 @@ def invalid_window_name(self):
     if is_with_analyzer(node=self.context.node):
         exitcode = 36
         message = "DB::Exception: Window 'w3' does not exists."
+        if check_clickhouse_version(">=24.5")(self):
+            exitcode = 36
+            message = "DB::Exception: Window 'w3' does not exist."
 
     self.context.node.query(
         "SELECT number,sum(number) OVER w3 FROM values('number Int8', (1),(1),(2),(3)) WINDOW w1 AS () FORMAT TabSeparated",

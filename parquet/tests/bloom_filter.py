@@ -56,7 +56,7 @@ def read_and_write_file_with_bloom(self):
 
 @TestCheck
 def check_parquet_with_bloom(
-    self, file_name, statement, condition, bloom_filter, filter_pushdown
+    self, file_name, statement, condition, bloom_filter, filter_pushdown, native_reader
 ):
     """Check if the bloom filter is being used by ClickHouse."""
 
@@ -74,7 +74,7 @@ def check_parquet_with_bloom(
             statement=statement,
             condition=condition,
             format="Json",
-            settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown}",
+            settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
         )
 
     with Then("I check that the number of rows read is correct"):
@@ -107,16 +107,17 @@ def read_bloom_filter_parquet_files(self):
         "f32,f64,int,str,fixed_str,array",
     ]
     filter = ["true", "false"]
+    native_reader = "false"
     conditions = [
         "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC'",
-        "f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
         "WHERE f32=toFloat32(-15.910733) AND fixed_str IN ('BYYC', 'DCXV') ORDER BY f32 ASC",
         "WHERE f64 IN (toFloat64(22.89182051713945), toFloat64(68.62704389505595)) ORDER BY f32",
-        "where has(array, 69778) order by f32 asc",
-        "where hasAll(array, [69778,58440,2913,64975,92300]) order by f32 asc",
-        "where has(array, toInt32(toString(69778)))",
-        "where hasAny(array, [69778,58440,2913,64975,92300]) order by f32 asc",
-        "WHERE '56' NOT IN 'int'",
+        "WHERE has(array, 69778) ORDER BY f32 ASC",
+        "WHERE hasAll(array, [69778,58440,2913,64975,92300]) ORDER BY f32 ASC",
+        "WHERE has(array, toInt32(toString(69778)))",
+        "WHERE hasAny(array, [69778,58440,2913,64975,92300]) ORDER BY f32 asc",
+        "WHERE '48' NOT IN 'int' AND fixed_str='BYYC'",
     ]
 
     check_parquet_with_bloom(
@@ -125,6 +126,53 @@ def read_bloom_filter_parquet_files(self):
         filter_pushdown=either(*filter),
         condition=either(*conditions),
         statement=either(*statements),
+        native_reader=native_reader,
+    )
+
+
+@TestSketch(Scenario)
+def read_bloom_filter_parquet_files_native_reader(self):
+    """Read all files from a bloom directory that contains parquet files with bloom filters using the ClickHouse parquet native reader."""
+
+    file_name = "bloom/bloom_no_arrays.gz.parquet"
+    statements = [
+        "*",
+        "f32",
+        "f64",
+        "int",
+        "str",
+        "fixed_str",
+        "f32,f64,int,str,fixed_str",
+    ]
+    filter = ["true", "false"]
+    native_reader = "true"
+    conditions = [
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC'",
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
+        "WHERE f32=toFloat32(-15.910733) AND fixed_str IN ('BYYC', 'DCXV') ORDER BY f32 ASC",
+        "WHERE f64 IN (toFloat64(22.89182051713945), toFloat64(68.62704389505595)) ORDER BY f32",
+        "WHERE '48' NOT IN 'int' AND fixed_str='BYYC'",
+    ]
+
+    check_parquet_with_bloom(
+        file_name=file_name,
+        bloom_filter=either(*filter),
+        filter_pushdown=either(*filter),
+        condition=either(*conditions),
+        statement=either(*statements),
+        native_reader=native_reader,
+    )
+
+
+@TestScenario
+def native_reader_array_bloom(self):
+    """Read a parquet file with bloom filter and array column using the ClickHouse parquet native reader."""
+    file = "array_bloom.gz.parquet"
+
+    select_from_parquet(
+        file_name=file,
+        format="Json",
+        settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down=false,use_cache_for_count_from_files=false, input_format_parquet_use_native_reader=true",
     )
 
 
@@ -167,3 +215,5 @@ def feature(self, node="clickhouse1"):
 
     # Scenario(run=read_and_write_file_with_bloom)
     Scenario(run=read_bloom_filter_parquet_files)
+    Scenario(run=read_bloom_filter_parquet_files_native_reader)
+    Scenario(run=native_reader_array_bloom)

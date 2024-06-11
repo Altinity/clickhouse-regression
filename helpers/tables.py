@@ -31,7 +31,7 @@ class Column:
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
         return self.name + " " + self.datatype.name
 
-    def values(self, row_count, cardinality, random=None):
+    def values(self, row_count, cardinality, random=None, shuffle_values=False):
         """Yield of values that have specified cardinality."""
         if random is None:
             random = self.random
@@ -46,7 +46,10 @@ class Column:
             values += [self.datatype.rand_value(random) for i in range(row_count - 3)]
 
         values = values * cardinality
-        for i in range(row_count):
+        if shuffle_values:
+            random.shuffle(values)
+
+        for i in range(row_count * cardinality):
             yield str(values[i])
 
 
@@ -322,20 +325,22 @@ class Table:
     def insert_test_data(
         self,
         row_count=10,
-        cardinality=2,
+        cardinality=1,
         node=None,
         query_settings=None,
         random=None,
         get_values=False,
+        shuffle_values=False,
     ):
         """Insert data that is necessary for Parquet testing into the specified table.
 
         :param row_count: the number of rows to insert into the table, default: `10`
-        :param cardinality: the number of distinct values to generate for each column, default: `2`
+        :param cardinality: the number of times to repeat the same values in the table, default: `1`
         :param node: the node object to execute the query, if not provided, it will use the current context node.
         :param query_settings: list of settings to be used for the query, default: `None`
         :param random: an optional random number generator object to control the data generation, default: `None`
         :param get_values: if True, returns the generated values in addition to the query execution result, default: `False`
+        :param shuffle_values: if True, shuffles the values before inserting them into the table, default: `False`
         """
         if node is None:
             node = current().context.node
@@ -343,13 +348,18 @@ class Table:
         name = self.name
         columns = self.columns
         columns_values = [
-            column.values(row_count=row_count, cardinality=cardinality, random=random)
+            column.values(
+                row_count=row_count,
+                cardinality=cardinality,
+                random=random,
+                shuffle_values=shuffle_values,
+            )
             for column in columns
         ]
 
         values = []
 
-        for row in range(row_count):
+        for row in range(row_count * cardinality):
             values.append(
                 "("
                 + ",".join([next(column_values) for column_values in columns_values])
@@ -400,8 +410,12 @@ def create_table(
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
     if order_by_all_columns:
-        non_nullable_columns = [column for column in columns if "Nullable" not in column.datatype.name]
-        order_by = "(" + ",".join([column.name for column in non_nullable_columns]) + ")"
+        non_nullable_columns = [
+            column for column in columns if "Nullable" not in column.datatype.name
+        ]
+        order_by = (
+            "(" + ",".join([column.name for column in non_nullable_columns]) + ")"
+        )
 
     if if_not_exists:
         if_not_exists = "IF NOT EXISTS "

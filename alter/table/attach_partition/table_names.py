@@ -108,8 +108,8 @@ def table_names(self, source_table, destination_table, with_id=False):
                 destination_table,
                 "a" * 10000,
             }
-            | set(random.sample(ascii_letters, 5))
-            | set(random.sample(not_letters, 10))
+            | set(random.sample(sorted(ascii_letters), 5))
+            | set(random.sample(list(not_letters), 10))
             | set(random.sample(part_of_unicode, 10))
         )
 

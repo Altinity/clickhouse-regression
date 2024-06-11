@@ -42,7 +42,7 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-    
+
     with And("I enable or disable experimental analyzer if needed"):
         experimental_analyzer(
             node=cluster.node("clickhouse1"), with_analyzer=with_analyzer

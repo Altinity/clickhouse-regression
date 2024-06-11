@@ -671,7 +671,7 @@ def start_mixed_keeper(
 
         with And(f"I check that ruok returns imok"):
             for name in control_nodes:
-                retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=100, delay=3)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="imok",
@@ -1322,6 +1322,18 @@ def create_keeper_cluster_configuration_ssl(
             node.command(f"rm -rf {config_d_dir}{config_file} ")
 
 
+@TestStep(Then)
+def check_ruok(self, node, hostname, port, ssl=False):
+    """Check ruok returns imok."""
+
+    if ssl:
+        cmd = f"echo ruok | openssl s_client -connect {hostname}:{port} -ign_eof"
+    else:
+        cmd = f"echo ruok | nc {hostname} {port}"
+
+    node.command(cmd, exitcode=0, message="imok")
+
+
 @TestStep(Given)
 def start_mixed_keeper_ssl(
     self,
@@ -1385,12 +1397,11 @@ def start_mixed_keeper_ssl(
                     wait_healthy=False
                 )
 
-        with And(f"I check that ruok returns imok"):
+        with And("I check that ruok returns imok"):
+            bash_tools = cluster.node("bash-tools")
             for name in control_nodes:
-                retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
-                    f"echo ruok | nc {name} {self.context.port}",
-                    exitcode=0,
-                    message="F",
+                retry(check_ruok, timeout=100, delay=3)(
+                    node=bash_tools, hostname=name, port=self.context.port, ssl=True
                 )
 
         if rest_cluster_nodes != "no_rest_nodes":
@@ -1504,15 +1515,14 @@ def start_standalone_keeper(
             time.sleep(10)
             start_keepers(standalone_keeper_nodes=control_nodes, manual_cleanup=True)
 
-        with And(f"I check that ruok returns imok"):
+        with And("I check that ruok returns imok"):
+            bash_tools = cluster.node("bash-tools")
             for name in control_nodes:
-                retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
-                    f"echo ruok | nc {name} {self.context.port}",
-                    exitcode=0,
-                    message=f"{'F' if ssl else 'imok'}",
+                retry(check_ruok, timeout=100, delay=3)(
+                    node=bash_tools, hostname=name, port=self.context.port, ssl=ssl
                 )
 
-        with And("I start rest ClickHouse server nodes"):
+        with And("I start the remaining ClickHouse server nodes"):
             for name in cluster_nodes:
                 retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
 
