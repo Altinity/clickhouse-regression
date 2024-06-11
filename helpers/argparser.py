@@ -77,3 +77,60 @@ def argparser(parser):
         default=False,
         help="Use experimental analyzer.",
     )
+
+
+def CaptureClusterArgs(func):
+    """
+    Collect cluster arguments from argparser into cluster_args.
+
+    Usage:
+
+        @TestModule
+        @ArgumentParser(argparser)
+        @...  # other decorators
+        @CaptureClusterArgs
+        def regression(
+            self,
+            cluster_args,
+            clickhouse_version,
+            stress=None,
+            allow_vfs=False,
+            with_analyzer=False,
+        ):
+            nodes = ...
+
+            with Given("docker-compose cluster"):
+                cluster = create_cluster(
+                    **cluster_args,
+                    nodes=nodes,
+                    configs_dir=current_dir(),
+                    docker_compose_project_dir=os.path.join(
+                        current_dir(), os.path.basename(current_dir()) + "_env"
+                    ),
+                )
+
+            ...
+
+    """
+
+    def capture_cluster_args(
+        self,
+        local,
+        clickhouse_binary_path,
+        keeper_binary_path,
+        zookeeper_version,
+        use_keeper,
+        collect_service_logs,
+        **kwargs
+    ):
+        cluster_args = {
+            "local": local,
+            "clickhouse_binary_path": clickhouse_binary_path,
+            "keeper_binary_path": keeper_binary_path,
+            "zookeeper_version": zookeeper_version,
+            "use_keeper": use_keeper,
+            "collect_service_logs": collect_service_logs,
+        }
+        return func(self, cluster_args=cluster_args, **kwargs)
+
+    return capture_cluster_args

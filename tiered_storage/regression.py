@@ -8,7 +8,7 @@ from testflows.connect import Shell
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
-from helpers.argparser import argparser as argparser_base
+from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
@@ -138,30 +138,20 @@ ffails = {
 )
 def feature(
     self,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
+    cluster_args,
     with_analyzer,
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
     allow_vfs=False,
     environ=None,
-    keeper_binary_path=None,
-    zookeeper_version=None,
     use_keeper=False,
 ):
     """Execute tests for tiered storage feature."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        nodes=nodes,
-        environ=environ,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
+        **cluster_args,
         use_keeper=use_keeper,
     ) as cluster:
         cluster.with_minio = with_minio
@@ -347,13 +337,8 @@ def feature(
 @FFails(ffails)
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     stress=None,
     with_minio=False,
     with_s3amazon=False,
@@ -413,15 +398,10 @@ def regression(
         name = "with s3gcs"
 
     Feature(name, test=feature)(
-        local=local,
-        clickhouse_binary_path=clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
+        **cluster_args,
         with_minio=with_minio,
         with_s3amazon=with_s3amazon,
         with_s3gcs=with_s3gcs,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
         environ=environ,
         allow_vfs=allow_vfs,
         with_analyzer=with_analyzer,

@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.common import experimental_analyzer
-from helpers.argparser import argparser as argparser_base
+from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from s3.tests.common import *
 
 from s3.requirements import SRS_015_ClickHouse_S3_External_Storage
@@ -271,24 +271,14 @@ def minio_regression(
     uri,
     root_user,
     root_password,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     with Cluster(
-        local,
-        clickhouse_binary_path,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
-        collect_service_logs=collect_service_logs,
+        **cluster_args,
         nodes=nodes,
         environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
     ) as cluster:
@@ -344,12 +334,7 @@ def aws_s3_regression(
     access_key,
     bucket,
     region,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
@@ -372,12 +357,7 @@ def aws_s3_regression(
     region = region.value
 
     with Cluster(
-        local,
-        clickhouse_binary_path,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
-        collect_service_logs=collect_service_logs,
+        **cluster_args,
         nodes=nodes,
         environ={
             "S3_AMAZON_ACCESS_KEY": access_key,
@@ -442,12 +422,7 @@ def gcs_regression(
     uri,
     key_id,
     access_key,
-    local,
-    clickhouse_binary_path,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run gcs tests."""
@@ -464,12 +439,7 @@ def gcs_regression(
     key_id = key_id.value
 
     with Cluster(
-        local,
-        clickhouse_binary_path,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
-        collect_service_logs=collect_service_logs,
+        **cluster_args,
         nodes=nodes,
         environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
     ) as cluster:
@@ -508,12 +478,11 @@ def gcs_regression(
 @Specifications(SRS_015_ClickHouse_S3_External_Storage)
 @XFails(xfails)
 @FFails(ffails)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_version,
-    collect_service_logs,
     storages,
     minio_uri,
     gcs_uri,
@@ -527,9 +496,6 @@ def regression(
     gcs_key_id,
     stress,
     allow_vfs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
     with_analyzer=False,
 ):
     """S3 Storage regression."""
@@ -574,12 +540,7 @@ def regression(
 
     assert storage_module is not None
     Module(test=storage_module)(
-        local=local,
-        clickhouse_binary_path=clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        keeper_binary_path=keeper_binary_path,
-        zookeeper_version=zookeeper_version,
-        use_keeper=use_keeper,
+        **cluster_args,
         with_analyzer=with_analyzer,
         **storage_module_kwargs,
     )
