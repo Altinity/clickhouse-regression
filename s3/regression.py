@@ -470,6 +470,9 @@ def gcs_regression(
             Feature(test=load("s3.tests.backup", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
+            Feature(test=load("s3.tests.table_function_performance", "gcs"))(
+                uri=uri, key_id=key_id, access_key=access_key
+            )
 
 
 @TestModule
