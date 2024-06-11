@@ -1,0 +1,5 @@
+FROM altinityinfra/clickhouse-regression-multiarch:1.0
+
+RUN apt-get update
+RUN apt-get install --yes ca-certificates
+RUN pip install clickhouse-driver

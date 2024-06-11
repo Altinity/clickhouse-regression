@@ -173,6 +173,9 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     force_fips,
+    keeper_binary_path=None,
+    zookeeper_version=None,
+    use_keeper=False,
     stress=None,
     allow_vfs=False,
     with_analyzer=False,
@@ -186,6 +189,9 @@ def regression(
     if current_cpu() == "aarch64":
         nodes["zookeeper"] = (("zookeeper"),)
 
+    if zookeeper_version:
+        skip("ssl_server suite does not support specifying zookeeper version")
+
     self.context.clickhouse_version = clickhouse_version
     self.context.fips_mode = False
 
@@ -196,6 +202,9 @@ def regression(
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            keeper_binary_path=keeper_binary_path,
+            zookeeper_version=zookeeper_version,
+            use_keeper=use_keeper,
             collect_service_logs=collect_service_logs,
             nodes=nodes,
             use_zookeeper_nodes=True,

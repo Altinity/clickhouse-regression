@@ -1522,7 +1522,7 @@ def start_standalone_keeper(
                     node=bash_tools, hostname=name, port=self.context.port, ssl=ssl
                 )
 
-        with And("I start rest ClickHouse server nodes"):
+        with And("I start the remaining ClickHouse server nodes"):
             for name in cluster_nodes:
                 retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
 

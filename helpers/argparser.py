@@ -29,6 +29,29 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--keeper-binary-path",
+        type=str,
+        dest="keeper_binary_path",
+        help="path to ClickHouse Keeper binary",
+        default=None,
+    )
+
+    parser.add_argument(
+        "--zookeeper-version",
+        type=str,
+        dest="zookeeper_version",
+        help="Zookeeper version",
+        default=None,
+    )
+    parser.add_argument(
+        "--use-keeper",
+        action="store_true",
+        default=False,
+        dest="use_keeper",
+        help="use ClickHouse Keeper instead of ZooKeeper",
+    )
+
+    parser.add_argument(
         "--stress",
         action="store_true",
         default=False,
