@@ -1,0 +1,13 @@
+name: Test Daily Scheduled Regression
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  scheduled-regression-test:
+    uses: ./.github/workflows/test-reusable-workflow.yml
+    with:
+      package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
+      version: 23.8.5.17.altinitytest
+      suite: all
