@@ -4,6 +4,32 @@ on:
   schedule:
     - cron: "0 0 * * *"
 
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  PYTHONIOENCODING: utf-8
+  REGRESSION_RESULTS_URL: clickhouse/${{ inputs.version }}/${GITHUB_RUN_ID}/testflows
+  artifacts: internal
+  args: --test-to-end
+    --local
+    --collect-service-logs 
+    --output ${{ vars.OUTPUT }} 
+    --parallel ${{ vars.PARALLEL }}
+    --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
+    --log raw.log
+  artifact_paths: |
+    ./report.html
+    ./*.log.txt
+    ./*.log
+    ./*.html
+    ./*/_instances/*.log
+    ./*/_instances/*/logs/*.log
+    ./*/*/_instances/*/logs/*.log
+    ./*/*/_instances/*.log
+
 jobs:
   scheduled-regression-test:
     uses: ./.github/workflows/test-reusable-workflow.yml
