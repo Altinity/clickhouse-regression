@@ -13,3 +13,4 @@ def feature(self):
     Feature(run=load("rbac.tests.sql_security.mv_small_tests", "feature"))
     Feature(run=load("rbac.tests.sql_security.modify", "feature"))
     Feature(run=load("rbac.tests.sql_security.view_tests", "feature"))
+    Feature(run=load("rbac.tests.sql_security.multiple_source_tables", "feature"))

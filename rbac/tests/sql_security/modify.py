@@ -86,7 +86,9 @@ def modify_sql_security(self):
                 == "0"
             ), error()
 
-        with And("I create a materialized view without specifying SQL security options"):
+        with And(
+            "I create a materialized view without specifying SQL security options"
+        ):
             mv_name = create_materialized_view(
                 source_table_name=source_table_name,
                 target_table_name=target_table_name,
