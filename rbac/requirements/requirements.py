@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240606.1023545.
+# document by TestFlows v2.0.240607.1014418.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -633,7 +633,7 @@ RQ_SRS_006_RBAC_User_Create_Host_None = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support fobidding access from any host using `HOST NONE` clause in the\n"
+        "[ClickHouse] SHALL support forbidding access from any host using `HOST NONE` clause in the\n"
         "`CREATE USER` statement.\n"
         "\n"
     ),
@@ -1072,7 +1072,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_None = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support fobidding access from any host using `HOST NONE` clause in the\n"
+        "[ClickHouse] SHALL support forbidding access from any host using `HOST NONE` clause in the\n"
         "`ALTER USER` statement.\n"
         "\n"
     ),
@@ -1157,7 +1157,7 @@ RQ_SRS_006_RBAC_User_Alter_Settings_Min = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying a minimum value for the variable specifed using `SETTINGS` with `MIN` clause in the `ALTER USER` statement.\n"
+        "[ClickHouse] SHALL support specifying a minimum value for the variable specified using `SETTINGS` with `MIN` clause in the `ALTER USER` statement.\n"
         "\n"
     ),
     link=None,
@@ -1173,7 +1173,7 @@ RQ_SRS_006_RBAC_User_Alter_Settings_Max = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying a maximum value for the variable specifed using `SETTINGS` with `MAX` clause in the `ALTER USER` statement.\n"
+        "[ClickHouse] SHALL support specifying a maximum value for the variable specified using `SETTINGS` with `MAX` clause in the `ALTER USER` statement.\n"
         "\n"
     ),
     link=None,
@@ -1189,7 +1189,7 @@ RQ_SRS_006_RBAC_User_Alter_Settings_Profile = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying the name of a profile for the variable specifed using `SETTINGS` with `PROFILE` clause in the `ALTER USER` statement.\n"
+        "[ClickHouse] SHALL support specifying the name of a profile for the variable specified using `SETTINGS` with `PROFILE` clause in the `ALTER USER` statement.\n"
         "\n"
     ),
     link=None,
@@ -7115,11 +7115,42 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSp
         "SQL SECURITY NONE is a deprecated option.\n"
         "[ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=4,
     num="5.18.5.22",
+)
+
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_MultipleSourceTables_Select_SqlSecurityDefiner_Definer = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Select.SqlSecurityDefiner.Definer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "| SQL security | DEFINER | Operation         | \n"
+        "| -------------|---------|-------------------|\n"
+        "| `DEFINER`    | `alice` | `SELECT`          |\n"
+        "\n"
+        "[ClickHouse] SHALL only successfully `SELECT` from a materialized view with multiple source tables if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege on **all source tables** and the materialized view's **target** table (if it was specified in the `TO` clause).\n"
+        "\n"
+        "For example,\n"
+        "```sql\n"
+        "CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM source_table\n"
+        "CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 WHERE column IN (SELECT column FROM table1 WHERE column IN (SELECT column FROM table2 WHERE expression))\n"
+        "CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 JOIN table1 USING column\n"
+        "CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 UNION ALL SELECT * FROM table1 UNION ALL SELECT * FROM table2\n"
+        "CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT column FROM table0 JOIN table1 USING column UNION ALL SELECT column FROM table2 WHERE column IN (SELECT column FROM table3 WHERE column IN (SELECT column FROM table4 WHERE expression))\n"
+        "CREATE MATERIALIZED VIEW view0 ENGINE = Memory AS SELECT column FROM view1 UNION ALL SELECT column FROM view2\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.18.6.1",
 )
 
 RQ_SRS_006_RBAC_LiveView = Requirement(
@@ -7137,7 +7168,7 @@ RQ_SRS_006_RBAC_LiveView = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.6.1",
+    num="5.18.7.1",
 )
 
 RQ_SRS_006_RBAC_LiveView_Create = Requirement(
@@ -7167,7 +7198,7 @@ RQ_SRS_006_RBAC_LiveView_Create = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.6.2",
+    num="5.18.7.2",
 )
 
 RQ_SRS_006_RBAC_LiveView_Select = Requirement(
@@ -7198,7 +7229,7 @@ RQ_SRS_006_RBAC_LiveView_Select = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.6.3",
+    num="5.18.7.3",
 )
 
 RQ_SRS_006_RBAC_LiveView_Drop = Requirement(
@@ -7215,7 +7246,7 @@ RQ_SRS_006_RBAC_LiveView_Drop = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.6.4",
+    num="5.18.7.4",
 )
 
 RQ_SRS_006_RBAC_LiveView_Refresh = Requirement(
@@ -7232,7 +7263,7 @@ RQ_SRS_006_RBAC_LiveView_Refresh = Requirement(
     ),
     link=None,
     level=4,
-    num="5.18.6.5",
+    num="5.18.7.5",
 )
 
 RQ_SRS_006_RBAC_Select = Requirement(
@@ -9050,7 +9081,7 @@ RQ_SRS_006_RBAC_ShowDatabases_Privilege = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL grant **show databases** privilege on a database to a user if that user has recieved any grant,\n"
+        "[ClickHouse] SHALL grant **show databases** privilege on a database to a user if that user has received any grant,\n"
         "including `SHOW DATABASES`, on that table, either directly or through a role.\n"
         "\n"
     ),
@@ -11878,12 +11909,18 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             level=4,
             num="5.18.5.22",
         ),
-        Heading(name="Live View", level=3, num="5.18.6"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView", level=4, num="5.18.6.1"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Create", level=4, num="5.18.6.2"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Select", level=4, num="5.18.6.3"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Drop", level=4, num="5.18.6.4"),
-        Heading(name="RQ.SRS-006.RBAC.LiveView.Refresh", level=4, num="5.18.6.5"),
+        Heading(name="Materialized View and Joins", level=3, num="5.18.6"),
+        Heading(
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Select.SqlSecurityDefiner.Definer",
+            level=4,
+            num="5.18.6.1",
+        ),
+        Heading(name="Live View", level=3, num="5.18.7"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView", level=4, num="5.18.7.1"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Create", level=4, num="5.18.7.2"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Select", level=4, num="5.18.7.3"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Drop", level=4, num="5.18.7.4"),
+        Heading(name="RQ.SRS-006.RBAC.LiveView.Refresh", level=4, num="5.18.7.5"),
         Heading(name="Select", level=2, num="5.19"),
         Heading(name="RQ.SRS-006.RBAC.Select", level=3, num="5.19.1"),
         Heading(name="RQ.SRS-006.RBAC.Select.Column", level=3, num="5.19.2"),
@@ -12921,6 +12958,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNotSpecified_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_Definer,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Insert_SqlSecurityNone_DefinerNotSpecified,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_MultipleSourceTables_Select_SqlSecurityDefiner_Definer,
         RQ_SRS_006_RBAC_LiveView,
         RQ_SRS_006_RBAC_LiveView_Create,
         RQ_SRS_006_RBAC_LiveView_Select,
@@ -14104,7 +14142,7 @@ to indicate that user can access the server from any host.
 ##### RQ.SRS-006.RBAC.User.Create.Host.None
 version: 1.0
 
-[ClickHouse] SHALL support fobidding access from any host using `HOST NONE` clause in the
+[ClickHouse] SHALL support forbidding access from any host using `HOST NONE` clause in the
 `CREATE USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Create.Host.Local
@@ -14270,7 +14308,7 @@ to indicate that user can access the server from any host.
 ##### RQ.SRS-006.RBAC.User.Alter.Host.None
 version: 1.0
 
-[ClickHouse] SHALL support fobidding access from any host using `HOST NONE` clause in the
+[ClickHouse] SHALL support forbidding access from any host using `HOST NONE` clause in the
 `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.DefaultRole
@@ -14300,17 +14338,17 @@ using `SETTINGS` clause in the `ALTER USER` statement.
 ##### RQ.SRS-006.RBAC.User.Alter.Settings.Min
 version: 1.0
 
-[ClickHouse] SHALL support specifying a minimum value for the variable specifed using `SETTINGS` with `MIN` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support specifying a minimum value for the variable specified using `SETTINGS` with `MIN` clause in the `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.Settings.Max
 version: 1.0
 
-[ClickHouse] SHALL support specifying a maximum value for the variable specifed using `SETTINGS` with `MAX` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support specifying a maximum value for the variable specified using `SETTINGS` with `MAX` clause in the `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.Settings.Profile
 version: 1.0
 
-[ClickHouse] SHALL support specifying the name of a profile for the variable specifed using `SETTINGS` with `PROFILE` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support specifying the name of a profile for the variable specified using `SETTINGS` with `PROFILE` clause in the `ALTER USER` statement.
 
 ##### RQ.SRS-006.RBAC.User.Alter.Syntax
 version: 1.0
@@ -16932,6 +16970,28 @@ version: 1.0
 SQL SECURITY NONE is a deprecated option.
 [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.
 
+#### Materialized View and Joins
+Materialized view searches for the first real table in the `FROM` section and triggers on inserts into
+this table only.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Select.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view with multiple source tables if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege on **all source tables** and the materialized view's **target** table (if it was specified in the `TO` clause).
+
+For example,
+```sql
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM source_table
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 WHERE column IN (SELECT column FROM table1 WHERE column IN (SELECT column FROM table2 WHERE expression))
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 JOIN table1 USING column
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 UNION ALL SELECT * FROM table1 UNION ALL SELECT * FROM table2
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT column FROM table0 JOIN table1 USING column UNION ALL SELECT column FROM table2 WHERE column IN (SELECT column FROM table3 WHERE column IN (SELECT column FROM table4 WHERE expression))
+CREATE MATERIALIZED VIEW view0 ENGINE = Memory AS SELECT column FROM view1 UNION ALL SELECT column FROM view2
+```
 
 #### Live View
 
@@ -17826,7 +17886,7 @@ or any privilege on the table either directly or through a role.
 #### RQ.SRS-006.RBAC.ShowDatabases.Privilege
 version: 1.0
 
-[ClickHouse] SHALL grant **show databases** privilege on a database to a user if that user has recieved any grant,
+[ClickHouse] SHALL grant **show databases** privilege on a database to a user if that user has received any grant,
 including `SHOW DATABASES`, on that table, either directly or through a role.
 
 #### RQ.SRS-006.RBAC.ShowDatabases.RequiredPrivilege
