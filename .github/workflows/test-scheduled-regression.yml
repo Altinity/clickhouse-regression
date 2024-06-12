@@ -31,13 +31,31 @@ jobs:
     with:
       package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
       version: '23.8.5.17'
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   job2:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
       package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
       version: '23.8.5.17'
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   job3:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
       package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
       version: '23.8.5.17'
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
