@@ -15,7 +15,7 @@ on:
       suite:
         type: string
         description: "Test suite to run. Default: all"
-        default: all
+        default: benchmark_all
       artifacts:
         description: "Artifact S3 bucket"
         type: string
@@ -43,21 +43,6 @@ on:
         required: true
       DOCKER_PASSWORD:
         required: true
-      AWS_BUCKET:
-        required: true
-      AWS_REGION:
-        required: true
-      AWS_KEY_ID:
-        required: true
-      AWS_ACCESS_KEY:
-        required: true
-      GCS_URI:
-        required: true
-      GCS_KEY_ID:
-        required: true
-      GCS_KEY_SECRET:
-        required: true
-
 
 
 env:

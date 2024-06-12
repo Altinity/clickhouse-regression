@@ -1,25 +1,43 @@
 name: Test Daily Scheduled Regression
 on:
   workflow_dispatch:
+    inputs:
+      suite:
+        type: string
+        description: "Test suite to run. Default: all"
+        default: all
+      artifacts:
+        description: "Artifact S3 bucket"
+        type: string
+        default: public
+      output_format:
+        description: "Testflows output style."
+        type: string
+        default: new-fails
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
+      extra_args:
+        description: "Extra test program arguments. Default: none (empty string)."
+        type: string
+        default: ""
   schedule:
     - cron: "0 0 * * *"
 
 jobs:
-  scheduled-regression-test:
+  job1:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
       package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
-      version: 23.8.5.17.altinitytest
-      suite: benchmark_all
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      GCS_URI: ${{ secrets.GCS_URI }}
-      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
+      version: '23.8.5.17'
+  job2:
+    uses: ./.github/workflows/test-reusable-workflow.yml
+    with:
+      package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
+      version: '23.8.5.17'
+  job3:
+    uses: ./.github/workflows/test-reusable-workflow.yml
+    with:
+      package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
+      version: '23.8.5.17'
