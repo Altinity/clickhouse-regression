@@ -47,6 +47,55 @@ def create_simple_MergeTree_table(
 
 
 @TestStep(Given)
+def create_table_with_two_columns_with_data(
+    self,
+    node=None,
+    table_name=None,
+    column_names=["x", "y"],
+    order_by="x",
+    cluster=None,
+    rows=0,
+):
+    """Create simple MergeTree table with two Int32 columns."""
+    if table_name is None:
+        table_name = "table_" + getuid()
+
+    if node is None:
+        node = self.context.node
+
+    query = f"CREATE TABLE {table_name} "
+
+    columns_def = ", ".join([f"{column} Int32" for column in column_names])
+
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} ({columns_def}) ENGINE = ReplicatedMergeTree ORDER BY {order_by}"
+    else:
+        query += f"({columns_def}) ENGINE = MergeTree ORDER BY {order_by}"
+
+    try:
+        node.query(query)
+
+        if rows > 0:
+            column1_data = [str(i) for i in range(rows)]
+            column2_data = [str(i) for i in range(rows - 15, rows - 15 + rows)]
+            data = ", ".join(
+                [f"({column1_data[i]}, {column2_data[i]})" for i in range(rows)]
+            )
+            node.query(f"INSERT INTO {table_name} VALUES {data}")
+
+        yield table_name
+
+    finally:
+        with Finally("I drop the table if exists"):
+            if cluster is not None:
+                node.query(
+                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster} SYNC"
+                )
+            else:
+                node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
+@TestStep(Given)
 def create_user(self, node=None, user_name=None):
     """Create user with given name. If name is not provided, it will be generated."""
 
@@ -175,6 +224,110 @@ def create_materialized_view(
         query += f"SQL SECURITY {sql_security} "
 
     query += f"AS SELECT {select_columns} FROM {source_table_name}"
+
+    try:
+        if settings is not None:
+            node.query(query, settings=settings, exitcode=exitcode, message=message)
+        else:
+            node.query(query, exitcode=exitcode, message=message)
+        yield view_name
+
+    finally:
+        with Finally("I drop the materialized view if exists"):
+            node.query(f"DROP TABLE IF EXISTS {view_name}")
+
+
+@TestStep(Given)
+def create_materialized_view_with_join(
+    self,
+    source_table_name_1,
+    source_table_name_2,
+    source_table_name_3,
+    join_option="INNER JOIN",
+    node=None,
+    view_name=None,
+    target_table_name=None,
+    definer=None,
+    sql_security=None,
+    if_not_exists=False,
+    cluster=None,
+    settings=None,
+    exitcode=None,
+    message=None,
+    order_by=None,
+    engine=None,
+    populate=False,
+):
+    """Create materialized view with join."""
+
+    if node is None:
+        node = self.context.node
+
+    if view_name is None:
+        view_name = "mv_" + getuid()
+
+    query = f"CREATE MATERIALIZED VIEW "
+
+    if if_not_exists:
+        query += "IF NOT EXISTS "
+
+    query += f"{view_name} "
+
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} "
+
+    if target_table_name is not None:
+        query += f"TO {target_table_name} "
+
+    if engine is not None:
+        query += f"ENGINE = {engine} "
+
+    if order_by is not None:
+        query += f"ORDER BY {order_by} "
+
+    if populate:
+        query += "POPULATE "
+
+    if definer is not None:
+        query += f"DEFINER = {definer} "
+
+    if sql_security is not None:
+        query += f"SQL SECURITY {sql_security} "
+
+    if join_option == "CROSS JOIN":
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} CROSS JOIN {source_table_name_2}
+            """
+    elif "ASOF" in join_option:
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} {join_option} {source_table_name_2} 
+            ON {source_table_name_1}.x == {source_table_name_2}.x AND {source_table_name_2}.x <= {source_table_name_1}.x
+            """
+    elif join_option == "PASTE JOIN":
+        query += f"""
+            AS SELECT x,y
+            FROM
+                (
+                    SELECT {source_table_name_1}.x as x
+                    FROM {source_table_name_1} 
+                    INNER JOIN {source_table_name_3} 
+                    ON {source_table_name_1}.x = {source_table_name_3}.x
+                ) 
+            {join_option}
+                (
+                    SELECT y 
+                    FROM {source_table_name_2} 
+                    WHERE x > 3
+                ) 
+            """
+    else:
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} {join_option} {source_table_name_2} 
+            ON {source_table_name_1}.x == {source_table_name_2}.x
+            """
 
     try:
         if settings is not None:
