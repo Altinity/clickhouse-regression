@@ -6,8 +6,8 @@ on:
 
 jobs:
   scheduled-regression-test:
-    uses: ./.github/workflows/test-reusable-workflow.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
       version: 23.8.5.17.altinitytest
-      suite: parquet
+      suite: all
