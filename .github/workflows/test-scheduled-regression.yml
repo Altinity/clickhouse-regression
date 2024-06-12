@@ -26,11 +26,11 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
-  job1:
+  altinitystable-23-8-11-29:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
-      package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
-      version: '23.8.5.17'
+      package: docker://altinity/clickhouse-server:23.8.11.29.altinitystable
+      version: '23.8.11.29'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -44,11 +44,11 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-  job2:
+  altinitystable-23-3-19-33:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
-      package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
-      version: '23.8.5.17'
+      package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
+      version: '23.3.19.33'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -62,11 +62,11 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-  job3:
+  altinitystable-22-8-15-25:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
-      package: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
-      version: '23.8.5.17'
+      package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
+      version: '22.8.15.25'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

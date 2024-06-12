@@ -15,7 +15,7 @@ on:
       suite:
         type: string
         description: "Test suite to run. Default: all"
-        default: benchmark_all
+        default: all
       artifacts:
         description: "Artifact S3 bucket"
         type: string
