@@ -147,6 +147,7 @@ def check_select_from_mv_multiple_source_table_with_join(
             node.query(
                 f"INSERT INTO {source_table_1} SELECT number, number%3 FROM numbers(20)"
             )
+            triggered = True
         else:
             node.query(
                 f"INSERT INTO {source_table_1} SELECT number, number%3 FROM numbers(20)",
