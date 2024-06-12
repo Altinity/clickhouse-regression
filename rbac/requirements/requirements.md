@@ -3806,6 +3806,36 @@ version: 1.0
 SQL SECURITY NONE is a deprecated option.
 [ClickHouse] SHALL only successfully `INSERT` into a materialized view with described SQL security options if and only if the user has `INSERT` privilege for the materialized view.
 
+#### Materialized View and Joins
+Materialized view searches for the first real table in the `FROM` section and triggers on inserts into
+this table only.
+
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Select.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view with multiple source tables if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for **all source tables** and the materialized view's **target** table (if it was specified in the `TO` clause).
+
+For example,
+```sql
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM source_table
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 WHERE column IN (SELECT column FROM table1 WHERE column IN (SELECT column FROM table2 WHERE expression))
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 JOIN table1 USING column
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 UNION ALL SELECT * FROM table1 UNION ALL SELECT * FROM table2
+CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT column FROM table0 JOIN table1 USING column UNION ALL SELECT column FROM table2 WHERE column IN (SELECT column FROM table3 WHERE column IN (SELECT column FROM table4 WHERE expression))
+CREATE MATERIALIZED VIEW view0 ENGINE = Memory AS SELECT column FROM view1 UNION ALL SELECT column FROM view2
+```
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Insert.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `Insert`          |
+
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with multiple source tables if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table (if it was specified in the `TO` clause).
 
 #### Live View
 
