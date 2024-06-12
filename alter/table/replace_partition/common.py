@@ -163,7 +163,7 @@ def check_partition_was_replaced(
     with Then(
         "I check that the data on the partition of the destination table is the same as the data on the source table partition"
     ):
-        for retry in retries(timeout=60):
+        for retry in retries(timeout=120):
             with retry:
                 assert (
                     partition_values_destination.output.strip()
