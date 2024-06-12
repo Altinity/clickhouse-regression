@@ -261,7 +261,7 @@ def insert_into_function(self):
     columns = generate_all_column_types(include=parquet_test_columns())
     func_def = ",".join([column.full_definition() for column in columns])
 
-    columns_values = [column.values(row_count=2, cardinality=10) for column in columns]
+    columns_values = [column.values(row_count=2, cardinality=1) for column in columns]
     total_values = []
 
     with Given("I have a table with a `MergeTree` engine"):

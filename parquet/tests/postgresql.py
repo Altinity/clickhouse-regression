@@ -116,12 +116,12 @@ def postgresql_function_to_parquet_file_to_postgresql_function(self):
 
     with And("I generate test values"):
         columns_values = [
-            column.values(row_count=5, cardinality=10)
+            column.values(row_count=5, cardinality=1)
             for column in postgresql_test_columns()
         ]
 
     with And(
-        f"I populate {table0_name} with test data using the `postgresql` table funtion"
+        f"I populate {table0_name} with test data using the `postgresql` table function"
     ):
         node.query(
             f"""

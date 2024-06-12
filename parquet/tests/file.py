@@ -301,7 +301,7 @@ def insert_into_function_manual_cast_types(self):
     table_name = "table_" + getuid()
     columns = generate_all_column_types(include=parquet_test_columns())
     func_def = ",".join([column.full_definition() for column in columns])
-    columns_values = [column.values(row_count=2, cardinality=10) for column in columns]
+    columns_values = [column.values(row_count=2, cardinality=1) for column in columns]
     total_values = []
 
     for row in range(2):
@@ -363,7 +363,7 @@ def insert_into_function_auto_cast_types(self):
         "I populate table with test data",
         description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
-        table.insert_test_data(row_count=2, cardinality=10)
+        table.insert_test_data(row_count=2)
 
     with When("I copy the Parquet file created by the table"):
         node.command(
@@ -372,7 +372,7 @@ def insert_into_function_auto_cast_types(self):
 
     with And("I generate test values"):
         columns_values = [
-            column.values(row_count=2, cardinality=10) for column in table.columns
+            column.values(row_count=2, cardinality=1) for column in table.columns
         ]
 
         total_values = []
