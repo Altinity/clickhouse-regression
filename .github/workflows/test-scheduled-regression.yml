@@ -37,6 +37,13 @@ jobs:
       AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      GCS_URI: ${{ secrets.GCS_URI }}
+      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
+      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
   job2:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
@@ -48,6 +55,13 @@ jobs:
       AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      GCS_URI: ${{ secrets.GCS_URI }}
+      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
+      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
   job3:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
@@ -59,3 +73,10 @@ jobs:
       AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      GCS_URI: ${{ secrets.GCS_URI }}
+      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
+      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
