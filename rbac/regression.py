@@ -38,6 +38,7 @@ issue_37389 = "https://github.com/ClickHouse/ClickHouse/issues/37389"
 issue_37580 = "https://github.com/ClickHouse/ClickHouse/issues/37580"
 issue_38716 = "https://github.com/ClickHouse/ClickHouse/issues/38716"
 pull_47002 = "https://github.com/ClickHouse/ClickHouse/pull/47002"
+issue_65134 = "https://github.com/ClickHouse/ClickHouse/issues/65134"
 
 xfails = {
     "syntax/show create quota/I show create quota current": [
@@ -303,6 +304,11 @@ ffails = {
         Skip,
         "Crashes the server.",
         check_clickhouse_version("<24.6"),
+    ),
+    "/rbac/SQL security/joins/Select:PASTE:": (
+        Skip,
+        issue_65134,
+        check_clickhouse_version(">=24.3") and check_clickhouse_version("<24.5"),
     ),
 }
 
