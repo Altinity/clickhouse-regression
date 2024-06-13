@@ -277,23 +277,29 @@ def minio_regression(
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
+    self.context.storage = "minio"
+    self.context.access_key_id = root_user
+    self.context.secret_access_key = root_password
+    self.context.bucket_name = "root"
+
     with Cluster(
         **cluster_args,
         nodes=nodes,
         environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
     ) as cluster:
         self.context.cluster = cluster
+        self.context.node = cluster.node("clickhouse1")
 
         with Given("I have a minio client"):
             start_minio(access_key=root_user, secret_key=root_password)
+            uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
+            self.context.uri = uri_bucket_file
 
         with And("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
                 experimental_analyzer(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
-
-        uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
 
         with Module(self.context.object_storage_mode):
             Feature(test=load("s3.tests.table_function", "minio"))(
@@ -305,9 +311,7 @@ def minio_regression(
             Feature(test=load("s3.tests.table_function_invalid", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
-            Feature(test=load("s3.tests.disk", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
-            )
+            Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.disk_invalid", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
@@ -356,6 +360,15 @@ def aws_s3_regression(
         fail("AWS S3 region needs to be set")
     region = region.value
 
+    uri = f"https://s3.{region}.amazonaws.com/{bucket}/data/"
+
+    self.context.storage = "aws_s3"
+    self.context.uri = uri
+    self.context.access_key_id = key_id
+    self.context.secret_access_key = access_key
+    self.context.bucket_name = "altinity-qa-test"
+    self.context.bucket_path = "data/zero-copy-replication"
+
     with Cluster(
         **cluster_args,
         nodes=nodes,
@@ -367,10 +380,10 @@ def aws_s3_regression(
             "AWS_DEFAULT_REGION": region,
         },
     ) as cluster:
-        uri = f"https://s3.{region}.amazonaws.com/{bucket}/data/"
 
         self.context.cluster = cluster
         self.context.cluster.bucket = bucket
+        self.context.node = cluster.node("clickhouse1")
 
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
@@ -385,12 +398,7 @@ def aws_s3_regression(
             Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
-            Feature(test=load("s3.tests.disk", "aws_s3"))(
-                uri=uri,
-                key_id=key_id,
-                access_key=access_key,
-                bucket=bucket,
-            )
+            Feature(test=load("s3.tests.disk", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.sanity", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
@@ -438,12 +446,20 @@ def gcs_regression(
         fail("GCS key id needs to be set")
     key_id = key_id.value
 
+    self.context.storage = "gcs"
+    self.context.uri = uri
+    self.context.access_key_id = key_id
+    self.context.secret_access_key = access_key
+    self.context.bucket_name = None
+    self.context.bucket_path = None
+
     with Cluster(
         **cluster_args,
         nodes=nodes,
         environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
     ) as cluster:
         self.context.cluster = cluster
+        self.context.node = cluster.node("clickhouse1")
 
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
@@ -458,9 +474,7 @@ def gcs_regression(
             Feature(test=load("s3.tests.table_function_invalid", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
-            Feature(test=load("s3.tests.disk", "gcs"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )

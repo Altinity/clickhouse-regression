@@ -2417,8 +2417,12 @@ def ssec(self):
     RQ_SRS_015_S3_Disk_Configuration("1.0"),
     RQ_SRS_015_S3_Policy("1.0"),
 )
-def disk_tests(self):
+def disk_tests(self, uri):
     """Test S3 and S3 compatible storage through storage disks."""
+
+    self.context.uri = uri + "disk/"
+    self.context.bucket_path = "data/disk"
+
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
             scenario()
@@ -2427,16 +2431,9 @@ def disk_tests(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS("1.0"), RQ_SRS_015_S3_AWS_Disk_Configuration("1.0"))
 @Name("disk")
-def aws_s3(self, uri, access_key, key_id, bucket, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
-    self.context.uri = uri + "disk/"
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = bucket
-    self.context.bucket_path = "data/disk"
+def aws_s3(self, uri):
 
-    disk_tests()
+    disk_tests(uri=uri)
 
     Feature(run=ssec)
 
@@ -2444,32 +2441,18 @@ def aws_s3(self, uri, access_key, key_id, bucket, node="clickhouse1"):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS("1.0"), RQ_SRS_015_S3_GCS_Disk_Configuration("1.0"))
 @Name("disk")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = None
-    self.context.bucket_path = None
+def gcs(self, uri):
 
     if check_clickhouse_version(">=22.6")(self):
         with Given("I disable batch delete option"):
             add_batch_delete_option()
 
-    disk_tests()
+    disk_tests(uri=uri)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO("1.0"), RQ_SRS_015_S3_MinIO_Disk_Configuration("1.0"))
 @Name("disk")
-def minio(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
-    self.context.uri = uri + "disk/"
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
-    self.context.bucket_name = "root"
-    self.context.bucket_path = "data/disk"
+def minio(self, uri):
 
-    disk_tests()
+    disk_tests(uri=uri)
