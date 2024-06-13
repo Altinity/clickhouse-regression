@@ -325,35 +325,26 @@ def outline(self):
 
 @TestFeature
 @Name("invalid disk")
-def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
+def aws_s3(self, uri):
+
     self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
 
     outline()
 
 
 @TestFeature
 @Name("invalid disk")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
+def gcs(self, uri):
+
     self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
 
     outline()
 
 
 @TestFeature
 @Name("invalid disk")
-def minio(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
+def minio(self, uri):
+
     self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
 
     outline()
