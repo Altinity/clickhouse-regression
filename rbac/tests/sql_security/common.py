@@ -131,8 +131,11 @@ def create_user_on_cluster(self, cluster, node=None, user_name=None):
 
 
 @TestStep(Given)
-def grant_privilege(self, node, privilege, object, user):
+def grant_privilege(self, privilege, object, user, node=None):
     """Grant privilege on table/view/database to user."""
+    if node is None:
+        node = self.context.node
+        
     node.query(f"GRANT {privilege} ON {object} TO {user}")
 
 
@@ -314,13 +317,13 @@ def create_materialized_view_with_join(
                     FROM {source_table_name_1} 
                     INNER JOIN {source_table_name_3} 
                     ON {source_table_name_1}.x = {source_table_name_3}.x
-                ) 
+                ) a
             {join_option}
                 (
                     SELECT y 
                     FROM {source_table_name_2} 
                     WHERE x > 3
-                ) 
+                ) b
             """
     else:
         query += f"""
