@@ -17,6 +17,7 @@ issue_18251 = "https://github.com/ClickHouse/ClickHouse/issues/18251"
 issue_24029 = "https://github.com/ClickHouse/ClickHouse/issues/24029"
 issue_39987 = "https://github.com/ClickHouse/ClickHouse/issues/39987"
 issue_40826 = "https://github.com/ClickHouse/ClickHouse/issues/40826"
+issue_65116 = "https://github.com/ClickHouse/ClickHouse/issues/65116"
 
 xfails = {
     # decrypt
@@ -80,6 +81,7 @@ xfails = {
     ],
     # aes-128-cfb128 not supported in 22.8
     "*/:cfb128:": [(Fail, issue_40826)],
+    "performance/:/:": [(Fail, issue_65116, check_clickhouse_version(">=24.4"))],
 }
 
 
@@ -150,6 +152,12 @@ def regression(
             )
             Feature(
                 run=load("aes_encryption.tests.compatibility.feature", "feature"),
+                flags=TE,
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load("aes_encryption.tests.performance", "feature"),
                 flags=TE,
                 parallel=True,
                 executor=pool,
