@@ -19,7 +19,7 @@ def encrypt_decrypt_stress(
     exitcode=0,
     step=When,
 ):
-    """Use the `encrypt` and `decrypt` functions on a number sequence."""
+    """Use the encrypt and decrypt functions on a number sequence."""
     params = [key]
     if iv is not None:
         params.append(iv)
@@ -35,7 +35,7 @@ def encrypt_decrypt_stress(
 @TestScenario
 @Requirements(RQ_SRS008_AES_Functions_Check_Performance("1.0"))
 def encryption_decryption(self):
-    """TODO"""
+    """Check that all modes of encrypt and decrypt finish in a reasonable time."""
     key = f"{'1' * 36}"
     iv = f"{'2' * 16}"
     aad = "some random aad"
@@ -69,7 +69,7 @@ def encrypt_decrypt_mysql_stress(
     exitcode=0,
     step=When,
 ):
-    """Use the `encrypt` and `decrypt` functions on a number sequence."""
+    """Use the aes_encrypt_mysql and aes_decrypt_mysql functions on a number sequence."""
     params = [key]
     if iv is not None:
         params.append(iv)
@@ -83,7 +83,7 @@ def encrypt_decrypt_mysql_stress(
 @TestScenario
 @Requirements(RQ_SRS008_AES_Functions_Check_Performance("1.0"))
 def encryption_decryption_mysql(self):
-    """TODO"""
+    """Check that all modes of aes_encrypt_mysql and aes_decrypt_mysql finish in a reasonable time."""
     key = f"{'1' * 36}"
     iv = f"{'2' * 16}"
     aad = "some random aad"
