@@ -961,7 +961,7 @@ def check_consistency(
                                     timeout=60,
                                     column=(
                                         "key"
-                                        if self.context.workarounds.get(
+                                        if getattr(self.context, "workarounds", {}).get(
                                             "use_key_column_for_count"
                                         )
                                         else None
