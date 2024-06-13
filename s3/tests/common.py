@@ -1043,10 +1043,10 @@ def cleanup(self, storage="minio", disk="external"):
     if storage == "aws_s3":
         node = current().context.node
 
-        node.command(f"aws s3 rm s3://{self.context.bucket}/data --recursive")
-        node.command(f"aws s3 rm s3://{self.context.bucket2} --recursive")
+        node.command(f"aws s3 rm s3://{self.context.bucket_name}/data --recursive")
+        node.command(f"aws s3 rm s3://{self.context.bucket2_name} --recursive")
         node.command(
-            f"aws s3api create-bucket --bucket {self.context.bucket2} --region {self.context.region}"
+            f"aws s3api create-bucket --bucket {self.context.bucket2_name} --region {self.context.region}"
         )
 
 

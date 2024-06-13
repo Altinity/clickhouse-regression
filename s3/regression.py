@@ -303,9 +303,7 @@ def minio_regression(
 
         with Module(self.context.object_storage_mode):
             Feature(test=load("s3.tests.table_function", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.backup", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
-            )
+            Feature(test=load("s3.tests.backup", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.table_function_invalid", "minio"))(
                 uri=uri_bucket_file
             )
@@ -359,7 +357,7 @@ def aws_s3_regression(
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
     self.context.bucket_name = "altinity-qa-test"
-    self.context.bucket_path = "data/zero-copy-replication"
+    self.context.region = region
 
     with Cluster(
         **cluster_args,
@@ -391,13 +389,7 @@ def aws_s3_regression(
             Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.backup", "aws_s3"))(
-                uri=uri,
-                key_id=key_id,
-                access_key=access_key,
-                region=region,
-                bucket=bucket,
-            )
+            Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
@@ -451,9 +443,7 @@ def gcs_regression(
             Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.backup", "gcs"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
 
