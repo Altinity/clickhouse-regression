@@ -293,7 +293,6 @@ def minio_regression(
         with Given("I have a minio client"):
             start_minio(access_key=root_user, secret_key=root_password)
             uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
-            self.context.uri = uri_bucket_file
 
         with And("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
@@ -315,6 +314,7 @@ def minio_regression(
                 uri=uri_bucket_file
             )
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.table_function_performance", "minio"))(
                 uri=uri_bucket_file
             )
@@ -469,14 +469,15 @@ def regression(
     aws_s3_key_id,
     gcs_key_secret,
     gcs_key_id,
-    stress,
-    allow_vfs,
+    stress=False,
+    allow_vfs=False,
     with_analyzer=False,
 ):
     """S3 Storage regression."""
 
     self.context.clickhouse_version = clickhouse_version
     self.context.object_storage_mode = "normal"
+    self.context.stress = stress
 
     if allow_vfs:
         self.context.object_storage_mode = "vfs"
