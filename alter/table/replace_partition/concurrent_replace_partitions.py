@@ -81,7 +81,7 @@ def create_two_tables(
 
 
 @TestScenario
-@Repeat(100, until="fail")
+@Repeat(300, until="fail")
 def concurrent_replace(
     self,
     number_of_partitions=None,
