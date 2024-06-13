@@ -636,7 +636,7 @@ def ssec(self):
         endpoints["s3-bucket"].update(self.context.s3_options)
 
     with s3_endpoints(endpoints):
-        outline()
+        outline(uri=self.context.uri)
 
 
 @TestFeature
@@ -646,6 +646,7 @@ def aws_s3(self, uri):
 
     outline(uri=uri)
 
+    self.context.uri = uri
     Feature(run=ssec_encryption_check)
     Feature(run=ssec)
 
