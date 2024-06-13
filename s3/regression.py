@@ -312,9 +312,7 @@ def minio_regression(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
             Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.disk_invalid", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
-            )
+            Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.sanity", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
@@ -400,9 +398,7 @@ def aws_s3_regression(
             Feature(test=load("s3.tests.sanity", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
-            Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
@@ -474,9 +470,7 @@ def gcs_regression(
             Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
-            Feature(test=load("s3.tests.disk_invalid", "gcs"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.backup", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
