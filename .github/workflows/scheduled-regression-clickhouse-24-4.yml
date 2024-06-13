@@ -1,5 +1,5 @@
-name: Scheduled ClickHouse 24.3 Regression
-run-name: Scheduled ClickHouse 24.3 Regression
+name: Scheduled ClickHouse 24.4 Regression
+run-name: Scheduled ClickHouse 24.4 Regression
 on:
   workflow_dispatch:
     inputs:
