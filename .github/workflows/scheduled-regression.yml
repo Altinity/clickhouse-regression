@@ -1,4 +1,4 @@
-name: Run scheduled CI/CD regression tests (old)
+name: Run scheduled CI/CD regression tests
 run-name: Scheduled Regression
 on:
   workflow_dispatch:
