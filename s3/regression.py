@@ -311,9 +311,7 @@ def minio_regression(
             )
             Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.sanity", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
-            )
+            Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
                 uri=uri_bucket_file
@@ -389,9 +387,7 @@ def aws_s3_regression(
             Feature(test=load("s3.tests.table_function", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.disk", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.sanity", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
