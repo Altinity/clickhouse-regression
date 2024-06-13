@@ -302,14 +302,12 @@ def minio_regression(
                 )
 
         with Module(self.context.object_storage_mode):
-            Feature(test=load("s3.tests.table_function", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
-            )
+            Feature(test=load("s3.tests.table_function", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.backup", "minio"))(
                 uri=uri_bucket_file, key=root_user, secret=root_password
             )
             Feature(test=load("s3.tests.table_function_invalid", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
+                uri=uri_bucket_file
             )
             Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
@@ -322,7 +320,7 @@ def minio_regression(
             )
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
             Feature(test=load("s3.tests.table_function_performance", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
+                uri=uri_bucket_file
             )
 
 
@@ -388,12 +386,8 @@ def aws_s3_regression(
                 )
 
         with Module(self.context.object_storage_mode):
-            Feature(test=load("s3.tests.table_function", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key, bucket=bucket
-            )
-            Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.table_function", "aws_s3"))(uri=uri)
+            Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.disk", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.sanity", "aws_s3"))(
                 uri=uri, key_id=key_id, access_key=access_key
@@ -408,9 +402,7 @@ def aws_s3_regression(
                 region=region,
                 bucket=bucket,
             )
-            Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
 @TestModule
@@ -458,21 +450,15 @@ def gcs_regression(
                 )
 
         with Module(self.context.object_storage_mode):
-            Feature(test=load("s3.tests.table_function", "gcs"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
-            Feature(test=load("s3.tests.table_function_invalid", "gcs"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.table_function", "gcs"))(uri=uri)
+            Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.backup", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
             )
-            Feature(test=load("s3.tests.table_function_performance", "gcs"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
 
 @TestModule
