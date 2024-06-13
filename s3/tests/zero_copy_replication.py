@@ -1183,9 +1183,12 @@ def consistency_during_conflicting_mutation(self):
 
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
-def outline(self):
+def outline(self, uri):
     """Test S3 and S3 compatible storage through storage disks."""
     self.context.minio_enabled = self.context.storage == "minio"
+
+    self.context.uri = uri
+    self.context.bucket_path = "data/zero-copy-replication"
 
     with Given("I have two S3 disks configured"):
         uri_tiered = self.context.uri + "tiered/"
@@ -1257,44 +1260,23 @@ def outline(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = "altinity-qa-test"
-    self.context.bucket_path = "data/zero-copy-replication"
+def aws_s3(self, uri):
 
-    outline()
+    outline(uri=uri)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
+def gcs(self, uri):
     skip("GCS is not supported for zero copy replication")
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = None
-    self.context.bucket_path = None
 
-    outline()
+    outline(uri=uri)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def minio(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
-    self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
-    self.context.bucket_name = "root"
-    self.context.bucket_path = "data/zero-copy-replication"
+def minio(self, uri):
 
-    outline()
+    outline(uri=uri)

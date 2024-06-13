@@ -318,7 +318,7 @@ def minio_regression(
             )
             Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
-                uri=uri_bucket_file, key=root_user, secret=root_password
+                uri=uri_bucket_file
             )
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
             Feature(test=load("s3.tests.table_function_performance", "minio"))(
@@ -399,9 +399,7 @@ def aws_s3_regression(
                 uri=uri, key_id=key_id, access_key=access_key
             )
             Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.backup", "aws_s3"))(
                 uri=uri,
@@ -467,9 +465,7 @@ def gcs_regression(
                 uri=uri, key_id=key_id, access_key=access_key
             )
             Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
-                uri=uri, key_id=key_id, access_key=access_key
-            )
+            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.backup", "gcs"))(
                 uri=uri, key_id=key_id, access_key=access_key
