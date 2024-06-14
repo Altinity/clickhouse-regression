@@ -510,7 +510,7 @@ def measure_file_size(self):
         )
 
     with And("I get the size of the s3 bucket after adding data"):
-        size_after = get_stable_bucket_size(prefix=bucket_path)
+        size_after = get_stable_bucket_size(prefix=bucket_path, delay=20)
 
     with Then("I compare the size that clickhouse reports"):
         r = node.query(
