@@ -4,6 +4,7 @@ import time
 import platform
 import xml.etree.ElementTree as xmltree
 from collections import namedtuple
+from threading import Event
 
 import testflows.settings as settings
 from testflows.core import *
@@ -36,7 +37,10 @@ def check_analyzer():
         default_query_settings = getsattr(
             current().context, "default_query_settings", []
         )
-        if ("allow_experimental_analyzer", 1,) in default_query_settings or (
+        if (
+            "allow_experimental_analyzer",
+            1,
+        ) in default_query_settings or (
             check_clickhouse_version(">=24.3")(test)
             and ("allow_experimental_analyzer", 0) not in default_query_settings
         ):
@@ -879,3 +883,14 @@ def experimental_analyzer(self, node, with_analyzer):
         default_query_settings.append(("allow_experimental_analyzer", 1))
     elif not with_analyzer and default_value == "1":
         default_query_settings.append(("allow_experimental_analyzer", 0))
+
+
+@TestStep(When)
+def repeat_until_stop(self, stop_event: Event, func, delay=0.5):
+    """
+    Call the given function with no arguments until stop_event is set.
+    Use with parallel=True.
+    """
+    while not stop_event.is_set():
+        func()
+        time.sleep(delay)
