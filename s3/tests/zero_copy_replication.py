@@ -80,8 +80,10 @@ def drop_replica(self):
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
 def add_replica(self):
-    """Check that additional replicas of a replicated table can be added with
-    no changes to the data in the table.
+    """
+    Check that additional replicas of a replicated table can be added:
+    - with no changes to the data in the table.
+    - without significantly increasing disk usage.
     """
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
@@ -123,8 +125,9 @@ def add_replica(self):
 @Requirements(
     RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
 )
-def drop_alter_replica(self):
-    """Check that when a ClickHouse instance with a replicated table is dropped,
+def offline_alter_replica(self):
+    """
+    Check that when a ClickHouse instance with a replicated table is offline,
     the data in the table is changed, and then the instance is restarted, all
     data in its replicated table matches the updated data.
     """
@@ -162,6 +165,313 @@ def drop_alter_replica(self):
 
     with Then("I check simple queries on the other node"):
         standard_selects(node=nodes[1], table_name=table_name)
+
+
+@TestScenario
+@Tags("sanity")
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
+)
+def stale_alter_replica(self):
+    """
+    Similar to offline test, but under load.
+    """
+
+    table_name = "vfs_stale_replica"
+    nodes = self.context.ch_nodes
+    columns = "d UInt64, s String"
+    insert_size = 10_000_000
+    insert_time = 15
+
+    with Given("I have an Event to control background inserts"):
+        stop_background_inserts = Event()
+
+    with And("I have merge tree configuration set to use zero copy replication"):
+        settings = self.context.zero_copy_replication_settings
+        mergetree_config(settings=settings)
+
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after()
+
+    with When("I create a replicated table on each node"):
+        table_name = "zero_copy_replication_drop_alter"
+        for node in nodes:
+            replicated_table(node=node, table_name=table_name, columns=columns)
+    with And("I stop node 2"):
+        nodes[1].stop()
+
+    When("I start inserts on node 1", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[0], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+    When("I start inserts on node 3", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[2], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+
+    with When(f"I wait {insert_time} seconds and I restart node 2"):
+        time.sleep(insert_time)
+        nodes[1].start()
+
+    When("I start inserts on node 2", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[1], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+
+    with When("I tell node 2 to sync"):
+        sync_replica(node=nodes[1], table_name=table_name, timeout=insert_time)
+
+    with When(f"I wait {insert_time} seconds and stop the inserts"):
+        time.sleep(insert_time)
+        stop_background_inserts.set()
+        join()
+
+    with Then("I check that the nodes are consistent"):
+        check_consistency(nodes=nodes, table_name=table_name, sync_timeout=60)
+
+
+@TestScenario
+@Tags("sanity")
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
+)
+def add_remove_one_replica(self):
+    """
+    Test that no data is lost when a node is removed and added as a replica
+    during inserts on other replicas.
+    """
+
+    table_name = "add_remove_one_replica"
+    storage_policy = "external"
+    parallel = False
+    nodes = self.context.ch_nodes
+    rows_per_insert = 100_000_000
+    retry_settings = {
+        "timeout": 120,
+        "initial_delay": 5,
+        "delay": 2,
+    }
+
+    if self.context.stress:
+        rows_per_insert = 500_000_000
+        retry_settings["timeout"] = 300
+        retry_settings["delay"] = 5
+
+    with Given("I have merge tree configuration set to use zero copy replication"):
+        settings = self.context.zero_copy_replication_settings
+        mergetree_config(settings=settings)
+
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after()
+
+    with Given("I have a replicated table"):
+        for node in nodes:
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                policy=storage_policy,
+                columns="d UInt64",
+            )
+
+    When(
+        "I start inserts on the second node",
+        test=insert_random,
+        parallel=parallel,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+
+    And(
+        "I delete the replica on the third node",
+        test=delete_replica,
+        parallel=parallel,
+    )(node=nodes[2], table_name=table_name)
+
+    And(
+        "I replicate the table on the third node",
+        test=replicated_table,
+        parallel=parallel,
+    )(node=nodes[2], table_name=table_name)
+
+    When(
+        "I start inserts on the first node",
+        test=insert_random,
+        parallel=parallel,
+    )(
+        node=nodes[0],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+
+    join()
+
+    for node in nodes:
+        with Then(f"I wait for {node.name} to sync by watching the row count"):
+            retry(assert_row_count, **retry_settings)(
+                node=node, table_name=table_name, rows=rows_per_insert * 2
+            )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
+)
+def add_remove_replica_parallel(self):
+    """
+    Test that no data is lost when replicas are added and removed
+    during inserts on other replicas.
+    """
+
+    table_name = "add_remove_replica_parallel"
+    nodes = self.context.ch_nodes
+    rows_per_insert = 100_000_000
+    retry_settings = {
+        "timeout": 120,
+        "initial_delay": 5,
+        "delay": 2,
+    }
+
+    if self.context.stress:
+        rows_per_insert = 500_000_000
+        retry_settings["timeout"] = 300
+        retry_settings["delay"] = 5
+
+    with Given("I have merge tree configuration set to use zero copy replication"):
+        settings = self.context.zero_copy_replication_settings
+        mergetree_config(settings=settings)
+
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after()
+
+    with Given("I have a replicated table on one node"):
+        replicated_table(node=nodes[0], table_name=table_name)
+
+    When(
+        "I start parallel inserts on the first node",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[0],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets = 1
+
+    And(
+        "I replicate the table on the second node in parallel",
+        test=replicated_table,
+        parallel=True,
+    )(node=nodes[1], table_name=table_name)
+
+    join()
+
+    with Then("I wait for the second node to sync by watching the row count"):
+        retry(assert_row_count, **retry_settings)(
+            node=nodes[1], table_name=table_name, rows=rows_per_insert
+        )
+
+    And(
+        "I start parallel inserts on the second node",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+
+    And(
+        "I delete the replica on the first node",
+        test=delete_replica,
+        parallel=True,
+    )(node=nodes[0], table_name=table_name)
+
+    And(
+        "I replicate the table on the third node in parallel",
+        test=replicated_table,
+        parallel=True,
+    )(node=nodes[2], table_name=table_name)
+
+    And(
+        "I continue with parallel inserts on the second node",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+
+    join()
+
+    with And("I wait for the third node to sync by watching the row count"):
+        retry(assert_row_count, **retry_settings)(
+            node=nodes[2], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+
+    with Then("I also check the row count on the second node"):
+        assert_row_count(
+            node=nodes[1], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+
+    Given(
+        "I start parallel inserts on the second node in parallel",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+    And(
+        "I start parallel inserts on the third node in parallel",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[2],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+
+    And(
+        "I replicate the table on the first node again in parallel",
+        test=replicated_table,
+        parallel=True,
+    )(node=nodes[0], table_name=table_name)
+
+    join()
+
+    with Then("I wait for the first node to sync by watching the row count"):
+        retry(assert_row_count, **retry_settings)(
+            node=nodes[0], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+
+    with And("I check the row count on the other nodes"):
+        assert_row_count(
+            node=nodes[1], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+        assert_row_count(
+            node=nodes[2], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
 
 
 @TestScenario

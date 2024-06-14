@@ -6,8 +6,10 @@ from contextlib import contextmanager
 import boto3
 from minio import Minio
 from testflows.connect import Shell
+from testflows.combinatorics import combinations
 
 from helpers.common import *
+from helpers.queries import sync_replica, get_row_count
 
 Config = namedtuple("Config", "content path name uid preprocessed_name")
 
@@ -674,6 +676,30 @@ def insert_data(self, name, number_of_mb, start=0, node=None):
     node.query(f"INSERT INTO {name} VALUES {values}")
 
 
+@TestStep(Given)
+def insert_random(
+    self,
+    node,
+    table_name,
+    columns: str = None,
+    rows: int = 1000000,
+    settings: str = None,
+    **kwargs,
+):
+    """Insert random data to a table."""
+
+    if settings:
+        settings = "SETTINGS " + settings
+    else:
+        settings = ""
+
+    return node.query(
+        f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
+        exitcode=0,
+        **kwargs,
+    )
+
+
 @TestStep(Then)
 def check_query(self, num, query, expected):
     node = current().context.node
@@ -1283,6 +1309,15 @@ def replicated_table(
             node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
+@TestStep(Given)
+def delete_replica(self, node, table_name, timeout=30):
+    """Delete the local copy of a replicated table."""
+    r = node.query(
+        f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0, timeout=timeout
+    )
+    return r
+
+
 @TestStep(When)
 def standard_check(self):
     """Create a table on s3, insert data, check the data is correct."""
@@ -1353,6 +1388,36 @@ def standard_selects(self, node, table_name):
         query=f"SELECT * FROM (SELECT d FROM {table_name} WHERE d == 1) FORMAT TabSeparated",
         expected="1",
     )
+
+
+@TestStep(Then)
+def assert_row_count(self, node, table_name: str, rows: int = 1000000):
+    """Assert that the number of rows in a table is as expected."""
+    if node is None:
+        node = current().context.node
+
+    actual_count = get_row_count(node=node, table_name=table_name)
+    assert rows == actual_count, error()
+
+
+@TestStep(Then)
+def check_consistency(self, nodes, table_name, sync_timeout=10):
+    """SYNC the given nodes and check that they agree about the given table"""
+
+    with When("I make sure all nodes are synced"):
+        for node in nodes:
+            sync_replica(
+                node=node, table_name=table_name, timeout=sync_timeout, no_checks=True
+            )
+
+    with When("I query all nodes for their row counts"):
+        row_counts = {}
+        for node in nodes:
+            row_counts[node.name] = get_row_count(node=node, table_name=table_name)
+
+    with Then("All replicas should have the same state"):
+        for n1, n2 in combinations(nodes, 2):
+            assert row_counts[n1.name] == row_counts[n2.name], error()
 
 
 @TestStep(Given)

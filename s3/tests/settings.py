@@ -6,10 +6,10 @@ from testflows.core import *
 from testflows.combinatorics import CoveringArray
 
 from helpers.common import getuid
-from s3.tests.common import s3_table, s3_storage
+from s3.tests.common import s3_table, s3_storage, check_consistency
 
 from vfs.tests.steps import insert_random, replicated_table_cluster
-from alter.stress.tests.actions import optimize_random, check_consistency
+from alter.stress.tests.actions import optimize_random
 
 
 @TestStep
