@@ -8,6 +8,8 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
+from helpers.common import check_clickhouse_version
+from vfs.tests.steps import enable_vfs
 from alter.stress.tests.actions import *
 from alter.stress.tests.steps import *
 
