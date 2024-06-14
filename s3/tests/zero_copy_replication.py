@@ -1029,6 +1029,59 @@ def ttl_delete(self):
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
+@TestOutline(Scenario)
+@Examples(
+    "source destination", [["replicated", "zero-copy"], ["zero-copy", "replicated"]]
+)
+def migration(self, source, destination):
+    """Test migrating data between tables with and without zero copy replication."""
+
+    node = self.context.node
+    columns = "d UInt64"
+
+    with Given("I have a replicated table"):
+        replicated_table_name = "migration_replicated"
+        for node in self.context.ch_nodes:
+            replicated_table(
+                node=node, table_name=replicated_table_name, columns=columns
+            )
+
+    with And("I have a zero-copy table"):
+        zero_copy_table_name = "migration_zero_copy"
+        for node in self.context.ch_nodes:
+            replicated_table(
+                node=node,
+                table_name=zero_copy_table_name,
+                columns=columns,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
+
+    table_names = {
+        "replicated": replicated_table_name,
+        "zero-copy": zero_copy_table_name,
+    }
+
+    with And(f"I select {source} as the source table"):
+        source_table_name = table_names[source]
+
+    with And(f"I select {destination} as the destination table"):
+        dest_table_name = table_names[destination]
+
+    with And("I insert data to the source table"):
+        insert_random(
+            node=node, table_name=source_table_name, columns=columns, rows=1000000
+        )
+
+    with When("I copy the source table to the destination table"):
+        node.query(f"INSERT INTO {dest_table_name} SELECT * from {source_table_name}")
+
+    with And("I delete the source table"):
+        delete_replica(node=node, table_name=source_table_name)
+
+    with Then("the data should be in the destination table"):
+        assert_row_count(node=node, table_name=dest_table_name, rows=1000000)
+
+
 @TestScenario
 def bad_detached_part(self):
     """

@@ -681,7 +681,7 @@ def insert_random(
     self,
     node,
     table_name,
-    columns: str = None,
+    columns: str,
     rows: int = 1000000,
     settings: str = None,
     **kwargs,
