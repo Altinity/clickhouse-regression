@@ -57,7 +57,7 @@ def revert_clickhouse_version(self):
     ):
         node_with_different_version.stop_clickhouse(safe=False)
 
-        if check_clickhouse_version(">=24.4")(self):
+        if check_clickhouse_version(">=24.3")(self):
             node_with_different_version.command(
                 "cp /usr/bin/clickhouse_main_version/clickhouse /usr/bin"
             )
