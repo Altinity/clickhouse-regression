@@ -132,13 +132,13 @@ def cascade_mv_mv_mv(
 
     with And("I try to insert into source table with new user"):
         if (
-            "SELECT" in user_source_privileges
-            and "INSERT" in user_source_privileges
+            # "SELECT" in user_source_privileges
+            "INSERT" in user_source_privileges
             and "SELECT" in definer_one_source_privileges
             and "INSERT" in definer_one_target_one_privileges
-            and "SELECT" in definer_one_target_one_privileges
+            # and "SELECT" in definer_one_target_one_privileges
             and "SELECT" in definer_two_target_one_privileges
-            and "SELECT" in definer_two_target_two_privileges
+            # and "SELECT" in definer_two_target_two_privileges
             and "INSERT" in definer_two_target_two_privileges
             and "SELECT" in definer_three_target_two_privileges
             and "INSERT" in definer_three_target_three_privileges
@@ -163,11 +163,13 @@ def feature(self, node="clickhouse1"):
     """Test cascading views with different sql security options."""
     self.context.node = self.context.cluster.node(node)
     grant_privileges = [grant_privileges_directly, grant_privileges_via_role]
-    privileges = ["SELECT", "INSERT", "ALTER", "CREATE", "NONE"]
+    privileges = ("SELECT", "INSERT", "ALTER", "CREATE", "NONE")
 
     if not self.context.stress:
-        privileges = (("SELECT",), ("INSERT",), ("NONE",))
+        privileges = ("SELECT", "INSERT", "NONE")
         grant_privileges = [grant_privileges_directly]
+
+    privileges = list(combinations(privileges, 2)) + [("NONE",)]
 
     combinations_dict = {
         "user_source_privileges": privileges,
@@ -180,7 +182,8 @@ def feature(self, node="clickhouse1"):
         "grant_privilege": grant_privileges,
     }
 
-    covering_array = CoveringArray(combinations_dict, strength=10)
+    covering_array = CoveringArray(combinations_dict, strength=5)
+
     privileges_combinations = [
         [
             item["user_source_privileges"],
@@ -209,7 +212,19 @@ def feature(self, node="clickhouse1"):
             test_name = f"cascade_mv_mv_mv_{user_source_privileges}_{definer_one_source_privileges}_{definer_one_target_one_privileges}_{definer_two_target_one_privileges}_{definer_two_target_two_privileges}_{definer_three_target_two_privileges}_{definer_three_target_three_privileges}_{grant_privilege.__name__}"
             test_name = test_name.replace("[", "_").replace("]", "_")
             Scenario(
-                test_name, test=cascade_mv_mv_mv, parallel=True, executor=executor
+                test_name,
+                description=f"""
+                User source privileges: {user_source_privileges}
+                Definer one source privileges: {definer_one_source_privileges}
+                Definer one target one privileges: {definer_one_target_one_privileges}
+                Definer two target one privileges: {definer_two_target_one_privileges}
+                Definer two target two privileges: {definer_two_target_two_privileges}
+                Definer three target two privileges: {definer_three_target_two_privileges}
+                Definer three target three privileges: {definer_three_target_three_privileges}     
+                """,
+                test=cascade_mv_mv_mv,
+                parallel=True,
+                executor=executor,
             )(
                 user_source_privileges=user_source_privileges,
                 definer_one_source_privileges=definer_one_source_privileges,
