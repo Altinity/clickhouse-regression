@@ -11,6 +11,7 @@ jobs:
     with:
       package: docker://clickhouse/clickhouse-server:24.3
       version: '24.3'
+      extra_args: '--with-analyzer'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
