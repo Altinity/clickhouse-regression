@@ -2,27 +2,6 @@ name: Scheduled Altinity 23.8 Regression
 run-name: Scheduled Altinity 23.8 Regression
 on:
   workflow_dispatch:
-    inputs:
-      suite:
-        type: string
-        description: "Test suite to run. Default: all"
-        default: all
-      artifacts:
-        description: "Artifact S3 bucket"
-        type: string
-        default: public
-      output_format:
-        description: "Testflows output style."
-        type: string
-        default: new-fails
-      ref:
-        description: "Commit SHA to checkout. Default: current (empty string)."
-        type: string
-        default: ""
-      extra_args:
-        description: "Extra test program arguments. Default: none (empty string)."
-        type: string
-        default: ""
   schedule:
     - cron: "0 0 * * *"
 
@@ -32,7 +11,6 @@ jobs:
     with:
       package: docker://altinity/clickhouse-server:23.8.11.29.altinitystable
       version: '23.8.11.29'
-      suite: ${{ inputs.suite }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}

@@ -2,27 +2,6 @@ name: Scheduled ClickHouse latest Regression
 run-name: Scheduled ClickHouse latest Regression
 on:
   workflow_dispatch:
-    inputs:
-      suite:
-        type: string
-        description: "Test suite to run. Default: all"
-        default: all
-      artifacts:
-        description: "Artifact S3 bucket"
-        type: string
-        default: public
-      output_format:
-        description: "Testflows output style."
-        type: string
-        default: new-fails
-      ref:
-        description: "Commit SHA to checkout. Default: current (empty string)."
-        type: string
-        default: ""
-      extra_args:
-        description: "Extra test program arguments. Default: none (empty string)."
-        type: string
-        default: ""
   schedule:
     - cron: "0 0 * * *"
 
