@@ -300,6 +300,11 @@ ffails = {
         "SYMBOLS was removed https://github.com/ClickHouse/ClickHouse/pull/51873",
         (lambda test: check_clickhouse_version(">=23.8")(test)),
     ),
+    "/rbac/SQL security": (
+        Skip,
+        "SQL security was introduced in 24.2",
+        check_clickhouse_version("<24.2"),
+    ),
     "/rbac/SQL security/modify materialized view SQL security/modify sql security on cluster": (
         Skip,
         "Crashes the server.",
