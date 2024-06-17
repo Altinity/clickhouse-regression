@@ -17,7 +17,7 @@ def create_partitions_with_random_parts(self, table_name, number_of_partitions):
 
     with By(
         f"Inserting data into a {table_name} table",
-        description="each insert creates a new part inside a partiion resulting in a partition with a set numebr of parts",
+        description="each insert creates a new part inside a partition resulting in a partition with a set number of parts",
     ):
         for partition in range(1, number_of_partitions):
             number_of_parts = random.randrange(1, 50)
