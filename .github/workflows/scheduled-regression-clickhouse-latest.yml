@@ -1,16 +1,16 @@
-name: Scheduled Altinity 23.8 Regression
-run-name: Scheduled Altinity 23.8 Regression
+name: Scheduled ClickHouse latest Regression
+run-name: Scheduled ClickHouse latest Regression
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
 
 jobs:
-  altinitystable-23-8:
+  clickhouse-latest:
     uses: ./.github/workflows/test-reusable-workflow.yml
     with:
-      package: docker://altinity/clickhouse-server:23.8.11.29.altinitystable
-      version: '23.8.11.29'
+      package: docker://clickhouse/clickhouse-server:latest
+      version: 'latest'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
