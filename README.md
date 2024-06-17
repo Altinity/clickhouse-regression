@@ -1,3 +1,5 @@
+[![Scheduled Altinity 23.8 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml)
+
 ## ClickHouse Tests in [TestFlows]
 
 This directory contains integration tests written using [TestFlows] 
