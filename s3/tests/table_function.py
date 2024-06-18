@@ -516,7 +516,8 @@ def measure_file_size(self):
         r = node.query(
             f"SELECT sum(_size) FROM s3('{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
         )
-        assert size_after - size_before == int(r.output.strip()), error()
+        size_clickhouse = int(r.output.strip())
+        assert size_after - size_before == size_clickhouse, error()
 
 
 @TestOutline(Feature)
