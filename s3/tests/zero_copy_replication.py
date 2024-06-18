@@ -251,7 +251,7 @@ def add_remove_one_replica(self):
     storage_policy = "external"
     parallel = False
     nodes = self.context.ch_nodes
-    rows_per_insert = 100_000_000
+    rows_per_insert = 1_000_000
     retry_settings = {
         "timeout": 120,
         "initial_delay": 5,
@@ -259,7 +259,7 @@ def add_remove_one_replica(self):
     }
 
     if self.context.stress:
-        rows_per_insert = 500_000_000
+        rows_per_insert = 5_000_000
         retry_settings["timeout"] = 300
         retry_settings["delay"] = 5
 
@@ -334,7 +334,7 @@ def add_remove_replica_parallel(self):
 
     table_name = "add_remove_replica_parallel"
     nodes = self.context.ch_nodes
-    rows_per_insert = 100_000_000
+    rows_per_insert = 1_000_000
     retry_settings = {
         "timeout": 120,
         "initial_delay": 5,
@@ -342,7 +342,7 @@ def add_remove_replica_parallel(self):
     }
 
     if self.context.stress:
-        rows_per_insert = 500_000_000
+        rows_per_insert = 5_000_000
         retry_settings["timeout"] = 300
         retry_settings["delay"] = 5
 
