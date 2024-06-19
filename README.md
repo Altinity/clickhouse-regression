@@ -1,5 +1,7 @@
 ## Daily Scheduled Regression Runs
 
+Results for **the latest** scheduled workflow runs.
+
 | ClickHouse Version | Scheduled Regression Status |
 | ------------ | - |
 | **`latest`** | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
