@@ -1,5 +1,3 @@
-name: Run CI/CD regression tests (for testing)
-run-name: Run CI/CD scheduled regression tests (for testing)
 on:
   workflow_call:
     inputs:

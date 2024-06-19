@@ -7,7 +7,7 @@ on:
 
 jobs:
   clickhouse-24-4:
-    uses: ./.github/workflows/test-reusable-workflow.yml
+    uses: ./.github/workflows/reusable-workflow-x86.yml
     with:
       package: docker://clickhouse/clickhouse-server:24.4
       version: '24.4'
