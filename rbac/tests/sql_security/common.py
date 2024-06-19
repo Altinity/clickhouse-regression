@@ -135,8 +135,17 @@ def grant_privilege(self, privilege, object, user, node=None):
     """Grant privilege on table/view/database to user."""
     if node is None:
         node = self.context.node
-        
+
     node.query(f"GRANT {privilege} ON {object} TO {user}")
+
+
+@TestStep(Given)
+def revoke_privilege(self, privilege, object, user, node=None):
+    """Revoke privilege on table/view/database from user."""
+    if node is None:
+        node = self.context.node
+
+    node.query(f"REVOKE {privilege} ON {object} FROM {user}")
 
 
 @TestStep(Given)
