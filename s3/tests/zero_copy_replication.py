@@ -109,7 +109,7 @@ def add_replica(self):
         replicated_table(node=nodes[1], table_name=table_name)
 
     with Then(
-        """The size of the s3 bucket should be 1 byte more
+        """the size of the s3 bucket should be 1 byte more
                 than previously because of the additional replica"""
     ):
         check_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
@@ -177,7 +177,7 @@ def stale_alter_replica(self):
     Similar to offline test, but under load.
     """
 
-    table_name = "vfs_stale_replica"
+    table_name = "stale_replica"
     nodes = self.context.ch_nodes
     columns = "d UInt64, s String"
     insert_size = 10_000_000
@@ -225,7 +225,7 @@ def stale_alter_replica(self):
     )
 
     with When("I tell node 2 to sync"):
-        sync_replica(node=nodes[1], table_name=table_name, timeout=insert_time)
+        sync_replica(node=nodes[1], table_name=table_name, timeout=300)
 
     with When(f"I wait {insert_time} seconds and stop the inserts"):
         time.sleep(insert_time)
@@ -354,7 +354,7 @@ def add_remove_replica_parallel(self):
         measure_buckets_before_and_after()
 
     with Given("I have a replicated table on one node"):
-        replicated_table(node=nodes[0], table_name=table_name)
+        replicated_table(node=nodes[0], table_name=table_name, columns="d UInt64")
 
     When(
         "I start parallel inserts on the first node",
@@ -753,14 +753,14 @@ def delete(self):
     with When("I drop the table on one node"):
         nodes[0].query(f"DROP TABLE IF EXISTS {table_name}")
 
-    with Then("The size of the s3 bucket should be the same"):
+    with Then("the size of the s3 bucket should be the same"):
         check_bucket_size(expected_size=size_before, tolerance=0)
 
     with When("I drop the table on the other node"):
         nodes[1].query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
-        """The size of the s3 bucket should be very close to the size
+        """the size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
         check_stable_bucket_size(expected_size=size_before, tolerance=5)

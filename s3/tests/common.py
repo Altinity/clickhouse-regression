@@ -786,7 +786,9 @@ def get_bucket_size(
             )
             return sum(obj._size for obj in objects)
 
-    with By("querying with boto3 client"):
+    with By(
+        "querying with boto3 client", description=f"bucket: {name}, prefix: {prefix}"
+    ):
         s3 = boto3.resource(
             "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
         )
@@ -846,7 +848,7 @@ def get_stable_bucket_size(
                 access_key=access_key,
                 key_id=key_id,
             )
-        with And(f"checking if current={size} == previous={size_previous}"):
+        with And(f"checking if current:{size} == previous:{size_previous}"):
             if size_previous == size:
                 break
         size_previous = size
