@@ -1,4 +1,4 @@
-## Daily Scheduled Regression Runs
+## Scheduled Regression Runs
 
 Results for **the latest** scheduled workflow runs.
 
