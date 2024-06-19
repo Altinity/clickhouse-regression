@@ -1160,6 +1160,9 @@ class Cluster(object):
         if self.clickhouse_binary_path:
             if self.use_specific_version:
                 docker_image = self.use_specific_version
+                assert docker_image.startswith("docker://"), error(
+                    "use_specific_version must be a docker image path"
+                )
                 self.specific_clickhouse_binary_path = (
                     self.get_binary_from_docker_container(
                         docker_image=docker_image,
