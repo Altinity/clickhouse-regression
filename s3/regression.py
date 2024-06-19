@@ -145,8 +145,9 @@ xfails = {
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
     ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
-    "aws s3/:/zero copy replication/:": [
-        (Fail, "Data cleanup not working as expected")
+    "aws s3/:/zero copy replication/add replica": [(Fail, "needs investigation")],
+    "aws s3/:/zero copy replication/bucket should be empty before test begins": [
+        (Fail, "Data cleanup needs investigation")
     ],
     "aws s3/:/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
@@ -192,6 +193,9 @@ xfails = {
             check_clickhouse_version("<23.11"),
         )
     ],
+    ":/:/table function/measure file size": [
+        (Fail, "Not implemented <24", check_clickhouse_version("<24"))
+    ],
 }
 
 ffails = {
@@ -231,6 +235,10 @@ ffails = {
     "aws s3/:/table function/ssec encryption check": (
         Skip,
         "SSEC currently not working. Timeout",
+    ),
+    "aws s3/:/zero copy replication/add remove replica parallel": (
+        XFail,
+        "This test causes boto errors in subsequent tests.",
     ),
     ":/:/backup/:/metadata:": (
         XFail,
