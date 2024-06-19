@@ -82,11 +82,14 @@ def unpack_deb(deb_binary_path, program_name):
     with Shell() as bash:
         bash.timeout = 300
         if not os.path.exists(f"{deb_binary_dir}/{program_name}"):
-            bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
-            bash(
-                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}""'
+            cmd = bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
+            assert cmd.exitcode == 0, error()
+            cmd = bash(
+                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" "./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}"'
             )
-            bash(f'chmod +x "{deb_binary_dir}/{program_name}"')
+            assert cmd.exitcode == 0, error()
+            cmd = bash(f'chmod +x "{deb_binary_dir}/{program_name}"')
+            assert cmd.exitcode == 0, error()
 
     return f"{deb_binary_dir}/{program_name}"
 
@@ -97,8 +100,10 @@ def unpack_tar_gz(tar_path):
     os.makedirs(tar_dest_dir, exist_ok=True)
     with Shell() as bash:
         bash.timeout = 300
-        bash(f'tar -xzf "{tar_path}" -C "{tar_dest_dir}" --strip-components=1')
-        bash(f'chmod +x "{tar_dest_dir}/bin/*"')
+        cmd = bash(f'tar -xzf "{tar_path}" -C "{tar_dest_dir}" --strip-components=1')
+        assert cmd.exitcode == 0, error()
+        cmd = bash(f'chmod +x "{tar_dest_dir}/bin/*"')
+        assert cmd.exitcode == 0, error()
 
     return f"{tar_dest_dir}"
 
