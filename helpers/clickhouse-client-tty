@@ -3,7 +3,7 @@ import sys
 import json
 
 from clickhouse_driver import Client
-from clickhouse_driver.errors import Error, LogicalError
+from clickhouse_driver.errors import Error
 
 
 def clickhouse_client_tty():
