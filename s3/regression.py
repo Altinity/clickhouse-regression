@@ -239,6 +239,10 @@ ffails = {
         XFail,
         "This test causes boto errors in subsequent tests.",
     ),
+    "aws s3/:/zero copy replication/stale alter replica": (
+        XFail,
+        "This test causes boto errors in subsequent tests.",
+    ),
     ":/:/backup/:/metadata:": (
         XFail,
         "Under development for 22.8 and newer.",
