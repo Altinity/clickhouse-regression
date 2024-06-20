@@ -145,7 +145,6 @@ xfails = {
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
     ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
-    "aws s3/:/zero copy replication/add replica": [(Fail, "needs investigation")],
     "aws s3/:/zero copy replication/bucket should be empty before test begins": [
         (Fail, "Data cleanup needs investigation")
     ],
