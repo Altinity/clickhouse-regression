@@ -242,7 +242,7 @@ def stale_alter_replica(self):
     table_name = "stale_replica"
     nodes = self.context.ch_nodes
     columns = "d UInt64, s String"
-    insert_size = 10_000_000
+    insert_size = 100_000
     insert_time = 15
 
     with Given("I have an Event to control background inserts"):
