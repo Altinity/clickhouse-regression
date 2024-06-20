@@ -125,7 +125,7 @@ xfails = {
     ":/:/zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/:/zero copy replication/delete": [(Fail, "Under investigation")],
+    ":/:/zero copy replication/delete": [(Fail, "needs investigation")],
     ":/vfs/zero copy replication/:replic:": [
         (Fail, "TODO: VFS uses more disk per replica than 0-copy")
     ],
