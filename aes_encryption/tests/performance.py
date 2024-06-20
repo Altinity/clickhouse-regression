@@ -33,7 +33,6 @@ def encrypt_decrypt_stress(
 
 
 @TestScenario
-@Requirements(RQ_SRS008_AES_Functions_Check_Performance("1.0"))
 def encryption_decryption(self):
     """Check that all modes of encrypt and decrypt finish in a reasonable time."""
     key = f"{'1' * 36}"
@@ -42,7 +41,7 @@ def encryption_decryption(self):
 
     for mode, key_len, iv_len, aad_len in modes:
         if mode == "'aes-128-ecb'":
-            expected_time = 0.25
+            expected_time = 0.2
         else:
             expected_time = 0.1
 
@@ -55,9 +54,17 @@ def encryption_decryption(self):
                 aad=(None if not aad_len else f"'{aad}'"),
             )
             t_elapsed = time.time() - t_start
+            metric("Elapsed time", t_elapsed, units="s")
+            metric("Relative time", t_elapsed / expected_time * 100, units="%")
 
             with Then("I check encryption time"):
-                assert t_elapsed < expected_time, error()
+                assert t_elapsed < expected_time, error(
+                    f"Elapsed time {t_elapsed:.3f}s is {(t_elapsed/expected_time)-1:.1%} longer than expected {expected_time}s"
+                )
+                # sanity check
+                assert t_elapsed > expected_time // 10, error(
+                    f"{t_elapsed:.3}s is less than 10% of expected {expected_time}s"
+                )
 
 
 @TestOutline
@@ -81,7 +88,6 @@ def encrypt_decrypt_mysql_stress(
 
 
 @TestScenario
-@Requirements(RQ_SRS008_AES_Functions_Check_Performance("1.0"))
 def encryption_decryption_mysql(self):
     """Check that all modes of aes_encrypt_mysql and aes_decrypt_mysql finish in a reasonable time."""
     key = f"{'1' * 36}"
@@ -90,7 +96,7 @@ def encryption_decryption_mysql(self):
 
     for mode, key_len, iv_len in mysql_modes:
         if mode == "'aes-128-ecb'":
-            expected_time = 0.25
+            expected_time = 0.2
         else:
             expected_time = 0.1
 
@@ -102,16 +108,24 @@ def encryption_decryption_mysql(self):
                 iv=(None if not iv_len else f"'{iv[:iv_len]}'"),
             )
             t_elapsed = time.time() - t_start
+            metric("Elapsed time", t_elapsed, units="s")
+            metric("Relative time", t_elapsed / expected_time * 100, units="%")
 
             with Then("I check encryption time"):
-                assert t_elapsed < expected_time, error()
+                assert t_elapsed < expected_time, error(
+                    f"Elapsed time {t_elapsed:.3f}s is {(t_elapsed/expected_time)-1:.1%} longer than expected {expected_time}s"
+                )
+                # sanity check
+                assert t_elapsed > expected_time // 10, error(
+                    f"{t_elapsed:.3}s is less than 10% of expected {expected_time}s"
+                )
 
 
 @TestFeature
 @Name("performance")
-@Requirements(RQ_SRS008_AES_Encrypt_Function("1.0"))
+@Requirements(RQ_SRS008_AES_Functions_Check_Performance("1.0"))
 def feature(self, node="clickhouse1"):
-    """Check the behavior of the `encrypt` function."""
+    """Check that the encrypt and decrypt functions finish in a reasonable time."""
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):

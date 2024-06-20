@@ -1,5 +1,5 @@
-name: Scheduled Altinity 23.8 Regression
-run-name: Scheduled Altinity 23.8 Regression
+name: Scheduled Altinity 23.8
+run-name: Scheduled Altinity 23.8
 on:
   workflow_dispatch:
   schedule:
