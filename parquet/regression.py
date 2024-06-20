@@ -155,12 +155,6 @@ xfails = {
             "repeated manually, we can not reproduce it",
         )
     ],
-    "/parquet/*/s3/compression type/*/outline/engine/*": [
-        (
-            Fail,
-            "Fails with the error `could not be decoded`, we will attach the ticket to the xfail",
-        )
-    ],
     "/parquet/read and write/read and write parquet file/*": [
         (
             Fail,
@@ -343,6 +337,10 @@ ffails = {
         Skip,
         "Not implemented yet",
         check_clickhouse_version("<24.6"),
+    ),
+    "/parquet/*/s3/compression type/*/outline/engine/*": (
+        Skip,
+        "Unsupported compression type",
     ),
 }
 

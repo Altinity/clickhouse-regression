@@ -1,5 +1,5 @@
-name: Scheduled ClickHouse latest Regression
-run-name: Scheduled ClickHouse latest Regression
+name: Scheduled ClickHouse latest
+run-name: Scheduled ClickHouse latest
 on:
   workflow_dispatch:
   schedule:

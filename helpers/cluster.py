@@ -77,6 +77,7 @@ def parse_version_from_docker_path(docker_path):
 
 def unpack_deb(deb_binary_path, program_name):
     """Unpack deb binary and return path to the binary."""
+    assert deb_binary_path.endswith(".deb"), error("not a .deb file")
     deb_binary_dir = deb_binary_path.rsplit(".deb", 1)[0]
     os.makedirs(deb_binary_dir, exist_ok=True)
     with Shell() as bash:
@@ -96,6 +97,7 @@ def unpack_deb(deb_binary_path, program_name):
 
 def unpack_tar_gz(tar_path):
     """Unpack tar.gz file and return path to the result."""
+    assert tar_path.endswith(".tar.gz"), error("not a .tar.gz file")
     tar_dest_dir = tar_path.rsplit(".tar.gz", 1)[0]
     os.makedirs(tar_dest_dir, exist_ok=True)
     with Shell() as bash:
@@ -1157,15 +1159,19 @@ class Cluster(object):
 
         if self.clickhouse_binary_path:
             if self.use_specific_version:
+                docker_image = self.use_specific_version
+                assert docker_image.startswith("docker://"), error(
+                    "use_specific_version must be a docker image path"
+                )
                 self.specific_clickhouse_binary_path = (
                     self.get_binary_from_docker_container(
-                        docker_image=self.use_specific_version,
+                        docker_image=docker_image,
                         container_binary_path="/usr/bin/clickhouse",
                     )
                 )
                 self.clickhouse_specific_odbc_binary = (
                     self.get_binary_from_docker_container(
-                        docker_image=self.use_specific_version,
+                        docker_image=docker_image,
                         container_binary_path="/usr/bin/clickhouse-odbc-bridge",
                         host_binary_path_suffix="_odbc_bridge",
                     )
@@ -1180,12 +1186,12 @@ class Cluster(object):
                 )
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
+                binary_source = self.clickhouse_binary_path
                 with Given(
-                    "I download ClickHouse server binary",
-                    description=f"{self.clickhouse_binary_path}",
+                    "I download ClickHouse server binary", description=binary_source
                 ):
                     self.clickhouse_binary_path = download_http_binary(
-                        binary_source=self.clickhouse_binary_path
+                        binary_source=binary_source
                     )
 
             elif self.clickhouse_binary_path.startswith("docker://"):
@@ -1200,28 +1206,29 @@ class Cluster(object):
                         ):
                             current().context.clickhouse_version = parsed_version
 
+                docker_path = self.clickhouse_binary_path
+
                 self.clickhouse_binary_path = self.get_binary_from_docker_container(
-                    docker_image=self.clickhouse_binary_path,
+                    docker_image=docker_path,
                     container_binary_path="/usr/bin/clickhouse",
                 )
                 self.clickhouse_odbc_bridge_binary_path = (
                     self.get_binary_from_docker_container(
-                        docker_image=self.clickhouse_binary_path,
+                        docker_image=docker_path,
                         container_binary_path="/usr/bin/clickhouse-odbc-bridge",
                         host_binary_path_suffix="_odbc_bridge",
                     )
                 )
 
             if self.clickhouse_binary_path.endswith(".deb"):
-                with Given(
-                    "unpack deb package", description=f"{self.clickhouse_binary_path}"
-                ):
+                deb_path = self.clickhouse_binary_path
+                with Given("unpack deb package", description=deb_path):
                     self.clickhouse_binary_path = unpack_deb(
-                        deb_binary_path=self.clickhouse_binary_path,
+                        deb_binary_path=deb_path,
                         program_name="clickhouse",
                     )
-                    unpack_deb(
-                        deb_binary_path=self.clickhouse_binary_path,
+                    self.clickhouse_odbc_bridge_binary_path = unpack_deb(
+                        deb_binary_path=deb_path,
                         program_name="clickhouse-odbc-bridge",
                     )
 
@@ -1288,11 +1295,11 @@ class Cluster(object):
 
         Args:
             docker_image: docker image name
-            container_binary_path: path to link the binary in the container
+            container_binary_path: path to the binary in the container
             host_binary_path: path to store the binary on the host
             host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
         """
-
+        assert docker_image.startswith("docker://"), error("not a docker image path")
         docker_image = docker_image.split("docker://", 1)[-1]
         docker_container_name = str(uuid.uuid1())
 
