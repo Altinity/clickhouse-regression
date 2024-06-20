@@ -50,6 +50,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN pip install pytz
 RUN pip install pytest docker-compose docker dicttoxml kazoo PyMySQL pymongo tzlocal protobuf redis pandas parquet-tools flask
 RUN pip install pytest-timeout boto3 minio pyarrow
+RUN pip install clickhouse-driver
 
 ENV DOCKER_CHANNEL stable
 ENV DOCKER_VERSION 20.10.9
