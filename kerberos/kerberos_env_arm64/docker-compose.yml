@@ -3,32 +3,32 @@ version: '2.3'
 services:
   zookeeper1:
     extends:
-      file: ../../helpers/docker/zookeeper-service.yml
+      file: ../../docker-compose/zookeeper-service.yml
       service: zookeeper1
 
   zookeeper2:
     extends:
-      file: ../../helpers/docker/zookeeper-service.yml
+      file: ../../docker-compose/zookeeper-service.yml
       service: zookeeper2
 
   zookeeper3:
     extends:
-      file: ../../helpers/docker/zookeeper-service.yml
+      file: ../../docker-compose/zookeeper-service.yml
       service: zookeeper3
 
   keeper1:
     extends:
-      file: ../../helpers/docker/keeper-service.yml
+      file: ../../docker-compose/keeper-service.yml
       service: keeper1
 
   keeper2:
     extends:
-      file: ../../helpers/docker/keeper-service.yml
+      file: ../../docker-compose/keeper-service.yml
       service: keeper2
 
   keeper3:
     extends:
-      file: ../../helpers/docker/keeper-service.yml
+      file: ../../docker-compose/keeper-service.yml
       service: keeper3
 
   kerberos:
