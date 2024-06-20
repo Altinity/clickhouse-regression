@@ -800,12 +800,12 @@ def delete(self):
     with And("I get the size of the s3 bucket before adding data"):
         size_before = measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with Given("I create a replicated table on each node"):
         table_name = "zero_copy_replication_delete"
         for node in nodes:
             replicated_table(node=node, table_name=table_name)
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with Then("I check that data was added to the s3 bucket"):
@@ -816,7 +816,7 @@ def delete(self):
         nodes[0].query(f"DROP TABLE IF EXISTS {table_name}")
 
     with Then("the size of the s3 bucket should be the same"):
-        check_bucket_size(expected_size=size_before, tolerance=0)
+        check_stable_bucket_size(expected_size=size_after, tolerance=0)
 
     with When("I drop the table on the other node"):
         nodes[1].query(f"DROP TABLE IF EXISTS {table_name} SYNC")
