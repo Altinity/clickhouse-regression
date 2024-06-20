@@ -469,7 +469,7 @@ def mergetree_config(
     config_d_dir="/etc/clickhouse-server/config.d",
     config_file="merge_tree.xml",
     timeout=60,
-    restart=False,
+    restart=True,
     config=None,
     nodes=None,
 ):

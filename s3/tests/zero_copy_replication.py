@@ -78,9 +78,16 @@ def drop_replica(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
-def add_replica(self):
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global("1.0"),
+)
+def add_replica_global_setting(self):
     """
+    Check that ClickHouse replicated tables work correctly when the
+    zero_copy_replication setting is set  as a global merge
+    tree engine setting.
+
     Check that additional replicas of a replicated table can be added:
     - with no changes to the data in the table.
     - without significantly increasing disk usage.
@@ -119,6 +126,61 @@ def add_replica(self):
 
     with And("I check simple queries on the second node"):
         standard_selects(node=nodes[1], table_name=table_name)
+
+    with And("I check the size one more time"):
+        check_stable_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
+
+
+@TestScenario
+@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
+def add_replica_local_setting(self):
+    """
+    Configure zero copy replication per table.
+    Check that additional replicas of a replicated table can be added:
+    - with no changes to the data in the table.
+    - without significantly increasing disk usage.
+    """
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
+
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after()
+
+    with When("I create a replicated table on the first node"):
+        table_name = "zero_copy_replication_add_local"
+        replicated_table(
+            node=nodes[0],
+            table_name=table_name,
+            settings=f"{self.context.zero_copy_replication_setting}=1",
+        )
+
+    with And("I add data to the table"):
+        standard_inserts(node=nodes[0], table_name=table_name)
+
+    with And("I get the size of the s3 bucket"):
+        size_after_inserts = get_bucket_size()
+
+    with And("I create a replicated table on the second node"):
+        replicated_table(
+            node=nodes[1],
+            table_name=table_name,
+            settings=f"{self.context.zero_copy_replication_setting}=1",
+        )
+
+    with Then(
+        """the size of the s3 bucket should be 1 byte more
+                than previously because of the additional replica"""
+    ):
+        check_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
+
+    with And("I check simple queries on the first node"):
+        standard_selects(node=nodes[0], table_name=table_name)
+
+    with And("I check simple queries on the second node"):
+        standard_selects(node=nodes[1], table_name=table_name)
+
+    with And("I check the size one more time"):
+        check_stable_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
 
 
 @TestScenario
