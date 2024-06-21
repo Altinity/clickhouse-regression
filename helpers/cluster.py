@@ -1714,21 +1714,21 @@ class Cluster(object):
                             None, f"set -o pipefail && {self.docker_compose} ps | tee"
                         )
 
-                    with And("executing docker-compose up"):
-                        with By(
-                            "creating a unique builder just in case docker-compose needs to build images"
-                        ):
-                            self.command(
-                                None,
-                                f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
-                                exitcode=0,
-                            )
+                    with And(
+                        "creating a unique builder just in case docker-compose needs to build images"
+                    ):
+                        self.command(
+                            None,
+                            f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
+                            exitcode=0,
+                        )
 
+                    with And("executing docker-compose up"):
                         for attempt in retries(count=max_up_attempts):
                             with attempt:
                                 cmd = self.command(
                                     None,
-                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --build --timeout 600 -d 2>&1 | tee",
+                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
                                     exitcode=0,
                                 )

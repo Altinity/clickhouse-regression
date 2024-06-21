@@ -1,4 +1,4 @@
-version: '2.3'
+version: "2.3"
 
 services:
   zookeeper:
@@ -20,6 +20,7 @@ services:
       - label:disable
 
   zookeeper-alone:
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     extends: zookeeper
     hostname: zookeeper
     environment:
@@ -27,18 +28,21 @@ services:
       ZOO_SERVERS: server.0=localhost:2888:3888;2181
 
   zookeeper1:
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     extends: zookeeper
     hostname: zookeeper1
     environment:
       ZOO_MY_ID: 1
 
   zookeeper2:
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     extends: zookeeper
     hostname: zookeeper2
     environment:
       ZOO_MY_ID: 2
 
   zookeeper3:
+    image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     extends: zookeeper
     hostname: zookeeper3
     environment:
