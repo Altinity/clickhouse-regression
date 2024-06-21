@@ -401,6 +401,7 @@ def aws_s3_regression(
             Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
+            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
             Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
@@ -455,6 +456,7 @@ def gcs_regression(
             Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
+            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
             Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
 
