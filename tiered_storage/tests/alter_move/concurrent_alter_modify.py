@@ -108,7 +108,7 @@ def scenario(self, engine):
                 tasks = []
                 for i in range(5):
                     tasks.append(p.submit(alter_move, (100,)))
-                    tasks.append(p.submit(alter_modify, (100,)))
+                    tasks.append(p.submit(alter_modify, (50,)))
 
                 for task in tasks:
                     task.result(timeout=900)
