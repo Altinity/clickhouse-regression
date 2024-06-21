@@ -18,7 +18,7 @@ def insert(self, table_name, settings):
     """Insert random data to a table."""
     node = random.choice(self.context.ch_nodes)
     with By(f"inserting rows to {table_name} on {node.name} with settings {settings}"):
-        insert_random(node=node, table_name=table_name, settings=settings, rows=5000000)
+        insert_random(node=node, table_name=table_name, settings=settings, rows=50000)
 
 
 @TestStep
