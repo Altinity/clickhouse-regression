@@ -347,12 +347,6 @@ def feature(self, node="clickhouse1"):
 
     privileges_combinations = list(combinations(privileges, 2)) + [["NONE"]]
 
-    privileges = [
-        "SELECT",
-        "INSERT",
-        "NONE",
-    ]
-
     with Pool(7) as executor:
         for (
             definer_source_1_privileges,
