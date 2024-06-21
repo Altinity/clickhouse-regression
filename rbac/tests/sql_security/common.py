@@ -468,3 +468,74 @@ def change_core_settings(
 
     with And("adding xml config file to the server"):
         return add_config(config, restart=restart, modify=modify, user=user, node=node)
+
+
+@TestStep(Given)
+def create_distributed_table(
+    self,
+    nodes=None,
+    table_name=None,
+    dist_table_name=None,
+    row_number=5,
+):
+    """Create distributed table on cluster with 2 shards and only one replica on 2 of the nodes.
+    Insert row_number rows into the table on first and second node."""
+
+    if table_name is None:
+        table_name = "table_" + getuid()
+
+    if dist_table_name is None:
+        dist_table_name = "dist_table_" + getuid()
+
+    if nodes is None:
+        nodes = self.context.nodes
+
+    node_1 = nodes[0]
+    node_2 = nodes[1]
+
+    try:
+        node_1.query(
+            f"""
+            CREATE TABLE {table_name} ON CLUSTER sharded_cluster12
+            (  
+            x UInt64,  
+            column1 String  
+            )  
+            ENGINE = MergeTree  
+            ORDER BY column1
+            """
+        )
+        node_1.query(
+            f"""
+            INSERT INTO {table_name} SELECT number, toString(number) FROM numbers({row_number})
+            """
+        )
+        node_2.query(
+            f"""
+            INSERT INTO {table_name} SELECT number, toString(number) FROM numbers({row_number})
+            """
+        )
+        node_1.query(
+            f"""
+            CREATE TABLE {dist_table_name} (
+                x UInt64,
+                column1 String
+            )
+            ENGINE = Distributed(sharded_cluster12,default,{table_name}, rand())
+            """
+        )
+        yield table_name, dist_table_name
+
+    finally:
+        with Finally("I drop the table if exists"):
+            node_1.query(
+                f"DROP TABLE IF EXISTS {table_name} ON CLUSTER sharded_cluster12 SYNC"
+            )
+            node_1.query(f"DROP TABLE IF EXISTS {dist_table_name}")
+
+
+def get_name(items):
+    try:
+        return [item.__name__ for item in items]
+    except AttributeError:
+        raise AttributeError(f"The object does not have a __name__ attribute.")
