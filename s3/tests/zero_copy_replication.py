@@ -638,7 +638,7 @@ def metadata(self):
 @Examples("count", [[1], [10]])
 def alter(self, count=10):
     """Check for data duplication when repeated alter commands are used."""
-    table_name = "zero_copy_replication_alter_repeat"
+    table_name = f"zero_copy_replication_alter_repeat_{count}"
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
