@@ -97,7 +97,7 @@ def add_replica_global_setting(self):
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
+        mergetree_config(settings=settings, restart=True)
 
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
@@ -647,91 +647,83 @@ def alter(self, count=10):
         )
         node.query(f"INSERT INTO {table_name} VALUES {values}")
 
-    def check_query_pair(node, num, query, expected):
-        with By(f"executing query {num}", description=query):
-            r = node.query(query).output.strip()
-            with Then(f"result should match the expected", description=expected):
-                assert r == expected, error()
+    @TestStep(Then)
+    def check_query(self, node, query, expected):
+        with By(f"executing query", description=query):
+            for attempt in retries(timeout=120, delay=5):
+                with attempt:
+                    with Then(
+                        f"result should match the expected", description=expected
+                    ):
+                        r = node.query(query).output.strip()
+                        assert r == expected, error()
 
     def alter_table(sign):
-        with Then(f"I change all signs to {sign}"):
+        with When(f"all sign values are changed to {sign}"):
             nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1")
 
-        with And("I sync the replicas"):
+        with Then(f"the sign should be {sign} for all nodes"):
             for node in nodes:
-                for attempt in retries(timeout=1200, delay=5):
-                    with attempt:
-                        node.query(f"SYSTEM SYNC REPLICA {table_name}", timeout=600)
+                check_query(
+                    node=node,
+                    query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
+                    expected=f"{sign}",
+                )
 
-        with And("I check that the sign is -1 for the second table"):
-            check_query_pair(
-                node=nodes[1],
-                num=0,
-                query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
-                expected=f"{sign}",
-            )
-
-        with And("I check that the sign is -1 for the first table"):
-            check_query_pair(
-                node=nodes[0],
-                num=0,
-                query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
-                expected=f"{sign}",
-            )
-
-    with Given("I have a pair of clickhouse nodes"):
+    with Given("a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
+    with And("merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings.copy()
         settings["old_parts_lifetime"] = "1"
-        mergetree_config(settings=settings)
+        mergetree_config(settings=settings, restart=True)
 
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with And("a replicated table on each node"):
         for node in nodes:
-            node.restart()
+            # node.restart()
             replicated_table(
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
 
-    with And("I add data to the table"):
+    with When("data is added to the table"):
         with By("first inserting 1MB of data"):
             insert_data_pair(nodes[0], 1)
 
-    with And("I get the size of the s3 bucket"):
+    with And("I get the size of the s3 bucket after insert"):
         size_after_insert = get_bucket_size()
 
-    with Then("I check that the sign is 1 for the second table"):
-        check_query_pair(
+    with Then("I check that the sign is 1 for the second node"):
+        check_query(
             node=nodes[1],
-            num=0,
             query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
             expected="1",
         )
 
     with And("I alter and check the size 10 times"):
-        s = 1
-        for i in range(count):
-            alter_table(s)
+        sign = 1
+        for _ in range(count):
+            sign *= -1
+            with When(f"all sign values are changed to {sign}"):
+                nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1")
 
-            with Then(
-                """I make sure the amount of data in S3 is within
-                        50% of the original amount"""
-            ):
-                start_time = time.time()
-                while True:
-                    current_size = get_bucket_size()
-                    if current_size < size_after_insert * 1.5:
-                        break
-                    if time.time() - start_time < 60:
-                        time.sleep(2)
-                        continue
-                    assert False, "data in S3 has grown by more than 50%"
+            with Then(f"the sign should be {sign} for all nodes"):
+                for node in nodes:
+                    check_query(
+                        node=node,
+                        query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
+                        expected=f"{sign}",
+                    )
 
-            s *= -1
+            with And("the data in S3 should be within 50% of the original amount"):
+                for attempt in retries(timeout=60, delay=5):
+                    with attempt:
+                        current_size = get_bucket_size()
+                        assert current_size < size_after_insert * 1.5, error(
+                            "data in S3 has grown by more than 50%"
+                        )
 
 
 @TestScenario
