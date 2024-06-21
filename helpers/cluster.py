@@ -1602,24 +1602,33 @@ class Cluster(object):
         """
         with self.lock:
             try:
-                container_id = self.node_container_id(node, timeout=1)
+                with By(f"getting docker container id for {node}"):
+                    container_id = self.node_container_id(node, timeout=1)
             except RuntimeError:
                 return
 
-        r = self.command(
-            node=None,
-            command=f"docker inspect {container_id} | jq -M '[.[0].Mounts[] | select(.Source | contains(\"_instances\")) | {{Source, Destination}}]'",
-            exitcode=0,
-        )
-        mounts = json.loads(r.output)
+        with By(f"querying mounted volumes for {node}"):
+            with tempfile.NamedTemporaryFile() as tmp:
+                self.command(
+                    node=None,
+                    command=f"docker inspect {container_id} > {tmp.name}",
+                    exitcode=0,
+                    steps=False,
+                )
+                mounts = json.load(tmp)[0]["Mounts"]
+
         docker_exposed_dirs = [
             m["Destination"] for m in mounts if "_instances" in m["Source"]
         ]
 
         for exposed_dir in docker_exposed_dirs:
-            self.command(
-                node=node, command=f"chmod a+rwX -R {exposed_dir}", no_checks=True
-            )
+            with By(f"changing permissions in {exposed_dir}"):
+                self.command(
+                    node=node,
+                    command=f"chmod a+rwX -R {exposed_dir}",
+                    no_checks=True,
+                    steps=False,
+                )
 
     def temp_path(self):
         """Return temporary folder path."""
