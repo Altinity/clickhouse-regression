@@ -58,7 +58,7 @@ def from_temporary_to_regular(self):
                     f"SELECT * FROM '{destination_table}' WHERE p = 1 ORDER BY i FORMAT TabSeparated"
                 )
 
-                assert destination_data.strip() == source_data.strip(), error()
+                assert destination_data.output == source_data.output, error()
 
 
 @TestScenario
@@ -93,11 +93,11 @@ def from_temporary_to_temporary_table(self):
             with Then(
                 "I check if it is possible to replace partition on the temporary destination table from the temporary source table"
             ):
-                exitcode = 0 if check_clickhouse_version(">=23.11")(self) else 60
+                errorcode = None if check_clickhouse_version(">=23.11")(self) else 60
 
                 client.query(
                     f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};",
-                    exitcode=exitcode,
+                    errorcode=errorcode,
                 )
 
 
@@ -134,11 +134,11 @@ def from_regular_to_temporary(self):
             with Then(
                 "I check if it is possible to replace partition on the regular table from the temporary table"
             ):
-                exitcode = 0 if check_clickhouse_version(">=23.11")(self) else 60
+                errorcode = None if check_clickhouse_version(">=23.11")(self) else 60
 
                 client.query(
                     f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};",
-                    exitcode=exitcode,
+                    errorcode=errorcode,
                 )
 
 
