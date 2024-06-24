@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231215.1221232.
+# document by TestFlows v2.0.240621.1152109.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -3012,7 +3012,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Insert,
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Alter,
     ),
-    content="""
+    content=r"""
 # SRS-015 ClickHouse S3 External Storage
 # Software Requirements Specification
 

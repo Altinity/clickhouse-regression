@@ -8,6 +8,7 @@ import tempfile
 import re
 import json
 import shutil
+from contextlib import contextmanager
 
 from testflows._core.cli.arg.common import description
 
@@ -135,6 +136,28 @@ class QueryRuntimeException(Exception):
     pass
 
 
+class ClientQueryResult:
+    def __init__(self, query_result):
+        self.query_result = query_result
+        self._output = None
+
+    @property
+    def output(self):
+        """Return parsed query output."""
+        if self._output is None:
+            try:
+                if self.query_result:
+                    self._output = [
+                        json.loads(line) for line in self.query_result.splitlines()
+                    ]
+            except json.JSONDecodeError:
+                raise Exception(
+                    f"Failed to decode the query result as JSON: {self.query_result}"
+                )
+
+        return self._output
+
+
 class Node(object):
     """Generic cluster node."""
 
@@ -201,10 +224,13 @@ class Node(object):
     def command(self, *args, **kwargs):
         return self.cluster.command(self.name, *args, **kwargs)
 
-    class QueryHandler:
-        def __init__(self, command_context, prompt=r"\[clickhouse1\] :\) "):
+    class ClientQueryHandler:
+        """Query handler for the clickhouse-client-tty."""
+
+        def __init__(self, command_context, prompt=r"⇒ ", output_prompt="⇐ "):
             self.command_context = command_context
             self.prompt = prompt
+            self.output_prompt = output_prompt
 
         def __enter__(self):
             self.command_context.__enter__()
@@ -219,48 +245,56 @@ class Node(object):
         @staticmethod
         def _parse_error_code(message):
             match = re.search(r"Code:\s*(\d+)", message)
-            if match:
-                return int(match.group(1))
-            else:
-                return 0
 
-        def query(self, query_string, match=None, exitcode=None, message=None):
+            return int(match.group(1))
+
+        def query(
+            self,
+            query_string,
+            match=None,
+            errorcode=None,
+            message=None,
+            ignore_exception=False,
+            raise_on_exception=False,
+        ):
             self.command_context.app.send(query_string)
-            self.command_context.app.expect(query_string, escape=True)
+            self.command_context.app.expect(self.output_prompt, escape=True)
 
             if match is not None:
                 self.command_context.app.expect(match, escape=True)
 
-            self.command_context.app.expect(self.prompt)
+            self.command_context.app.expect(self.prompt, escape=True)
 
             query_result = self.command_context.app.child.before
 
-            raise_exception = True
-
-            if exitcode is not None:
-                with Then(f"exitcode should be {exitcode}", format_name=False):
-                    assert exitcode == self._parse_error_code(
+            if errorcode is not None:
+                with Then(f"exitcode should be {errorcode}", format_name=False):
+                    assert errorcode == self._parse_error_code(
                         str(query_result)
                     ), error()
 
-                raise_exception = False
             if message is not None:
                 with Then(f"message should be {message}", format_name=False):
                     assert message in query_result, error()
 
-                raise_exception = False
+            if not ignore_exception:
+                if message is None or "Exception:" not in message:
+                    if "⇐ Exception" in query_result.strip():
+                        if raise_on_exception:
+                            raise QueryRuntimeException(query_result.strip())
+                        assert False, error(query_result.strip())
 
-            elif raise_exception and not query_result.strip().startswith("Output:"):
-                raise Exception(query_result)
+            return ClientQueryResult(query_result.split(self.prompt, 1)[-1])
 
-            return query_result
-
+    @contextmanager
     def client(self, client="clickhouse-client-tty", name="clickhouse-client-tty"):
-        command_context = self.command(
-            client, asynchronous=True, no_checks=True, name=name
-        )
+        with self.cluster.shell(self.name) as bash:
+            command_context = self.command(
+                client, asynchronous=True, no_checks=True, name=name, bash=bash
+            )
 
-        return self.QueryHandler(command_context)
+            with self.ClientQueryHandler(command_context) as _client:
+                yield _client
 
 
 class ZooKeeperNode(Node):
@@ -1177,13 +1211,13 @@ class Cluster(object):
                     )
                 )
 
-                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
-                    self.specific_clickhouse_binary_path
-                )
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_BINARY"
+                ] = self.specific_clickhouse_binary_path
 
-                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
-                    self.clickhouse_specific_odbc_binary
-                )
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
+                ] = self.clickhouse_specific_odbc_binary
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 binary_source = self.clickhouse_binary_path
@@ -1602,24 +1636,33 @@ class Cluster(object):
         """
         with self.lock:
             try:
-                container_id = self.node_container_id(node, timeout=1)
+                with By(f"getting docker container id for {node}"):
+                    container_id = self.node_container_id(node, timeout=1)
             except RuntimeError:
                 return
 
-        r = self.command(
-            node=None,
-            command=f"docker inspect {container_id} | jq -M '[.[0].Mounts[] | select(.Source | contains(\"_instances\")) | {{Source, Destination}}]'",
-            exitcode=0,
-        )
-        mounts = json.loads(r.output)
+        with By(f"querying mounted volumes for {node}"):
+            with tempfile.NamedTemporaryFile() as tmp:
+                self.command(
+                    node=None,
+                    command=f"docker inspect {container_id} > {tmp.name}",
+                    exitcode=0,
+                    steps=False,
+                )
+                mounts = json.load(tmp)[0]["Mounts"]
+
         docker_exposed_dirs = [
             m["Destination"] for m in mounts if "_instances" in m["Source"]
         ]
 
         for exposed_dir in docker_exposed_dirs:
-            self.command(
-                node=node, command=f"chmod a+rwX -R {exposed_dir}", no_checks=True
-            )
+            with By(f"changing permissions in {exposed_dir}"):
+                self.command(
+                    node=node,
+                    command=f"chmod a+rwX -R {exposed_dir}",
+                    no_checks=True,
+                    steps=False,
+                )
 
     def temp_path(self):
         """Return temporary folder path."""
@@ -1645,15 +1688,14 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
-                    self.clickhouse_binary_path
-                )
-                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
-                    self.clickhouse_odbc_bridge_binary_path
-                    or os.path.join(
-                        os.path.dirname(self.clickhouse_binary_path),
-                        "clickhouse-odbc-bridge",
-                    )
+                self.environ[
+                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
+                ] = self.clickhouse_binary_path
+                self.environ[
+                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
+                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
+                    os.path.dirname(self.clickhouse_binary_path),
+                    "clickhouse-odbc-bridge",
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""
@@ -1705,21 +1747,21 @@ class Cluster(object):
                             None, f"set -o pipefail && {self.docker_compose} ps | tee"
                         )
 
-                    with And("executing docker-compose up"):
-                        with By(
-                            "creating a unique builder just in case docker-compose needs to build images"
-                        ):
-                            self.command(
-                                None,
-                                f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
-                                exitcode=0,
-                            )
+                    with And(
+                        "creating a unique builder just in case docker-compose needs to build images"
+                    ):
+                        self.command(
+                            None,
+                            f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
+                            exitcode=0,
+                        )
 
+                    with And("executing docker-compose up"):
                         for attempt in retries(count=max_up_attempts):
                             with attempt:
                                 cmd = self.command(
                                     None,
-                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --build --timeout 600 -d 2>&1 | tee",
+                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
                                     exitcode=0,
                                 )
