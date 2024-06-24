@@ -1258,7 +1258,7 @@ DROP USER [IF EXISTS] name [,...] [ON CLUSTER cluster_name]
 #### RQ.SRS-006.RBAC.Role
 version: 1.0
 
-[ClikHouse] SHALL support creation and manipulation of **roles**
+[ClickHouse] SHALL support creation and manipulation of **roles**
 to which privileges, settings profile, quotas and row policies can be
 assigned.
 
@@ -3643,14 +3643,10 @@ version: 1.0
 
 [ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
 
-##### `RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews
-**To be continued**
-* cascading views (3)
-    * mv -> mv -> v
-    * v -> nan -> nan
-    * v -> v -> nan
-    * ...
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select
+version: 1.0  
 
+[ClickHouse] SHALL allow to `SELECT` from a cascading materialized view if the user has `SELECT` privileges on all underlying materialized views involved in the cascade.
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer
 version: 1.0  
@@ -3817,25 +3813,51 @@ version: 1.0
 | -------------|---------|-------------------|
 | `DEFINER`    | `alice` | `SELECT`          |
 
-[ClickHouse] SHALL only successfully `SELECT` from a materialized view with multiple source tables if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for **all source tables** and the materialized view's **target** table (if it was specified in the `TO` clause).
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view that was triggered at least once with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for **all source tables** and the materialized view's **target** table (if it was specified in the `TO` clause).
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view that was not triggered with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the first source table in the `FROM` section and **`SELECT`** privilege for the materialized view's **target** table (if it was specified in the `TO` clause).
 
 For example,
 ```sql
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM source_table
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 WHERE column IN (SELECT column FROM table1 WHERE column IN (SELECT column FROM table2 WHERE expression))
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 JOIN table1 USING column
-CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 UNION ALL SELECT * FROM table1 UNION ALL SELECT * FROM table2
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT column FROM table0 JOIN table1 USING column UNION ALL SELECT column FROM table2 WHERE column IN (SELECT column FROM table3 WHERE column IN (SELECT column FROM table4 WHERE expression))
-CREATE MATERIALIZED VIEW view0 ENGINE = Memory AS SELECT column FROM view1 UNION ALL SELECT column FROM view2
 ```
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Insert.SqlSecurityDefiner.Definer
 version: 1.0  
 
 | SQL security | DEFINER | Operation         | 
 | -------------|---------|-------------------|
-| `DEFINER`    | `alice` | `Insert`          |
+| `DEFINER`    | `alice` | `INSERT`          |
 
-[ClickHouse] SHALL only successfully `INSERT` into a materialized view with multiple source tables if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table (if it was specified in the `TO` clause).
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with multiple source tables and with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table (if it was specified in the `TO` clause).
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.MultipleSourceTables.Select.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for **all source tables**.
+
+For example,
+```sql
+CREATE VIEW view AS SELECT * FROM source_table
+CREATE VIEW view AS SELECT * FROM table0 WHERE column IN (SELECT column FROM table1 WHERE column IN (SELECT column FROM table2 WHERE expression))
+CREATE VIEW view AS SELECT * FROM table0 JOIN table1 USING column
+SELECT * FROM view
+```
+##### RQ.SRS-006.RBAC.SQLSecurity.View.MultipleSourceTables.Select.SqlSecurityInvoker
+version: 1.0  
+
+| SQL security | Operation         |
+| -------------|-------------------|
+| `INVOKER`    | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and **`SELECT`** privilege for **all source tables**.
+
 
 #### Live View
 
@@ -4706,7 +4728,7 @@ the user has `ALTER DROP COLUMN` privilege on the table where the mutation was c
 #### RQ.SRS-006.RBAC.ShowTables.Privilege
 version: 1.0
 
-[ClickHouse] SHALL grant **show tables** privilege on a table to a user if that user has recieved any grant,
+[ClickHouse] SHALL grant **show tables** privilege on a table to a user if that user has received any grant,
 including `SHOW TABLES`, on that table, either directly or through a role.
 
 #### RQ.SRS-006.RBAC.ShowTables.RequiredPrivilege
