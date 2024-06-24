@@ -3648,6 +3648,39 @@ version: 1.0
 
 [ClickHouse] SHALL allow to `SELECT` from a cascading materialized view if the user has `SELECT` privileges on all underlying materialized views involved in the cascade.
 
+Example of cascading materialized view with 3 definer users:
+
+
+```mermaid
+graph TD
+    classDef sourceNode fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef mvNode fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef targetNode fill:#f9f,stroke:#333,stroke-width:2px;
+    
+    source_table["Source Table"] --> mv1["Materialized View 1"]
+    mv1 --> target_table1["Target Table 1"]
+    class mvNode mv1;
+    class targetNode target_table1;
+    definer1["Definer 1"] --> mv1;
+    
+    target_table1 --> mv2["Materialized View 2"]
+    mv2 --> target_table2["Target Table 2"]
+    class mvNode mv2;
+    class targetNode target_table2;
+    definer2["Definer 2"] --> mv2;
+    
+    target_table2 --> mv3["Materialized View 3"]
+    mv3 --> target_table3["Target Table 3"]
+    class mvNode mv3;
+    class targetNode target_table3;
+    definer3["Definer 3"] --> mv3;
+```
+
+| Cascade               | Operation                 | Privileges         | 
+| ----------------------|---------------------------|--------------------|
+| MV with definer 1 -> MV with definer 2 -> MV with definer 3 | `INSERT` into source table | - INSERT on source table for user  <br> - SELECT on source table for definer 1 <br> - INSERT on target table 1 for definer 1 <br> - SELECT on target table 1 for definer 2 <br> - INSERT on target table 2 for definer 2 <br> - SELECT on target table 2 for definer 3 <br> - INSERT on target table 3 for definer 3 |
+
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer
 version: 1.0  
 
