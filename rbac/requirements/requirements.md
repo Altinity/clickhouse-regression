@@ -3651,8 +3651,6 @@ version: 1.0
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select
 version: 1.0  
 
-[ClickHouse] SHALL allow to `SELECT` from a cascading materialized view if the user has `SELECT` privileges on all underlying materialized views involved in the cascade.
-
 Example of cascading materialized view with 3 definer users:
 
 
@@ -3680,6 +3678,8 @@ graph TD
     class targetNode target_table3;
     definer3["Definer 3"] --> mv3;
 ```
+
+The following table shows which privileges are required for which user in order to perform the specified operation on the cascading materialized view.
 
 | Cascade               | Operation                 | Privileges         | 
 | ----------------------|---------------------------|--------------------|
