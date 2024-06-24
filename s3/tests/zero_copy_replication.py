@@ -26,7 +26,7 @@ def global_setting(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_global_setting"
         for node in nodes:
             replicated_table(node=node, table_name=table_name)
@@ -56,12 +56,12 @@ def drop_replica(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop"
         for node in nodes:
             replicated_table(node=node, table_name=table_name)
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with And("I stop the second node"):
@@ -102,17 +102,17 @@ def add_replica_global_setting(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    with When("I create a replicated table on the first node"):
+    with And("I have a replicated table on the first node"):
         table_name = "zero_copy_replication_add"
         replicated_table(node=nodes[0], table_name=table_name)
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with And("I get the size of the s3 bucket"):
         size_after_inserts = get_bucket_size()
 
-    with And("I create a replicated table on the second node"):
+    with Given("I have a replicated table on the second node"):
         replicated_table(node=nodes[1], table_name=table_name)
 
     with Then(
@@ -146,7 +146,7 @@ def add_replica_local_setting(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    with When("I create a replicated table on the first node"):
+    with And("I have a replicated table on the first node"):
         table_name = "zero_copy_replication_add_local"
         replicated_table(
             node=nodes[0],
@@ -154,13 +154,13 @@ def add_replica_local_setting(self):
             settings=f"{self.context.zero_copy_replication_setting}=1",
         )
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with And("I get the size of the s3 bucket"):
         size_after_inserts = get_bucket_size()
 
-    with And("I create a replicated table on the second node"):
+    with Given("I have a replicated table on the second node"):
         replicated_table(
             node=nodes[1],
             table_name=table_name,
@@ -203,12 +203,12 @@ def offline_alter_replica(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
         for node in nodes:
             replicated_table(node=node, table_name=table_name)
 
-    with And("I insert 1MB of data"):
+    with When("I insert 1MB of data"):
         insert_data(node=nodes[0], number_of_mb=1, name=table_name)
 
     with And("I stop the other node"):
@@ -255,11 +255,12 @@ def stale_alter_replica(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
         for node in nodes:
             replicated_table(node=node, table_name=table_name, columns=columns)
-    with And("I stop node 2"):
+
+    with When("I stop node 2"):
         nodes[1].stop()
 
     When("I start inserts on node 1", test=repeat_until_stop, parallel=True)(
@@ -358,7 +359,7 @@ def add_remove_one_replica(self):
         parallel=parallel,
     )(node=nodes[2], table_name=table_name)
 
-    And(
+    Given(
         "I replicate the table on the third node",
         test=replicated_table,
         parallel=parallel,
@@ -430,7 +431,7 @@ def add_remove_replica_parallel(self):
     )
     insert_sets = 1
 
-    And(
+    Given(
         "I replicate the table on the second node in parallel",
         test=replicated_table,
         parallel=True,
@@ -461,13 +462,13 @@ def add_remove_replica_parallel(self):
         parallel=True,
     )(node=nodes[0], table_name=table_name)
 
-    And(
+    Given(
         "I replicate the table on the third node in parallel",
         test=replicated_table,
         parallel=True,
     )(node=nodes[2], table_name=table_name)
 
-    And(
+    When(
         "I continue with parallel inserts on the second node",
         test=insert_random,
         parallel=True,
@@ -514,7 +515,7 @@ def add_remove_replica_parallel(self):
     )
     insert_sets += 1
 
-    And(
+    Given(
         "I replicate the table on the first node again in parallel",
         test=replicated_table,
         parallel=True,
@@ -578,10 +579,12 @@ def metadata(self):
         settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
 
-    with When("I create a replicated table on each node"):
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after()
+
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_metadata"
         for node in nodes:
-            node.restart()
             replicated_table(node=node, table_name=table_name)
 
     with And("I add data to the table"):
@@ -658,18 +661,6 @@ def alter(self, count=10):
                         r = node.query(query).output.strip()
                         assert r == expected, error()
 
-    def alter_table(sign):
-        with When(f"all sign values are changed to {sign}"):
-            nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1")
-
-        with Then(f"the sign should be {sign} for all nodes"):
-            for node in nodes:
-                check_query(
-                    node=node,
-                    query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
-                    expected=f"{sign}",
-                )
-
     with Given("a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
@@ -683,7 +674,6 @@ def alter(self, count=10):
 
     with And("a replicated table on each node"):
         for node in nodes:
-            # node.restart()
             replicated_table(
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
@@ -747,13 +737,12 @@ def insert_multiple_replicas(self):
     with And("I get the size of the s3 bucket before adding data"):
         size_before = measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
         for node in nodes:
-            node.restart()
             replicated_table(node=node, table_name=table_name)
 
-    with And("I insert 1MB of data"):
+    with When("I insert 1MB of data"):
         insert_data(node=nodes[0], number_of_mb=1, name=table_name)
 
     with And("I insert of 1MB of data on the other node"):
@@ -792,7 +781,7 @@ def delete(self):
     with And("I get the size of the s3 bucket before adding data"):
         size_before = measure_buckets_before_and_after()
 
-    with Given("I create a replicated table on each node"):
+    with Given("I have a replicated table on each node"):
         table_name = "zero_copy_replication_delete"
         for node in nodes:
             replicated_table(node=node, table_name=table_name)
@@ -836,12 +825,12 @@ def delete_all(self):
     with And("I get the size of the s3 bucket before adding data"):
         size_before = measure_buckets_before_and_after()
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_delete_all"
         for node in nodes:
             replicated_table(node=node, table_name=table_name)
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with Then("A nonzero amount of data should be added to S3"):
@@ -1085,7 +1074,7 @@ def ttl_delete(self):
 
 @TestOutline(Scenario)
 @Examples(
-    "source destination", [["replicated", "zero-copy"], ["zero-copy", "replicated"]]
+    "source destination", [["replicated", "zero_copy"], ["zero_copy", "replicated"]]
 )
 def migration(self, source, destination):
     """Test migrating data between tables with and without zero copy replication."""
@@ -1093,15 +1082,18 @@ def migration(self, source, destination):
     node = self.context.node
     columns = "d UInt64"
 
-    with Given("I have a replicated table"):
-        replicated_table_name = "migration_replicated"
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after()
+
+    with And("I have a replicated table"):
+        replicated_table_name = "migration_replicated_" + getuid()[:8]
         for node in self.context.ch_nodes:
             replicated_table(
                 node=node, table_name=replicated_table_name, columns=columns
             )
 
     with And("I have a zero-copy table"):
-        zero_copy_table_name = "migration_zero_copy"
+        zero_copy_table_name = "migration_zero_copy_" + getuid()[:8]
         for node in self.context.ch_nodes:
             replicated_table(
                 node=node,
@@ -1112,10 +1104,10 @@ def migration(self, source, destination):
 
     table_names = {
         "replicated": replicated_table_name,
-        "zero-copy": zero_copy_table_name,
+        "zero_copy": zero_copy_table_name,
     }
 
-    with And(f"I select {source} as the source table"):
+    with When(f"I select {source} as the source table"):
         source_table_name = table_names[source]
 
     with And(f"I select {destination} as the destination table"):
@@ -1154,14 +1146,13 @@ def bad_detached_part(self):
         }
         mergetree_config(settings=settings)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         for node in nodes:
-            node.restart()
             replicated_table(
                 node=node, table_name=table_name, settings="min_bytes_for_wide_part=0"
             )
 
-    with And("I insert data on the second node"):
+    with When("I insert data on the second node"):
         nodes[1].query(f"INSERT INTO {table_name} VALUES (123)")
 
     with And("I sync the first node"):
@@ -1217,13 +1208,13 @@ def performance_insert(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "no_zero_copy_replication_insert"
         for node in nodes:
             node.restart()
             replicated_table(node=node, table_name=table_name)
 
-    with And("I add data to the table and save the time taken"):
+    with When("I add data to the table and save the time taken"):
         no_zero_copy_time = insert_data_time(nodes[0], 20, table_name)
         metric("no_zero_copy", units="seconds", value=str(no_zero_copy_time))
 
@@ -1231,13 +1222,13 @@ def performance_insert(self):
         settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "allow_zero_copy_replication_insert"
         for node in nodes:
             node.restart()
             replicated_table(node=node, table_name=table_name)
 
-    with And("I add data to the table and save the time taken"):
+    with When("I add data to the table and save the time taken"):
         allow_zero_copy_time = insert_data_time(nodes[0], 20, table_name)
         metric("with_zero_copy", units="seconds", value=str(allow_zero_copy_time))
 
@@ -1263,13 +1254,13 @@ def performance_select(self):
         nodes = self.context.ch_nodes[:2]
 
     try:
-        with When("I create a replicated table on each node"):
+        with Given("I have a replicated table on each node"):
             table_name = "no_zero_copy_replication_select"
             for node in nodes:
                 node.restart()
                 replicated_table(node=node, table_name=table_name)
 
-        with And("I add 20 Mb of data to the table"):
+        with When("I add 20 Mb of data to the table"):
             insert_data(node=nodes[0], name=table_name, number_of_mb=20)
 
         with Then("I sync the replicas"):
@@ -1298,13 +1289,13 @@ def performance_select(self):
         mergetree_config(settings=settings)
 
     try:
-        with When("I create a replicated table on each node"):
+        with Given("I have a replicated table on each node"):
             table_name = "allow_zero_copy_replication_select"
             for node in nodes:
                 node.restart()
                 replicated_table(node=node, table_name=table_name)
 
-        with And("I add 20 Mb of data to the table"):
+        with When("I add 20 Mb of data to the table"):
             insert_data(node=nodes[0], name=table_name, number_of_mb=20)
 
         with Then("I sync the replicas"):
@@ -1360,7 +1351,7 @@ def performance_alter(self):
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "no_zero_copy_replication_alter"
         for node in nodes:
             node.restart()
@@ -1368,7 +1359,7 @@ def performance_alter(self):
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
 
-    with And("I add 20 Mb of data to the table"):
+    with When("I add 20 Mb of data to the table"):
         insert_data_pair(nodes[0], 20, table_name)
 
     with Then("I sync the replicas"):
@@ -1389,7 +1380,7 @@ def performance_alter(self):
         settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "allow_zero_copy_replication_alter"
         for node in nodes:
             node.restart()
@@ -1397,7 +1388,7 @@ def performance_alter(self):
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
 
-    with And("I add 20 Mb of data to the table"):
+    with When("I add 20 Mb of data to the table"):
         insert_data_pair(nodes[0], 20, table_name)
 
     with Then("I sync the replicas"):
