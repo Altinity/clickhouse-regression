@@ -1,3 +1,1 @@
-FROM altinityinfra/clickhouse-regression-multiarch:1.0
-
-RUN pip install clickhouse-driver
+FROM altinityinfra/clickhouse-regression-multiarch:2.0
