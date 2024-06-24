@@ -1083,7 +1083,7 @@ def migration(self, source, destination):
     columns = "d UInt64"
 
     with Given("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(delay=60)
 
     with And("I have a replicated table"):
         replicated_table_name = "migration_replicated_" + getuid()[:8]
