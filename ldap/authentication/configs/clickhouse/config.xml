@@ -226,7 +226,7 @@
 
          See https://clickhouse.com/docs/en/table_engines/replication/
       -->
-    <zookeeper incl="zookeeper" optional="true" />
+    <!-- <zookeeper incl="zookeeper" optional="true" /> -->
 
     <!-- Substitutions for parameters of replicated tables.
           Optional. If you don't use replicated tables, you could omit that.
