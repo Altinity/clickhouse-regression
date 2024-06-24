@@ -18,6 +18,11 @@ def clickhouse_client_tty():
         try:
             result = client.execute(query)
             print("⇐ ", end="")
+
+            if not result:
+                print("null")
+                continue
+
             for row in result:
                 json.dump(row, sys.stdout, sort_keys=True)
                 print("")
