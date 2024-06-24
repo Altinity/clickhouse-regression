@@ -7,7 +7,7 @@ append_path(sys.path, "../..")
 
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, experimental_analyzer
-from s3.regression import argparser, CaptureClusterArgs
+from s3.regression import argparser as argparser_base, CaptureClusterArgs
 from s3.tests.common import start_minio
 
 xfails = {
@@ -17,6 +17,17 @@ xfails = {
 }
 
 ffails = {}
+
+
+def argparser(parser):
+    """Add --unsafe flag to the parser."""
+    argparser_base(parser)
+
+    parser.add_argument(
+        "--unsafe",
+        action="store_true",
+        help="Disable workarounds for known issues.",
+    )
 
 
 @TestModule
@@ -289,6 +300,7 @@ def regression(
     stress,
     allow_vfs,
     with_analyzer=False,
+    unsafe=False,
 ):
     """Disk Object Storage VFS regression."""
 
@@ -296,6 +308,7 @@ def regression(
 
     self.context.stress = stress
     self.context.allow_vfs = allow_vfs
+    self.context.unsafe = unsafe
 
     if storages is None:
         storages = ["minio"]

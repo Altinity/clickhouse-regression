@@ -205,7 +205,7 @@ def alter_combinations(
             )
             table_settings = (
                 "min_bytes_for_wide_part=0"
-                if self.context.workarounds["wide_parts_only"]
+                if self.context.workarounds.get("wide_parts_only")
                 else None
             )
 
@@ -584,15 +584,17 @@ def feature(self):
 
     # Workarounds
     self.context.workarounds = {}
-    # https://github.com/ClickHouse/ClickHouse/issues/62459
-    self.context.workarounds["disallow_move_partition_to_self"] = True
 
-    # https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
-    self.context.workarounds["wide_parts_only"] = True
+    if not self.context.unsafe:
+        # https://github.com/ClickHouse/ClickHouse/issues/62459
+        self.context.workarounds["disallow_move_partition_to_self"] = True
 
-    # SELECT count() fails sporadically when column and part manipulation are combined
-    # Use SELECT count(key) instead when we actually need to know the row count
-    self.context.workarounds["use_key_column_for_count"] = True
+        # https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
+        self.context.workarounds["wide_parts_only"] = True
+
+        # SELECT count() fails sporadically when column and part manipulation are combined
+        # Use SELECT count(key) instead when we actually need to know the row count
+        self.context.workarounds["use_key_column_for_count"] = True
 
     with Given("I have S3 disks configured"):
         disk_config()

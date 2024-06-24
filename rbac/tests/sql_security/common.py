@@ -131,9 +131,21 @@ def create_user_on_cluster(self, cluster, node=None, user_name=None):
 
 
 @TestStep(Given)
-def grant_privilege(self, node, privilege, object, user):
+def grant_privilege(self, privilege, object, user, node=None):
     """Grant privilege on table/view/database to user."""
+    if node is None:
+        node = self.context.node
+
     node.query(f"GRANT {privilege} ON {object} TO {user}")
+
+
+@TestStep(Given)
+def revoke_privilege(self, privilege, object, user, node=None):
+    """Revoke privilege on table/view/database from user."""
+    if node is None:
+        node = self.context.node
+
+    node.query(f"REVOKE {privilege} ON {object} FROM {user}")
 
 
 @TestStep(Given)
@@ -258,7 +270,7 @@ def create_materialized_view_with_join(
     engine=None,
     populate=False,
 ):
-    """Create materialized view with join."""
+    """Create materialized view with join clause."""
 
     if node is None:
         node = self.context.node
@@ -314,13 +326,101 @@ def create_materialized_view_with_join(
                     FROM {source_table_name_1} 
                     INNER JOIN {source_table_name_3} 
                     ON {source_table_name_1}.x = {source_table_name_3}.x
-                ) 
+                ) a
             {join_option}
                 (
                     SELECT y 
                     FROM {source_table_name_2} 
                     WHERE x > 3
-                ) 
+                ) b
+            """
+    else:
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} {join_option} {source_table_name_2} 
+            ON {source_table_name_1}.x == {source_table_name_2}.x
+            """
+
+    try:
+        if settings is not None:
+            node.query(query, settings=settings, exitcode=exitcode, message=message)
+        else:
+            node.query(query, exitcode=exitcode, message=message)
+        yield view_name
+
+    finally:
+        with Finally("I drop the materialized view if exists"):
+            node.query(f"DROP TABLE IF EXISTS {view_name}")
+
+
+@TestStep(Given)
+def create_normal_view_with_join(
+    self,
+    source_table_name_1,
+    source_table_name_2,
+    source_table_name_3,
+    join_option="INNER JOIN",
+    node=None,
+    view_name=None,
+    definer=None,
+    sql_security=None,
+    if_not_exists=False,
+    cluster=None,
+    settings=None,
+    exitcode=None,
+    message=None,
+):
+    """Create normal view with join clause."""
+
+    if node is None:
+        node = self.context.node
+
+    if view_name is None:
+        view_name = "view_" + getuid()
+
+    query = f"CREATE VIEW "
+
+    if if_not_exists:
+        query += "IF NOT EXISTS "
+
+    query += f"{view_name} "
+
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} "
+
+    if definer is not None:
+        query += f"DEFINER = {definer} "
+
+    if sql_security is not None:
+        query += f"SQL SECURITY {sql_security} "
+
+    if join_option == "CROSS JOIN":
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} CROSS JOIN {source_table_name_2}
+            """
+    elif "ASOF" in join_option:
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} {join_option} {source_table_name_2} 
+            ON {source_table_name_1}.x == {source_table_name_2}.x AND {source_table_name_2}.x <= {source_table_name_1}.x
+            """
+    elif join_option == "PASTE JOIN":
+        query += f"""
+            AS SELECT x,y
+            FROM
+                (
+                    SELECT {source_table_name_1}.x as x
+                    FROM {source_table_name_1} 
+                    INNER JOIN {source_table_name_3} 
+                    ON {source_table_name_1}.x = {source_table_name_3}.x
+                ) a
+            {join_option}
+                (
+                    SELECT y 
+                    FROM {source_table_name_2} 
+                    WHERE x > 3
+                ) b
             """
     else:
         query += f"""
@@ -456,3 +556,74 @@ def change_core_settings(
 
     with And("adding xml config file to the server"):
         return add_config(config, restart=restart, modify=modify, user=user, node=node)
+
+
+@TestStep(Given)
+def create_distributed_table(
+    self,
+    nodes=None,
+    table_name=None,
+    dist_table_name=None,
+    row_number=5,
+):
+    """Create distributed table on cluster with 2 shards and only one replica on 2 of the nodes.
+    Insert row_number rows into the table on first and second node."""
+
+    if table_name is None:
+        table_name = "table_" + getuid()
+
+    if dist_table_name is None:
+        dist_table_name = "dist_table_" + getuid()
+
+    if nodes is None:
+        nodes = self.context.nodes
+
+    node_1 = nodes[0]
+    node_2 = nodes[1]
+
+    try:
+        node_1.query(
+            f"""
+            CREATE TABLE {table_name} ON CLUSTER sharded_cluster12
+            (  
+            x UInt64,  
+            column1 String  
+            )  
+            ENGINE = MergeTree  
+            ORDER BY column1
+            """
+        )
+        node_1.query(
+            f"""
+            INSERT INTO {table_name} SELECT number, toString(number) FROM numbers({row_number})
+            """
+        )
+        node_2.query(
+            f"""
+            INSERT INTO {table_name} SELECT number, toString(number) FROM numbers({row_number})
+            """
+        )
+        node_1.query(
+            f"""
+            CREATE TABLE {dist_table_name} (
+                x UInt64,
+                column1 String
+            )
+            ENGINE = Distributed(sharded_cluster12,default,{table_name}, rand())
+            """
+        )
+        yield table_name, dist_table_name
+
+    finally:
+        with Finally("I drop the table if exists"):
+            node_1.query(
+                f"DROP TABLE IF EXISTS {table_name} ON CLUSTER sharded_cluster12 SYNC"
+            )
+            node_1.query(f"DROP TABLE IF EXISTS {dist_table_name}")
+
+
+def get_name(items):
+    try:
+        return [item.__name__ for item in items]
+    except AttributeError:
+        raise AttributeError(f"The object does not have a __name__ attribute.")

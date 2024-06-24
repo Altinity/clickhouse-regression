@@ -132,7 +132,7 @@ volumes:
 services:
   minio1:
     extends:
-      file: ../../helpers/docker/minio-service.yml
+      file: ../../docker-compose/minio-service.yml
       service: minio1
     depends_on:
       - proxy1
@@ -164,7 +164,7 @@ services:
 
   minio-client:
     extends:
-      file: ../../helpers/docker/minio-client.yml
+      file: ../../docker-compose/minio-client.yml
       service: minio-client
     depends_on:
       minio1:
@@ -172,32 +172,32 @@ services:
 
   zookeeper1:
     extends:
-      file: ../../helpers/docker/zookeeper-service.yml
+      file: ../../docker-compose/zookeeper-service.yml
       service: zookeeper1
 
   zookeeper2:
     extends:
-      file: ../../helpers/docker/zookeeper-service.yml
+      file: ../../docker-compose/zookeeper-service.yml
       service: zookeeper2
 
   zookeeper3:
     extends:
-      file: ../../helpers/docker/zookeeper-service.yml
+      file: ../../docker-compose/zookeeper-service.yml
       service: zookeeper3
 
   keeper1:
     extends:
-      file: ../../helpers/docker/keeper-service.yml
+      file: ../../docker-compose/keeper-service.yml
       service: keeper1
 
   keeper2:
     extends:
-      file: ../../helpers/docker/keeper-service.yml
+      file: ../../docker-compose/keeper-service.yml
       service: keeper2
 
   keeper3:
     extends:
-      file: ../../helpers/docker/keeper-service.yml
+      file: ../../docker-compose/keeper-service.yml
       service: keeper3
 
   clickhouse1:
@@ -259,7 +259,7 @@ services:
 
   aws:
     extends:
-      file: ../../helpers/docker/aws-client.yml
+      file: ../../docker-compose/aws-client.yml
       service: aws
 
   # dummy service which does nothing, but allows to postpone

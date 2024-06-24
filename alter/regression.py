@@ -25,7 +25,7 @@ def argparser(parser):
         "tests which is set by --clickhouse-binary-path variable, this argument fetches additional clickhouse "
         "binary and stores it inside a container along the main version",
         metavar="path",
-        default="altinity/clickhouse-server:23.3.13.7.altinitytest",
+        default="docker://altinity/clickhouse-server:23.3.13.7.altinitytest",
     )
 
 

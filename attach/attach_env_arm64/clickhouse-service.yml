@@ -3,7 +3,7 @@ version: '2.3'
 services:
   clickhouse:
     extends:
-      file: ../../helpers/docker/clickhouse-service.yml
+      file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/instant_moves.xml:/etc/clickhouse-server/config.d/instant_moves.xml"

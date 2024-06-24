@@ -1,3 +1,15 @@
+## Scheduled Regression Runs
+
+Results for **the latest** scheduled workflow runs.
+
+| ClickHouse Version | Scheduled Regression Status |
+| ------------ | - |
+| **`latest`** | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
+| **`24.4`** | [![Scheduled ClickHouse 24.4 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-4.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-4.yml) |
+| **`24.3`** | [![Scheduled ClickHouse 24.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml) |
+| **`23.8.11.29.altinitystable`** | [![Scheduled Altinity 23.8 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/runs/9574052708) |
+| **`23.3.19.33.altinitystable`** | [![Scheduled Altinity 23.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml) |
+
 ## ClickHouse Tests in [TestFlows]
 
 This directory contains integration tests written using [TestFlows] 
@@ -38,9 +50,8 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 ## [Supported Environment](#table-of-contents)
 
-* [Ubuntu] 22.04
-* [Python 3] >= 3.8
-* [TestFlows] >= 1.9.51
+* [Ubuntu] 22.04 / 24.04
+* [Python 3] >= 3.10.12
 * [Docker](https://docs.docker.com/engine/install/ubuntu/) >= Docker version 25.0.3, build 4debf41
 * [Docker Compose] >= v2.23.1 (non-Python version)
 

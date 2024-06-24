@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.231215.1221232.
+# document by TestFlows v2.0.240621.1152109.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -5278,7 +5278,7 @@ SRS024_ClickHouse_Keeper = Specification(
         RQ_SRS_024_ClickHouse_Keeper_Disaster_Recovery_DynamicRecovery,
         RQ_SRS_024_ClickHouse_Keeper_Disaster_Recovery_ManualRecovery,
     ),
-    content="""
+    content=r"""
 # SRS024 ClickHouse Keeper
 # Software Requirements Specification
 

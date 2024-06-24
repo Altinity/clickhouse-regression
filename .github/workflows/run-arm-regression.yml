@@ -1,4 +1,4 @@
-name: Run CI/CD ARM regression tests
+name: Run CI/CD on ARM
 run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite) }}
 
 on:
@@ -560,7 +560,7 @@ jobs:
 
   clickhouse_keeper_ssl:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: clickhouse_keeper
       STORAGE: /ssl

@@ -70,7 +70,6 @@ def daemon(self, node=None):
 
         with When("I start `clickhouse-keeper` cluster with --daemon option."):
             with By("starting keeper process"):
-                # pause()
                 node.command(
                     "clickhouse keeper --config /etc/clickhouse-server/config.xml"
                     f" --pidfile={pidfilepath} --daemon",
