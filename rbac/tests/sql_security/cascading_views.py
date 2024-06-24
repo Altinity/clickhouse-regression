@@ -1442,15 +1442,6 @@ def check_cascade_mv_definer_mv_definer_mv_definer(self):
                 .replace(" ", "")
                 .replace("'", "")
             )
-            # test_name = f"{user_source_privileges}_{definer_one_source_privileges}_{definer_one_target_one_privileges}_{definer_two_target_one_privileges}_{definer_two_target_two_privileges}_{definer_three_target_two_privileges}_{definer_three_target_three_privileges}"
-            # test_name = (
-            #     test_name.replace("(", "_")
-            #     .replace(")", "_")
-            #     .replace(" ", "")
-            #     .replace("'", "")
-            #     .replace(",", "")
-            #     .replace("_", "")
-            # )
             Scenario(
                 test_name,
                 description=f"""
