@@ -3,7 +3,7 @@ version: '2.3'
 services:
   clickhouse-different-versions:
     extends:
-      file: ../../helpers/docker/clickhouse-service.yml
+      file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"

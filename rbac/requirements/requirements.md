@@ -426,7 +426,7 @@
             * 5.18.5.3 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues](#rqsrs-006rbacsqlsecuritymaterializedviewdefaultvalues)
             * 5.18.5.4 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewdefinernotspecified)
             * 5.18.5.5 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.SqlSecurityNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewsqlsecuritynotspecified)
-            * 5.18.5.6 [`RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews](#rqsrs-006rbacsqlsecuritymaterializedviewcascadingviews)
+            * 5.18.5.6 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select](#rqsrs-006rbacsqlsecuritymaterializedviewcascadingviewsselect)
             * 5.18.5.7 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefiner)
             * 5.18.5.8 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefinernotspecified)
             * 5.18.5.9 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefiner)
@@ -443,12 +443,17 @@
             * 5.18.5.20 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNotSpecified.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynotspecifieddefinernotspecified)
             * 5.18.5.21 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefiner)
             * 5.18.5.22 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Insert.SqlSecurityNone.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewinsertsqlsecuritynonedefinernotspecified)
-        * 5.18.6 [Live View](#live-view)
-            * 5.18.6.1 [RQ.SRS-006.RBAC.LiveView](#rqsrs-006rbacliveview)
-            * 5.18.6.2 [RQ.SRS-006.RBAC.LiveView.Create](#rqsrs-006rbacliveviewcreate)
-            * 5.18.6.3 [RQ.SRS-006.RBAC.LiveView.Select](#rqsrs-006rbacliveviewselect)
-            * 5.18.6.4 [RQ.SRS-006.RBAC.LiveView.Drop](#rqsrs-006rbacliveviewdrop)
-            * 5.18.6.5 [RQ.SRS-006.RBAC.LiveView.Refresh](#rqsrs-006rbacliveviewrefresh)
+        * 5.18.6 [Materialized View and Joins](#materialized-view-and-joins)
+            * 5.18.6.1 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewmultiplesourcetablesselectsqlsecuritydefinerdefiner)
+            * 5.18.6.2 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Insert.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewmultiplesourcetablesinsertsqlsecuritydefinerdefiner)
+            * 5.18.6.3 [RQ.SRS-006.RBAC.SQLSecurity.View.MultipleSourceTables.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecurityviewmultiplesourcetablesselectsqlsecuritydefinerdefiner)
+            * 5.18.6.4 [RQ.SRS-006.RBAC.SQLSecurity.View.MultipleSourceTables.Select.SqlSecurityInvoker](#rqsrs-006rbacsqlsecurityviewmultiplesourcetablesselectsqlsecurityinvoker)
+        * 5.18.7 [Live View](#live-view)
+            * 5.18.7.1 [RQ.SRS-006.RBAC.LiveView](#rqsrs-006rbacliveview)
+            * 5.18.7.2 [RQ.SRS-006.RBAC.LiveView.Create](#rqsrs-006rbacliveviewcreate)
+            * 5.18.7.3 [RQ.SRS-006.RBAC.LiveView.Select](#rqsrs-006rbacliveviewselect)
+            * 5.18.7.4 [RQ.SRS-006.RBAC.LiveView.Drop](#rqsrs-006rbacliveviewdrop)
+            * 5.18.7.5 [RQ.SRS-006.RBAC.LiveView.Refresh](#rqsrs-006rbacliveviewrefresh)
     * 5.19 [Select](#select)
         * 5.19.1 [RQ.SRS-006.RBAC.Select](#rqsrs-006rbacselect)
         * 5.19.2 [RQ.SRS-006.RBAC.Select.Column](#rqsrs-006rbacselectcolumn)
@@ -1258,7 +1263,7 @@ DROP USER [IF EXISTS] name [,...] [ON CLUSTER cluster_name]
 #### RQ.SRS-006.RBAC.Role
 version: 1.0
 
-[ClikHouse] SHALL support creation and manipulation of **roles**
+[ClickHouse] SHALL support creation and manipulation of **roles**
 to which privileges, settings profile, quotas and row policies can be
 assigned.
 
@@ -3643,13 +3648,66 @@ version: 1.0
 
 [ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
 
-##### `RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews
-**To be continued**
-* cascading views (3)
-    * mv -> mv -> v
-    * v -> nan -> nan
-    * v -> v -> nan
-    * ...
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select
+version: 1.0  
+
+Example of cascading materialized view with 3 definer users:
+
+
+```mermaid
+graph TD
+    classDef sourceNode fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef mvNode fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef targetNode fill:#f9f,stroke:#333,stroke-width:2px;
+    
+    source_table["Source Table"] --> mv1["Materialized View 1"]
+    mv1 --> target_table1["Target Table 1"]
+    class mvNode mv1;
+    class targetNode target_table1;
+    definer1["Definer 1"] --> mv1;
+    
+    target_table1 --> mv2["Materialized View 2"]
+    mv2 --> target_table2["Target Table 2"]
+    class mvNode mv2;
+    class targetNode target_table2;
+    definer2["Definer 2"] --> mv2;
+    
+    target_table2 --> mv3["Materialized View 3"]
+    mv3 --> target_table3["Target Table 3"]
+    class mvNode mv3;
+    class targetNode target_table3;
+    definer3["Definer 3"] --> mv3;
+```
+
+The following table shows which privileges are required for which user in order to perform the specified operation on the cascading materialized view.
+
+| Cascade               | Operation                 | Privileges         | 
+| ----------------------|---------------------------|--------------------|
+| MV 1 with definer 1 -> <br> MV 2 with definer 2 -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user  <br> - SELECT on source table for definer 1 <br> - INSERT on target table 1 for definer 1 <br> - SELECT on target table 1 for definer 2 <br> - INSERT on target table 2 for definer 2 <br> - SELECT on target table 2 for definer 3 <br> - INSERT on target table 3 for definer 3 |
+| MV 1 with definer 1 -> <br> MV 2 with definer 2 -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target table 2 for definer 3 <br> - SELECT on target 3 for definer 3 |
+| MV 1 with definer 1 -> <br> MV 2 with definer 2 -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br>  - INSERT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for definer 2 <br> - INSERT on target 2 for definer 2 <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target table 2 for definer 3 <br> - SELECT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br> - INSERT on target 3 for definer 3 |
+| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for definer 1 <br> - SELECT on target 1 for definer 1 <br> - INSERT on target 1 for definer 1 <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |
+| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for definer 3 <br> - SELECT on target 3 for definer 3 |
+| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br> - INSERT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for user <br> - INSERT on target 1 for user <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for definer 3 <br> - SELECT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br> - INSERT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for definer 2 <br> - SELECT on target 2 for definer 2 <br> - INSERT on target 2 for definer 2 | 
+| MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for user |
+| MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `INSERT` into view 3 | - INSERT on view 3 for user |
+| MV 1 with definer 1 -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for definer 1 <br> - INSERT on target 1 for definer 1 <br> - SELECT on target 1 for definer 2 <br> - SELECT on target 2 for definer 2 <br> - INSERT on target 2 for definer 2 | 
+| MV 1 with definer 1 -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for user |
+| MV 1 with definer 1 -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `INSERT` into view 3 | - INSERT on view 3 for user |
+| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 without SQL security specified | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for definer 1 <br> - INSERT on target 1 for definer 1 <br> - SELECT on target 1 for definer 1 <br> - SELECT on target 2 for definer 1 |
+| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 without SQL security specified | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for user |
+| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 without SQL security specified | `INSERT` into view 3 | - INSERT on view 3 for user |
+| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 without SQL security specified | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for user <br> - SELECT on target 2 for user |
+| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 without SQL security specified | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for user |
+| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 without SQL security specified | `INSERT` into view 3 | - INSERT on view 3 for user |
+
 
 
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer
@@ -3817,25 +3875,51 @@ version: 1.0
 | -------------|---------|-------------------|
 | `DEFINER`    | `alice` | `SELECT`          |
 
-[ClickHouse] SHALL only successfully `SELECT` from a materialized view with multiple source tables if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for **all source tables** and the materialized view's **target** table (if it was specified in the `TO` clause).
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view that was triggered at least once with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for **all source tables** and the materialized view's **target** table (if it was specified in the `TO` clause).
+[ClickHouse] SHALL only successfully `SELECT` from a materialized view that was not triggered with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for the first source table in the `FROM` section and **`SELECT`** privilege for the materialized view's **target** table (if it was specified in the `TO` clause).
 
 For example,
 ```sql
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM source_table
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 WHERE column IN (SELECT column FROM table1 WHERE column IN (SELECT column FROM table2 WHERE expression))
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 JOIN table1 USING column
-CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT * FROM table0 UNION ALL SELECT * FROM table1 UNION ALL SELECT * FROM table2
 CREATE MATERIALIZED VIEW view ENGINE = Memory AS SELECT column FROM table0 JOIN table1 USING column UNION ALL SELECT column FROM table2 WHERE column IN (SELECT column FROM table3 WHERE column IN (SELECT column FROM table4 WHERE expression))
-CREATE MATERIALIZED VIEW view0 ENGINE = Memory AS SELECT column FROM view1 UNION ALL SELECT column FROM view2
 ```
+
 ##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.MultipleSourceTables.Insert.SqlSecurityDefiner.Definer
 version: 1.0  
 
 | SQL security | DEFINER | Operation         | 
 | -------------|---------|-------------------|
-| `DEFINER`    | `alice` | `Insert`          |
+| `DEFINER`    | `alice` | `INSERT`          |
 
-[ClickHouse] SHALL only successfully `INSERT` into a materialized view with multiple source tables if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table (if it was specified in the `TO` clause).
+[ClickHouse] SHALL only successfully `INSERT` into a materialized view with multiple source tables and with described SQL security options if and only if the user has `INSERT` privilege for the view and definer user (alice) has **`INSERT`** privilege for the materialized view's **target** table (if it was specified in the `TO` clause).
+
+##### RQ.SRS-006.RBAC.SQLSecurity.View.MultipleSourceTables.Select.SqlSecurityDefiner.Definer
+version: 1.0  
+
+| SQL security | DEFINER | Operation         | 
+| -------------|---------|-------------------|
+| `DEFINER`    | `alice` | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and definer user (alice) has **`SELECT`** privilege for **all source tables**.
+
+For example,
+```sql
+CREATE VIEW view AS SELECT * FROM source_table
+CREATE VIEW view AS SELECT * FROM table0 WHERE column IN (SELECT column FROM table1 WHERE column IN (SELECT column FROM table2 WHERE expression))
+CREATE VIEW view AS SELECT * FROM table0 JOIN table1 USING column
+SELECT * FROM view
+```
+##### RQ.SRS-006.RBAC.SQLSecurity.View.MultipleSourceTables.Select.SqlSecurityInvoker
+version: 1.0  
+
+| SQL security | Operation         |
+| -------------|-------------------|
+| `INVOKER`    | `SELECT`          |
+
+[ClickHouse] SHALL only successfully `SELECT` from a normal view with multiple source tables and with described SQL security options if and only if the user has `SELECT` privilege for the view and **`SELECT`** privilege for **all source tables**.
+
 
 #### Live View
 
@@ -4706,7 +4790,7 @@ the user has `ALTER DROP COLUMN` privilege on the table where the mutation was c
 #### RQ.SRS-006.RBAC.ShowTables.Privilege
 version: 1.0
 
-[ClickHouse] SHALL grant **show tables** privilege on a table to a user if that user has recieved any grant,
+[ClickHouse] SHALL grant **show tables** privilege on a table to a user if that user has received any grant,
 including `SHOW TABLES`, on that table, either directly or through a role.
 
 #### RQ.SRS-006.RBAC.ShowTables.RequiredPrivilege

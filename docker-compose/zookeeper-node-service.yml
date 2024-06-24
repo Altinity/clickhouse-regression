@@ -1,12 +1,14 @@
-version: '2.3'
+version: "2.3"
 
 services:
   zookeeper:
+    image: clickhouse-regression-zookeeper-node:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
+    pull_policy: never
     build:
       context: .
       dockerfile: Dockerfile.zookeepernode
       args:
-        ZOOKEEPER_VERSION: $CLICKHOUSE_TESTS_ZOOKEEPER_VERSION
+        ZOOKEEPER_VERSION: ${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     expose:
       - "2181"
     init: true

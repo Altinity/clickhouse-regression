@@ -6746,10 +6746,6 @@ _aggregate_functions_argMax_datatypes_String_LowCardinality_Nullable_Int128___ =
 {"argMax(string, lowcardinality_nullable_int128__)":"","any(toTypeName(string))":"String","any(toTypeName(lowcardinality_nullable_int128__))":"LowCardinality(Nullable(Int128))"}
 """
 
-_aggregate_functions_argMax_datatypes_String_LowCardinality_Nullable_Int128___abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
-{"argMax(string, lowcardinality_nullable_int128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(lowcardinality_nullable_int128__))":"LowCardinality(Nullable(Int128))"}
-"""
-
 _aggregate_functions_argMax_datatypes_String_LowCardinality_Nullable_Int16___abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
 {"argMax(string, lowcardinality_nullable_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
 """
@@ -6768,10 +6764,6 @@ _aggregate_functions_argMax_datatypes_String_LowCardinality_Nullable_Int8___abcd
 
 _aggregate_functions_argMax_datatypes_String_LowCardinality_Nullable_String___MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM = r"""
 {"argMax(string, lowcardinality_nullable_string__)":"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM","any(toTypeName(string))":"String","any(toTypeName(lowcardinality_nullable_string__))":"LowCardinality(Nullable(String))"}
-"""
-
-_aggregate_functions_argMax_datatypes_String_LowCardinality_Nullable_UInt128___ = r"""
-{"argMax(string, lowcardinality_nullable_uint128__)":"","any(toTypeName(string))":"String","any(toTypeName(lowcardinality_nullable_uint128__))":"LowCardinality(Nullable(UInt128))"}
 """
 
 _aggregate_functions_argMax_datatypes_String_LowCardinality_Nullable_UInt128___abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -12534,10 +12526,6 @@ _aggregate_functions_argMax_datatypes_String_Nullable_Bool__abcdefghijklmnopqrst
 {"argMax(string, nullable_bool_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(nullable_bool_))":"Nullable(Bool)"}
 """
 
-_aggregate_functions_argMax_datatypes_String_Nullable_DateTime64_3____22_8_ = r"""
-{"argMax(string, nullable_datetime64_3__)":"","any(toTypeName(string))":"String","any(toTypeName(nullable_datetime64_3__))":"Nullable(DateTime64(3))"}
-"""
-
 _aggregate_functions_argMax_datatypes_String_Nullable_DateTime64_3____22_8_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
 {"argMax(string, nullable_datetime64_3__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(nullable_datetime64_3__))":"Nullable(DateTime64(3))"}
 """
@@ -12548,10 +12536,6 @@ _aggregate_functions_argMax_datatypes_String_Nullable_DateTime__abcdefghijklmnop
 
 _aggregate_functions_argMax_datatypes_String_Nullable_Date__abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
 {"argMax(string, nullable_date_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_argMax_datatypes_String_Nullable_Decimal128_38___ = r"""
-{"argMax(string, nullable_decimal128_38__)":"","any(toTypeName(string))":"String","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_String_Nullable_Decimal128_38___abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -12574,10 +12558,6 @@ _aggregate_functions_argMax_datatypes_String_Nullable_Int128__ = r"""
 {"argMax(string, nullable_int128_)":"","any(toTypeName(string))":"String","any(toTypeName(nullable_int128_))":"Nullable(Int128)"}
 """
 
-_aggregate_functions_argMax_datatypes_String_Nullable_Int128__abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
-{"argMax(string, nullable_int128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(nullable_int128_))":"Nullable(Int128)"}
-"""
-
 _aggregate_functions_argMax_datatypes_String_Nullable_Int16__abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
 {"argMax(string, nullable_int16_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
 """
@@ -12596,10 +12576,6 @@ _aggregate_functions_argMax_datatypes_String_Nullable_Int8__abcdefghijklmnopqrst
 
 _aggregate_functions_argMax_datatypes_String_Nullable_String__gggggggggggggggggggggggggggggggggggg = r"""
 {"argMax(string, nullable_string_)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(nullable_string_))":"Nullable(String)"}
-"""
-
-_aggregate_functions_argMax_datatypes_String_Nullable_UInt128__ = r"""
-{"argMax(string, nullable_uint128_)":"","any(toTypeName(string))":"String","any(toTypeName(nullable_uint128_))":"Nullable(UInt128)"}
 """
 
 _aggregate_functions_argMax_datatypes_String_Nullable_UInt128__abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -12750,10 +12726,6 @@ _aggregate_functions_argMax_datatypes_permutations_Array_String__Nullable_Date__
 {"argMax(array_string_, nullable_date_)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"any(toTypeName(array_string_))":"Array(String)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Array_String__Nullable_Decimal128_38_______ = r"""
-{"argMax(array_string_, nullable_decimal128_38__)":[""],"any(toTypeName(array_string_))":"Array(String)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Array_String__Nullable_Decimal128_38_____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ__ = r"""
 {"argMax(array_string_, nullable_decimal128_38__)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"any(toTypeName(array_string_))":"Array(String)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
@@ -12842,10 +12814,6 @@ _aggregate_functions_argMax_datatypes_permutations_DateTime_Nullable_Date__2106_
 {"argMax(datetime, nullable_date_)":"2106-02-07 06:28:15","any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_date_))":"Nullable(Date)"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_DateTime_Nullable_Decimal128_38___1970_01_01_01_00_00 = r"""
-{"argMax(datetime, nullable_decimal128_38__)":"1970-01-01 01:00:00","any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_DateTime_Nullable_Decimal128_38___2106_02_07_06_28_15 = r"""
 {"argMax(datetime, nullable_decimal128_38__)":"2106-02-07 06:28:15","any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
@@ -12932,10 +12900,6 @@ _aggregate_functions_argMax_datatypes_permutations_Date_Nullable_DateTime__2149_
 
 _aggregate_functions_argMax_datatypes_permutations_Date_Nullable_Date__2149_06_06 = r"""
 {"argMax(date, nullable_date_)":"2149-06-06","any(toTypeName(date))":"Date","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Date_Nullable_Decimal128_38___1970_01_01 = r"""
-{"argMax(date, nullable_decimal128_38__)":"1970-01-01","any(toTypeName(date))":"Date","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Date_Nullable_Decimal128_38___2149_06_06 = r"""
@@ -13030,10 +12994,6 @@ _aggregate_functions_argMax_datatypes_permutations_Decimal128_38__Nullable_Decim
 {"argMax(decimal128_38_, nullable_decimal128_38__)":0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Decimal128_38__Nullable_Decimal128_38____1_0 = r"""
-{"argMax(decimal128_38_, nullable_decimal128_38__)":-0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Decimal128_38__Nullable_Float32__1_0 = r"""
 {"argMax(decimal128_38_, nullable_float32_)":0.99999999999999997752612184630461283328,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -13120,10 +13080,6 @@ _aggregate_functions_argMax_datatypes_permutations_Float32_Nullable_Date__3_4028
 
 _aggregate_functions_argMax_datatypes_permutations_Float32_Nullable_Decimal128_38___3_4028235e_38 = r"""
 {"argMax(float32, nullable_decimal128_38__)":3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Float32_Nullable_Decimal128_38____3_4028235e_38 = r"""
-{"argMax(float32, nullable_decimal128_38__)":-3.4028235e38,"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Float32_Nullable_Float32__3_4028235e_38 = r"""
@@ -13214,10 +13170,6 @@ _aggregate_functions_argMax_datatypes_permutations_Float64_Nullable_Decimal128_3
 {"argMax(float64, nullable_decimal128_38__)":1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Float64_Nullable_Decimal128_38____1_7976909999999999e_308 = r"""
-{"argMax(float64, nullable_decimal128_38__)":-1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Float64_Nullable_Float32__1_7976909999999999e_308 = r"""
 {"argMax(float64, nullable_float32_)":1.7976909999999999e308,"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -13306,10 +13258,6 @@ _aggregate_functions_argMax_datatypes_permutations_Int64_Nullable_Decimal128_38_
 {"argMax(int64, nullable_decimal128_38__)":"9223372036854775807","any(toTypeName(int64))":"Int64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Int64_Nullable_Decimal128_38____9223372036854775808 = r"""
-{"argMax(int64, nullable_decimal128_38__)":"-9223372036854775808","any(toTypeName(int64))":"Int64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Int64_Nullable_Float32__9223372036854775807 = r"""
 {"argMax(int64, nullable_float32_)":"9223372036854775807","any(toTypeName(int64))":"Int64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -13392,10 +13340,6 @@ _aggregate_functions_argMax_datatypes_permutations_LowCardinality_DateTime__Null
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_DateTime__Nullable_Date__2106_02_07_06_28_15 = r"""
 {"argMax(lowcardinality_datetime_, nullable_date_)":"2106-02-07 06:28:15","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_LowCardinality_DateTime__Nullable_Decimal128_38___1970_01_01_01_00_00 = r"""
-{"argMax(lowcardinality_datetime_, nullable_decimal128_38__)":"1970-01-01 01:00:00","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_DateTime__Nullable_Decimal128_38___2106_02_07_06_28_15 = r"""
@@ -13484,10 +13428,6 @@ _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Date__Nullable
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Date__Nullable_Date__2149_06_06 = r"""
 {"argMax(lowcardinality_date_, nullable_date_)":"2149-06-06","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_LowCardinality_Date__Nullable_Decimal128_38___1970_01_01 = r"""
-{"argMax(lowcardinality_date_, nullable_decimal128_38__)":"1970-01-01","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Date__Nullable_Decimal128_38___2149_06_06 = r"""
@@ -13582,10 +13522,6 @@ _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Float32__Nulla
 {"argMax(lowcardinality_float32_, nullable_decimal128_38__)":3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_LowCardinality_Float32__Nullable_Decimal128_38____3_4028235e_38 = r"""
-{"argMax(lowcardinality_float32_, nullable_decimal128_38__)":-3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Float32__Nullable_Float32__3_4028235e_38 = r"""
 {"argMax(lowcardinality_float32_, nullable_float32_)":3.4028235e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -13672,10 +13608,6 @@ _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Float64__Nulla
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Float64__Nullable_Decimal128_38___1_7976909999999999e_308 = r"""
 {"argMax(lowcardinality_float64_, nullable_decimal128_38__)":1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_LowCardinality_Float64__Nullable_Decimal128_38____1_7976909999999999e_308 = r"""
-{"argMax(lowcardinality_float64_, nullable_decimal128_38__)":-1.7976909999999999e308,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Float64__Nullable_Float32__1_7976909999999999e_308 = r"""
@@ -13766,10 +13698,6 @@ _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Int64__Nullabl
 {"argMax(lowcardinality_int64_, nullable_decimal128_38__)":"9223372036854775807","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_LowCardinality_Int64__Nullable_Decimal128_38____9223372036854775808 = r"""
-{"argMax(lowcardinality_int64_, nullable_decimal128_38__)":"-9223372036854775808","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_Int64__Nullable_Float32__9223372036854775807 = r"""
 {"argMax(lowcardinality_int64_, nullable_float32_)":"9223372036854775807","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -13852,10 +13780,6 @@ _aggregate_functions_argMax_datatypes_permutations_LowCardinality_UInt64__Nullab
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_UInt64__Nullable_Date__18446744073709551615 = r"""
 {"argMax(lowcardinality_uint64_, nullable_date_)":"18446744073709551615","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_LowCardinality_UInt64__Nullable_Decimal128_38___0 = r"""
-{"argMax(lowcardinality_uint64_, nullable_decimal128_38__)":"0","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_LowCardinality_UInt64__Nullable_Decimal128_38___18446744073709551615 = r"""
@@ -13946,10 +13870,6 @@ _aggregate_functions_argMax_datatypes_permutations_Map_String_LowCardinality_Flo
 {"argMax(map_string_lowcardinality_float64__, nullable_date_)":{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(nullable_date_))":"Nullable(Date)"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Map_String_LowCardinality_Float64___Nullable_Decimal128_38_________1_7976909999999999e_308_ = r"""
-{"argMax(map_string_lowcardinality_float64__, nullable_decimal128_38__)":{"":-1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Map_String_LowCardinality_Float64___Nullable_Decimal128_38_____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ___1_7976909999999999e_308_ = r"""
 {"argMax(map_string_lowcardinality_float64__, nullable_decimal128_38__)":{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":1.7976909999999999e308},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
@@ -13984,10 +13904,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_DateTime__DateTime_2
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_DateTime__Date_2106_02_07_06_28_15 = r"""
 {"argMax(nullable_datetime_, date)":"2106-02-07 06:28:15","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(date))":"Date"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_DateTime__Decimal128_38__1970_01_01_01_00_00 = r"""
-{"argMax(nullable_datetime_, decimal128_38_)":"1970-01-01 01:00:00","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_DateTime__Decimal128_38__2106_02_07_06_28_15 = r"""
@@ -14042,10 +13958,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_DateTime__Nullable_D
 {"argMax(nullable_datetime_, nullable_date_)":"2106-02-07 06:28:15","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Nullable_DateTime__Nullable_Decimal128_38___1970_01_01_01_00_00 = r"""
-{"argMax(nullable_datetime_, nullable_decimal128_38__)":"1970-01-01 01:00:00","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Nullable_DateTime__Nullable_Decimal128_38___2106_02_07_06_28_15 = r"""
 {"argMax(nullable_datetime_, nullable_decimal128_38__)":"2106-02-07 06:28:15","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
@@ -14080,10 +13992,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Date__DateTime_2149_
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Date__Date_2149_06_06 = r"""
 {"argMax(nullable_date_, date)":"2149-06-06","any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(date))":"Date"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Date__Decimal128_38__1970_01_01 = r"""
-{"argMax(nullable_date_, decimal128_38_)":"1970-01-01","any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Date__Decimal128_38__2149_06_06 = r"""
@@ -14138,10 +14046,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Date__Nullable_Date_
 {"argMax(nullable_date_, nullable_date_)":"2149-06-06","any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Date__Nullable_Decimal128_38___1970_01_01 = r"""
-{"argMax(nullable_date_, nullable_decimal128_38__)":"1970-01-01","any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Date__Nullable_Decimal128_38___2149_06_06 = r"""
 {"argMax(nullable_date_, nullable_decimal128_38__)":"2149-06-06","any(toTypeName(nullable_date_))":"Nullable(Date)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
@@ -14180,10 +14084,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Decimal128_38___Date
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Decimal128_38___Decimal128_38__1_0 = r"""
 {"argMax(nullable_decimal128_38__, decimal128_38_)":0.99999999999999997752612184630461283328,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Decimal128_38___Decimal128_38___1_0 = r"""
-{"argMax(nullable_decimal128_38__, decimal128_38_)":-0.99999999999999997752612184630461283328,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Decimal128_38___Float32_1_0 = r"""
@@ -14238,10 +14138,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Decimal128_38___Null
 {"argMax(nullable_decimal128_38__, nullable_decimal128_38__)":0.99999999999999997752612184630461283328,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Decimal128_38___Nullable_Decimal128_38____1_0 = r"""
-{"argMax(nullable_decimal128_38__, nullable_decimal128_38__)":-0.99999999999999997752612184630461283328,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Decimal128_38___Nullable_Float32__1_0 = r"""
 {"argMax(nullable_decimal128_38__, nullable_float32_)":0.99999999999999997752612184630461283328,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -14276,10 +14172,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Float32__Date_3_4028
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Float32__Decimal128_38__3_4028235e_38 = r"""
 {"argMax(nullable_float32_, decimal128_38_)":3.4028235e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Float32__Decimal128_38___3_4028235e_38 = r"""
-{"argMax(nullable_float32_, decimal128_38_)":-3.4028235e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Float32__Float32_3_4028235e_38 = r"""
@@ -14334,10 +14226,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Float32__Nullable_De
 {"argMax(nullable_float32_, nullable_decimal128_38__)":3.4028235e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Float32__Nullable_Decimal128_38____3_4028235e_38 = r"""
-{"argMax(nullable_float32_, nullable_decimal128_38__)":-3.4028235e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Float32__Nullable_Float32__3_4028235e_38 = r"""
 {"argMax(nullable_float32_, nullable_float32_)":3.4028235e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -14372,10 +14260,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Float64__Date_1_7976
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Float64__Decimal128_38__1_7976909999999999e_308 = r"""
 {"argMax(nullable_float64_, decimal128_38_)":1.7976909999999999e308,"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Float64__Decimal128_38___1_7976909999999999e_308 = r"""
-{"argMax(nullable_float64_, decimal128_38_)":-1.7976909999999999e308,"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Float64__Float32_1_7976909999999999e_308 = r"""
@@ -14430,10 +14314,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Float64__Nullable_De
 {"argMax(nullable_float64_, nullable_decimal128_38__)":1.7976909999999999e308,"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Float64__Nullable_Decimal128_38____1_7976909999999999e_308 = r"""
-{"argMax(nullable_float64_, nullable_decimal128_38__)":-1.7976909999999999e308,"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Float64__Nullable_Float32__1_7976909999999999e_308 = r"""
 {"argMax(nullable_float64_, nullable_float32_)":1.7976909999999999e308,"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -14468,10 +14348,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Int64__Date_92233720
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Int64__Decimal128_38__9223372036854775807 = r"""
 {"argMax(nullable_int64_, decimal128_38_)":"9223372036854775807","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Int64__Decimal128_38___9223372036854775808 = r"""
-{"argMax(nullable_int64_, decimal128_38_)":"-9223372036854775808","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Int64__Float32_9223372036854775807 = r"""
@@ -14526,10 +14402,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_Int64__Nullable_Deci
 {"argMax(nullable_int64_, nullable_decimal128_38__)":"9223372036854775807","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
-_aggregate_functions_argMax_datatypes_permutations_Nullable_Int64__Nullable_Decimal128_38____9223372036854775808 = r"""
-{"argMax(nullable_int64_, nullable_decimal128_38__)":"-9223372036854775808","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
-"""
-
 _aggregate_functions_argMax_datatypes_permutations_Nullable_Int64__Nullable_Float32__9223372036854775807 = r"""
 {"argMax(nullable_int64_, nullable_float32_)":"9223372036854775807","any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
@@ -14560,10 +14432,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__DateTime_184
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__Date_18446744073709551615 = r"""
 {"argMax(nullable_uint64_, date)":"18446744073709551615","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(date))":"Date"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__Decimal128_38__0 = r"""
-{"argMax(nullable_uint64_, decimal128_38_)":"0","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__Decimal128_38__18446744073709551615 = r"""
@@ -14616,10 +14484,6 @@ _aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__Nullable_Dat
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__Nullable_Date__18446744073709551615 = r"""
 {"argMax(nullable_uint64_, nullable_date_)":"18446744073709551615","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__Nullable_Decimal128_38___0 = r"""
-{"argMax(nullable_uint64_, nullable_decimal128_38__)":"0","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_Nullable_UInt64__Nullable_Decimal128_38___18446744073709551615 = r"""
@@ -14708,10 +14572,6 @@ _aggregate_functions_argMax_datatypes_permutations_UInt64_Nullable_DateTime__184
 
 _aggregate_functions_argMax_datatypes_permutations_UInt64_Nullable_Date__18446744073709551615 = r"""
 {"argMax(uint64, nullable_date_)":"18446744073709551615","any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_date_))":"Nullable(Date)"}
-"""
-
-_aggregate_functions_argMax_datatypes_permutations_UInt64_Nullable_Decimal128_38___0 = r"""
-{"argMax(uint64, nullable_decimal128_38__)":"0","any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_argMax_datatypes_permutations_UInt64_Nullable_Decimal128_38___18446744073709551615 = r"""

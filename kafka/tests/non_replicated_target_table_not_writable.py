@@ -1,7 +1,7 @@
 import time
 from testflows.core import *
-from testflows.core.utils import Timer
 from kafka.tests.common import *
+from testflows.core.utils import Timer
 
 
 @TestScenario

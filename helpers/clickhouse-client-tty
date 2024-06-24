@@ -1,27 +1,34 @@
 #!/usr/bin/env python3
 import sys
+import json
 
 from clickhouse_driver import Client
-from clickhouse_driver.errors import Error, LogicalError
+from clickhouse_driver.errors import Error
 
 
 def clickhouse_client_tty():
     client = Client("localhost")
 
     while True:
-        query = input("[clickhouse1] :) ")
+        query = input("⇒ ")
 
         if query.lower() in ["exit", "quit"]:
             sys.exit(0)
 
         try:
             result = client.execute(query)
-            print("Output:\n")
+            print("⇐ ", end="")
+
+            if not result:
+                print("null")
+                continue
+
             for row in result:
-                print(row)
+                json.dump(row, sys.stdout, sort_keys=True)
+                print("")
 
         except Error as e:
-            print(f"Exception:\n{e}")
+            print(f"⇐ Exception:\n{e}")
 
 
 if __name__ == "__main__":

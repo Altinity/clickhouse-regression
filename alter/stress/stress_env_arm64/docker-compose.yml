@@ -16,7 +16,7 @@ services:
 
   zookeeper1:
     extends:
-      file: ../../../helpers/docker/zookeeper-node-service.yml
+      file: ../../../docker-compose/zookeeper-node-service.yml
       service: zookeeper1
     volumes:
       - zookeeper_data-limited-1:/data-limited
@@ -24,7 +24,7 @@ services:
 
   zookeeper2:
     extends:
-      file: ../../../helpers/docker/zookeeper-node-service.yml
+      file: ../../../docker-compose/zookeeper-node-service.yml
       service: zookeeper2
     volumes:
       - zookeeper_data-limited-2:/data-limited
@@ -32,7 +32,7 @@ services:
 
   zookeeper3:
     extends:
-      file: ../../../helpers/docker/zookeeper-node-service.yml
+      file: ../../../docker-compose/zookeeper-node-service.yml
       service: zookeeper3
     volumes:
       - zookeeper_data-limited-3:/data-limited
@@ -40,17 +40,17 @@ services:
 
   keeper1:
     extends:
-      file: ../../../helpers/docker/keeper-service.yml
+      file: ../../../docker-compose/keeper-service.yml
       service: keeper1
 
   keeper2:
     extends:
-      file: ../../../helpers/docker/keeper-service.yml
+      file: ../../../docker-compose/keeper-service.yml
       service: keeper2
 
   keeper3:
     extends:
-      file: ../../../helpers/docker/keeper-service.yml
+      file: ../../../docker-compose/keeper-service.yml
       service: keeper3
 
   clickhouse1:
