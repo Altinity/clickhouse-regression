@@ -270,7 +270,7 @@ def create_materialized_view_with_join(
     engine=None,
     populate=False,
 ):
-    """Create materialized view with join."""
+    """Create materialized view with join clause."""
 
     if node is None:
         node = self.context.node
@@ -299,6 +299,94 @@ def create_materialized_view_with_join(
 
     if populate:
         query += "POPULATE "
+
+    if definer is not None:
+        query += f"DEFINER = {definer} "
+
+    if sql_security is not None:
+        query += f"SQL SECURITY {sql_security} "
+
+    if join_option == "CROSS JOIN":
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} CROSS JOIN {source_table_name_2}
+            """
+    elif "ASOF" in join_option:
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} {join_option} {source_table_name_2} 
+            ON {source_table_name_1}.x == {source_table_name_2}.x AND {source_table_name_2}.x <= {source_table_name_1}.x
+            """
+    elif join_option == "PASTE JOIN":
+        query += f"""
+            AS SELECT x,y
+            FROM
+                (
+                    SELECT {source_table_name_1}.x as x
+                    FROM {source_table_name_1} 
+                    INNER JOIN {source_table_name_3} 
+                    ON {source_table_name_1}.x = {source_table_name_3}.x
+                ) a
+            {join_option}
+                (
+                    SELECT y 
+                    FROM {source_table_name_2} 
+                    WHERE x > 3
+                ) b
+            """
+    else:
+        query += f"""
+            AS SELECT {source_table_name_1}.x as x, {source_table_name_2}.y as y
+            FROM {source_table_name_1} {join_option} {source_table_name_2} 
+            ON {source_table_name_1}.x == {source_table_name_2}.x
+            """
+
+    try:
+        if settings is not None:
+            node.query(query, settings=settings, exitcode=exitcode, message=message)
+        else:
+            node.query(query, exitcode=exitcode, message=message)
+        yield view_name
+
+    finally:
+        with Finally("I drop the materialized view if exists"):
+            node.query(f"DROP TABLE IF EXISTS {view_name}")
+
+
+@TestStep(Given)
+def create_normal_view_with_join(
+    self,
+    source_table_name_1,
+    source_table_name_2,
+    source_table_name_3,
+    join_option="INNER JOIN",
+    node=None,
+    view_name=None,
+    definer=None,
+    sql_security=None,
+    if_not_exists=False,
+    cluster=None,
+    settings=None,
+    exitcode=None,
+    message=None,
+):
+    """Create normal view with join clause."""
+
+    if node is None:
+        node = self.context.node
+
+    if view_name is None:
+        view_name = "view_" + getuid()
+
+    query = f"CREATE VIEW "
+
+    if if_not_exists:
+        query += "IF NOT EXISTS "
+
+    query += f"{view_name} "
+
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} "
 
     if definer is not None:
         query += f"DEFINER = {definer} "
