@@ -28,6 +28,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/data/:/var/lib/clickhouse"
+
   keeper2:
     extends: keeper
     hostname: keeper2

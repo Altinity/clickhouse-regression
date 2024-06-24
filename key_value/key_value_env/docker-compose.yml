@@ -1,36 +1,6 @@
 version: '2.3'
 
 services:
-  zookeeper1:
-    extends:
-      file: ../../docker-compose/zookeeper-service.yml
-      service: zookeeper1
-
-  zookeeper2:
-    extends:
-      file: ../../docker-compose/zookeeper-service.yml
-      service: zookeeper2
-
-  zookeeper3:
-    extends:
-      file: ../../docker-compose/zookeeper-service.yml
-      service: zookeeper3
-
-  keeper1:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper1
-
-  keeper2:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper2
-
-  keeper3:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper3
-
   clickhouse1:
     extends:
       file: clickhouse-service.yml
@@ -40,9 +10,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-    depends_on:
-      zookeeper1:
-        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -53,9 +20,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-    depends_on:
-      zookeeper1:
-        condition: service_healthy
 
   clickhouse3:
     extends:
@@ -66,9 +30,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-    depends_on:
-      zookeeper1:
-        condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
@@ -81,15 +42,4 @@ services:
         condition: service_healthy
       clickhouse3:
         condition: service_healthy
-      zookeeper1:
-        condition: service_healthy
-      zookeeper2:
-        condition: service_healthy
-      zookeeper3:
-        condition: service_healthy
-      keeper1:
-        condition: service_healthy
-      keeper2:
-        condition: service_healthy
-      keeper3:
-        condition: service_healthy
+
