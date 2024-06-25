@@ -29,7 +29,6 @@ def regression(
     clickhouse_version,
     collect_service_logs,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Run the ClickHouse functional (stateless and stateful) tests."""

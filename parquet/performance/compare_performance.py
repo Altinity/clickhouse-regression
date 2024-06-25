@@ -25,7 +25,6 @@ def performance_cluster(
     docker_compose_project_dir=os.path.join(
         current_dir(), "env", "compare_performance_env"
     ),
-    allow_vfs=False,
 ):
     nodes = {"clickhouse": ("clickhouse1",), "duckdb": ("duckdb1",)}
 
@@ -97,7 +96,6 @@ def module(
     rerun_queries,
     test_machine,
     clickhouse_binary_path=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Running performance tests for ClickHouse"""

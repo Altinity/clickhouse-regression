@@ -42,7 +42,6 @@ def regression(
     clickhouse_version,
     stress=None,
     thread_fuzzer=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """ClickHouse different ENGINES regression suite."""

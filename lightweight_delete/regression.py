@@ -98,7 +98,6 @@ def regression(
     force_run=False,
     stress=None,
     parallel=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Lightweight Delete regression."""
