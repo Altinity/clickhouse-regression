@@ -38,7 +38,6 @@ def regression(
     gcs_key_id,
     node="clickhouse1",
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """ClickHouse regression."""

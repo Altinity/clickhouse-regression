@@ -44,7 +44,6 @@ def regression(
     zookeeper_version=None,
     ssl=None,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Check ClickHouse performance when using ClickHouse Keeper."""

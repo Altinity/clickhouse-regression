@@ -45,14 +45,12 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Attach statement regression."""
 
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
-    self.context.allow_vfs = allow_vfs
 
     nodes = {
         "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
