@@ -83,7 +83,9 @@ def cascade_mv_definer_mv_definer_mv_definer(
         new_user = "new_user_" + getuid()
         create_user(user_name=new_user)
 
-    with And(f"grant following privileges to new user: {user_source_privileges}"):
+    with And(
+        f"grant following privileges to new user for source table: {user_source_privileges}"
+    ):
         grant_privilege(
             privileges=user_source_privileges, object=source_table_name, user=new_user
         )
@@ -273,7 +275,9 @@ def cascade_mv_mv_definer_mv_definer(
         new_user = "new_user_" + getuid()
         create_user(user_name=new_user)
 
-    with And("grant privileges to new user"):
+    with And(
+        f"grant following privileges to new user on source table: {user_source_privileges}"
+    ):
         grant_privilege(
             privileges=user_source_privileges, object=source_table_name, user=new_user
         )
@@ -449,7 +453,9 @@ def cascade_mv_definer_mv_mv_definer(
         new_user = "new_user_" + getuid()
         create_user(user_name=new_user)
 
-    with And("grant privileges to new user"):
+    with And(
+        f"grant following privileges to new user on source table: {user_source_privileges}"
+    ):
         grant_privilege(
             privileges=user_source_privileges, object=source_table_name, user=new_user
         )
@@ -732,7 +738,7 @@ def cascade_mv_mv_definer_mv(
 ):
     """
     Test privileges for different operations on cascading view:
-    source table -> MV without sql security specified-> MV with definer -> MV with definer
+    source table -> MV without sql security specified-> MV with definer -> MV without sql security specified
     """
     node = self.context.node
 
@@ -981,6 +987,7 @@ def cascade_mv_definer_mv_definer_mv(
         - SELECT on source table for definer one,
         - INSERT on target table one for definer one, 
         - SELECT on target table one for definer two,
+        - SELECT on target table two for definer two,
         - INSERT on target table two for definer two, 
         otherwise expect exception"""
     ):
@@ -1139,6 +1146,7 @@ def cascade_mv_definer_mv_mv(
         - INSERT on source table for user, 
         - SELECT on source table for definer one,
         - INSERT on target table one for definer one, 
+        - SELECT on target table one for definer one,
         - SELECT on target table two for definer one,
         otherwise expect exception"""
     ):
