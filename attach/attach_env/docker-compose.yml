@@ -1,96 +1,9 @@
 version: '2.3'
 
-volumes:
-  data1-1:
-
-  var_lib_clickhouse-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=30G"
-      device: tmpfs
-      type: tmpfs
-
-  var_log_clickhouse-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-  
-  var_lib_clickhouse-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=30G"
-      device: tmpfs
-      type: tmpfs
-
-  var_log_clickhouse-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  var_lib_clickhouse-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=30G"
-      device: tmpfs
-      type: tmpfs
-
-  var_log_clickhouse-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_data-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=1G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_datalog-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_data-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=1G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_datalog-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_data-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=1G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_datalog-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
 services:
   zookeeper1:
     extends:
-      file: ../../docker-compose/zookeeper-node-service.yml
+      file: ../../docker-compose/zookeeper-service.yml
       service: zookeeper-alone
 
   keeper1:
