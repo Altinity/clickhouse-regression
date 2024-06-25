@@ -866,7 +866,6 @@ def cascade_mv_mv_definer_mv(
         """check that following set of grants allows user to insert into third MV:
         - INSERT on third MV for new user"""
     ):
-        exitcode, message = 241, f"Exception:"
         node.query(
             f"INSERT INTO {view_name_3} VALUES (4), (5), (6)",
             settings=[("user", new_user)],
@@ -1012,6 +1011,7 @@ def cascade_mv_definer_mv_definer_mv(
     with And(
         """check that following set of grants allows user to select from third MV:
         - SELECT on third MV for new user
+        - SELECT on second target table (third MV's source table) for new user
         otherwise expect exception"""
     ):
         exitcode, message = 241, f"Exception:"
@@ -1168,6 +1168,7 @@ def cascade_mv_definer_mv_mv(
     with And(
         """check that following set of grants allows user to select from third MV:
         - SELECT on third MV for new user
+        - SELECT on second target table (third MV's source table) for new user
         otherwise expect exception"""
     ):
         exitcode, message = 241, f"Exception:"
@@ -1273,9 +1274,9 @@ def cascade_mv_mv_mv(
     with And(
         """check that following set of grants allows to insert into source table:
         - INSERT on source table for user, 
-        - SELECT on source table for definer one,
-        - INSERT on target table one for definer one, 
-        - SELECT on target table two for definer one,
+        - SELECT on source table for user,
+        - SELECT on target table one for user,
+        - SELECT on target table two for user,
         otherwise expect exception"""
     ):
         if (
@@ -1303,6 +1304,7 @@ def cascade_mv_mv_mv(
     with And(
         """check that following set of grants allows user to select from third MV:
         - SELECT on third MV for new user
+        - SELECT on second target table (third MV's source table) for new user
         otherwise expect exception"""
     ):
         exitcode, message = 241, f"Exception:"
