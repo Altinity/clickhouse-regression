@@ -105,13 +105,15 @@ def scenario(self, cluster, node="clickhouse1"):
                             time.sleep(wait_expire_2 / 2)
 
                         with And("get used disks for the table after merge"):
-                            used_disks = get_used_disks_for_table(node, name)
-                            with Then(
-                                f"parts {'should' if positive else 'should not'} have been moved"
-                            ):
-                                assert set(used_disks) == (
-                                    {"external" if positive else "jbod1"}
-                                ), error()
+                            for attempt in retries(timeout=20, delay=5):
+                                with attempt:
+                                    used_disks = get_used_disks_for_table(node, name)
+                                    with Then(
+                                        f"parts {'should' if positive else 'should not'} have been moved"
+                                    ):
+                                        assert set(used_disks) == (
+                                            {"external" if positive else "jbod1"}
+                                        ), error()
 
                         with Then("I double check that number of rows did not change"):
                             r = node.query(

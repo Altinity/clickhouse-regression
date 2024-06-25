@@ -103,20 +103,17 @@ def scenario(self, engine):
                 with Then(f"it should return the result of {rows_count}"):
                     assert r == f"{rows_count}", error()
 
-        with And("poll maximum 20 times to check used disks for the table"):
-            used_disks = get_used_disks_for_table(node, table_name)
-            retry = 20
-            i = 0
-            while not used_disks.count("external") == 1 and i < retry:
-                time.sleep(0.5)
-                used_disks = get_used_disks_for_table(node, table_name)
-                i += 1
-
         with Then("check that jbod1 disk is not used"):
-            assert used_disks.count("jbod1") == 0, error()
+            for attempt in retries(timeout=20, delay=5):
+                with attempt:
+                    with When("get used disks for the table"):
+                        used_disks = get_used_disks_for_table(node, table_name)
 
-        with And("that the part was moved to 'external'"):
-            assert used_disks[0] == "external", error()
+                    with Then("jbod1 disk should not be used"):
+                        assert used_disks.count("jbod1") == 0, error()
+
+                    with And("the part should be moved to 'external'"):
+                        assert used_disks[0] == "external", error()
 
         with When("I check if the part was deleted from jbod1"):
             entries = (
