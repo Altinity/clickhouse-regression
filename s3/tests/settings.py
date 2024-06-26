@@ -6,9 +6,13 @@ from testflows.core import *
 from testflows.combinatorics import CoveringArray
 
 from helpers.common import getuid
-from s3.tests.common import s3_table, s3_storage, check_consistency
+from s3.tests.common import (
+    s3_storage,
+    check_consistency,
+    insert_random,
+    replicated_table,
+)
 
-from vfs.tests.steps import insert_random, replicated_table_cluster
 from alter.stress.tests.actions import optimize_random
 
 
@@ -59,11 +63,9 @@ def check_setting_combination(
             s3_storage(disks=disks, restart=False, config_file="test_settings.xml")
 
     with Given("a table"):
-        _, table_name = replicated_table_cluster(
-            storage_policy="external",
-            exitcode=0,
-            settings=table_setting,
-        )
+        table_name = "test_" + getuid()
+        for node in self.context.ch_nodes:
+            replicated_table(node=node, table_name=table_name, settings=table_setting)
 
     with And("some inserted data"):
         insert(table_name=table_name, settings=insert_setting)
