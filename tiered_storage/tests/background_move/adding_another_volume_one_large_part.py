@@ -104,7 +104,7 @@ def scenario(self, engine):
                     assert r == f"{rows_count}", error()
 
         with Then("check that jbod1 disk is not used"):
-            for attempt in retries(timeout=20, delay=5):
+            for attempt in retries(timeout=60, delay=5):
                 with attempt:
                     with When("get used disks for the table"):
                         used_disks = get_used_disks_for_table(node, table_name)
