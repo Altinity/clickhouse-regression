@@ -253,11 +253,34 @@ class Node(object):
             query_string,
             match=None,
             errorcode=None,
+            no_checks=False,
             message=None,
             ignore_exception=False,
             raise_on_exception=False,
             settings=None,
+            messages_to_retry=None,
+            retry_count=5,
+            retry_delay=5,
         ):
+            """Execute query and return the result.
+            :param query_string: query to execute.
+            :param match: expect a specific match in the output
+            :param errorcode: assert that a specific error code is in the output.
+            :param message: assert that a specific message is in the output.
+            :param ignore_exception: ignore exception.
+            :param raise_on_exception: raise a QueryRuntimeException with the query message.
+            :param settings: query settings, a list of tuple where in the tuple the first value is a setting and the second is a value.
+            :param messages_to_retry: list of messages that should trigger a retry.
+            :param retry_count: number of retries.
+            :param retry_delay: delay between retries.
+            """
+
+            retry_count = max(0, int(retry_count))
+            retry_delay = max(0, float(retry_delay))
+
+            if messages_to_retry is None:
+                messages_to_retry = MESSAGES_TO_RETRY
+
             if settings is not None:
                 query_string += " SETTINGS "
                 for key, value in settings:
@@ -274,6 +297,26 @@ class Node(object):
             self.command_context.app.expect(self.prompt, escape=True)
 
             query_result = self.command_context.app.child.before
+
+            if retry_count and retry_count > 0:
+                if any(msg in query_result for msg in messages_to_retry):
+                    time.sleep(retry_delay)
+                    return self.query(
+                        query_string=query_string,
+                        match=match,
+                        errorcode=errorcode,
+                        no_checks=no_checks,
+                        message=message,
+                        ignore_exception=ignore_exception,
+                        raise_on_exception=raise_on_exception,
+                        settings=settings,
+                        messages_to_retry=messages_to_retry,
+                        retry_count=retry_count - 1,
+                        retry_delay=retry_delay,
+                    )
+
+            if no_checks:
+                return ClientQueryResult(query_result.split(self.prompt, 1)[-1])
 
             if errorcode is not None:
                 with Then(f"exitcode should be {errorcode}", format_name=False):
