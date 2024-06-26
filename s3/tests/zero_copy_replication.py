@@ -1646,7 +1646,8 @@ def outline(self, uri):
                 disks[disk_name]["allow_vfs"] = "1"
         else:
             self.context.zero_copy_replication_settings = {
-                self.context.zero_copy_replication_setting: "1"
+                self.context.zero_copy_replication_setting: "1",
+                "old_parts_lifetime": "1",
             }
 
     with And("I have clickhouse nodes"):
