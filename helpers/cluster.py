@@ -330,7 +330,7 @@ class Node(object):
 
             if not ignore_exception:
                 if message is None or "Exception:" not in message:
-                    if "💣 Exception:" in query_result:
+                    if "🔥 Exception:" in query_result:
                         if raise_on_exception:
                             raise QueryRuntimeException(query_result.strip())
                         assert False, error(query_result.strip())
