@@ -37,25 +37,25 @@ def scenario(self, engine):
 
     table_name = "table_" + engine.split("(")[0].lower()
 
-    with When("I create table"):
-        node.query(
-            f"""
-            DROP TABLE IF EXISTS {table_name} SYNC;
-            CREATE TABLE {table_name} (
-                s1 String
-            ) ENGINE = {engine}
-            ORDER BY tuple()
-            SETTINGS storage_policy='one_small_disk'
-        """
-        )
-
-    with And("I get table's uuid"):
-        table_uuid = node.query(
-            f"SELECT uuid FROM system.tables WHERE name = '{table_name}' FORMAT TabSeparated"
-        ).output.strip()
-        table_uuid_prefix = table_uuid[:3]
-
     try:
+        with When("I create table"):
+            node.query(
+                f"""
+                DROP TABLE IF EXISTS {table_name} SYNC;
+                CREATE TABLE {table_name} (
+                    s1 String
+                ) ENGINE = {engine}
+                ORDER BY tuple()
+                SETTINGS storage_policy='one_small_disk'
+            """
+            )
+
+        with And("I get table's uuid"):
+            table_uuid = node.query(
+                f"SELECT uuid FROM system.tables WHERE name = '{table_name}' FORMAT TabSeparated"
+            ).output.strip()
+            table_uuid_prefix = table_uuid[:3]
+
         with When("I stop merges to avoid conflicts"):
             node.query(f"SYSTEM STOP MERGES {table_name}")
 
