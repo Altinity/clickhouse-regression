@@ -195,6 +195,7 @@ xfails = {
     ":/:/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
+    ":/:/combinatoric table/:": [(Fail, "Unstable test")],
 }
 
 ffails = {
@@ -312,6 +313,7 @@ def minio_regression(
                 )
 
         with Module(self.context.object_storage_mode):
+            Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.table_function", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.backup", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.table_function_invalid", "minio"))(
@@ -319,7 +321,9 @@ def minio_regression(
             )
             Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
+            Feature(test=load("s3.tests.combinatoric_table", "feature"))(
+                uri=uri_bucket_file
+            )
             Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
             Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
                 uri=uri_bucket_file
@@ -393,11 +397,12 @@ def aws_s3_regression(
                 )
 
         with Module(self.context.object_storage_mode):
+            Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.table_function", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.disk", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
+            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
             Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
             Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
@@ -453,8 +458,9 @@ def gcs_regression(
             Feature(test=load("s3.tests.table_function", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
+            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
             Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
