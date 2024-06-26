@@ -256,7 +256,15 @@ class Node(object):
             message=None,
             ignore_exception=False,
             raise_on_exception=False,
+            settings=None,
         ):
+            if settings is not None:
+                query_string += " SETTINGS "
+                for key, value in settings:
+                    query_string += f"{key} = {value}, "
+
+                query_string = query_string.rstrip(", ")
+
             self.command_context.app.send(query_string)
             self.command_context.app.expect(self.output_prompt, escape=True)
 
@@ -279,7 +287,7 @@ class Node(object):
 
             if not ignore_exception:
                 if message is None or "Exception:" not in message:
-                    if "⇐ Exception" in query_result.strip():
+                    if "⇐ Exception:" in query_result:
                         if raise_on_exception:
                             raise QueryRuntimeException(query_result.strip())
                         assert False, error(query_result.strip())
