@@ -9,8 +9,7 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
-from helpers.common import KeyWithAttributes, create_xml_config_content, add_config
-from vfs.tests.steps import *
+from helpers.common import *
 from alter.stress.tests.tc_netem import *
 from alter.stress.tests.steps import *
 from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
@@ -57,7 +56,6 @@ def insert_to_random(self):
             columns=columns,
             no_checks=True,
             rows=100_000,
-            settings=f"insert_keeper_fault_injection_probability={self.context.fault_probability}",
         )
 
 
