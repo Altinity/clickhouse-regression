@@ -16,6 +16,7 @@ xfails = {
     "dynamic:": [(Fail, "Not working")],
     "manual failover rcvr": [(Fail, "Not working")],
     "manual failover --force-recovery": [(Fail, "Not working on runners")],
+    ":": [(Fail, "Unstable ClickHouse<24", check_clickhouse_version("<24"))],
 }
 
 ffails = {}
