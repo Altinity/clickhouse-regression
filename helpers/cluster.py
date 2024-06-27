@@ -338,7 +338,19 @@ class Node(object):
             return ClientQueryResult(query_result.split(self.prompt, 1)[-1])
 
     @contextmanager
-    def client(self, client="clickhouse-client-tty", name="clickhouse-client-tty"):
+    def client(
+        self,
+        client="clickhouse-client-tty",
+        client_args=None,
+        name="clickhouse-client-tty",
+    ):
+        """Context manager for the clickhouse-client-tty."""
+        if client_args is None:
+            client_args = {}
+
+        for arg, value in client_args.items():
+            client += f" --{arg} {value}"
+
         with self.cluster.shell(self.name) as bash:
             command_context = self.command(
                 client, asynchronous=True, no_checks=True, name=name, bash=bash
