@@ -1485,10 +1485,12 @@ def measure_buckets_before_and_after(
         """The size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
-        check_stable_bucket_size(
-            prefix=bucket_prefix,
-            name=bucket_name,
-            expected_size=size_before,
-            tolerance=tolerance,
-            delay=delay,
-        )
+        for attempt in retries(count=3):
+            with attempt:
+                check_stable_bucket_size(
+                    prefix=bucket_prefix,
+                    name=bucket_name,
+                    expected_size=size_before,
+                    tolerance=tolerance,
+                    delay=delay * (attempt.retry_number + 1),
+                )
