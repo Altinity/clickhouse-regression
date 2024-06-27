@@ -297,16 +297,14 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     stress,
-    allow_vfs=False,
     with_analyzer=False,
     unsafe=False,
 ):
-    """Disk Object Storage VFS regression."""
+    """Stress testing regression."""
 
     self.context.clickhouse_version = clickhouse_version
 
     self.context.stress = stress
-    self.context.allow_vfs = allow_vfs
     self.context.unsafe = unsafe
 
     if storages is None:

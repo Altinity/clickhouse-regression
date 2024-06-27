@@ -10,12 +10,18 @@ from testflows.core import *
 from testflows.asserts import error
 
 from helpers.queries import *
-from s3.tests.common import s3_storage
+from s3.tests.common import (
+    s3_storage,
+    insert_random,
+    create_replicated_table as create_one_replica,
+    delete_replicated_table as delete_one_replica,
+    replicated_table_cluster,
+)
 
 
 @TestStep(Given)
 def disk_config(self):
-    """Set up disks and policies for vfs tests."""
+    """Set up disks and policies for stress tests."""
 
     if getattr(self.context, "uri", None):
         with Given("I have two S3 disks configured"):
