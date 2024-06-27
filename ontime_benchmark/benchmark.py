@@ -13,14 +13,7 @@ from s3.tests.common import *
 
 xfails = {}
 
-ffails = {
-    ":/queries/vfs": (
-        Skip,
-        "vfs not supported on < 24.2 and requires --allow-vfs flag",
-        lambda test: not test.context.allow_vfs
-        or check_clickhouse_version("<24.2")(test),
-    ),
-}
+ffails = {}
 
 
 def argparser(parser):
@@ -60,7 +53,6 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     format,
-    allow_vfs=False,
     with_analyzer=False,
     node="clickhouse1",
 ):
@@ -74,7 +66,6 @@ def regression(
     bucket_path = "data/benchmark"
 
     self.context.clickhouse_version = clickhouse_version
-    self.context.allow_vfs = allow_vfs
 
     if storages is None:
         storages = ["minio"]
