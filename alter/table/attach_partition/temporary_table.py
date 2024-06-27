@@ -53,10 +53,15 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                 detach_partition(
                     table=table_name, partition=1, node=client, exitcode=exitcode
                 )
-                table_after_detach = client.query(
-                    f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
-                    exitcode=exitcode,
-                )
+                if exitcode == 0:
+                    table_after_detach = client.query(
+                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
+                    )
+                else:
+                    table_after_detach = client.query(
+                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
+                        errorcode=exitcode,
+                    )
 
                 if exitcode == 0:
                     for attempt in retries(timeout=timeout, delay=delay):
@@ -172,7 +177,10 @@ def check_attach_partition_from_with_temporary_tables(
                     "19",
                 ]:
                     query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
-                    client.query(query, exitcode=exitcode)
+                    if exitcode == 0:
+                        client.query(query)
+                    else:
+                        client.query(query, errorcode=exitcode)
 
             if exitcode == 0:
                 with Then(
