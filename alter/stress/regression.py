@@ -298,7 +298,7 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     stress,
-    allow_vfs,
+    allow_vfs=False,
     with_analyzer=False,
     unsafe=False,
 ):

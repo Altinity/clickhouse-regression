@@ -173,7 +173,6 @@ def regression(
     clickhouse_version,
     force_fips,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """ClickHouse security SSL server regression."""

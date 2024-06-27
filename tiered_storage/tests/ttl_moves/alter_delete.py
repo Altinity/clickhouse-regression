@@ -11,7 +11,7 @@ from testflows.asserts import error
 from tiered_storage.requirements import *
 
 
-@TestScenario
+@TestOutline(Scenario)
 @Name("alter delete")
 @Requirements(RQ_SRS_004_TTLExpressions_Compatibility("1.0"))
 @Examples(
@@ -25,7 +25,7 @@ from tiered_storage.requirements import *
     ],
     "%-21s | %-20s",
 )
-def scenario(self, cluster, node="clickhouse1"):
+def scenario(self, name, engine):
     """Check compatibility with old TTL delete expressions to make sure
     that:
     * alter modify of column's TTL delete expression works
@@ -34,12 +34,12 @@ def scenario(self, cluster, node="clickhouse1"):
     for a table that has TTL delete expression defined but
     no explicit storage policy assigned.
     """
-    with Given("cluster node"):
-        node = cluster.node(node)
 
-    for example in self.examples:
-        name, engine = example
-        with Given(f"table name='{name}', engine='{engine}'"):
+    cluster = self.context.cluster
+    node = cluster.node("clickhouse1")
+
+    try:
+        with Given("table"):
             node.query(
                 f"""
                 CREATE TABLE {name} (
@@ -50,71 +50,71 @@ def scenario(self, cluster, node="clickhouse1"):
                 TTL d1 + INTERVAL 1 DAY DELETE
             """
             )
-            try:
-                with When("I modify TTL delete expression on a column"):
-                    node.query(
-                        f"""ALTER TABLE {name} MODIFY COLUMN s1 String TTL d1 + INTERVAL 1 SECOND"""
-                    )
 
-                with When("I add new column"):
-                    node.query(f"""ALTER TABLE {name} ADD COLUMN b1 Int32""")
+        with When("I modify TTL delete expression on a column"):
+            node.query(
+                f"""ALTER TABLE {name} MODIFY COLUMN s1 String TTL d1 + INTERVAL 1 SECOND"""
+            )
 
-                with When("I now insert data into table"):
-                    node.query(
-                        f"""INSERT INTO {name} (s1, b1, d1) VALUES ('hello1', 1, toDateTime({time.time()}))"""
-                    )
-                    node.query(
-                        f"""INSERT INTO {name} (s1, b1, d1) VALUES ('hello2', 2, toDateTime({time.time() + 360}))"""
-                    )
+        with When("I add new column"):
+            node.query(f"""ALTER TABLE {name} ADD COLUMN b1 Int32""")
 
-                with And("I wait for TTL on a column to expire"):
-                    time.sleep(1)
+        with When("I now insert data into table"):
+            node.query(
+                f"""INSERT INTO {name} (s1, b1, d1) VALUES ('hello1', 1, toDateTime({time.time()}))"""
+            )
+            node.query(
+                f"""INSERT INTO {name} (s1, b1, d1) VALUES ('hello2', 2, toDateTime({time.time() + 360}))"""
+            )
 
-                with And("I optimize table to make sure TTL has executed"):
-                    node.query(f"OPTIMIZE TABLE {name}")
+        with And("I wait for TTL on a column to expire"):
+            time.sleep(1)
 
-                with And("I read data from the table"):
-                    r = (
-                        node.query(
-                            f"SELECT s1, b1, d1 FROM {name} ORDER BY b1 FORMAT TabSeparated"
-                        )
-                        .output.strip()
-                        .splitlines()
-                    )
+        with And("I optimize table to make sure TTL has executed"):
+            node.query(f"OPTIMIZE TABLE {name}")
 
-                with Then("check that row where TTL has expired is not there"):
-                    assert len(r) == 2, error()
-                    assert r[0].startswith("1\t"), error()
-                    assert r[1].startswith("hello2\t2"), error()
+        with And("I read data from the table"):
+            r = (
+                node.query(
+                    f"SELECT s1, b1, d1 FROM {name} ORDER BY b1 FORMAT TabSeparated"
+                )
+                .output.strip()
+                .splitlines()
+            )
 
-                with When("I add TTL delete expression on a new column"):
-                    node.query(f"""ALTER TABLE {name} MODIFY COLUMN b1 Int32 TTL d1""")
+        with Then("check that row where TTL has expired is not there"):
+            assert len(r) == 2, error()
+            assert r[0].startswith("1\t"), error()
+            assert r[1].startswith("hello2\t2"), error()
 
-                with When("I again insert data into table"):
-                    node.query(
-                        f"""INSERT INTO {name} (s1, b1, d1) VALUES ('hello3', 3, toDateTime({time.time()}))"""
-                    )
-                with And("I again wait for TTL on a column to expire"):
-                    time.sleep(1)
+        with When("I add TTL delete expression on a new column"):
+            node.query(f"""ALTER TABLE {name} MODIFY COLUMN b1 Int32 TTL d1""")
 
-                with And("I again optimize table to make sure TTL has executed"):
-                    node.query(f"OPTIMIZE TABLE {name}")
+        with When("I again insert data into table"):
+            node.query(
+                f"""INSERT INTO {name} (s1, b1, d1) VALUES ('hello3', 3, toDateTime({time.time()}))"""
+            )
+        with And("I again wait for TTL on a column to expire"):
+            time.sleep(1)
 
-                with And("I again read data from the table"):
-                    r = (
-                        node.query(
-                            f"SELECT s1, b1, d1 FROM {name} ORDER BY b1 FORMAT TabSeparated"
-                        )
-                        .output.strip()
-                        .splitlines()
-                    )
+        with And("I again optimize table to make sure TTL has executed"):
+            node.query(f"OPTIMIZE TABLE {name}")
 
-                with Then("again check that row where TTL has expired is not there"):
-                    assert len(r) == 3, error()
-                    assert r[0].startswith("0\t"), error()
-                    assert r[1].startswith("\t0\t"), error()
-                    assert r[2].startswith("hello2\t2"), error()
+        with And("I again read data from the table"):
+            r = (
+                node.query(
+                    f"SELECT s1, b1, d1 FROM {name} ORDER BY b1 FORMAT TabSeparated"
+                )
+                .output.strip()
+                .splitlines()
+            )
 
-            finally:
-                with Finally("I drop the table"):
-                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+        with Then("again check that row where TTL has expired is not there"):
+            assert len(r) == 3, error()
+            assert r[0].startswith("0\t"), error()
+            assert r[1].startswith("\t0\t"), error()
+            assert r[2].startswith("hello2\t2"), error()
+
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")

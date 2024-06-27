@@ -2,7 +2,7 @@
 
 Results for **the latest** scheduled workflow runs.
 
-| ClickHouse Version | Scheduled Regression Status |
+| ClickHouse Version | Status |
 | ------------ | - |
 | **`latest`** | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
 | **`24.4`** | [![Scheduled ClickHouse 24.4 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-4.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-4.yml) |

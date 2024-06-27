@@ -97,20 +97,22 @@ def scenario(self, cluster, node="clickhouse1"):
                         with And("sleep 10 sec"):
                             time.sleep(10)
 
-                    with And("I read disk_name from system.parts"):
-                        disks_for_merges = (
-                            node.query(
-                                f"SELECT disk_name FROM system.parts WHERE table == '{name}'"
-                                " AND level >= 1 and active = 1 ORDER BY modification_time FORMAT TabSeparated"
-                            )
-                            .output.strip()
-                            .split("\n")
-                        )
+                    for attempt in retries(timeout=90, delay=5):
+                        with attempt:
+                            with When("I read disk_name from system.parts"):
+                                disks_for_merges = (
+                                    node.query(
+                                        f"SELECT disk_name FROM system.parts WHERE table == '{name}'"
+                                        " AND level >= 1 and active = 1 ORDER BY modification_time FORMAT TabSeparated"
+                                    )
+                                    .output.strip()
+                                    .split("\n")
+                                )
 
-                    with Then("all parts should be on 'external' disk"):
-                        assert all(
-                            disk == "external" for disk in disks_for_merges
-                        ), error()
+                            with Then("all parts should be on 'external' disk"):
+                                assert all(
+                                    disk == "external" for disk in disks_for_merges
+                                ), error()
 
                 finally:
                     with Finally("I drop the table"):

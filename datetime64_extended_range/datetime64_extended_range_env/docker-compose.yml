@@ -1,36 +1,6 @@
 version: '2.3'
 
 services:
-  zookeeper1:
-    extends:
-      file: ../../docker-compose/zookeeper-service.yml
-      service: zookeeper1
-
-  zookeeper2:
-    extends:
-      file: ../../docker-compose/zookeeper-service.yml
-      service: zookeeper2
-
-  zookeeper3:
-    extends:
-      file: ../../docker-compose/zookeeper-service.yml
-      service: zookeeper3
-
-  keeper1:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper1
-
-  keeper2:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper2
-
-  keeper3:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper3
-
   clickhouse1:
     extends:
       file: clickhouse-service.yml
@@ -45,10 +15,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
-    depends_on:
-      zookeeper1:
-        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -63,10 +29,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
-    depends_on:
-      zookeeper1:
-        condition: service_healthy
 
   clickhouse3:
     extends:
@@ -81,10 +43,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
-    depends_on:
-      zookeeper1:
-        condition: service_healthy
 
   all_services_ready:
     image: hello-world
@@ -94,16 +52,4 @@ services:
       clickhouse2:
         condition: service_healthy
       clickhouse3:
-        condition: service_healthy
-      zookeeper1:
-        condition: service_healthy
-      zookeeper2:
-        condition: service_healthy
-      zookeeper3:
-        condition: service_healthy
-      keeper1:
-        condition: service_healthy
-      keeper2:
-        condition: service_healthy
-      keeper3:
         condition: service_healthy

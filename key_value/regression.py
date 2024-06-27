@@ -34,7 +34,6 @@ def regression(
     clickhouse_version,
     stress=None,
     parallel=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Key Value regression."""

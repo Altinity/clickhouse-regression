@@ -23,7 +23,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Simple example of how you can use TestFlows to test ClickHouse."""
