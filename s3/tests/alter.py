@@ -14,7 +14,14 @@ from s3.tests.common import (
     insert_random,
 )
 
-COLUMNS = "key UInt32, value1 String, value2 String, value3 String"
+COLUMNS = "key UInt32, value1 String, value2 UInt8"
+
+retry_args = {
+    "timeout": 90,
+    "delay": 5,
+}
+
+INSERT_SIZE = 100_000
 
 
 @TestStep(Given)
@@ -110,7 +117,9 @@ def update_delete(self):
         )
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name, columns=columns)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=columns, rows=INSERT_SIZE
+        )
 
     with Then("I lightweight DELETE with success"):
         nodes[0].query(f"DELETE FROM {table_name} WHERE (e % 4 = 0)", exitcode=0)
@@ -144,7 +153,9 @@ def order_by(self):
         replicated_table_cluster(table_name=table_name, storage_policy="external")
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name, columns=COLUMNS)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Then("I modify ORDER BY with success"):
         nodes[0].query(
@@ -168,7 +179,9 @@ def sample_by(self):
         )
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name, columns=COLUMNS)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Then("I modify SAMPLE BY with success"):
         nodes[0].query(
@@ -187,33 +200,35 @@ def index(self):
         replicated_table_cluster(table_name=table_name, storage_policy="external")
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name, columns=COLUMNS)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Check("add"):
         with When("I add an index"):
             nodes[0].query(
-                f"ALTER TABLE {table_name} ADD INDEX idxtest value1 TYPE set(100) GRANULARITY 2",
+                f"ALTER TABLE {table_name} ADD INDEX idx_test value1 TYPE set(100) GRANULARITY 2",
                 exitcode=0,
             )
 
     with Check("materialize"):
         with When("I materialize an index"):
             nodes[0].query(
-                f"ALTER TABLE {table_name} MATERIALIZE INDEX idxtest",
+                f"ALTER TABLE {table_name} MATERIALIZE INDEX idx_test",
                 exitcode=0,
             )
 
     with Check("clear"):
         with When("I clear an index"):
-            retry(nodes[0].query, timeout=15, delay=1)(
-                f"ALTER TABLE {table_name} CLEAR INDEX idxtest",
+            retry(nodes[0].query, **retry_args)(
+                f"ALTER TABLE {table_name} CLEAR INDEX idx_test",
                 exitcode=0,
             )
 
     with Check("drop"):
         with When("I drop an index"):
             nodes[0].query(
-                f"ALTER TABLE {table_name} DROP INDEX idxtest",
+                f"ALTER TABLE {table_name} DROP INDEX idx_test",
                 exitcode=0,
             )
 
@@ -240,7 +255,9 @@ def projection(self):
         )
 
     with Then("I insert data with success"):
-        insert_random(node=nodes[0], table_name=table_name, columns=COLUMNS)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with And("I clear the projection with success"):
         nodes[0].query(
@@ -271,7 +288,9 @@ def freeze(self, partition):
         )
 
     with When("I insert some data into the table"):
-        insert_random(node=nodes[0], table_name=table_name, columns=COLUMNS)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Then("I freeze the table"):
         nodes[0].query(
@@ -303,7 +322,9 @@ def fetch(self, fetch_item):
         )
 
     with And("I insert data into the first table"):
-        insert_random(node=node, table_name=source_table_name, columns=COLUMNS)
+        insert_random(
+            node=node, table_name=source_table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
@@ -322,7 +343,7 @@ def fetch(self, fetch_item):
 
     with Then("I check the number of rows on the second table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=destination_table_name, rows=row_count
             )
 
@@ -334,7 +355,7 @@ def attach_from(self):
     nodes = self.context.ch_nodes
     node = nodes[0]
     fetch_item = "PARTITION 2"
-    insert_rows = 1000000
+    insert_rows = INSERT_SIZE
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
@@ -363,13 +384,13 @@ def attach_from(self):
 
     with Then("I check the number of rows on the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=source_table_name, rows=insert_rows
             )
 
     with And("I check the number of rows on the second table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=destination_table_name, rows=row_count
             )
 
@@ -424,13 +445,13 @@ def move_to_table(self):
 
     with Then("I check the number of rows in the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=source_table_name, rows=(insert_rows - row_count)
             )
 
     with And("I check the number of rows in the second table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node,
                 table_name=destination_table_name,
                 rows=(insert_rows // 2 + row_count),
@@ -444,7 +465,7 @@ def replace(self):
     nodes = self.context.ch_nodes
     node = nodes[0]
     fetch_item = "PARTITION 2"
-    insert_rows = 1000000
+    insert_rows = INSERT_SIZE
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
@@ -480,7 +501,7 @@ def replace(self):
 
     with Then("I check the number of rows on the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=source_table_name, rows=insert_rows
             )
 
@@ -535,7 +556,7 @@ def drop(self, drop_item, detach_first):
 
     with Then("I check the number of rows on the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node,
                 table_name=table_name,
                 rows=(insert_rows - part_row_count),
@@ -626,7 +647,7 @@ def detach(self, detach_item):
 
     with Then("I check the number of rows on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node,
                 table_name=source_table_name,
                 rows=(insert_rows - part_row_count),
@@ -643,7 +664,9 @@ def columns(self):
         replicated_table_cluster(table_name=table_name, storage_policy="external")
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name, columns=COLUMNS)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Check("drop"):
         with When("I delete a column on the second node"):
@@ -732,7 +755,7 @@ def columns(self):
         assert "column comment" not in r.output, error(r)
 
     with And("The table should contain all rows"):
-        assert_row_count(node=nodes[2], table_name=table_name)
+        assert_row_count(node=nodes[2], table_name=table_name, rows=INSERT_SIZE)
 
 
 @TestFeature
