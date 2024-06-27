@@ -28,8 +28,7 @@ def clickhouse_client_tty():
                 print("")
 
         except Error as e:
-            print(f"⇐ Exception:\n{e}")
-
+            print(f"⇐ 🔥 Exception: {e}")
 
 if __name__ == "__main__":
     clickhouse_client_tty()

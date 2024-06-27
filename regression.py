@@ -4,6 +4,7 @@ from testflows.core import *
 
 append_path(sys.path, ".")
 
+from helpers.argparser import CaptureClusterArgs
 from s3.regression import argparser
 
 
@@ -19,12 +20,11 @@ ffails = {
 @Name("clickhouse")
 @FFails(ffails)
 @ArgumentParser(argparser)
+@CaptureClusterArgs
 def regression(
     self,
-    local,
+    cluster_args,
     clickhouse_version,
-    clickhouse_binary_path,
-    collect_service_logs,
     storages,
     minio_uri,
     gcs_uri,
@@ -38,25 +38,20 @@ def regression(
     gcs_key_id,
     node="clickhouse1",
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """ClickHouse regression."""
     args = {
-        "local": local,
-        "clickhouse_binary_path": clickhouse_binary_path,
+        **cluster_args,
         "clickhouse_version": clickhouse_version,
         "stress": stress,
-        "collect_service_logs": collect_service_logs,
         "with_analyzer": with_analyzer,
     }
 
     s3_args = {
-        "local": local,
-        "clickhouse_binary_path": clickhouse_binary_path,
+        **cluster_args,
         "clickhouse_version": clickhouse_version,
         "stress": stress,
-        "collect_service_logs": collect_service_logs,
         "with_analyzer": with_analyzer,
         "storages": storages,
         "minio_uri": minio_uri,

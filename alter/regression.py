@@ -164,7 +164,6 @@ def regression(
     clickhouse_version,
     use_specific_version,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Alter regression."""

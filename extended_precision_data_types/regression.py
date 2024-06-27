@@ -32,7 +32,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Extended precision data type regression."""

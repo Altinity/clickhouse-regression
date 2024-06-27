@@ -62,21 +62,17 @@ def scenario(self, engine):
                 values = ",".join(["('" + x + "')" for x in data])
                 node.query(f"INSERT INTO {table_name} VALUES {values}")
 
-        with And("poll maximum 20 times to check used disks for the table"):
-            used_disks = get_used_disks_for_table(node, table_name)
-            retry = 20
-            i = 0
-            while not used_disks.count("jbod1") <= 0 and i < retry:
-                with And("sleep 1 sec"):
-                    time.sleep(1)
-                used_disks = get_used_disks_for_table(node, table_name)
-                i += 1
+        with Then("all parts should be on jbod1"):
+            for attempt in retries(timeout=20, delay=5):
+                with attempt:
+                    with When("get used disks for the table"):
+                        used_disks = get_used_disks_for_table(node, table_name)
 
-        with Then("check that jbod1 disk is used less than or equal to 0 times"):
-            assert used_disks.count("jbod1") <= 0, error()
+                    with Then("check that jbod1 disk is used 0 times"):
+                        assert used_disks.count("jbod1") == 0, error()
 
-        with And("that all the parts were moved to 'external'"):
-            assert used_disks[:] == ["external"] * 5, error()
+                    with And("that all the parts were moved to 'external'"):
+                        assert used_disks[:] == ["external"] * 5, error()
 
         with When("I read path_on_disk from system.part_log"):
             path = (

@@ -20,7 +20,6 @@ def regression(
     zookeeper_version=None,
     use_keeper=False,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """ClickHouse LDAP integration regression module."""
@@ -32,7 +31,6 @@ def regression(
         "zookeeper_version": zookeeper_version,
         "clickhouse_version": clickhouse_version,
         "collect_service_logs": collect_service_logs,
-        "allow_vfs": allow_vfs,
     }
 
     self.context.clickhouse_version = clickhouse_version

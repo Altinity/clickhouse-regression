@@ -1,122 +1,15 @@
 version: '2.3'
 
-volumes:
-  data1-1:
-
-  var_lib_clickhouse-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=30G"
-      device: tmpfs
-      type: tmpfs
-
-  var_log_clickhouse-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-  
-  var_lib_clickhouse-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=30G"
-      device: tmpfs
-      type: tmpfs
-
-  var_log_clickhouse-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  var_lib_clickhouse-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=30G"
-      device: tmpfs
-      type: tmpfs
-
-  var_log_clickhouse-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_data-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=1G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_datalog-limited-1:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_data-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=1G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_datalog-limited-2:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_data-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=1G"
-      device: tmpfs
-      type: tmpfs
-
-  zookeeper_datalog-limited-3:
-    driver: local
-    driver_opts:
-      o: "size=5G"
-      device: tmpfs
-      type: tmpfs
-
 services:
   zookeeper1:
     extends:
-      file: ../../docker-compose/zookeeper-node-service.yml
-      service: zookeeper1
-
-  zookeeper2:
-    extends:
-      file: ../../docker-compose/zookeeper-node-service.yml
-      service: zookeeper2
-
-  zookeeper3:
-    extends:
-      file: ../../docker-compose/zookeeper-node-service.yml
-      service: zookeeper3
+      file: ../../docker-compose/zookeeper-service.yml
+      service: zookeeper-alone
 
   keeper1:
     extends:
       file: ../../docker-compose/keeper-service.yml
       service: keeper1
-
-  keeper2:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper2
-
-  keeper3:
-    extends:
-      file: ../../docker-compose/keeper-service.yml
-      service: keeper3
 
   clickhouse1:
     extends:
@@ -141,7 +34,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper2:
+      zookeeper1:
         condition: service_healthy
 
   clickhouse3:
@@ -154,7 +47,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
-      zookeeper3:
+      zookeeper1:
         condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
@@ -170,13 +63,6 @@ services:
         condition: service_healthy
       zookeeper1:
         condition: service_healthy
-      zookeeper2:
-        condition: service_healthy
-      zookeeper3:
-        condition: service_healthy
       keeper1:
         condition: service_healthy
-      keeper2:
-        condition: service_healthy
-      keeper3:
-        condition: service_healthy
+

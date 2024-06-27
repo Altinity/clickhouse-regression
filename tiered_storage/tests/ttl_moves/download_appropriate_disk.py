@@ -16,7 +16,7 @@ from tiered_storage.requirements import *
 @TestScenario
 @Name("download appropriate disk")
 @Requirements(RQ_SRS_004_TTLExpressions_ReplicatedTable_DownloadedPartPlacement("1.0"))
-def scenario(self, cluster, nodes=None):
+def scenario(self, nodes=None):
     """Check that when parts are downloaded from a replica
     they are placed according to the storage policy and TTL expression
     specified for the table.
@@ -32,6 +32,7 @@ def scenario(self, cluster, nodes=None):
         * node3 - fast disk (because there is no space on medium disk )
     """
     name = "replicated_table_ttl_moves_download_appropriate_disk"
+    cluster = self.context.cluster
 
     if nodes is None:
         nodes = cluster.nodes["clickhouse"][:3]

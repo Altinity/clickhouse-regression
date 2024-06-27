@@ -30,7 +30,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=False,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """ClickHouse Session Timezone regression module."""
