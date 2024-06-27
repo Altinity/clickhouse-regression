@@ -12,7 +12,7 @@ from testflows.asserts import error
 from tiered_storage.requirements import *
 
 
-@TestScenario
+@TestOutline(Scenario)
 @Name("alter multiple ttls")
 @Requirements(
     RQ_SRS_004_TTLExpressions_AddingToTable_AlterTable("1.0"),
@@ -22,11 +22,14 @@ from tiered_storage.requirements import *
     "name engine",
     [
         ("mt_test_alter_multiple_ttls", "MergeTree()"),
-        # ("replicated_mt_test_alter_multiple_ttls", "ReplicatedMergeTree('/clickhouse/replicated_test_alter_multiple_ttls', '1')"),
+        (
+            "replicated_mt_test_alter_multiple_ttls",
+            "ReplicatedMergeTree('/clickhouse/replicated_test_alter_multiple_ttls', '1')",
+        ),
     ],
     "%-21s | %-20s",
 )
-def scenario(self, cluster, node="clickhouse1"):
+def scenario(self, name, engine):
     """Check that when multiple TTL expressions are set
     and before any parts are inserted the TTL expressions
     are changed with ALTER command then all old
@@ -35,16 +38,13 @@ def scenario(self, cluster, node="clickhouse1"):
     deleted if the new TTL expression is triggered
     and are not moved or deleted when it is not.
     """
-    with Given("cluster node"):
-        node = cluster.node(node)
+    cluster = self.context.cluster
+    node = cluster.node("clickhouse1")
 
-    for example in self.examples:
-        name, engine = example
-        for positive in (True, False):
-            with When(
-                f"I check that inserted parts should {'be' if positive else 'not be'} moved"
-            ):
-                with Given(f"table name='{name}', engine='{engine}'"):
+    for positive in (True, False):
+        with Check(f"inserted parts should {'be' if positive else 'not be'} moved"):
+            try:
+                with Given("table"):
                     node.query(
                         f"""
                         CREATE TABLE {name} (
@@ -59,120 +59,102 @@ def scenario(self, cluster, node="clickhouse1"):
                         SETTINGS storage_policy='jbods_with_external', merge_with_ttl_timeout=0
                     """
                     )
-                    try:
-                        with When(
-                            "I straightaway change TTL expressions using ALTER TABLE"
-                        ):
-                            node.query(
+
+                with When("I straightaway change TTL expressions using ALTER TABLE"):
+                    node.query(
+                        f"""
+                        ALTER TABLE {name} MODIFY
+                        TTL d1 + INTERVAL 0 SECOND TO DISK 'jbod2',
+                            d1 + INTERVAL 60 SECOND TO VOLUME 'external',
+                            d1 + INTERVAL 90 SECOND DELETE
+                    """
+                    )
+
+                with When("I check table schema"):
+                    for attempt in retries(timeout=120, delay=5):
+                        with attempt:
+                            r = node.query(
                                 f"""
-                                ALTER TABLE {name} MODIFY
-                                TTL d1 + INTERVAL 0 SECOND TO DISK 'jbod2',
-                                    d1 + INTERVAL 60 SECOND TO VOLUME 'external',
-                                    d1 + INTERVAL 90 SECOND DELETE
+                                SHOW CREATE TABLE {name} FORMAT Vertical
                             """
+                            ).output.strip()
+                            expected = (
+                                "TTL d1 + toIntervalSecond(0) TO DISK 'jbod2', "
+                                "d1 + toIntervalSecond(60) TO VOLUME 'external', "
+                                "d1 + toIntervalSecond(90)"
                             )
+                            with Then(
+                                "it should contain new TTL expressions",
+                                description=expected,
+                            ):
+                                assert expected in r, error()
 
-                        with When("I check table schema"):
-                            for attempt in retries(timeout=120, delay=5):
-                                with attempt:
-                                    r = node.query(
-                                        f"""
-                                        SHOW CREATE TABLE {name} FORMAT Vertical
-                                    """
-                                    ).output.strip()
-                                    expected = (
-                                        "TTL d1 + toIntervalSecond(0) TO DISK 'jbod2', "
-                                        "d1 + toIntervalSecond(60) TO VOLUME 'external', "
-                                        "d1 + toIntervalSecond(90)"
-                                    )
-                                    with Then(
-                                        "it should contain new TTL expressions",
-                                        description=expected,
-                                    ):
-                                        assert expected in r, error()
+                with When("I insert data"):
+                    for p in range(3):
+                        data = []  # 2MB in total
+                        now = time.time()
+                        for i in range(2):
+                            p1 = p
+                            s1 = get_random_string(
+                                cluster, 1024 * 1024, steps=False
+                            )  # 1MB
+                            d1 = now - 1 if i > 0 or positive else now + 300
+                            data.append(f"({p1}, '{s1}', toDateTime({d1}))")
+                        values = ",".join(data)
+                        node.query(f"INSERT INTO {name} (p1, s1, d1) VALUES {values}")
 
-                        with When("I insert data"):
-                            for p in range(3):
-                                data = []  # 2MB in total
-                                now = time.time()
-                                for i in range(2):
-                                    p1 = p
-                                    s1 = get_random_string(
-                                        cluster, 1024 * 1024, steps=False
-                                    )  # 1MB
-                                    d1 = now - 1 if i > 0 or positive else now + 300
-                                    data.append(f"({p1}, '{s1}', toDateTime({d1}))")
-                                values = ",".join(data)
-                                node.query(
-                                    f"INSERT INTO {name} (p1, s1, d1) VALUES {values}"
-                                )
+                with And("I get used disks for the table"):
+                    used_disks = get_used_disks_for_table(node, name)
+                    with Then(
+                        f"parts {'should' if positive else 'should not'} have been moved"
+                    ):
+                        assert set(used_disks) == (
+                            {"jbod2"} if positive else {"jbod1", "jbod2"}
+                        ), error()
 
-                        with And("I get used disks for the table"):
-                            used_disks = get_used_disks_for_table(node, name)
+                with Then("number of rows should match"):
+                    r = node.query(
+                        f"SELECT count() FROM {name} FORMAT TabSeparated"
+                    ).output.strip()
+                    assert r == "6", error()
+
+                with And("I wait until second TTL expression eventually triggers"):
+                    time.sleep(60)
+
+                    for attempt in retries(timeout=300, delay=10):
+                        with attempt:
+                            with When("I get used disks for the table"):
+                                used_disks = get_used_disks_for_table(node, name)
                             with Then(
                                 f"parts {'should' if positive else 'should not'} have been moved"
                             ):
                                 assert set(used_disks) == (
-                                    {"jbod2"} if positive else {"jbod1", "jbod2"}
+                                    {"external"} if positive else {"jbod1", "jbod2"}
                                 ), error()
 
-                        with Then("number of rows should match"):
-                            r = node.query(
-                                f"SELECT count() FROM {name} FORMAT TabSeparated"
-                            ).output.strip()
-                            assert r == "6", error()
+                            with Then("again number of rows should match"):
+                                r = node.query(
+                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
+                                ).output.strip()
+                                assert r == "6", error()
 
-                        with And(
-                            "I wait until second TTL expression eventually triggers"
-                        ):
-                            time.sleep(60)
+                with And("I wait until TTL expression to delete eventually triggers"):
+                    time.sleep(30)
 
-                            for attempt in retries(timeout=300, delay=10):
-                                with attempt:
-                                    with When("I get used disks for the table"):
-                                        used_disks = get_used_disks_for_table(
-                                            node, name
-                                        )
-                                    with Then(
-                                        f"parts {'should' if positive else 'should not'} have been moved"
-                                    ):
-                                        assert set(used_disks) == (
-                                            {"external"}
-                                            if positive
-                                            else {"jbod1", "jbod2"}
-                                        ), error()
+                    with By("running optimize final to make sure delete completes"):
+                        node.query(f"OPTIMIZE TABLE {name} FINAL")
 
-                                    with Then("again number of rows should match"):
-                                        r = node.query(
-                                            f"SELECT count() FROM {name} FORMAT TabSeparated"
-                                        ).output.strip()
-                                        assert r == "6", error()
+                    with And("retrying until number of rows reaches the expected"):
+                        for attempt in retries(timeout=300, delay=10):
+                            with attempt:
+                                with Then(
+                                    f"number of rows should {'be 0' if positive else 'match'}"
+                                ):
+                                    r = node.query(
+                                        f"SELECT count() FROM {name} FORMAT TabSeparated"
+                                    ).output.strip()
+                                    assert r == ("0" if positive else "3"), error()
 
-                        with And(
-                            "I wait until TTL expression to delete eventually triggers"
-                        ):
-                            time.sleep(30)
-
-                            with By(
-                                "running optimize final to make sure delete completes"
-                            ):
-                                node.query(f"OPTIMIZE TABLE {name} FINAL")
-
-                            with And(
-                                "retrying until number of rows reaches the expected"
-                            ):
-                                for attempt in retries(timeout=300, delay=10):
-                                    with attempt:
-                                        with Then(
-                                            f"number of rows should {'be 0' if positive else 'match'}"
-                                        ):
-                                            r = node.query(
-                                                f"SELECT count() FROM {name} FORMAT TabSeparated"
-                                            ).output.strip()
-                                            assert r == (
-                                                "0" if positive else "3"
-                                            ), error()
-
-                    finally:
-                        with Finally("I drop the table"):
-                            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+            finally:
+                with Finally("I drop the table"):
+                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")

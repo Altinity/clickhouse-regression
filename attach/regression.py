@@ -45,17 +45,14 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """Attach statement regression."""
 
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
-    self.context.allow_vfs = allow_vfs
 
     nodes = {
-        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
     }
 
@@ -63,7 +60,6 @@ def regression(
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
-            use_zookeeper_nodes=True,
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
@@ -72,7 +68,6 @@ def regression(
         self.context.node_2 = self.context.cluster.node("clickhouse2")
         self.context.node_3 = self.context.cluster.node("clickhouse3")
         self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
-        self.context.zk_nodes = [cluster.node(n) for n in cluster.nodes["zookeeper"]]
 
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:

@@ -22,7 +22,7 @@ services:
   zookeeper-alone:
     image: zookeeper:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     extends: zookeeper
-    hostname: zookeeper
+    hostname: zookeeper1
     environment:
       ZOO_MY_ID: 0
       ZOO_SERVERS: server.0=localhost:2888:3888;2181

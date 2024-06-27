@@ -25,23 +25,15 @@ services:
     hostname: keeper1
     environment:
       - KEEPER_SERVER_ID=1
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/data/:/var/lib/clickhouse"
+
   keeper2:
     extends: keeper
     hostname: keeper2
     environment:
       - KEEPER_SERVER_ID=2
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper2/data/:/var/lib/clickhouse"
 
   keeper3:
     extends: keeper
     hostname: keeper3
     environment:
       - KEEPER_SERVER_ID=3
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/logs/:/var/log/clickhouse-keeper"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper3/data/:/var/lib/clickhouse"

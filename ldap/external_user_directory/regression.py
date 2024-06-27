@@ -82,7 +82,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """ClickHouse LDAP external user directory regression module."""

@@ -12,7 +12,7 @@ from testflows.asserts import error
 from tiered_storage.requirements import *
 
 
-@TestScenario
+@TestOutline(Scenario)
 @Name("alter drop all ttls")
 @Requirements(
     RQ_SRS_004_TTLExpressions_AddingToTable_AlterTable("1.0"),
@@ -22,21 +22,21 @@ from tiered_storage.requirements import *
     "name engine",
     [
         ("mt_test_alter_drop_all_ttls", "MergeTree()"),
-        # ("replicated_mt_test_alter_drop_all_ttls", "ReplicatedMergeTree('/clickhouse/replicated_test_alter_drop_all_ttls', '1')"),
+        (
+            "replicated_mt_test_alter_drop_all_ttls",
+            "ReplicatedMergeTree('/clickhouse/replicated_test_alter_drop_all_ttls', '1')",
+        ),
     ],
     "%-21s | %-20s",
 )
-def scenario(self, cluster, node="clickhouse1"):
+def scenario(self, name, engine):
     """Check that ALTER can be used to drop all TTL expressions."""
-    with Given("cluster node"):
-        node = cluster.node(node)
+    cluster = self.context.cluster
+    node = cluster.node("clickhouse1")
 
-    for example in self.examples:
-        name, engine = example
-        for positive in (True, False):
-            with When(
-                f"I check that inserted parts should {'be' if positive else 'not be'} moved"
-            ):
+    for positive in (True, False):
+        with Check(f"inserted parts should {'be' if positive else 'not be'} moved"):
+            try:
                 with Given(f"table name='{name}', engine='{engine}'"):
                     node.query(
                         f"""
@@ -52,75 +52,73 @@ def scenario(self, cluster, node="clickhouse1"):
                         SETTINGS storage_policy='jbods_with_external', merge_with_ttl_timeout=0
                     """
                     )
-                    try:
-                        with When(
-                            "I straightaway change TTL expressions using ALTER TABLE"
-                        ):
-                            node.query(
-                                f"""
-                                ALTER TABLE {name} REMOVE TTL
-                            """
-                            )
-                        with When("I insert data"):
-                            for p in range(3):
-                                data = []  # 2MB in total
-                                now = time.time()
-                                for i in range(2):
-                                    p1 = p
-                                    s1 = get_random_string(
-                                        cluster, 1024 * 1024, steps=False
-                                    )  # 1MB
-                                    d1 = now - 1 if i > 0 or positive else now + 300
-                                    data.append(f"({p1}, '{s1}', toDateTime({d1}))")
-                                values = ",".join(data)
-                                node.query(
-                                    f"INSERT INTO {name} (p1, s1, d1) VALUES {values}"
-                                )
 
-                        with And("I get used disks for the table"):
+                    with When(
+                        "I straightaway change TTL expressions using ALTER TABLE"
+                    ):
+                        node.query(
+                            f"""
+                            ALTER TABLE {name} REMOVE TTL
+                        """
+                        )
+                    with When("I insert data"):
+                        for p in range(3):
+                            data = []  # 2MB in total
+                            now = time.time()
+                            for i in range(2):
+                                p1 = p
+                                s1 = get_random_string(
+                                    cluster, 1024 * 1024, steps=False
+                                )  # 1MB
+                                d1 = now - 1 if i > 0 or positive else now + 300
+                                data.append(f"({p1}, '{s1}', toDateTime({d1}))")
+                            values = ",".join(data)
+                            node.query(
+                                f"INSERT INTO {name} (p1, s1, d1) VALUES {values}"
+                            )
+
+                    with And("I get used disks for the table"):
+                        used_disks = get_used_disks_for_table(node, name)
+                        with Then(f"parts should not have been moved"):
+                            assert set(used_disks) == {"jbod1", "jbod2"}, error()
+
+                    with Then("number of rows should match"):
+                        r = node.query(
+                            f"SELECT count() FROM {name} FORMAT TabSeparated"
+                        ).output.strip()
+                        assert r == "6", error()
+
+                    with And("I wait until second TTL expression would trigger"):
+                        time.sleep(5)
+
+                        with When("I get used disks for the table"):
                             used_disks = get_used_disks_for_table(node, name)
                             with Then(f"parts should not have been moved"):
-                                assert set(used_disks) == {"jbod1", "jbod2"}, error()
+                                assert set(used_disks) == {
+                                    "jbod1",
+                                    "jbod2",
+                                }, error()
 
-                        with Then("number of rows should match"):
+                        with Then("again number of rows should match"):
                             r = node.query(
                                 f"SELECT count() FROM {name} FORMAT TabSeparated"
                             ).output.strip()
                             assert r == "6", error()
 
-                        with And("I wait until second TTL expression would trigger"):
-                            time.sleep(5)
+                    with And(
+                        "I wait until TTL expression to delete would have triggered"
+                    ):
+                        time.sleep(5)
 
-                            with When("I get used disks for the table"):
-                                used_disks = get_used_disks_for_table(node, name)
-                                with Then(f"parts should not have been moved"):
-                                    assert set(used_disks) == {
-                                        "jbod1",
-                                        "jbod2",
-                                    }, error()
+                        with When("I ran optimize final to make sure delete completes"):
+                            node.query(f"OPTIMIZE TABLE {name} FINAL")
 
-                            with Then("again number of rows should match"):
-                                r = node.query(
-                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
-                                ).output.strip()
-                                assert r == "6", error()
+                        with Then(f"number of rows should match"):
+                            r = node.query(
+                                f"SELECT count() FROM {name} FORMAT TabSeparated"
+                            ).output.strip()
+                            assert r == "6", error()
 
-                        with And(
-                            "I wait until TTL expression to delete would have triggered"
-                        ):
-                            time.sleep(5)
-
-                            with When(
-                                "I ran optimize final to make sure delete completes"
-                            ):
-                                node.query(f"OPTIMIZE TABLE {name} FINAL")
-
-                            with Then(f"number of rows should match"):
-                                r = node.query(
-                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
-                                ).output.strip()
-                                assert r == "6", error()
-
-                    finally:
-                        with Finally("I drop the table"):
-                            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+            finally:
+                with Finally("I drop the table"):
+                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")

@@ -83,7 +83,9 @@ def cascade_mv_definer_mv_definer_mv_definer(
         new_user = "new_user_" + getuid()
         create_user(user_name=new_user)
 
-    with And(f"grant following privileges to new user: {user_source_privileges}"):
+    with And(
+        f"grant following privileges to new user for source table: {user_source_privileges}"
+    ):
         grant_privilege(
             privileges=user_source_privileges, object=source_table_name, user=new_user
         )
@@ -273,7 +275,9 @@ def cascade_mv_mv_definer_mv_definer(
         new_user = "new_user_" + getuid()
         create_user(user_name=new_user)
 
-    with And("grant privileges to new user"):
+    with And(
+        f"grant following privileges to new user on source table: {user_source_privileges}"
+    ):
         grant_privilege(
             privileges=user_source_privileges, object=source_table_name, user=new_user
         )
@@ -449,7 +453,9 @@ def cascade_mv_definer_mv_mv_definer(
         new_user = "new_user_" + getuid()
         create_user(user_name=new_user)
 
-    with And("grant privileges to new user"):
+    with And(
+        f"grant following privileges to new user on source table: {user_source_privileges}"
+    ):
         grant_privilege(
             privileges=user_source_privileges, object=source_table_name, user=new_user
         )
@@ -732,7 +738,7 @@ def cascade_mv_mv_definer_mv(
 ):
     """
     Test privileges for different operations on cascading view:
-    source table -> MV without sql security specified-> MV with definer -> MV with definer
+    source table -> MV without sql security specified-> MV with definer -> MV without sql security specified
     """
     node = self.context.node
 
@@ -866,7 +872,6 @@ def cascade_mv_mv_definer_mv(
         """check that following set of grants allows user to insert into third MV:
         - INSERT on third MV for new user"""
     ):
-        exitcode, message = 241, f"Exception:"
         node.query(
             f"INSERT INTO {view_name_3} VALUES (4), (5), (6)",
             settings=[("user", new_user)],
@@ -982,6 +987,7 @@ def cascade_mv_definer_mv_definer_mv(
         - SELECT on source table for definer one,
         - INSERT on target table one for definer one, 
         - SELECT on target table one for definer two,
+        - SELECT on target table two for definer two,
         - INSERT on target table two for definer two, 
         otherwise expect exception"""
     ):
@@ -1012,6 +1018,7 @@ def cascade_mv_definer_mv_definer_mv(
     with And(
         """check that following set of grants allows user to select from third MV:
         - SELECT on third MV for new user
+        - SELECT on second target table (third MV's source table) for new user
         otherwise expect exception"""
     ):
         exitcode, message = 241, f"Exception:"
@@ -1139,6 +1146,7 @@ def cascade_mv_definer_mv_mv(
         - INSERT on source table for user, 
         - SELECT on source table for definer one,
         - INSERT on target table one for definer one, 
+        - SELECT on target table one for definer one,
         - SELECT on target table two for definer one,
         otherwise expect exception"""
     ):
@@ -1168,6 +1176,7 @@ def cascade_mv_definer_mv_mv(
     with And(
         """check that following set of grants allows user to select from third MV:
         - SELECT on third MV for new user
+        - SELECT on second target table (third MV's source table) for new user
         otherwise expect exception"""
     ):
         exitcode, message = 241, f"Exception:"
@@ -1273,9 +1282,9 @@ def cascade_mv_mv_mv(
     with And(
         """check that following set of grants allows to insert into source table:
         - INSERT on source table for user, 
-        - SELECT on source table for definer one,
-        - INSERT on target table one for definer one, 
-        - SELECT on target table two for definer one,
+        - SELECT on source table for user,
+        - SELECT on target table one for user,
+        - SELECT on target table two for user,
         otherwise expect exception"""
     ):
         if (
@@ -1303,6 +1312,7 @@ def cascade_mv_mv_mv(
     with And(
         """check that following set of grants allows user to select from third MV:
         - SELECT on third MV for new user
+        - SELECT on second target table (third MV's source table) for new user
         otherwise expect exception"""
     ):
         exitcode, message = 241, f"Exception:"

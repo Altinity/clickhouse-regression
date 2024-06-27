@@ -59,12 +59,6 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--allow-vfs",
-        help="Instruct the tests to enable allow_vfs for all external disks",
-        action="store_true",
-    )
-
-    parser.add_argument(
         "--collect-service-logs",
         action="store_true",
         default=False,
@@ -94,7 +88,6 @@ def CaptureClusterArgs(func):
             cluster_args,
             clickhouse_version,
             stress=None,
-            allow_vfs=False,
             with_analyzer=False,
         ):
             nodes = ...
