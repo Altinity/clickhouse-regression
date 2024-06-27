@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import sys
 import json
 
@@ -6,8 +7,10 @@ from clickhouse_driver import Client
 from clickhouse_driver.errors import Error
 
 
-def clickhouse_client_tty():
-    client = Client("localhost")
+
+def clickhouse_client_tty(args):
+    args_dict = {k: v for k, v in vars(args).items() if v is not None}
+    client = Client(**args_dict)
 
     while True:
         query = input("⇒ ")
@@ -18,10 +21,7 @@ def clickhouse_client_tty():
         try:
             result = client.execute(query)
             print("⇐ ", end="")
-
-            if not result:
-                print("null")
-                continue
+            result = result or ["null"]
 
             for row in result:
                 json.dump(row, sys.stdout, sort_keys=True)
@@ -31,4 +31,32 @@ def clickhouse_client_tty():
             print(f"⇐ 🔥 Exception: {e}")
 
 if __name__ == "__main__":
-    clickhouse_client_tty()
+    parser = argparse.ArgumentParser(description='ClickHouse client with TTY.')
+    parser.add_argument('--user', default="default", help='User for ClickHouse connection.')
+    parser.add_argument('--password', default="", help='Password for ClickHouse connection.')
+    parser.add_argument('--secure', default=False, action='store_true', help='Use secure connection.')
+    parser.add_argument('--host', default='localhost', help='Host for ClickHouse connection.')
+    parser.add_argument('--port', default='9000', help='Port for ClickHouse connection.')
+    parser.add_argument('--database', default='default', help='Database for ClickHouse connection.')
+    parser.add_argument('--client_name', default='python-driver', help='Client name for ClickHouse connection.')
+    parser.add_argument('--connect_timeout', default=10, help='Timeout for establishing connection.')
+    parser.add_argument('--send_receive_timeout', default=300, help='Timeout for sending and receiving data.')
+    parser.add_argument('--sync_request_timeout', default=5, help='Timeout for server ping.')
+    parser.add_argument('--compress_block_size', default=1048576, help='Size of compressed block to send.')
+    parser.add_argument('--compression', default=False, help='Compression algorithm, possible choices: True (lz4), lz4, lz4hc, zstd.')
+    parser.add_argument('--verify', default=True, help='Specifies whether a certificate is required and whether it will be validated after connection.')
+    parser.add_argument('--ssl_version',help='SSL version.')
+    parser.add_argument('--ca_certs', help='CA certificates.')
+    parser.add_argument('--ciphers', help='Ciphers.')
+    parser.add_argument('--keyfile', help='Keyfile.')
+    parser.add_argument('--certfile', help='Certfile.')
+    parser.add_argument('--server_hostname', default=False, help='Hostname to use in SSL Wrapper construction.')
+    parser.add_argument('--alt_hosts', help='List of alternative hosts for connection. Example: alt_hosts=host1:port1,host2:port2.')
+    parser.add_argument('--settings_is_important', default=False, help='False means unknown settings will be ignored, True means that the query will fail with UNKNOWN_SETTING error.')
+    parser.add_argument('--tcp_keepalive', default=False, help='Enables TCP keepalive on established connection.')
+    parser.add_argument('--client_revision', default=None, help='Can be used for client version downgrading.')
+
+    args = parser.parse_args()
+
+    clickhouse_client_tty(args)
+
