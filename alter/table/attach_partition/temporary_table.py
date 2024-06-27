@@ -189,13 +189,14 @@ def check_attach_partition_from_with_temporary_tables(
                     for attempt in retries(timeout=30, delay=2):
                         with attempt:
                             source_partition_data = client.query(
-                                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                                f"SELECT a,b,c,extra FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                             )
                             destination_partition_data = client.query(
-                                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                                f"SELECT a,b,c,extra FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                             )
                             assert (
-                                source_partition_data == destination_partition_data
+                                source_partition_data.output
+                                == destination_partition_data.output
                             ), error()
 
     with And(f"I check that all replicas of destination table have same data:"):
