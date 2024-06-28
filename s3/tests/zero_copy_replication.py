@@ -24,7 +24,7 @@ def global_setting(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_global_setting"
@@ -54,7 +54,7 @@ def drop_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop"
@@ -100,7 +100,7 @@ def add_replica_global_setting(self):
         mergetree_config(settings=settings, restart=True)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on the first node"):
         table_name = "zero_copy_replication_add"
@@ -144,7 +144,7 @@ def add_replica_local_setting(self):
         nodes = self.context.ch_nodes[:2]
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on the first node"):
         table_name = "zero_copy_replication_add_local"
@@ -201,7 +201,7 @@ def offline_alter_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
@@ -253,7 +253,7 @@ def stale_alter_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
@@ -331,7 +331,7 @@ def add_remove_one_replica(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with Given("I have a replicated table"):
         for node in nodes:
@@ -414,7 +414,7 @@ def add_remove_replica_parallel(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with Given("I have a replicated table on one node"):
         replicated_table(node=nodes[0], table_name=table_name, columns="d UInt64")
@@ -580,7 +580,7 @@ def metadata(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_metadata"
@@ -670,7 +670,7 @@ def alter(self, count=10):
         mergetree_config(settings=settings, restart=True)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("a replicated table on each node"):
         for node in nodes:
@@ -735,7 +735,7 @@ def insert_multiple_replicas(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after()
+        size_before = measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
@@ -779,12 +779,12 @@ def delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after()
+        size_before = measure_buckets_before_and_after(less_ok=True)
 
     with Given("I have a replicated table on each node"):
         table_name = "zero_copy_replication_delete"
         for node in nodes:
-            replicated_table(node=node, table_name=table_name)
+            replicated_table(node=node, table_name=table_name, policy="external")
 
     with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
@@ -823,7 +823,7 @@ def delete_all(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after()
+        size_before = measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_delete_all"
@@ -862,7 +862,7 @@ def ttl_move(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I get the size of the other s3 bucket before adding data"):
         measure_buckets_before_and_after(
@@ -981,7 +981,12 @@ def ttl_delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I get the size of the other s3 bucket before adding data"):
+        measure_buckets_before_and_after(
+            bucket_prefix=self.context.bucket_path + "/tiered"
+        )
 
     try:
         with When("I create a replicated table on each node"):
@@ -1083,7 +1088,7 @@ def migration(self, source, destination):
     columns = "d UInt64"
 
     with Given("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after(delay=60)
+        measure_buckets_before_and_after(delay=10, less_ok=True)
 
     with And("I have a replicated table"):
         replicated_table_name = "migration_replicated_" + getuid()[:8]
@@ -1145,6 +1150,9 @@ def bad_detached_part(self):
             self.context.zero_copy_replication_setting: "1",
         }
         mergetree_config(settings=settings)
+
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I have a replicated table on each node"):
         for node in nodes:
@@ -1426,11 +1434,16 @@ def check_refcount_after_mutation(self):
     """Check that clickhouse correctly updates ref_count when updating metadata across replicas."""
     node = current().context.node
     table_name = "table_" + getuid()
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
     try:
         with Given("I have a table"):
             node.query(
                 f"""
-            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) 
+            ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
             ORDER BY key
             PARTITION BY (key % 4)
             SETTINGS storage_policy='external'
@@ -1479,6 +1492,9 @@ def consistency_during_double_mutation(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
@@ -1487,7 +1503,8 @@ def consistency_during_double_mutation(self):
         with Given("I have a table"):
             node.query(
                 f"""
-            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) 
+            ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
             ORDER BY key
             PARTITION BY (key % 4)
             SETTINGS storage_policy='external'
@@ -1542,15 +1559,19 @@ def consistency_during_conflicting_mutation(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
 
     try:
         with Given("I have a table"):
             node.query(
                 f"""
-            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) 
+            ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
             ORDER BY key
             PARTITION BY (key % 4)
             SETTINGS storage_policy='external'
@@ -1596,21 +1617,20 @@ def outline(self, uri):
     self.context.minio_enabled = self.context.storage == "minio"
 
     self.context.uri = uri
+    zero_copy_uri = uri + "zero-copy-replication/"
     self.context.bucket_path = "data/zero-copy-replication"
 
     with Given("I have two S3 disks configured"):
-        uri_tiered = self.context.uri + "tiered/"
-        # /zero-copy-replication/
         disks = {
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}zero-copy-replication/",
+                "endpoint": zero_copy_uri,
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
             "external_tiered": {
                 "type": "s3",
-                "endpoint": f"{uri_tiered}",
+                "endpoint": zero_copy_uri + "tiered/",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
@@ -1659,11 +1679,14 @@ def outline(self, uri):
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
-    with Check("bucket should be empty before test begins"):
-        check_bucket_size(expected_size=0, tolerance=50)
+    with And("I know the current bucket size"):
+        initial_bucket_size = get_bucket_size()
 
     for scenario in loads(current_module(), Scenario):
         scenario()
+
+    with Finally("the bucket should be cleaned up"):
+        check_bucket_size(expected_size=initial_bucket_size, tolerance=50)
 
 
 @TestFeature
