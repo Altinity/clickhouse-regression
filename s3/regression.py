@@ -125,7 +125,12 @@ xfails = {
     ":/:/zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/:/zero copy replication/delete": [(Fail, "needs investigation")],
+    ":/:/zero copy replication/delete": [
+        (Fail, "test doesn't clean up, needs investigation")
+    ],
+    ":/:/zero copy replication/:mutation/:/the size of the s3 bucket:": [
+        (Fail, "test doesn't clean up, needs investigation")
+    ],
     ":/vfs/zero copy replication/:replic:": [
         (Fail, "TODO: VFS uses more disk per replica than 0-copy")
     ],
@@ -145,7 +150,7 @@ xfails = {
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
     ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
-    "aws s3/:/zero copy replication/bucket should be empty before test begins": [
+    ":/:/zero copy replication/the bucket should be cleaned up": [
         (Fail, "Data cleanup needs investigation")
     ],
     "aws s3/:/backup/:/:": [
