@@ -566,21 +566,21 @@ def execute_query(
         if no_checks:
             return r
 
+    lock = threading.Lock()
+
     if message is None:
         if expected is not None:
             with Then("I check output against expected"):
                 assert r.output.strip() == expected, error()
         else:
-            lock = threading.Lock()
-            with lock:
-                with Then("I check output against snapshot"):
-                    with values() as that:
-                        assert that(
-                            snapshot(
-                                "\n" + r.output.strip() + "\n",
-                                id=snapshot_id,
-                                name=snapshot_name,
-                                encoder=str,
-                                mode=snapshot.CHECK,
-                            )
-                        ), error()
+            with Then("I check output against snapshot"):
+                with values() as that:
+                    with lock:
+                        snapshot_result = snapshot(
+                            "\n" + r.output.strip() + "\n",
+                            id=snapshot_id,
+                            name=snapshot_name,
+                            encoder=str,
+                            mode=snapshot.CHECK,
+                        )
+                    assert that(snapshot_result), error()
