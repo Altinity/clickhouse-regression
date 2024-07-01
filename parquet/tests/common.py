@@ -11,6 +11,7 @@ from helpers.tables import *
 from s3.tests.common import *
 from testflows.asserts import values, error, snapshot
 
+lock = threading.Lock()
 
 @TestStep(Given)
 def start_minio(
@@ -571,7 +572,6 @@ def execute_query(
             with Then("I check output against expected"):
                 assert r.output.strip() == expected, error()
         else:
-            lock = threading.Lock()
             with Then("I check output against snapshot"):
                 with values() as that:
                     with lock:
