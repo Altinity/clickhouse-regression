@@ -1,3 +1,4 @@
+import threading
 import uuid
 import pyarrow.parquet as pq
 
@@ -570,14 +571,16 @@ def execute_query(
             with Then("I check output against expected"):
                 assert r.output.strip() == expected, error()
         else:
-            with Then("I check output against snapshot"):
-                with values() as that:
-                    assert that(
-                        snapshot(
-                            "\n" + r.output.strip() + "\n",
-                            id=snapshot_id,
-                            name=snapshot_name,
-                            encoder=str,
-                            mode=snapshot.CHECK,
-                        )
-                    ), error()
+            lock = threading.Lock()
+            with lock:
+                with Then("I check output against snapshot"):
+                    with values() as that:
+                        assert that(
+                            snapshot(
+                                "\n" + r.output.strip() + "\n",
+                                id=snapshot_id,
+                                name=snapshot_name,
+                                encoder=str,
+                                mode=snapshot.CHECK,
+                            )
+                        ), error()
