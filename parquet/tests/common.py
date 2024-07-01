@@ -566,7 +566,6 @@ def execute_query(
         if no_checks:
             return r
 
-
     if message is None:
         if expected is not None:
             with Then("I check output against expected"):
