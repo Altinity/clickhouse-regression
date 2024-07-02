@@ -8,7 +8,12 @@ from clickhouse_driver import Client
 from clickhouse_driver.errors import Error
 
 
-class DateTimeEncoder(json.JSONEncoder):
+class JSONEncoder(json.JSONEncoder):
+    """
+    Custom JSON encoder:
+        - Supports DateTime serialization.
+    """
+
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
@@ -31,7 +36,7 @@ def clickhouse_client_tty(args):
             result = result or ["null"]
 
             for row in result:
-                json.dump(row, sys.stdout, cls=DateTimeEncoder, sort_keys=True)
+                json.dump(row, sys.stdout, cls=JSONEncoder, sort_keys=True)
                 print("")
 
         except Error as e:
