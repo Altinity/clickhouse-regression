@@ -7,6 +7,7 @@ on:
 
 jobs:
   clickhouse-24-3-x86:
+    name: Test Names Can be changed from here
     uses: ./.github/workflows/reusable-workflow-x86.yml
     with:
       package: docker://clickhouse/clickhouse-server:24.3
