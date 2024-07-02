@@ -16,9 +16,9 @@ jobs:
         id: version
         run: |
           VERSION_24_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.3" | jq -r '. | [.Config.Labels."com.clickhouse.build.version"]')
-          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=version::VERSION_24_3"
   clickhouse-24-3-x86:
-    name: ${VERSION_24_3}
+    needs: get_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
     with:
       package: docker://clickhouse/clickhouse-server:24.3
