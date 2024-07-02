@@ -36,7 +36,10 @@ def check_analyzer():
         default_query_settings = getsattr(
             current().context, "default_query_settings", []
         )
-        if ("allow_experimental_analyzer", 1,) in default_query_settings or (
+        if (
+            "allow_experimental_analyzer",
+            1,
+        ) in default_query_settings or (
             check_clickhouse_version(">=24.3")(test)
             and ("allow_experimental_analyzer", 0) not in default_query_settings
         ):
@@ -661,6 +664,7 @@ def attach_partition(
     table,
     partition=1,
     exitcode=None,
+    errorcode=None,
     user_name=None,
     message=None,
     node=None,
@@ -683,7 +687,8 @@ def attach_partition(
             params["message"] = message
         if exitcode is not None:
             params["exitcode"] = exitcode
-
+        if errorcode is not None:
+            params["errorcode"] = errorcode
         node.query(query, **params)
 
 
@@ -758,6 +763,7 @@ def detach_partition(
     table,
     partition=1,
     exitcode=None,
+    errorcode=None,
     user_name=None,
     message=None,
     node=None,
@@ -780,6 +786,8 @@ def detach_partition(
             params["message"] = message
         if exitcode is not None:
             params["exitcode"] = exitcode
+        if errorcode is not None:
+            params["errorcode"] = errorcode
 
         node.query(query, **params)
 
