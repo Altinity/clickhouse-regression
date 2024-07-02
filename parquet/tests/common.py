@@ -1,4 +1,3 @@
-import threading
 import uuid
 import pyarrow.parquet as pq
 
@@ -10,8 +9,6 @@ from helpers.datatypes import *
 from helpers.tables import *
 from s3.tests.common import *
 from testflows.asserts import values, error, snapshot
-
-lock = threading.Lock()
 
 @TestStep(Given)
 def start_minio(
@@ -574,12 +571,11 @@ def execute_query(
         else:
             with Then("I check output against snapshot"):
                 with values() as that:
-                    with lock:
-                        snapshot_result = snapshot(
-                            "\n" + r.output.strip() + "\n",
-                            id=snapshot_id,
-                            name=snapshot_name,
-                            encoder=str,
-                            mode=snapshot.CHECK,
-                        )
+                    snapshot_result = snapshot(
+                        "\n" + r.output.strip() + "\n",
+                        id=snapshot_id,
+                        name=snapshot_name,
+                        encoder=str,
+                        mode=snapshot.CHECK,
+                    )
                     assert that(snapshot_result), error()
