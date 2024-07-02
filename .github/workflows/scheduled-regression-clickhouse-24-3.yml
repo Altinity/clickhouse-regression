@@ -15,8 +15,8 @@ jobs:
       - name: Get version
         id: version
         run: |
-          VERSION_24_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.3" | jq -r '. | [.Config.Labels."com.clickhouse.build.version"]')
-          echo "::set-output name=version::VERSION_24_3"
+          VERSION_24_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.3" | jq -r '. | [.Config.Labels."com.clickhouse.build.version"]' | sed -e 's/^v//' -e 's/-lts$//')
+          echo "::set-output name=version::$VERSION_24_3"
   clickhouse-24-3-x86:
     needs: get_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
@@ -38,6 +38,7 @@ jobs:
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
   clickhouse-24-3-arm:
+    needs: get_version
     uses: ./.github/workflows/reusable-workflow-arm.yml
     with:
       package: docker://clickhouse/clickhouse-server:24.3
