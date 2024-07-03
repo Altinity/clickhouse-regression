@@ -15,7 +15,7 @@ jobs:
       - name: Get version
         id: version
         run: |
-          VERSION_24_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.4" | jq -r '. | [.Config.Labels."com.clickhouse.build.version"]' | jq -r '.[0]' | sed 's/^v//;s/-.*//')
+          VERSION_24_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.3" | jq -r '. | [.Config.Labels."com.clickhouse.build.version"]' | jq -r '.[0]' | sed 's/^v//;s/-.*//')
           echo "VERSION_24_3=$VERSION_24_3" >> $GITHUB_ENV
           echo "The value is $VERSION_24_3"
 
