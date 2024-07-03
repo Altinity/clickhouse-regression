@@ -163,7 +163,8 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.4.21.altinitystable/2023-12-26T23-40-44.341/report.html **TBD**
 
-> `Pass*` - Pass with known fails
+> [!NOTE]
+> **Pass\*** - tests passed with known fails
 
 | Test Suite  | Result                                | Comments |
 | --- |---------------------------------------| --- |
