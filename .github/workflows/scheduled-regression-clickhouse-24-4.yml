@@ -6,11 +6,26 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
+  get_clickhouse_version:
+    runs-on: [ self-hosted, type-cpx41, image-x86-app-docker-ce ]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Pull Docker image
+        run: docker pull clickhouse/clickhouse-server:24.4
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION_24_4=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.4" | jq -r '.Config.Labels."com.clickhouse.build.version" | ltrimstr("v") | split("-")[0]')
+          echo "version=$VERSION_24_4" >> "$GITHUB_OUTPUT"
   clickhouse-24-4-x86:
+    needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
+    name: "clickhouse-${{ needs.get_clickhouse_version.outputs.version }}-x86"
     with:
-      package: docker://clickhouse/clickhouse-server:24.4
-      version: '24.4'
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
@@ -26,10 +41,12 @@ jobs:
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
   clickhouse-24-4-arm:
+    needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-arm.yml
+    name: "clickhouse-${{ needs.get_clickhouse_version.outputs.version }}-arm"
     with:
-      package: docker://clickhouse/clickhouse-server:24.4
-      version: '24.4'
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
