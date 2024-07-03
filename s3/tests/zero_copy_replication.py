@@ -1662,14 +1662,9 @@ def outline(self, uri):
                 "allow_s3_zero_copy_replication"
             )
 
-        if self.context.object_storage_mode == "vfs":
-            self.context.zero_copy_replication_settings = {}
-            for disk_name in disks.keys():
-                disks[disk_name]["allow_vfs"] = "1"
-        else:
-            self.context.zero_copy_replication_settings = {
-                self.context.zero_copy_replication_setting: "1"
-            }
+        self.context.zero_copy_replication_settings = {
+            self.context.zero_copy_replication_setting: "1"
+        }
 
     with And("I have clickhouse nodes"):
         self.context.ch_nodes = [
