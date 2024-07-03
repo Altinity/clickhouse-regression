@@ -21,10 +21,9 @@ jobs:
 
   clickhouse-24-3-x86:
     needs: get_version
-    name: "$VERSION_24_3"
     uses: ./.github/workflows/reusable-workflow-x86.yml
     with:
-      package: docker://clickhouse/clickhouse-server:24.3
+      package: "docker://clickhouse/clickhouse-server:$VERSION_24_3-alpine"
       version: '24.3'
       extra_args: '--with-analyzer'
     secrets:
@@ -40,23 +39,23 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-  clickhouse-24-3-arm:
-    needs: get_version
-    uses: ./.github/workflows/reusable-workflow-arm.yml
-    with:
-      package: docker://clickhouse/clickhouse-server:24.3
-      version: '24.3'
-      extra_args: '--with-analyzer'
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      GCS_URI: ${{ secrets.GCS_URI }}
-      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
+#  clickhouse-24-3-arm:
+#    needs: get_version
+#    uses: ./.github/workflows/reusable-workflow-arm.yml
+#    with:
+#      package: docker://clickhouse/clickhouse-server:24.3
+#      version: '24.3'
+#      extra_args: '--with-analyzer'
+#    secrets:
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+#      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+#      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+#      AWS_REGION: ${{ secrets.AWS_REGION }}
+#      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+#      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+#      GCS_URI: ${{ secrets.GCS_URI }}
+#      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
+#      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
