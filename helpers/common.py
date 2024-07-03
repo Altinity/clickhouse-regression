@@ -8,7 +8,7 @@ from collections import namedtuple
 import testflows.settings as settings
 from testflows.core import *
 from testflows.asserts import values, error, snapshot
-from testflows.core.name import basename, parentname
+from testflows.core.name import basename, parentname, unclean
 from testflows._core.testtype import TestSubType
 
 
@@ -852,7 +852,7 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None):
             id_postfix = clickhouse_version
 
     if snapshot_id is None:
-        return name.basename(current().name) + id_postfix
+        return unclean(name.basename(current().name)) + id_postfix
     return snapshot_id
 
 
