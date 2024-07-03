@@ -3,6 +3,7 @@ from gettext import find
 import os
 import sys
 from testflows.core import *
+from testflows.core.name import clean
 
 append_path(sys.path, "..")
 
@@ -25,27 +26,29 @@ xfails = {
         (Fail, issue_39987)
     ],
     # encrypt
-    "encrypt/invalid key or iv length for mode/mode=\"'aes-???-gcm'\", key_len=??, iv_len=12, aad=True/iv is too short": [
-        (Fail, "known issue")
-    ],
-    "encrypt/invalid key or iv length for mode/mode=\"'aes-???-gcm'\", key_len=??, iv_len=12, aad=True/iv is too long": [
-        (Fail, "known issue")
-    ],
-    "encrypt/invalid plaintext data type/data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\"": [
-        (Fail, "known issue as IPv6 is implemented as FixedString(16)")
-    ],
+    "encrypt/"
+    + clean(
+        "invalid key or iv length for mode/mode=\"'aes-???-gcm'\", key_len=??, iv_len=12, aad=True/iv is too short"
+    ): [(Fail, "known issue")],
+    "encrypt/"
+    + clean(
+        "invalid key or iv length for mode/mode=\"'aes-???-gcm'\", key_len=??, iv_len=12, aad=True/iv is too long"
+    ): [(Fail, "known issue")],
+    "encrypt/"
+    + clean(
+        "invalid plaintext data type/data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\""
+    ): [(Fail, "known issue as IPv6 is implemented as FixedString(16)")],
     # encrypt_mysql
-    "encrypt_mysql/key or iv length for mode/mode=\"'aes-???-ecb'\", key_len=??, iv_len=None": [
-        (Fail, issue_18251)
-    ],
+    "encrypt_mysql/key or iv length for mode/"
+    + clean("mode=\"'aes-???-ecb'\", key_len=??, iv_len=None"): [(Fail, issue_18251)],
     "encrypt_mysql/invalid parameters/iv not valid for mode": [(Fail, issue_18251)],
-    "encrypt_mysql/invalid plaintext data type/data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\"": [
-        (Fail, "known issue as IPv6 is implemented as FixedString(16)")
-    ],
+    "encrypt_mysql/invalid plaintext data type/"
+    + clean(
+        "data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\""
+    ): [(Fail, "known issue as IPv6 is implemented as FixedString(16)")],
     # decrypt_mysql
-    "decrypt_mysql/key or iv length for mode/mode=\"'aes-???-ecb'\", key_len=??, iv_len=None:": [
-        (Fail, issue_18251)
-    ],
+    "decrypt_mysql/key or iv length for mode/"
+    + clean("mode=\"'aes-???-ecb'\", key_len=??, iv_len=None:"): [(Fail, issue_18251)],
     # compatibility
     "compatibility/insert/encrypt using materialized view/:": [(Fail, issue_18249)],
     "compatibility/insert/decrypt using materialized view/:": [(Error, issue_18249)],
@@ -56,29 +59,29 @@ xfails = {
         (Error, issue_18249)
     ],
     "compatibility/select/decrypt unique": [(Fail, issue_18249)],
-    "compatibility/mysql/:engine/decrypt/mysql_datatype='TEXT'/:": [
-        (Fail, issue_18250)
-    ],
-    "compatibility/mysql/:engine/decrypt/mysql_datatype='VARCHAR(100)'/:": [
-        (Fail, issue_18250)
-    ],
-    "compatibility/mysql/:engine/encrypt/mysql_datatype='TEXT'/:": [
-        (Fail, issue_18250)
-    ],
-    "compatibility/mysql/:engine/encrypt/mysql_datatype='VARCHAR(100)'/:": [
-        (Fail, issue_18250)
-    ],
+    "compatibility/mysql/:engine/decrypt/"
+    + clean("mysql_datatype='TEXT'")
+    + "/:": [(Fail, issue_18250)],
+    "compatibility/mysql/:engine/decrypt/"
+    + clean("mysql_datatype='VARCHAR(100)'")
+    + "/:": [(Fail, issue_18250)],
+    "compatibility/mysql/:engine/encrypt/"
+    + clean("mysql_datatype='TEXT'")
+    + "/:": [(Fail, issue_18250)],
+    "compatibility/mysql/:engine/encrypt/"
+    + clean("mysql_datatype='VARCHAR(100)'")
+    + "/:": [(Fail, issue_18250)],
     # reinterpretAsFixedString for UUID stopped working
     "decrypt/decryption/mode=:datatype=UUID:": [(Fail, issue_24029)],
     "encrypt/:/mode=:datatype=UUID:": [(Fail, issue_24029)],
-    "decrypt/invalid ciphertext/mode=:/invalid ciphertext=reinterpretAsFixedString(toUUID:": [
-        (Fail, issue_24029)
-    ],
+    "decrypt/invalid ciphertext/mode=:/"
+    + clean("invalid ciphertext=reinterpretAsFixedString(toUUID")
+    + ":": [(Fail, issue_24029)],
     "encrypt_mysql/encryption/mode=:datatype=UUID:": [(Fail, issue_24029)],
     "decrypt_mysql/decryption/mode=:datatype=UUID:": [(Fail, issue_24029)],
-    "decrypt_mysql/invalid ciphertext/mode=:/invalid ciphertext=reinterpretAsFixedString(toUUID:": [
-        (Fail, issue_24029)
-    ],
+    "decrypt_mysql/invalid ciphertext/mode=:/"
+    + clean("invalid ciphertext=reinterpretAsFixedString(toUUID")
+    + ":": [(Fail, issue_24029)],
     # aes-128-cfb128 not supported in 22.8
     "*/:cfb128:": [(Fail, issue_40826)],
     "performance/:/:": [(Fail, issue_65116, check_clickhouse_version(">=24.3"))],
