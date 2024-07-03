@@ -5,7 +5,7 @@ from importlib.machinery import SourceFileLoader
 
 from testflows.core import *
 from testflows.core.name import basename
-from testflows.asserts.helpers import varname
+from testflows.snapshots.v1 import varname
 from testflows.asserts import values, error, snapshot
 
 from aes_encryption.tests.common import modes, mysql_modes
