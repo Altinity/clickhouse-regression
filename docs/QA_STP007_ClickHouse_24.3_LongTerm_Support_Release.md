@@ -75,7 +75,7 @@ Started to execute test plan on July 1, 2024 and ended on **TBD**.
         * 8.2.4 [Java `clickhouse-jdbc`](#java-clickhouse-jdbc)
     * 8.3 [Backup `clickhouse-backup`](#backup-clickhouse-backup)
     * 8.4 [Compatibility With Operation on es](#compatibility-with-operation-on-es)
-        * 8.4.1 [es `clickhouse-operator`](#es-clickhouse-operator)
+        * 8.4.1 [Kubernetes `clickhouse-operator`](#kubernetes-clickhouse-operator)
         * 8.4.2 [Altinity.Cloud](#altinitycloud)
     * 8.5 [Production Cluster Operation](#production-cluster-operation)
     * 8.6 [Upgrade and Downgrade](#upgrade-and-downgrade)
@@ -157,13 +157,14 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 [GitHub is:issue is:open label:v24.3-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.3-affected+) as of July 3, 2024
 
-* **TBD** 
+* None 
 
 ### Summary
 
 Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.4.21.altinitystable/2023-12-26T23-40-44.341/report.html **TBD**
 
-> `Pass*` - Pass with known fails
+> [!NOTE]
+> **Pass\*** - tests passed with known fails
 
 | Test Suite  | Result                                | Comments |
 | --- |---------------------------------------| --- |
