@@ -24,10 +24,12 @@ jobs:
   clickhouse-24-3-x86:
     needs: get_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
+    name: "${{ needs.get_version.outputs.version }}"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_version.outputs.version }}-alpine"
-      version: '24.3'
+      version: "${{ needs.get_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
+      suite: example
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
