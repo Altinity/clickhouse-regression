@@ -11,12 +11,18 @@ from testflows.asserts import error
 
 from helpers.queries import *
 from helpers.common import getuid
-from s3.tests.common import s3_storage
+from s3.tests.common import (
+    s3_storage,
+    insert_random,
+    create_replicated_table as create_one_replica,
+    delete_replicated_table as delete_one_replica,
+    replicated_table_cluster,
+)
 
 
 @TestStep(Given)
 def disk_config(self):
-    """Set up disks and policies for vfs tests."""
+    """Set up disks and policies for stress tests."""
 
     if getattr(self.context, "uri", None):
         with Given("I have two S3 disks configured"):
@@ -221,6 +227,7 @@ def delete_one_replica(self, node, table_name, timeout=30):
     )
     return r
 
+
 @TestStep(Then)
 def assert_row_count(self, node, table_name: str, rows: int = 1000000):
     """Assert that the number of rows in a table is as expected."""
@@ -229,6 +236,7 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
 
     actual_count = get_row_count(node=node, table_name=table_name)
     assert rows == actual_count, error()
+
 
 @TestStep
 def get_nodes_for_table(self, nodes, table_name):

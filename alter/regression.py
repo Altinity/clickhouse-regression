@@ -128,6 +128,12 @@ xfails = {
             "Need to investigate",
         )
     ],
+    "/alter/replace partition/concurrent replace partitions/concurrent replace/*": [
+        (
+            Fail,
+            "Bug when replacing partitions concurrently",
+        )
+    ],
 }
 
 xflags = {}
