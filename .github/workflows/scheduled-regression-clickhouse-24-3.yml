@@ -17,7 +17,7 @@ jobs:
       - name: Get version
         id: version
         run: |
-          VERSION_24_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.3" | jq -r '. | [.Config.Labels."com.clickhouse.build.version"]' | jq -r '.[0]' | sed 's/^v//;s/-.*//')
+          VERSION_24_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:24.3" | jq -r '.Config.Labels."com.clickhouse.build.version" | ltrimstr("v") | split("-")[0]')
           echo "version=$VERSION_24_3" >> "$GITHUB_OUTPUT"
 
   clickhouse-24-3-x86:
@@ -42,23 +42,25 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-#  clickhouse-24-3-arm:
-#    needs: get_version
-#    uses: ./.github/workflows/reusable-workflow-arm.yml
-#    with:
-#      package: docker://clickhouse/clickhouse-server:24.3
-#      version: '24.3'
-#      extra_args: '--with-analyzer'
-#    secrets:
-#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-#      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-#      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-#      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-#      AWS_REGION: ${{ secrets.AWS_REGION }}
-#      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-#      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-#      GCS_URI: ${{ secrets.GCS_URI }}
-#      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-#      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
+  clickhouse-24-3-arm:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-arm.yml
+    name: "clickhouse-${{ needs.get_clickhouse_version.outputs.version }}-arm"
+    with:
+      package: docker://clickhouse/clickhouse-server:24.3
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer'
+      suite: example
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      GCS_URI: ${{ secrets.GCS_URI }}
+      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
+      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
