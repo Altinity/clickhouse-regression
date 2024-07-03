@@ -10,7 +10,6 @@ from helpers.tables import *
 from s3.tests.common import *
 from testflows.asserts import values, error, snapshot
 
-
 @TestStep(Given)
 def start_minio(
     self,
@@ -572,12 +571,11 @@ def execute_query(
         else:
             with Then("I check output against snapshot"):
                 with values() as that:
-                    assert that(
-                        snapshot(
-                            "\n" + r.output.strip() + "\n",
-                            id=snapshot_id,
-                            name=snapshot_name,
-                            encoder=str,
-                            mode=snapshot.CHECK,
-                        )
-                    ), error()
+                    snapshot_result = snapshot(
+                        "\n" + r.output.strip() + "\n",
+                        id=snapshot_id,
+                        name=snapshot_name,
+                        encoder=str,
+                        mode=snapshot.CHECK,
+                    )
+                    assert that(snapshot_result), error()

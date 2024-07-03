@@ -278,6 +278,11 @@ ffails = {
         Skip,
         "not relevant with vfs",
     ),
+    ":/:/table function performance": (
+        Skip,
+        "not supported <23.8",
+        check_clickhouse_version("<23.8"),
+    ),
 }
 
 

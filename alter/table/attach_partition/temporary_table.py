@@ -46,14 +46,14 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                 )(self):
                     exitcode = 60
                 else:
-                    exitcode = 0
+                    exitcode = None
 
                 note(f"exitcode should be {exitcode}")
 
                 detach_partition(
-                    table=table_name, partition=1, node=client, exitcode=exitcode
+                    table=table_name, partition=1, node=client, errorcode=exitcode
                 )
-                if exitcode == 0:
+                if exitcode is None:
                     table_after_detach = client.query(
                         f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
                     )
@@ -63,10 +63,12 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                         errorcode=exitcode,
                     )
 
-                if exitcode == 0:
+                if exitcode is None:
                     for attempt in retries(timeout=timeout, delay=delay):
                         with attempt:
-                            assert table_before != table_after_detach, error()
+                            assert (
+                                table_before.output != table_after_detach.output
+                            ), error()
 
             with And("I attach detached partition back"):
                 if "temporary" in table.__name__ and check_clickhouse_version(
@@ -74,12 +76,12 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                 )(self):
                     exitcode = 60
                 else:
-                    exitcode = 0
+                    exitcode = None
                 attach_partition(
-                    table=table_name, partition=1, node=client, exitcode=exitcode
+                    table=table_name, partition=1, node=client, errorcode=exitcode
                 )
 
-            if exitcode == 0:
+            if exitcode is None:
                 with Then(
                     "I check that data is the same as it was before attach detach"
                 ):
@@ -88,7 +90,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     )
                     for attempt in retries(timeout=timeout, delay=delay):
                         with attempt:
-                            assert table_before == table_after, error()
+                            assert table_before.output == table_after.output, error()
 
 
 @TestScenario
@@ -157,7 +159,7 @@ def check_attach_partition_from_with_temporary_tables(
                 ):
                     exitcode = 60
                 else:
-                    exitcode = 0
+                    exitcode = None
 
                 note(f"exitcode should be {exitcode}")
 
@@ -177,25 +179,26 @@ def check_attach_partition_from_with_temporary_tables(
                     "19",
                 ]:
                     query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION {partition_id} FROM {source_table_name}"
-                    if exitcode == 0:
+                    if exitcode is None:
                         client.query(query)
                     else:
                         client.query(query, errorcode=exitcode)
 
-            if exitcode == 0:
+            if exitcode is None:
                 with Then(
                     f"I check that partitions were attached to the destination table"
                 ):
                     for attempt in retries(timeout=30, delay=2):
                         with attempt:
                             source_partition_data = client.query(
-                                f"SELECT * FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                                f"SELECT a,b,c,extra FROM {source_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                             )
                             destination_partition_data = client.query(
-                                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                                f"SELECT a,b,c,extra FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
                             )
                             assert (
-                                source_partition_data == destination_partition_data
+                                source_partition_data.output
+                                == destination_partition_data.output
                             ), error()
 
     with And(f"I check that all replicas of destination table have same data:"):

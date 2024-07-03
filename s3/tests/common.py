@@ -1320,6 +1320,83 @@ def delete_replica(self, node, table_name, timeout=30):
     return r
 
 
+@TestStep(Given)
+def replicated_table_cluster(
+    self,
+    columns: str,
+    table_name: str = None,
+    storage_policy: str = "external",
+    cluster_name: str = "replicated_cluster",
+    order_by: str = None,
+    partition_by: str = None,
+    primary_key: str = None,
+    ttl: str = None,
+    settings: str = None,
+    allow_zero_copy: bool = None,
+    exitcode: int = 0,
+    no_cleanup=False,
+):
+    """Create a replicated table with the ON CLUSTER clause."""
+    node = current().context.node
+
+    if table_name is None:
+        table_name = "table_" + getuid()
+
+    if order_by is None:
+        order_by = columns.split()[0]
+
+    if settings is None:
+        settings = []
+    else:
+        settings = [settings]
+
+    settings.append(f"storage_policy='{storage_policy}'")
+
+    if allow_zero_copy is not None:
+        settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
+
+    if partition_by is not None:
+        partition_by = f"PARTITION BY ({partition_by})"
+    else:
+        partition_by = ""
+
+    if primary_key is not None:
+        primary_key = f"PRIMARY KEY {primary_key}"
+    else:
+        primary_key = ""
+
+    if ttl is not None:
+        ttl = "TTL " + ttl
+    else:
+        ttl = ""
+
+    try:
+        with Given("I have a table"):
+            r = node.query(
+                f"""
+                CREATE TABLE IF NOT EXISTS {table_name} 
+                ON CLUSTER '{cluster_name}' ({columns}) 
+                ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
+                ORDER BY {order_by} {partition_by} {primary_key} {ttl}
+                SETTINGS {', '.join(settings)}
+                """,
+                settings=[("distributed_ddl_task_timeout ", 360)],
+                exitcode=exitcode,
+            )
+
+        yield r, table_name
+
+    finally:
+        if not no_cleanup:
+            with Finally(f"I drop the table"):
+                for attempt in retries(timeout=120, delay=5):
+                    with attempt:
+                        node.query(
+                            f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC",
+                            timeout=60,
+                        )
+
+
 @TestStep(When)
 def standard_check(self):
     """Create a table on s3, insert data, check the data is correct."""

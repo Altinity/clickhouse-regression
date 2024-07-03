@@ -129,7 +129,6 @@ def alter_combinations(
     maximum_replicas=3,
     n_tables=5,
     n_columns=50,
-    insert_keeper_fault_injection_probability=0,
     network_impairment=False,
     limit_disk_space=False,
     enforce_table_structure=None,
@@ -145,7 +144,6 @@ def alter_combinations(
     self.context.storage_policy = storage_policy
     self.context.minimum_replicas = minimum_replicas
     self.context.maximum_replicas = maximum_replicas
-    self.context.fault_probability = insert_keeper_fault_injection_probability
 
     assert not (
         restart_network in actions and network_impairment
@@ -490,22 +488,6 @@ def indexes_and_projections(self):
 
 
 @TestScenario
-def insert_faults(self):
-    """
-    Perform actions with keeper fault injection on inserts with VFS PR.
-    """
-
-    if not self.context.allow_vfs:
-        skip("VFS is not enabled")
-
-    alter_combinations(
-        actions=build_action_list(),
-        insert_keeper_fault_injection_probability=0.1,
-        limit=None if self.context.stress else 20,
-    )
-
-
-@TestScenario
 def network_faults(self):
     """
     Perform actions with random network interference.
@@ -556,22 +538,8 @@ def full_disk(self):
 
 
 @TestFeature
-def vfs(self):
-    """Run test scenarios with vfs."""
-
-    if check_clickhouse_version("<24.2")(self):
-        skip("vfs not supported on ClickHouse < 24.2 and requires --allow-vfs flag")
-
-    with Given("VFS is enabled"):
-        enable_vfs(disk_names=["external", "external_tiered"])
-
-    for scenario in loads(current_module(), Scenario):
-        Scenario(run=scenario, tags=["long", "combinatoric"])
-
-
-@TestFeature
 def normal(self):
-    """Run test scenarios without vfs."""
+    """Run stress scenarios."""
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario, tags=["long", "combinatoric"])
@@ -599,7 +567,4 @@ def feature(self):
     with Given("I have S3 disks configured"):
         disk_config()
 
-    if self.context.allow_vfs:
-        Feature(run=vfs)
-    else:
-        Feature(run=normal)
+    Feature(run=normal)
