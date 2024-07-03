@@ -21,7 +21,7 @@ jobs:
 
   clickhouse-24-3-x86:
     needs: get_version
-    name: $VERSION_24_3
+    name: "$VERSION_24_3"
     uses: ./.github/workflows/reusable-workflow-x86.yml
     with:
       package: docker://clickhouse/clickhouse-server:24.3
