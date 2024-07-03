@@ -157,7 +157,7 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 [GitHub is:issue is:open label:v24.3-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.3-affected+) as of July 3, 2024
 
-* **TBD** 
+* None 
 
 ### Summary
 
