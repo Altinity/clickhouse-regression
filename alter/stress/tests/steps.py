@@ -14,8 +14,8 @@ from helpers.common import getuid
 from s3.tests.common import (
     s3_storage,
     insert_random,
-    create_replicated_table as create_one_replica,
-    delete_replicated_table as delete_one_replica,
+    replicated_table as create_one_replica,
+    delete_replica as delete_one_replica,
     replicated_table_cluster,
 )
 
