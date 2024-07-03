@@ -40,8 +40,6 @@ def aws_s3(self, uri):
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
         }
-        if self.context.object_storage_mode == "vfs":
-            disks["aws"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -72,8 +70,6 @@ def minio(self, uri):
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
         }
-        if self.context.object_storage_mode == "vfs":
-            disks["minio"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {

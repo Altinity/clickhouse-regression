@@ -109,176 +109,158 @@ def argparser(parser):
 
 
 xfails = {
-    ":/:/disk/generic url": [(Fail, "not yet supported")],
-    ":/:/:/remote host filter": [
+    ":/disk/generic url": [(Fail, "not yet supported")],
+    ":/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
     ],
-    "gcs/:/disk invalid/:": [
+    "gcs/disk invalid/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
-    ":/:/zero copy replication/alter/count=10": [
+    ":/zero copy replication/alter/count=10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
     ],
-    ":/:/zero copy replication/ttl move": [
+    ":/zero copy replication/ttl move": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/:/zero copy replication/ttl delete": [
+    ":/zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/:/zero copy replication/delete": [
+    ":/zero copy replication/delete": [
         (Fail, "test doesn't clean up, needs investigation")
     ],
-    ":/:/zero copy replication/:mutation/:/the size of the s3 bucket:": [
+    ":/zero copy replication/:mutation/:/the size of the s3 bucket:": [
         (Fail, "test doesn't clean up, needs investigation")
     ],
-    ":/vfs/zero copy replication/:replic:": [
-        (Fail, "TODO: VFS uses more disk per replica than 0-copy")
-    ],
-    ":/vfs/zero copy replication/delete all": [
-        (Fail, "TODO: VFS requires bigger tolerances than 0-copy")
-    ],
-    ":/vfs/zero copy replication/metadata": [
-        (Fail, "TODO: VFS requires bigger tolerances than 0-copy")
-    ],
-    "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
-    "minio/:/disk/environment credentials/:": [
+    "minio/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
+    "minio/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
-    "aws s3/:/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
-    "aws s3/:/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
-    "gcs/:/disk/environment credentials/:": [
+    "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
+    "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
+    "gcs/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
-    ":/:/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
-    ":/:/zero copy replication/the bucket should be cleaned up": [
+    ":/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
+    ":/zero copy replication/the bucket should be cleaned up": [
         (Fail, "Data cleanup needs investigation")
     ],
-    "aws s3/:/backup/:/:": [
+    "aws s3/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
     ],
-    "minio/:/zero copy replication/performance alter": [
+    "minio/zero copy replication/performance alter": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "minio/:/zero copy replication/performance select": [
+    "minio/zero copy replication/performance select": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "gcs/:/table function/wildcard/:": [
+    "gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
     ],
-    ":/:/disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
-    "gcs/:/disk/delete/gcs truncate err log": [
+    ":/disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
+    "gcs/disk/delete/gcs truncate err log": [
         (Fail, "Exception appears in error log but not in ClickHouse.")
     ],
-    "aws s3/:/table function/ssec/:": [
+    "aws s3/table function/ssec/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    "aws s3/:/table function/ssec/:/:": [
+    "aws s3/table function/ssec/:/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    "aws s3/:/table function/ssec encryption check": [
+    "aws s3/table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
-    ":/:/table function performance/wildcard/:": [
+    ":/table function performance/wildcard/:": [
         (
             Error,
             "https://github.com/ClickHouse/ClickHouse/pull/62120",
             check_clickhouse_version("<24.5"),
         )
     ],
-    ":/:/disk/low cardinality offset": [
+    ":/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
-    ":/:/zero copy replication/bad detached part": [
+    ":/zero copy replication/bad detached part": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/pull/58333",
             check_clickhouse_version("<23.11"),
         )
     ],
-    ":/:/table function/measure file size": [
+    ":/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
-    ":/:/combinatoric table/:": [(Fail, "Unstable test")],
+    ":/combinatoric table/:": [(Fail, "Unstable test")],
 }
 
 ffails = {
-    "minio/:/disk/environment credentials": (
+    "minio/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for minio tests.",
     ),
-    "gcs/:/disk/environment credentials": (
+    "gcs/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    "gcs/:/zero copy replication": (
+    "gcs/zero copy replication": (
         Skip,
         "GCS is not supported for zero copy replication",
-    ),
-    "gcs/:/:/:/:/:the size of the s3 bucket*": (
-        Skip,
-        "AWS S3 credentials not set for gcs tests.",
     ),
     "gcs/:/:/:/:the size of the s3 bucket*": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    "gcs/:/table function/measure file size": (
+    "gcs/:/:/:the size of the s3 bucket*": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    "aws s3/:/backup": (
+    "gcs/table function/measure file size": (
+        Skip,
+        "AWS S3 credentials not set for gcs tests.",
+    ),
+    "aws s3/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
     ),
-    "gcs/:/backup": (
+    "gcs/backup": (
         Skip,
         "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
     ),
-    "aws s3/:/disk/ssec": (Skip, "SSEC option with disk not working"),
-    "aws s3/:/table function/ssec encryption check": (
+    "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
+    "aws s3/table function/ssec encryption check": (
         Skip,
         "SSEC currently not working. Timeout",
     ),
-    "aws s3/:/zero copy replication/add remove replica parallel": (
+    "aws s3/zero copy replication/add remove replica parallel": (
         XFail,
         "This test causes boto errors in subsequent tests.",
     ),
-    "aws s3/:/zero copy replication/stale alter replica": (
+    "aws s3/zero copy replication/stale alter replica": (
         XFail,
         "This test causes boto errors in subsequent tests.",
     ),
-    ":/:/backup/:/metadata:": (
+    ":/backup/:/metadata:": (
         XFail,
         "Under development for 22.8 and newer.",
         check_clickhouse_version(">=22.8"),
     ),
-    ":/:/disk/cache*": (
+    ":/disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
         check_clickhouse_version(">=22.8"),
     ),
-    ":/:/invalid disk/cache*": (
+    ":/invalid disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
         check_clickhouse_version(">=22.8"),
     ),
-    ":/vfs": (Skip, "vfs not supported on < 24", check_clickhouse_version("<24")),
-    ":/:/disk/no restart": (
+    ":/disk/no restart": (
         XFail,
         "https://github.com/ClickHouse/ClickHouse/issues/58924",
         check_clickhouse_version(">=23.12"),
     ),
-    ":/vfs/zero copy replication/performance*": (
-        Skip,
-        "0-copy performance tests do not expect vfs",
-    ),
-    ":/vfs/zero copy replication/global setting": (
-        Skip,
-        "not relevant with vfs",
-    ),
-    ":/:/table function performance": (
+    ":/table function performance": (
         Skip,
         "not supported <23.8",
         check_clickhouse_version("<23.8"),
@@ -322,28 +304,27 @@ def minio_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
-        with Module(self.context.object_storage_mode):
-            Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.table_function", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.backup", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.table_function_invalid", "minio"))(
-                uri=uri_bucket_file
-            )
-            Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.alter", "feature"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.combinatoric_table", "feature"))(
-                uri=uri_bucket_file
-            )
-            Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
-                uri=uri_bucket_file
-            )
-            Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.table_function_performance", "minio"))(
-                uri=uri_bucket_file
-            )
+        Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.table_function", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.backup", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.table_function_invalid", "minio"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.alter", "feature"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.table_function_performance", "minio"))(
+            uri=uri_bucket_file
+        )
 
 
 @TestModule
@@ -407,19 +388,18 @@ def aws_s3_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
-        with Module(self.context.object_storage_mode):
-            Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.table_function", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.disk", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.table_function", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.disk", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
 @TestModule
@@ -466,17 +446,16 @@ def gcs_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
-        with Module(self.context.object_storage_mode):
-            Feature(test=load("s3.tests.table_function", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.table_function", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
 
 @TestModule
@@ -502,19 +481,12 @@ def regression(
     gcs_key_secret,
     gcs_key_id,
     stress=False,
-    allow_vfs=False,
     with_analyzer=False,
 ):
     """S3 Storage regression."""
 
     self.context.clickhouse_version = clickhouse_version
-    self.context.object_storage_mode = "normal"
     self.context.stress = stress
-
-    if allow_vfs:
-        self.context.object_storage_mode = "vfs"
-        if check_clickhouse_version("<24.1")(self):
-            skip("vfs not supported on < 24.1")
 
     if storages is None:
         storages = ["minio"]
