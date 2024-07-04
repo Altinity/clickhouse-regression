@@ -94,7 +94,7 @@ xfails = {
     ":/manual move with downtime": [
         (Fail, "https://altinity.atlassian.net/browse/CH-124")
     ],
-    ":/ttl moves/alter with existing parts/:": [(Fail, "not yet supported")],
+    ":/ttl moves/alter with existing parts": [(Fail, "not yet supported")],
     ":/ttl moves/alter policy and ttl with existing parts": [
         (Fail, "not yet supported")
     ],
