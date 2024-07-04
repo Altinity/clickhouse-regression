@@ -285,6 +285,7 @@ def minio_regression(
     self.context.access_key_id = root_user
     self.context.secret_access_key = root_password
     self.context.bucket_name = "root"
+    bucket_prefix = "data"
 
     with Cluster(
         **cluster_args,
@@ -296,7 +297,9 @@ def minio_regression(
 
         with Given("I have a minio client"):
             start_minio(access_key=root_user, secret_key=root_password)
-            uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}" + "/data/"
+            uri_bucket_file = (
+                uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
+            )
 
         with And("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
@@ -305,12 +308,16 @@ def minio_regression(
                 )
 
         Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
-        Feature(test=load("s3.tests.table_function", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.table_function", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.backup", "minio"))(uri=uri_bucket_file)
         Feature(test=load("s3.tests.table_function_invalid", "minio"))(
             uri=uri_bucket_file
         )
-        Feature(test=load("s3.tests.disk", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.disk", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
         Feature(test=load("s3.tests.alter", "feature"))(uri=uri_bucket_file)
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(
@@ -318,7 +325,7 @@ def minio_regression(
         )
         Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
         Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
-            uri=uri_bucket_file
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
@@ -357,7 +364,9 @@ def aws_s3_regression(
         fail("AWS S3 region needs to be set")
     region = region.value
 
-    uri = f"https://s3.{region}.amazonaws.com/{bucket}/data/"
+    bucket_prefix = "data"
+
+    uri = f"https://s3.{region}.amazonaws.com/{bucket}/{bucket_prefix}/"
 
     self.context.storage = "aws_s3"
     self.context.uri = uri
@@ -389,13 +398,19 @@ def aws_s3_regression(
                 )
 
         Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.table_function", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.table_function", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.disk", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.disk", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
         Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
         Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
@@ -425,6 +440,7 @@ def gcs_regression(
         fail("GCS key id needs to be set")
     key_id = key_id.value
 
+    bucket_prefix = "data"
     self.context.storage = "gcs"
     self.context.uri = uri
     self.context.access_key_id = key_id
@@ -446,13 +462,17 @@ def gcs_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
-        Feature(test=load("s3.tests.table_function", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.table_function", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.disk", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
         Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
         Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
         Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)

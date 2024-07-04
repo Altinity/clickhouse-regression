@@ -2398,14 +2398,14 @@ def low_cardinality_offset(self, use_alter_delete=True):
 @Requirements(
     RQ_SRS_015_S3_AWS_SSEC("1.0"),
 )
-def ssec(self):
+def ssec(self, uri, bucket_prefix):
     """Check S3 SSE-C encryption option."""
     if self.context.storage not in ["aws_s3"]:
         xfail(f"not supported on {self.context.storage}")
 
     with Given("I add S3 SSE-C encryption option"):
         add_ssec_s3_option()
-    disk_tests()
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestOutline(Feature)
@@ -2414,11 +2414,11 @@ def ssec(self):
     RQ_SRS_015_S3_Disk_Configuration("1.0"),
     RQ_SRS_015_S3_Policy("1.0"),
 )
-def disk_tests(self, uri):
+def disk_tests(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
 
     self.context.uri = uri + "disk/"
-    self.context.bucket_path = "data/disk"
+    self.context.bucket_path = f"{bucket_prefix}/disk"
 
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
@@ -2428,28 +2428,28 @@ def disk_tests(self, uri):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS("1.0"), RQ_SRS_015_S3_AWS_Disk_Configuration("1.0"))
 @Name("disk")
-def aws_s3(self, uri):
+def aws_s3(self, uri, bucket_prefix):
 
-    disk_tests(uri=uri)
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)
 
-    Feature(run=ssec)
+    Feature(test=ssec)(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS("1.0"), RQ_SRS_015_S3_GCS_Disk_Configuration("1.0"))
 @Name("disk")
-def gcs(self, uri):
+def gcs(self, uri, bucket_prefix):
 
     if check_clickhouse_version(">=22.6")(self):
         with Given("I disable batch delete option"):
             add_batch_delete_option()
 
-    disk_tests(uri=uri)
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO("1.0"), RQ_SRS_015_S3_MinIO_Disk_Configuration("1.0"))
 @Name("disk")
-def minio(self, uri):
+def minio(self, uri, bucket_prefix):
 
-    disk_tests(uri=uri)
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)

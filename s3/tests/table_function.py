@@ -522,11 +522,8 @@ def measure_file_size(self):
 
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_TableFunction("1.0"))
-def outline(self, uri):
+def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
-
-    self.context.uri = uri
-    self.context.bucket_path = "data"
 
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
@@ -643,26 +640,34 @@ def ssec(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_TableFunction("1.0"))
 @Name("table function")
-def aws_s3(self, uri):
-
-    outline(uri=uri)
+def aws_s3(self, uri, bucket_prefix):
 
     self.context.uri = uri
+    self.context.bucket_path = bucket_prefix
+
+    outline()
+
     Feature(run=ssec_encryption_check)
-    Feature(run=ssec)
+    Feature(test=ssec)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_TableFunction("1.0"))
 @Name("table function")
-def gcs(self, uri):
+def gcs(self, uri, bucket_prefix):
 
-    outline(uri=uri)
+    self.context.uri = uri
+    self.context.bucket_path = bucket_prefix
+
+    outline()
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_TableFunction("1.0"))
 @Name("table function")
-def minio(self, uri):
+def minio(self, uri, bucket_prefix):
 
-    outline(uri=uri)
+    self.context.uri = uri
+    self.context.bucket_path = bucket_prefix
+
+    outline()

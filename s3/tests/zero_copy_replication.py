@@ -1614,13 +1614,13 @@ def consistency_during_conflicting_mutation(self):
 
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
-def outline(self, uri):
+def outline(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
     self.context.minio_enabled = self.context.storage == "minio"
 
     self.context.uri = uri
     zero_copy_uri = uri + "zero-copy-replication/"
-    self.context.bucket_path = "data/zero-copy-replication"
+    self.context.bucket_path = f"{bucket_prefix}/zero-copy-replication"
 
     with Given("I have two S3 disks configured"):
         disks = {
@@ -1688,23 +1688,23 @@ def outline(self, uri):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def aws_s3(self, uri):
+def aws_s3(self, uri, bucket_prefix):
 
-    outline(uri=uri)
+    outline(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def gcs(self, uri):
+def gcs(self, uri, bucket_prefix):
     skip("GCS is not supported for zero copy replication")
 
-    outline(uri=uri)
+    outline(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def minio(self, uri):
+def minio(self, uri, bucket_prefix):
 
-    outline(uri=uri)
+    outline(uri=uri, bucket_prefix=bucket_prefix)
