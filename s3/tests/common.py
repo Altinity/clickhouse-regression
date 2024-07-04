@@ -1097,6 +1097,61 @@ def aws_s3_setup_second_bucket(self, region, bucket):
             node.command(f"aws s3api delete-bucket --bucket {bucket} --region {region}")
 
 
+@TestStep(Given)
+def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
+    """
+    Return a temporary bucket sub-path which will be cleaned up.
+    This is returned without the given prefix for compatibility with the
+    uri defined in s3/regression.py, which already includes the prefix.
+
+    Example:
+
+        with Given("a temporary s3 path"):
+            temp_s3_path = temporary_bucket_path(
+                bucket_name=self.context.bucket_name,
+                bucket_prefix=f"{bucket_prefix}/my_test_prefix",
+            )
+
+            temp_uri = f"{uri}my_test_prefix/{temp_s3_path}"
+
+            temp_bucket_path = f"{bucket_prefix}/my_test_prefix/{temp_s3_path}"
+
+    """
+
+    assert self.context.storage in [
+        "minio",
+        "aws_s3",
+    ], f"Unsupported storage: {self.context.storage}"
+
+    if bucket_name is None:
+        bucket_name = self.context.bucket_name
+
+    if bucket_prefix is None:
+        bucket_prefix = self.context.bucket_prefix
+
+    try:
+        with When("I create a temporary bucket path"):
+            temp_path = f"tmp_{getuid()}"
+            yield temp_path
+
+    finally:
+        with Finally("remove the temporary bucket path"):
+            if self.context.storage == "minio":
+                minio_client = self.context.cluster.minio_client
+                for obj in list(minio_client.list_objects(bucket_name, recursive=True)):
+                    if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
+                        continue
+                    if obj.object_name.startswith(f"{bucket_prefix}/{temp_path}"):
+                        minio_client.remove_object(bucket_name, obj.object_name)
+
+            elif self.context.storage == "aws_s3":
+                node = current().context.node
+
+                node.command(
+                    f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                )
+
+
 @contextmanager
 def allow_s3_truncate(node):
     """Enable S3 truncate on insert setting."""

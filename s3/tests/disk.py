@@ -2417,8 +2417,10 @@ def ssec(self, uri, bucket_prefix):
 def disk_tests(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
 
-    self.context.uri = uri + "disk/"
-    self.context.bucket_path = f"{bucket_prefix}/disk"
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
+        self.context.uri = f"{uri}disk/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"
 
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
