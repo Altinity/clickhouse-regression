@@ -1619,10 +1619,18 @@ def outline(self, uri, bucket_prefix):
     self.context.minio_enabled = self.context.storage == "minio"
 
     self.context.uri = uri
-    zero_copy_uri = uri + "zero-copy-replication/"
-    self.context.bucket_path = f"{bucket_prefix}/zero-copy-replication"
 
-    with Given("I have two S3 disks configured"):
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/zero-copy-replication"
+        )
+
+        zero_copy_uri = f"{uri}zero-copy-replication/{temp_s3_path}/"
+        self.context.bucket_path = (
+            f"{bucket_prefix}/zero-copy-replication/{temp_s3_path}"
+        )
+
+    with And("I have two S3 disks configured"):
         disks = {
             "external": {
                 "type": "s3",

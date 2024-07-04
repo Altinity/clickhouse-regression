@@ -369,7 +369,6 @@ def aws_s3_regression(
     uri = f"https://s3.{region}.amazonaws.com/{bucket}/{bucket_prefix}/"
 
     self.context.storage = "aws_s3"
-    self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
     self.context.bucket_name = bucket
@@ -442,7 +441,6 @@ def gcs_regression(
 
     bucket_prefix = "data"
     self.context.storage = "gcs"
-    self.context.uri = uri
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
     self.context.bucket_name = None
