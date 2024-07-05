@@ -746,7 +746,7 @@ def insert_multiple_replicas(self):
         nodes = self.context.ch_nodes[:2]
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after(delay=30, less_ok=True)
+        size_before = measure_buckets_before_and_after(delay=60, less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
@@ -775,6 +775,9 @@ def insert_multiple_replicas(self):
     with And("I check that the data added is within 1% of expected amount"):
         current_size = get_bucket_size()
         added_size = current_size - size_before
+        note(
+            f"Added size: {added_size}, current size: {current_size}, size before: {size_before}"
+        )
 
         assert added_size >= expected * 0.99, error()
         assert added_size <= expected * 1.01, error()
