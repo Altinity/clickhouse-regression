@@ -6,8 +6,10 @@ from contextlib import contextmanager
 import boto3
 from minio import Minio
 from testflows.connect import Shell
+from testflows.combinatorics import combinations
 
 from helpers.common import *
+from helpers.queries import sync_replica, get_row_count
 
 Config = namedtuple("Config", "content path name uid preprocessed_name")
 
@@ -467,7 +469,7 @@ def mergetree_config(
     config_d_dir="/etc/clickhouse-server/config.d",
     config_file="merge_tree.xml",
     timeout=60,
-    restart=False,
+    restart=True,
     config=None,
     nodes=None,
 ):
@@ -674,6 +676,30 @@ def insert_data(self, name, number_of_mb, start=0, node=None):
     node.query(f"INSERT INTO {name} VALUES {values}")
 
 
+@TestStep(Given)
+def insert_random(
+    self,
+    node,
+    table_name,
+    columns: str,
+    rows: int = 1000000,
+    settings: str = None,
+    **kwargs,
+):
+    """Insert random data to a table."""
+
+    if settings:
+        settings = "SETTINGS " + settings
+    else:
+        settings = ""
+
+    return node.query(
+        f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
+        exitcode=0,
+        **kwargs,
+    )
+
+
 @TestStep(Then)
 def check_query(self, num, query, expected):
     node = current().context.node
@@ -760,7 +786,9 @@ def get_bucket_size(
             )
             return sum(obj._size for obj in objects)
 
-    with By("querying with boto3 client"):
+    with By(
+        "querying with boto3 client", description=f"bucket: {name}, prefix: {prefix}"
+    ):
         s3 = boto3.resource(
             "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
         )
@@ -820,7 +848,7 @@ def get_stable_bucket_size(
                 access_key=access_key,
                 key_id=key_id,
             )
-        with And(f"checking if current={size} == previous={size_previous}"):
+        with And(f"checking if current:{size} == previous:{size_previous}"):
             if size_previous == size:
                 break
         size_previous = size
@@ -1043,10 +1071,10 @@ def cleanup(self, storage="minio", disk="external"):
     if storage == "aws_s3":
         node = current().context.node
 
-        node.command(f"aws s3 rm s3://{self.context.bucket}/data --recursive")
-        node.command(f"aws s3 rm s3://{self.context.bucket2} --recursive")
+        node.command(f"aws s3 rm s3://{self.context.bucket_name}/data --recursive")
+        node.command(f"aws s3 rm s3://{self.context.bucket2_name} --recursive")
         node.command(
-            f"aws s3api create-bucket --bucket {self.context.bucket2} --region {self.context.region}"
+            f"aws s3api create-bucket --bucket {self.context.bucket2_name} --region {self.context.region}"
         )
 
 
@@ -1067,6 +1095,61 @@ def aws_s3_setup_second_bucket(self, region, bucket):
 
         with And("I remove the second bucket", flags=TE):
             node.command(f"aws s3api delete-bucket --bucket {bucket} --region {region}")
+
+
+@TestStep(Given)
+def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
+    """
+    Return a temporary bucket sub-path which will be cleaned up.
+    This is returned without the given prefix for compatibility with the
+    uri defined in s3/regression.py, which already includes the prefix.
+
+    Example:
+
+        with Given("a temporary s3 path"):
+            temp_s3_path = temporary_bucket_path(
+                bucket_name=self.context.bucket_name,
+                bucket_prefix=f"{bucket_prefix}/my_test_prefix",
+            )
+
+            temp_uri = f"{uri}my_test_prefix/{temp_s3_path}"
+
+            temp_bucket_path = f"{bucket_prefix}/my_test_prefix/{temp_s3_path}"
+
+    """
+
+    assert self.context.storage in [
+        "minio",
+        "aws_s3",
+    ], f"Unsupported storage: {self.context.storage}"
+
+    if bucket_name is None:
+        bucket_name = self.context.bucket_name
+
+    if bucket_prefix is None:
+        bucket_prefix = self.context.bucket_prefix
+
+    try:
+        with When("I create a temporary bucket path"):
+            temp_path = f"tmp_{getuid()}"
+            yield temp_path
+
+    finally:
+        with Finally("remove the temporary bucket path"):
+            if self.context.storage == "minio":
+                minio_client = self.context.cluster.minio_client
+                for obj in list(minio_client.list_objects(bucket_name, recursive=True)):
+                    if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
+                        continue
+                    if obj.object_name.startswith(f"{bucket_prefix}/{temp_path}"):
+                        minio_client.remove_object(bucket_name, obj.object_name)
+
+            elif self.context.storage == "aws_s3":
+                node = current().context.node
+
+                node.command(
+                    f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                )
 
 
 @contextmanager
@@ -1206,9 +1289,6 @@ def default_s3_disk_and_volume(
                 }
             }
 
-        if self.context.object_storage_mode == "vfs":
-            disks[disk_name]["allow_vfs"] = "1"
-
         if hasattr(self.context, "s3_options"):
             disks[disk_name].update(self.context.s3_options)
 
@@ -1281,6 +1361,15 @@ def replicated_table(
     finally:
         with Finally(f"I drop the table {table_name}"):
             node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
+@TestStep(Given)
+def delete_replica(self, node, table_name, timeout=30):
+    """Delete the local copy of a replicated table."""
+    r = node.query(
+        f"DROP TABLE IF EXISTS {table_name} SYNC", exitcode=0, timeout=timeout
+    )
+    return r
 
 
 @TestStep(Given)
@@ -1432,6 +1521,36 @@ def standard_selects(self, node, table_name):
     )
 
 
+@TestStep(Then)
+def assert_row_count(self, node, table_name: str, rows: int = 1000000):
+    """Assert that the number of rows in a table is as expected."""
+    if node is None:
+        node = current().context.node
+
+    actual_count = get_row_count(node=node, table_name=table_name)
+    assert rows == actual_count, error()
+
+
+@TestStep(Then)
+def check_consistency(self, nodes, table_name, sync_timeout=10):
+    """SYNC the given nodes and check that they agree about the given table"""
+
+    with When("I make sure all nodes are synced"):
+        for node in nodes:
+            sync_replica(
+                node=node, table_name=table_name, timeout=sync_timeout, no_checks=True
+            )
+
+    with When("I query all nodes for their row counts"):
+        row_counts = {}
+        for node in nodes:
+            row_counts[node.name] = get_row_count(node=node, table_name=table_name)
+
+    with Then("All replicas should have the same state"):
+        for n1, n2 in combinations(nodes, 2):
+            assert row_counts[n1.name] == row_counts[n2.name], error()
+
+
 @TestStep(Given)
 def add_ssec_s3_option(self, ssec_key=None):
     """Add S3 SSE-C encryption option."""
@@ -1547,7 +1666,12 @@ def insert_from_s3_function(
 
 @TestStep(Given)
 def measure_buckets_before_and_after(
-    self, bucket_prefix=None, bucket_name=None, tolerance=5, delay=10
+    self,
+    bucket_prefix=None,
+    bucket_name=None,
+    tolerance=5,
+    delay=10,
+    less_ok=False,
 ):
     """Return the current bucket size and assert that it is the same after cleanup."""
 
@@ -1558,16 +1682,24 @@ def measure_buckets_before_and_after(
 
     yield size_before
 
-    with Then(
-        """The size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        for attempt in retries(count=3):
-            with attempt:
-                check_stable_bucket_size(
-                    prefix=bucket_prefix,
-                    name=bucket_name,
-                    expected_size=size_before,
-                    tolerance=tolerance,
-                    delay=delay * (attempt.retry_number + 1),
-                )
+    if less_ok:
+        with Then("the size of the s3 bucket should not be more than the initial size"):
+            for attempt in retries(count=3):
+                with attempt:
+                    size = get_stable_bucket_size(
+                        prefix=bucket_prefix,
+                        name=bucket_name,
+                        delay=delay * (attempt.retry_number + 1),
+                    )
+                    assert size <= size_before + tolerance, error()
+    else:
+        with Then("the size of the s3 bucket should be very close to the initial size"):
+            for attempt in retries(count=3):
+                with attempt:
+                    check_stable_bucket_size(
+                        prefix=bucket_prefix,
+                        name=bucket_name,
+                        expected_size=size_before,
+                        tolerance=tolerance,
+                        delay=delay * (attempt.retry_number + 1),
+                    )

@@ -48,9 +48,6 @@ def define_s3_disk_storage_configuration(
                 "secret_access_key": f"{secret_access_key}",
             }
 
-            if self.context.object_storage_mode == "vfs":
-                disks[disk_name]["allow_vfs"] = "1"
-
             if hasattr(self.context, "s3_options"):
                 disks[disk_name].update(self.context.s3_options)
 
@@ -2401,14 +2398,14 @@ def low_cardinality_offset(self, use_alter_delete=True):
 @Requirements(
     RQ_SRS_015_S3_AWS_SSEC("1.0"),
 )
-def ssec(self):
+def ssec(self, uri, bucket_prefix):
     """Check S3 SSE-C encryption option."""
     if self.context.storage not in ["aws_s3"]:
         xfail(f"not supported on {self.context.storage}")
 
     with Given("I add S3 SSE-C encryption option"):
         add_ssec_s3_option()
-    disk_tests()
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestOutline(Feature)
@@ -2417,8 +2414,18 @@ def ssec(self):
     RQ_SRS_015_S3_Disk_Configuration("1.0"),
     RQ_SRS_015_S3_Policy("1.0"),
 )
-def disk_tests(self):
+def disk_tests(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
+
+    with Given("a temporary s3 path"):
+        if self.context.storage == "gcs":
+            temp_s3_path = "disk"  # temporary_bucket_path does not support gcs yet
+        else:
+            temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
+
+        self.context.uri = f"{uri}disk/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"
+
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
             scenario()
@@ -2427,49 +2434,28 @@ def disk_tests(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS("1.0"), RQ_SRS_015_S3_AWS_Disk_Configuration("1.0"))
 @Name("disk")
-def aws_s3(self, uri, access_key, key_id, bucket, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
-    self.context.uri = uri + "disk/"
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = bucket
-    self.context.bucket_path = "data/disk"
+def aws_s3(self, uri, bucket_prefix):
 
-    disk_tests()
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)
 
-    Feature(run=ssec)
+    Feature(test=ssec)(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS("1.0"), RQ_SRS_015_S3_GCS_Disk_Configuration("1.0"))
 @Name("disk")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = None
-    self.context.bucket_path = None
+def gcs(self, uri, bucket_prefix):
 
     if check_clickhouse_version(">=22.6")(self):
         with Given("I disable batch delete option"):
             add_batch_delete_option()
 
-    disk_tests()
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO("1.0"), RQ_SRS_015_S3_MinIO_Disk_Configuration("1.0"))
 @Name("disk")
-def minio(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
-    self.context.uri = uri + "disk/"
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
-    self.context.bucket_name = "root"
-    self.context.bucket_path = "data/disk"
+def minio(self, uri, bucket_prefix):
 
-    disk_tests()
+    disk_tests(uri=uri, bucket_prefix=bucket_prefix)

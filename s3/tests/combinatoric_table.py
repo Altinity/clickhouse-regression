@@ -4,11 +4,13 @@ from random import choice
 from testflows.core import *
 from testflows.combinatorics import CoveringArray
 
+from helpers.common import getuid
 from helpers.tables import create_table, Column
 from helpers.datatypes import *
 
-from vfs.tests.steps import *
-from vfs.requirements import *
+from s3.requirements import *
+from s3.tests.common import default_s3_disk_and_volume, assert_row_count
+
 
 table_configurations = {
     "engine": [
@@ -23,8 +25,10 @@ table_configurations = {
     "n_cols": [10, 500, 2000],
     "n_tables": [1, 3],
     "part_type": ["unspecified", "wide", "compact"],
-    "fault_probability": [0, 0.2],
 }
+
+WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
+COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
 
 
 @TestStep(Given)
@@ -88,7 +92,6 @@ def create_test_table(
 
 @TestOutline(Scenario)
 @Tags("combinatoric")
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Combinatoric_Insert("1.0"))
 def check_table_combination(
     self,
     engine: str,
@@ -96,7 +99,6 @@ def check_table_combination(
     n_cols: int,
     n_tables: int,
     part_type: str,
-    fault_probability: float,
 ):
     """
     Test that the given table parameters create a functional table.
@@ -133,30 +135,39 @@ def check_table_combination(
                     1 AS ver,
                     * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
                 LIMIT {n_rows}
-                SETTINGS insert_keeper_fault_injection_probability={fault_probability}
                 """
             )
 
         for node in query_nodes:
             with Then(f"the data in table#{i} on {node.name} can be queried"):
-                retry(assert_row_count, timeout=30, delay=0.2)(
+                retry(assert_row_count, timeout=60, delay=5)(
                     node=node, table_name=table.name, rows=n_rows
                 )
 
 
 @TestFeature
-@Name("create insert")
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Combinatoric("0.0"))
-def feature(self):
-    """Test CREATE and INSERT commands with VFS enabled on a variety of table configurations."""
+@Name("combinatoric table")
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_MergeTree("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_ReplacingMergeTree("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_SummingMergeTree("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_AggregatingMergeTree("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_CollapsingMergeTree("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_VersionedCollapsingMergeTree("1.0"),
+)
+def feature(self, uri):
+    """Test CREATE and INSERT commands on a variety of table configurations."""
+
+    self.context.uri = uri
+
+    cluster = self.context.cluster
+    self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
 
     covering_array_strength = len(table_configurations) if self.context.stress else 2
 
     with Given("I have S3 disks configured"):
-        s3_config()
-
-    with And("VFS is enabled"):
-        enable_vfs()
+        default_s3_disk_and_volume()
 
     for table_config in CoveringArray(
         table_configurations, strength=covering_array_strength

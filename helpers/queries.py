@@ -1,5 +1,5 @@
 """
-Helpers.queries contains functions that wrap  SQL queries.
+Helpers.queries contains functions that wrap SQL queries.
 """
 
 import json

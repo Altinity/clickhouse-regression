@@ -72,6 +72,7 @@ def local_storage(
         )
 
     Feature(run=load("alter.stress.tests.simplified", "feature"))
+    Feature(run=load("alter.stress.tests.stress_insert", "feature"))
     Feature(run=load("alter.stress.tests.stress_alter", "feature"))
 
 
