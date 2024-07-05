@@ -1,4 +1,4 @@
-version: '2.3'
+version: "2.3"
 
 services:
   clickhouse:
@@ -13,12 +13,7 @@ services:
       - "8443"
       - "9444"
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/dhparam.pem:/etc/clickhouse-server/config.d/dhparam.pem"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.crt:/etc/clickhouse-server/config.d/server.crt"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.key:/etc/clickhouse-server/config.d/server.key"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/altinity_blog_ca.crt:/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/:/etc/clickhouse-server/config.d/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-client/:/etc/clickhouse-client"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/break-hash:/var/lib/break-hash"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/https_app_file.py:/https_app_file.py"
@@ -27,7 +22,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4'
+          cpus: "4"
           memory: 4096M
         reservations:
           memory: 4096M
