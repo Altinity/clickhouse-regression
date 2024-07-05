@@ -20,6 +20,7 @@ jobs:
         run: |
           VERSION_LATEST=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:latest" | jq -r '.Config.Labels."com.clickhouse.build.version" | ltrimstr("v") | split("-")[0]')
           echo "version=$VERSION_LATEST" >> "$GITHUB_OUTPUT"
+          echo $VERSION_LATEST
 
   clickhouse-latest-x86:
     needs: get_clickhouse_version
