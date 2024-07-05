@@ -22,7 +22,7 @@ jobs:
   clickhouse-24-4-x86:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
-    name: "clickhouse-${{ needs.get_clickhouse_version.outputs.version }}-x86"
+    name: "clickhouse-${{ needs.get_clickhouse_version.outputs.version }}-alpine-x86"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
@@ -43,7 +43,7 @@ jobs:
   clickhouse-24-4-arm:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-arm.yml
-    name: "clickhouse-${{ needs.get_clickhouse_version.outputs.version }}-arm"
+    name: "clickhouse-${{ needs.get_clickhouse_version.outputs.version }}-alpine-arm"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
