@@ -133,13 +133,10 @@ def s3_disk(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AutomaticReconnects_AWS("1.0"))
 @Name("reconnect")
-def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
+def aws_s3(self, uri):
     """Check that ClickHouse reconnects to aws s3."""
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
+
     self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
@@ -148,13 +145,10 @@ def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AutomaticReconnects_GCS("1.0"))
 @Name("reconnect")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
+def gcs(self, uri):
     """Check that ClickHouse reconnects to gcs."""
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
+
     self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
@@ -163,13 +157,10 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AutomaticReconnects_MinIO("1.0"))
 @Name("reconnect")
-def minio(self, uri, key, secret, node="clickhouse1"):
+def minio(self, uri):
     """Check that ClickHouse reconnects to minio."""
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
+
     self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
