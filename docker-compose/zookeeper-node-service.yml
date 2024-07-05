@@ -6,7 +6,7 @@ services:
     pull_policy: never
     build:
       context: .
-      dockerfile: Dockerfile.zookeepernode
+      dockerfile: zookeeper-node.Dockerfile
       args:
         ZOOKEEPER_VERSION: ${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     expose:
