@@ -36,6 +36,7 @@ def regression(
     aws_s3_key_id,
     gcs_key_secret,
     gcs_key_id,
+    use_specific_version,
     node="clickhouse1",
     stress=None,
     with_analyzer=False,
@@ -66,6 +67,14 @@ def regression(
         "gcs_key_id": gcs_key_id,
     }
 
+    alter_args = {
+        **cluster_args,
+        "clickhouse_version": clickhouse_version,
+        "stress": stress,
+        "with_analyzer": with_analyzer,
+        "use_specific_version": use_specific_version,
+    }
+
     self.context.stress = stress
 
     with Pool(4) as pool:
@@ -79,7 +88,7 @@ def regression(
                 test=load("alter.regression", "regression"),
                 parallel=True,
                 executor=pool,
-            )(**args)
+            )(**alter_args)
             Feature(
                 test=load("aggregate_functions.regression", "regression"),
                 parallel=True,

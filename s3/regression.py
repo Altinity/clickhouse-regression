@@ -107,6 +107,17 @@ def argparser(parser):
         default=os.getenv("GCS_KEY_SECRET"),
     )
 
+    parser.add_argument(
+        "--use-specific-clickhouse-version",
+        type=str,
+        dest="use_specific_version",
+        help="used for the tests that use different versions of clickhouse, there is a main version used for all "
+        "tests which is set by --clickhouse-binary-path variable, this argument fetches additional clickhouse "
+        "binary and stores it inside a container along the main version",
+        metavar="path",
+        default="docker://altinity/clickhouse-server:23.3.13.7.altinitytest",
+    )
+
 
 xfails = {
     ":/:/disk/generic url": [(Fail, "not yet supported")],
