@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   clickhouse:
@@ -11,7 +11,7 @@ services:
       - "9009"
       - "8123"
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/:/etc/clickhouse-server/config.d/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/docker_related_config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
