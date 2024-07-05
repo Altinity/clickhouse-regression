@@ -746,7 +746,7 @@ def insert_multiple_replicas(self):
         nodes = self.context.ch_nodes[:2]
 
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after(less_ok=True)
+        size_before = measure_buckets_before_and_after(delay=30, less_ok=True)
 
     with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
