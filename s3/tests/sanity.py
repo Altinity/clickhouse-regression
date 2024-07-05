@@ -4,7 +4,7 @@ from s3.tests.common import *
 
 
 @TestOutline(Scenario)
-def sanity(self, policy, server="clickhouse1"):
+def sanity(self, policy):
     """Check that S3 storage is working correctly by
     storing data using different S3 policies.
     """
@@ -23,11 +23,10 @@ def sanity(self, policy, server="clickhouse1"):
 
 @TestFeature
 @Name("sanity")
-def aws_s3(self, uri, key_id, access_key, node="clickhouse1"):
+def aws_s3(self, uri):
     """Check that S3 storage is working correctly by
     storing data using different S3 policies.
     """
-    self.context.node = self.context.cluster.node(node)
 
     with Given(
         """I have a disk configuration with a S3 storage disk, access id and key provided"""
@@ -37,12 +36,10 @@ def aws_s3(self, uri, key_id, access_key, node="clickhouse1"):
             "aws": {
                 "type": "s3",
                 "endpoint": f"{uri}",
-                "access_key_id": f"{key_id}",
-                "secret_access_key": f"{access_key}",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
             },
         }
-        if self.context.object_storage_mode == "vfs":
-            disks["aws"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -58,11 +55,10 @@ def aws_s3(self, uri, key_id, access_key, node="clickhouse1"):
 
 @TestFeature
 @Name("sanity")
-def minio(self, uri, key, secret, node="clickhouse1"):
+def minio(self, uri):
     """Check that S3 storage is working correctly by
     storing data using different S3 policies.
     """
-    self.context.node = self.context.cluster.node(node)
 
     with Given("""I have a disk configuration with minio storage"""):
         disks = {
@@ -70,12 +66,10 @@ def minio(self, uri, key, secret, node="clickhouse1"):
             "minio": {
                 "type": "s3",
                 "endpoint": f"{uri}",
-                "access_key_id": f"{key}",
-                "secret_access_key": f"{secret}",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
             },
         }
-        if self.context.object_storage_mode == "vfs":
-            disks["minio"]["allow_vfs"] = "1"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {

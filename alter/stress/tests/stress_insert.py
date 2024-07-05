@@ -1,31 +1,28 @@
 #!/usr/bin/env python3
 from testflows.core import *
 
-from vfs.tests.steps import *
-from vfs.requirements import *
+from alter.stress.tests.actions import *
+from alter.stress.tests.steps import *
 
 
 @TestOutline(Scenario)
-@Tags("long", "combinatoric")
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Performance("1.0"))
 @Examples(
-    "n_cols max_inserts allow_vfs",
+    "n_cols max_inserts",
     [
-        (1, 2_000_000_000, False),
-        (1, 2_000_000_000, True),
-        (40, 50_000_000, False),
-        (40, 50_000_000, True),
-        (1000, 1_250_000, False),
-        (1000, 1_250_000, True),
+        (1, 2_000_000_000),
+        (1, 2_000_000_000),
+        (40, 50_000_000),
+        (40, 50_000_000),
+        (1000, 1_250_000),
+        (1000, 1_250_000),
     ],
 )
-def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
+def stress_inserts(self, n_cols=40, max_inserts=50e6):
     """
     Check that performing tens of millions of individual inserts does not cause data to be lost.
     """
     nodes = self.context.ch_nodes[:2]
     max_inserts = int(max_inserts)
-    fault_probability = 0.001
 
     columns = ", ".join([f"d{i} UInt8" for i in range(n_cols)])
 
@@ -34,7 +31,6 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
             "max_insert_block_size=1",  # Stress (zoo)keeper by inflating transaction counts
             "max_insert_threads=16",
             "max_memory_usage=0",  # Ignore per-query memory limits
-            f"insert_keeper_fault_injection_probability={fault_probability}",  # Stress (zoo)keeper by injecting faults during inserts
         ]
     )
 
@@ -49,10 +45,6 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
             yield n // 4
             yield n // 2
             yield n
-
-    if allow_vfs:
-        with Given("vfs is enabled"):
-            enable_vfs()
 
     with Given(f"I create a replicated table with {n_cols} cols on each node"):
         _, table_name = replicated_table_cluster(columns=columns)
@@ -85,11 +77,11 @@ def stress_inserts(self, n_cols=40, max_inserts=50e6, allow_vfs=True):
 
 
 @TestFeature
-@Name("stress insert")
+@Name("insert")
 def feature(self):
     """Stress test with many inserts."""
     with Given("I have S3 disks configured"):
-        s3_config()
+        disk_config()
 
     for scenario in loads(current_module(), Scenario):
         scenario()

@@ -2,15 +2,109 @@
 import random
 
 from testflows.core import *
+from testflows.asserts import error
 from testflows.combinatorics import product
 
 from helpers.alter import *
-from vfs.tests.steps import *
-from vfs.requirements import *
+from helpers.queries import optimize
+from helpers.common import getuid
+from s3.tests.common import (
+    default_s3_disk_and_volume,
+    assert_row_count,
+    insert_random,
+)
+
+COLUMNS = "key UInt32, value1 String, value2 UInt8"
+
+retry_args = {
+    "timeout": 90,
+    "delay": 5,
+}
+
+INSERT_SIZE = 100_000
+
+
+@TestStep(Given)
+def replicated_table_cluster(
+    self,
+    table_name: str = None,
+    columns: str = None,
+    storage_policy: str = "external",
+    cluster_name: str = "replicated_cluster",
+    order_by: str = None,
+    partition_by: str = None,
+    primary_key: str = None,
+    ttl: str = None,
+    settings: str = None,
+    allow_zero_copy: bool = None,
+    exitcode: int = 0,
+    no_cleanup=False,
+):
+    """Create a replicated table with the ON CLUSTER clause."""
+    node = current().context.node
+
+    if table_name is None:
+        table_name = "table_" + getuid()
+
+    if columns is None:
+        columns = COLUMNS
+
+    if order_by is None:
+        order_by = columns.split()[0]
+
+    if settings is None:
+        settings = []
+    else:
+        settings = [settings]
+
+    settings.append(f"storage_policy='{storage_policy}'")
+
+    if allow_zero_copy is not None:
+        settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
+
+    if partition_by is not None:
+        partition_by = f"PARTITION BY ({partition_by})"
+    else:
+        partition_by = ""
+
+    if primary_key is not None:
+        primary_key = f"PRIMARY KEY {primary_key}"
+    else:
+        primary_key = ""
+
+    if ttl is not None:
+        ttl = "TTL " + ttl
+    else:
+        ttl = ""
+
+    try:
+        with Given("I have a table"):
+            r = node.query(
+                f"""
+                CREATE TABLE IF NOT EXISTS {table_name} 
+                ON CLUSTER '{cluster_name}' ({columns}) 
+                ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
+                ORDER BY {order_by} {partition_by} {primary_key} {ttl}
+                SETTINGS {', '.join(settings)}
+                """,
+                settings=[("distributed_ddl_task_timeout ", 360)],
+                exitcode=exitcode,
+            )
+
+        yield r, table_name
+
+    finally:
+        if not no_cleanup:
+            with Finally(f"I drop the table"):
+                for attempt in retries(timeout=120, delay=5):
+                    with attempt:
+                        node.query(
+                            f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC",
+                            timeout=60,
+                        )
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Update("0.0"))
 def update_delete(self):
     """Test that ALTER UPDATE and DELETE execute without errors."""
     table_name = "update_table"
@@ -19,11 +113,13 @@ def update_delete(self):
 
     with Given("I have a table"):
         replicated_table_cluster(
-            table_name=table_name, storage_policy="external_vfs", columns=columns
+            table_name=table_name, storage_policy="external", columns=columns
         )
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name, columns=columns)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=columns, rows=INSERT_SIZE
+        )
 
     with Then("I lightweight DELETE with success"):
         nodes[0].query(f"DELETE FROM {table_name} WHERE (e % 4 = 0)", exitcode=0)
@@ -48,17 +144,18 @@ def update_delete(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_OrderBy("0.0"))
 def order_by(self):
     """Test that MODIFY ORDER BY executes without errors."""
     table_name = "order_table"
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+        replicated_table_cluster(table_name=table_name, storage_policy="external")
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Then("I modify ORDER BY with success"):
         nodes[0].query(
@@ -68,7 +165,6 @@ def order_by(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_SampleBy("0.0"))
 def sample_by(self):
     """Test that MODIFY SAMPLE BY executes without errors."""
     table_name = "sample_table"
@@ -77,13 +173,15 @@ def sample_by(self):
     with Given("I have a table"):
         replicated_table_cluster(
             table_name=table_name,
-            storage_policy="external_vfs",
+            storage_policy="external",
             primary_key="(key, cityHash64(value1))",
             order_by="(key, cityHash64(value1))",
         )
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Then("I modify SAMPLE BY with success"):
         nodes[0].query(
@@ -93,56 +191,56 @@ def sample_by(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Index("0.0"))
 def index(self):
     """Test that MODIFY ORDER BY executes without errors."""
     table_name = "index_table"
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+        replicated_table_cluster(table_name=table_name, storage_policy="external")
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Check("add"):
         with When("I add an index"):
             nodes[0].query(
-                f"ALTER TABLE {table_name} ADD INDEX idxtest value1 TYPE set(100) GRANULARITY 2",
+                f"ALTER TABLE {table_name} ADD INDEX idx_test value1 TYPE set(100) GRANULARITY 2",
                 exitcode=0,
             )
 
     with Check("materialize"):
         with When("I materialize an index"):
             nodes[0].query(
-                f"ALTER TABLE {table_name} MATERIALIZE INDEX idxtest",
+                f"ALTER TABLE {table_name} MATERIALIZE INDEX idx_test",
                 exitcode=0,
             )
 
     with Check("clear"):
         with When("I clear an index"):
-            retry(nodes[0].query, timeout=15, delay=1)(
-                f"ALTER TABLE {table_name} CLEAR INDEX idxtest",
+            retry(nodes[0].query, **retry_args)(
+                f"ALTER TABLE {table_name} CLEAR INDEX idx_test",
                 exitcode=0,
             )
 
     with Check("drop"):
         with When("I drop an index"):
             nodes[0].query(
-                f"ALTER TABLE {table_name} DROP INDEX idxtest",
+                f"ALTER TABLE {table_name} DROP INDEX idx_test",
                 exitcode=0,
             )
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Projections("0.0"))
 def projection(self):
     """Test that adding projections does not error."""
     table_name = "proj_table"
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+        replicated_table_cluster(table_name=table_name, storage_policy="external")
 
     with When("I add a projection with success"):
         nodes[0].query(
@@ -157,7 +255,9 @@ def projection(self):
         )
 
     with Then("I insert data with success"):
-        insert_random(node=nodes[0], table_name=table_name)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with And("I clear the projection with success"):
         nodes[0].query(
@@ -173,7 +273,6 @@ def projection(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Freeze("0.0"))
 @Examples("partition", [[""], ["PARTITION 1"]])
 def freeze(self, partition):
     """Check tables work with ALTER TABLE FREEZE."""
@@ -184,12 +283,14 @@ def freeze(self, partition):
     with Given(f"I have a table {table_name}"):
         replicated_table_cluster(
             table_name=table_name,
-            storage_policy="external_vfs",
+            storage_policy="external",
             partition_by="key % 4",
         )
 
     with When("I insert some data into the table"):
-        insert_random(node=nodes[0], table_name=table_name)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Then("I freeze the table"):
         nodes[0].query(
@@ -205,10 +306,6 @@ def freeze(self, partition):
 
 
 @TestOutline(Scenario)
-@Requirements(
-    RQ_SRS038_DiskObjectStorageVFS_Alter_Fetch("0.0"),
-    RQ_SRS038_DiskObjectStorageVFS_Alter_Attach("0.0"),
-)
 @Examples("fetch_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
 def fetch(self, fetch_item):
     """Test fetching a new part from another replica."""
@@ -218,14 +315,16 @@ def fetch(self, fetch_item):
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
-            storage_policy="external_vfs", partition_by="key % 4"
+            storage_policy="external", partition_by="key % 4"
         )
         _, destination_table_name = replicated_table_cluster(
-            storage_policy="external_vfs", partition_by="key % 4"
+            storage_policy="external", partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
-        insert_random(node=node, table_name=source_table_name)
+        insert_random(
+            node=node, table_name=source_table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
@@ -244,31 +343,32 @@ def fetch(self, fetch_item):
 
     with Then("I check the number of rows on the second table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=destination_table_name, rows=row_count
             )
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_AttachFrom("0.0"))
 def attach_from(self):
     """Test attaching a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
     fetch_item = "PARTITION 2"
-    insert_rows = 1000000
+    insert_rows = INSERT_SIZE
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
-            storage_policy="external_vfs", partition_by="key % 4"
+            storage_policy="external", partition_by="key % 4"
         )
         _, destination_table_name = replicated_table_cluster(
-            storage_policy="external_vfs", partition_by="key % 4"
+            storage_policy="external", partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
-        insert_random(node=node, table_name=source_table_name, rows=insert_rows)
+        insert_random(
+            node=node, table_name=source_table_name, columns=COLUMNS, rows=insert_rows
+        )
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
@@ -284,19 +384,18 @@ def attach_from(self):
 
     with Then("I check the number of rows on the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=source_table_name, rows=insert_rows
             )
 
     with And("I check the number of rows on the second table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=destination_table_name, rows=row_count
             )
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_MoveToTable("0.0"))
 def move_to_table(self):
     """Test moving a part from one table to another."""
 
@@ -304,7 +403,7 @@ def move_to_table(self):
     node = nodes[0]
     fetch_item = "PARTITION 2"
     insert_rows = 1000000
-    storage_policy = "external_vfs"
+    storage_policy = "external"
     source_table_name = "table_move_src"
     destination_table_name = "table_move_dest"
 
@@ -321,11 +420,16 @@ def move_to_table(self):
         )
 
     with And("I insert data into the first table"):
-        insert_random(node=node, table_name=source_table_name, rows=insert_rows)
+        insert_random(
+            node=node, table_name=source_table_name, columns=COLUMNS, rows=insert_rows
+        )
 
     with And("I insert less data into the second table"):
         insert_random(
-            node=node, table_name=destination_table_name, rows=insert_rows // 2
+            node=node,
+            table_name=destination_table_name,
+            columns=COLUMNS,
+            rows=insert_rows // 2,
         )
 
     with And("I count the rows in a partition on the first table"):
@@ -341,13 +445,13 @@ def move_to_table(self):
 
     with Then("I check the number of rows in the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=source_table_name, rows=(insert_rows - row_count)
             )
 
     with And("I check the number of rows in the second table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node,
                 table_name=destination_table_name,
                 rows=(insert_rows // 2 + row_count),
@@ -355,29 +459,33 @@ def move_to_table(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Replace("0.0"))
 def replace(self):
     """Test attaching a part from one table to another."""
 
     nodes = self.context.ch_nodes
     node = nodes[0]
     fetch_item = "PARTITION 2"
-    insert_rows = 1000000
+    insert_rows = INSERT_SIZE
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
-            storage_policy="external_vfs", partition_by="key % 4"
+            storage_policy="external", partition_by="key % 4"
         )
         _, destination_table_name = replicated_table_cluster(
-            storage_policy="external_vfs", partition_by="key % 4"
+            storage_policy="external", partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
-        insert_random(node=node, table_name=source_table_name, rows=insert_rows)
+        insert_random(
+            node=node, table_name=source_table_name, columns=COLUMNS, rows=insert_rows
+        )
 
     with And("I insert a smaller amount of data into the second table"):
         insert_random(
-            node=node, table_name=destination_table_name, rows=insert_rows // 2
+            node=node,
+            table_name=destination_table_name,
+            columns=COLUMNS,
+            rows=insert_rows // 2,
         )
 
     with And("I count the rows in a partition on the first table"):
@@ -393,7 +501,7 @@ def replace(self):
 
     with Then("I check the number of rows on the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node, table_name=source_table_name, rows=insert_rows
             )
 
@@ -406,7 +514,6 @@ def replace(self):
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Drop("0.0"))
 @Examples(
     "drop_item detach_first", product(["PARTITION 2", "PART '2_0_0_0'"], [False, True])
 )
@@ -418,11 +525,13 @@ def drop(self, drop_item, detach_first):
 
     with Given("I have a replicated tables"):
         _, table_name = replicated_table_cluster(
-            storage_policy="external_vfs", partition_by="key % 4"
+            storage_policy="external", partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
-        insert_random(node=nodes[1], table_name=table_name, rows=insert_rows)
+        insert_random(
+            node=nodes[1], table_name=table_name, columns=COLUMNS, rows=insert_rows
+        )
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
@@ -447,7 +556,7 @@ def drop(self, drop_item, detach_first):
 
     with Then("I check the number of rows on the first table on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node,
                 table_name=table_name,
                 rows=(insert_rows - part_row_count),
@@ -467,7 +576,9 @@ def check_move(self, move_item, policy, disk_order, to_type):
         )
 
     with When("I insert data into the first table"):
-        insert_random(node=nodes[0], table_name=table_name, rows=insert_rows)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=insert_rows
+        )
 
     with Then("I check system.parts"):
         what, part_name = move_item.split()
@@ -500,68 +611,14 @@ def check_move(self, move_item, policy, disk_order, to_type):
         assert r.output == destination_disk, error()
 
 
-@TestScenario
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_MovePart("0.0"))
-def move(self):
-    """
-    Test moving  part between vfs and non-vfs disks.
-
-    Clickhouse fills disks in the order they were defined,
-    therefore need to use 3 disks to test both movement directions.
-    As a sanity check, moves with no vfs at all are performed first.
-    """
-
-    part_selections = ["PARTITION 2", "PART '2_0_0_0'"]
-    disk_orders = [
-        ["external", "external_no_vfs"],
-        ["external", "external_vfs"],
-        ["external_vfs", "external_no_vfs"],
-        ["external_vfs", "external_vfs_2"],
-    ]
-    destination_types = ["DISK", "VOLUME"]
-    policies = {}
-
-    with Given("I have storage policies for the disk pairs"):
-        policies = {
-            f"move_policy_{i}": {
-                "volumes": {
-                    "source": {"disk": source_disk},
-                    "destination": {"disk": destination_disk},
-                }
-            }
-            for i, (source_disk, destination_disk) in enumerate(disk_orders)
-        }
-
-    with And("I activate the policies"):
-        s3_storage(
-            policies=policies,
-            restart=True,
-            timeout=60,
-            config_file="test_move_policies.xml",
-        )
-
-    for policy_name, disk_order in zip(policies.keys(), disk_orders):
-        for part_selected, dest_type in product(part_selections, destination_types):
-            Example(
-                f"Disks={disk_order}, MOVE {part_selected} TO {dest_type}",
-                test=check_move,
-            )(
-                move_item=part_selected,
-                policy=policy_name,
-                disk_order=disk_order,
-                to_type=dest_type,
-            )
-
-
 @TestOutline(Scenario)
-@Requirements(RQ_SRS038_DiskObjectStorageVFS_Alter_Detach("0.0"))
 @Examples("detach_item", [["PARTITION 2"], ["PART '2_0_0_0'"]])
 def detach(self, detach_item):
     """Test detaching a part."""
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
-    storage_policy = "external_vfs"
+    storage_policy = "external"
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
@@ -569,7 +626,12 @@ def detach(self, detach_item):
         )
 
     with And("I insert data into the first table"):
-        insert_random(node=nodes[1], table_name=source_table_name, rows=insert_rows)
+        insert_random(
+            node=nodes[1],
+            table_name=source_table_name,
+            columns=COLUMNS,
+            rows=insert_rows,
+        )
 
     with And("I count the rows in a partition"):
         # Can also get this information from system.parts
@@ -585,7 +647,7 @@ def detach(self, detach_item):
 
     with Then("I check the number of rows on all nodes"):
         for node in nodes:
-            retry(assert_row_count, timeout=15, delay=1)(
+            retry(assert_row_count, **retry_args)(
                 node=node,
                 table_name=source_table_name,
                 rows=(insert_rows - part_row_count),
@@ -593,20 +655,18 @@ def detach(self, detach_item):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS038_DiskObjectStorageVFS_Alter_Column("0.0"),
-    RQ_SRS038_DiskObjectStorageVFS_Combinatoric("0.0"),
-)
 def columns(self):
     """Test that alter column commands execute without errors."""
     table_name = "columns_table"
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external_vfs")
+        replicated_table_cluster(table_name=table_name, storage_policy="external")
 
     with And("I insert some data"):
-        insert_random(node=nodes[0], table_name=table_name)
+        insert_random(
+            node=nodes[0], table_name=table_name, columns=COLUMNS, rows=INSERT_SIZE
+        )
 
     with Check("drop"):
         with When("I delete a column on the second node"):
@@ -695,16 +755,21 @@ def columns(self):
         assert "column comment" not in r.output, error(r)
 
     with And("The table should contain all rows"):
-        assert_row_count(node=nodes[2], table_name=table_name)
+        assert_row_count(node=nodes[2], table_name=table_name, rows=INSERT_SIZE)
 
 
 @TestFeature
 @Name("alter")
-def feature(self):
+def feature(self, uri):
     """Test ALTER commands with VFS enabled"""
 
+    self.context.uri = uri
+
+    cluster = self.context.cluster
+    self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+
     with Given("I have S3 disks configured"):
-        s3_config()
+        default_s3_disk_and_volume()
 
     for scenario in loads(current_module(), Scenario):
         scenario()

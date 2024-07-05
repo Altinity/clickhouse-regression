@@ -8,6 +8,7 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
+from helpers.common import check_clickhouse_version
 from alter.stress.tests.actions import *
 from alter.stress.tests.steps import *
 
