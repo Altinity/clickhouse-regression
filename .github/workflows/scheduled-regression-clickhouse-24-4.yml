@@ -3,7 +3,7 @@ run-name: Scheduled ClickHouse 24.4
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * 1-4"
 
 jobs:
   get_clickhouse_version:
