@@ -3,7 +3,7 @@ run-name: Scheduled Altinity 23.3
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * 1-4"
 
 jobs:
   altinitystable-23-3-x86:
