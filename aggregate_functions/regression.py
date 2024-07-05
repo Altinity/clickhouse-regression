@@ -72,17 +72,17 @@ xfails = {
     "/aggregate functions/state/quantileTDigestWeightedState/datatypes/permutations/:_date_:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
-    "/aggregate functions/state/topKWeightedState/datatypes/permutations/*": [
+    "/aggregate functions/state/topKWeightedState/datatypes/permutations/:": [
         (Fail, issue_55997)
     ],
-    "/aggregate functions/state/maxIntersectionsState/*": [
+    "/aggregate functions/state/maxIntersectionsState/:": [
         (
             Fail,
             "Another value on 22.8.13.22; needs to be investigated",
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsPositionState/*": [
+    "/aggregate functions/state/maxIntersectionsPositionState/:": [
         (
             Fail,
             "Another value on 22.8.13.22; needs to be investigated",
@@ -363,12 +363,12 @@ ffails = {
     # states
     "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": (
         XFail,
-        "need to invesigate",
+        "need to investigate",
         check_clickhouse_version("<23"),
     ),
     "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": (
         XFail,
-        "need to invesigate",
+        "need to investigate",
         check_clickhouse_version("<23"),
     ),
     "/aggregate functions/state/retentionState/NULL value handling/*": (
