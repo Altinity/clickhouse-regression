@@ -1,4 +1,4 @@
-name: Reusable Workflow for scheduled ARM
+name: Reusable Workflow for Scheduled ARM
 
 on:
   workflow_call:
