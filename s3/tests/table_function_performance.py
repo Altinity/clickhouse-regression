@@ -106,8 +106,11 @@ def wildcard(self, wildcard, expected_time, expect_result):
 
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_TableFunction("1.0"))
-def outline(self):
+def outline(self, uri):
     """Test S3 and S3 compatible storage through storage disks."""
+
+    self.context.uri = uri
+    self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
 
     with allow_s3_truncate(self.context.node):
         Scenario(run=s3_create_many_files)
@@ -119,40 +122,22 @@ def outline(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_TableFunction("1.0"))
 @Name("table function performance")
-def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
+def aws_s3(self, uri):
 
-    outline()
+    outline(uri=uri)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_TableFunction("1.0"))
 @Name("table function performance")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
+def gcs(self, uri):
 
-    outline()
+    outline(uri=uri)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_TableFunction("1.0"))
 @Name("table function performance")
-def minio(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
-    self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
-    self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
+def minio(self, uri):
 
-    outline()
+    outline(uri=uri)

@@ -450,7 +450,7 @@ jobs:
 
   benchmark_gcs:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: ontime_benchmark
       STORAGE: /gcs
@@ -1382,7 +1382,7 @@ jobs:
 
   s3_aws:
     runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 300
     env:
       SUITE: s3
       STORAGE: /aws

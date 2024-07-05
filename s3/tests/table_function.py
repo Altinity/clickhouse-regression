@@ -510,13 +510,14 @@ def measure_file_size(self):
         )
 
     with And("I get the size of the s3 bucket after adding data"):
-        size_after = get_stable_bucket_size(prefix=bucket_path)
+        size_after = get_stable_bucket_size(prefix=bucket_path, delay=20)
 
     with Then("I compare the size that clickhouse reports"):
         r = node.query(
             f"SELECT sum(_size) FROM s3('{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
         )
-        assert size_after - size_before == int(r.output.strip()), error()
+        size_clickhouse = int(r.output.strip())
+        assert size_after - size_before == size_clickhouse, error()
 
 
 @TestOutline(Feature)
@@ -633,38 +634,30 @@ def ssec(self):
         endpoints["s3-bucket"].update(self.context.s3_options)
 
     with s3_endpoints(endpoints):
-        outline()
+        outline(uri=self.context.uri)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_TableFunction("1.0"))
 @Name("table function")
-def aws_s3(self, uri, access_key, key_id, bucket, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
+def aws_s3(self, uri, bucket_prefix):
+
     self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = bucket
-    self.context.bucket_path = "data"
+    self.context.bucket_path = bucket_prefix
 
     outline()
 
     Feature(run=ssec_encryption_check)
-    Feature(run=ssec)
+    Feature(test=ssec)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_TableFunction("1.0"))
 @Name("table function")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
+def gcs(self, uri, bucket_prefix):
+
     self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = None
-    self.context.bucket_path = None
+    self.context.bucket_path = bucket_prefix
 
     outline()
 
@@ -672,13 +665,9 @@ def gcs(self, uri, access_key, key_id, node="clickhouse1"):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_TableFunction("1.0"))
 @Name("table function")
-def minio(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
+def minio(self, uri, bucket_prefix):
+
     self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
-    self.context.bucket_name = "root"
-    self.context.bucket_path = "data"
+    self.context.bucket_path = bucket_prefix
 
     outline()
