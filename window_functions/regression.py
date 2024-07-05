@@ -76,12 +76,10 @@ xfails = {
             "DB::Exception: The RANGE OFFSET frame for 'DB::ColumnNullable' ORDER BY column is not implemented",
         )
     ],
-    "tests/:/aggregate funcs/aggregate funcs over rows frame/func='mannWhitneyUTest(salary, 1)'": [
-        (Fail, "need to investigate")
-    ],
-    "tests/:/aggregate funcs/aggregate funcs over rows frame/func='rankCorr(salary, 0.5)'": [
-        (Fail, "need to investigate")
-    ],
+    "tests/:/aggregate funcs/aggregate funcs over rows frame/"
+    + name.clean("func='mannWhitneyUTest(salary, 1)'"): [(Fail, "need to investigate")],
+    "tests/:/aggregate funcs/aggregate funcs over rows frame/"
+    + name.clean("func='rankCorr(salary, 0.5)'"): [(Fail, "need to investigate")],
     "tests/distributed/misc/query with order by and one window": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/23902")
     ],

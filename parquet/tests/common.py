@@ -10,6 +10,7 @@ from helpers.tables import *
 from s3.tests.common import *
 from testflows.asserts import values, error, snapshot
 
+
 @TestStep(Given)
 def start_minio(
     self,
