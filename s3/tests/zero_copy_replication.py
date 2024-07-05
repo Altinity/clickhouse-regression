@@ -24,9 +24,9 @@ def global_setting(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_global_setting"
         for node in nodes:
             replicated_table(node=node, table_name=table_name)
@@ -49,19 +49,19 @@ def drop_replica(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop"
         for node in nodes:
-            replicated_table(node=node, table_name=table_name)
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with And("I stop the second node"):
@@ -78,36 +78,45 @@ def drop_replica(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
-def add_replica(self):
-    """Check that additional replicas of a replicated table can be added with
-    no changes to the data in the table.
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global("1.0"),
+)
+def add_replica_global_setting(self):
+    """
+    Check that ClickHouse replicated tables work correctly when the
+    zero_copy_replication setting is set  as a global merge
+    tree engine setting.
+
+    Check that additional replicas of a replicated table can be added:
+    - with no changes to the data in the table.
+    - without significantly increasing disk usage.
     """
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
     with And("I have merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
+        mergetree_config(settings=settings, restart=True)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on the first node"):
+    with And("I have a replicated table on the first node"):
         table_name = "zero_copy_replication_add"
         replicated_table(node=nodes[0], table_name=table_name)
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with And("I get the size of the s3 bucket"):
         size_after_inserts = get_bucket_size()
 
-    with And("I create a replicated table on the second node"):
+    with Given("I have a replicated table on the second node"):
         replicated_table(node=nodes[1], table_name=table_name)
 
     with Then(
-        """The size of the s3 bucket should be 1 byte more
+        """the size of the s3 bucket should be 1 byte more
                 than previously because of the additional replica"""
     ):
         check_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
@@ -118,32 +127,88 @@ def add_replica(self):
     with And("I check simple queries on the second node"):
         standard_selects(node=nodes[1], table_name=table_name)
 
+    with And("I check the size one more time"):
+        check_stable_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
+
+
+@TestScenario
+@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
+def add_replica_local_setting(self):
+    """
+    Configure zero copy replication per table.
+    Check that additional replicas of a replicated table can be added:
+    - with no changes to the data in the table.
+    - without significantly increasing disk usage.
+    """
+    with Given("I have a pair of clickhouse nodes"):
+        nodes = self.context.ch_nodes[:2]
+
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I have a replicated table on the first node"):
+        table_name = "zero_copy_replication_add_local"
+        replicated_table(
+            node=nodes[0],
+            table_name=table_name,
+            settings=f"{self.context.zero_copy_replication_setting}=1",
+        )
+
+    with When("I add data to the table"):
+        standard_inserts(node=nodes[0], table_name=table_name)
+
+    with And("I get the size of the s3 bucket"):
+        size_after_inserts = get_bucket_size()
+
+    with Given("I have a replicated table on the second node"):
+        replicated_table(
+            node=nodes[1],
+            table_name=table_name,
+            settings=f"{self.context.zero_copy_replication_setting}=1",
+        )
+
+    with Then(
+        """the size of the s3 bucket should be 1 byte more
+                than previously because of the additional replica"""
+    ):
+        check_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
+
+    with And("I check simple queries on the first node"):
+        standard_selects(node=nodes[0], table_name=table_name)
+
+    with And("I check simple queries on the second node"):
+        standard_selects(node=nodes[1], table_name=table_name)
+
+    with And("I check the size one more time"):
+        check_stable_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
+
 
 @TestScenario
 @Requirements(
     RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
 )
-def drop_alter_replica(self):
-    """Check that when a ClickHouse instance with a replicated table is dropped,
+def offline_alter_replica(self):
+    """
+    Check that when a ClickHouse instance with a replicated table is offline,
     the data in the table is changed, and then the instance is restarted, all
     data in its replicated table matches the updated data.
     """
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
         for node in nodes:
-            replicated_table(node=node, table_name=table_name)
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
 
-    with And("I insert 1MB of data"):
+    with When("I insert 1MB of data"):
         insert_data(node=nodes[0], number_of_mb=1, name=table_name)
 
     with And("I stop the other node"):
@@ -162,6 +227,329 @@ def drop_alter_replica(self):
 
     with Then("I check simple queries on the other node"):
         standard_selects(node=nodes[1], table_name=table_name)
+
+
+@TestScenario
+@Tags("sanity")
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
+)
+def stale_alter_replica(self):
+    """
+    Similar to offline test, but under load.
+    """
+
+    table_name = "stale_replica"
+    nodes = self.context.ch_nodes
+    columns = "d UInt64, s String"
+    insert_size = 100_000
+    insert_time = 15
+
+    with Given("I have an Event to control background inserts"):
+        stop_background_inserts = Event()
+
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I have a replicated table on each node"):
+        table_name = "zero_copy_replication_drop_alter"
+        for node in nodes:
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                columns=columns,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
+
+    with When("I stop node 2"):
+        nodes[1].stop()
+
+    When("I start inserts on node 1", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[0], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+    When("I start inserts on node 3", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[2], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+
+    with When(f"I wait {insert_time} seconds and I restart node 2"):
+        time.sleep(insert_time)
+        nodes[1].start()
+
+    When("I start inserts on node 2", test=repeat_until_stop, parallel=True)(
+        stop_event=stop_background_inserts,
+        func=lambda: insert_random(
+            node=nodes[1], table_name=table_name, columns=columns, rows=insert_size
+        ),
+    )
+
+    with When("I tell node 2 to sync"):
+        sync_replica(node=nodes[1], table_name=table_name, timeout=300)
+
+    with When(f"I wait {insert_time} seconds and stop the inserts"):
+        time.sleep(insert_time)
+        stop_background_inserts.set()
+        join()
+
+    with Then("I check that the nodes are consistent"):
+        check_consistency(nodes=nodes, table_name=table_name, sync_timeout=60)
+
+
+@TestScenario
+@Tags("sanity")
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
+)
+def add_remove_one_replica(self):
+    """
+    Test that no data is lost when a node is removed and added as a replica
+    during inserts on other replicas.
+    """
+
+    table_name = "add_remove_one_replica"
+    storage_policy = "external"
+    parallel = False
+    nodes = self.context.ch_nodes
+    rows_per_insert = 1_000_000
+    retry_settings = {
+        "timeout": 120,
+        "initial_delay": 5,
+        "delay": 2,
+    }
+
+    if self.context.stress:
+        rows_per_insert = 5_000_000
+        retry_settings["timeout"] = 300
+        retry_settings["delay"] = 5
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I have a replicated table"):
+        for node in nodes:
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                policy=storage_policy,
+                columns="d UInt64",
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
+
+    When(
+        "I start inserts on the second node",
+        test=insert_random,
+        parallel=parallel,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+
+    And(
+        "I delete the replica on the third node",
+        test=delete_replica,
+        parallel=parallel,
+    )(node=nodes[2], table_name=table_name)
+
+    Given(
+        "I replicate the table on the third node",
+        test=replicated_table,
+        parallel=parallel,
+    )(
+        node=nodes[2],
+        table_name=table_name,
+        settings=f"{self.context.zero_copy_replication_setting}=1",
+    )
+
+    When(
+        "I start inserts on the first node",
+        test=insert_random,
+        parallel=parallel,
+    )(
+        node=nodes[0],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+
+    join()
+
+    for node in nodes:
+        with Then(f"I wait for {node.name} to sync by watching the row count"):
+            retry(assert_row_count, **retry_settings)(
+                node=node, table_name=table_name, rows=rows_per_insert * 2
+            )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica("1.0")
+)
+def add_remove_replica_parallel(self):
+    """
+    Test that no data is lost when replicas are added and removed
+    during inserts on other replicas.
+    """
+
+    table_name = "add_remove_replica_parallel"
+    nodes = self.context.ch_nodes
+    rows_per_insert = 1_000_000
+    retry_settings = {
+        "timeout": 120,
+        "initial_delay": 5,
+        "delay": 2,
+    }
+
+    if self.context.stress:
+        rows_per_insert = 5_000_000
+        retry_settings["timeout"] = 300
+        retry_settings["delay"] = 5
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I have a replicated table on one node"):
+        replicated_table(
+            node=nodes[0],
+            table_name=table_name,
+            columns="d UInt64",
+            settings=f"{self.context.zero_copy_replication_setting}=1",
+        )
+
+    When(
+        "I start parallel inserts on the first node",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[0],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets = 1
+
+    Given(
+        "I replicate the table on the second node in parallel",
+        test=replicated_table,
+        parallel=True,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        settings=f"{self.context.zero_copy_replication_setting}=1",
+    )
+
+    join()
+
+    with Then("I wait for the second node to sync by watching the row count"):
+        retry(assert_row_count, **retry_settings)(
+            node=nodes[1], table_name=table_name, rows=rows_per_insert
+        )
+
+    And(
+        "I start parallel inserts on the second node",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+
+    And(
+        "I delete the replica on the first node",
+        test=delete_replica,
+        parallel=True,
+    )(node=nodes[0], table_name=table_name)
+
+    Given(
+        "I replicate the table on the third node in parallel",
+        test=replicated_table,
+        parallel=True,
+    )(
+        node=nodes[2],
+        table_name=table_name,
+        settings=f"{self.context.zero_copy_replication_setting}=1",
+    )
+
+    When(
+        "I continue with parallel inserts on the second node",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+
+    join()
+
+    with And("I wait for the third node to sync by watching the row count"):
+        retry(assert_row_count, **retry_settings)(
+            node=nodes[2], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+
+    with Then("I also check the row count on the second node"):
+        assert_row_count(
+            node=nodes[1], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+
+    Given(
+        "I start parallel inserts on the second node in parallel",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[1],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+    And(
+        "I start parallel inserts on the third node in parallel",
+        test=insert_random,
+        parallel=True,
+    )(
+        node=nodes[2],
+        table_name=table_name,
+        columns="d UInt64",
+        rows=rows_per_insert,
+    )
+    insert_sets += 1
+
+    Given(
+        "I replicate the table on the first node again in parallel",
+        test=replicated_table,
+        parallel=True,
+    )(
+        node=nodes[0],
+        table_name=table_name,
+        settings=f"{self.context.zero_copy_replication_setting}=1",
+    )
+
+    join()
+
+    with Then("I wait for the first node to sync by watching the row count"):
+        retry(assert_row_count, **retry_settings)(
+            node=nodes[0], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+
+    with And("I check the row count on the other nodes"):
+        assert_row_count(
+            node=nodes[1], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
+        assert_row_count(
+            node=nodes[2], table_name=table_name, rows=rows_per_insert * insert_sets
+        )
 
 
 @TestScenario
@@ -206,10 +594,12 @@ def metadata(self):
         settings = self.context.zero_copy_replication_settings
         mergetree_config(settings=settings)
 
-    with When("I create a replicated table on each node"):
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_metadata"
         for node in nodes:
-            node.restart()
             replicated_table(node=node, table_name=table_name)
 
     with And("I add data to the table"):
@@ -266,7 +656,7 @@ def metadata(self):
 @Examples("count", [[1], [10]])
 def alter(self, count=10):
     """Check for data duplication when repeated alter commands are used."""
-    table_name = "zero_copy_replication_alter_repeat"
+    table_name = f"zero_copy_replication_alter_repeat_{count}"
 
     def insert_data_pair(node, number_of_mb, start=0):
         values = ",".join(
@@ -275,91 +665,70 @@ def alter(self, count=10):
         )
         node.query(f"INSERT INTO {table_name} VALUES {values}")
 
-    def check_query_pair(node, num, query, expected):
-        with By(f"executing query {num}", description=query):
-            r = node.query(query).output.strip()
-            with Then(f"result should match the expected", description=expected):
-                assert r == expected, error()
+    @TestStep(Then)
+    def check_query(self, node, query, expected):
+        with By(f"executing query", description=query):
+            for attempt in retries(timeout=120, delay=5):
+                with attempt:
+                    with Then(
+                        f"result should match the expected", description=expected
+                    ):
+                        r = node.query(query).output.strip()
+                        assert r == expected, error()
 
-    def alter_table(sign):
-        with Then(f"I change all signs to {sign}"):
-            nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1")
-
-        with And("I sync the replicas"):
-            for node in nodes:
-                for attempt in retries(timeout=1200, delay=5):
-                    with attempt:
-                        node.query(f"SYSTEM SYNC REPLICA {table_name}", timeout=600)
-
-        with And("I check that the sign is -1 for the second table"):
-            check_query_pair(
-                node=nodes[1],
-                num=0,
-                query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
-                expected=f"{sign}",
-            )
-
-        with And("I check that the sign is -1 for the first table"):
-            check_query_pair(
-                node=nodes[0],
-                num=0,
-                query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
-                expected=f"{sign}",
-            )
-
-    with Given("I have a pair of clickhouse nodes"):
+    with Given("a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
+    with And("merge tree configuration set to use zero copy replication"):
         settings = self.context.zero_copy_replication_settings.copy()
         settings["old_parts_lifetime"] = "1"
-        mergetree_config(settings=settings)
+        mergetree_config(settings=settings, restart=True)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on each node"):
+    with And("a replicated table on each node"):
         for node in nodes:
-            node.restart()
             replicated_table(
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
 
-    with And("I add data to the table"):
+    with When("data is added to the table"):
         with By("first inserting 1MB of data"):
             insert_data_pair(nodes[0], 1)
 
-    with And("I get the size of the s3 bucket"):
+    with And("I get the size of the s3 bucket after insert"):
         size_after_insert = get_bucket_size()
 
-    with Then("I check that the sign is 1 for the second table"):
-        check_query_pair(
+    with Then("I check that the sign is 1 for the second node"):
+        check_query(
             node=nodes[1],
-            num=0,
             query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
             expected="1",
         )
 
     with And("I alter and check the size 10 times"):
-        s = 1
-        for i in range(count):
-            alter_table(s)
+        sign = 1
+        for _ in range(count):
+            sign *= -1
+            with When(f"all sign values are changed to {sign}"):
+                nodes[1].query(f"ALTER TABLE {table_name} UPDATE sign = {sign} WHERE 1")
 
-            with Then(
-                """I make sure the amount of data in S3 is within
-                        50% of the original amount"""
-            ):
-                start_time = time.time()
-                while True:
-                    current_size = get_bucket_size()
-                    if current_size < size_after_insert * 1.5:
-                        break
-                    if time.time() - start_time < 60:
-                        time.sleep(2)
-                        continue
-                    assert False, "data in S3 has grown by more than 50%"
+            with Then(f"the sign should be {sign} for all nodes"):
+                for node in nodes:
+                    check_query(
+                        node=node,
+                        query=f"SELECT sign FROM {table_name} LIMIT 1 FORMAT TabSeparated",
+                        expected=f"{sign}",
+                    )
 
-            s *= -1
+            with And("the data in S3 should be within 50% of the original amount"):
+                for attempt in retries(timeout=60, delay=5):
+                    with attempt:
+                        current_size = get_bucket_size()
+                        assert current_size < size_after_insert * 1.5, error(
+                            "data in S3 has grown by more than 50%"
+                        )
 
 
 @TestScenario
@@ -376,20 +745,19 @@ def insert_multiple_replicas(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after()
+        size_before = measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_drop_alter"
         for node in nodes:
-            node.restart()
-            replicated_table(node=node, table_name=table_name)
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
 
-    with And("I insert 1MB of data"):
+    with When("I insert 1MB of data"):
         insert_data(node=nodes[0], number_of_mb=1, name=table_name)
 
     with And("I insert of 1MB of data on the other node"):
@@ -421,19 +789,19 @@ def delete(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after()
+        size_before = measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on each node"):
+    with Given("I have a replicated table on each node"):
         table_name = "zero_copy_replication_delete"
         for node in nodes:
-            replicated_table(node=node, table_name=table_name)
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with Then("I check that data was added to the s3 bucket"):
@@ -443,14 +811,14 @@ def delete(self):
     with When("I drop the table on one node"):
         nodes[0].query(f"DROP TABLE IF EXISTS {table_name}")
 
-    with Then("The size of the s3 bucket should be the same"):
-        check_bucket_size(expected_size=size_before, tolerance=0)
+    with Then("the size of the s3 bucket should be the same"):
+        check_stable_bucket_size(expected_size=size_after, tolerance=0)
 
     with When("I drop the table on the other node"):
         nodes[1].query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
     with Then(
-        """The size of the s3 bucket should be very close to the size
+        """the size of the s3 bucket should be very close to the size
                 before adding any data"""
     ):
         check_stable_bucket_size(expected_size=size_before, tolerance=5)
@@ -465,19 +833,19 @@ def delete_all(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
     with And("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after()
+        size_before = measure_buckets_before_and_after(less_ok=True)
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "zero_copy_replication_delete_all"
         for node in nodes:
-            replicated_table(node=node, table_name=table_name)
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
 
-    with And("I add data to the table"):
+    with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
     with Then("A nonzero amount of data should be added to S3"):
@@ -509,7 +877,7 @@ def ttl_move(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
 
     with And("I get the size of the other s3 bucket before adding data"):
         measure_buckets_before_and_after(
@@ -628,7 +996,12 @@ def ttl_delete(self):
         mergetree_config(settings=settings)
 
     with And("I get the size of the s3 bucket before adding data"):
-        measure_buckets_before_and_after()
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I get the size of the other s3 bucket before adding data"):
+        measure_buckets_before_and_after(
+            bucket_prefix=self.context.bucket_path + "/tiered"
+        )
 
     try:
         with When("I create a replicated table on each node"):
@@ -719,6 +1092,62 @@ def ttl_delete(self):
                 node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
+@TestOutline(Scenario)
+@Examples(
+    "source destination", [["replicated", "zero_copy"], ["zero_copy", "replicated"]]
+)
+def migration(self, source, destination):
+    """Test migrating data between tables with and without zero copy replication."""
+
+    node = self.context.node
+    columns = "d UInt64"
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(delay=10, less_ok=True)
+
+    with And("I have a replicated table"):
+        replicated_table_name = "migration_replicated_" + getuid()[:8]
+        for node in self.context.ch_nodes:
+            replicated_table(
+                node=node, table_name=replicated_table_name, columns=columns
+            )
+
+    with And("I have a zero-copy table"):
+        zero_copy_table_name = "migration_zero_copy_" + getuid()[:8]
+        for node in self.context.ch_nodes:
+            replicated_table(
+                node=node,
+                table_name=zero_copy_table_name,
+                columns=columns,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
+
+    table_names = {
+        "replicated": replicated_table_name,
+        "zero_copy": zero_copy_table_name,
+    }
+
+    with When(f"I select {source} as the source table"):
+        source_table_name = table_names[source]
+
+    with And(f"I select {destination} as the destination table"):
+        dest_table_name = table_names[destination]
+
+    with And("I insert data to the source table"):
+        insert_random(
+            node=node, table_name=source_table_name, columns=columns, rows=1000000
+        )
+
+    with When("I copy the source table to the destination table"):
+        node.query(f"INSERT INTO {dest_table_name} SELECT * from {source_table_name}")
+
+    with And("I delete the source table"):
+        delete_replica(node=node, table_name=source_table_name)
+
+    with Then("the data should be in the destination table"):
+        assert_row_count(node=node, table_name=dest_table_name, rows=1000000)
+
+
 @TestScenario
 def bad_detached_part(self):
     """
@@ -737,14 +1166,16 @@ def bad_detached_part(self):
         }
         mergetree_config(settings=settings)
 
-    with When("I create a replicated table on each node"):
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
+    with And("I have a replicated table on each node"):
         for node in nodes:
-            node.restart()
             replicated_table(
                 node=node, table_name=table_name, settings="min_bytes_for_wide_part=0"
             )
 
-    with And("I insert data on the second node"):
+    with When("I insert data on the second node"):
         nodes[1].query(f"INSERT INTO {table_name} VALUES (123)")
 
     with And("I sync the first node"):
@@ -800,27 +1231,27 @@ def performance_insert(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "no_zero_copy_replication_insert"
         for node in nodes:
             node.restart()
             replicated_table(node=node, table_name=table_name)
 
-    with And("I add data to the table and save the time taken"):
+    with When("I add data to the table and save the time taken"):
         no_zero_copy_time = insert_data_time(nodes[0], 20, table_name)
         metric("no_zero_copy", units="seconds", value=str(no_zero_copy_time))
 
-    with Given("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
-    with When("I create a replicated table on each node"):
+    with Given("I have a replicated 0copy table on each node"):
         table_name = "allow_zero_copy_replication_insert"
         for node in nodes:
             node.restart()
-            replicated_table(node=node, table_name=table_name)
+            replicated_table(
+                node=node,
+                table_name=table_name,
+                settings=f"{self.context.zero_copy_replication_setting}=1",
+            )
 
-    with And("I add data to the table and save the time taken"):
+    with When("I add data to the table and save the time taken"):
         allow_zero_copy_time = insert_data_time(nodes[0], 20, table_name)
         metric("with_zero_copy", units="seconds", value=str(allow_zero_copy_time))
 
@@ -846,13 +1277,13 @@ def performance_select(self):
         nodes = self.context.ch_nodes[:2]
 
     try:
-        with When("I create a replicated table on each node"):
+        with Given("I have a replicated table on each node"):
             table_name = "no_zero_copy_replication_select"
             for node in nodes:
                 node.restart()
                 replicated_table(node=node, table_name=table_name)
 
-        with And("I add 20 Mb of data to the table"):
+        with When("I add 20 Mb of data to the table"):
             insert_data(node=nodes[0], name=table_name, number_of_mb=20)
 
         with Then("I sync the replicas"):
@@ -876,18 +1307,18 @@ def performance_select(self):
             for node in nodes:
                 node.query("DROP TABLE IF EXISTS zcrSelect SYNC")
 
-    with Given("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
     try:
-        with When("I create a replicated table on each node"):
+        with Given("I have a replicated 0copy table on each node"):
             table_name = "allow_zero_copy_replication_select"
             for node in nodes:
                 node.restart()
-                replicated_table(node=node, table_name=table_name)
+                replicated_table(
+                    node=node,
+                    table_name=table_name,
+                    settings=f"{self.context.zero_copy_replication_setting}=1",
+                )
 
-        with And("I add 20 Mb of data to the table"):
+        with When("I add 20 Mb of data to the table"):
             insert_data(node=nodes[0], name=table_name, number_of_mb=20)
 
         with Then("I sync the replicas"):
@@ -940,18 +1371,14 @@ def performance_alter(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-
-    with When("I create a replicated table on each node"):
+    with And("I have a replicated table on each node"):
         table_name = "no_zero_copy_replication_alter"
         for node in nodes:
-            node.restart()
             replicated_table(
                 node=node, table_name=table_name, columns="d UInt64, sign Int8"
             )
 
-    with And("I add 20 Mb of data to the table"):
+    with When("I add 20 Mb of data to the table"):
         insert_data_pair(nodes[0], 20, table_name)
 
     with Then("I sync the replicas"):
@@ -968,19 +1395,18 @@ def performance_alter(self):
         no_zero_copy_time = end_time - start_time
         metric("no_zero_copy", units="seconds", value=str(no_zero_copy_time))
 
-    with Given("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
-
-    with When("I create a replicated table on each node"):
+    with Given("I have a replicated 0copy table on each node"):
         table_name = "allow_zero_copy_replication_alter"
         for node in nodes:
             node.restart()
             replicated_table(
-                node=node, table_name=table_name, columns="d UInt64, sign Int8"
+                node=node,
+                table_name=table_name,
+                columns="d UInt64, sign Int8",
+                settings=f"{self.context.zero_copy_replication_setting}=1",
             )
 
-    with And("I add 20 Mb of data to the table"):
+    with When("I add 20 Mb of data to the table"):
         insert_data_pair(nodes[0], 20, table_name)
 
     with Then("I sync the replicas"):
@@ -1018,11 +1444,16 @@ def check_refcount_after_mutation(self):
     """Check that clickhouse correctly updates ref_count when updating metadata across replicas."""
     node = current().context.node
     table_name = "table_" + getuid()
+
+    with Given("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
+
     try:
         with Given("I have a table"):
             node.query(
                 f"""
-            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) 
+            ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
             ORDER BY key
             PARTITION BY (key % 4)
             SETTINGS storage_policy='external'
@@ -1071,18 +1502,18 @@ def consistency_during_double_mutation(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = self.context.zero_copy_replication_settings
-        mergetree_config(settings=settings)
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
 
     try:
-        with Given("I have a table"):
+        with Given("I have a 0copy table"):
             node.query(
                 f"""
-            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) 
+            ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
             ORDER BY key
             PARTITION BY (key % 4)
-            SETTINGS storage_policy='external'
+            SETTINGS storage_policy='external', {self.context.zero_copy_replication_setting}=1
             """,
                 settings=[("distributed_ddl_task_timeout ", 360)],
             )
@@ -1134,18 +1565,18 @@ def consistency_during_conflicting_mutation(self):
     with Given("I have a pair of clickhouse nodes"):
         nodes = self.context.ch_nodes[:2]
 
-    with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
-        mergetree_config(settings=settings)
+    with And("I get the size of the s3 bucket before adding data"):
+        measure_buckets_before_and_after(less_ok=True)
 
     try:
         with Given("I have a table"):
             node.query(
                 f"""
-            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) 
+            ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
             ORDER BY key
             PARTITION BY (key % 4)
-            SETTINGS storage_policy='external'
+            SETTINGS storage_policy='external', {self.context.zero_copy_replication_setting}=1
             """,
                 settings=[("distributed_ddl_task_timeout ", 360)],
             )
@@ -1183,23 +1614,33 @@ def consistency_during_conflicting_mutation(self):
 
 @TestOutline(Feature)
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication("1.0"))
-def outline(self):
+def outline(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
     self.context.minio_enabled = self.context.storage == "minio"
 
-    with Given("I have two S3 disks configured"):
-        uri_tiered = self.context.uri + "tiered/"
-        # /zero-copy-replication/
+    self.context.uri = uri
+
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/zero-copy-replication"
+        )
+
+        zero_copy_uri = f"{uri}zero-copy-replication/{temp_s3_path}/"
+        self.context.bucket_path = (
+            f"{bucket_prefix}/zero-copy-replication/{temp_s3_path}"
+        )
+
+    with And("I have two S3 disks configured"):
         disks = {
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}zero-copy-replication/",
+                "endpoint": zero_copy_uri,
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
             "external_tiered": {
                 "type": "s3",
-                "endpoint": f"{uri_tiered}",
+                "endpoint": zero_copy_uri + "tiered/",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
@@ -1229,14 +1670,9 @@ def outline(self):
                 "allow_s3_zero_copy_replication"
             )
 
-        if self.context.object_storage_mode == "vfs":
-            self.context.zero_copy_replication_settings = {}
-            for disk_name in disks.keys():
-                disks[disk_name]["allow_vfs"] = "1"
-        else:
-            self.context.zero_copy_replication_settings = {
-                self.context.zero_copy_replication_setting: "1"
-            }
+        self.context.zero_copy_replication_settings = {
+            self.context.zero_copy_replication_setting: "1"
+        }
 
     with And("I have clickhouse nodes"):
         self.context.ch_nodes = [
@@ -1247,54 +1683,36 @@ def outline(self):
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
-    with Check("bucket should be empty before test begins"):
-        check_bucket_size(expected_size=0, tolerance=50)
+    with And("I know the current bucket size"):
+        initial_bucket_size = get_bucket_size()
 
     for scenario in loads(current_module(), Scenario):
         scenario()
+
+    with Finally("the bucket should be cleaned up"):
+        check_bucket_size(expected_size=initial_bucket_size, tolerance=50)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_AWS_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def aws_s3(self, uri, access_key, key_id, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "aws_s3"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = "altinity-qa-test"
-    self.context.bucket_path = "data/zero-copy-replication"
+def aws_s3(self, uri, bucket_prefix):
 
-    outline()
+    outline(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_GCS_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def gcs(self, uri, access_key, key_id, node="clickhouse1"):
+def gcs(self, uri, bucket_prefix):
     skip("GCS is not supported for zero copy replication")
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "gcs"
-    self.context.uri = uri
-    self.context.access_key_id = key_id
-    self.context.secret_access_key = access_key
-    self.context.bucket_name = None
-    self.context.bucket_path = None
 
-    outline()
+    outline(uri=uri, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_MinIO_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
-def minio(self, uri, key, secret, node="clickhouse1"):
-    self.context.node = self.context.cluster.node(node)
-    self.context.storage = "minio"
-    self.context.uri = uri
-    self.context.access_key_id = key
-    self.context.secret_access_key = secret
-    self.context.bucket_name = "root"
-    self.context.bucket_path = "data/zero-copy-replication"
+def minio(self, uri, bucket_prefix):
 
-    outline()
+    outline(uri=uri, bucket_prefix=bucket_prefix)
