@@ -16,11 +16,17 @@ def create_and_drop_table(self, number_of_tables=100):
 
 @TestScenario
 def check_leak_with_system_memory_dump_log(self, node=None):
-    if check_clickhouse_version("<24.6")(self):
-        skip("pr that introduces system.memory_dump_log is not yet merged")
-
     if node is None:
         node = self.context.node
+
+    memory_dump_log_present = (
+        node.query(
+            f"SELECT name from system.tables where name = 'memory_dump_log'"
+        ).output
+        == "memory_dump_log"
+    )
+    if not memory_dump_log_present:
+        skip("pr that introduces system.memory_dump_log is not yet merged")
 
     with Given("I create 1000 tables in parallel"):
         with Pool(10) as executor:
