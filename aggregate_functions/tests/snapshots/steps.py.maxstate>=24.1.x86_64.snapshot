@@ -99,75 +99,75 @@ _aggregate_functions_state_maxState_Array_LowCardinality_Int8__ = r"""
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Bool___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_bool___))":"010101","any(toTypeName(array_lowcardinality_nullable_bool___))":"Array(LowCardinality(Nullable(Bool)))"}
+{"hex(maxState(array_lowcardinality_nullable_bool___))":"01010001","any(toTypeName(array_lowcardinality_nullable_bool___))":"Array(LowCardinality(Nullable(Bool)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_DateTime___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_datetime___))":"010101","any(toTypeName(array_lowcardinality_nullable_datetime___))":"Array(LowCardinality(Nullable(DateTime)))"}
+{"hex(maxState(array_lowcardinality_nullable_datetime___))":"010100EFF1FFFF","any(toTypeName(array_lowcardinality_nullable_datetime___))":"Array(LowCardinality(Nullable(DateTime)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Date___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_date___))":"010101","any(toTypeName(array_lowcardinality_nullable_date___))":"Array(LowCardinality(Nullable(Date)))"}
+{"hex(maxState(array_lowcardinality_nullable_date___))":"010100FFFF","any(toTypeName(array_lowcardinality_nullable_date___))":"Array(LowCardinality(Nullable(Date)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_FixedString_51____ = r"""
-{"hex(maxState(array_lowcardinality_nullable_fixedstring_51____))":"010101","any(toTypeName(array_lowcardinality_nullable_fixedstring_51____))":"Array(LowCardinality(Nullable(FixedString(51))))"}
+{"hex(maxState(array_lowcardinality_nullable_fixedstring_51____))":"010100737373737373737373737373737373737373737373737373737373737373737373737373737300000000000000000000000000","any(toTypeName(array_lowcardinality_nullable_fixedstring_51____))":"Array(LowCardinality(Nullable(FixedString(51))))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Float32___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_float32___))":"010101","any(toTypeName(array_lowcardinality_nullable_float32___))":"Array(LowCardinality(Nullable(Float32)))"}
+{"hex(maxState(array_lowcardinality_nullable_float32___))":"010100FFFF7F7F","any(toTypeName(array_lowcardinality_nullable_float32___))":"Array(LowCardinality(Nullable(Float32)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Float64___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_float64___))":"010101","any(toTypeName(array_lowcardinality_nullable_float64___))":"Array(LowCardinality(Nullable(Float64)))"}
+{"hex(maxState(array_lowcardinality_nullable_float64___))":"01010051776F82FDFFEF7F","any(toTypeName(array_lowcardinality_nullable_float64___))":"Array(LowCardinality(Nullable(Float64)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Int128___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_int128___))":"010101","any(toTypeName(array_lowcardinality_nullable_int128___))":"Array(LowCardinality(Nullable(Int128)))"}
+{"hex(maxState(array_lowcardinality_nullable_int128___))":"0101000100000000000080FFFFFFFFFFFFFF7F","any(toTypeName(array_lowcardinality_nullable_int128___))":"Array(LowCardinality(Nullable(Int128)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Int16___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_int16___))":"010101","any(toTypeName(array_lowcardinality_nullable_int16___))":"Array(LowCardinality(Nullable(Int16)))"}
+{"hex(maxState(array_lowcardinality_nullable_int16___))":"010100FF7F","any(toTypeName(array_lowcardinality_nullable_int16___))":"Array(LowCardinality(Nullable(Int16)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Int32___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_int32___))":"010101","any(toTypeName(array_lowcardinality_nullable_int32___))":"Array(LowCardinality(Nullable(Int32)))"}
+{"hex(maxState(array_lowcardinality_nullable_int32___))":"010100FFFFFF7F","any(toTypeName(array_lowcardinality_nullable_int32___))":"Array(LowCardinality(Nullable(Int32)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Int64___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_int64___))":"010101","any(toTypeName(array_lowcardinality_nullable_int64___))":"Array(LowCardinality(Nullable(Int64)))"}
+{"hex(maxState(array_lowcardinality_nullable_int64___))":"010100FFFFFFFFFFFFFF7F","any(toTypeName(array_lowcardinality_nullable_int64___))":"Array(LowCardinality(Nullable(Int64)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_Int8___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_int8___))":"010101","any(toTypeName(array_lowcardinality_nullable_int8___))":"Array(LowCardinality(Nullable(Int8)))"}
+{"hex(maxState(array_lowcardinality_nullable_int8___))":"0101007F","any(toTypeName(array_lowcardinality_nullable_int8___))":"Array(LowCardinality(Nullable(Int8)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_String___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_string___))":"010101","any(toTypeName(array_lowcardinality_nullable_string___))":"Array(LowCardinality(Nullable(String)))"}
+{"hex(maxState(array_lowcardinality_nullable_string___))":"0101005E77777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777","any(toTypeName(array_lowcardinality_nullable_string___))":"Array(LowCardinality(Nullable(String)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_UInt128___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_uint128___))":"010101","any(toTypeName(array_lowcardinality_nullable_uint128___))":"Array(LowCardinality(Nullable(UInt128)))"}
+{"hex(maxState(array_lowcardinality_nullable_uint128___))":"0101000100000000000000FEFFFFFFFFFFFFFF","any(toTypeName(array_lowcardinality_nullable_uint128___))":"Array(LowCardinality(Nullable(UInt128)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_UInt16___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_uint16___))":"010101","any(toTypeName(array_lowcardinality_nullable_uint16___))":"Array(LowCardinality(Nullable(UInt16)))"}
+{"hex(maxState(array_lowcardinality_nullable_uint16___))":"010100FFFF","any(toTypeName(array_lowcardinality_nullable_uint16___))":"Array(LowCardinality(Nullable(UInt16)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_UInt32___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_uint32___))":"010101","any(toTypeName(array_lowcardinality_nullable_uint32___))":"Array(LowCardinality(Nullable(UInt32)))"}
+{"hex(maxState(array_lowcardinality_nullable_uint32___))":"010100FFFFFFFF","any(toTypeName(array_lowcardinality_nullable_uint32___))":"Array(LowCardinality(Nullable(UInt32)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_UInt64___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_uint64___))":"010101","any(toTypeName(array_lowcardinality_nullable_uint64___))":"Array(LowCardinality(Nullable(UInt64)))"}
+{"hex(maxState(array_lowcardinality_nullable_uint64___))":"010100FFFFFFFFFFFFFFFF","any(toTypeName(array_lowcardinality_nullable_uint64___))":"Array(LowCardinality(Nullable(UInt64)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_UInt8___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_uint8___))":"010101","any(toTypeName(array_lowcardinality_nullable_uint8___))":"Array(LowCardinality(Nullable(UInt8)))"}
+{"hex(maxState(array_lowcardinality_nullable_uint8___))":"010100FF","any(toTypeName(array_lowcardinality_nullable_uint8___))":"Array(LowCardinality(Nullable(UInt8)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_Nullable_UUID___ = r"""
-{"hex(maxState(array_lowcardinality_nullable_uuid___))":"010101","any(toTypeName(array_lowcardinality_nullable_uuid___))":"Array(LowCardinality(Nullable(UUID)))"}
+{"hex(maxState(array_lowcardinality_nullable_uuid___))":"010100FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF","any(toTypeName(array_lowcardinality_nullable_uuid___))":"Array(LowCardinality(Nullable(UUID)))"}
 """
 
 _aggregate_functions_state_maxState_Array_LowCardinality_String__ = r"""
@@ -203,83 +203,83 @@ _aggregate_functions_state_maxState_Array_Map_String_LowCardinality_Float64___ =
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Bool__ = r"""
-{"hex(maxState(array_nullable_bool__))":"010101","any(toTypeName(array_nullable_bool__))":"Array(Nullable(Bool))"}
+{"hex(maxState(array_nullable_bool__))":"01010001","any(toTypeName(array_nullable_bool__))":"Array(Nullable(Bool))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_DateTime64_3_____22_8 = r"""
-{"hex(maxState(array_nullable_datetime64_3___))":"010101","any(toTypeName(array_nullable_datetime64_3___))":"Array(Nullable(DateTime64(3)))"}
+{"hex(maxState(array_nullable_datetime64_3___))":"0101007F8928A678090000","any(toTypeName(array_nullable_datetime64_3___))":"Array(Nullable(DateTime64(3)))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_DateTime__ = r"""
-{"hex(maxState(array_nullable_datetime__))":"010101","any(toTypeName(array_nullable_datetime__))":"Array(Nullable(DateTime))"}
+{"hex(maxState(array_nullable_datetime__))":"010100EFF1FFFF","any(toTypeName(array_nullable_datetime__))":"Array(Nullable(DateTime))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Date__ = r"""
-{"hex(maxState(array_nullable_date__))":"010101","any(toTypeName(array_nullable_date__))":"Array(Nullable(Date))"}
+{"hex(maxState(array_nullable_date__))":"010100FFFF","any(toTypeName(array_nullable_date__))":"Array(Nullable(Date))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Decimal128_38___ = r"""
-{"hex(maxState(array_nullable_decimal128_38___))":"010101","any(toTypeName(array_nullable_decimal128_38___))":"Array(Nullable(Decimal(38, 38)))"}
+{"hex(maxState(array_nullable_decimal128_38___))":"010100003C79A557B3C43400C4865AA84C3B4B","any(toTypeName(array_nullable_decimal128_38___))":"Array(Nullable(Decimal(38, 38)))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_FixedString_51___ = r"""
-{"hex(maxState(array_nullable_fixedstring_51___))":"010101","any(toTypeName(array_nullable_fixedstring_51___))":"Array(Nullable(FixedString(51)))"}
+{"hex(maxState(array_nullable_fixedstring_51___))":"010100737373737373737373737373737373737373737373737373737373737373737373737373737373737300000000000000000000","any(toTypeName(array_nullable_fixedstring_51___))":"Array(Nullable(FixedString(51)))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Float32__ = r"""
-{"hex(maxState(array_nullable_float32__))":"010101","any(toTypeName(array_nullable_float32__))":"Array(Nullable(Float32))"}
+{"hex(maxState(array_nullable_float32__))":"010100FFFF7F7F","any(toTypeName(array_nullable_float32__))":"Array(Nullable(Float32))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Float64__ = r"""
-{"hex(maxState(array_nullable_float64__))":"010101","any(toTypeName(array_nullable_float64__))":"Array(Nullable(Float64))"}
+{"hex(maxState(array_nullable_float64__))":"01010051776F82FDFFEF7F","any(toTypeName(array_nullable_float64__))":"Array(Nullable(Float64))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Int128__ = r"""
-{"hex(maxState(array_nullable_int128__))":"010101","any(toTypeName(array_nullable_int128__))":"Array(Nullable(Int128))"}
+{"hex(maxState(array_nullable_int128__))":"0101000100000000000080FFFFFFFFFFFFFF7F","any(toTypeName(array_nullable_int128__))":"Array(Nullable(Int128))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Int16__ = r"""
-{"hex(maxState(array_nullable_int16__))":"010101","any(toTypeName(array_nullable_int16__))":"Array(Nullable(Int16))"}
+{"hex(maxState(array_nullable_int16__))":"010100FF7F","any(toTypeName(array_nullable_int16__))":"Array(Nullable(Int16))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Int32__ = r"""
-{"hex(maxState(array_nullable_int32__))":"010101","any(toTypeName(array_nullable_int32__))":"Array(Nullable(Int32))"}
+{"hex(maxState(array_nullable_int32__))":"010100FFFFFF7F","any(toTypeName(array_nullable_int32__))":"Array(Nullable(Int32))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Int64__ = r"""
-{"hex(maxState(array_nullable_int64__))":"010101","any(toTypeName(array_nullable_int64__))":"Array(Nullable(Int64))"}
+{"hex(maxState(array_nullable_int64__))":"010100FFFFFFFFFFFFFF7F","any(toTypeName(array_nullable_int64__))":"Array(Nullable(Int64))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_Int8__ = r"""
-{"hex(maxState(array_nullable_int8__))":"010101","any(toTypeName(array_nullable_int8__))":"Array(Nullable(Int8))"}
+{"hex(maxState(array_nullable_int8__))":"0101007F","any(toTypeName(array_nullable_int8__))":"Array(Nullable(Int8))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_String__ = r"""
-{"hex(maxState(array_nullable_string__))":"010101","any(toTypeName(array_nullable_string__))":"Array(Nullable(String))"}
+{"hex(maxState(array_nullable_string__))":"0101000B6363636363636363636363","any(toTypeName(array_nullable_string__))":"Array(Nullable(String))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_UInt128__ = r"""
-{"hex(maxState(array_nullable_uint128__))":"010101","any(toTypeName(array_nullable_uint128__))":"Array(Nullable(UInt128))"}
+{"hex(maxState(array_nullable_uint128__))":"0101000100000000000000FEFFFFFFFFFFFFFF","any(toTypeName(array_nullable_uint128__))":"Array(Nullable(UInt128))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_UInt16__ = r"""
-{"hex(maxState(array_nullable_uint16__))":"010101","any(toTypeName(array_nullable_uint16__))":"Array(Nullable(UInt16))"}
+{"hex(maxState(array_nullable_uint16__))":"010100FFFF","any(toTypeName(array_nullable_uint16__))":"Array(Nullable(UInt16))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_UInt32__ = r"""
-{"hex(maxState(array_nullable_uint32__))":"010101","any(toTypeName(array_nullable_uint32__))":"Array(Nullable(UInt32))"}
+{"hex(maxState(array_nullable_uint32__))":"010100FFFFFFFF","any(toTypeName(array_nullable_uint32__))":"Array(Nullable(UInt32))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_UInt64__ = r"""
-{"hex(maxState(array_nullable_uint64__))":"010101","any(toTypeName(array_nullable_uint64__))":"Array(Nullable(UInt64))"}
+{"hex(maxState(array_nullable_uint64__))":"010100FFFFFFFFFFFFFFFF","any(toTypeName(array_nullable_uint64__))":"Array(Nullable(UInt64))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_UInt8__ = r"""
-{"hex(maxState(array_nullable_uint8__))":"010101","any(toTypeName(array_nullable_uint8__))":"Array(Nullable(UInt8))"}
+{"hex(maxState(array_nullable_uint8__))":"010100FF","any(toTypeName(array_nullable_uint8__))":"Array(Nullable(UInt8))"}
 """
 
 _aggregate_functions_state_maxState_Array_Nullable_UUID__ = r"""
-{"hex(maxState(array_nullable_uuid__))":"010101","any(toTypeName(array_nullable_uuid__))":"Array(Nullable(UUID))"}
+{"hex(maxState(array_nullable_uuid__))":"010100FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF","any(toTypeName(array_nullable_uuid__))":"Array(Nullable(UUID))"}
 """
 
 _aggregate_functions_state_maxState_Array_String_ = r"""
