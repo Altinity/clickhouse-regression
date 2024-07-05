@@ -1,4 +1,4 @@
-version: '2.3'
+version: "2.3"
 
 services:
   clickhouse:
@@ -13,15 +13,8 @@ services:
       - "9444"
       - "9234"
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/fips.xml:/etc/clickhouse-server/config.d/fips.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/secure_keeper.xml:/etc/clickhouse-server/config.d/secure_keeper.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/certs/dhparam.pem:/etc/clickhouse-server/config.d/dhparam.pem"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/certs/server.crt:/etc/clickhouse-server/config.d/server.crt"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/certs/server.key:/etc/clickhouse-server/config.d/server.key"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/certs/altinity_blog_ca.crt:/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/:/etc/clickhouse-server/config.d/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/client_fips.xml:/etc/clickhouse-client/config.d/fips.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/config.xml:/etc/clickhouse-client/config.xml"
-
