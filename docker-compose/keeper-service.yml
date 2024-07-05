@@ -4,7 +4,7 @@ services:
   keeper:
     build:
       context: .
-      dockerfile: Dockerfile.keeper
+      dockerfile: keeper.Dockerfile
     expose:
       - "2181"
     init: true

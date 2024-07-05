@@ -4,7 +4,7 @@ services:
   clickhouse:
     build:
       context: .
-      dockerfile: Dockerfile.clickhouse
+      dockerfile: clickhouse.Dockerfile
     init: true
     expose:
       - "9000"
