@@ -3,6 +3,7 @@ import os
 import sys
 
 from testflows.core import *
+from testflows.core.name import clean
 
 append_path(sys.path, "..")
 
@@ -45,18 +46,14 @@ xfails = {
     ":/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
-        (Fail, "needs to be reviewed")
-    ],
-    "fips/server/:/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
-        (Fail, "needs to be reviewed")
-    ],
-    "fips/:/:/:/just disabling TLSv1.1 suite connection should work": [
-        (Fail, "needs to be reviewed")
-    ],
-    ":/:/just disabling TLSv1.1 suite connection should work": [
-        (Fail, "needs to be reviewed")
-    ],
+    "fips/server/tcp connection/:/:/just disabling "
+    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
+    "fips/server/:/tcp connection/:/:/just disabling "
+    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
+    "fips/:/:/:/just disabling "
+    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
+    ":/:/just disabling "
+    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
     "fips/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
@@ -66,9 +63,8 @@ xfails = {
     "ports ssl fips/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "ports ssl fips/:/:/just disabling TLSv1.1 suite connection should work": [
-        (Fail, "needs to be reviewed")
-    ],
+    "ports ssl fips/:/:/just disabling "
+    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
     "/clickhouse keeper/cli converter/output dir invalid": [
         (Fail, "Improper behaviour <23.8", check_clickhouse_version("<23.8"))
     ],

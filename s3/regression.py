@@ -193,6 +193,13 @@ xfails = {
             check_clickhouse_version("<24.5"),
         )
     ],
+    ":/:/table function/measure file size": [
+        (
+            Fail,
+            "not supported <24",
+            check_clickhouse_version("<24"),
+        )
+    ],
     ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],

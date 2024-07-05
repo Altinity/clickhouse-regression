@@ -2,6 +2,7 @@
 import os
 import sys
 from testflows.core import *
+from testflows.core.name import clean
 
 append_path(sys.path, "..", "..")
 
@@ -15,16 +16,20 @@ issue_51323 = "https://github.com/ClickHouse/ClickHouse/issues/51323"
 
 # Cross-outs of known fails
 xfails = {
-    "connection protocols/tls/tls_require_cert='try'": [
+    "connection protocols/tls/"
+    + clean("tls_require_cert='try'"): [
         (Fail, "can't be tested with self-signed certificates")
     ],
-    "connection protocols/tls/tls_require_cert='demand'": [
+    "connection protocols/tls/"
+    + clean("tls_require_cert='demand'"): [
         (Fail, "can't be tested with self-signed certificates")
     ],
-    "connection protocols/starttls/tls_require_cert='try'": [
+    "connection protocols/starttls/"
+    + clean("tls_require_cert='try'"): [
         (Fail, "can't be tested with self-signed certificates")
     ],
-    "connection protocols/starttls/tls_require_cert='demand'": [
+    "connection protocols/starttls/"
+    + clean("tls_require_cert='demand'"): [
         (Fail, "can't be tested with self-signed certificates")
     ],
     "connection protocols/tls require cert default demand": [

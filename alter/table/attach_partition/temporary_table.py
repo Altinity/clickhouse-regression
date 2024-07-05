@@ -66,7 +66,9 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                 if exitcode is None:
                     for attempt in retries(timeout=timeout, delay=delay):
                         with attempt:
-                            assert table_before != table_after_detach, error()
+                            assert (
+                                table_before.output != table_after_detach.output
+                            ), error()
 
             with And("I attach detached partition back"):
                 if "temporary" in table.__name__ and check_clickhouse_version(
@@ -88,7 +90,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     )
                     for attempt in retries(timeout=timeout, delay=delay):
                         with attempt:
-                            assert table_before == table_after, error()
+                            assert table_before.output == table_after.output, error()
 
 
 @TestScenario

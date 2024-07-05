@@ -91,10 +91,10 @@ def argparser(parser):
 
 
 xfails = {
-    ":/manual move with downtime/*/all paths should start with :": [
+    ":/manual move with downtime": [
         (Fail, "https://altinity.atlassian.net/browse/CH-124")
     ],
-    ":/ttl moves/alter with existing parts/:": [(Fail, "not yet supported")],
+    ":/ttl moves/alter with existing parts": [(Fail, "not yet supported")],
     ":/ttl moves/alter policy and ttl with existing parts": [
         (Fail, "not yet supported")
     ],
@@ -105,7 +105,7 @@ xfails = {
     ":/background move/concurrent read/:": [(Fail, "known issue")],
     ":/disk space bytes": [(Fail, "not yet supported")],
     ":/attach or replace partition different policies": [(Fail, "known issue")],
-    ":/ttl moves/alter column in ttl/*": [
+    ":/ttl moves/alter column in ttl/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39808")
     ],
     ":/ttl moves/delete/:": [
