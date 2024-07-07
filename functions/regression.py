@@ -46,7 +46,7 @@ def regression(
     stress=None,
     with_analyzer=False,
 ):
-    """Functions regression suite. Automated test for issues."""
+    """Functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
@@ -70,6 +70,7 @@ def regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
+    Feature(run=load("functions.tests.plus", "feature"))
     Feature(run=load("functions.tests.merge", "feature"))
     Feature(run=load("functions.tests.insert", "feature"))
     Feature(run=load("functions.tests.projection_optimization", "feature"))
