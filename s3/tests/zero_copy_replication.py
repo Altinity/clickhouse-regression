@@ -820,11 +820,10 @@ def delete(self):
     with When("I drop the table on the other node"):
         nodes[1].query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
-    with Then(
-        """the size of the s3 bucket should be very close to the size
-                before adding any data"""
-    ):
-        check_stable_bucket_size(expected_size=size_before, tolerance=5)
+    with Then("the size of the s3 bucket should be the same as before adding data"):
+        for attempt in retries(timeout=600, delay=15):
+            with attempt:
+                check_bucket_size(expected_size=size_before, tolerance=5)
 
 
 @TestScenario
