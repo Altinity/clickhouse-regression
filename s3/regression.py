@@ -126,7 +126,7 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
     ":/zero copy replication/delete": [
-        (Fail, "test doesn't clean up, needs investigation")
+        (Fail, "test is slow to clean up, needs investigation")
     ],
     ":/zero copy replication/:mutation/:/the size of the s3 bucket:": [
         (Fail, "test doesn't clean up, needs investigation")
