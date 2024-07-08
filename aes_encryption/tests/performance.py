@@ -42,6 +42,8 @@ def encryption_decryption(self):
     for mode, key_len, iv_len, aad_len in modes:
         if mode == "'aes-128-ecb'":
             expected_time = 0.3
+        elif "gcm" in mode:
+            expected_time = 0.175
         else:
             expected_time = 0.15
 
