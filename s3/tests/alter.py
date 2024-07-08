@@ -510,7 +510,8 @@ def replace(self):
             r = node.query(
                 f"SELECT count() FROM {destination_table_name} where key % 4 = 2 FORMAT TabSeparated;"
             )
-            assert row_count_source == int(r.output)
+            table_row_count = int(r.output)
+            assert row_count_source == table_row_count, error()
 
 
 @TestOutline(Scenario)

@@ -265,6 +265,11 @@ ffails = {
         "not supported <23.8",
         check_clickhouse_version("<23.8"),
     ),
+    ":/settings/setting combinations": (
+        Skip,
+        "Many settings not supported <23.8",
+        check_clickhouse_version("<23.8"),
+    ),
 }
 
 
