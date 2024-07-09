@@ -203,19 +203,19 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3
 | Part Moves Between Shards | [In progress](#part-moves-between-shards)        |   |
 | Lightweight Delete | [In progress](#lightweight-delete)               |    |
 | Aggregate Functions | [In progress](#aggregate-functions)              |   |
-| Python `clickhouse_driver` | [In progress*](#python-clickhouse_driver)    |   |
-| ODBC `clickhouse-odbc` | [In progress](#odbc-clickhouse-odbc)         |  |
-| SQLAlchemy | [In progress](#sqlalchemy)                   |    |
-| Java `clickhouse-jdbc` | [In progress](#java-clickhouse-jdbc)         |   |
+| Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)    |   |
+| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)         |  |
+| SQLAlchemy | [Pass](#sqlalchemy)                   |    |
+| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)         |   |
 | Java `clickhouse-jdbc` (DBeaver) | [In progress](#java-clickhouse-jdbc)         |   |
 | Backup `clickhouse-backup` | [In progress](#backup-clickhouse-backup)     |   |
-| Kubernetes `clickhouse-operator` | [In progress](#kubernetes-clickhouse-operator)   |   |
+| Kubernetes `clickhouse-operator` | [Pass](#kubernetes-clickhouse-operator)   |   |
 | Altinity.Cloud | [In progress](#altinitycloud)                |   |
 | Production Cluster Operation | [In progress](#production-cluster-operation) |   |
 | Upgrade And Downgrade | [In progress](#upgrade-and-downgrade)        |   |
-| Grafana | [In progress](#grafana)                          |   |
+| Grafana | [Pass](#grafana)                          |   |
 | Tableau | [In progress](#tableau)                          |   |
-| Superset | [In progress](#superset)                         |   |
+| Superset | [Pass](#superset)                         |   |
 | Trivy | [In progress](#trivy)                            |   |
 | Scout | [In progress](#scout)                            |   |
 
@@ -472,25 +472,41 @@ The following client drivers SHALL be tested for compatibility:
 
 #### Python `clickhouse_driver`
 
-**TBD**
+clickhouse-driver version: 0.2.8
+
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-driver/
+
+The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
+
+```
+Test: tests/test_connect.py
+Reason: connecting to secure port without credentials.
+Status: [Fail](https://github.com/mymarilyn/clickhouse-driver/issues/442)
+```
 
 Compatibility with the [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
 #### ODBC `clickhouse-odbc`
 
-**TBD**
+clickhouse-odbc version: v1.2.1.20220905
+
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-odbc/
 
 The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc) driver.
 
 #### SQLAlchemy
 
-**TBD**
+clickhouse-sqlalchemy version: 0.3.2
+
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-sqlalchemy/
 
 The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) ClickHouse dialect for SQLAlchemy.
 
 #### Java `clickhouse-jdbc`
 
-**TBD**
+clickhouse-jdbc version: v0.6.2
+
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-jdbc/
 
 The (https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
@@ -505,7 +521,9 @@ Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhous
 
 #### Kubernetes `clickhouse-operator`
 
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-operator/
+
+clickhouse-operator version: 0.24.0
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
 
@@ -543,6 +561,8 @@ Compatibility with the following BI tools.
 
 Results:
 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/grafana/
+
 Compatibility with [Grafana].
 
 #### Tableau
@@ -557,7 +577,7 @@ Compatibility with [Tableau].
 
 Results:
 
-**TBD**
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/superset/
 
 Compatibility with [Superset].
 
