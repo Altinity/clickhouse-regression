@@ -267,7 +267,7 @@ def detach(self):
                     "Exception: Unknown table expression identifier '{table_name}'"
                 )
             elif check_clickhouse_version("<23.8")(self):
-                message = "Exception: Table {table_name} doesn't exist"
+                message = "Exception: Table default.{table_name} doesn't exist"
             else:
                 message = "Exception: Table default.{table_name} does not exist"
 
