@@ -319,15 +319,10 @@ class ResultUploader:
 
         print(response.text)
 
-        if response.ok:
-            return
-
-        print(
-            f"Request headers '{response.request.headers}', body '{response.request.body}'"
-        )
-        raise ValueError(
-            f"Cannot insert data into clickhouse: HTTP code {response.status_code}'"
-        )
+        if not response.ok:
+            raise ValueError(
+                f"Cannot insert data into clickhouse: HTTP code {response.status_code}: {response.text}"
+            )
 
     def report_from_compressed_log(self, log_path=None):
         args = namedtuple(
