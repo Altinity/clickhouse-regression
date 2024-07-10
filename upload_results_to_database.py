@@ -369,12 +369,29 @@ class ResultUploader:
         if self.debug:
             self.write_native_csv()
 
+    def run_upload(self):
+        report = None
+        try:
+            report = self.report_from_compressed_log(log_path)
+        except Exception as e:
+            print(f"Failed to read compressed log: {repr(e)}")
+            log_raw_lines = self.raw_log_from_compressed_log(log_path=log_path)
+
+        if report:
+            self.read_json_report(report=report)
+        else:
+            self.read_raw_log(log_lines=log_raw_lines)
+
+        self.read_pr_info()
+        self.upload_results()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--log-path", help="Path to the log file")
+    parser.add_argument("--debug", action="store_true", help="Extra debug output")
     args = parser.parse_args()
 
-    R = ResultUploader(debug=True, log_path=args.log_path)
+    R = ResultUploader(debug=args.debug, log_path=args.log_path)
 
     R.run_local()
