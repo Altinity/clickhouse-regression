@@ -166,58 +166,58 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3
 > [!NOTE]
 > **Pass\*** - tests passed with known fails
 
-| Test Suite  | Result                                | Comments |
-| --- |---------------------------------------| --- |
-| Stateless | [In progress](#stateless)                        |   |
-| Stateful | [In progress](#stateful)                         |   |
-| Stress | [In progress](#stress)                  |  Not executed  |
-| Integration | [In progress](#integration)                      |   |
-| Key Value | [In progress](#key-value)                        |   |
-| Engines  | [In progress](#engines)                          | Not executed  |
-| Parquet | [In progress](#parquet)                          |   |
-| Tiered Storage (Local) | [In progress](#tiered-storage)                   |   |
-| Tiered Storage (MinIO) | [In progress](#tiered-storage)                   |   |
-| Tiered Storage (AWS) | [In progress](#tiered-storage)                   |   |
-| Tiered Storage (GCS) | [In progress](#tiered-storage)                   |   |
-| S3 (AWS) | [In progress*](#s3)                               |  |
-| S3 (MinIO) | [In progress](#s3)                               |   |
-| S3 (GCS) | [In progress](#s3)                               |   |
-| Selects | [In progress](#selects)                          |   |
-[ Session Timezone | [In progress](#session-timezone)        |   |
-| AES Encryption | [In progress](#aes-encryption)                   |   |
-| Atomic Insert | [In progress](#atomic-insert)                    |   |
-| Base58 | [In progress](#base58)                          |   |
-| DNS | [In progress](#dns)                              |   |
-| Kafka | [In progress](#kafka)                            |   |
-| Kerberos | [In progress](#kerberos)                         |   |
-| DateTime64 Extended Range | [In progress](#datetime64-extended-range)        |   |
-| Extended Precision Data Types | [In progress](#extended-precision-data-types)    |   |
-| LDAP | [In progress](#ldap)                             |   |
-| RBAC | [In progress](#rbac)                             |   |
-| Window Functions | [In progress*](#window-functions)                 |   |
-| SSL Server | [In progress](#ssl-server)                       |   |
-| Disk Level Encryption | [In progress](#disk-level-encryption)            |   |
-| ClickHouse Keeper | [In progress](#clickhouse-keeper)                |   |
-| Data Types | [In progress](#data-types)                         |   |
-| Ontime Bechmark | [In progress](#ontime-benchmark)                 
-| Part Moves Between Shards | [In progress](#part-moves-between-shards)        |   |
-| Lightweight Delete | [In progress](#lightweight-delete)               |    |
-| Aggregate Functions | [In progress](#aggregate-functions)              |   |
-| Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)    |   |
-| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)         |  |
-| SQLAlchemy | [Pass](#sqlalchemy)                   |    |
-| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)         |   |
-| Java `clickhouse-jdbc` (DBeaver) | [In progress](#java-clickhouse-jdbc)         |   |
-| Backup `clickhouse-backup` | [In progress](#backup-clickhouse-backup)     |   |
-| Kubernetes `clickhouse-operator` | [Pass](#kubernetes-clickhouse-operator)   |   |
-| Altinity.Cloud | [In progress](#altinitycloud)                |   |
-| Production Cluster Operation | [In progress](#production-cluster-operation) |   |
-| Upgrade And Downgrade | [In progress](#upgrade-and-downgrade)        |   |
-| Grafana | [Pass](#grafana)                          |   |
-| Tableau | [In progress](#tableau)                          |   |
-| Superset | [Pass](#superset)                         |   |
-| Trivy | [In progress](#trivy)                            |   |
-| Scout | [In progress](#scout)                            |   |
+| Test Suite  | Result                                        | Comments |
+| --- |-----------------------------------------------| --- |
+| Stateless | [In progress](#stateless)                     |   |
+| Stateful | [In progress](#stateful)                      |   |
+| Stress | [In progress](#stress)                        |  Not executed  |
+| Integration | [In progress](#integration)                   |   |
+| Key Value | [In progress](#key-value)                     |   |
+| Engines  | [In progress](#engines)                       | Not executed  |
+| Parquet | [In progress](#parquet)                       |   |
+| Tiered Storage (Local) | [In progress](#tiered-storage)                |   |
+| Tiered Storage (MinIO) | [In progress](#tiered-storage)                |   |
+| Tiered Storage (AWS) | [In progress](#tiered-storage)                |   |
+| Tiered Storage (GCS) | [In progress](#tiered-storage)                |   |
+| S3 (AWS) | [In progress*](#s3)                           |  |
+| S3 (MinIO) | [In progress](#s3)                            |   |
+| S3 (GCS) | [In progress](#s3)                            |   |
+| Selects | [In progress](#selects)                       |   |
+[ Session Timezone | [In progress](#session-timezone)              |   |
+| AES Encryption | [In progress](#aes-encryption)                |   |
+| Atomic Insert | [In progress](#atomic-insert)                 |   |
+| Base58 | [In progress](#base58)                        |   |
+| DNS | [In progress](#dns)                           |   |
+| Kafka | [In progress](#kafka)                         |   |
+| Kerberos | [In progress](#kerberos)                      |   |
+| DateTime64 Extended Range | [In progress](#datetime64-extended-range)     |   |
+| Extended Precision Data Types | [In progress](#extended-precision-data-types) |   |
+| LDAP | [In progress](#ldap)                          |   |
+| RBAC | [In progress](#rbac)                          |   |
+| Window Functions | [In progress*](#window-functions)             |   |
+| SSL Server | [In progress](#ssl-server)                    |   |
+| Disk Level Encryption | [In progress](#disk-level-encryption)         |   |
+| ClickHouse Keeper | [In progress](#clickhouse-keeper)             |   |
+| Data Types | [In progress](#data-types)                    |   |
+| Ontime Bechmark | [In progress](#ontime-benchmark)              
+| Part Moves Between Shards | [In progress](#part-moves-between-shards)     |   |
+| Lightweight Delete | [In progress](#lightweight-delete)            |    |
+| Aggregate Functions | [In progress](#aggregate-functions)           |   |
+| Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)            |   |
+| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
+| SQLAlchemy | [Pass](#sqlalchemy)                           |    |
+| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)                 |   |
+| Java `clickhouse-jdbc` (DBeaver) | [In progress](#java-clickhouse-jdbc)          |   |
+| Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
+| Kubernetes `clickhouse-operator` | [Pass](#kubernetes-clickhouse-operator)       |   |
+| Altinity.Cloud | [Pass](#altinitycloud)                        |   |
+| Production Cluster Operation | [Pass](#production-cluster-operation)         |   |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
+| Grafana | [Pass](#grafana)                              |   |
+| Tableau | [In progress](#tableau)                       |   |
+| Superset | [Pass](#superset)                             |   |
+| Trivy | [In progress](#trivy)                         |   |
+| Scout | [In progress](#scout)                         |   |
 
 ## Scope
 
@@ -513,7 +513,8 @@ The (https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
 ### Backup `clickhouse-backup`
 
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-backup/
+Results (ACM): https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
@@ -529,19 +530,19 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 
 #### Altinity.Cloud
 
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/acm-launch-and-upgrade/launch_with_24.3.4.148.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
 ### Production Cluster Operation
 
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/acm-launch-and-upgrade/launch_with_24.3.4.148.altinitytest/
 
 Operation on a production clusters.
 
 ### Upgrade and Downgrade
 
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/acm-launch-and-upgrade/upgrade_downgrade_from_23.8.11.29.altinitystable_to_24.3.4.148.altinitytest/
 
 The upgrade and downgrade.
 
