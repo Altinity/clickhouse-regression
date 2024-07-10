@@ -12,7 +12,7 @@ from testflows._core.compress import CompressedFile
 from testflows._core.cli.arg.handlers.report.results import Handler
 
 # Map keys from DB schema to keys in test attributes or test result messages.
-# For keys that are directly mappable to the attributes or messages, see ResultUploader.get_common_attributes
+# For keys that are not directly mappable to the attributes or messages, see ResultUploader.get_common_attributes
 table_schema_attributes_map = {
     "pull_request_number": None,  # pr_info
     "commit_sha": "commit.hash",
