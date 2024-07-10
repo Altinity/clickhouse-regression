@@ -364,7 +364,7 @@ class ResultUploader:
         if self.debug:
             self.write_native_csv()
 
-    def run_upload(self):
+    def run_upload(self, log_path=None):
         report = None
         try:
             report = self.report_from_compressed_log(log_path)
