@@ -4,6 +4,7 @@ import json
 import csv
 from collections import namedtuple
 import argparse
+import os
 
 import requests
 
@@ -37,10 +38,9 @@ table_schema_attributes_map = {
 }
 
 ARTIFACT_BUCKET = "altinity-test-reports"
-
-
-def get_parameter_from_infra(name: str) -> str:
-    raise NotImplementedError("Need to locate credentials")
+DATABASE_HOST_VAR = "CHECKS_DATABASE_HOST"
+DATABASE_USER_VAR = "CHECKS_DATABASE_USER"
+DATABASE_PASSWORD_VAR = "CHECKS_DATABASE_PASSWORD"
 
 
 class ResultUploader:
@@ -185,10 +185,6 @@ class ResultUploader:
         )
         self.pr_info = pr_info
 
-        if self.debug:
-            print(json.dumps(pr_info, indent=2))
-            print(json.dumps(self.test_attributes, indent=2))
-
     def write_native_csv(self):
         """
         Export the test results with their original attributes names.
@@ -286,7 +282,7 @@ class ResultUploader:
         timeout=100,
     ):
         if db_url is None:
-            db_url = get_parameter_from_infra("clickhouse-test-stat-url")
+            db_url = os.getenv(DATABASE_HOST_VAR)
 
         if db_user is not None:
             db_auth = {
@@ -295,12 +291,8 @@ class ResultUploader:
             }
         else:
             db_auth = {
-                "X-ClickHouse-User": get_parameter_from_infra(
-                    "clickhouse-test-stat-login"
-                ),
-                "X-ClickHouse-Key": get_parameter_from_infra(
-                    "clickhouse-test-stat-password"
-                ),
+                "X-ClickHouse-User": os.getenv(DATABASE_USER_VAR),
+                "X-ClickHouse-Key": os.getenv(DATABASE_PASSWORD_VAR),
             }
 
         json_lines = [json.dumps(row) for row in self.iter_formatted_test_results()]
@@ -363,6 +355,10 @@ class ResultUploader:
 
         if self.debug:
             self.write_native_csv()
+
+            print(json.dumps(self.pr_info, indent=2))
+            print(json.dumps(self.test_attributes, indent=2))
+            print(json.dumps(self.test_results[-1], indent=2))
 
     def run_upload(self, log_path=None):
         report = None
