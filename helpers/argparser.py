@@ -66,6 +66,13 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--thread-fuzzer",
+        action="store_true",
+        help="enable thread fuzzer",
+        default=False,
+    )
+
+    parser.add_argument(
         "--with-analyzer",
         action="store_true",
         default=False,
@@ -114,6 +121,7 @@ def CaptureClusterArgs(func):
         zookeeper_version,
         use_keeper,
         collect_service_logs,
+        thread_fuzzer,
         **kwargs
     ):
         cluster_args = {
@@ -123,6 +131,7 @@ def CaptureClusterArgs(func):
             "zookeeper_version": zookeeper_version,
             "use_keeper": use_keeper,
             "collect_service_logs": collect_service_logs,
+            "thread_fuzzer": thread_fuzzer,
         }
         return func(self, cluster_args=cluster_args, **kwargs)
 

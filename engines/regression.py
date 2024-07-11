@@ -7,22 +7,10 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 
 from engines.requirements import *
-
-
-def argparser(parser):
-    """Custom argperser that add --thread-fuzzer option."""
-    base_argparser(parser)
-
-    parser.add_argument(
-        "--thread-fuzzer",
-        action="store_true",
-        help="enable thread fuzzer",
-        default=False,
-    )
 
 
 xfails = {}
@@ -41,7 +29,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    thread_fuzzer=None,
     with_analyzer=False,
 ):
     """ClickHouse different ENGINES regression suite."""
@@ -55,7 +42,6 @@ def regression(
     with Given("docker-compose cluster"):
         cluster = create_cluster(
             **cluster_args,
-            thread_fuzzer=thread_fuzzer,
             nodes=nodes,
             configs_dir=current_dir(),
         )

@@ -7,25 +7,12 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 from part_moves_between_shards.requirements import *
 
 
-def fuzzer_arg(parser):
-    base_argparser(parser)
-
-    parser.add_argument(
-        "--thread_fuzzer",
-        action="store_true",
-        help="enable thread fuzzer",
-        default=False,
-    )
-
-
 xfails = {}
-
-
 xflags = {}
 
 
@@ -59,7 +46,7 @@ ffails = {
 
 
 @TestModule
-@ArgumentParser(fuzzer_arg)
+@ArgumentParser(argparser)
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
@@ -72,7 +59,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    thread_fuzzer=None,
     with_analyzer=False,
 ):
     """ClickHouse regression when using parts moves."""
@@ -89,7 +75,6 @@ def regression(
     with Given("docker-compose cluster"):
         cluster = create_cluster(
             **cluster_args,
-            thread_fuzzer=thread_fuzzer,
             nodes=nodes,
             configs_dir=current_dir(),
         )
