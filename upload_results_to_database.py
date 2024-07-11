@@ -32,9 +32,6 @@ table_schema_attributes_map = {
     "base_repo": None,  # pr_info
     "head_ref": None,  # pr_info
     "head_repo": None,  # pr_info
-    "test_context_raw": None,
-    "instance_type": None,  # "Altinity runner"
-    "instance_id": "job.id",
 }
 
 ARTIFACT_BUCKET = "altinity-test-reports"
@@ -235,8 +232,6 @@ class ResultUploader:
                 "check_status": self.status,
                 "check_duration_ms": self.duration_ms,
                 "check_start_time": self.run_start_time,
-                "test_context_raw": json.dumps(self.test_attributes),
-                "instance_type": "Altinity runner",
                 "report_url": self.report_url(),
             }
         )
