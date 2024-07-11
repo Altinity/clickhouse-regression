@@ -30,5 +30,5 @@ then
     ./retry.sh 5 30 aws s3 cp compare.html $SUITE_REPORT_BUCKET_PATH/compare.html
     ./retry.sh 5 30 aws s3 cp coverage.html $SUITE_REPORT_BUCKET_PATH/coverage.html
     sudo rm --recursive --force $SUITE/_instances/*/database/
-    ./retry.sh 5 30 "aws s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"'--exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
+    ./retry.sh 5 30 "aws s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
 fi
