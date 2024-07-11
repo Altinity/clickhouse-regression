@@ -7,23 +7,10 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import *
 
 from selects.requirements import *
-
-
-def argparser(parser):
-    """Custom argperser that add --thread-fuzzer option."""
-    base_argparser(parser)
-
-    parser.add_argument(
-        "--thread-fuzzer",
-        action="store_true",
-        help="enable thread fuzzer",
-        default=False,
-    )
-
 
 xfails = {
     "final/force/general/without experimental analyzer/select join clause/*": [
@@ -184,7 +171,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    thread_fuzzer=None,
     with_analyzer=False,
 ):
     """ClickHouse SELECT query regression suite."""

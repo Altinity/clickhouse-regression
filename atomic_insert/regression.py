@@ -7,24 +7,11 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import CaptureClusterArgs, argparser as base_argparser
+from helpers.argparser import CaptureClusterArgs, argparser
 from helpers.common import check_clickhouse_version
 from atomic_insert.requirements import *
 
 from atomic_insert.tests.steps import *
-
-
-def argparser(parser):
-    """Custom argperser that add --thread-fuzzer option."""
-    base_argparser(parser)
-
-    parser.add_argument(
-        "--thread-fuzzer",
-        action="store_true",
-        help="enable thread fuzzer",
-        default=False,
-    )
-
 
 ffails = {
     "/atomic insert/dependent_tables/Replicated*/table with materialized view engine mismatch/*": (
@@ -66,7 +53,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    thread_fuzzer=None,
     with_analyzer=False,
 ):
     """ClickHouse atomic inserts regression."""
@@ -85,7 +71,6 @@ def regression(
     with Given("docker-compose cluster"):
         cluster = create_cluster(
             **cluster_args,
-            thread_fuzzer=thread_fuzzer,
             nodes=nodes,
             configs_dir=current_dir(),
             docker_compose_project_dir=os.path.join(
