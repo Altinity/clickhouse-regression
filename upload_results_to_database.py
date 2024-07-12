@@ -12,26 +12,35 @@ from testflows._core.transform.log.pipeline import ResultsLogPipeline
 from testflows._core.compress import CompressedFile
 from testflows._core.cli.arg.handlers.report.results import Handler
 
-# Map keys from DB schema to keys in test attributes or test result messages.
-# For keys that are not directly mappable to the attributes or messages, see ResultUploader.get_common_attributes
-table_schema_attributes_map = {
-    "pull_request_number": None,  # pr_info
-    "commit_sha": "commit.hash",
-    "check_name": None,
-    "check_status": None,
-    "check_duration_ms": None,
-    "check_start_time": None,
-    "test_name": "test_name",
-    "test_status": "result_type",
-    "test_duration_ms": "message_rtime_ms",
-    "report_url": None,  # s3 path constructed from other values
-    "pull_request_url": None,  # pr_info
-    "commit_url": None,  # pr_info
-    "task_url": "job.url",
-    "base_ref": None,  # pr_info
-    "base_repo": None,  # pr_info
-    "head_ref": None,  # pr_info
-    "head_repo": None,  # pr_info
+"""
+Map keys from DB schema to keys in test attributes or test result messages.
+Format: {"source": {"db_column": "source_key"}}
+
+Additional keys that are created while reading the log:
+pr_info: pull_request_number, commit_url, base_ref, head_ref, base_repo, head_repo, pull_request_url
+test_attributes: testflows_version, start_time
+test_results: message_rtime_ms
+"""
+
+table_schema_attr_map = {
+    "pr_info": {"pull_request_number": "pull_request_number"},
+    "test_attributes": {
+        "version": "version",
+        "repository": "repository",
+        "package": "package",
+        "commit_hash": "commit.hash",
+        "job_url": "job.url",
+        "report_url": "report.url",
+        "start_time": "start_time",
+        "architecture": "arch",
+    },
+    "test_results": {
+        "test_duration_ms": "message_rtime_ms",  # This value is generated in read_json_report/read_log_line
+        "result_type": "result_type",
+        "test_name": "test_name",
+        "result_reason": "result_reason",
+        "result_message": "result_message",
+    },
 }
 
 ARTIFACT_BUCKET = "altinity-test-reports"
@@ -53,21 +62,36 @@ class ResultUploader:
         self.debug = debug
 
     def get_pr_info(self, project: str, sha: str) -> dict:
-        pr_info = {}
-        pr_info["base_ref"] = "main"
-        pr_info["head_ref"] = "main"
-        pr_info["base_repo"] = project
-        pr_info["head_repo"] = project
-        pr_info["commit_url"] = f"https://github.com/{project}/commits/{sha}"
+        pr_info = {
+            "commit_url": f"https://github.com/{project}/commits/{sha}",
+            "pull_request_number": None,
+        }
 
         prs_for_sha = requests.get(
             f"https://api.github.com/repos/{project}/commits/{sha}/pulls"
         ).json()
+
+        if prs_for_sha:
+            pr_number = prs_for_sha[0]["number"]
+            pr_info["pull_request_number"] = pr_number
+
+        # If the schema only requires the pr number or commit url, return now
+        if not (
+            set(table_schema_attr_map["pr_info"].values())
+            - set(("commit_url", "pull_request_number"))
+        ):
+            return pr_info
+
+        pr_info["base_ref"] = "main"
+        pr_info["head_ref"] = "main"
+        pr_info["base_repo"] = project
+        pr_info["head_repo"] = project
+
         if not prs_for_sha:
             return pr_info
 
-        pr_number = prs_for_sha[0]["number"]
         pr_info["pull_request_number"] = pr_number
+
         pr_info["pull_request_url"] = f"https://github.com/{project}/pull/{pr_number}"
 
         pull_request = requests.get(
@@ -87,6 +111,7 @@ class ResultUploader:
         """
 
         self.run_start_time = report["metadata"]["date"]
+        self.test_attributes["start_time"] = self.run_start_time
         self.duration_ms = report["metadata"]["duration"] * 1000
         self.test_attributes["testflows_version"] = report["metadata"]["version"]
 
@@ -95,7 +120,7 @@ class ResultUploader:
 
         for message in report["tests"]:
             result = message["result"]
-            result["message_rtime_ms"] = result["message_rtime"] * 1000
+            result["message_rtime_ms"] = int(result["message_rtime"] * 1000)
             self.test_results.append(result)
 
         self.suite = self.test_results[0]["test_name"].split("/")[1].replace(" ", "_")
@@ -112,7 +137,7 @@ class ResultUploader:
                 and data["test_subtype"] != "Example"
                 and data["test_parent_type"] != "Test"
             ):
-                data["message_rtime_ms"] = data["message_rtime"] * 1000
+                data["message_rtime_ms"] = int(data["message_rtime"] * 1000)
                 self.test_results.append(data)
 
         elif message_keyword == "ATTRIBUTE":
@@ -123,6 +148,7 @@ class ResultUploader:
             self.test_attributes["testflows_protocol"] = data["protocol_version"]
             assert data["protocol_version"] == "TFSPv2.1", "Unexpected protocol version"
             self.run_start_time = data["message_time"]
+            self.test_attributes["start_time"] = self.run_start_time
             self.suite = data["test_name"].split("/")[1]
 
         elif message_keyword == "VERSION":
@@ -149,6 +175,7 @@ class ResultUploader:
     def report_url(self) -> str:
         """
         Construct the URL to the test report in the S3 bucket.
+        This is a fallback if test_attributes report.url does not exist.
         """
         storage = (
             "/" + json.loads(self.test_attributes["storages"].replace("'", '"'))[0]
@@ -222,20 +249,20 @@ class ResultUploader:
         """
         Return a dictionary with the common schema values for all tests.
         """
-        common_attributes = {
-            schema_attr: self.test_attributes.get(test_attr, None)
-            for schema_attr, test_attr in table_schema_attributes_map.items()
-        }
-        common_attributes.update(
-            {
-                "check_name": self.suite,
-                "check_status": self.status,
-                "check_duration_ms": self.duration_ms,
-                "check_start_time": self.run_start_time,
-                "report_url": self.report_url(),
-            }
-        )
-        common_attributes.update(self.pr_info)
+        common_attributes = {}
+
+        for key, value in table_schema_attr_map["pr_info"].items():
+            common_attributes[key] = self.pr_info.get(value, None)
+
+        for key, value in table_schema_attr_map["test_attributes"].items():
+            common_attributes[key] = self.test_attributes.get(value, None)
+
+        if common_attributes["report_url"] is None:
+            common_attributes["report_url"] = self.report_url()
+
+        for key in table_schema_attr_map["test_results"].keys():
+            common_attributes[key] = None
+
         return common_attributes
 
     def iter_formatted_test_results(self, common_attributes):
@@ -244,7 +271,7 @@ class ResultUploader:
         """
         for test_result in self.test_results:
             row = common_attributes.copy()
-            for schema_attr, test_attr in table_schema_attributes_map.items():
+            for schema_attr, test_attr in table_schema_attr_map["test_results"].items():
                 if test_attr in test_result:
                     row[schema_attr] = test_result[test_attr]
             yield row
@@ -259,7 +286,7 @@ class ResultUploader:
 
         # Write results in table schema format}
         with open("results_table.csv", "w", newline="") as csv_file:
-            fieldnames = table_schema_attributes_map.keys()
+            fieldnames = common_attributes.keys()
 
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
@@ -360,12 +387,13 @@ class ResultUploader:
         try:
             report = self.report_from_compressed_log(log_path)
         except Exception as e:
-            print(f"Failed to read compressed log: {repr(e)}")
-            log_raw_lines = self.raw_log_from_compressed_log(log_path=log_path)
+            print(f"Failed to read log in report format: {repr(e)}")
 
         if report:
             self.read_json_report(report=report)
         else:
+            print("Falling back to reading raw log")
+            log_raw_lines = self.raw_log_from_compressed_log(log_path=log_path)
             self.read_raw_log(log_lines=log_raw_lines)
 
         self.read_pr_info()
@@ -374,10 +402,10 @@ class ResultUploader:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--log-path", help="Path to the log file")
+    parser.add_argument("--log-file", help="Path to the log file")
     parser.add_argument("--debug", action="store_true", help="Extra debug output")
     args = parser.parse_args()
 
-    R = ResultUploader(debug=args.debug, log_path=args.log_path)
+    R = ResultUploader(debug=args.debug, log_path=args.log_file)
 
     R.run_local()
