@@ -26,16 +26,15 @@ test_results: message_rtime_ms
 """
 
 table_schema_attr_map = {
-    "pr_info": {"pull_request_number": "pull_request_number"},
+    "pr_info": {"pr_number": "pull_request_number"},
     "test_attributes": {
         "version": "version",
-        "repository": "repository",
         "package": "package",
+        "architecture": "arch",
         "commit_hash": "commit.hash",
         "job_url": "job.url",
         "report_url": "report.url",
         "start_time": "start_time",
-        "architecture": "arch",
     },
     "test_results": {
         "test_duration_ms": "message_rtime_ms",  # This value is generated in read_json_report/read_log_line
