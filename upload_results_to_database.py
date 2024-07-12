@@ -5,9 +5,11 @@ import csv
 from collections import namedtuple
 import argparse
 import os
-import time
+from datetime import datetime
+from pprint import pprint
 
 import requests
+from clickhouse_driver import Client
 
 from testflows._core.transform.log.pipeline import ResultsLogPipeline
 from testflows._core.compress import CompressedFile
@@ -112,7 +114,7 @@ class ResultUploader:
         """
 
         self.run_start_time = report["metadata"]["date"]
-        self.test_attributes["start_time"] = time.ctime(self.run_start_time)
+        self.test_attributes["start_time"] = datetime.fromtimestamp(self.run_start_time)
         self.duration_ms = report["metadata"]["duration"] * 1000
         self.test_attributes["testflows_version"] = report["metadata"]["version"]
 
@@ -149,7 +151,9 @@ class ResultUploader:
             self.test_attributes["testflows_protocol"] = data["protocol_version"]
             assert data["protocol_version"] == "TFSPv2.1", "Unexpected protocol version"
             self.run_start_time = data["message_time"]
-            self.test_attributes["start_time"] = time.ctime(self.run_start_time)
+            self.test_attributes["start_time"] = datetime.fromtimestamp(
+                self.run_start_time
+            )
             self.suite = data["test_name"].split("/")[1]
 
         elif message_keyword == "VERSION":
@@ -297,54 +301,45 @@ class ResultUploader:
 
     def upload_results(
         self,
-        db="gh-data",
-        table="checks",
-        db_url=None,
+        db,
+        table,
+        db_host=None,
         db_user=None,
         db_password=None,
         timeout=100,
     ):
-        if db_url is None:
-            db_url = os.getenv(DATABASE_HOST_VAR)
+        if db_host is None:
+            db_host = os.getenv(DATABASE_HOST_VAR)
 
-        if db_user is not None:
-            db_auth = {
-                "X-ClickHouse-User": db_user,
-                "X-ClickHouse-Key": db_password,
-            }
-        else:
-            db_auth = {
-                "X-ClickHouse-User": os.getenv(DATABASE_USER_VAR),
-                "X-ClickHouse-Key": os.getenv(DATABASE_PASSWORD_VAR, ""),
-            }
+        if db_user is None:
+            db_user = os.getenv(DATABASE_USER_VAR)
+
+        if db_password is None:
+            db_password = os.getenv(DATABASE_PASSWORD_VAR, "")
 
         # Collect values that are the same for all tests
         common_attributes = self.get_common_attributes()
 
-        json_lines = [
-            json.dumps(row)
-            for row in self.iter_formatted_test_results(common_attributes)
-        ]
-        json_str = ",".join(json_lines)
+        rows = self.iter_formatted_test_results(common_attributes)
 
-        params = {
-            "database": db,
-            "query": f"INSERT INTO {table} FORMAT JSONEachRow",
-            "date_time_input_format": "best_effort",
-            "send_logs_level": "warning",
-        }
-
-        response = requests.post(
-            url=db_url, headers=db_auth, params=params, data=json_str, timeout=timeout
+        client = Client(
+            db_host,
+            user=db_user,
+            password=db_password,
         )
 
-        print("Upload response:", response.status_code)
-        print(response.text)
+        settings = {
+            "send_logs_level": "warning",
+            "input_format_null_as_default": True,
+        }
 
-        if not response.ok:
-            raise ValueError(
-                f"Cannot insert data into clickhouse: HTTP code {response.status_code}: {response.text}"
-            )
+        r = client.execute(
+            f"INSERT INTO `{db}`.{table} VALUES",
+            rows,
+            types_check=self.debug,
+            settings=settings,
+        )
+        print(f"Inserted {r} records")
 
     def report_from_compressed_log(self, log_path=None):
         args = namedtuple(
@@ -383,31 +378,35 @@ class ResultUploader:
 
         if self.debug:
             self.write_native_csv()
-            print(json.dumps(self.pr_info, indent=2))
-            print(json.dumps(self.test_attributes, indent=2))
-            print(json.dumps(self.test_results[-1], indent=2))
+            pprint(self.pr_info, indent=2)
+            pprint(self.test_attributes, indent=2)
+            pprint(self.test_results[-1], indent=2)
 
         self.write_csv()
 
     def run_upload(
         self,
-        log_path=None,
-        db="gh-data",
-        table="checks",
-        db_url=None,
+        db,
+        table,
+        db_host=None,
         db_user=None,
         db_password=None,
+        log_path=None,
     ):
         self.read_log(log_path=log_path)
         self.read_pr_info()
 
         if self.debug:
-            print(json.dumps(self.pr_info, indent=2))
-            print(json.dumps(self.test_attributes, indent=2))
-            print(json.dumps(self.test_results[-1], indent=2))
+            pprint(self.pr_info, indent=2)
+            pprint(self.test_attributes, indent=2)
+            pprint(self.test_results[-1], indent=2)
 
         self.upload_results(
-            db=db, table=table, db_url=db_url, db_user=db_user, db_password=db_password
+            db=db,
+            table=table,
+            db_host=db_host,
+            db_user=db_user,
+            db_password=db_password,
         )
 
 
@@ -422,7 +421,9 @@ if __name__ == "__main__":
         "--database", default="gh-data", help="Database name to upload results to"
     )
     parser.add_argument("--table", default="checks", help="Table name to upload to")
-    parser.add_argument("--db-url", help="URL of the ClickHouse database to upload to")
+    parser.add_argument(
+        "--db-host", help="Hostname of the ClickHouse database to upload to"
+    )
     parser.add_argument("--db-user", help="Database user to use for the upload")
     parser.add_argument("--db-password", help="Database password to use for the upload")
 
@@ -434,7 +435,7 @@ if __name__ == "__main__":
         R.run_upload(
             db=args.database,
             table=args.table,
-            db_url=args.db_url,
+            db_host=args.db_host,
             db_user=args.db_user,
             db_password=args.db_password,
         )
