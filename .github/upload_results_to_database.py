@@ -414,15 +414,11 @@ if __name__ == "__main__":
     parser.add_argument("--log-file", help="Path to the log file")
     parser.add_argument("--debug", action="store_true", help="Extra debug output")
     parser.add_argument(
-        "--upload", action="store_true", help="Upload results to the database"
+        "--upload", action="store_true", help="Upload results to a database"
     )
-    parser.add_argument(
-        "--database", default="gh-data", help="Database name to upload results to"
-    )
-    parser.add_argument("--table", default="checks", help="Table name to upload to")
-    parser.add_argument(
-        "--db-host", help="Hostname of the ClickHouse database to upload to"
-    )
+    parser.add_argument("--database", help="Database name to upload results to")
+    parser.add_argument("--table", help="Table name to upload to")
+    parser.add_argument("--db-host", help="Hostname of the ClickHouse database")
     parser.add_argument("--db-user", help="Database user to use for the upload")
     parser.add_argument("--db-password", help="Database password to use for the upload")
 
