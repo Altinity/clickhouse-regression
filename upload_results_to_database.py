@@ -5,6 +5,7 @@ import csv
 from collections import namedtuple
 import argparse
 import os
+import time
 
 import requests
 
@@ -55,7 +56,7 @@ class ResultUploader:
         self.log_path = log_path
         self.test_attributes = {}
         self.test_results = []
-        self.run_start_time = 0
+        self.run_start_time = None
         self.last_message_time = 0
         self.duration_ms = None
         self.pr_info = {}
@@ -111,7 +112,7 @@ class ResultUploader:
         """
 
         self.run_start_time = report["metadata"]["date"]
-        self.test_attributes["start_time"] = self.run_start_time
+        self.test_attributes["start_time"] = time.ctime(self.run_start_time)
         self.duration_ms = report["metadata"]["duration"] * 1000
         self.test_attributes["testflows_version"] = report["metadata"]["version"]
 
@@ -148,7 +149,7 @@ class ResultUploader:
             self.test_attributes["testflows_protocol"] = data["protocol_version"]
             assert data["protocol_version"] == "TFSPv2.1", "Unexpected protocol version"
             self.run_start_time = data["message_time"]
-            self.test_attributes["start_time"] = self.run_start_time
+            self.test_attributes["start_time"] = time.ctime(self.run_start_time)
             self.suite = data["test_name"].split("/")[1]
 
         elif message_keyword == "VERSION":
@@ -314,10 +315,16 @@ class ResultUploader:
         else:
             db_auth = {
                 "X-ClickHouse-User": os.getenv(DATABASE_USER_VAR),
-                "X-ClickHouse-Key": os.getenv(DATABASE_PASSWORD_VAR),
+                "X-ClickHouse-Key": os.getenv(DATABASE_PASSWORD_VAR, ""),
             }
 
-        json_lines = [json.dumps(row) for row in self.iter_formatted_test_results()]
+        # Collect values that are the same for all tests
+        common_attributes = self.get_common_attributes()
+
+        json_lines = [
+            json.dumps(row)
+            for row in self.iter_formatted_test_results(common_attributes)
+        ]
         json_str = ",".join(json_lines)
 
         params = {
@@ -331,6 +338,7 @@ class ResultUploader:
             url=db_url, headers=db_auth, params=params, data=json_str, timeout=timeout
         )
 
+        print("Upload response:", response.status_code)
         print(response.text)
 
         if not response.ok:
@@ -372,27 +380,63 @@ class ResultUploader:
     def run_local(self, log_path=None):
         self.read_log(log_path=log_path)
         self.read_pr_info()
-        self.write_csv()
 
         if self.debug:
             self.write_native_csv()
-
             print(json.dumps(self.pr_info, indent=2))
             print(json.dumps(self.test_attributes, indent=2))
             print(json.dumps(self.test_results[-1], indent=2))
 
-    def run_upload(self, log_path=None):
+        self.write_csv()
+
+    def run_upload(
+        self,
+        log_path=None,
+        db="gh-data",
+        table="checks",
+        db_url=None,
+        db_user=None,
+        db_password=None,
+    ):
         self.read_log(log_path=log_path)
         self.read_pr_info()
-        self.upload_results()
+
+        if self.debug:
+            print(json.dumps(self.pr_info, indent=2))
+            print(json.dumps(self.test_attributes, indent=2))
+            print(json.dumps(self.test_results[-1], indent=2))
+
+        self.upload_results(
+            db=db, table=table, db_url=db_url, db_user=db_user, db_password=db_password
+        )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--log-file", help="Path to the log file")
     parser.add_argument("--debug", action="store_true", help="Extra debug output")
+    parser.add_argument(
+        "--upload", action="store_true", help="Upload results to the database"
+    )
+    parser.add_argument(
+        "--database", default="gh-data", help="Database name to upload results to"
+    )
+    parser.add_argument("--table", default="checks", help="Table name to upload to")
+    parser.add_argument("--db-url", help="URL of the ClickHouse database to upload to")
+    parser.add_argument("--db-user", help="Database user to use for the upload")
+    parser.add_argument("--db-password", help="Database password to use for the upload")
+
     args = parser.parse_args()
 
     R = ResultUploader(debug=args.debug, log_path=args.log_file)
 
-    R.run_local()
+    if args.upload:
+        R.run_upload(
+            db=args.database,
+            table=args.table,
+            db_url=args.db_url,
+            db_user=args.db_user,
+            db_password=args.db_password,
+        )
+    else:
+        R.run_local()
