@@ -762,7 +762,7 @@ def columns(self):
 @TestFeature
 @Name("alter")
 def feature(self, uri):
-    """Test ALTER commands with VFS enabled"""
+    """Test ALTER commands with s3 disks"""
 
     self.context.uri = uri
 
