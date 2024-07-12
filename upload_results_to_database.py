@@ -358,20 +358,19 @@ class ResultUploader:
         for line in f:
             yield line
 
-    def run_local(self, log_path=None):
-
-        report = None
+    def read_log(self, log_path=None):
         try:
             report = self.report_from_compressed_log(log_path)
         except Exception as e:
-            print(f"Failed to read compressed log: {repr(e)}")
+            print(f"Failed to read log in report format: {repr(e)}", "")
+            print("Falling back to reading raw log")
             log_raw_lines = self.raw_log_from_compressed_log(log_path=log_path)
-
-        if report:
-            self.read_json_report(report=report)
-        else:
             self.read_raw_log(log_lines=log_raw_lines)
+        else:
+            self.read_json_report(report=report)
 
+    def run_local(self, log_path=None):
+        self.read_log(log_path=log_path)
         self.read_pr_info()
         self.write_csv()
 
@@ -383,19 +382,7 @@ class ResultUploader:
             print(json.dumps(self.test_results[-1], indent=2))
 
     def run_upload(self, log_path=None):
-        report = None
-        try:
-            report = self.report_from_compressed_log(log_path)
-        except Exception as e:
-            print(f"Failed to read log in report format: {repr(e)}")
-
-        if report:
-            self.read_json_report(report=report)
-        else:
-            print("Falling back to reading raw log")
-            log_raw_lines = self.raw_log_from_compressed_log(log_path=log_path)
-            self.read_raw_log(log_lines=log_raw_lines)
-
+        self.read_log(log_path=log_path)
         self.read_pr_info()
         self.upload_results()
 
