@@ -111,6 +111,55 @@ def unpack_tar_gz(tar_path):
     return f"{tar_dest_dir}"
 
 
+def get_binary_from_docker_container(
+    docker_image,
+    container_binary_path="/usr/bin/clickhouse",
+    host_binary_path=None,
+    host_binary_path_suffix=None,
+):
+    """
+    Get clickhouse-keeper binary from some Docker container.
+
+    Args:
+        docker_image: docker image name
+        container_binary_path: path to the binary in the container
+        host_binary_path: path to store the binary on the host
+        host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
+    """
+    assert docker_image.startswith("docker://"), error("not a docker image path")
+    docker_image = docker_image.split("docker://", 1)[-1]
+    docker_container_name = str(uuid.uuid1())
+
+    if host_binary_path is None:
+        host_binary_path = os.path.join(
+            tempfile.gettempdir(),
+            f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
+        )
+        if host_binary_path_suffix:
+            host_binary_path += host_binary_path_suffix
+
+    with Given(
+        "I get ClickHouse Keeper binary from docker container",
+        description=f"{docker_image}",
+    ):
+        with Shell() as bash:
+            bash.timeout = 300
+            bash(
+                f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
+            )
+            bash(
+                f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
+            )
+            bash(f'docker stop "{docker_container_name}"')
+
+    with And("debug"):
+        with Shell() as bash:
+            bash.timeout = 300
+            bash(f"ls -la {host_binary_path}")
+
+    return host_binary_path
+
+
 class Shell(ShellBase):
     def __exit__(self, type, value, traceback):
         # send exit and Ctrl-D repeatedly
@@ -1260,18 +1309,14 @@ class Cluster(object):
                 assert docker_image.startswith("docker://"), error(
                     "use_specific_version must be a docker image path"
                 )
-                self.specific_clickhouse_binary_path = (
-                    self.get_binary_from_docker_container(
-                        docker_image=docker_image,
-                        container_binary_path="/usr/bin/clickhouse",
-                    )
+                self.specific_clickhouse_binary_path = get_binary_from_docker_container(
+                    docker_image=docker_image,
+                    container_binary_path="/usr/bin/clickhouse",
                 )
-                self.clickhouse_specific_odbc_binary = (
-                    self.get_binary_from_docker_container(
-                        docker_image=docker_image,
-                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                        host_binary_path_suffix="_odbc_bridge",
-                    )
+                self.clickhouse_specific_odbc_binary = get_binary_from_docker_container(
+                    docker_image=docker_image,
+                    container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                    host_binary_path_suffix="_odbc_bridge",
                 )
 
                 self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
@@ -1305,12 +1350,12 @@ class Cluster(object):
 
                 docker_path = self.clickhouse_binary_path
 
-                self.clickhouse_binary_path = self.get_binary_from_docker_container(
+                self.clickhouse_binary_path = get_binary_from_docker_container(
                     docker_image=docker_path,
                     container_binary_path="/usr/bin/clickhouse",
                 )
                 self.clickhouse_odbc_bridge_binary_path = (
-                    self.get_binary_from_docker_container(
+                    get_binary_from_docker_container(
                         docker_image=docker_path,
                         container_binary_path="/usr/bin/clickhouse-odbc-bridge",
                         host_binary_path_suffix="_odbc_bridge",
@@ -1357,7 +1402,7 @@ class Cluster(object):
                         ):
                             current().context.keeper_version = parsed_version
 
-                self.keeper_binary_path = self.get_binary_from_docker_container(
+                self.keeper_binary_path = get_binary_from_docker_container(
                     docker_image=self.keeper_binary_path,
                     container_binary_path="/usr/bin/clickhouse-keeper",
                 )
@@ -1379,55 +1424,6 @@ class Cluster(object):
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
-
-    def get_binary_from_docker_container(
-        self,
-        docker_image,
-        container_binary_path="/usr/bin/clickhouse",
-        host_binary_path=None,
-        host_binary_path_suffix=None,
-    ):
-        """
-        Get clickhouse-keeper binary from some Docker container.
-
-        Args:
-            docker_image: docker image name
-            container_binary_path: path to the binary in the container
-            host_binary_path: path to store the binary on the host
-            host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
-        """
-        assert docker_image.startswith("docker://"), error("not a docker image path")
-        docker_image = docker_image.split("docker://", 1)[-1]
-        docker_container_name = str(uuid.uuid1())
-
-        if host_binary_path is None:
-            host_binary_path = os.path.join(
-                tempfile.gettempdir(),
-                f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
-            )
-            if host_binary_path_suffix:
-                host_binary_path += host_binary_path_suffix
-
-        with Given(
-            "I get ClickHouse Keeper binary from docker container",
-            description=f"{docker_image}",
-        ):
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(
-                    f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
-                )
-                bash(
-                    f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
-                )
-                bash(f'docker stop "{docker_container_name}"')
-
-        with And("debug"):
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"ls -la {host_binary_path}")
-
-        return host_binary_path
 
     @property
     def control_shell(self, timeout=300):
