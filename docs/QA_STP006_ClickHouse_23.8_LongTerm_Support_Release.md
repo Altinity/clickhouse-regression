@@ -250,7 +250,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8
 | Altinity.Cloud | [Pass](#altinitycloud)                |   |
 | Production Cluster Operation | [Pass](#production-cluster-operation) |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)        |   |
-| Grafana | [](#grafana)                          |   |
+| Grafana | [Pass](#grafana)                          |   |
 | Tableau | [Pass](#tableau)                          |   |
 | Superset | [Pass](#superset)                         |   |
 | Trivy | [Pass](#trivy)                            |   |
@@ -659,6 +659,8 @@ Compatibility with the following BI tools.
 #### Grafana
 
 Results:
+
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/grafana/
 
 Compatibility with [Grafana].
 
