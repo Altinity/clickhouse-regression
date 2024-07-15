@@ -207,7 +207,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                           |    |
 | Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)                 |   |
-| Java `clickhouse-jdbc` (DBeaver) | [In progress](#java-clickhouse-jdbc)          |   |
+| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
 | Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
 | Kubernetes `clickhouse-operator` | [Pass](#kubernetes-clickhouse-operator)       |   |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
@@ -507,6 +507,8 @@ The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) 
 clickhouse-jdbc version: v0.6.2
 
 Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-jdbc/
+
+Results (DBeaver): https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/clickhouse-jdbc/DBeaver/
 
 The (https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
