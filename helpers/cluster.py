@@ -1238,6 +1238,7 @@ class Cluster(object):
         frame=None,
         use_specific_version=False,
         rm_instances_files=True,
+        reuse_env=False,
     ):
         self._bash = {}
         self._control_shell = None
@@ -1256,6 +1257,7 @@ class Cluster(object):
         self.collect_service_logs = collect_service_logs
         self.use_zookeeper_nodes = use_zookeeper_nodes
         self.use_specific_version = use_specific_version
+        self.reuse_env = reuse_env
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
@@ -1648,6 +1650,9 @@ class Cluster(object):
     def down(self, timeout=300):
         """Bring cluster down by executing docker-compose down."""
 
+        if self.reuse_env:
+            return
+
         # add message to each clickhouse-server.log
         if settings.debug and self.running:
             for node in self.nodes["clickhouse"]:
@@ -1969,6 +1974,7 @@ def create_cluster(
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
+    reuse_env=False,
 ):
     """Create docker compose cluster."""
     with Cluster(
@@ -1988,5 +1994,6 @@ def create_cluster(
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,
+        reuse_env=reuse_env,
     ) as cluster:
         yield cluster
