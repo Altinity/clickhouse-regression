@@ -701,7 +701,11 @@ def metadata_detached(self, policy_name, disk="external"):
 @TestOutline
 @Requirements(RQ_SRS_015_S3_Metadata("1.0"))
 def metadata_non_restorable_schema(self, policy_name, disk="external"):
-    """Fail to restore using metadata when send_metadata is set to false."""
+    """
+    Fail to restore using metadata when send_metadata is set to false.
+
+    Note: send_metadata is deprecated
+    """
     node = self.context.node
     node2 = self.context.cluster.node("clickhouse2")
     table_name = f"s3.table_{getuid()}"
@@ -1068,7 +1072,6 @@ def local_and_s3_disk(self):
                 "list_object_keys_size": "1",
             },
         }
-        disks["external"]["send_metadata"] = "true"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -1113,7 +1116,6 @@ def local_and_s3_volumes(self):
                 "list_object_keys_size": "1",
             },
         }
-        disks["external"]["send_metadata"] = "true"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -1153,7 +1155,6 @@ def s3_disk(self):
                 "list_object_keys_size": "1",
             }
         }
-        disks["external"]["send_metadata"] = "true"
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {"external": {"volumes": {"external": {"disk": "external"}}}}

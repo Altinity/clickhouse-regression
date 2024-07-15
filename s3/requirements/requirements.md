@@ -328,6 +328,10 @@ if and only if they have `<send_metadata>` set to `true` in the disk config.
 The disk metadata is stored in `/var/lib/clickhouse/disks/{disk name}/`.
 The metadata is stored in the s3 bucket.
 
+`<send_metadata>` was deprecated in ClickHouse 21 and will be removed in the future.
+See <https://github.com/ClickHouse/ClickHouse/issues/30510>
+
+
 ##### RQ.SRS-015.S3.Metadata.Revisions
 version: 1.0
 
