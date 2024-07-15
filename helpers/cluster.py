@@ -1828,8 +1828,22 @@ class Cluster(object):
                                     None,
                                     f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
-                                    exitcode=0,
+                                    no_checks=True,
                                 )
+                                if "port is already allocated" in cmd.output:
+                                    port = re.search(
+                                        r"Bind for .+:([0-9]+) failed", cmd.output
+                                    ).group(1)
+
+                                    ps = self.command(
+                                        None, f"docker ps | grep {port}", no_checks=True
+                                    )
+                                    conflict_env = ps.output.split()[-1]
+                                    raise RuntimeError(
+                                        f"Failed to allocate port {port}, already in use by {conflict_env}."
+                                    )
+
+                                assert cmd.exitcode == 0, error(cmd.output)
                                 assert "ERROR:" not in cmd.output, error(cmd.output)
                                 if "is unhealthy" not in cmd.output:
                                     break
