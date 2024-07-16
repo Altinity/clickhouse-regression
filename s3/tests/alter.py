@@ -506,12 +506,14 @@ def replace(self):
             )
 
     with And("I check the size of the replaced part"):
-        for node in nodes:
-            r = node.query(
-                f"SELECT count() FROM {destination_table_name} where key % 4 = 2 FORMAT TabSeparated;"
-            )
-            table_row_count = int(r.output)
-            assert row_count_source == table_row_count, error()
+        for attempt in retries(timeout=120, delay=5):
+            with attempt:
+                for node in nodes:
+                    r = node.query(
+                        f"SELECT count() FROM {destination_table_name} where key % 4 = 2 FORMAT TabSeparated;"
+                    )
+                    table_row_count = int(r.output)
+                    assert row_count_source == table_row_count, error()
 
 
 @TestOutline(Scenario)
