@@ -17,7 +17,7 @@
 
 **Summary:**
 
-Started to execute test plan on July 1, 2024 and ended on **TBD**.
+Started to execute test plan on July 1, 2024 and ended on July 19, 2024.
 
 ## Table of Contents
 
@@ -126,7 +126,13 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 ### Notable Differences in Behavior
 
-**TBD**
+* Analyzer is enabled by default.
+* Multiple array joins.
+* Final can be passed to particular table in joins.
+* Refreshable materialized views.
+* S3 queue.
+* PASTE JOIN.
+* Variant data type.
 
 ### Summary of Main Regressions
 
@@ -157,7 +163,7 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 [GitHub is:issue is:open label:v24.3-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.3-affected+) as of July 3, 2024
 
-* None 
+* No issues 
 
 ### Summary
 
@@ -214,7 +220,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3
 | Production Cluster Operation | [Pass](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
-| Tableau | [In progress](#tableau)                       |   |
+| Tableau | [Pass](#tableau)                       |   |
 | Superset | [Pass](#superset)                             |   |
 | Trivy | [In progress](#trivy)                         |   |
 | Scout | [In progress](#scout)                         |   |
@@ -572,7 +578,8 @@ Compatibility with [Grafana].
 
 Results:
 
-**TBD**
+
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/tableau/results.png
 
 Compatibility with [Tableau].
 
