@@ -65,10 +65,6 @@ on:
           - tiered_storage_local
           - tiered_storage_minio
           - window_functions
-      enable_thread_fuzzer:
-        description: "Enable thread fuzzer"
-        type: boolean
-        default: false
       artifacts:
         description: "Artifact S3 bucket"
         type: choice
@@ -102,6 +98,10 @@ on:
       custom_run_name:
         description: 'Custom run name (optional)'
         required: false
+      enable_thread_fuzzer:
+        description: "Enable thread fuzzer"
+        type: boolean
+        default: false
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
