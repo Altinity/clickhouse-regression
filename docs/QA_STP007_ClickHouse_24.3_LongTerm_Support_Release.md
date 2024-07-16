@@ -17,7 +17,7 @@
 
 **Summary:**
 
-Started to execute test plan on July 1, 2024 and ended on **TBD**.
+Started to execute test plan on July 1, 2024 and ended on July 19, 2024.
 
 ## Table of Contents
 
@@ -126,7 +126,7 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 ### Notable Differences in Behavior
 
-**TBD**
+* Analyzer is enabled by default.
 
 ### Summary of Main Regressions
 
@@ -157,7 +157,7 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 [GitHub is:issue is:open label:v24.3-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.3-affected+) as of July 3, 2024
 
-* None 
+* No issues 
 
 ### Summary
 
