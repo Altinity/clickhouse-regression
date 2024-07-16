@@ -21,6 +21,8 @@ from testflows.uexpect import ExpectTimeoutError
 from testflows._core.testtype import TestSubType
 from helpers.common import check_clickhouse_version, current_cpu
 
+MINIMUM_COMPOSE_VERSION = "2.23.1"
+
 MESSAGES_TO_RETRY = [
     "DB::Exception: ZooKeeper session has been expired",
     "DB::Exception: Connection loss",
@@ -1261,6 +1263,15 @@ class Cluster(object):
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
+
+        # Check docker compose version >= MINIMUM_COMPOSE_VERSION
+        with Shell() as bash:
+            cmd = bash(f"{self.docker_compose} --version")
+            version = cmd.output.split()[-1].strip("v").split(".")
+            if version < MINIMUM_COMPOSE_VERSION.split("."):
+                raise RuntimeError(
+                    f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}"
+                )
 
         # auto set configs directory
         if self.configs_dir is None:
