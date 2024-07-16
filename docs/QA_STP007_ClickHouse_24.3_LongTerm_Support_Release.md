@@ -127,6 +127,12 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 ### Notable Differences in Behavior
 
 * Analyzer is enabled by default.
+* Multiple array joins.
+* Final can be passed to particular table in joins.
+* Refreshable materialized views.
+* S3 queue.
+* PASTE JOIN.
+* Variant data type.
 
 ### Summary of Main Regressions
 
