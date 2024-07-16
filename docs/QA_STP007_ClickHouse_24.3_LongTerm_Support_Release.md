@@ -214,7 +214,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3
 | Production Cluster Operation | [Pass](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
-| Tableau | [In progress](#tableau)                       |   |
+| Tableau | [Pass](#tableau)                       |   |
 | Superset | [Pass](#superset)                             |   |
 | Trivy | [In progress](#trivy)                         |   |
 | Scout | [In progress](#scout)                         |   |
@@ -572,7 +572,8 @@ Compatibility with [Grafana].
 
 Results:
 
-**TBD**
+
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/tableau/results.png
 
 Compatibility with [Tableau].
 
