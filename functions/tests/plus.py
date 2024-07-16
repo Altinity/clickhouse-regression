@@ -3,7 +3,7 @@ from helpers.cluster import *
 from testflows.combinatorics import product
 
 
-@TestSketch
+@TestSketch(Scenario)
 def floats(self, client=None):
     """Check addition of floats using the plus() function inside the SELECT statement"""
     if client is None:
@@ -38,5 +38,5 @@ def feature(self, node="clickhouse1"):
 
     with self.context.node.client() as client:
         self.context.client = client
-        for scenario in loads(current_module(), Scenario, Sketch):
+        for scenario in loads(current_module(), Scenario):
             scenario()
