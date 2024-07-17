@@ -1084,39 +1084,14 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def local_and_s3_disk(self):
     """Test back up using s3 and local disk combination."""
-    node = current().context.node
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}/backup/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-                "list_object_keys_size": "1",
-            },
-        }
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {
-            "local_and_s3_disk": {
-                "volumes": [
-                    {
-                        "default_and_external": [
-                            {"disk": "default"},
-                            {"disk": "external"},
-                        ]
-                    }
-                ]
-            },
-        }
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_and_local_disk(
+            uri=f"{uri}/backup/",
+            policy_name="local_and_s3_disk",
+            disk_settings={"list_object_keys_size": "1"},
+        )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
@@ -1134,34 +1109,13 @@ def local_and_s3_disk(self):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def local_and_s3_volumes(self):
     """Test backup with a storage policy that has both local and s3 volume."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}/backup/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-                "list_object_keys_size": "1",
-            },
-        }
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {
-            "default_and_external": {
-                "volumes": {
-                    "external": {"disk": "external"},
-                    "default": {"disk": "default"},
-                }
-            },
-        }
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_and_local_volume(
+            uri=f"{uri}/backup/",
+            disk_settings={"list_object_keys_size": "1"},
+        )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
@@ -1179,26 +1133,13 @@ def local_and_s3_volumes(self):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def s3_disk(self):
     """Test backup with s3 disk."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        disks = {
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}/backup/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-                "list_object_keys_size": "1",
-            }
-        }
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {"external": {"volumes": {"external": {"disk": "external"}}}}
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume(
+            uri=f"{uri}/backup/",
+            settings={"list_object_keys_size": "1"},
+        )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):

@@ -1181,17 +1181,23 @@ def allow_s3_truncate(node):
 
 
 @TestStep(Given)
-def default_s3_and_local_disk(self, restart=True):
+def default_s3_and_local_disk(
+    self, restart=True, uri=None, policy_name="default_and_external", disk_settings=None
+):
     """Default settings for s3 and local disks."""
+
+    uri = uri or self.context.uri
+    disk_settings = disk_settings or {}
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}",
+                "endpoint": uri,
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
+                **disk_settings,
             },
             "s3_cache": {
                 "type": "cache",
@@ -1205,7 +1211,7 @@ def default_s3_and_local_disk(self, restart=True):
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
-            "default_and_external": {
+            policy_name: {
                 "volumes": [
                     {
                         "default_and_external": [
@@ -1221,17 +1227,23 @@ def default_s3_and_local_disk(self, restart=True):
 
 
 @TestStep(Given)
-def default_s3_and_local_volume(self, restart=True):
+def default_s3_and_local_volume(
+    self, restart=True, uri=None, policy_name="default_and_external", disk_settings=None
+):
     """Default settings for s3 and local volumes."""
+
+    uri = uri or self.context.uri
+    disk_settings = disk_settings or {}
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}",
+                "endpoint": uri,
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
+                **disk_settings,
             },
             "s3_cache": {
                 "type": "cache",
@@ -1245,7 +1257,7 @@ def default_s3_and_local_volume(self, restart=True):
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
-            "default_and_external": {
+            policy_name: {
                 "volumes": {
                     "default": {"disk": "default"},
                     "external": {"disk": "s3_cache"},
