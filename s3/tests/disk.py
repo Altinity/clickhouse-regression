@@ -47,6 +47,16 @@ def define_s3_disk_storage_configuration(
                 "access_key_id": f"{access_key_id}",
                 "secret_access_key": f"{secret_access_key}",
             }
+            disks[f"{disk_name}_cached"] = (
+                {
+                    "type": "cache",
+                    "disk": disk_name,
+                    "path": f"{disk_name}_cache/",
+                    "max_size": "22548578304",
+                    "cache_on_write_operations": "1",
+                    "do_not_evict_index_and_mark_files": "1",
+                },
+            )
 
             if hasattr(self.context, "s3_options"):
                 disks[disk_name].update(self.context.s3_options)
@@ -440,10 +450,16 @@ def multiple_storage(self):
     with And("I have a storage policy configured to use both S3 disks at once"):
         policies = {
             "default": {"volumes": {"default": {"disk": "default"}}},
-            "external": {
+            "external_nocache": {
                 "volumes": {
                     "default": {"disk": "first_external"},
                     "external": {"disk": "second_external"},
+                }
+            },
+            "external": {
+                "volumes": {
+                    "default": {"disk": "first_external_cached"},
+                    "external": {"disk": "second_external_cached"},
                 }
             },
         }
@@ -531,10 +547,16 @@ def multiple_storage_query(self):
     with And("I have a storage policy configured to use both S3 disks at once"):
         policies = {
             "default": {"volumes": {"default": {"disk": "default"}}},
-            "external": {
+            "external_nocache": {
                 "volumes": {
                     "default": {"disk": "first_external"},
                     "external": {"disk": "second_external"},
+                }
+            },
+            "external": {
+                "volumes": {
+                    "default": {"disk": "first_external_cached"},
+                    "external": {"disk": "second_external_cached"},
                 }
             },
         }
@@ -633,7 +655,12 @@ def add_storage(self):
         with And("I have a storage policy configured to use the S3 disk"):
             policies = {
                 "default": {"volumes": {"default": {"disk": "default"}}},
-                "external": {"volumes": {"external1": {"disk": "first_external"}}},
+                "external_nocache": {
+                    "volumes": {"external1": {"disk": "first_external"}}
+                },
+                "external": {
+                    "volumes": {"external1": {"disk": "first_external_cached"}}
+                },
             }
 
         with And("I enable the disk and policy config"):
@@ -658,7 +685,12 @@ def add_storage(self):
         with And("I have a storage policy configured to use the new S3 disk"):
             policies = {
                 "default": {"volumes": {"default": {"disk": "default"}}},
-                "external": {"volumes": {"external": {"disk": "second_external"}}},
+                "external_nocache": {
+                    "volumes": {"external": {"disk": "second_external"}}
+                },
+                "external": {
+                    "volumes": {"external1": {"disk": "second_external_cached"}}
+                },
             }
 
         with And("I enable the disk and policy config"):
@@ -1382,13 +1414,19 @@ def performance_ttl_move(self):
             "tiered": {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": "external", "perform_ttl_move_on_insert": "1"},
+                    "external": {
+                        "disk": "external_cached",
+                        "perform_ttl_move_on_insert": "1",
+                    },
                 }
             },
             "tiered_bg": {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": "external", "perform_ttl_move_on_insert": "0"},
+                    "external": {
+                        "disk": "external_cached",
+                        "perform_ttl_move_on_insert": "0",
+                    },
                 }
             },
         }
@@ -1473,7 +1511,7 @@ def perform_ttl_move_on_insert(self, bool_value):
                 "volumes": {
                     "default": {"disk": "default"},
                     "external": {
-                        "disk": "external",
+                        "disk": "external_cached",
                         "perform_ttl_move_on_insert": f"{bool_value}",
                     },
                 }
@@ -1539,7 +1577,7 @@ def perform_ttl_move_on_insert_default(self):
             "tiered": {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": f"{disk_name}"},
+                    "external": {"disk": f"{disk_name}_cached"},
                 }
             },
         }
@@ -2103,7 +2141,7 @@ def alter_on_cluster_modify_ttl(self):
             "tiered": {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": "external"},
+                    "external": {"disk": "external_cached"},
                 }
             },
         }
