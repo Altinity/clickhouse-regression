@@ -137,10 +137,14 @@ xfails = {
     ],
     "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
+    "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
     "gcs/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
-    ":/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
+    ":/backup/:/metadata non restorable schema": [
+        (Fail, "send_metadata is deprecated")
+    ],
+    ":/backup/:/metadata:": ((Fail, "SYSTEM RESTART DISK is not implemented"),),
     ":/zero copy replication/the bucket should be cleaned up": [
         (Fail, "Data cleanup needs investigation")
     ],
@@ -219,14 +223,6 @@ ffails = {
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    "aws s3/backup": (
-        Skip,
-        "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
-    ),
-    "gcs/backup": (
-        Skip,
-        "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
-    ),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
@@ -239,11 +235,6 @@ ffails = {
     "aws s3/zero copy replication/stale alter replica": (
         XFail,
         "This test causes boto errors in subsequent tests.",
-    ),
-    ":/backup/:/metadata:": (
-        XFail,
-        "Under development for 22.8 and newer.",
-        check_clickhouse_version(">=22.8"),
     ),
     ":/disk/cache*": (
         XFail,
@@ -289,7 +280,6 @@ def minio_regression(
     self.context.storage = "minio"
     self.context.access_key_id = root_user
     self.context.secret_access_key = root_password
-    self.context.bucket_name = "root"
     bucket_prefix = "data"
 
     with Cluster(
@@ -305,6 +295,7 @@ def minio_regression(
             uri_bucket_file = (
                 uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
             )
+            self.context.bucket_name = self.context.cluster.minio_bucket
 
         with And("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
