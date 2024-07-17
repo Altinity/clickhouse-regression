@@ -2434,7 +2434,7 @@ SELECT * FROM file('test.Parquet, Parquet) WHERE f32=toFloat32(-64.12787) AND fi
 ##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex
 version: 1.0
 
-[ClickHouse] SHALL support reading data from a Parquet file containing complex datatype columns that have Bloom Filter applied on them. This allows to decrease the query runtime for queries that include reading from a parquet file with `Array`, `Map` and `Tuple` datatypes.
+[ClickHouse] SHALL support reading data from a Parquet file containing complex datatype columns that have Bloom Filter applied on them. This allows to decrease the query runtime for queries that include reading from a parquet file with `Array`, `Map` and `Tuple` datatypes that are in a row-group with a bloom filter applied.
 
 ### Dictionary
 
