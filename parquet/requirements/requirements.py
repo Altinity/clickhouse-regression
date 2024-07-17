@@ -3560,7 +3560,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex = Requiremen
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support reading data from a Parquet file containing complex datatype columns that have Bloom Filter applied on them. This allows to decrease the query runtime.\n"
+        "[ClickHouse] SHALL support reading data from a Parquet file containing complex datatype columns that have Bloom Filter applied on them. This allows to decrease the query runtime for queries that include reading from a parquet file with `Array`, `Map` and `Tuple` datatypes.\n"
         "\n"
     ),
     link=None,
@@ -8325,7 +8325,7 @@ SELECT * FROM file('test.Parquet, Parquet) WHERE f32=toFloat32(-64.12787) AND fi
 ##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex
 version: 1.0
 
-[ClickHouse] SHALL support reading data from a Parquet file containing complex datatype columns that have Bloom Filter applied on them. This allows to decrease the query runtime.
+[ClickHouse] SHALL support reading data from a Parquet file containing complex datatype columns that have Bloom Filter applied on them. This allows to decrease the query runtime for queries that include reading from a parquet file with `Array`, `Map` and `Tuple` datatypes.
 
 ### Dictionary
 
