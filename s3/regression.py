@@ -440,7 +440,6 @@ def gcs_regression(
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
     self.context.bucket_name = None
-    self.context.bucket_path = None
 
     with Cluster(
         **cluster_args,

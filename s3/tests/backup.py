@@ -1172,6 +1172,8 @@ def gcs(self, uri):
     """Test manual backup and metadata back up with gcs storage."""
 
     self.context.uri = uri
+    self.context.bucket_name = "data"
+    self.context.bucket_path = None
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
