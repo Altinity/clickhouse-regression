@@ -124,60 +124,54 @@ def add_storage_config(
     with_minio=False, with_aws_s3=False, with_gcs_s3=False, environ=None
 ):
     """Add the minio storage config to storage_configuration.xml."""
+    disks = {
+        "default": {"keep_free_space_bytes": "1024"},
+        "jbod1": {"path": "/jbod1/"},
+        "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
+        "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
+        "external": {
+            "type": "cache",
+            "disk": "external_disk",
+            "path": "external_cache/",
+            "max_size": "22548578304",
+            "cache_on_write_operations": "1",
+            "do_not_evict_index_and_mark_files": "1",
+        },
+    }
+
     if with_minio:
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "jbod1": {"path": "/jbod1/"},
-            "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
-            "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
-            "external": {
-                "type": "s3",
-                "endpoint": "http://minio:9001/root/data/",
-                "access_key_id": "minio",
-                "secret_access_key": "minio123",
-            },
+        disks["external_disk"] = {
+            "type": "s3",
+            "endpoint": "http://minio:9001/root/data/",
+            "access_key_id": "minio",
+            "secret_access_key": "minio123",
         }
     elif with_aws_s3:
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "jbod1": {"path": "/jbod1/"},
-            "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
-            "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{environ['S3_AMAZON_URI']}",
-                "access_key_id": f"{environ['S3_AMAZON_KEY_ID']}",
-                "secret_access_key": f"{environ['S3_AMAZON_ACCESS_KEY']}",
-            },
+        disks["external_disk"] = {
+            "type": "s3",
+            "endpoint": f"{environ['S3_AMAZON_URI']}",
+            "access_key_id": f"{environ['S3_AMAZON_KEY_ID']}",
+            "secret_access_key": f"{environ['S3_AMAZON_ACCESS_KEY']}",
         }
 
     elif with_gcs_s3:
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "jbod1": {"path": "/jbod1/"},
-            "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
-            "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{environ['GCS_URI']}",
-                "access_key_id": f"{environ['GCS_KEY_ID']}",
-                "secret_access_key": f"{environ['GCS_KEY_SECRET']}",
-            },
+        disks["external_disk"] = {
+            "type": "s3",
+            "endpoint": f"{environ['GCS_URI']}",
+            "access_key_id": f"{environ['GCS_KEY_ID']}",
+            "secret_access_key": f"{environ['GCS_KEY_SECRET']}",
         }
 
     else:
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "jbod1": {"path": "/jbod1/"},
-            "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
-            "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
-            "external": {"path": "/external/"},
-        }
+        disks["external"] = {"path": "/external/"}
 
     policies = {
         "one_small_disk": {"volumes": {"main": {"disk": "jbod1"}}},
         "small_jbod_with_external": {
-            "volumes": {"main": {"disk": "jbod1"}, "external": {"disk": "external"}}
+            "volumes": {
+                "main": {"disk": "jbod1"},
+                "external": {"disk": "external"},
+            }
         },
         "jbods": {
             "volumes": {
@@ -228,7 +222,10 @@ def add_storage_config(
         "default_disk_with_external": {
             "volumes": {
                 "small": [{"disk": "default"}, {"max_data_part_size_bytes": "2097152"}],
-                "big": [{"disk": "external"}, {"max_data_part_size_bytes": "20971520"}],
+                "big": [
+                    {"disk": "external"},
+                    {"max_data_part_size_bytes": "20971520"},
+                ],
             }
         },
         "jbod1_with_jbod2": {
