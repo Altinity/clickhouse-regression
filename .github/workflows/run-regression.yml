@@ -148,14 +148,12 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: |
-          EXITCODE=0;
+        run: EXITCODE=0;
           python3 -u ${{ env.SUITE }}/regression.py
           --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-          --clickhouse-version ${{ env.version }}
-          ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+          --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
           ${{ env.args }} || EXITCODE=$?;
-          .github/add_link_to_logs.sh; 
+          .github/add_link_to_logs.sh;
           exit $EXITCODE
 
       - name: Create and upload logs
