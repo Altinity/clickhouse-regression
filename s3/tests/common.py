@@ -909,7 +909,6 @@ def start_minio(
 
             buckets = ["root", "root2"]
             self.context.cluster.minio_bucket = "root"
-            self.context.cluster.minio_bucket_2 = "root2"
 
             for bucket in buckets:
                 if minio_client.bucket_exists(bucket):
@@ -1050,7 +1049,7 @@ def get_revision_counter(self, table_name, backup_number, disk, node=None):
 
 
 @TestStep(Given)
-def cleanup(self, storage="minio", disk="external"):
+def cleanup(self, storage="minio", disk="external", s3_path=None):
     """Clean up shadow directory, s3 metadata, and minio if necessary."""
     cluster = self.context.cluster
 
@@ -1062,19 +1061,20 @@ def cleanup(self, storage="minio", disk="external"):
 
     if storage == "minio":
         minio_client = self.context.cluster.minio_client
-        for bucket in [cluster.minio_bucket, cluster.minio_bucket_2]:
-            for obj in list(minio_client.list_objects(bucket, recursive=True)):
-                if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
-                    continue
-                minio_client.remove_object(bucket, obj.object_name)
+        for obj in list(
+            minio_client.list_objects(cluster.minio_bucket, recursive=True)
+        ):
+            if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
+                continue
+            minio_client.remove_object(cluster.minio_bucket, obj.object_name)
 
     if storage == "aws_s3":
+        assert s3_path is not None, "cleanup will hang if s3_path is not specified"
+
         node = current().context.node
 
-        node.command(f"aws s3 rm s3://{self.context.bucket_name}/data --recursive")
-        node.command(f"aws s3 rm s3://{self.context.bucket2_name} --recursive")
         node.command(
-            f"aws s3api create-bucket --bucket {self.context.bucket2_name} --region {self.context.region}"
+            f"aws s3 rm s3://{self.context.bucket_name}/data/{s3_path} --recursive"
         )
 
 
