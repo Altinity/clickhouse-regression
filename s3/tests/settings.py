@@ -11,6 +11,7 @@ from s3.tests.common import (
     check_consistency,
     insert_random,
     replicated_table,
+    default_s3_disk_and_volume,
 )
 
 from alter.stress.tests.actions import optimize_random
@@ -152,28 +153,11 @@ def setting_combinations(self):
 def feature(self, uri):
     """Test interactions between settings."""
 
-    self.context.uri = uri
     cluster = self.context.cluster
     self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
 
-    with Given("I have two S3 disks configured"):
-        disks = {
-            "external": {
-                "type": "s3",
-                "endpoint": self.context.uri,
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-        }
-
-    with And(
-        """I have a storage policy configured to use the S3 disk and a tiered
-             storage policy using both S3 disks"""
-    ):
-        policies = {"external": {"volumes": {"external": {"disk": "external"}}}}
-
-    with Given("I have S3 disks configured"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume(uri=uri)
 
     for scenario in loads(current_module(), Scenario):
         scenario()

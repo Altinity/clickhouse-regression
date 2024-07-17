@@ -1282,7 +1282,7 @@ def default_s3_disk_and_volume(
             disks = {
                 disk_name: {
                     "type": "s3",
-                    "endpoint": f"{self.context.uri}",
+                    "endpoint": f"{uri}",
                     "access_key_id": f"{self.context.access_key_id}",
                     "secret_access_key": f"{self.context.secret_access_key}",
                 },
@@ -1299,7 +1299,7 @@ def default_s3_disk_and_volume(
             disks = {
                 disk_name: {
                     "type": "s3",
-                    "endpoint": f"{self.context.uri}",
+                    "endpoint": f"{uri}",
                     "access_key_id": f"{self.context.access_key_id}",
                     "secret_access_key": f"{self.context.secret_access_key}",
                 }
@@ -1314,6 +1314,7 @@ def default_s3_disk_and_volume(
     with And("I have a storage policy configured to use the S3 disk"):
         if check_clickhouse_version(">=22.8")(self):
             policies = {
+                "default": {"volumes": {"default": {"disk": "default"}}},
                 f"{policy_name}_nocache": {
                     "volumes": {"external": {"disk": disk_name}}
                 },
