@@ -1193,6 +1193,14 @@ def default_s3_and_local_disk(self, restart=True):
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
+            "s3_cache": {
+                "type": "cache",
+                "disk": "external",
+                "path": "external_disk_cache/",
+                "max_size": "22548578304",
+                "cache_on_write_operations": "1",
+                "do_not_evict_index_and_mark_files": "1",
+            },
         }
 
     with And("I have a storage policy configured to use the S3 disk"):
@@ -1202,7 +1210,7 @@ def default_s3_and_local_disk(self, restart=True):
                     {
                         "default_and_external": [
                             {"disk": "default"},
-                            {"disk": "external"},
+                            {"disk": "s3_cache"},
                         ]
                     }
                 ]
@@ -1225,6 +1233,14 @@ def default_s3_and_local_volume(self, restart=True):
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
             },
+            "s3_cache": {
+                "type": "cache",
+                "disk": "external",
+                "path": "external_disk_cache/",
+                "max_size": "22548578304",
+                "cache_on_write_operations": "1",
+                "do_not_evict_index_and_mark_files": "1",
+            },
         }
 
     with And("I have a storage policy configured to use the S3 disk"):
@@ -1232,7 +1248,7 @@ def default_s3_and_local_volume(self, restart=True):
             "default_and_external": {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": "external"},
+                    "external": {"disk": "s3_cache"},
                 }
             },
         }
@@ -1298,7 +1314,10 @@ def default_s3_disk_and_volume(
     with And("I have a storage policy configured to use the S3 disk"):
         if check_clickhouse_version(">=22.8")(self):
             policies = {
-                policy_name: {"volumes": {"external": {"disk": disk_name}}},
+                f"{policy_name}_nocache": {
+                    "volumes": {"external": {"disk": disk_name}}
+                },
+                policy_name: {"volumes": {"external": {"disk": "s3_cache"}}},
                 "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}},
             }
         else:
