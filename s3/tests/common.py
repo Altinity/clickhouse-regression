@@ -1068,9 +1068,7 @@ def cleanup(self, storage="minio", disk="external", s3_path=None):
                 continue
             minio_client.remove_object(cluster.minio_bucket, obj.object_name)
 
-    if storage == "aws_s3":
-        assert s3_path is not None, "cleanup will hang if s3_path is not specified"
-
+    if storage == "aws_s3" and s3_path is not None:
         node = current().context.node
 
         node.command(

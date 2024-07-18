@@ -267,14 +267,14 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another nodes"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
         config_find_and_replace(
             node=node3,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -351,8 +351,8 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -530,8 +530,8 @@ def metadata_mutations(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -650,8 +650,8 @@ def metadata_detached(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -782,8 +782,8 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -910,8 +910,8 @@ def metadata_change_configs(self, policy_name, disk="external"):
     with Given("I have a different config on clickhouse1"):
         config_find_and_replace(
             node=node,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -986,8 +986,8 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
     with Given("I have a different config on clickhouse2"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name + "/backup",
-            replace=self.context.bucket_name + "/backup2",
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -1084,82 +1084,68 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def local_and_s3_disk(self):
     """Test back up using s3 and local disk combination."""
-    uri = self.context.uri
 
     with Given("I update the config to have s3 and local disks"):
         default_s3_and_local_disk(
-            uri=f"{uri}/backup/",
+            uri=self.context.uri,
             policy_name="local_and_s3_disk",
             disk_settings={"list_object_keys_size": "1"},
         )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
-            cleanup(storage=self.context.storage, s3_path="backup")
-            cleanup(storage=self.context.storage, s3_path="backup2")
+            cleanup(storage=self.context.storage)
 
         Scenario(test=outline)(policy_name="local_and_s3_disk")
-
-    with Finally("I run the clean up"):
-        cleanup(storage=self.context.storage, s3_path="backup")
-        cleanup(storage=self.context.storage, s3_path="backup2")
 
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def local_and_s3_volumes(self):
     """Test backup with a storage policy that has both local and s3 volume."""
-    uri = self.context.uri
 
     with Given("I update the config to have s3 and local disks"):
         default_s3_and_local_volume(
-            uri=f"{uri}/backup/",
+            uri=self.context.uri,
             disk_settings={"list_object_keys_size": "1"},
         )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
-            cleanup(storage=self.context.storage, s3_path="backup")
-            cleanup(storage=self.context.storage, s3_path="backup2")
+            cleanup(storage=self.context.storage)
 
         Scenario(test=outline)(policy_name="default_and_external")
-
-    with Finally("I run the clean up"):
-        cleanup(storage=self.context.storage, s3_path="backup")
-        cleanup(storage=self.context.storage, s3_path="backup2")
 
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def s3_disk(self):
     """Test backup with s3 disk."""
-    uri = self.context.uri
 
     with Given("I update the config to have s3 and local disks"):
         default_s3_disk_and_volume(
-            uri=f"{uri}/backup/",
+            uri=self.context.uri,
             settings={"list_object_keys_size": "1"},
         )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
-            cleanup(storage=self.context.storage, s3_path="backup")
-            cleanup(storage=self.context.storage, s3_path="backup2")
+            cleanup(storage=self.context.storage)
 
         Scenario(test=outline)(policy_name="external")
-
-    with Finally("I run the clean up"):
-        cleanup(storage=self.context.storage, s3_path="backup")
-        cleanup(storage=self.context.storage, s3_path="backup2")
 
 
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_AWSS3Backup("1.0"))
 @Name("backup")
-def aws_s3(self, uri):
+def aws_s3(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with aws s3 storage."""
-    self.context.uri = uri
-    self.context.bucket_path = "data"
+
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/backup")
+
+        self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
+        self.context.bucket_path = f"{bucket_prefix}/{temp_s3_path}/backup_bucket"
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
@@ -1168,11 +1154,11 @@ def aws_s3(self, uri):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_GCSBackup("1.0"))
 @Name("backup")
-def gcs(self, uri):
+def gcs(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with gcs storage."""
 
-    self.context.uri = uri
-    self.context.bucket_name = "data"
+    self.context.uri = f"{uri}backup_bucket/"
+    self.context.bucket_name = f"{bucket_prefix}/backup_bucket"
     self.context.bucket_path = None
 
     for scenario in loads(current_module(), Scenario):
@@ -1182,10 +1168,14 @@ def gcs(self, uri):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_MinIOBackup("1.0"))
 @Name("backup")
-def minio(self, uri):
+def minio(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with minio storage."""
-    self.context.uri = uri
-    self.context.bucket_path = "data"
+
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/backup")
+
+        self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
+        self.context.bucket_path = f"{bucket_prefix}/{temp_s3_path}/backup_bucket"
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
