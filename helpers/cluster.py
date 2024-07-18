@@ -1335,7 +1335,7 @@ class Cluster(object):
                         )
                     )
                 except:
-                    self.clickhouse_specific_odbc_binary = "unavailable"
+                    self.clickhouse_specific_odbc_binary = None
 
                 self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
                     self.specific_clickhouse_binary_path
@@ -1381,7 +1381,7 @@ class Cluster(object):
                         )
                     )
                 except:
-                    self.clickhouse_odbc_bridge_binary_path = "unavailable"
+                    pass
 
             if self.clickhouse_binary_path.endswith(".deb"):
                 deb_path = self.clickhouse_binary_path
@@ -1396,7 +1396,7 @@ class Cluster(object):
                             program_name="clickhouse-odbc-bridge",
                         )
                     except:
-                        self.clickhouse_odbc_bridge_binary_path = "unavailable"
+                        pass
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
