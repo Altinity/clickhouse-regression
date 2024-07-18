@@ -1326,11 +1326,16 @@ class Cluster(object):
                     docker_image=docker_image,
                     container_binary_path="/usr/bin/clickhouse",
                 )
-                self.clickhouse_specific_odbc_binary = get_binary_from_docker_container(
-                    docker_image=docker_image,
-                    container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                    host_binary_path_suffix="_odbc_bridge",
-                )
+                try:
+                    self.clickhouse_specific_odbc_binary = (
+                        get_binary_from_docker_container(
+                            docker_image=docker_image,
+                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                            host_binary_path_suffix="_odbc_bridge",
+                        )
+                    )
+                except:
+                    self.clickhouse_specific_odbc_binary = "unavailable"
 
                 self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
                     self.specific_clickhouse_binary_path
@@ -1367,13 +1372,16 @@ class Cluster(object):
                     docker_image=docker_path,
                     container_binary_path="/usr/bin/clickhouse",
                 )
-                self.clickhouse_odbc_bridge_binary_path = (
-                    get_binary_from_docker_container(
-                        docker_image=docker_path,
-                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                        host_binary_path_suffix="_odbc_bridge",
+                try:
+                    self.clickhouse_odbc_bridge_binary_path = (
+                        get_binary_from_docker_container(
+                            docker_image=docker_path,
+                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                            host_binary_path_suffix="_odbc_bridge",
+                        )
                     )
-                )
+                except:
+                    self.clickhouse_odbc_bridge_binary_path = "unavailable"
 
             if self.clickhouse_binary_path.endswith(".deb"):
                 deb_path = self.clickhouse_binary_path
@@ -1382,10 +1390,13 @@ class Cluster(object):
                         deb_binary_path=deb_path,
                         program_name="clickhouse",
                     )
-                    self.clickhouse_odbc_bridge_binary_path = unpack_deb(
-                        deb_binary_path=deb_path,
-                        program_name="clickhouse-odbc-bridge",
-                    )
+                    try:
+                        self.clickhouse_odbc_bridge_binary_path = unpack_deb(
+                            deb_binary_path=deb_path,
+                            program_name="clickhouse-odbc-bridge",
+                        )
+                    except:
+                        self.clickhouse_odbc_bridge_binary_path = "unavailable"
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
