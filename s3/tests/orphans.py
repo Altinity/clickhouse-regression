@@ -11,6 +11,57 @@ from helpers.common import getuid
 from s3.tests.common import *
 
 
+list_remote_files_query = """SELECT s3_subpath, s3_size, (ch_remote_path = '') as is_orphan, ch_remote_path, ch_size FROM
+(
+  SELECT _size as s3_size, regexpExtract(_path, '([a-zA-Z0-9\\-])/(.*)$', 2) AS s3_subpath
+  FROM s3('{uri}**', '{access_key_id}', '{secret_access_key}', 'One')
+) AS s3
+LEFT OUTER JOIN
+(
+  SELECT remote_path as ch_remote_path, size as ch_size
+  FROM clusterAllReplicas('{cluster_name}', system.remote_data_paths)
+  WHERE disk_name = '{disk_name}'
+) ch
+ON s3_subpath = ch_remote_path
+ORDER BY s3_subpath INTO OUTFILE '{outfile}' TRUNCATE FORMAT TSV
+"""
+
+count_orphans_query = """WITH refs AS (
+ SELECT s3_subpath, s3_size, (ch_remote_path = '') as is_orphan, ch_remote_path, ch_size FROM
+ (
+   SELECT _size as s3_size, regexpExtract(_path, '([a-zA-Z0-9\\-])/(.*)$', 2) AS s3_subpath
+   FROM s3('{uri}**', '{access_key_id}', '{secret_access_key}', 'One')
+ ) AS s3
+ LEFT OUTER JOIN
+ (
+   SELECT remote_path as ch_remote_path, size as ch_size
+   FROM clusterAllReplicas('{cluster_name}', system.remote_data_paths)
+   WHERE disk_name = '{disk_name}'
+ ) ch
+ ON s3_subpath = ch_remote_path
+)
+SELECT is_orphan, count(), sum(s3_size) FROM refs
+GROUP BY is_orphan FORMAT TSV
+"""
+
+generate_orphan_rm_commands = """WITH comp AS (
+  SELECT s3_subpath, s3_size, (ch_remote_path = '') as is_orphan, ch_remote_path, ch_size FROM
+  (
+    SELECT _size as s3_size, regexpExtract(_path, '([a-zA-Z0-9\\-])/(.*)$', 2) AS s3_subpath
+    FROM s3('{uri}**', '{access_key_id}', '{secret_access_key}', 'One')
+  ) AS s3
+  LEFT OUTER JOIN
+  (
+    SELECT remote_path as ch_remote_path, size as ch_size
+    FROM clusterAllReplicas('{cluster_name}', system.remote_data_paths) where disk_name = '{disk_name}'
+  ) ch
+  ON s3_subpath = ch_remote_path
+),
+'s3://{bucket}/' AS s3_endpoint
+SELECT '{aws} s3 rm '|| s3_endpoint || s3_subpath AS cmd FROM comp
+WHERE is_orphan INTO OUTFILE '{outfile}' TRUNCATE FORMAT TSV"""
+
+
 @TestScenario
 def create_insert_and_drop(self):
     """Repeatedly create a table, insert data, and drop the table"""
@@ -53,6 +104,12 @@ def create_insert_and_drop(self):
                 for node in self.context.ch_nodes:
                     delete_replica(node=node, table_name=table_name)
 
+            with Then("I check for orphans"):
+                orphans = check_orphans()
+
+            if orphans == True:
+                Scenario(run=remove_orphans)
+
 
 @TestScenario
 def detach_and_drop(self):
@@ -90,6 +147,12 @@ def detach_and_drop(self):
                 for node in self.context.ch_nodes:
                     delete_replica(node=node, table_name=table_name)
 
+            with Then("I check for orphans"):
+                orphans = check_orphans()
+
+            if orphans == True:
+                Scenario(run=remove_orphans)
+
 
 @TestScenario
 def freeze_and_drop(self):
@@ -101,40 +164,44 @@ def freeze_and_drop(self):
     with Given("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after()
 
-    for iteration in repeats(3, until="fail"):
-        with iteration:
-            with Given("a table"):
-                table_name = f"table_{getuid()}"
-                table_names.append(table_name)
-                replicated_table_cluster(
-                    table_name=table_name,
-                    columns="a UInt64, b UInt64",
-                    partition_by="a % 10",
-                )
+    with Given("a table"):
+        table_name = f"table_{getuid()}"
+        table_names.append(table_name)
+        replicated_table_cluster(
+            table_name=table_name,
+            columns="a UInt64, b UInt64",
+            partition_by="a % 10",
+        )
 
-            with When("I insert data into the table"):
-                for node in self.context.ch_nodes:
-                    insert_random(
-                        node=node,
-                        table_name=table_name,
-                        columns="a UInt64, b UInt64",
-                        rows=100000,
-                    )
+    with When("I insert data into the table"):
+        for node in self.context.ch_nodes:
+            insert_random(
+                node=node,
+                table_name=table_name,
+                columns="a UInt64, b UInt64",
+                rows=100000,
+            )
 
-            with When("I freeze a part"):
-                backup_name = f"backup_{getuid()}"
-                backup_names.append(backup_name)
-                for i, node in enumerate(self.context.ch_nodes):
-                    alter_table_freeze_partition_with_name(
-                        node=node,
-                        table_name=table_name,
-                        partition_name=f"{i * 2}",
-                        backup_name=backup_name,
-                    )
+    with When("I freeze a part"):
+        backup_name = f"backup_{getuid()}"
+        backup_names.append(backup_name)
+        for i, node in enumerate(self.context.ch_nodes):
+            alter_table_freeze_partition_with_name(
+                node=node,
+                table_name=table_name,
+                partition_name=f"{i * 2}",
+                backup_name=backup_name,
+            )
 
-            with When("I drop the table"):
-                for node in self.context.ch_nodes:
-                    delete_replica(node=node, table_name=table_name)
+    with When("I drop the table"):
+        for node in self.context.ch_nodes:
+            delete_replica(node=node, table_name=table_name)
+
+    with Then("I check for orphans"):
+        orphans = check_orphans()
+
+    if orphans == True:
+        Scenario(run=remove_orphans)
 
     with When("I unfreeze all"):
         for backup_name in backup_names:
@@ -212,6 +279,77 @@ def freeze_drop_and_attach(self):
     with When("I unfreeze the part"):
         node = self.context.ch_nodes[0]
         node.query(f"SYSTEM UNFREEZE WITH NAME '{backup_name}'")
+
+    with Then("I check for orphans"):
+        orphans = check_orphans()
+
+    if orphans == True:
+        Scenario(run=remove_orphans)
+
+
+@TestStep(When)
+def check_orphans(self):
+    node = self.context.ch_nodes[0]
+
+    format_args = {
+        "uri": self.context.uri,
+        "cluster_name": "replicated_cluster",
+        "disk_name": "external",
+        "access_key_id": self.context.access_key_id,
+        "secret_access_key": self.context.secret_access_key,
+    }
+
+    with When("I count orphans"):
+        r = node.query(count_orphans_query.format(**format_args))
+
+    with Then("I check if there are orphans"):
+        for line in r.output.splitlines():
+            is_orphan, count, size = line.split()
+            if is_orphan == "1" and size != "0":
+                return True
+
+    return False
+
+
+@TestCheck
+def remove_orphans(self):
+
+    node = self.context.ch_nodes[0]
+
+    format_args = {
+        "uri": self.context.uri,
+        "cluster_name": "replicated_cluster",
+        "disk_name": "external",
+        "access_key_id": self.context.access_key_id,
+        "secret_access_key": self.context.secret_access_key,
+    }
+
+    with When("I list remote files"):
+        node.query(
+            list_remote_files_query.format(
+                **format_args, outfile="/tmp/remote_files.tsv"
+            )
+        )
+
+    with When("I generate rm commands"):
+        bucket = self.context.bucket_name
+        aws = "aws"
+        if self.context.storage == "minio":
+            aws = f"aws --endpoint-url http://minio1:9001"
+
+        node.query(
+            generate_orphan_rm_commands.format(
+                **format_args, outfile="/tmp/rm_commands.tsv", aws=aws, bucket=bucket
+            )
+        )
+
+    with Then("I execute the rm commands"):
+        node.command(
+            f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} bash -x /tmp/rm_commands.tsv"
+        )
+
+    with Then("I check for orphans"):
+        assert not check_orphans()
 
 
 @TestFeature
