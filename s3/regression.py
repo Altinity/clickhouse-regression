@@ -307,7 +307,9 @@ def minio_regression(
         Feature(test=load("s3.tests.table_function", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
-        Feature(test=load("s3.tests.backup", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.backup", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.table_function_invalid", "minio"))(
             uri=uri_bucket_file
         )
@@ -407,7 +409,9 @@ def aws_s3_regression(
             uri=uri, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
         Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
@@ -466,7 +470,9 @@ def gcs_regression(
         Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
             uri=uri, bucket_prefix=bucket_prefix
         )
-        Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
         Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
