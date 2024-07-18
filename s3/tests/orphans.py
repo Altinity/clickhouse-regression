@@ -6,7 +6,7 @@ from testflows.asserts import error
 from testflows.combinatorics import product
 
 from helpers.alter import *
-from helpers.queries import get_active_partition_ids
+from helpers.queries import get_active_partition_ids, optimize
 from helpers.common import getuid
 from s3.tests.common import *
 
@@ -35,6 +35,19 @@ def create_insert_and_drop(self):
                         columns="a UInt64, b UInt64",
                         rows=100000,
                     )
+
+            with And("I insert more data into the table"):
+                for node in self.context.ch_nodes:
+                    insert_random(
+                        node=node,
+                        table_name=table_name,
+                        columns="a UInt64, b UInt64",
+                        rows=100000,
+                    )
+
+            with And("I optimize the table"):
+                for node in self.context.ch_nodes:
+                    optimize(node=node, table_name=table_name, final=True)
 
             with When("I drop the table"):
                 for node in self.context.ch_nodes:
