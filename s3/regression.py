@@ -29,25 +29,25 @@ def argparser(parser):
 
     parser.add_argument(
         "--minio-uri",
-        type=str,
         action="store",
         help="set url for the minio connection",
+        type=Secret(name="minio_uri"),
         default="http://minio1:9001",
     )
 
     parser.add_argument(
         "--minio-root-user",
-        type=str,
         action="store",
         help="minio root user name (access key id)",
-        default="minio",
+        type=Secret(name="minio_root_user"),
+        default="minio_user",
     )
 
     parser.add_argument(
         "--minio-root-password",
-        type=str,
         action="store",
         help="minio root user password (secret access key)",
+        type=Secret(name="minio_root_password"),
         default="minio123",
     )
 
@@ -276,6 +276,10 @@ def minio_regression(
 ):
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+
+    root_user = root_user.value
+    root_password = root_password.value
+    uri = uri.value
 
     self.context.storage = "minio"
     self.context.access_key_id = root_user
