@@ -29,25 +29,25 @@ def argparser(parser):
 
     parser.add_argument(
         "--minio-uri",
-        type=str,
         action="store",
         help="set url for the minio connection",
+        type=Secret(name="minio_uri"),
         default="http://minio1:9001",
     )
 
     parser.add_argument(
         "--minio-root-user",
-        type=str,
         action="store",
         help="minio root user name (access key id)",
-        default="minio",
+        type=Secret(name="minio_root_user"),
+        default="minio_user",
     )
 
     parser.add_argument(
         "--minio-root-password",
-        type=str,
         action="store",
         help="minio root user password (secret access key)",
+        type=Secret(name="minio_root_password"),
         default="minio123",
     )
 
@@ -137,10 +137,14 @@ xfails = {
     ],
     "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
+    "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
     "gcs/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
-    ":/backup/:/metadata non restorable schema": [(Fail, "Under investigation")],
+    ":/backup/:/metadata non restorable schema": [
+        (Fail, "send_metadata is deprecated")
+    ],
+    ":/backup/:/metadata:": ((Fail, "SYSTEM RESTART DISK is not implemented"),),
     ":/zero copy replication/the bucket should be cleaned up": [
         (Fail, "Data cleanup needs investigation")
     ],
@@ -219,14 +223,6 @@ ffails = {
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    "aws s3/backup": (
-        Skip,
-        "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
-    ),
-    "gcs/backup": (
-        Skip,
-        "timeout, https://github.com/ClickHouse/ClickHouse/issues/30510",
-    ),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
@@ -239,11 +235,6 @@ ffails = {
     "aws s3/zero copy replication/stale alter replica": (
         XFail,
         "This test causes boto errors in subsequent tests.",
-    ),
-    ":/backup/:/metadata:": (
-        XFail,
-        "Under development for 22.8 and newer.",
-        check_clickhouse_version(">=22.8"),
     ),
     ":/disk/cache*": (
         XFail,
@@ -286,10 +277,13 @@ def minio_regression(
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
+    root_user = root_user.value
+    root_password = root_password.value
+    uri = uri.value
+
     self.context.storage = "minio"
     self.context.access_key_id = root_user
     self.context.secret_access_key = root_password
-    self.context.bucket_name = "root"
     bucket_prefix = "data"
 
     with Cluster(
@@ -305,6 +299,7 @@ def minio_regression(
             uri_bucket_file = (
                 uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
             )
+            self.context.bucket_name = self.context.cluster.minio_bucket
 
         with And("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
@@ -316,7 +311,9 @@ def minio_regression(
         Feature(test=load("s3.tests.table_function", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
-        Feature(test=load("s3.tests.backup", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.backup", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.table_function_invalid", "minio"))(
             uri=uri_bucket_file
         )
@@ -416,7 +413,9 @@ def aws_s3_regression(
             uri=uri, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.backup", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
         Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
@@ -449,7 +448,6 @@ def gcs_regression(
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
     self.context.bucket_name = None
-    self.context.bucket_path = None
 
     with Cluster(
         **cluster_args,
@@ -476,7 +474,9 @@ def gcs_regression(
         Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
             uri=uri, bucket_prefix=bucket_prefix
         )
-        Feature(test=load("s3.tests.backup", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
         Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 

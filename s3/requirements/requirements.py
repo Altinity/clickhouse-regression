@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240621.1152109.
+# document by TestFlows v2.0.240703.1144231.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -339,6 +339,10 @@ RQ_SRS_015_S3_Metadata = Requirement(
         "if and only if they have `<send_metadata>` set to `true` in the disk config.\n"
         "The disk metadata is stored in `/var/lib/clickhouse/disks/{disk name}/`.\n"
         "The metadata is stored in the s3 bucket.\n"
+        "\n"
+        "`<send_metadata>` was deprecated in ClickHouse 21 and will be removed in the future.\n"
+        "See <https://github.com/ClickHouse/ClickHouse/issues/30510>\n"
+        "\n"
         "\n"
     ),
     link=None,
@@ -3342,6 +3346,10 @@ version: 1.0
 if and only if they have `<send_metadata>` set to `true` in the disk config.
 The disk metadata is stored in `/var/lib/clickhouse/disks/{disk name}/`.
 The metadata is stored in the s3 bucket.
+
+`<send_metadata>` was deprecated in ClickHouse 21 and will be removed in the future.
+See <https://github.com/ClickHouse/ClickHouse/issues/30510>
+
 
 ##### RQ.SRS-015.S3.Metadata.Revisions
 version: 1.0

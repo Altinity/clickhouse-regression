@@ -8,7 +8,7 @@ on:
 
 jobs:
   get_clickhouse_version:
-    runs-on: [ self-hosted, type-cpx41, image-x86-app-docker-ce ]
+    runs-on: [ self-hosted, x86, type-cpx41, image-x86-app-docker-ce ]
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -22,10 +22,10 @@ jobs:
           echo "version=$VERSION_LATEST" >> "$GITHUB_OUTPUT"
           echo $VERSION_LATEST
 
-  clickhouse-latest-x86-with-analyzer:
+  clickhouse-latest-x86-with-analyzer-zookeeper:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
-    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
@@ -43,10 +43,10 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-  clickhouse-latest-arm-with-analyzer:
+  clickhouse-latest-arm-with-analyzer-zookeeper:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-arm.yml
-    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
@@ -64,10 +64,10 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-  clickhouse-latest-x86:
+  clickhouse-latest-x86-zookeeper:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
-    name: "x86-${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+    name: "x86-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
@@ -84,10 +84,10 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-  clickhouse-latest-arm:
+  clickhouse-latest-arm-zookeeper:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-arm.yml
-    name: "arm-${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+    name: "arm-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"

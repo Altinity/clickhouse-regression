@@ -21,6 +21,8 @@ from testflows.uexpect import ExpectTimeoutError
 from testflows._core.testtype import TestSubType
 from helpers.common import check_clickhouse_version, current_cpu
 
+MINIMUM_COMPOSE_VERSION = "2.23.1"
+
 MESSAGES_TO_RETRY = [
     "DB::Exception: ZooKeeper session has been expired",
     "DB::Exception: Connection loss",
@@ -109,6 +111,55 @@ def unpack_tar_gz(tar_path):
         assert cmd.exitcode == 0, error()
 
     return f"{tar_dest_dir}"
+
+
+def get_binary_from_docker_container(
+    docker_image,
+    container_binary_path="/usr/bin/clickhouse",
+    host_binary_path=None,
+    host_binary_path_suffix=None,
+):
+    """
+    Get clickhouse-keeper binary from some Docker container.
+
+    Args:
+        docker_image: docker image name
+        container_binary_path: path to the binary in the container
+        host_binary_path: path to store the binary on the host
+        host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
+    """
+    assert docker_image.startswith("docker://"), error("not a docker image path")
+    docker_image = docker_image.split("docker://", 1)[-1]
+    docker_container_name = str(uuid.uuid1())
+
+    if host_binary_path is None:
+        host_binary_path = os.path.join(
+            tempfile.gettempdir(),
+            f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
+        )
+        if host_binary_path_suffix:
+            host_binary_path += host_binary_path_suffix
+
+    with Given(
+        "I get ClickHouse Keeper binary from docker container",
+        description=f"{docker_image}",
+    ):
+        with Shell() as bash:
+            bash.timeout = 300
+            bash(
+                f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
+            )
+            bash(
+                f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
+            )
+            bash(f'docker stop "{docker_container_name}"')
+
+    with And("debug"):
+        with Shell() as bash:
+            bash.timeout = 300
+            bash(f"ls -la {host_binary_path}")
+
+    return host_binary_path
 
 
 class Shell(ShellBase):
@@ -1189,6 +1240,7 @@ class Cluster(object):
         frame=None,
         use_specific_version=False,
         rm_instances_files=True,
+        reuse_env=False,
     ):
         self._bash = {}
         self._control_shell = None
@@ -1207,9 +1259,19 @@ class Cluster(object):
         self.collect_service_logs = collect_service_logs
         self.use_zookeeper_nodes = use_zookeeper_nodes
         self.use_specific_version = use_specific_version
+        self.reuse_env = reuse_env
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
+
+        # Check docker compose version >= MINIMUM_COMPOSE_VERSION
+        with Shell() as bash:
+            cmd = bash(f"{self.docker_compose} --version")
+            version = cmd.output.split()[-1].strip("v").split(".")
+            if version < MINIMUM_COMPOSE_VERSION.split("."):
+                raise RuntimeError(
+                    f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}"
+                )
 
         # auto set configs directory
         if self.configs_dir is None:
@@ -1260,19 +1322,20 @@ class Cluster(object):
                 assert docker_image.startswith("docker://"), error(
                     "use_specific_version must be a docker image path"
                 )
-                self.specific_clickhouse_binary_path = (
-                    self.get_binary_from_docker_container(
-                        docker_image=docker_image,
-                        container_binary_path="/usr/bin/clickhouse",
-                    )
+                self.specific_clickhouse_binary_path = get_binary_from_docker_container(
+                    docker_image=docker_image,
+                    container_binary_path="/usr/bin/clickhouse",
                 )
-                self.clickhouse_specific_odbc_binary = (
-                    self.get_binary_from_docker_container(
-                        docker_image=docker_image,
-                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                        host_binary_path_suffix="_odbc_bridge",
+                try:
+                    self.clickhouse_specific_odbc_binary = (
+                        get_binary_from_docker_container(
+                            docker_image=docker_image,
+                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                            host_binary_path_suffix="_odbc_bridge",
+                        )
                     )
-                )
+                except:
+                    self.clickhouse_specific_odbc_binary = None
 
                 self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
                     self.specific_clickhouse_binary_path
@@ -1305,17 +1368,20 @@ class Cluster(object):
 
                 docker_path = self.clickhouse_binary_path
 
-                self.clickhouse_binary_path = self.get_binary_from_docker_container(
+                self.clickhouse_binary_path = get_binary_from_docker_container(
                     docker_image=docker_path,
                     container_binary_path="/usr/bin/clickhouse",
                 )
-                self.clickhouse_odbc_bridge_binary_path = (
-                    self.get_binary_from_docker_container(
-                        docker_image=docker_path,
-                        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                        host_binary_path_suffix="_odbc_bridge",
+                try:
+                    self.clickhouse_odbc_bridge_binary_path = (
+                        get_binary_from_docker_container(
+                            docker_image=docker_path,
+                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                            host_binary_path_suffix="_odbc_bridge",
+                        )
                     )
-                )
+                except:
+                    pass
 
             if self.clickhouse_binary_path.endswith(".deb"):
                 deb_path = self.clickhouse_binary_path
@@ -1324,10 +1390,13 @@ class Cluster(object):
                         deb_binary_path=deb_path,
                         program_name="clickhouse",
                     )
-                    self.clickhouse_odbc_bridge_binary_path = unpack_deb(
-                        deb_binary_path=deb_path,
-                        program_name="clickhouse-odbc-bridge",
-                    )
+                    try:
+                        self.clickhouse_odbc_bridge_binary_path = unpack_deb(
+                            deb_binary_path=deb_path,
+                            program_name="clickhouse-odbc-bridge",
+                        )
+                    except:
+                        pass
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
@@ -1357,7 +1426,7 @@ class Cluster(object):
                         ):
                             current().context.keeper_version = parsed_version
 
-                self.keeper_binary_path = self.get_binary_from_docker_container(
+                self.keeper_binary_path = get_binary_from_docker_container(
                     docker_image=self.keeper_binary_path,
                     container_binary_path="/usr/bin/clickhouse-keeper",
                 )
@@ -1379,55 +1448,6 @@ class Cluster(object):
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
-
-    def get_binary_from_docker_container(
-        self,
-        docker_image,
-        container_binary_path="/usr/bin/clickhouse",
-        host_binary_path=None,
-        host_binary_path_suffix=None,
-    ):
-        """
-        Get clickhouse-keeper binary from some Docker container.
-
-        Args:
-            docker_image: docker image name
-            container_binary_path: path to the binary in the container
-            host_binary_path: path to store the binary on the host
-            host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
-        """
-        assert docker_image.startswith("docker://"), error("not a docker image path")
-        docker_image = docker_image.split("docker://", 1)[-1]
-        docker_container_name = str(uuid.uuid1())
-
-        if host_binary_path is None:
-            host_binary_path = os.path.join(
-                tempfile.gettempdir(),
-                f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
-            )
-            if host_binary_path_suffix:
-                host_binary_path += host_binary_path_suffix
-
-        with Given(
-            "I get ClickHouse Keeper binary from docker container",
-            description=f"{docker_image}",
-        ):
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(
-                    f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
-                )
-                bash(
-                    f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
-                )
-                bash(f'docker stop "{docker_container_name}"')
-
-        with And("debug"):
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"ls -la {host_binary_path}")
-
-        return host_binary_path
 
     @property
     def control_shell(self, timeout=300):
@@ -1652,6 +1672,9 @@ class Cluster(object):
     def down(self, timeout=300):
         """Bring cluster down by executing docker-compose down."""
 
+        if self.reuse_env:
+            return
+
         # add message to each clickhouse-server.log
         if settings.debug and self.running:
             for node in self.nodes["clickhouse"]:
@@ -1827,8 +1850,22 @@ class Cluster(object):
                                     None,
                                     f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
-                                    exitcode=0,
+                                    no_checks=True,
                                 )
+                                if "port is already allocated" in cmd.output:
+                                    port = re.search(
+                                        r"Bind for .+:([0-9]+) failed", cmd.output
+                                    ).group(1)
+
+                                    ps = self.command(
+                                        None, f"docker ps | grep {port}", no_checks=True
+                                    )
+                                    conflict_env = ps.output.split()[-1]
+                                    raise RuntimeError(
+                                        f"Failed to allocate port {port}, already in use by {conflict_env}."
+                                    )
+
+                                assert cmd.exitcode == 0, error(cmd.output)
                                 assert "ERROR:" not in cmd.output, error(cmd.output)
                                 if "is unhealthy" not in cmd.output:
                                     break
@@ -1973,6 +2010,7 @@ def create_cluster(
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
+    reuse_env=False,
 ):
     """Create docker compose cluster."""
     with Cluster(
@@ -1992,5 +2030,6 @@ def create_cluster(
         thread_fuzzer=thread_fuzzer,
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,
+        reuse_env=reuse_env,
     ) as cluster:
         yield cluster
