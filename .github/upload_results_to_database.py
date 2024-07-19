@@ -11,6 +11,7 @@ from pprint import pprint
 import requests
 from clickhouse_driver import Client
 
+from testflows.core import Secret
 from testflows._core.transform.log.pipeline import ResultsLogPipeline
 from testflows._core.compress import CompressedFile
 from testflows._core.cli.arg.handlers.report.results import Handler
@@ -21,23 +22,27 @@ Format: {"source": {"db_column": "source_key"}}
 
 Additional keys that are created while reading the log:
 pr_info: pull_request_number, commit_url, base_ref, head_ref, base_repo, head_repo, pull_request_url
-test_attributes: testflows_version, start_time
+test_attributes: testflows_version, start_time, start_datetime, test_raw_attributes, flags
 test_results: message_rtime_ms
 """
 
 table_schema_attr_map = {
-    "pr_info": {"pr_number": "pull_request_number"},
+    "pr_info": {},  # {"pr_number": "pull_request_number"},
     "test_attributes": {
-        "version": "version",
-        "package": "package",
+        "clickhouse_version": "version",
+        "clickhouse_package": "package",
         "architecture": "arch",
+        "keeper_package": "keeper_binary_path",
+        "zookeeper_version": "zookeeper_version",
+        "attributes": "test_raw_attributes",
+        "flags": "flags",
         "commit_hash": "commit.hash",
         "job_url": "job.url",
         "report_url": "report.url",
-        "start_time": "start_time",
+        "start_time": "start_datetime",
     },
     "test_results": {
-        "test_duration_ms": "message_rtime_ms",  # This value is generated in read_json_report/read_log_line
+        "test_duration_ms": "message_rtime_ms",
         "result_type": "result_type",
         "test_name": "test_name",
         "result_reason": "result_reason",
@@ -50,12 +55,21 @@ DATABASE_HOST_VAR = "CHECKS_DATABASE_HOST"
 DATABASE_USER_VAR = "CHECKS_DATABASE_USER"
 DATABASE_PASSWORD_VAR = "CHECKS_DATABASE_PASSWORD"
 
+bools = {
+    "True": True,
+    "False": False,
+    "true": True,
+    "false": False,
+    True: True,
+    False: False,
+}
+
 
 class ResultUploader:
 
     def __init__(self, log_path=None, debug=False) -> None:
         self.log_path = log_path
-        self.test_attributes = {}
+        self.test_attributes = {"test_raw_attributes": {}, "flags": {}}
         self.test_results = []
         self.run_start_time = None
         self.last_message_time = 0
@@ -64,6 +78,9 @@ class ResultUploader:
         self.debug = debug
 
     def get_pr_info(self, project: str, sha: str) -> dict:
+        if table_schema_attr_map["pr_info"] == {}:
+            return {}
+
         pr_info = {
             "commit_url": f"https://github.com/{project}/commits/{sha}",
             "pull_request_number": None,
@@ -107,18 +124,39 @@ class ResultUploader:
 
         return pr_info
 
+    def record_attribute_from_message(self, message: dict):
+        """
+        Record an attribute from a test log message.
+        """
+        assert message["message_keyword"] == "ATTRIBUTE"
+
+        value = message["attribute_value"]
+        if value is None:
+            return
+        if isinstance(value, str) and value.startswith("Secret"):
+            return
+
+        self.test_attributes[message["attribute_name"]] = value
+        self.test_attributes["test_raw_attributes"][message["attribute_name"]] = value
+
+        if value in bools.keys():
+            self.test_attributes["flags"][message["attribute_name"]] = bools[value]
+
     def read_json_report(self, report: dict = None):
         """
         Import the test results from tfs report results.
         """
 
         self.run_start_time = report["metadata"]["date"]
-        self.test_attributes["start_time"] = datetime.fromtimestamp(self.run_start_time)
+        self.test_attributes["start_time"] = int(self.run_start_time)
+        self.test_attributes["start_datetime"] = datetime.fromtimestamp(
+            self.run_start_time
+        )
         self.duration_ms = report["metadata"]["duration"] * 1000
         self.test_attributes["testflows_version"] = report["metadata"]["version"]
 
         for message in report["attributes"]:
-            self.test_attributes[message["attribute_name"]] = message["attribute_value"]
+            self.record_attribute_from_message(message)
 
         for message in report["tests"]:
             result = message["result"]
@@ -143,14 +181,15 @@ class ResultUploader:
                 self.test_results.append(data)
 
         elif message_keyword == "ATTRIBUTE":
-            self.test_attributes[data["attribute_name"]] = data["attribute_value"]
+            self.record_attribute_from_message(data)
 
         elif message_keyword == "PROTOCOL":
             print(data["protocol_version"])
             self.test_attributes["testflows_protocol"] = data["protocol_version"]
             assert data["protocol_version"] == "TFSPv2.1", "Unexpected protocol version"
             self.run_start_time = data["message_time"]
-            self.test_attributes["start_time"] = datetime.fromtimestamp(
+            self.test_attributes["start_time"] = int(self.run_start_time)
+            self.test_attributes["start_datetime"] = datetime.fromtimestamp(
                 self.run_start_time
             )
             self.suite = data["test_name"].split("/")[1]
