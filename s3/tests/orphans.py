@@ -197,21 +197,16 @@ def freeze_and_drop(self):
         for node in self.context.ch_nodes:
             delete_replica(node=node, table_name=table_name)
 
+    with When("I system unfreeze the backup"):
+        for backup_name in backup_names:
+            for node in self.context.ch_nodes:
+                node.query(f"SYSTEM UNFREEZE WITH NAME '{backup_name}'")
+
     with Then("I check for orphans"):
         orphans = check_orphans()
 
     if orphans == True:
         Scenario(run=remove_orphans)
-
-    with When("I unfreeze all"):
-        for backup_name in backup_names:
-            for node in self.context.ch_nodes:
-                node.query(f"SYSTEM UNFREEZE WITH NAME '{backup_name}'")
-
-    with When("I drop all the restored tables"):
-        for table_name in table_names:
-            for node in self.context.ch_nodes:
-                delete_replica(node=node, table_name=table_name)
 
 
 @TestScenario
@@ -228,10 +223,12 @@ def freeze_drop_and_attach(self):
         replicated_table_cluster(
             table_name=table1_name,
             columns="a UInt64",
+            partition_by="a % 2",
         )
         replicated_table_cluster(
             table_name=table2_name,
             columns="a UInt64",
+            partition_by="a % 2",
         )
 
     with When("I insert data into the first table"):
@@ -254,20 +251,7 @@ def freeze_drop_and_attach(self):
         for node in self.context.ch_nodes:
             delete_replica(node=node, table_name=table1_name)
 
-    with When("I attach the part to the second table"):
-        node = self.context.ch_nodes[0]
-        alter_table_attach_partition_from(
-            node=node,
-            table_name=table2_name,
-            partition_name=partition_id,
-            path_to_backup=backup_name,
-        )
-
-    with Then("I check the data"):
-        node = self.context.ch_nodes[0]
-        standard_selects(node=node, table_name=table2_name)
-
-    with When("I unfreeze the part"):
+    with When("I unfreeze the part and attach it to the second table"):
         node = self.context.ch_nodes[0]
         alter_table_unfreeze_partition_with_name(
             node=node,
@@ -276,7 +260,13 @@ def freeze_drop_and_attach(self):
             backup_name=backup_name,
         )
 
-    with When("I unfreeze the part"):
+    with Then(
+        "I check the data", description="there should be no data from the dropped table"
+    ):
+        node = self.context.ch_nodes[0]
+        assert_row_count(node=node, table_name=table2_name, rows=0)
+
+    with When("I system unfreeze the backup"):
         node = self.context.ch_nodes[0]
         node.query(f"SYSTEM UNFREEZE WITH NAME '{backup_name}'")
 
