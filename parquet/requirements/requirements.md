@@ -310,6 +310,8 @@
         * 16.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Page](#rqsrs-032clickhouseparquetindexespage)
     * 16.3 [Bloom Filter](#bloom-filter)
         * 16.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
+        * 16.3.2 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
+            * 16.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
     * 16.4 [Dictionary](#dictionary)
         * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 17 [Metadata](#metadata)
@@ -2415,12 +2417,24 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter
 version: 1.0
 
-[ClickHouse] SHALL support utilizing 'Bloom Filter' of a parquet file in order to read data from the file more efficiently.
+[ClickHouse] SHALL support utilizing 'Bloom Filter' of a parquet file in order to read data from the file more efficiently. In order to use Bloom filters, the `input_format_parquet_bloom_filter_push_down` setting SHALL be set to `true`.
+
+For example,
+```sql
+SELECT * FROM file('test.Parquet, Parquet) WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC' SETTINGS input_format_parquet_bloom_filter_push_down=true
+```
 
 > A Bloom filter is a compact data structure that overapproximates a set. It can respond to membership 
 > queries with either “definitely no” or “probably yes”, where the probability of false positives is configured when the filter is initialized. Bloom filters do not have false negatives.
 > 
 > Because Bloom filters are small compared to dictionaries, they can be used for predicate pushdown even in columns with high cardinality and when space is at a premium.
+
+#### Columns With Complex Datatypes That Have Bloom Filter Applied on Them
+
+##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex
+version: 1.0
+
+[ClickHouse] SHALL support reading data from a Parquet file that has row-groups with the Bloom Filter and complex datatype columns. This allows to decrease the query runtime for queries that include reading from a parquet file with `Array`, `Map` and `Tuple` datatypes.
 
 ### Dictionary
 

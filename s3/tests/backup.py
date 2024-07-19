@@ -199,7 +199,7 @@ def metadata_full_restore(self, policy_name, disk="external"):
         drop_s3_metadata(disk=disk)
 
     with Then("I create a restore file"):
-        create_restore_file(disk=disk)
+        create_restore_file(path="data/backup", disk=disk)
 
     with And("I restart the disk"):
         node.query(f"SYSTEM RESTART DISK {disk}")
@@ -267,14 +267,14 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another nodes"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
         config_find_and_replace(
             node=node3,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -291,7 +291,9 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
         ), error()
 
     with Then("I create a restore file on clickhouse2"):
-        create_restore_file(node=node2, bucket=self.context.bucket_name, disk=disk)
+        create_restore_file(
+            node=node2, bucket=self.context.bucket_name, path="data/backup", disk=disk
+        )
 
     with And("I restart the disk"):
         node2.query(f"SYSTEM RESTART DISK {disk}")
@@ -314,7 +316,7 @@ def metadata_restore_another_bucket_path(self, policy_name, disk="external"):
 
     with And("I create a restore file on clickhouse3"):
         create_restore_file(
-            node=node3, bucket=self.context.bucket2_name, path="data", disk=disk
+            node=node3, bucket=self.context.bucket_name, path="data/backup2", disk=disk
         )
 
     with And("I restart the disk"):
@@ -349,8 +351,8 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -406,7 +408,11 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
 
     with Then("I attempt to restore an old revision to the original bucket and path"):
         create_restore_file(
-            node=node, revision=revision1, bucket=self.context.bucket_name, disk=disk
+            node=node,
+            revision=revision1,
+            bucket=self.context.bucket_name,
+            path="data/backup",
+            disk=disk,
         )
 
     with And("I restart the disk"):
@@ -418,7 +424,11 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
 
     with And("I restore revision1"):
         create_restore_file(
-            node=node2, revision=revision1, bucket=self.context.bucket_name, disk=disk
+            node=node2,
+            revision=revision1,
+            bucket=self.context.bucket_name,
+            path="data/backup",
+            disk=disk,
         )
 
     with And("I restart the disk"):
@@ -449,7 +459,11 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
     with When("I restore revision 2"):
         node2.query(f"DETACH TABLE s3.{table_name}")
         create_restore_file(
-            node=node2, revision=revision2, bucket=self.context.bucket_name, disk=disk
+            node=node2,
+            revision=revision2,
+            bucket=self.context.bucket_name,
+            path="data/backup",
+            disk=disk,
         )
         node2.query(f"SYSTEM RESTART DISK {disk}")
         node2.query(f"ATTACH TABLE s3.{table_name}")
@@ -475,7 +489,11 @@ def metadata_restore_different_revisions(self, policy_name, disk="external"):
     with When("I restore revision 3"):
         node2.query(f"DETACH TABLE s3.{table_name}")
         create_restore_file(
-            node=node2, revision=revision3, bucket=self.context.bucket_name, disk=disk
+            node=node2,
+            revision=revision3,
+            bucket=self.context.bucket_name,
+            path="data/backup",
+            disk=disk,
         )
         node2.query(f"SYSTEM RESTART DISK {disk}")
         node2.query(f"ATTACH TABLE s3.{table_name}")
@@ -512,8 +530,8 @@ def metadata_mutations(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -544,6 +562,7 @@ def metadata_mutations(self, policy_name, disk="external"):
             node=node2,
             revision=revision_before_mutation,
             bucket=self.context.bucket_name,
+            path="data/backup",
             disk=disk,
         )
 
@@ -572,6 +591,7 @@ def metadata_mutations(self, policy_name, disk="external"):
             node=node2,
             revision=revision_after_mutation,
             bucket=self.context.bucket_name,
+            path="data/backup",
             disk=disk,
         )
         node2.query(f"SYSTEM RESTART DISK {disk}")
@@ -596,6 +616,7 @@ def metadata_mutations(self, policy_name, disk="external"):
             node=node2,
             revision=(revision_after_mutation + revision_before_mutation) // 2,
             bucket=self.context.bucket_name,
+            path="data/backup",
             disk=disk,
         )
         node2.query(f"SYSTEM RESTART DISK {disk}")
@@ -629,8 +650,8 @@ def metadata_detached(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -661,7 +682,7 @@ def metadata_detached(self, policy_name, disk="external"):
             node=node2,
             revision=revision,
             bucket=self.context.bucket_name,
-            path="data",
+            path="data/backup",
             detached=True,
             disk=disk,
         )
@@ -701,7 +722,11 @@ def metadata_detached(self, policy_name, disk="external"):
 @TestOutline
 @Requirements(RQ_SRS_015_S3_Metadata("1.0"))
 def metadata_non_restorable_schema(self, policy_name, disk="external"):
-    """Fail to restore using metadata when send_metadata is set to false."""
+    """
+    Fail to restore using metadata when send_metadata is set to false.
+
+    Note: send_metadata is deprecated
+    """
     node = self.context.node
     node2 = self.context.cluster.node("clickhouse2")
     table_name = f"s3.table_{getuid()}"
@@ -727,7 +752,7 @@ def metadata_non_restorable_schema(self, policy_name, disk="external"):
         drop_s3_metadata(disk=disk)
 
     with And("I create a restore file"):
-        create_restore_file(node=node, disk=disk)
+        create_restore_file(node=node, path="data/backup", disk=disk)
 
     with Then("I try to restart the disk"):
         node.query(f"SYSTEM RESTART DISK {disk}")
@@ -757,8 +782,8 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
     with Given("I have different storage.xml on another node"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -800,7 +825,11 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
     with When("I create a restore file with no path, and a negative revision version"):
         node2.command(f"rm -rf /var/lib/clickhouse/disks/{disk}/restore")
         create_restore_file(
-            disk=disk, node=node2, bucket=self.context.bucket_name, revision=-1
+            disk=disk,
+            node=node2,
+            bucket=self.context.bucket_name,
+            path="data/backup",
+            revision=-1,
         )
 
     with Then("I try to restart the disk"):
@@ -816,6 +845,7 @@ def metadata_garbage_restore_file(self, policy_name, disk="external"):
             disk=disk,
             node=node2,
             bucket=self.context.bucket_name,
+            path="data/backup",
             revision=revision + 99999999,
         )
 
@@ -880,8 +910,8 @@ def metadata_change_configs(self, policy_name, disk="external"):
     with Given("I have a different config on clickhouse1"):
         config_find_and_replace(
             node=node,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -914,7 +944,8 @@ def metadata_change_configs(self, policy_name, disk="external"):
         create_restore_file(
             node=node,
             revision=revision_before_mutation,
-            bucket=self.context.bucket2_name,
+            bucket=self.context.bucket_name,
+            path="data/backup2",
             disk=disk,
         )
 
@@ -955,8 +986,8 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
     with Given("I have a different config on clickhouse2"):
         config_find_and_replace(
             node=node2,
-            find=self.context.bucket_name,
-            replace=self.context.bucket2_name,
+            find="backup_bucket",
+            replace="backup2_bucket",
             config_name="storage.xml",
         )
 
@@ -982,6 +1013,7 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
             node=node2,
             revision=revision_before_mutation,
             bucket=self.context.bucket_name,
+            path="data/backup",
             disk=disk,
         )
 
@@ -1028,7 +1060,7 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
         drop_s3_metadata(disk=disk)
 
     with Then("I create a restore file on clickhouse"):
-        create_restore_file(node=node, disk=disk)
+        create_restore_file(node=node, path="data/backup", disk=disk)
 
     with And("I restart the disk"):
         node.query(f"SYSTEM RESTART DISK {disk}")
@@ -1052,40 +1084,13 @@ def metadata_restore_two_tables(self, policy_name, disk="external"):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def local_and_s3_disk(self):
     """Test back up using s3 and local disk combination."""
-    node = current().context.node
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-                "list_object_keys_size": "1",
-            },
-        }
-        disks["external"]["send_metadata"] = "true"
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {
-            "local_and_s3_disk": {
-                "volumes": [
-                    {
-                        "default_and_external": [
-                            {"disk": "default"},
-                            {"disk": "external"},
-                        ]
-                    }
-                ]
-            },
-        }
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_and_local_disk(
+            uri=self.context.uri,
+            policy_name="local_and_s3_disk",
+            disk_settings={"list_object_keys_size": "1"},
+        )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
@@ -1098,35 +1103,12 @@ def local_and_s3_disk(self):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def local_and_s3_volumes(self):
     """Test backup with a storage policy that has both local and s3 volume."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-                "list_object_keys_size": "1",
-            },
-        }
-        disks["external"]["send_metadata"] = "true"
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {
-            "default_and_external": {
-                "volumes": {
-                    "external": {"disk": "external"},
-                    "default": {"disk": "default"},
-                }
-            },
-        }
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_and_local_volume(
+            uri=self.context.uri,
+            disk_settings={"list_object_keys_size": "1"},
+        )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
@@ -1139,27 +1121,12 @@ def local_and_s3_volumes(self):
 @Requirements(RQ_SRS_015_S3_Backup_StoragePolicies("1.0"))
 def s3_disk(self):
     """Test backup with s3 disk."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        disks = {
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-                "list_object_keys_size": "1",
-            }
-        }
-        disks["external"]["send_metadata"] = "true"
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {"external": {"volumes": {"external": {"disk": "external"}}}}
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume(
+            uri=self.context.uri,
+            settings={"list_object_keys_size": "1"},
+        )
 
     for outline in loads(current_module(), Outline):
         with Given("I run the clean up"):
@@ -1171,12 +1138,14 @@ def s3_disk(self):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_AWSS3Backup("1.0"))
 @Name("backup")
-def aws_s3(self, uri):
+def aws_s3(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with aws s3 storage."""
-    self.context.uri = uri
-    self.context.bucket2_name = self.context.bucket_name + "2"
-    self.context.bucket_name = self.context.cluster.bucket
-    self.context.bucket_path = "data"
+
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/backup")
+
+        self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
+        self.context.bucket_path = f"{bucket_prefix}/{temp_s3_path}/backup_bucket"
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
@@ -1185,12 +1154,11 @@ def aws_s3(self, uri):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_GCSBackup("1.0"))
 @Name("backup")
-def gcs(self, uri):
+def gcs(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with gcs storage."""
 
-    self.context.uri = uri
-    self.context.bucket_name = "data"
-    self.context.bucket2_name = "data2"
+    self.context.uri = f"{uri}backup_bucket/"
+    self.context.bucket_name = f"{bucket_prefix}/backup_bucket"
     self.context.bucket_path = None
 
     for scenario in loads(current_module(), Scenario):
@@ -1200,12 +1168,14 @@ def gcs(self, uri):
 @TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_MinIOBackup("1.0"))
 @Name("backup")
-def minio(self, uri):
+def minio(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with minio storage."""
-    self.context.uri = uri
-    self.context.bucket_name = self.context.cluster.minio_bucket
-    self.context.bucket2_name = self.context.cluster.minio_bucket_2
-    self.context.bucket_path = "data"
+
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/backup")
+
+        self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
+        self.context.bucket_path = f"{bucket_prefix}/{temp_s3_path}/backup_bucket"
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)

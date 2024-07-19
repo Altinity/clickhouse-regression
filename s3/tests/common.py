@@ -909,7 +909,6 @@ def start_minio(
 
             buckets = ["root", "root2"]
             self.context.cluster.minio_bucket = "root"
-            self.context.cluster.minio_bucket_2 = "root2"
 
             for bucket in buckets:
                 if minio_client.bucket_exists(bucket):
@@ -1050,7 +1049,7 @@ def get_revision_counter(self, table_name, backup_number, disk, node=None):
 
 
 @TestStep(Given)
-def cleanup(self, storage="minio", disk="external"):
+def cleanup(self, storage="minio", disk="external", s3_path=None):
     """Clean up shadow directory, s3 metadata, and minio if necessary."""
     cluster = self.context.cluster
 
@@ -1062,19 +1061,18 @@ def cleanup(self, storage="minio", disk="external"):
 
     if storage == "minio":
         minio_client = self.context.cluster.minio_client
-        for bucket in [cluster.minio_bucket, cluster.minio_bucket_2]:
-            for obj in list(minio_client.list_objects(bucket, recursive=True)):
-                if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
-                    continue
-                minio_client.remove_object(bucket, obj.object_name)
+        for obj in list(
+            minio_client.list_objects(cluster.minio_bucket, recursive=True)
+        ):
+            if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
+                continue
+            minio_client.remove_object(cluster.minio_bucket, obj.object_name)
 
-    if storage == "aws_s3":
+    if storage == "aws_s3" and s3_path is not None:
         node = current().context.node
 
-        node.command(f"aws s3 rm s3://{self.context.bucket_name}/data --recursive")
-        node.command(f"aws s3 rm s3://{self.context.bucket2_name} --recursive")
         node.command(
-            f"aws s3api create-bucket --bucket {self.context.bucket2_name} --region {self.context.region}"
+            f"aws s3 rm s3://{self.context.bucket_name}/data/{s3_path} --recursive"
         )
 
 
@@ -1181,28 +1179,42 @@ def allow_s3_truncate(node):
 
 
 @TestStep(Given)
-def default_s3_and_local_disk(self, restart=True):
+def default_s3_and_local_disk(
+    self, restart=True, uri=None, policy_name="default_and_external", disk_settings=None
+):
     """Default settings for s3 and local disks."""
+
+    uri = uri or self.context.uri
+    disk_settings = disk_settings or {}
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}",
+                "endpoint": uri,
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
+                **disk_settings,
+            },
+            "s3_cache": {
+                "type": "cache",
+                "disk": "external",
+                "path": "external_disk_cache/",
+                "max_size": "22548578304",
+                "cache_on_write_operations": "1",
+                "do_not_evict_index_and_mark_files": "1",
             },
         }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
-            "default_and_external": {
+            policy_name: {
                 "volumes": [
                     {
                         "default_and_external": [
                             {"disk": "default"},
-                            {"disk": "external"},
+                            {"disk": "s3_cache"},
                         ]
                     }
                 ]
@@ -1213,26 +1225,40 @@ def default_s3_and_local_disk(self, restart=True):
 
 
 @TestStep(Given)
-def default_s3_and_local_volume(self, restart=True):
+def default_s3_and_local_volume(
+    self, restart=True, uri=None, policy_name="default_and_external", disk_settings=None
+):
     """Default settings for s3 and local volumes."""
+
+    uri = uri or self.context.uri
+    disk_settings = disk_settings or {}
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
             "external": {
                 "type": "s3",
-                "endpoint": f"{self.context.uri}",
+                "endpoint": uri,
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
+                **disk_settings,
+            },
+            "s3_cache": {
+                "type": "cache",
+                "disk": "external",
+                "path": "external_disk_cache/",
+                "max_size": "22548578304",
+                "cache_on_write_operations": "1",
+                "do_not_evict_index_and_mark_files": "1",
             },
         }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
-            "default_and_external": {
+            policy_name: {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": "external"},
+                    "external": {"disk": "s3_cache"},
                 }
             },
         }
@@ -1266,14 +1292,14 @@ def default_s3_disk_and_volume(
             disks = {
                 disk_name: {
                     "type": "s3",
-                    "endpoint": f"{self.context.uri}",
+                    "endpoint": f"{uri}",
                     "access_key_id": f"{self.context.access_key_id}",
                     "secret_access_key": f"{self.context.secret_access_key}",
                 },
                 "s3_cache": {
                     "type": "cache",
                     "disk": disk_name,
-                    "path": f"{disk_name}_caches/",
+                    "path": f"{disk_name}_cache/",
                     "max_size": "22548578304",
                     "cache_on_write_operations": "1",
                     "do_not_evict_index_and_mark_files": "1",
@@ -1283,7 +1309,7 @@ def default_s3_disk_and_volume(
             disks = {
                 disk_name: {
                     "type": "s3",
-                    "endpoint": f"{self.context.uri}",
+                    "endpoint": f"{uri}",
                     "access_key_id": f"{self.context.access_key_id}",
                     "secret_access_key": f"{self.context.secret_access_key}",
                 }
@@ -1298,7 +1324,11 @@ def default_s3_disk_and_volume(
     with And("I have a storage policy configured to use the S3 disk"):
         if check_clickhouse_version(">=22.8")(self):
             policies = {
-                policy_name: {"volumes": {"external": {"disk": disk_name}}},
+                "default": {"volumes": {"default": {"disk": "default"}}},
+                f"{policy_name}_nocache": {
+                    "volumes": {"external": {"disk": disk_name}}
+                },
+                policy_name: {"volumes": {"external": {"disk": "s3_cache"}}},
                 "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}},
             }
         else:

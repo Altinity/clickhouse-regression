@@ -7,20 +7,8 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from ssl_keeper.helpers.cluster import Cluster
-from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
+from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
-
-
-def argparser(parser):
-    """Custom argperser that add --thread-fuzzer option."""
-    base_argparser(parser)
-
-    parser.add_argument(
-        "--thread-fuzzer",
-        action="store_true",
-        help="enable thread fuzzer",
-        default=False,
-    )
 
 
 xfails = {
@@ -45,7 +33,6 @@ def regression(
     cluster_args,
     clickhouse_version,
     stress=None,
-    thread_fuzzer=None,
     with_analyzer=False,
 ):
     """ClickHouse ssl ClickHouse Keeper regression."""
@@ -63,7 +50,6 @@ def regression(
 
     with Cluster(
         **cluster_args,
-        thread_fuzzer=thread_fuzzer,
         nodes=nodes,
     ) as cluster:
         self.context.cluster = cluster

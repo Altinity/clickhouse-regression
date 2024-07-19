@@ -28,27 +28,8 @@ def aws_s3(self, uri):
     storing data using different S3 policies.
     """
 
-    with Given(
-        """I have a disk configuration with a S3 storage disk, access id and key provided"""
-    ):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "aws": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-        }
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {
-            "default": {"volumes": {"default": {"disk": "default"}}},
-            "aws_external": {"volumes": {"external": {"disk": "aws"}}},
-        }
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume(uri=uri, disk_name="aws", policy_name="aws_external")
 
     Scenario(run=sanity, examples=Examples("policy", [("default",), ("aws_external",)]))
 
@@ -60,25 +41,10 @@ def minio(self, uri):
     storing data using different S3 policies.
     """
 
-    with Given("""I have a disk configuration with minio storage"""):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "minio": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-        }
-
-    with And("I have a storage policy configured to use the S3 disk"):
-        policies = {
-            "default": {"volumes": {"default": {"disk": "default"}}},
-            "minio_external": {"volumes": {"external": {"disk": "minio"}}},
-        }
-
-    with And("I enable the disk and policy config"):
-        s3_storage(disks=disks, policies=policies, restart=True)
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume(
+            uri=uri, disk_name="minio", policy_name="minio_external"
+        )
 
     Scenario(
         run=sanity, examples=Examples("policy", [("default",), ("minio_external",)])

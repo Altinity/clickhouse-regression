@@ -132,7 +132,7 @@ env:
 
 jobs:
   alter_stress_aws_x86:
-    runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
+    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress
@@ -170,7 +170,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   alter_stress_gcs_x86:
-    runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
+    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress
@@ -207,7 +207,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   alter_stress_minio_x86:
-    runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
+    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress
@@ -241,7 +241,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   alter_stress_local_x86:
-    runs-on: [self-hosted, type-cpx51, image-x86-app-docker-ce]
+    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress
@@ -275,7 +275,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   alter_stress_aws_arm:
-    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress
@@ -313,7 +313,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   alter_stress_gcs_arm:
-    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress
@@ -350,7 +350,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   alter_stress_minio_arm:
-    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress
@@ -384,7 +384,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   alter_stress_local_arm:
-    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: alter/stress

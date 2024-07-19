@@ -7,7 +7,6 @@ append_path(sys.path, ".")
 from helpers.argparser import CaptureClusterArgs
 from s3.regression import argparser
 
-
 ffails = {
     "tiered_storage": (
         Skip,
@@ -36,7 +35,7 @@ def regression(
     aws_s3_key_id,
     gcs_key_secret,
     gcs_key_id,
-    use_specific_version,
+    use_specific_version=None,
     node="clickhouse1",
     stress=None,
     with_analyzer=False,
@@ -66,6 +65,12 @@ def regression(
         "gcs_key_secret": gcs_key_secret,
         "gcs_key_id": gcs_key_id,
     }
+
+    # FIXME: Remove use_specific_version and move it to the test level
+    if use_specific_version is None:
+        use_specific_version = (
+            "docker://altinity/clickhouse-server:23.3.13.7.altinitytest"
+        )
 
     alter_args = {
         **cluster_args,
