@@ -60,7 +60,7 @@ services:
       - KAFKA_BROKER_ID=1
       - BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
     healthcheck:
-      test: echo dump | nc ${CLICKHOUSE_TESTS_COORDINATOR}1 2181 | grep '/brokers/ids/1'
+      test: echo dump | nc zookeeper1 2181 | grep '/brokers/ids/1'
     depends_on:
         zookeeper1:
           condition: service_healthy
@@ -75,7 +75,7 @@ services:
       - KAFKA_BROKER_ID=2
       - BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
     healthcheck:
-      test: echo dump | nc ${CLICKHOUSE_TESTS_COORDINATOR}1 2181 | grep '/brokers/ids/2'
+      test: echo dump | nc zookeeper1 2181 | grep '/brokers/ids/2'
     depends_on:
         zookeeper1:
           condition: service_healthy
@@ -90,7 +90,7 @@ services:
       - KAFKA_BROKER_ID=3
       - BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
     healthcheck:
-      test: echo dump | nc ${CLICKHOUSE_TESTS_COORDINATOR}1 2181 | grep '/brokers/ids/3'
+      test: echo dump | nc zookeeper1 2181 | grep '/brokers/ids/3'
     depends_on:
         zookeeper1:
           condition: service_healthy
