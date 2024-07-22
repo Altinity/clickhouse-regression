@@ -56,9 +56,6 @@ def math_int_inline(
     if node is None:
         node = self.context.node
 
-    if is_with_analyzer(node):
-        self.context.snapshot_id = f"tests.with_analyzer"
-
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
         with When(f"I check {func} with {int_type} using 1, max, and min"):
             node.query(
@@ -136,9 +133,6 @@ def math_dec_inline(self, func, expected_result, exitcode, node=None):
 
     if node is None:
         node = self.context.node
-
-    if is_with_analyzer(node):
-        self.context.snapshot_id = f"tests.with_analyzer"
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
         with When(f"I check {func} with Decimal256 using 1, max, and min"):
