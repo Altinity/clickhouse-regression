@@ -460,7 +460,7 @@ class ZooKeeperNode(Node):
         with By(f"stopping {self.name}"):
             self.zk_server_command("stop")
 
-    def start_zookeeper(self, timeout=300, check_version=True):
+    def start_zookeeper(self, timeout=300, check_version=True, skip_if_running=False):
         """Start ZooKeeper server."""
         if check_version:
             r = self.zk_server_command("version")
@@ -468,7 +468,10 @@ class ZooKeeperNode(Node):
             current().context.zookeeper_version = version
 
         with By(f"starting {self.name}"):
-            self.zk_server_command("start", exitcode=0)
+            r = self.zk_server_command("start", no_checks=True)
+            if skip_if_running and "already running" in r.output:
+                return
+            assert r.exitcode == 0, error(r.output)
 
     def restart_zookeeper(self, timeout=300):
         """Restart ZooKeeper server."""
@@ -629,11 +632,15 @@ class ClickHouseNode(Node):
         thread_fuzzer=False,
         check_version=True,
         log_dir="/var/log/clickhouse-server",
+        skip_if_running=False,
     ):
         """Start ClickHouse server."""
         pid = self.clickhouse_pid()
         if pid:
-            raise RuntimeError(f"ClickHouse server already running with pid {pid}")
+            if skip_if_running:
+                return
+            else:
+                raise RuntimeError(f"ClickHouse server already running with pid {pid}")
 
         if thread_fuzzer:
             self.enable_thread_fuzzer()
@@ -1128,6 +1135,7 @@ class ClickHouseKeeperNode(Node):
         user=None,
         force_recovery=False,
         check_version=True,
+        skip_if_running=False,
     ):
         """Start ClickHouse Keeper."""
         if check_version:
@@ -1136,7 +1144,10 @@ class ClickHouseKeeperNode(Node):
 
         pid = self.keeper_pid()
         if pid:
-            raise RuntimeError(f"ClickHouse Keeper already running with pid {pid}")
+            if skip_if_running:
+                return
+            else:
+                raise RuntimeError(f"ClickHouse Keeper already running with pid {pid}")
 
         start_cmd = (
             "/usr/bin/clickhouse-keeper --config-file=/etc/clickhouse-keeper/keeper_config.xml"
@@ -1907,29 +1918,29 @@ class Cluster(object):
             if not running:
                 fail("could not bring up docker-compose cluster")
 
-        if self.reuse_env:
-            self.running = True
-            return
-
         with Then("wait all nodes report healthy"):
             if self.use_zookeeper_nodes:
                 for name in self.nodes["zookeeper"]:
                     self.node(name).wait_healthy()
                     if name.startswith("zookeeper"):
-                        self.node(name).start_zookeeper()
+                        self.node(name).start_zookeeper(skip_if_running=self.reuse_env)
 
             for name in self.nodes["clickhouse"]:
                 self.node(name).wait_healthy()
                 if name == "clickhouse-different-versions":
                     self.node(name).start_clickhouse(
-                        thread_fuzzer=self.thread_fuzzer, check_version=False
+                        thread_fuzzer=self.thread_fuzzer,
+                        check_version=False,
+                        skip_if_running=self.reuse_env,
                     )
                 elif name.startswith("clickhouse"):
-                    self.node(name).start_clickhouse(thread_fuzzer=self.thread_fuzzer)
+                    self.node(name).start_clickhouse(
+                        thread_fuzzer=self.thread_fuzzer, skip_if_running=self.reuse_env
+                    )
 
             for name in self.nodes.get("keeper", []):
                 if name.startswith("keeper"):
-                    self.node(name).start_keeper()
+                    self.node(name).start_keeper(skip_if_running=self.reuse_env)
 
         self.running = True
 
