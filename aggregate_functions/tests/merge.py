@@ -59,8 +59,13 @@ def check(
 
 
 @TestScenario
-def merge(self, scenario, short_name, is_parametric):
-    snapshot_id, func = scenario()
+def merge(self, scenario, short_name, is_parametric, extra_data=None):
+    if extra_data is not None:
+        if short_name in funcs_to_run_with_extra_data:
+            snapshot_id, func = scenario(func=short_name, extra_data=extra_data)
+    else:
+        snapshot_id, func = scenario()
+
     snapshot_id = snapshot_id.lower().replace(
         "merge", "state"
     )  # need state from snapshots of -State combinator
@@ -132,7 +137,7 @@ def merge(self, scenario, short_name, is_parametric):
 @TestFeature
 @Name("merge")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge("1.0"))
-def feature(self):
+def feature(self, extra_data=None):
     """Check aggregate functions `-Merge` combinator."""
     not_implemented = [
         "windowFunnel",
@@ -210,5 +215,10 @@ def feature(self):
                     test=merge,
                     parallel=True,
                     executor=executor,
-                )(scenario=scenario, short_name=name, is_parametric=is_parametric)
+                )(
+                    scenario=scenario,
+                    short_name=name,
+                    is_parametric=is_parametric,
+                    extra_data=extra_data,
+                )
         join()

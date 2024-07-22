@@ -7,15 +7,15 @@ from aggregate_functions.requirements import (
 
 
 @TestScenario
-def state(self, scenario, func):
+def state(self, scenario, func, extra_data=None):
     """Check -State combinator function."""
-    scenario(func=func)
+    scenario(func=func, extra_data=extra_data)
 
 
 @TestFeature
 @Name("state")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_State("1.0"))
-def feature(self):
+def feature(self, extra_data=None):
     """Check aggregate functions `-State` combinator
     that serializes the state of the function."""
 
@@ -32,8 +32,19 @@ def feature(self):
                 with Scenario(f"{name}State"):
                     skip(reason=f"{name}State() test is not implemented")
             else:
-                Scenario(
-                    name=f"{name}State", test=state, parallel=True, executor=executor
-                )(func=func, scenario=scenario)
-
+                if extra_data is not None:
+                    if name in funcs_to_run_with_extra_data:
+                        Scenario(
+                            name=f"{name}State",
+                            test=state,
+                            parallel=True,
+                            executor=executor,
+                        )(func=func, scenario=scenario, extra_data=extra_data)
+                else:
+                    Scenario(
+                        name=f"{name}State",
+                        test=state,
+                        parallel=True,
+                        executor=executor,
+                    )(func=func, scenario=scenario)
         join()

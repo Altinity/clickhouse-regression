@@ -234,6 +234,8 @@ parametric = [
     "largestTriangleThreeBuckets",
 ]
 
+funcs_to_run_with_extra_data = ["argMin", "argMax"]
+
 
 def permutations_with_replacement(n, r):
     """Return all possible permutations with replacement."""
@@ -332,7 +334,9 @@ def execute_query(
                     ), error()
 
 
-def get_snapshot_id(snapshot_id=None, clickhouse_version=None, add_analyzer=False):
+def get_snapshot_id(
+    snapshot_id=None, clickhouse_version=None, add_analyzer=False, extra_data=None
+):
     """Return snapshot id based on the current test's name
     and ClickHouse server version."""
     id_postfix = ""
@@ -344,6 +348,9 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None, add_analyzer=Fals
         snapshot_id = name.basename(current().name) + id_postfix
         if check_analyzer()(current()) and add_analyzer:
             snapshot_id += "_with_analyzer"
+
+    if extra_data is not None:
+        snapshot_id += "_extra_data"
 
     return snapshot_id
 
