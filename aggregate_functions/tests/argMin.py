@@ -24,7 +24,9 @@ def datatype(self, func, table, col1_name, col2_name):
 @TestScenario
 @Name("argMin")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin("1.0"))
-def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
+def scenario(
+    self, func="argMin({params})", table=None, snapshot_id=None, extra_data=None
+):
     """Check argMin or argMax or one of their combinator aggregate functions. By default: argMin."""
     # https://github.com/ClickHouse/ClickHouse/pull/58139
     clickhouse_version = (
@@ -34,6 +36,7 @@ def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
         snapshot_id=snapshot_id,
         clickhouse_version=clickhouse_version,
         add_analyzer=True,
+        extra_data=extra_data,
     )
 
     if "Merge" in self.name:

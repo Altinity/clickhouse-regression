@@ -43,8 +43,13 @@ def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=Fal
 
 
 @TestScenario
-def finalizeAggregation(self, scenario, short_name):
-    snapshot_id, func = scenario()
+def finalizeAggregation(self, scenario, short_name, extra_data=None):
+    if extra_data is not None:
+        if short_name in funcs_to_run_with_extra_data:
+            snapshot_id, func = scenario(func=short_name, extra_data=extra_data)
+    else:
+        snapshot_id, func = scenario()
+
     snapshot_id = snapshot_id.lower().replace(
         "_finalizeaggregation_merge", "state"
     )  # need state from snapshots of -State combinator
@@ -121,7 +126,7 @@ def finalizeAggregation(self, scenario, short_name):
         "1.0"
     )
 )
-def feature(self):
+def feature(self, extra_data=None):
     """Check aggregate function finalizeAggregation."""
     not_implemented = [
         "quantileDeterministic",
@@ -161,5 +166,5 @@ def feature(self):
                     test=finalizeAggregation,
                     parallel=True,
                     executor=executor,
-                )(scenario=scenario, short_name=name)
+                )(scenario=scenario, short_name=name, extra_data=extra_data)
         join()
