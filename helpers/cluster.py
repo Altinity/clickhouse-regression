@@ -1768,7 +1768,10 @@ class Cluster(object):
         """Bring cluster up."""
         if self.local:
             with Given("I am running in local mode"):
-                with Then("check --clickhouse-binary-path is specified"):
+                with Then(
+                    "check --clickhouse-binary-path is specified",
+                    description=self.clickhouse_binary_path,
+                ):
                     assert (
                         self.clickhouse_binary_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
