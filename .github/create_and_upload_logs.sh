@@ -18,6 +18,8 @@ tfs --debug --no-colors report compare results --log compact.log --order-by vers
 if [[ $1 == 1 ]];
 then
     echo "::notice title=$SUITE$STORAGE $(uname -i) s3 logs and reports::$REPORT_INDEX_URL"
+    aws s3 cp /var/crash/* $SUITE_REPORT_BUCKET_PATH/crash/
+    aws s3 cp /var/lib/systemd/coredump/* $SUITE_REPORT_BUCKET_PATH/crash/
     ./retry.sh 5 30 aws s3 cp pipeline_url.log.txt $JOB_S3_ROOT/pipeline_url.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp version.log.txt $SUITE_REPORT_BUCKET_PATH/version.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp raw.log $SUITE_REPORT_BUCKET_PATH/raw.log
