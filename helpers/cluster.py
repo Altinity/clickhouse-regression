@@ -140,10 +140,13 @@ def get_binary_from_docker_container(
         if host_binary_path_suffix:
             host_binary_path += host_binary_path_suffix
 
-    with Given(
-        "I get ClickHouse Keeper binary from docker container",
-        description=f"{docker_image}",
+    with By(
+        "I return host_binary_path if it already exists", description=host_binary_path
     ):
+        if os.path.exists(host_binary_path):
+            return host_binary_path
+
+    with And("copying binary from docker container", description=docker_image):
         with Shell() as bash:
             bash.timeout = 300
             bash(
@@ -1310,7 +1313,7 @@ class Cluster(object):
                 f"docker compose file '{docker_compose_file_path}' does not exist"
             )
 
-        if rm_instances_files:
+        if rm_instances_files and not reuse_env:
             shutil.rmtree(
                 os.path.join(docker_compose_project_dir, "..", "_instances"),
                 ignore_errors=True,
@@ -1799,47 +1802,55 @@ class Cluster(object):
                 self.command(None, "env | grep CLICKHOUSE")
 
         def start_cluster(max_up_attempts=3):
-            with By("pulling images for all the services"):
-                cmd = self.command(
-                    None,
-                    f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
-                    no_checks=True,
-                    timeout=timeout,
-                )
-                if cmd.exitcode != 0:
-                    return False
+            if not self.reuse_env:
+                with By("pulling images for all the services"):
+                    cmd = self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
+                        no_checks=True,
+                        timeout=timeout,
+                    )
+                    if cmd.exitcode != 0:
+                        return False
 
-            with And("checking if any containers are already running"):
-                self.command(None, f"set -o pipefail && {self.docker_compose} ps | tee")
+                with And("checking if any containers are already running"):
+                    self.command(
+                        None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                    )
 
-            with And("executing docker-compose down just in case it is up"):
-                cmd = self.command(
-                    None,
-                    f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
-                    no_checks=True,
-                    timeout=timeout,
-                )
-                if cmd.exitcode != 0:
-                    return False
+                with And("executing docker-compose down just in case it is up"):
+                    cmd = self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
+                        no_checks=True,
+                        timeout=timeout,
+                    )
+                    if cmd.exitcode != 0:
+                        return False
 
-            with And("checking if any containers are still left running"):
-                self.command(None, f"set -o pipefail && {self.docker_compose} ps | tee")
+                with And("checking if any containers are still left running"):
+                    self.command(
+                        None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                    )
 
-            with And(
-                "creating a unique builder just in case docker-compose needs to build images"
-            ):
-                self.command(
-                    None,
-                    f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
-                    exitcode=0,
-                )
+                with And(
+                    "creating a unique builder just in case docker-compose needs to build images"
+                ):
+                    self.command(
+                        None,
+                        f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
+                        exitcode=0,
+                    )
 
             with By("executing docker-compose up"):
+                up_args = (
+                    "" if self.reuse_env else "--renew-anon-volumes --force-recreate"
+                )
                 for attempt in retries(count=max_up_attempts):
                     with attempt:
                         cmd = self.command(
                             None,
-                            f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
+                            f"set -o pipefail && {self.docker_compose} up {up_args} --timeout 600 -d 2>&1 | tee",
                             timeout=timeout,
                             no_checks=True,
                         )
@@ -1892,6 +1903,10 @@ class Cluster(object):
 
             if not running:
                 fail("could not bring up docker-compose cluster")
+
+        if self.reuse_env:
+            self.running = True
+            return
 
         with Then("wait all nodes report healthy"):
             if self.use_zookeeper_nodes:
