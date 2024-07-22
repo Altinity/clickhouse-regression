@@ -1798,102 +1798,99 @@ class Cluster(object):
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
 
-        with Given("docker-compose"):
-            max_attempts = 5
-            max_up_attempts = 3
+        def start_cluster(max_up_attempts=3):
+            with By("pulling images for all the services"):
+                cmd = self.command(
+                    None,
+                    f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
+                    no_checks=True,
+                    timeout=timeout,
+                )
+                if cmd.exitcode != 0:
+                    return False
 
-            for attempt in range(max_attempts):
-                with When(f"attempt {attempt}/{max_attempts}"):
-                    with By("pulling images for all the services"):
+            with And("checking if any containers are already running"):
+                self.command(None, f"set -o pipefail && {self.docker_compose} ps | tee")
+
+            with And("executing docker-compose down just in case it is up"):
+                cmd = self.command(
+                    None,
+                    f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
+                    no_checks=True,
+                    timeout=timeout,
+                )
+                if cmd.exitcode != 0:
+                    return False
+
+            with And("checking if any containers are still left running"):
+                self.command(None, f"set -o pipefail && {self.docker_compose} ps | tee")
+
+            with And(
+                "creating a unique builder just in case docker-compose needs to build images"
+            ):
+                self.command(
+                    None,
+                    f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
+                    exitcode=0,
+                )
+
+            with By("executing docker-compose up"):
+                for attempt in retries(count=max_up_attempts):
+                    with attempt:
                         cmd = self.command(
                             None,
-                            f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
-                            no_checks=True,
+                            f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
                             timeout=timeout,
-                        )
-                        if cmd.exitcode != 0:
-                            continue
-
-                    with And("checking if any containers are already running"):
-                        self.command(
-                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
-                        )
-
-                    with And("executing docker-compose down just in case it is up"):
-                        cmd = self.command(
-                            None,
-                            f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
                             no_checks=True,
-                            timeout=timeout,
                         )
-                        if cmd.exitcode != 0:
-                            continue
+                        if "port is already allocated" in cmd.output:
+                            port = re.search(
+                                r"Bind for .+:([0-9]+) failed", cmd.output
+                            ).group(1)
 
-                    with And("checking if any containers are still left running"):
-                        self.command(
-                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
-                        )
-
-                    with And(
-                        "creating a unique builder just in case docker-compose needs to build images"
-                    ):
-                        self.command(
-                            None,
-                            f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
-                            exitcode=0,
-                        )
-
-                    with And("executing docker-compose up"):
-                        for attempt in retries(count=max_up_attempts):
-                            with attempt:
-                                cmd = self.command(
-                                    None,
-                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
-                                    timeout=timeout,
-                                    no_checks=True,
-                                )
-                                if "port is already allocated" in cmd.output:
-                                    port = re.search(
-                                        r"Bind for .+:([0-9]+) failed", cmd.output
-                                    ).group(1)
-
-                                    ps = self.command(
-                                        None, f"docker ps | grep {port}", no_checks=True
-                                    )
-                                    conflict_env = ps.output.split()[-1]
-                                    raise RuntimeError(
-                                        f"Failed to allocate port {port}, already in use by {conflict_env}."
-                                    )
-
-                                assert cmd.exitcode == 0, error(cmd.output)
-                                assert "ERROR:" not in cmd.output, error(cmd.output)
-                                if "is unhealthy" not in cmd.output:
-                                    break
-
-                    with Then("check there are no unhealthy containers"):
-                        ps_cmd = self.command(
-                            None,
-                            f'set -o pipefail && {self.docker_compose} ps | tee | grep -v "Exit 0"',
-                        )
-                        if "is unhealthy" in cmd.output or "Exit" in ps_cmd.output:
-                            self.command(
-                                None,
-                                f"set -o pipefail && {self.docker_compose} logs | tee",
+                            ps = self.command(
+                                None, f"docker ps | grep {port}", no_checks=True
                             )
-                            continue
+                            conflict_env = ps.output.split()[-1]
+                            raise RuntimeError(
+                                f"Failed to allocate port {port}, already in use by {conflict_env}."
+                            )
 
-                    if (
-                        cmd.exitcode == 0
-                        and "is unhealthy" not in cmd.output
-                        and "Exit" not in ps_cmd.output
-                    ):
-                        break
+                        assert cmd.exitcode == 0, error(cmd.output)
+                        assert "ERROR:" not in cmd.output, error(cmd.output)
+                        if "is unhealthy" not in cmd.output:
+                            return True
+
+            with Then("check there are no unhealthy containers"):
+                ps_cmd = self.command(
+                    None,
+                    f'set -o pipefail && {self.docker_compose} ps | tee | grep -v "Exit 0"',
+                )
+                if "is unhealthy" in cmd.output or "Exit" in ps_cmd.output:
+                    self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} logs | tee",
+                    )
+                    return False
 
             if (
-                cmd.exitcode != 0
-                or "is unhealthy" in cmd.output
-                or "Exit" in ps_cmd.output
+                cmd.exitcode == 0
+                and "is unhealthy" not in cmd.output
+                and "Exit" not in ps_cmd.output
             ):
+                return True
+
+            return False
+
+        with Given("docker-compose"):
+            max_attempts = 5
+            for attempt in range(max_attempts):
+                with When(f"attempt {attempt}/{max_attempts}"):
+                    running = start_cluster(max_up_attempts=3)
+                if running:
+                    break
+
+            if not running:
                 fail("could not bring up docker-compose cluster")
 
         with Then("wait all nodes report healthy"):
