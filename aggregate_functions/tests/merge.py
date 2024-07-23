@@ -165,6 +165,7 @@ def feature(self, extra_data=None):
         "groupArraySorted",
         "histogram",
         "kolmogorovSmirnovTest",
+        "largestTriangleThreeBuckets",
         "mannWhitneyUTest",
         "meanZTest",
         "quantileGK",
@@ -190,7 +191,6 @@ def feature(self, extra_data=None):
         "topKWeighted",
         "uniqUpTo",
         "windowFunnel",
-        "largestTriangleThreeBuckets",
     ]
 
     test_funcs = [i for i in aggregate_functions]
@@ -198,27 +198,52 @@ def feature(self, extra_data=None):
         if i in test_funcs:
             test_funcs.remove(i)
 
-    with Pool(10) as executor:
-        for name in test_funcs:
-            try:
-                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
-            except ModuleNotFoundError as e:
-                with Scenario(f"{name}Merge"):
-                    skip(reason=f"{name}State() test is not implemented")
-            else:
-                is_parametric = False
-                if name in parametric:
-                    is_parametric = True
-                Scenario(
-                    f"{name}Merge",
-                    description=f"Get snapshot name to retrieve state of {name} function",
-                    test=merge,
-                    parallel=True,
-                    executor=executor,
-                )(
-                    scenario=scenario,
-                    short_name=name,
-                    is_parametric=is_parametric,
-                    extra_data=extra_data,
-                )
-        join()
+    if extra_data is not None:
+        with Pool(10) as executor:
+            for name in funcs_to_run_with_extra_data:
+                try:
+                    scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+                except ModuleNotFoundError as e:
+                    with Scenario(f"{name}Merge"):
+                        skip(reason=f"{name}State() test is not implemented")
+                else:
+                    is_parametric = False
+                    if name in parametric:
+                        is_parametric = True
+                    Scenario(
+                        f"{name}Merge",
+                        description=f"Get snapshot name to retrieve state of {name} function",
+                        test=merge,
+                        parallel=True,
+                        executor=executor,
+                    )(
+                        scenario=scenario,
+                        short_name=name,
+                        is_parametric=is_parametric,
+                        extra_data=extra_data,
+                    )
+            join()
+    else:
+        with Pool(10) as executor:
+            for name in test_funcs:
+                try:
+                    scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+                except ModuleNotFoundError as e:
+                    with Scenario(f"{name}Merge"):
+                        skip(reason=f"{name}State() test is not implemented")
+                else:
+                    is_parametric = False
+                    if name in parametric:
+                        is_parametric = True
+                    Scenario(
+                        f"{name}Merge",
+                        description=f"Get snapshot name to retrieve state of {name} function",
+                        test=merge,
+                        parallel=True,
+                        executor=executor,
+                    )(
+                        scenario=scenario,
+                        short_name=name,
+                        is_parametric=is_parametric,
+                    )
+            join()

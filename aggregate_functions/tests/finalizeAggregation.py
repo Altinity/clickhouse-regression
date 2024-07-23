@@ -152,19 +152,37 @@ def feature(self, extra_data=None):
         if i in test_funcs:
             test_funcs.remove(i)
 
-    with Pool(10) as executor:
-        for name in test_funcs:
-            try:
-                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
-            except ModuleNotFoundError as e:
-                with Scenario(f"{name}_finalizeAggregation_Merge"):
-                    skip(reason=f"{name}State() test is not implemented")
-            else:
-                Scenario(
-                    f"{name}_finalizeAggregation_Merge",
-                    description=f"Get snapshot name to retrieve state of {name} function",
-                    test=finalizeAggregation,
-                    parallel=True,
-                    executor=executor,
-                )(scenario=scenario, short_name=name, extra_data=extra_data)
-        join()
+    if extra_data is not None:
+        with Pool(10) as executor:
+            for name in funcs_to_run_with_extra_data:
+                try:
+                    scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+                except ModuleNotFoundError as e:
+                    with Scenario(f"{name}_finalizeAggregation_Merge"):
+                        skip(reason=f"{name}State() test is not implemented")
+                else:
+                    Scenario(
+                        f"{name}_finalizeAggregation_Merge",
+                        description=f"Get snapshot name to retrieve state of {name} function",
+                        test=finalizeAggregation,
+                        parallel=True,
+                        executor=executor,
+                    )(scenario=scenario, short_name=name, extra_data=extra_data)
+            join()
+    else:
+        with Pool(10) as executor:
+            for name in test_funcs:
+                try:
+                    scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+                except ModuleNotFoundError as e:
+                    with Scenario(f"{name}_finalizeAggregation_Merge"):
+                        skip(reason=f"{name}State() test is not implemented")
+                else:
+                    Scenario(
+                        f"{name}_finalizeAggregation_Merge",
+                        description=f"Get snapshot name to retrieve state of {name} function",
+                        test=finalizeAggregation,
+                        parallel=True,
+                        executor=executor,
+                    )(scenario=scenario, short_name=name)
+            join()
