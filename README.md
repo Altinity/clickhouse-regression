@@ -10,7 +10,7 @@ Results for **the latest** scheduled workflow runs.
 | **`23.8.11.29.altinitystable`** | [![Scheduled Altinity 23.8 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/runs/9574052708) |
 | **`23.3.19.33.altinitystable`** | [![Scheduled Altinity 23.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml) |
 
-## ClickHouse Tests in [TestFlows]
+## Regression Tests in [TestFlows] for ClickHouse®
 
 This directory contains integration tests written using [TestFlows] 
 that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
