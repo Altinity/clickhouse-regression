@@ -1,5 +1,5 @@
 name: Run CI/CD on ARM
-run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite)}}${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
+run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite)}}${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
         required: true
         default: 23.8.5.17.altinitytest
       keeper_or_zookeeper:
-        description: "Keeper or Zookeeper"
+        description: "Keeper or ZooKeeper"
         type: choice
         options:
           - keeper
