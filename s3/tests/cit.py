@@ -16,7 +16,7 @@ from s3.requirements import *
     "maybe_auth positive",
     [
         ("", True, Name("empty auth")),
-        ("'minio', 'minio123',", True, Name("minio auth")),
+        ("'minio_user', 'minio123',", True, Name("minio auth")),
         ("'wrongid', 'wrongkey',", False, Name("invalid auth")),
     ],
 )
@@ -102,7 +102,7 @@ def test_empty_put(self, auth="'minio','minio123'"):
     "maybe_auth positive",
     [
         ("", True, Name("empty auth")),
-        ("'minio', 'minio123',", True, Name("minio auth")),
+        ("'minio_user', 'minio123',", True, Name("minio auth")),
         ("'wrongid', 'wrongkey',", False, Name("invalid auth")),
     ],
 )
