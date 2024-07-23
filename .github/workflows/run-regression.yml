@@ -16,6 +16,7 @@ on:
         description: "Expected version. Example: 23.3.1.64"
         type: string
         required: true
+        default: 23.8.5.17.altinitytest
       keeper_or_zookeeper:
         description: "Keeper or Zookeeper"
         type: choice
