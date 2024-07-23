@@ -11,7 +11,11 @@ from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.cluster import create_cluster
 from helpers.common import *
 
-from aggregate_functions.tests.steps import aggregate_functions, window_functions
+from aggregate_functions.tests.steps import (
+    aggregate_functions,
+    window_functions,
+    funcs_to_run_with_extra_data,
+)
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 issue_41176 = "https://github.com/ClickHouse/ClickHouse/issues/41176"
@@ -461,18 +465,41 @@ def regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    with And("table with all data types"):
+    with And("tables with all data types"):
         self.context.table = create_table(
             engine="MergeTree",
             columns=generate_all_column_types(),
             order_by_all_columns=False,
             order_by="tuple()",
         )
+        self.context.table_extra_data = create_table(
+            engine="MergeTree",
+            columns=generate_all_column_types(),
+            order_by_all_columns=False,
+            order_by="tuple()",
+        )
 
-    with And("I populate table with test data"):
+    with And("I populate tables with test data"):
         self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
+        self.context.table_extra_data.insert_test_data(
+            cardinality=5, shuffle_values=True
+        )
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
+
+    with Pool(10) as executor:
+        for name in funcs_to_run_with_extra_data:
+            try:
+                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+            except ModuleNotFoundError:
+                with Scenario(f"{name}"):
+                    skip(reason=f"{name} test is not implemented")
+                continue
+
+            Feature(
+                "run with extra data", test=scenario, parallel=True, executor=executor
+            )(table=self.context.table_extra_data, extra_data=True)
+        join()
 
     with Pool(10) as executor:
         for name in [
@@ -490,6 +517,9 @@ def regression(
         join()
 
     Feature(run=load("aggregate_functions.tests.state", "feature"))
+    Feature(
+        "run with extra data", test=load("aggregate_functions.tests.state", "feature")
+    )(extra_data=True, table=self.context.table_extra_data)
 
     with Pool(5) as executor:
         Feature(
@@ -498,10 +528,22 @@ def regression(
             executor=executor,
         )()
         Feature(
+            "run with extra data",
+            test=load("aggregate_functions.tests.merge", "feature"),
+            parallel=True,
+            executor=executor,
+        )(extra_data=True)
+        Feature(
             test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
             parallel=True,
             executor=executor,
         )()
+        Feature(
+            "run with extra data",
+            test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
+            parallel=True,
+            executor=executor,
+        )(extra_data=True)
         Feature(
             test=load("aggregate_functions.tests.window_functions", "feature"),
             parallel=True,
