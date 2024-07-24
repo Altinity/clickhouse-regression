@@ -45,13 +45,17 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     "<=23.10"
                 )(self):
                     exitcode = 60
+                    message = "DB::Exception: Could not find table:"
                 else:
                     exitcode = None
-
-                note(f"exitcode should be {exitcode}")
+                    message = None
 
                 detach_partition(
-                    table=table_name, partition=1, node=client, errorcode=exitcode
+                    table=table_name,
+                    partition=1,
+                    node=client,
+                    errorcode=exitcode,
+                    message=message,
                 )
                 if exitcode is None:
                     table_after_detach = client.query(
@@ -61,6 +65,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     table_after_detach = client.query(
                         f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
                         errorcode=exitcode,
+                        message=message,
                     )
 
                 if exitcode is None:
@@ -75,10 +80,17 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     "<=23.10"
                 )(self):
                     exitcode = 60
+                    message = "DB::Exception: Could not find table:"
                 else:
                     exitcode = None
+                    message = None
+
                 attach_partition(
-                    table=table_name, partition=1, node=client, errorcode=exitcode
+                    table=table_name,
+                    partition=1,
+                    node=client,
+                    errorcode=exitcode,
+                    message=message,
                 )
 
             if exitcode is None:
@@ -153,13 +165,16 @@ def check_attach_partition_from_with_temporary_tables(
                     and check_clickhouse_version("<=23.10")(self)
                 ):
                     exitcode = 60
+                    message = "DB::Exception: Could not find table:"
                 elif (
                     "temporary" in destination_table.__name__ + source_table.__name__
                     and check_clickhouse_version("<=23.4")(self)
                 ):
                     exitcode = 60
+                    message = "DB::Exception: Could not find table:"
                 else:
                     exitcode = None
+                    message = None
 
                 note(f"exitcode should be {exitcode}")
 
@@ -182,7 +197,7 @@ def check_attach_partition_from_with_temporary_tables(
                     if exitcode is None:
                         client.query(query)
                     else:
-                        client.query(query, errorcode=exitcode)
+                        client.query(query, errorcode=exitcode, message=message)
 
             if exitcode is None:
                 with Then(
