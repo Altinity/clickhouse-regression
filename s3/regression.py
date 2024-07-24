@@ -228,14 +228,6 @@ ffails = {
         Skip,
         "SSEC currently not working. Timeout",
     ),
-    "aws s3/zero copy replication/add remove replica parallel": (
-        XFail,
-        "This test causes boto errors in subsequent tests.",
-    ),
-    "aws s3/zero copy replication/stale alter replica": (
-        XFail,
-        "This test causes boto errors in subsequent tests.",
-    ),
     ":/disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
