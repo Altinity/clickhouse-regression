@@ -204,7 +204,7 @@ def check_create_and_drop_tables(
                 note(f"released memory: {released_memory}")
                 assert (
                     current_memory.resident - start_memory.resident <= max_memory
-                ), f"Memory usage {current_memory.resident} larger than expected {max_memory}"
+                ), f"Memory usage {current_memory.resident - start_memory.resident} larger than expected {max_memory}"
 
 
 @TestFeature
