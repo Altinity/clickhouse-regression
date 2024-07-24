@@ -74,6 +74,7 @@ def scenario(
     self,
     func="groupBitmapAnd({params})",
     snapshot_id=None,
+    table=None,
 ):
     """Check groupBitmapAnd aggregate function."""
     self.context.snapshot_id = get_snapshot_id(
