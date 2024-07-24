@@ -15,6 +15,7 @@ def scenario(
     self,
     func="groupBitmapOr({params})",
     snapshot_id=None,
+    table=None,
 ):
     """Check groupBitmapOr aggregate function by using the same tests as for groupBitmapAnd."""
     self.context.snapshot_id = get_snapshot_id(
