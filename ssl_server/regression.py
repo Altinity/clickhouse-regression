@@ -106,6 +106,14 @@ xfails = {
             r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
         )
     ],
+    ":/https server:checks/:onnection:should:": [
+        (
+            Error,
+            "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
+            check_clickhouse_version(">=24.3"),
+            r"ExpectTimeoutError.+https_server[\w]+connection.+node.query\($",
+        )
+    ],
 }
 
 xflags = {}
