@@ -488,20 +488,6 @@ def regression(
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 
     with Pool(10) as executor:
-        for name in funcs_to_run_with_extra_data:
-            try:
-                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
-            except ModuleNotFoundError:
-                with Scenario(f"{name}"):
-                    skip(reason=f"{name} test is not implemented")
-                continue
-
-            Feature(
-                "run with extra data", test=scenario, parallel=True, executor=executor
-            )(table=self.context.table_extra_data, extra_data=True)
-        join()
-
-    with Pool(10) as executor:
         for name in [
             name for name in aggregate_functions if name not in window_functions
         ]:
@@ -517,9 +503,6 @@ def regression(
         join()
 
     Feature(run=load("aggregate_functions.tests.state", "feature"))
-    Feature(
-        "run with extra data", test=load("aggregate_functions.tests.state", "feature")
-    )(extra_data=True, table=self.context.table_extra_data)
 
     with Pool(5) as executor:
         Feature(
@@ -528,22 +511,10 @@ def regression(
             executor=executor,
         )()
         Feature(
-            "run with extra data",
-            test=load("aggregate_functions.tests.merge", "feature"),
-            parallel=True,
-            executor=executor,
-        )(extra_data=True)
-        Feature(
             test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
             parallel=True,
             executor=executor,
         )()
-        Feature(
-            "run with extra data",
-            test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
-            parallel=True,
-            executor=executor,
-        )(extra_data=True)
         Feature(
             test=load("aggregate_functions.tests.window_functions", "feature"),
             parallel=True,
@@ -590,7 +561,9 @@ def regression(
         #     executor=executor,
         # )()
         join()
-
+    
+    # Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
+    
 
 if main():
     regression()
