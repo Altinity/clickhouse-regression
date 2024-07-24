@@ -45,17 +45,19 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     "<=23.10"
                 )(self):
                     exitcode = 60
-                    message = "DB::Exception: Could not find table:"
+                    detach_message = "DB::Exception: Could not find table"
+                    select_message = "DB::Exception: Table"
                 else:
                     exitcode = None
-                    message = None
+                    detach_message = None
+                    select_message = None
 
                 detach_partition(
                     table=table_name,
                     partition=1,
                     node=client,
                     errorcode=exitcode,
-                    message=message,
+                    message=detach_message,
                 )
                 if exitcode is None:
                     table_after_detach = client.query(
@@ -65,7 +67,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     table_after_detach = client.query(
                         f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
                         errorcode=exitcode,
-                        message=message,
+                        message=select_message,
                     )
 
                 if exitcode is None:
