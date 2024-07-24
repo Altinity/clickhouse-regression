@@ -87,6 +87,10 @@ on:
         description: "Testflows output style."
         type: choice
         options:
+          - nice-new-fails
+          - brisk-new-fails
+          - plain-new-fails
+          - pnice-new-fails
           - new-fails
           - classic
           - nice
