@@ -1,3 +1,4 @@
+import boto3
 from testflows.core import *
 
 from s3.tests.common import *
