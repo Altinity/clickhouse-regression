@@ -140,10 +140,16 @@ def from_regular_to_temporary(self):
                 "I check if it is possible to replace partition on the regular table from the temporary table"
             ):
                 errorcode = None if check_clickhouse_version(">=23.11")(self) else 60
+                message = (
+                    None
+                    if check_clickhouse_version(">=23.11")(self)
+                    else "DB::Exception: Could not find table:"
+                )
 
                 client.query(
                     f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};",
                     errorcode=errorcode,
+                    message=message,
                 )
 
 
