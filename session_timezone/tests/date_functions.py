@@ -2,6 +2,7 @@ from testflows.core import *
 from session_timezone.requirements import *
 from testflows.asserts import error
 from session_timezone.tests.steps import *
+from helpers.common import check_clickhouse_version
 
 
 @TestFeature
@@ -135,17 +136,29 @@ def snowflake_to_datetime(self):
     """
     node = self.context.cluster.node("clickhouse1")
 
-    with Check("snowflakeToDateTime function"):
-        node.query(
-            f"SELECT snowflakeToDateTime(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
-            message=f"2021-08-15 10:58:19",
-        )
+    with Check("snowflakeToDateTime/snowflakeIDToDateTime function"):
+        if check_clickhouse_version("<24.6")(self):
+            node.query(
+                f"SELECT snowflakeToDateTime(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
+                message=f"2021-08-15 10:58:19",
+            )
+        else:
+            node.query(
+                f"SELECT snowflakeIDToDateTime(1426860802823350272, 1288834974657, 'UTC') FORMAT TabSeparated;",
+                message=f"2021-08-15 10:58:19",
+            )
 
-    with Check("snowflakeToDateTime64 function"):
-        node.query(
-            f"SELECT snowflakeToDateTime64(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
-            message=f"2021-08-15 10:58:19.841",
-        )
+    with Check("snowflakeToDateTime64/snowflakeIDToDateTime64 function"):
+        if check_clickhouse_version("<24.6")(self):
+            node.query(
+                f"SELECT snowflakeToDateTime64(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC' FORMAT TabSeparated;",
+                message=f"2021-08-15 10:58:19.841",
+            )
+        else:
+            node.query(
+                f"SELECT snowflakeIDToDateTime64(1426860802823350272, 1288834974657, 'UTC') FORMAT TabSeparated;",
+                message=f"2021-08-15 10:58:19.841",
+            )
 
 
 @TestScenario
@@ -158,19 +171,31 @@ def datetime_to_snowflake(self):
     """
     node = self.context.cluster.node("clickhouse1")
 
-    with Check("dateTime64ToSnowflake function"):
-        node.query(
-            f"WITH toDateTime64('2021-08-15 18:57:56.492', 3) AS dt64 SELECT dateTime64ToSnowflake(dt64) "
-            f"SETTINGS session_timezone = 'Asia/Shanghai' FORMAT TabSeparated;",
-            message=f"1426860704886947840",
-        )
+    with Check("dateTime64ToSnowflake/dateTime64ToSnowflake function"):
+        if check_clickhouse_version("<24.6")(self):
+            node.query(
+                f"WITH toDateTime64('2021-08-15 18:57:56.492', 3) AS dt64 SELECT dateTime64ToSnowflake(dt64) "
+                f"SETTINGS session_timezone = 'Asia/Shanghai' FORMAT TabSeparated;",
+                message=f"1426860704886947840",
+            )
+        else:
+            node.query(
+                f"WITH toDateTime64('2021-08-15 18:57:56.492', 3, 'Asia/Shanghai') AS dt64 SELECT dateTime64ToSnowflakeID(dt64, 1288834974657) FORMAT TabSeparated",
+                message=f"1426860704886947840",
+            )
 
-    with Check("dateTimeToSnowflake function"):
-        node.query(
-            f"WITH toDateTime('2021-08-15 18:57:56') AS dt SELECT dateTimeToSnowflake(dt) SETTINGS"
-            f" session_timezone = 'Asia/Shanghai' FORMAT TabSeparated;",
-            message=f"1426860702823350272",
-        )
+    with Check("dateTimeToSnowflake/dateTimeToSnowflakeID function"):
+        if check_clickhouse_version("<24.6")(self):
+            node.query(
+                f"WITH toDateTime('2021-08-15 18:57:56') AS dt SELECT dateTimeToSnowflake(dt) SETTINGS"
+                f" session_timezone = 'Asia/Shanghai' FORMAT TabSeparated;",
+                message=f"1426860702823350272",
+            )
+        else:
+            node.query(
+                f"WITH toDateTime('2021-08-15 18:57:56', 'Asia/Shanghai') AS dt SELECT dateTimeToSnowflakeID(dt, 1288834974657) FORMAT TabSeparated",
+                message=f"1426860702823350272",
+            )
 
 
 @TestFeature
