@@ -31,6 +31,16 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
         )
 
     with Check(f"TLSv1_2 suite connection should {tls1_2_status}"):
+        if check_clickhouse_version(">=24.4")(self):
+            with Given(
+                "I make sure requireTLSv1_2=False",
+                description="https://github.com/ClickHouse/ClickHouse/issues/65187",
+            ):
+                add_ssl_server_configuration_file(
+                    entries={"requireTLSv1_2": "false"},
+                    config_file="ssl_disable_requireTLSv1_2.xml",
+                    restart=True,
+                )
         openssl_client_connection(options="-tls1_2", success=tls1_2_enabled)
 
     with Check("TLSv1 suite connection should be rejected"):
@@ -55,24 +65,63 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
     with Check("DTLSv1_2 suite connection should be rejected"):
         openssl_client_connection(options="-dtls1.2", success=False)
 
-    with Check(f"just disabling TLSv1 suite connection should {tls1_2_status}"):
-        openssl_client_connection(options="-no_tls1", success=tls1_2_enabled)
+    with Check("just disabling"):
+        workaround_options = ""
+        if check_clickhouse_version(">=24.4")(self):
+            with Given(
+                "I make sure requireTLSv1_2=False",
+                description="https://github.com/ClickHouse/ClickHouse/issues/65187",
+            ):
+                add_ssl_server_configuration_file(
+                    entries={"requireTLSv1_2": "false"},
+                    config_file="ssl_disable_requireTLSv1_2.xml",
+                    restart=True,
+                )
+            with And(
+                "I use --no_tls1_3 with all queries",
+                description="without requireTLSv1_2, Clickhouse allows TLSv1.3",
+            ):
+                workaround_options = " -no_tls1_3"
 
-    with Check(f"just disabling TLSv1_1 suite connection should {tls1_2_status}"):
-        openssl_client_connection(options="-no_tls1_1", success=tls1_2_enabled)
+        with Check(f"TLSv1, suite connection should {tls1_2_status}"):
+            openssl_client_connection(
+                options="-no_tls1" + workaround_options, success=tls1_2_enabled
+            )
 
-    with Check(f"just disabling TLSv1_3 suite connection should {tls1_2_status}"):
-        openssl_client_connection(options="-no_tls1_3", success=tls1_2_enabled)
+        with Check(f"TLSv1_1, suite connection should {tls1_2_status}"):
+            openssl_client_connection(
+                options="-no_tls1_1" + workaround_options, success=tls1_2_enabled
+            )
+
+        with Check(f"TLSv1_3, suite connection should {tls1_2_status}"):
+            openssl_client_connection(options="-no_tls1_3", success=tls1_2_enabled)
 
     with Check("disabling TLSv1_2 suite connection should be rejected"):
         openssl_client_connection(options="-no_tls1_2", success=False)
+
+    if check_clickhouse_version(">=24.4")(self):
+        workaround_options = ""
+        with Given(
+            "I make sure requireTLSv1_2=False",
+            description="https://github.com/ClickHouse/ClickHouse/issues/65187",
+        ):
+            add_ssl_server_configuration_file(
+                entries={"requireTLSv1_2": "false"},
+                config_file="ssl_disable_requireTLSv1_2.xml",
+                restart=True,
+            )
+        with And(
+            "I use --no_tls1_3 with all queries",
+            description="without requireTLSv1_2, Clickhouse allows TLSv1.3",
+        ):
+            workaround_options = " -no_tls1_3"
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
         with Check(
             f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"
         ):
             openssl_client_connection(
-                options=f'-cipher "{cipher}"',
+                options=f'-cipher "{cipher}"' + workaround_options,
                 success=tls1_2_enabled,
             )
 
@@ -82,7 +131,9 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
-            openssl_client_connection(options=f'-cipher "{cipher}"', success=False)
+            openssl_client_connection(
+                options=f'-cipher "{cipher}"' + workaround_options, success=False
+            )
 
 
 @TestOutline
@@ -225,6 +276,17 @@ def server_https_connection_curl(self, port=None, tls1_2_enabled=True):
         self.context.connection_port = port
 
     with Check(f"TLSv1_2 suite connection should {tls1_2_status}"):
+        if check_clickhouse_version(">=24.4")(self):
+            with Given(
+                "I make sure requireTLSv1_2=False",
+                description="https://github.com/ClickHouse/ClickHouse/issues/65187",
+            ):
+                add_ssl_server_configuration_file(
+                    entries={"requireTLSv1_2": "false"},
+                    config_file="ssl_disable_requireTLSv1_2.xml",
+                    restart=True,
+                )
+
         curl_client_connection(
             options="--tls-max 1.2 --tlsv1.2",
             success=tls1_2_enabled,
@@ -248,14 +310,47 @@ def server_https_connection_curl(self, port=None, tls1_2_enabled=True):
             success=False,
         )
 
-    with Check(f"just disabling TLSv1 suite connection should {tls1_2_status}"):
-        curl_client_connection(options="--tlsv1.1", success=tls1_2_enabled)
+    with Check("just disabling"):
+        workaround_options = ""
+        if check_clickhouse_version(">=24.4")(self):
+            with Given(
+                "I make sure requireTLSv1_2=False",
+                description="https://github.com/ClickHouse/ClickHouse/issues/65187",
+            ):
+                add_ssl_server_configuration_file(
+                    entries={"requireTLSv1_2": "false"},
+                    config_file="ssl_disable_requireTLSv1_2.xml",
+                    restart=True,
+                )
+            with And(
+                "I use --tls-max 1.2 with all queries",
+                description="without requireTLSv1_2, Clickhouse allows TLSv1.3",
+            ):
+                workaround_options = " --tls-max 1.2"
 
-    with Check(f"just disabling TLSv1_1 suite connection should {tls1_2_status}"):
-        curl_client_connection(options="--tlsv1.2", success=tls1_2_enabled)
+        with Check(f"TLSv1, suite connection should {tls1_2_status}"):
+            curl_client_connection(
+                options="--tlsv1.1" + workaround_options, success=tls1_2_enabled
+            )
 
-    with Check(f"just disabling TLSv1_3 suite connection should {tls1_2_status}"):
-        curl_client_connection(options="--tls-max 1.2", success=tls1_2_enabled)
+        with Check(f"TLSv1_1, suite connection should {tls1_2_status}"):
+            curl_client_connection(
+                options="--tlsv1.2" + workaround_options, success=tls1_2_enabled
+            )
+
+        with Check(f"TLSv1_3, suite connection should {tls1_2_status}"):
+            curl_client_connection(options="--tls-max 1.2", success=tls1_2_enabled)
+
+    if check_clickhouse_version(">=24.4")(self):
+        with Given(
+            "I make sure requireTLSv1_2=False",
+            description="https://github.com/ClickHouse/ClickHouse/issues/65187",
+        ):
+            add_ssl_server_configuration_file(
+                entries={"requireTLSv1_2": "false"},
+                config_file="ssl_disable_requireTLSv1_2.xml",
+                restart=True,
+            )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
         with Check(
@@ -272,7 +367,9 @@ def server_https_connection_curl(self, port=None, tls1_2_enabled=True):
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
-            curl_client_connection(options=f'--ciphers "{cipher}"', success=False)
+            curl_client_connection(
+                options=f'--ciphers "{cipher}" --tls-max 1.2', success=False
+            )
 
 
 @TestOutline
