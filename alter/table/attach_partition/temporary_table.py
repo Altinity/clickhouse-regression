@@ -168,12 +168,6 @@ def check_attach_partition_from_with_temporary_tables(
                 ):
                     exitcode = 60
                     message = "DB::Exception: Could not find table:"
-                elif (
-                    "temporary" in destination_table.__name__ + source_table.__name__
-                    and check_clickhouse_version("<=23.4")(self)
-                ):
-                    exitcode = 60
-                    message = "DB::Exception: Could not find table:"
                 else:
                     exitcode = None
                     message = None
@@ -238,7 +232,7 @@ def check_attach_partition_from_with_temporary_tables(
                     )
 
 
-@TestSketch(Scenario)
+@TestScenario
 @Flags(TE)
 def attach_partition_detached_with_temporary_tables(self):
     """Run test check with different table types to see if attach partition is possible."""
@@ -255,14 +249,18 @@ def attach_partition_detached_with_temporary_tables(self):
         "VersionedCollapsingMergeTree",
         "GraphiteMergeTree",
     }
+    with Pool(5) as executor:
+        for table, engine in product(tables, engines):
+            Scenario(
+                f"{table.__name__}_{engine}",
+                test=check_attach_partition_detached_with_temporary_tables,
+                parallel=True,
+                executor=executor,
+            )(table=table, engine=engine)
+        join()
 
-    check_attach_partition_detached_with_temporary_tables(
-        table=either(*tables),
-        engine=either(*engines),
-    )
 
-
-@TestSketch(Scenario)
+@TestScenario
 @Flags(TE)
 def attach_partition_from_with_temporary_tables(self):
     """Run test check with different table types to see if attach partition is possible."""
@@ -286,12 +284,25 @@ def attach_partition_from_with_temporary_tables(self):
         "GraphiteMergeTree",
     }
 
-    check_attach_partition_from_with_temporary_tables(
-        source_table=either(*source_tables),
-        destination_table=either(*destination_tables),
-        source_table_engine=either(*engines),
-        destination_table_engine=either(*engines),
-    )
+    with Pool(5) as executor:
+        for (
+            source_table,
+            destination_table,
+            source_table_engine,
+            destination_table_engine,
+        ) in product(source_tables, destination_tables, engines, engines):
+            Scenario(
+                f"{source_table.__name__}_{destination_table.__name__}_{source_table_engine}_{destination_table_engine}",
+                test=check_attach_partition_from_with_temporary_tables,
+                parallel=True,
+                executor=executor,
+            )(
+                source_table=source_table,
+                destination_table=destination_table,
+                source_table_engine=source_table_engine,
+                destination_table_engine=destination_table_engine,
+            )
+        join()
 
 
 @TestFeature
