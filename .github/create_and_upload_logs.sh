@@ -8,6 +8,9 @@ echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pip
 tfs --debug --no-colors transform brisk-new-fails raw.log brisk-new-fails.log.txt
 tfs --debug --no-colors transform nice-new-fails raw.log nice-new-fails.log.txt
 tfs --debug --no-colors report results -a "$JOB_REPORT_INDEX" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+echo "Re-compress the raw.log"
+cat raw.log | xzcat | xz -z -T $(nproc) - > raw.log.2
+mv raw.log.2 raw.log
 
 #Specify whether logs should be uploaded.
 if [[ $1 == 1 ]];
