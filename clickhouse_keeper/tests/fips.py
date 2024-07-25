@@ -19,7 +19,7 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
     ):
         pass
 
-    with Check("Connection with no protocols should be rejected"):
+    with Check("connection with no protocols should be rejected"):
         openssl_client_connection(
             options="-no_tls1 -no_tls1_1 -no_tls1_2 -no_tls1_3",
             success=False,
@@ -98,7 +98,7 @@ def tcp_connection_clickhouse_client(
     ):
         self.context.connection_port = port
 
-    with Check("Connection with no protocols should be rejected"):
+    with Check("connection with no protocols should be rejected"):
         output = clickhouse_client_connection(
             options={
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
@@ -291,7 +291,7 @@ def url_table_function(self):
 
     for tls_version, should_work in tls_versions_supported.items():
         with Check(
-            f"Connection with Protocol={tls_version} should be {'accepted' if should_work else 'rejected'}"
+            f"connection with Protocol={tls_version} should be {'accepted' if should_work else 'rejected'}"
         ):
             flask_server(
                 server_path=server_file_path,
@@ -301,7 +301,7 @@ def url_table_function(self):
             )
 
             test_https_connection_with_url_table_function(
-                port=port, success=should_work
+                port=port, success=should_work, timeout=5
             )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
@@ -313,7 +313,9 @@ def url_table_function(self):
                 ciphers=default_ciphers,
             )
 
-            test_https_connection_with_url_table_function(port=port, success=True)
+            test_https_connection_with_url_table_function(
+                port=port, success=True, timeout=5
+            )
 
         for second_cipher in all_ciphers:
             with Check(
@@ -327,7 +329,9 @@ def url_table_function(self):
                     ciphers=f"{cipher}:{second_cipher}",
                 )
 
-                test_https_connection_with_url_table_function(port=port, success=True)
+                test_https_connection_with_url_table_function(
+                    port=port, success=True, timeout=5
+                )
 
     for cipher in all_ciphers:
         if cipher in fips_compatible_tlsv1_2_cipher_suites:
@@ -377,7 +381,9 @@ def dictionary(self):
                 ciphers=default_ciphers,
             )
 
-            test_https_connection_with_dictionary(port=port, success=should_work)
+            test_https_connection_with_dictionary(
+                port=port, success=should_work, timeout=5
+            )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
         with Check(f"connection using FIPS compatible cipher {cipher} should work"):
@@ -388,7 +394,7 @@ def dictionary(self):
                 ciphers=cipher,
             )
 
-            test_https_connection_with_dictionary(port=port, success=True)
+            test_https_connection_with_dictionary(port=port, success=True, timeout=5)
 
         for second_cipher in all_ciphers:
             with Check(
@@ -402,7 +408,9 @@ def dictionary(self):
                     ciphers=f"{cipher}:{second_cipher}",
                 )
 
-                test_https_connection_with_dictionary(port=port, success=True)
+                test_https_connection_with_dictionary(
+                    port=port, success=True, timeout=5
+                )
 
     for cipher in all_ciphers:
         if cipher in fips_compatible_tlsv1_2_cipher_suites:
@@ -418,7 +426,7 @@ def dictionary(self):
                 ciphers=cipher,
             )
 
-            test_https_connection_with_dictionary(port=port, success=False)
+            test_https_connection_with_dictionary(port=port, success=False, timeout=5)
 
     with Finally("I remove the flask server file"):
         node.command(f"rm -f {server_file_path}")
