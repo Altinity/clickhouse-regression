@@ -118,6 +118,13 @@ xfails = {
             r"ExpectTimeoutError.+https_server[\w]+connection.+node.query\($",
         )
     ],
+    "fips/server/all protocols disabled/tcp connection/clickhouse-client/:/:": [
+        (
+            Fail,
+            "needs workaround https://github.com/ClickHouse/ClickHouse/issues/65187",
+            check_clickhouse_version(">=24.4"),
+        )
+    ],
 }
 
 xflags = {}
