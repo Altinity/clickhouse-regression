@@ -12,9 +12,13 @@ from helpers.cluster import create_cluster
 from helpers.common import *
 
 xfails = {
-    # "/memory/memory leak/*": [
-    #     (Fail, "should be fixed", check_clickhouse_version("<24"))
-    # ],
+    "/memory/memory leak/*": [
+        (
+            Fail,
+            "memory leak detected on 23.8, need to investigate on 24.7",
+            check_clickhouse_version("<24") or check_clickhouse_version(">=24.6"),
+        )
+    ],
 }
 
 
