@@ -55,14 +55,18 @@ xfails = {
     ":/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/tcp connection/:/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
-    "fips/server/:/tcp connection/:/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
-    "fips/:/:/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
-    ":/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
+    "fips/server/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/server/:/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/:/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    ":/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
     "fips/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
