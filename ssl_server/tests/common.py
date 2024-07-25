@@ -1040,7 +1040,7 @@ def create_crt_and_key(
 
 @TestStep(Then)
 def https_server_url_function_connection(
-    self, success=True, options=None, node=None, port=None
+    self, success=True, options=None, node=None, port=None, timeout=15
 ):
     """Check reading data from an https server with specified clickhouse-server config."""
     if node is None:
@@ -1062,12 +1062,19 @@ def https_server_url_function_connection(
         node.query(
             f"SELECT * FROM url('https://127.0.0.1:{port}/data', 'CSV') FORMAT CSV",
             message=message,
+            timeout=timeout,
         )
 
 
 @TestStep(Given)
 def https_server_https_dictionary_connection(
-    self, name=None, node=None, success=True, options=None, port=None
+    self,
+    name=None,
+    node=None,
+    success=True,
+    options=None,
+    port=None,
+    timeout=5,
 ):
     """Check reading data from a dictionary sourced from an https server"""
     if node is None:
@@ -1091,11 +1098,14 @@ def https_server_https_dictionary_connection(
     try:
         with When("I create a dictionary using an https source"):
             node.query(
-                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://127.0.0.1:{port}/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())"
+                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://127.0.0.1:{port}/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())",
+                timeout=timeout,
             )
 
         with Then("I select data from the dictionary"):
-            node.query(f"SELECT * FROM {name} FORMAT CSV", message=message)
+            node.query(
+                f"SELECT * FROM {name} FORMAT CSV", message=message, timeout=timeout
+            )
 
     finally:
         with Finally("I remove the dictionary"):

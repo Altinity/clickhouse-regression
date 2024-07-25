@@ -40,12 +40,13 @@ def https_server_url_function_checks(self):
             ciphers=default_ciphers,
         )
 
-    with Check("Connection with no protocols should be rejected"):
+    with Check("connection with no protocols should be rejected"):
         https_server_url_function_connection(
             options={
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
             },
             success=False,
+            timeout=5,
         )
 
     with Check(f"TLSv1.2 suite connection should work"):
@@ -64,6 +65,7 @@ def https_server_url_function_checks(self):
                 "disableProtocols": "sslv2,sslv3,tlsv1_1,tlsv1_2,tlsv1_3",
             },
             success=False,
+            timeout=5,
         )
 
     with Check("TLSv1.1 suite connection should be rejected"):
@@ -73,6 +75,7 @@ def https_server_url_function_checks(self):
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_2,tlsv1_3",
             },
             success=False,
+            timeout=5,
         )
 
     with Check("TLSv1.3 suite connection should be rejected"):
@@ -82,6 +85,7 @@ def https_server_url_function_checks(self):
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
             },
             success=False,
+            timeout=5,
         )
 
     with Check(f"just disabling TLSv1 suite connection should work"):
@@ -111,6 +115,7 @@ def https_server_url_function_checks(self):
                     "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
                 },
                 success=True,
+                timeout=5,
             )
 
     for cipher in all_ciphers:
@@ -122,6 +127,7 @@ def https_server_url_function_checks(self):
             https_server_url_function_connection(
                 options={"cipherList": cipher, "disableProtocols": ""},
                 success=False,
+                timeout=5,
             )
 
 
