@@ -17,12 +17,12 @@ def feature(self, table=None):
                 continue
 
             Scenario(test=scenario, parallel=True, executor=executor)(
-                table=self.context.table_extra_data, extra_data=True
+                table=table, extra_data=True
             )
         join()
 
     Feature(test=load("aggregate_functions.tests.state", "feature"))(
-        extra_data=True, table=self.context.table_extra_data
+        extra_data=True, table=table
     )
 
     with Pool(2) as executor:
