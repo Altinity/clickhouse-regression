@@ -61,7 +61,8 @@ def finalizeAggregation(self, scenario, short_name, extra_data=None):
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
 
-    snapshot_module = SourceFileLoader(func, snapshot_path).load_module()  # add UUID
+    fullname = func + getuid()
+    snapshot_module = SourceFileLoader(fullname, snapshot_path).load_module()
     snapshot_attrs = {
         k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
     }
