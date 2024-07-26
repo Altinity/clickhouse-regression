@@ -490,7 +490,7 @@ def not_present_role_added(self, server):
                             asynchronous=True,
                             name="client",
                         ) as client:
-                            client.app.expect("clickhouse1 :\) ")
+                            client.app.expect(r"clickhouse1 :\) ")
 
                             with When("I execute select on the table"):
                                 client.app.send(
@@ -499,7 +499,7 @@ def not_present_role_added(self, server):
 
                             with Then("I expect to get not enough privileges error"):
                                 client.app.expect("Not enough privileges")
-                                client.app.expect("clickhouse1 :\) ")
+                                client.app.expect(r"clickhouse1 :\) ")
 
                             try:
                                 with Given(
@@ -518,8 +518,8 @@ def not_present_role_added(self, server):
                                     )
 
                                 with Then("I expect to get no errors"):
-                                    client.app.expect("Ok\.")
-                                    client.app.expect("clickhouse1 :\) ")
+                                    client.app.expect(r"Ok\.")
+                                    client.app.expect(r"clickhouse1 :\) ")
 
                             finally:
                                 with Finally("I delete the role"):
