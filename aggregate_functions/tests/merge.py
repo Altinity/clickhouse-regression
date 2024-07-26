@@ -78,12 +78,12 @@ def merge(self, scenario, short_name, is_parametric, extra_data=None):
     fullname = func + getuid()
     snapshot_module = SourceFileLoader(
         fullname, snapshot_path
-    ).load_module()  # add UUID
+    ).load_module() 
     snapshot_attrs = {
         k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
     }
 
-    with Pool(5) as executor:
+    with Pool(7) as executor:
         for key, value in snapshot_attrs.items():
             with By("I break single snapshot value into lines"):
                 data = value.strip().split("\n")

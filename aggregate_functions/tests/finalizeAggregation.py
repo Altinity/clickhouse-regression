@@ -66,7 +66,7 @@ def finalizeAggregation(self, scenario, short_name, extra_data=None):
         k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
     }
 
-    with Pool(3) as executor:
+    with Pool(7) as executor:
         for key, value in snapshot_attrs.items():
             with By("I break single snapshot value into lines"):
                 data = value.strip().split("\n")
