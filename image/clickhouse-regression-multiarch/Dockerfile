@@ -39,11 +39,6 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
         /tmp/* \
     && apt-get clean
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip" -o "awscliv2.zip"
-RUN unzip awscliv2.zip
-RUN ./aws/install
-RUN rm -f awscliv2.zip
-
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -67,6 +62,11 @@ RUN set -eux; ARCH=$(uname -i); \
 		--directory /usr/local/bin/ \
 	; \
 	rm docker.tgz
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}-2.0.30.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+RUN rm -f awscliv2.zip
 
 
 RUN mkdir -p /etc/apt/sources.list.d \
