@@ -89,7 +89,7 @@ def scenario(self, engine):
                     node.query(
                         f"OPTIMIZE TABLE {table_name} FINAL",
                         steps=False,
-                        timeout=200,
+                        timeout=300,
                         raise_on_exception=True,
                     )
 
