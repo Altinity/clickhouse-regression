@@ -118,6 +118,14 @@ xfails = {
             r"ExpectTimeoutError.+https_server[\w]+connection.+node.query\($",
         )
     ],
+    ":/clickhouse server acting as a client/:/:onnection:should:": [
+        (
+            Error,
+            "Takes too long on 24.4+ https://github.com/ClickHouse/ClickHouse/issues/62887",
+            check_clickhouse_version(">=24.4"),
+            r"ExpectTimeoutError.+test_https_connection_with.+node.query\($",
+        )
+    ],
     "fips/server/all protocols disabled/tcp connection/clickhouse-client/:/:": [
         (
             Fail,
