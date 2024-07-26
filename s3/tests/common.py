@@ -3,7 +3,6 @@ import base64
 import tempfile
 from contextlib import contextmanager
 
-import boto3
 from minio import Minio
 from testflows.connect import Shell
 from testflows.combinatorics import combinations
@@ -786,18 +785,13 @@ def get_bucket_size(
             )
             return sum(obj._size for obj in objects)
 
-    with By(
-        "querying with boto3 client", description=f"bucket: {name}, prefix: {prefix}"
-    ):
-        s3 = boto3.resource(
-            "s3", aws_access_key_id=key_id, aws_secret_access_key=access_key
+    with By("querying with aws cli", description=f"bucket: {name}, prefix: {prefix}"):
+        cmd = (
+            f"aws s3 ls s3://{name}/{prefix} --recursive --summarize | "
+            "grep -Po --color=never '(?<=Total Size: )(.+)'"
         )
-        bucket = s3.Bucket(name)
-        total_bytes = 0
-        for obj in bucket.objects.filter(Prefix=prefix):
-            total_bytes += obj.size
-
-        return total_bytes
+        result = self.context.node.command(cmd, steps=False, no_checks=True)
+        return int(result.output)
 
 
 @TestStep(Then)
