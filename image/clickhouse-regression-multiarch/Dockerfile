@@ -63,7 +63,7 @@ RUN set -eux; ARCH=$(uname -i); \
 	; \
 	rm docker.tgz
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}-2.0.30.zip" -o "awscliv2.zip"
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -i)-2.0.30.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
 RUN rm -f awscliv2.zip
