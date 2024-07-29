@@ -362,12 +362,6 @@ def full_replication(self, uri, bucket_prefix):
 
 
 @TestFeature
-@FFails(
-    {
-        ":etach:": (Skip, "detach not enabled with zero copy replication"),
-        ":reeze:": (Skip, "freeze not enabled with zero copy replication"),
-    }
-)
 def zero_copy_replication(self, uri, bucket_prefix):
 
     with Given("a temporary s3 path"):
