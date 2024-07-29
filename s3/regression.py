@@ -262,6 +262,14 @@ ffails = {
         "not supported <=23.8",
         check_clickhouse_version("<=23.8"),
     ),
+    ":/orphans/zero copy replication/:etach:": (
+        Skip,
+        "detach not enabled with zero copy replication",
+    ),
+    ":/orphans/zero copy replication/:reeze:": (
+        Skip,
+        "freeze not enabled with zero copy replication",
+    ),
 }
 
 
