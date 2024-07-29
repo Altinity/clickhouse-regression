@@ -223,6 +223,10 @@ ffails = {
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
+    "gcs/orphans": (
+        Skip,
+        "AWS S3 credentials not set for gcs tests.",
+    ),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
