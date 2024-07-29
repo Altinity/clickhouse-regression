@@ -253,6 +253,11 @@ ffails = {
         "Many settings not supported <23.8",
         check_clickhouse_version("<23.8"),
     ),
+    ":/orphans": (
+        Skip,
+        "not supported <=23.8",
+        check_clickhouse_version("<=23.8"),
+    ),
 }
 
 
