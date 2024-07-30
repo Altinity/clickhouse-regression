@@ -239,7 +239,9 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=sql.format(column_name=column.name, table_name=table.name, order=order),
+                    sql=sql.format(
+                        column_name=column.name, table_name=table.name, order=order
+                    ),
                     expected=r.output.strip() if reference_table_name else None,
                 )
             join()
