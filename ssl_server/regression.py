@@ -121,8 +121,8 @@ xfails = {
     ":/clickhouse server acting as a client/:/:onnection:should:": [
         (
             Error,
-            "Takes too long on 24.4+ https://github.com/ClickHouse/ClickHouse/issues/62887",
-            check_clickhouse_version(">=24.4"),
+            "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
+            check_clickhouse_version(">=24.3"),
             r"ExpectTimeoutError.+test_https_connection_with.+node.query\($",
         )
     ],
