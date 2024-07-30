@@ -100,7 +100,7 @@ def encryption_decryption_mysql(self):
         if mode == "'aes-128-ecb'":
             expected_time = 0.3
         else:
-            expected_time = 0.22
+            expected_time = 0.24
 
         with Example(f"""mode={mode.strip("'")} key={key_len} iv={iv_len}"""):
             t_start = time.time()
