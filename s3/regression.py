@@ -223,6 +223,10 @@ ffails = {
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
+    "gcs/orphans": (
+        Skip,
+        "AWS S3 credentials not set for gcs tests.",
+    ),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
@@ -252,6 +256,19 @@ ffails = {
         Skip,
         "Many settings not supported <23.8",
         check_clickhouse_version("<23.8"),
+    ),
+    ":/orphans": (
+        Skip,
+        "not supported <24",
+        check_clickhouse_version("<24"),
+    ),
+    ":/orphans/zero copy replication/:etach:": (
+        Skip,
+        "detach not enabled with zero copy replication",
+    ),
+    ":/orphans/zero copy replication/:reeze:": (
+        Skip,
+        "freeze not enabled with zero copy replication",
     ),
 }
 
