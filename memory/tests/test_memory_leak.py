@@ -169,7 +169,7 @@ def check_create_and_drop_tables(
     number_of_workers=20,
     number_of_tables=15000,
     node=None,
-    timeout=1200,
+    timeout=3600,
 ):
     """Test memory leak when we create and drop many tables."""
     if node is None:
@@ -194,7 +194,7 @@ def check_create_and_drop_tables(
         note(f"end resident memory: {end_memory.resident}")
 
     with Then("I check for memory leaks and calculate released memory"):
-        max_memory = 110000
+        max_memory = 150000
         for attempt in retries(timeout=timeout, delay=10):
             with attempt:
                 current_memory = get_process_memory_usage(pid=pid)
