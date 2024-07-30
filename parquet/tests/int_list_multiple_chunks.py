@@ -31,7 +31,7 @@ def feature(self, node="clickhouse1"):
     with Then(
         "I check that the data was successfully written into the ClickHouse table"
     ):
-        if check_clickhouse_version(">23.8")(self):
+        if check_clickhouse_version(">23.9")(self):
             order = "ALL"
         else:
             order = "tuple(*)"

@@ -187,7 +187,7 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
         with And(
             "I select and save the data from the reference table and from the newly created table"
         ):
-            if check_clickhouse_version(">23.8")(self):
+            if check_clickhouse_version(">23.9")(self):
                 order = "ALL"
             else:
                 order = "tuple(*)"
@@ -214,7 +214,7 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
                 f"INSERT INTO {table_name} FROM INFILE '{path}' {'COMPRESSION ' + compression if compression and compression != 'NONE' else ''} FORMAT Parquet"
             )
 
-        if check_clickhouse_version(">23.8")(self):
+        if check_clickhouse_version(">23.9")(self):
             order = "ALL"
         else:
             order = "tuple(*)"
