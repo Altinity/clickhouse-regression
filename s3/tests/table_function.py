@@ -628,8 +628,13 @@ def ssec(self):
 @Name("table function")
 def aws_s3(self, uri, bucket_prefix):
 
-    self.context.uri = uri
-    self.context.bucket_path = bucket_prefix
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/table_function"
+        )
+
+        self.context.uri = f"{uri}table_function/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"
 
     outline()
 
@@ -642,8 +647,11 @@ def aws_s3(self, uri, bucket_prefix):
 @Name("table function")
 def gcs(self, uri, bucket_prefix):
 
-    self.context.uri = uri
-    self.context.bucket_path = bucket_prefix
+    with Given("a temporary s3 path"):
+        temp_s3_path = "temp"  # temporary_bucket_path does not support gcs yet
+
+        self.context.uri = f"{uri}table_function/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"
 
     outline()
 
@@ -653,7 +661,12 @@ def gcs(self, uri, bucket_prefix):
 @Name("table function")
 def minio(self, uri, bucket_prefix):
 
-    self.context.uri = uri
-    self.context.bucket_path = bucket_prefix
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/table_function"
+        )
+
+        self.context.uri = f"{uri}table_function/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"
 
     outline()
