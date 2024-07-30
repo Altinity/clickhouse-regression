@@ -51,7 +51,7 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                 """
             )
 
-            if check_clickhouse_version(">23.8")(self):
+            if check_clickhouse_version(">23.9")(self):
                 order = "ALL"
             else:
                 order = "tuple(*)"
