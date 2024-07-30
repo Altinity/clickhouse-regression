@@ -259,8 +259,8 @@ ffails = {
     ),
     ":/orphans": (
         Skip,
-        "not supported <=23.8",
-        check_clickhouse_version("<=23.8"),
+        "not supported <24",
+        check_clickhouse_version("<24"),
     ),
     ":/orphans/zero copy replication/:etach:": (
         Skip,
