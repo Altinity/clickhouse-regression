@@ -51,8 +51,13 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                 """
             )
 
+            if check_clickhouse_version(">23.8")(self):
+                order = "ALL"
+            else:
+                order = "tuple(*)"
+
             table_values = node.query(
-                f"SELECT * FROM {table_name} ORDER BY ALL FORMAT TabSeparated"
+                f"SELECT * FROM {table_name} ORDER BY {order} FORMAT TabSeparated"
             )
 
         with Then("I check that the output is correct"):
