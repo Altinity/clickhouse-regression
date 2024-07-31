@@ -32,7 +32,7 @@ on:
         description: "Extra test program arguments. Default: none (empty string)."
         type: string
         default: ""
-    analyzer:
+      analyzer:
         description: "Used to add information about analyzer to the log path."
         type: string
         default: "without_analyzer"
