@@ -25,21 +25,3 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
-  altinitystable-22-3-arm-zookeeper:
-    uses: ./.github/workflows/reusable-workflow-arm.yml
-    with:
-      package: docker://altinity/clickhouse-server:22.3.15.34.altinitystable
-      version: '22.3.15.34'
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      GCS_URI: ${{ secrets.GCS_URI }}
-      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
