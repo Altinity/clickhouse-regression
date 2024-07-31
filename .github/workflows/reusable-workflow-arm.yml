@@ -35,7 +35,7 @@ on:
       analyzer:
         description: "Used to add information about analyzer to the log path."
         type: string
-        default: ""
+        default: "without_analyzer"
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
