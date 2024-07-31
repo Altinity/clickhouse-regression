@@ -648,7 +648,9 @@ def aws_s3(self, uri, bucket_prefix):
 def gcs(self, uri, bucket_prefix):
 
     with Given("a temporary s3 path"):
-        temp_s3_path = "temp"  # temporary_bucket_path does not support gcs yet
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/table_function"
+        )
 
         self.context.uri = f"{uri}table_function/{temp_s3_path}/"
         self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"

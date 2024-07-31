@@ -458,11 +458,13 @@ def gcs_regression(
         fail("GCS key id needs to be set")
     key_id = key_id.value
 
-    bucket_prefix = "data"
+    bucket_name, bucket_prefix = uri.split("https://storage.googleapis.com/")[-1].split(
+        "/", maxsplit=1
+    )
     self.context.storage = "gcs"
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
-    self.context.bucket_name = None
+    self.context.bucket_name = Secret(name="gcs_bucket")(bucket_name).value
 
     with Cluster(
         **cluster_args,

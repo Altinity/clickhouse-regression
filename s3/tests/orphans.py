@@ -346,13 +346,10 @@ def remove_orphans(self):
 def full_replication(self, uri, bucket_prefix):
 
     with Given("a temporary s3 path"):
-        if self.context.storage == "gcs":
-            temp_s3_path = "disk"  # temporary_bucket_path does not support gcs yet
-        else:
-            temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/orphans")
 
-        self.context.uri = f"{uri}disk/{temp_s3_path}/"
-        self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"
+        self.context.uri = f"{uri}orphans/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/orphans/{temp_s3_path}"
 
     with Given("I have S3 disks configured"):
         default_s3_disk_and_volume()
@@ -365,13 +362,10 @@ def full_replication(self, uri, bucket_prefix):
 def zero_copy_replication(self, uri, bucket_prefix):
 
     with Given("a temporary s3 path"):
-        if self.context.storage == "gcs":
-            temp_s3_path = "disk"  # temporary_bucket_path does not support gcs yet
-        else:
-            temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/orphans")
 
-        self.context.uri = f"{uri}disk/{temp_s3_path}/"
-        self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"
+        self.context.uri = f"{uri}orphans/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/orphans/{temp_s3_path}"
 
     with And("I have S3 disks configured"):
         default_s3_disk_and_volume()

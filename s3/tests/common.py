@@ -1113,6 +1113,7 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
     assert self.context.storage in [
         "minio",
         "aws_s3",
+        "gcs",
     ], f"Unsupported storage: {self.context.storage}"
 
     if bucket_name is None:
@@ -1141,6 +1142,16 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
 
                 node.command(
                     f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                )
+
+            elif self.context.storage == "gcs":
+                node = current().context.node
+                node.command(
+                    (
+                        f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key}"
+                        f" aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                        " --endpoint=https://storage.googleapis.com/"
+                    )
                 )
 
 
