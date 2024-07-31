@@ -2457,7 +2457,7 @@ def disk_tests(self, uri, bucket_prefix):
 
     with Given("a temporary s3 path"):
         if self.context.storage == "gcs":
-            temp_s3_path = "disk"  # temporary_bucket_path does not support gcs yet
+            temp_s3_path = "temp"  # temporary_bucket_path does not support gcs yet
         else:
             temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
 
