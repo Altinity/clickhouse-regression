@@ -786,8 +786,13 @@ def get_bucket_size(
             return sum(obj._size for obj in objects)
 
     with By("querying with aws cli", description=f"bucket: {name}, prefix: {prefix}"):
+        aws = "aws"
+
+        if self.context.storage == "gcs":
+            aws = f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} aws --endpoint-url=https://storage.googleapis.com/"
+
         cmd = (
-            f"aws s3 ls s3://{name}/{prefix} --recursive --summarize | "
+            f"{aws} s3 ls s3://{name}/{prefix} --recursive --summarize | "
             "grep -Po --color=never '(?<=Total Size: )(.+)'"
         )
         result = self.context.node.command(cmd, steps=False, no_checks=True)

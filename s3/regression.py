@@ -213,15 +213,15 @@ ffails = {
     ),
     "gcs/:/:/:/:the size of the s3 bucket*": (
         Skip,
-        "AWS S3 credentials not set for gcs tests.",
+        "needs investigation",
     ),
     "gcs/:/:/:the size of the s3 bucket*": (
         Skip,
-        "AWS S3 credentials not set for gcs tests.",
+        "needs investigation",
     ),
     "gcs/table function/measure file size": (
         Skip,
-        "AWS S3 credentials not set for gcs tests.",
+        "needs investigation",
     ),
     "gcs/orphans": (
         Skip,
