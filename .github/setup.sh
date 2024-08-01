@@ -66,14 +66,17 @@ elif [[ $artifacts == 'builds' ]]; then
 
 fi
 
-echo $args
-echo $args == *'--with-analyzer'*
 if [[ $args == *'--with-analyzer'* ]]; then
   analyzer="with_analyzer"
 else
   analyzer="without_analyzer"
 fi
-echo $analyzer
+
+if [[ $args == *'--use-keeper'* ]]; then
+  keeper_or_zookeeper="keeper"
+else
+  keeper_or_zookeeper="zookeeper"
+fi
 
 
 JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
@@ -86,12 +89,12 @@ echo "JOB_REPORT_INDEX=$JOB_REPORT_INDEX" >> $GITHUB_ENV
 JOB_S3_ROOT=s3://$artifact_s3_bucket_path/$artifact_s3_dir
 echo "JOB_S3_ROOT=$JOB_S3_ROOT" >> $GITHUB_ENV
 
-SUITE_REPORT_INDEX_URL=$JOB_REPORT_INDEX$(uname -i)/$analyzer/$SUITE$STORAGE/
+SUITE_REPORT_INDEX_URL=$JOB_REPORT_INDEX$(uname -i)/${analyzer}_${keeper_or_zookeeper}/$SUITE$STORAGE/
 echo "SUITE_REPORT_INDEX_URL=$SUITE_REPORT_INDEX_URL" >> $GITHUB_ENV
 
-SUITE_LOG_FILE_PREFIX_URL=$JOB_BUCKET_URL/$artifact_s3_dir/$(uname -i)/$analyzer/$SUITE$STORAGE
+SUITE_LOG_FILE_PREFIX_URL=$JOB_BUCKET_URL/$artifact_s3_dir/$(uname -i)/${analyzer}_${keeper_or_zookeeper}/$SUITE$STORAGE
 echo "SUITE_LOG_FILE_PREFIX_URL=$SUITE_LOG_FILE_PREFIX_URL" >> $GITHUB_ENV
 
-SUITE_REPORT_BUCKET_PATH=$JOB_S3_ROOT/$(uname -i)/$analyzer/$SUITE$STORAGE
+SUITE_REPORT_BUCKET_PATH=$JOB_S3_ROOT/$(uname -i)/${analyzer}_${keeper_or_zookeeper}/$SUITE$STORAGE
 echo "SUITE_REPORT_BUCKET_PATH=$SUITE_REPORT_BUCKET_PATH" >> $GITHUB_ENV
 
