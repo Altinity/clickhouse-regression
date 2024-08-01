@@ -32,10 +32,6 @@ on:
         description: "Extra test program arguments. Default: none (empty string)."
         type: string
         default: ""
-      analyzer:
-        description: "Used to add information about analyzer to the log path."
-        type: string
-        default: "without_analyzer"
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -89,7 +85,6 @@ env:
     ./*/_instances/*/logs/*.log
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
-  analyzer: ${{inputs.analyzer}}
   
 jobs:
   aes_encryption:
