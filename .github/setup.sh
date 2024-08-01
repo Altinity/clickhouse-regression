@@ -66,11 +66,14 @@ elif [[ $artifacts == 'builds' ]]; then
 
 fi
 
+echo $extra_args
+echo $extra_args == *'--with-analyzer'*
 if [[ $extra_args == *'--with-analyzer'* ]]; then
   analyzer="with_analyzer"
 else
   analyzer="without_analyzer"
 fi
+echo $analyzer
 
 
 JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
