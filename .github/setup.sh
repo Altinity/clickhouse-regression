@@ -66,6 +66,13 @@ elif [[ $artifacts == 'builds' ]]; then
 
 fi
 
+if [[ $extra_args == *'--with-analyzer'* ]]; then
+  analyzer="with_analyzer"
+else
+  analyzer="without_analyzer"
+fi
+
+
 JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
 
 echo "confidential=$confidential" >> $GITHUB_ENV
