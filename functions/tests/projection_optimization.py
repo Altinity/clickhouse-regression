@@ -54,7 +54,8 @@ def projection_optimization(self):
         )
 
     with Then("I check the output"):
-        assert r.exitcode == 0 or r.exitcode == 1, error()
+        assert r.exitcode == 0, error()
+        assert int(r.output) == 0 or int(r.output) == 1, error()
 
 
 @TestFeature
