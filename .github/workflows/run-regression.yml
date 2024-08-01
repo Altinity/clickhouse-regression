@@ -141,24 +141,8 @@ env:
     ./*/_instances/*/logs/*.log
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
-  analyzer: without_analyzer
 
-jobs:
-  logs_path:
-      runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-      timeout-minutes: 10
-      steps:
-        - name: Check out repository
-          uses: actions/checkout@v3
-
-        - name: Set analyzer variable based on extra_args
-          run: |
-            if [[ "${{ inputs.extra_args }}" == *"--with-analyzer"* ]]; then
-              echo "analyzer=with_analyzer" >> $GITHUB_ENV
-            else
-              echo "analyzer=without_analyzer" >> $GITHUB_ENV
-            fi
-            
+jobs:       
   aes_encryption:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
     timeout-minutes: 180
