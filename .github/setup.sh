@@ -66,9 +66,9 @@ elif [[ $artifacts == 'builds' ]]; then
 
 fi
 
-echo $extra_args
-echo $extra_args == *'--with-analyzer'*
-if [[ $extra_args == *'--with-analyzer'* ]]; then
+echo $args
+echo $args == *'--with-analyzer'*
+if [[ $args == *'--with-analyzer'* ]]; then
   analyzer="with_analyzer"
 else
   analyzer="without_analyzer"
