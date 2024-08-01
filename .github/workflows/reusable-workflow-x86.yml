@@ -85,7 +85,6 @@ env:
     ./*/_instances/*/logs/*.log
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
-  
 jobs:
   aes_encryption:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
