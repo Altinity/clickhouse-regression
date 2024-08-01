@@ -11,7 +11,7 @@ from pprint import pprint
 import requests
 from clickhouse_driver import Client
 
-from testflows.core import Secret
+from testflows.core import *
 from testflows._core.transform.log.pipeline import ResultsLogPipeline
 from testflows._core.compress import CompressedFile
 from testflows._core.cli.arg.handlers.report.results import Handler
@@ -157,6 +157,8 @@ class ResultUploader:
 
         for message in report["attributes"]:
             self.record_attribute_from_message(message)
+
+        assert report["tests"], "No tests found in the report"
 
         for message in report["tests"]:
             result = message["result"]
@@ -344,40 +346,44 @@ class ResultUploader:
         db_host=None,
         db_user=None,
         db_password=None,
-        timeout=100,
     ):
-        if db_host is None:
-            db_host = os.getenv(DATABASE_HOST_VAR)
 
-        if db_user is None:
-            db_user = os.getenv(DATABASE_USER_VAR)
+        with Given("database credentials"):
+            if db_host is None:
+                db_host = os.getenv(DATABASE_HOST_VAR)
 
-        if db_password is None:
-            db_password = os.getenv(DATABASE_PASSWORD_VAR, "")
+            if db_user is None:
+                db_user = os.getenv(DATABASE_USER_VAR)
 
-        # Collect values that are the same for all tests
-        common_attributes = self.get_common_attributes()
+            if db_password is None:
+                db_password = os.getenv(DATABASE_PASSWORD_VAR, "")
 
-        rows = self.iter_formatted_test_results(common_attributes)
+        with And("common attributes for this test run"):
+            common_attributes = self.get_common_attributes()
 
-        client = Client(
-            db_host,
-            user=db_user,
-            password=db_password,
-        )
+        with And("an iterator of all test results"):
+            rows = self.iter_formatted_test_results(common_attributes)
 
-        settings = {
-            "send_logs_level": "warning",
-            "input_format_null_as_default": True,
-        }
+        with And("a database client"):
+            client = Client(
+                db_host,
+                user=db_user,
+                password=db_password,
+            )
 
-        r = client.execute(
-            f"INSERT INTO `{db}`.{table} VALUES",
-            rows,
-            types_check=self.debug,
-            settings=settings,
-        )
-        print(f"Inserted {r} records")
+        with When("inserting test results"):
+            settings = {
+                "send_logs_level": "warning",
+                "input_format_null_as_default": True,
+            }
+
+            r = client.execute(
+                f"INSERT INTO `{db}`.{table} VALUES",
+                rows,
+                types_check=self.debug,
+                settings=settings,
+            )
+            print(f"Inserted {r} records")
 
     def report_from_compressed_log(self, log_path=None):
         args = namedtuple(
@@ -401,26 +407,40 @@ class ResultUploader:
 
     def read_log(self, log_path=None):
         try:
-            report = self.report_from_compressed_log(log_path)
+            with When("converting log to report format"):
+                report = self.report_from_compressed_log(log_path)
         except Exception as e:
-            print(f"Failed to read log in report format: {repr(e)}", "")
-            print("Falling back to reading raw log")
-            log_raw_lines = self.raw_log_from_compressed_log(log_path=log_path)
-            self.read_raw_log(log_lines=log_raw_lines)
+            with When(
+                "failed to read log in report format, extracting raw log",
+                description=repr(e),
+            ):
+                log_raw_lines = self.raw_log_from_compressed_log(log_path=log_path)
+
+            with And("reading raw log line by line"):
+                self.read_raw_log(log_lines=log_raw_lines)
+
         else:
-            self.read_json_report(report=report)
+            with And("reading report"):
+                self.read_json_report(report=report)
 
     def run_local(self, log_path=None):
-        self.read_log(log_path=log_path)
-        self.read_pr_info()
+        with By("reading log"):
+            self.read_log(log_path=log_path)
+
+        with And("fetching PR info"):
+            self.read_pr_info()
 
         if self.debug:
-            self.write_native_csv()
-            pprint(self.pr_info, indent=2)
-            pprint(self.test_attributes, indent=2)
-            pprint(self.test_results[-1], indent=2)
+            with And("writing native csv"):
+                self.write_native_csv()
 
-        self.write_csv()
+            with And("printing debug info"):
+                pprint(self.pr_info, indent=2)
+                pprint(self.test_attributes, indent=2)
+                pprint(self.test_results[-1], indent=2)
+
+        with And("writing table csv"):
+            self.write_csv()
 
     def run_upload(
         self,
@@ -431,47 +451,63 @@ class ResultUploader:
         db_password=None,
         log_path=None,
     ):
-        self.read_log(log_path=log_path)
-        self.read_pr_info()
+        with By("reading log"):
+            self.read_log(log_path=log_path)
+
+        with And("fetching PR info"):
+            self.read_pr_info()
 
         if self.debug:
-            pprint(self.pr_info, indent=2)
-            pprint(self.test_attributes, indent=2)
-            pprint(self.test_results[-1], indent=2)
+            with And("printing debug info"):
+                pprint(self.pr_info, indent=2)
+                pprint(self.test_attributes, indent=2)
+                pprint(self.test_results[-1], indent=2)
 
-        self.upload_results(
-            db=db,
-            table=table,
-            db_host=db_host,
-            db_user=db_user,
-            db_password=db_password,
-        )
+        with And("uploading results"):
+            self.upload_results(
+                db=db,
+                table=table,
+                db_host=db_host,
+                db_user=db_user,
+                db_password=db_password,
+            )
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--log-file", help="Path to the log file")
-    parser.add_argument("--debug", action="store_true", help="Extra debug output")
+def argparser(parser: argparse.ArgumentParser):
+    parser.add_argument("--log-file", help="Path to the log file", required=True)
+    parser.add_argument("--debug-dump", action="store_true", help="Extra debug output")
     parser.add_argument(
-        "--upload", action="store_true", help="Upload results to a database"
+        "--local", action="store_true", help="Save results to csv instead of uploading"
     )
-    parser.add_argument("--database", help="Database name to upload results to")
+    parser.add_argument("--db-name", help="Database name to upload results to")
     parser.add_argument("--table", help="Table name to upload to")
     parser.add_argument("--db-host", help="Hostname of the ClickHouse database")
     parser.add_argument("--db-user", help="Database user to use for the upload")
     parser.add_argument("--db-password", help="Database password to use for the upload")
 
-    args = parser.parse_args()
 
-    R = ResultUploader(debug=args.debug, log_path=args.log_file)
+@TestModule
+@ArgumentParser(argparser)
+def upload(
+    self, log_file, debug_dump, local, db_name, table, db_host, db_user, db_password
+):
+    with Given("uploader instance"):
+        R = ResultUploader(log_path=log_file, debug=debug_dump)
 
-    if args.upload:
-        R.run_upload(
-            db=args.database,
-            table=args.table,
-            db_host=args.db_host,
-            db_user=args.db_user,
-            db_password=args.db_password,
-        )
+    if local:
+        with When("saving results locally"):
+            R.run_local()
+
     else:
-        R.run_local()
+        with When("uploading results to  database"):
+            R.run_upload(
+                db=db_name,
+                table=table,
+                db_host=db_host,
+                db_user=db_user,
+                db_password=db_password,
+            )
+
+
+if main():
+    upload()
