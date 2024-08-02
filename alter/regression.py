@@ -139,7 +139,7 @@ xfails = {
 xflags = {}
 
 ffails = {
-    "/alter/replace partition/temporary table": (
+    "/alter/:/temporary table": (
         Skip,
         "Not implemented before 23.5",
         check_clickhouse_version("<23.5"),

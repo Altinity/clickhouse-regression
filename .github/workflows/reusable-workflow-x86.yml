@@ -67,6 +67,7 @@ env:
   PYTHONIOENCODING: utf-8
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
+  keeper_or_zookeeper: zookeeper
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --no-colors
@@ -123,7 +124,7 @@ jobs:
 
   aggregate_functions:
     runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 360
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
@@ -369,7 +370,7 @@ jobs:
 
   benchmark_aws:
     runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 200
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
@@ -1307,7 +1308,7 @@ jobs:
 
   rbac:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}

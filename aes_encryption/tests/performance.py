@@ -47,6 +47,7 @@ def encryption_decryption(self):
         else:
             expected_time = 4.2
 
+
         with Example(f"""mode={mode.strip("'")} iv={iv_len} aad={aad_len}"""):
             t_start = time.time()
             encrypt_decrypt_stress(

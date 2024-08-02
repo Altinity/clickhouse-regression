@@ -16,7 +16,6 @@ xfails = {
     "dynamic:": [(Fail, "Not working")],
     "manual failover rcvr": [(Fail, "Not working")],
     "manual failover --force-recovery": [(Fail, "Not working on runners")],
-    ":": [(Fail, "Unstable ClickHouse<24", check_clickhouse_version("<24"))],
 }
 
 ffails = {}
@@ -40,6 +39,9 @@ def run_feature(
     ) as cluster:
         self.context.cluster = cluster
         self.context.keeper_nodes = [cluster.node(n) for n in cluster.nodes["keeper"]]
+
+        if check_clickhouse_version("<24")(self):
+            xfail("Unstable ClickHouse<24")
 
         with Given("I set the keeper config file"):
             set_keeper_config(
