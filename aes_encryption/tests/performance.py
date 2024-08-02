@@ -27,7 +27,7 @@ def encrypt_decrypt_stress(
         params.append(aad)
 
     sql = f"""SELECT DISTINCT toString(number) = decrypt({mode}, encrypt({mode}, toString(number), {", ".join(params)}), {", ".join(params)})
-              FROM numbers_mt(1000000)"""
+              FROM numbers_mt(100000000)"""
 
     return current().context.node.query(sql, step=step, exitcode=exitcode)
 
@@ -41,11 +41,12 @@ def encryption_decryption(self):
 
     for mode, key_len, iv_len, aad_len in modes:
         if mode == "'aes-128-ecb'":
-            expected_time = 0.3
+            expected_time = 5.1
         elif "gcm" in mode:
-            expected_time = 0.27
+            expected_time = 10
         else:
-            expected_time = 0.55
+            expected_time = 4.2
+
 
         with Example(f"""mode={mode.strip("'")} iv={iv_len} aad={aad_len}"""):
             t_start = time.time()
@@ -84,7 +85,7 @@ def encrypt_decrypt_mysql_stress(
         params.append(iv)
 
     sql = f"""SELECT DISTINCT toString(number) = aes_decrypt_mysql({mode}, aes_encrypt_mysql({mode}, toString(number), {", ".join(params)}), {", ".join(params)})
-              FROM numbers_mt(1000000)"""
+              FROM numbers_mt(100000000)"""
 
     return current().context.node.query(sql, step=step, exitcode=exitcode)
 
@@ -98,9 +99,9 @@ def encryption_decryption_mysql(self):
 
     for mode, key_len, iv_len in mysql_modes:
         if mode == "'aes-128-ecb'":
-            expected_time = 0.3
+            expected_time = 4.3
         else:
-            expected_time = 0.24
+            expected_time = 4.8
 
         with Example(f"""mode={mode.strip("'")} key={key_len} iv={iv_len}"""):
             t_start = time.time()
