@@ -56,9 +56,10 @@ def https_server_dictionary_checks(self):
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
             },
             success=False,
+            timeout=5,
         )
 
-    with Check(f"TLSv1.2 suite connection should work"):
+    with Check(f"TLSv1_2 suite connection should work"):
         https_server_https_dictionary_connection(
             options={
                 "requireTLSv1_2": "true",
@@ -74,24 +75,27 @@ def https_server_dictionary_checks(self):
                 "disableProtocols": "sslv2,sslv3,tlsv1_1,tlsv1_2,tlsv1_3",
             },
             success=False,
+            timeout=5,
         )
 
-    with Check("TLSv1.1 suite connection should be rejected"):
+    with Check("TLSv1_1 suite connection should be rejected"):
         https_server_https_dictionary_connection(
             options={
                 "requireTLSv1_1": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_2,tlsv1_3",
             },
             success=False,
+            timeout=5,
         )
 
-    with Check("TLSv1.3 suite connection should be rejected"):
+    with Check("TLSv1_3 suite connection should be rejected"):
         https_server_https_dictionary_connection(
             options={
                 "requireTLSv1_3": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
             },
             success=False,
+            timeout=5,
         )
 
     with Check(f"just disabling TLSv1 suite connection should work"):
@@ -100,13 +104,13 @@ def https_server_dictionary_checks(self):
             success=True,
         )
 
-    with Check(f"just disabling TLSv1.1 suite connection should work"):
+    with Check(f"just disabling TLSv1_1 suite connection should work"):
         https_server_https_dictionary_connection(
             options={"disableProtocols": "tlsv1_1"},
             success=True,
         )
 
-    with Check(f"just disabling TLSv1.3 suite connection should work"):
+    with Check(f"just disabling TLSv1_3 suite connection should work"):
         https_server_https_dictionary_connection(
             options={"disableProtocols": "tlsv1_3"},
             success=True,
@@ -121,6 +125,7 @@ def https_server_dictionary_checks(self):
                     "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
                 },
                 success=True,
+                timeout=5,
             )
 
     for cipher in all_ciphers:
@@ -132,6 +137,7 @@ def https_server_dictionary_checks(self):
             https_server_https_dictionary_connection(
                 options={"cipherList": cipher, "disableProtocols": ""},
                 success=False,
+                timeout=5,
             )
 
 

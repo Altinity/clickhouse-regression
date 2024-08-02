@@ -45,13 +45,19 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     "<=23.10"
                 )(self):
                     exitcode = 60
+                    detach_message = "DB::Exception: Could not find table"
+                    select_message = "DB::Exception: Table"
                 else:
                     exitcode = None
-
-                note(f"exitcode should be {exitcode}")
+                    detach_message = None
+                    select_message = None
 
                 detach_partition(
-                    table=table_name, partition=1, node=client, errorcode=exitcode
+                    table=table_name,
+                    partition=1,
+                    node=client,
+                    errorcode=exitcode,
+                    message=detach_message,
                 )
                 if exitcode is None:
                     table_after_detach = client.query(
@@ -61,6 +67,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     table_after_detach = client.query(
                         f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
                         errorcode=exitcode,
+                        message=select_message,
                     )
 
                 if exitcode is None:
@@ -75,10 +82,17 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     "<=23.10"
                 )(self):
                     exitcode = 60
+                    message = "DB::Exception: Could not find table:"
                 else:
                     exitcode = None
+                    message = None
+
                 attach_partition(
-                    table=table_name, partition=1, node=client, errorcode=exitcode
+                    table=table_name,
+                    partition=1,
+                    node=client,
+                    errorcode=exitcode,
+                    message=message,
                 )
 
             if exitcode is None:
@@ -153,13 +167,10 @@ def check_attach_partition_from_with_temporary_tables(
                     and check_clickhouse_version("<=23.10")(self)
                 ):
                     exitcode = 60
-                elif (
-                    "temporary" in destination_table.__name__ + source_table.__name__
-                    and check_clickhouse_version("<=23.4")(self)
-                ):
-                    exitcode = 60
+                    message = "DB::Exception: Could not find table:"
                 else:
                     exitcode = None
+                    message = None
 
                 note(f"exitcode should be {exitcode}")
 
@@ -182,7 +193,7 @@ def check_attach_partition_from_with_temporary_tables(
                     if exitcode is None:
                         client.query(query)
                     else:
-                        client.query(query, errorcode=exitcode)
+                        client.query(query, errorcode=exitcode, message=message)
 
             if exitcode is None:
                 with Then(
@@ -221,7 +232,7 @@ def check_attach_partition_from_with_temporary_tables(
                     )
 
 
-@TestSketch(Scenario)
+@TestScenario
 @Flags(TE)
 def attach_partition_detached_with_temporary_tables(self):
     """Run test check with different table types to see if attach partition is possible."""
@@ -238,14 +249,18 @@ def attach_partition_detached_with_temporary_tables(self):
         "VersionedCollapsingMergeTree",
         "GraphiteMergeTree",
     }
+    with Pool(5) as executor:
+        for table, engine in product(tables, engines):
+            Scenario(
+                f"{table.__name__}_{engine}",
+                test=check_attach_partition_detached_with_temporary_tables,
+                parallel=True,
+                executor=executor,
+            )(table=table, engine=engine)
+        join()
 
-    check_attach_partition_detached_with_temporary_tables(
-        table=either(*tables),
-        engine=either(*engines),
-    )
 
-
-@TestSketch(Scenario)
+@TestScenario
 @Flags(TE)
 def attach_partition_from_with_temporary_tables(self):
     """Run test check with different table types to see if attach partition is possible."""
@@ -269,12 +284,25 @@ def attach_partition_from_with_temporary_tables(self):
         "GraphiteMergeTree",
     }
 
-    check_attach_partition_from_with_temporary_tables(
-        source_table=either(*source_tables),
-        destination_table=either(*destination_tables),
-        source_table_engine=either(*engines),
-        destination_table_engine=either(*engines),
-    )
+    with Pool(5) as executor:
+        for (
+            source_table,
+            destination_table,
+            source_table_engine,
+            destination_table_engine,
+        ) in product(source_tables, destination_tables, engines, engines):
+            Scenario(
+                f"{source_table.__name__}_{destination_table.__name__}_{source_table_engine}_{destination_table_engine}",
+                test=check_attach_partition_from_with_temporary_tables,
+                parallel=True,
+                executor=executor,
+            )(
+                source_table=source_table,
+                destination_table=destination_table,
+                source_table_engine=source_table_engine,
+                destination_table_engine=destination_table_engine,
+            )
+        join()
 
 
 @TestFeature
