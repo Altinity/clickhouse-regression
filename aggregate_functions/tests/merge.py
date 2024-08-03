@@ -75,13 +75,15 @@ def merge(self, scenario, short_name, is_parametric, extra_data=None):
 
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
-
-    snapshot_module = SourceFileLoader(func, snapshot_path).load_module()  # add UUID
+    fullname = func + getuid()
+    snapshot_module = SourceFileLoader(
+        fullname, snapshot_path
+    ).load_module() 
     snapshot_attrs = {
         k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
     }
 
-    with Pool(3) as executor:
+    with Pool(7) as executor:
         for key, value in snapshot_attrs.items():
             with By("I break single snapshot value into lines"):
                 data = value.strip().split("\n")

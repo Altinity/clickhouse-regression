@@ -562,7 +562,7 @@ def regression(
         # )()
         join()
     
-    # Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
+    Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
     
 
 if main():
