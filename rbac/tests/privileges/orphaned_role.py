@@ -38,7 +38,7 @@ def feature(self, stress=None, node="clickhouse1"):
                 node.command("apt install -y screen")
                 node.command(f"screen -d -m bash -c 'clickhouse client -u {user_name}'")
 
-            with When("I want for 10 min 30sec"):
+            with When("I wait for 10 min 30sec"):
                 time.sleep(630)
 
             with And(f"I GRANT SELECT ON {table_name} TO {role_name}"):
