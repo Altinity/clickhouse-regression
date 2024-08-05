@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240705.1133204.
+# document by TestFlows v2.0.240801.1140507.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -554,30 +554,6 @@ RQ_SRS_006_RBAC_User_Create_Password_DoubleSha1Hash_Login = Requirement(
     num="5.3.15.15",
 )
 
-RQ_SRS_006_RBAC_User_Create_Password_Multiple = Requirement(
-    name="RQ.SRS-006.RBAC.User.Create.Password.Multiple",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "  \n"
-        "\n"
-        "[ClickHouse] SHALL support specifying multiple authentication methods when creating user account.\n"
-        "\n"
-        "**Example:**  \n"
-        "```sql\n"
-        "CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';\n"
-        "```\n"
-        "In the example above `user1` can authenticate with 1, 2 or 3.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="5.3.15.16",
-)
-
 RQ_SRS_006_RBAC_User_Create_Host_Name = Requirement(
     name="RQ.SRS-006.RBAC.User.Create.Host.Name",
     version="1.0",
@@ -593,7 +569,7 @@ RQ_SRS_006_RBAC_User_Create_Host_Name = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.17",
+    num="5.3.15.16",
 )
 
 RQ_SRS_006_RBAC_User_Create_Host_Regexp = Requirement(
@@ -611,7 +587,7 @@ RQ_SRS_006_RBAC_User_Create_Host_Regexp = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.18",
+    num="5.3.15.17",
 )
 
 RQ_SRS_006_RBAC_User_Create_Host_IP = Requirement(
@@ -629,7 +605,7 @@ RQ_SRS_006_RBAC_User_Create_Host_IP = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.19",
+    num="5.3.15.18",
 )
 
 RQ_SRS_006_RBAC_User_Create_Host_Any = Requirement(
@@ -646,7 +622,7 @@ RQ_SRS_006_RBAC_User_Create_Host_Any = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.20",
+    num="5.3.15.19",
 )
 
 RQ_SRS_006_RBAC_User_Create_Host_None = Requirement(
@@ -663,7 +639,7 @@ RQ_SRS_006_RBAC_User_Create_Host_None = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.21",
+    num="5.3.15.20",
 )
 
 RQ_SRS_006_RBAC_User_Create_Host_Local = Requirement(
@@ -680,7 +656,7 @@ RQ_SRS_006_RBAC_User_Create_Host_Local = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.22",
+    num="5.3.15.21",
 )
 
 RQ_SRS_006_RBAC_User_Create_Host_Like = Requirement(
@@ -697,7 +673,7 @@ RQ_SRS_006_RBAC_User_Create_Host_Like = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.23",
+    num="5.3.15.22",
 )
 
 RQ_SRS_006_RBAC_User_Create_Host_Default = Requirement(
@@ -714,7 +690,7 @@ RQ_SRS_006_RBAC_User_Create_Host_Default = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.24",
+    num="5.3.15.23",
 )
 
 RQ_SRS_006_RBAC_User_Create_DefaultRole = Requirement(
@@ -731,7 +707,7 @@ RQ_SRS_006_RBAC_User_Create_DefaultRole = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.25",
+    num="5.3.15.24",
 )
 
 RQ_SRS_006_RBAC_User_Create_DefaultRole_None = Requirement(
@@ -748,7 +724,7 @@ RQ_SRS_006_RBAC_User_Create_DefaultRole_None = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.26",
+    num="5.3.15.25",
 )
 
 RQ_SRS_006_RBAC_User_Create_DefaultRole_All = Requirement(
@@ -765,7 +741,7 @@ RQ_SRS_006_RBAC_User_Create_DefaultRole_All = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.27",
+    num="5.3.15.26",
 )
 
 RQ_SRS_006_RBAC_User_Create_Settings = Requirement(
@@ -782,7 +758,7 @@ RQ_SRS_006_RBAC_User_Create_Settings = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.28",
+    num="5.3.15.27",
 )
 
 RQ_SRS_006_RBAC_User_Create_OnCluster = Requirement(
@@ -799,7 +775,7 @@ RQ_SRS_006_RBAC_User_Create_OnCluster = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.29",
+    num="5.3.15.28",
 )
 
 RQ_SRS_006_RBAC_User_Create_Syntax = Requirement(
@@ -823,7 +799,7 @@ RQ_SRS_006_RBAC_User_Create_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.15.30",
+    num="5.3.15.29",
 )
 
 RQ_SRS_006_RBAC_User_Alter = Requirement(
@@ -960,72 +936,11 @@ RQ_SRS_006_RBAC_User_Alter_Password_DoubleSha1Password = Requirement(
         "to some password as identification when altering user account using\n"
         "`IDENTIFIED WITH DOUBLE_SHA1_PASSWORD` clause in the `ALTER USER` statement.\n"
         "\n"
+        "\n"
     ),
     link=None,
     level=4,
     num="5.3.16.8",
-)
-
-RQ_SRS_006_RBAC_User_Alter_AddIdentified = Requirement(
-    name="RQ.SRS-006.RBAC.User.Alter.AddIdentified",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support adding new authentication methods to the user while keeping the existing ones:\n"
-        "```sql\n"
-        "ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="5.3.16.9",
-)
-
-RQ_SRS_006_RBAC_User_Alter_AddIdentified_NoPassword = Requirement(
-    name="RQ.SRS-006.RBAC.User.Alter.AddIdentified.NoPassword",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods.\n"
-        "The below query should throw an error:\n"
-        "```sql\n"
-        "ALTER USER user1 ADD IDENTIFIED WITH no_password;\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="5.3.16.10",
-)
-
-RQ_SRS_006_RBAC_User_Alter_ResetAuthenticationMethods = Requirement(
-    name="RQ.SRS-006.RBAC.User.Alter.ResetAuthenticationMethods",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support resetting authentication methods and adding the ones specified in the query:\n"
-        "``` sql\n"
-        "ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;\n"
-        "```\n"
-        "The behavior is similar to `ALTER USER IDENTIFIED WITH` which clears all authentication methods and keeps only the one found in the query.\n"
-        "```sql\n"
-        "ALTER USER user1 IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3'\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="5.3.16.11",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_AddDrop = Requirement(
@@ -1042,7 +957,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_AddDrop = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.12",
+    num="5.3.16.9",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_Local = Requirement(
@@ -1059,7 +974,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_Local = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.13",
+    num="5.3.16.10",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_Name = Requirement(
@@ -1077,7 +992,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_Name = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.14",
+    num="5.3.16.11",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_Regexp = Requirement(
@@ -1095,7 +1010,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_Regexp = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.15",
+    num="5.3.16.12",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_IP = Requirement(
@@ -1113,7 +1028,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_IP = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.16",
+    num="5.3.16.13",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_Like = Requirement(
@@ -1130,7 +1045,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_Like = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.17",
+    num="5.3.16.14",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_Any = Requirement(
@@ -1147,7 +1062,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_Any = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.18",
+    num="5.3.16.15",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Host_None = Requirement(
@@ -1164,7 +1079,7 @@ RQ_SRS_006_RBAC_User_Alter_Host_None = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.19",
+    num="5.3.16.16",
 )
 
 RQ_SRS_006_RBAC_User_Alter_DefaultRole = Requirement(
@@ -1181,7 +1096,7 @@ RQ_SRS_006_RBAC_User_Alter_DefaultRole = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.20",
+    num="5.3.16.17",
 )
 
 RQ_SRS_006_RBAC_User_Alter_DefaultRole_All = Requirement(
@@ -1198,7 +1113,7 @@ RQ_SRS_006_RBAC_User_Alter_DefaultRole_All = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.21",
+    num="5.3.16.18",
 )
 
 RQ_SRS_006_RBAC_User_Alter_DefaultRole_AllExcept = Requirement(
@@ -1215,7 +1130,7 @@ RQ_SRS_006_RBAC_User_Alter_DefaultRole_AllExcept = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.22",
+    num="5.3.16.19",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Settings = Requirement(
@@ -1232,7 +1147,7 @@ RQ_SRS_006_RBAC_User_Alter_Settings = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.23",
+    num="5.3.16.20",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Settings_Min = Requirement(
@@ -1248,7 +1163,7 @@ RQ_SRS_006_RBAC_User_Alter_Settings_Min = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.24",
+    num="5.3.16.21",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Settings_Max = Requirement(
@@ -1264,7 +1179,7 @@ RQ_SRS_006_RBAC_User_Alter_Settings_Max = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.25",
+    num="5.3.16.22",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Settings_Profile = Requirement(
@@ -1280,7 +1195,7 @@ RQ_SRS_006_RBAC_User_Alter_Settings_Profile = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.26",
+    num="5.3.16.23",
 )
 
 RQ_SRS_006_RBAC_User_Alter_Syntax = Requirement(
@@ -1305,7 +1220,7 @@ RQ_SRS_006_RBAC_User_Alter_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.16.27",
+    num="5.3.16.24",
 )
 
 RQ_SRS_006_RBAC_User_ShowCreateUser = Requirement(
@@ -1432,6 +1347,180 @@ RQ_SRS_006_RBAC_User_Drop_Syntax = Requirement(
     link=None,
     level=4,
     num="5.3.18.4",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support specifying multiple authentication methods separated by commas\n"
+        "when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.\n"
+        "\n"
+        "**Example:**  \n"
+        "```sql\n"
+        "CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';\n"
+        "```\n"
+        "In the example above `user1` can authenticate with 1, 2 or 3.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.2",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.NoPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.\n"
+        "\n"
+        "The below query should throw an error:\n"
+        "```sql\n"
+        "CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.3",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support specifying multiple authentication methods separated by commas\n"
+        "when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement. [Clickhouse] SHALL clear all the existing authentication methods and keep only ones specified in the query.\n"
+        "\n"
+        "**Example:**  \n"
+        "```sql\n"
+        "ALTER USER user1 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2', sha256_password BY '3';\n"
+        "```\n"
+        "In the example above `user1` can authenticate only with 1, 2 or 3.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.4",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "\n"
+        "The below query should throw an error:\n"
+        "```sql\n"
+        "ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.5",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "```sql\n"
+        "ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.6",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "The below query should throw an error:\n"
+        "```sql\n"
+        "ALTER USER user1 ADD IDENTIFIED WITH no_password;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.7",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support clearing all authentication methods and keeping only the most recent one using `RESET AUTHENTICATION METHODS TO NEW` clause in the `ALTER USER` statement.\n"
+        "``` sql\n"
+        "ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.8",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL reflect the changes in `system.users` table in `auth_type` and `auth_params` columns when creating user with one or more authentication methods.\n"
+        "\n"
+        "For example,\n"
+        "```sql\n"
+        "SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.9",
 )
 
 RQ_SRS_006_RBAC_Role = Requirement(
@@ -11220,39 +11309,34 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             level=4,
             num="5.3.15.15",
         ),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.Name", level=4, num="5.3.15.16"),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Create.Password.Multiple",
-            level=4,
-            num="5.3.15.16",
+            name="RQ.SRS-006.RBAC.User.Create.Host.Regexp", level=4, num="5.3.15.17"
         ),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.Name", level=4, num="5.3.15.17"),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.IP", level=4, num="5.3.15.18"),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.Any", level=4, num="5.3.15.19"),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.None", level=4, num="5.3.15.20"),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Create.Host.Regexp", level=4, num="5.3.15.18"
+            name="RQ.SRS-006.RBAC.User.Create.Host.Local", level=4, num="5.3.15.21"
         ),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.IP", level=4, num="5.3.15.19"),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.Any", level=4, num="5.3.15.20"),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.None", level=4, num="5.3.15.21"),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.Like", level=4, num="5.3.15.22"),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Create.Host.Local", level=4, num="5.3.15.22"
-        ),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.Host.Like", level=4, num="5.3.15.23"),
-        Heading(
-            name="RQ.SRS-006.RBAC.User.Create.Host.Default", level=4, num="5.3.15.24"
+            name="RQ.SRS-006.RBAC.User.Create.Host.Default", level=4, num="5.3.15.23"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Create.DefaultRole", level=4, num="5.3.15.25"
+            name="RQ.SRS-006.RBAC.User.Create.DefaultRole", level=4, num="5.3.15.24"
         ),
         Heading(
             name="RQ.SRS-006.RBAC.User.Create.DefaultRole.None",
             level=4,
-            num="5.3.15.26",
+            num="5.3.15.25",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Create.DefaultRole.All", level=4, num="5.3.15.27"
+            name="RQ.SRS-006.RBAC.User.Create.DefaultRole.All", level=4, num="5.3.15.26"
         ),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.Settings", level=4, num="5.3.15.28"),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.OnCluster", level=4, num="5.3.15.29"),
-        Heading(name="RQ.SRS-006.RBAC.User.Create.Syntax", level=4, num="5.3.15.30"),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.Settings", level=4, num="5.3.15.27"),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.OnCluster", level=4, num="5.3.15.28"),
+        Heading(name="RQ.SRS-006.RBAC.User.Create.Syntax", level=4, num="5.3.15.29"),
         Heading(name="Alter User", level=3, num="5.3.16"),
         Heading(name="RQ.SRS-006.RBAC.User.Alter", level=4, num="5.3.16.1"),
         Heading(
@@ -11277,52 +11361,39 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             num="5.3.16.8",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.AddIdentified", level=4, num="5.3.16.9"
+            name="RQ.SRS-006.RBAC.User.Alter.Host.AddDrop", level=4, num="5.3.16.9"
+        ),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Local", level=4, num="5.3.16.10"),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Name", level=4, num="5.3.16.11"),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.Alter.Host.Regexp", level=4, num="5.3.16.12"
+        ),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.IP", level=4, num="5.3.16.13"),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Like", level=4, num="5.3.16.14"),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Any", level=4, num="5.3.16.15"),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.None", level=4, num="5.3.16.16"),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.Alter.DefaultRole", level=4, num="5.3.16.17"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.AddIdentified.NoPassword",
-            level=4,
-            num="5.3.16.10",
-        ),
-        Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.ResetAuthenticationMethods",
-            level=4,
-            num="5.3.16.11",
-        ),
-        Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.Host.AddDrop", level=4, num="5.3.16.12"
-        ),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Local", level=4, num="5.3.16.13"),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Name", level=4, num="5.3.16.14"),
-        Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.Host.Regexp", level=4, num="5.3.16.15"
-        ),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.IP", level=4, num="5.3.16.16"),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Like", level=4, num="5.3.16.17"),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.Any", level=4, num="5.3.16.18"),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Host.None", level=4, num="5.3.16.19"),
-        Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.DefaultRole", level=4, num="5.3.16.20"
-        ),
-        Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.DefaultRole.All", level=4, num="5.3.16.21"
+            name="RQ.SRS-006.RBAC.User.Alter.DefaultRole.All", level=4, num="5.3.16.18"
         ),
         Heading(
             name="RQ.SRS-006.RBAC.User.Alter.DefaultRole.AllExcept",
             level=4,
-            num="5.3.16.22",
+            num="5.3.16.19",
         ),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Settings", level=4, num="5.3.16.23"),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Settings", level=4, num="5.3.16.20"),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.Settings.Min", level=4, num="5.3.16.24"
-        ),
-        Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.Settings.Max", level=4, num="5.3.16.25"
+            name="RQ.SRS-006.RBAC.User.Alter.Settings.Min", level=4, num="5.3.16.21"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.Alter.Settings.Profile", level=4, num="5.3.16.26"
+            name="RQ.SRS-006.RBAC.User.Alter.Settings.Max", level=4, num="5.3.16.22"
         ),
-        Heading(name="RQ.SRS-006.RBAC.User.Alter.Syntax", level=4, num="5.3.16.27"),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.Alter.Settings.Profile", level=4, num="5.3.16.23"
+        ),
+        Heading(name="RQ.SRS-006.RBAC.User.Alter.Syntax", level=4, num="5.3.16.24"),
         Heading(name="Show Create User", level=3, num="5.3.17"),
         Heading(name="RQ.SRS-006.RBAC.User.ShowCreateUser", level=4, num="5.3.17.1"),
         Heading(
@@ -11336,6 +11407,48 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         Heading(name="RQ.SRS-006.RBAC.User.Drop.IfExists", level=4, num="5.3.18.2"),
         Heading(name="RQ.SRS-006.RBAC.User.Drop.OnCluster", level=4, num="5.3.18.3"),
         Heading(name="RQ.SRS-006.RBAC.User.Drop.Syntax", level=4, num="5.3.18.4"),
+        Heading(name="Multiple authentication methods", level=3, num="5.3.19"),
+        Heading(name="Schema", level=4, num="5.3.19.1"),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser",
+            level=4,
+            num="5.3.19.2",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.NoPassword",
+            level=4,
+            num="5.3.19.3",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser",
+            level=4,
+            num="5.3.19.4",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword",
+            level=4,
+            num="5.3.19.5",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified",
+            level=4,
+            num="5.3.19.6",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword",
+            level=4,
+            num="5.3.19.7",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods",
+            level=4,
+            num="5.3.19.8",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users",
+            level=4,
+            num="5.3.19.9",
+        ),
         Heading(name="Role", level=2, num="5.4"),
         Heading(name="RQ.SRS-006.RBAC.Role", level=3, num="5.4.1"),
         Heading(name="RQ.SRS-006.RBAC.Role.Privileges", level=3, num="5.4.2"),
@@ -12889,7 +13002,6 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_User_Create_Password_DoubleSha1Password_Login,
         RQ_SRS_006_RBAC_User_Create_Password_DoubleSha1Hash,
         RQ_SRS_006_RBAC_User_Create_Password_DoubleSha1Hash_Login,
-        RQ_SRS_006_RBAC_User_Create_Password_Multiple,
         RQ_SRS_006_RBAC_User_Create_Host_Name,
         RQ_SRS_006_RBAC_User_Create_Host_Regexp,
         RQ_SRS_006_RBAC_User_Create_Host_IP,
@@ -12912,9 +13024,6 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_User_Alter_Password_PlainText,
         RQ_SRS_006_RBAC_User_Alter_Password_Sha256Password,
         RQ_SRS_006_RBAC_User_Alter_Password_DoubleSha1Password,
-        RQ_SRS_006_RBAC_User_Alter_AddIdentified,
-        RQ_SRS_006_RBAC_User_Alter_AddIdentified_NoPassword,
-        RQ_SRS_006_RBAC_User_Alter_ResetAuthenticationMethods,
         RQ_SRS_006_RBAC_User_Alter_Host_AddDrop,
         RQ_SRS_006_RBAC_User_Alter_Host_Local,
         RQ_SRS_006_RBAC_User_Alter_Host_Name,
@@ -12938,6 +13047,14 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_User_Drop_IfExists,
         RQ_SRS_006_RBAC_User_Drop_OnCluster,
         RQ_SRS_006_RBAC_User_Drop_Syntax,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users,
         RQ_SRS_006_RBAC_Role,
         RQ_SRS_006_RBAC_Role_Privileges,
         RQ_SRS_006_RBAC_Role_Variables,
@@ -14410,17 +14527,6 @@ the user when connecting to the server
 when an account was created with `IDENTIFIED WITH DOUBLE_SHA1_HASH` clause
 and compare the calculated value to the one used in the `CREATE USER` statement.
 
-##### RQ.SRS-006.RBAC.User.Create.Password.Multiple
-version: 1.0  
-
-[ClickHouse] SHALL support specifying multiple authentication methods when creating user account.
-
-**Example:**  
-```sql
-CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';
-```
-In the example above `user1` can authenticate with 1, 2 or 3.
-
 ##### RQ.SRS-006.RBAC.User.Create.Host.Name
 version: 1.0
 
@@ -14569,34 +14675,6 @@ version: 1.0
 to some password as identification when altering user account using
 `IDENTIFIED WITH DOUBLE_SHA1_PASSWORD` clause in the `ALTER USER` statement.
 
-##### RQ.SRS-006.RBAC.User.Alter.AddIdentified
-version: 1.0
-
-[ClickHouse] SHALL support adding new authentication methods to the user while keeping the existing ones:
-```sql
-ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
-```
-
-##### RQ.SRS-006.RBAC.User.Alter.AddIdentified.NoPassword
-version: 1.0
-
-[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods.
-The below query should throw an error:
-```sql
-ALTER USER user1 ADD IDENTIFIED WITH no_password;
-```
-
-##### RQ.SRS-006.RBAC.User.Alter.ResetAuthenticationMethods
-version: 1.0
-
-[ClickHouse] SHALL support resetting authentication methods and adding the ones specified in the query:
-``` sql
-ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;
-```
-The behavior is similar to `ALTER USER IDENTIFIED WITH` which clears all authentication methods and keeps only the one found in the query.
-```sql
-ALTER USER user1 IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3'
-```
 
 ##### RQ.SRS-006.RBAC.User.Alter.Host.AddDrop
 version: 1.0
@@ -14753,6 +14831,104 @@ version: 1.0
 
 ```sql
 DROP USER [IF EXISTS] name [,...] [ON CLUSTER cluster_name]
+```
+
+#### Multiple authentication methods
+
+##### Schema
+
+Possible authentication methods are:
+```yaml
+authentication_methods:
+  - no_password
+  - plaintext_password
+  - sha256_password
+  - double_sha1_password
+  - ldap
+  - kerberos
+  - ssl_certificate
+  - bcrypt_password  
+  - ssh_key
+  - http
+  - jwt
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser
+version: 1.0  
+
+[ClickHouse] SHALL support specifying multiple authentication methods separated by commas
+when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.
+
+**Example:**  
+```sql
+CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';
+```
+In the example above `user1` can authenticate with 1, 2 or 3.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.NoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.
+
+The below query should throw an error:
+```sql
+CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser
+version: 1.0  
+
+[ClickHouse] SHALL support specifying multiple authentication methods separated by commas
+when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement. [Clickhouse] SHALL clear all the existing authentication methods and keep only ones specified in the query.
+
+**Example:**  
+```sql
+ALTER USER user1 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2', sha256_password BY '3';
+```
+In the example above `user1` can authenticate only with 1, 2 or 3.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword
+version: 1.0  
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
+
+The below query should throw an error:
+```sql
+ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified
+version: 1.0
+
+[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+The below query should throw an error:
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH no_password;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods
+version: 1.0
+
+[ClickHouse] SHALL support clearing all authentication methods and keeping only the most recent one using `RESET AUTHENTICATION METHODS TO NEW` clause in the `ALTER USER` statement.
+``` sql
+ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users
+version: 1.0  
+
+[ClickHouse] SHALL reflect the changes in `system.users` table in `auth_type` and `auth_params` columns when creating user with one or more authentication methods.
+
+For example,
+```sql
+SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';
 ```
 
 ### Role
