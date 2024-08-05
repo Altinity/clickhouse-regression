@@ -130,28 +130,49 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
 
     with And("create user with two plain text passwords"):
         user_name = f"user_{getuid()}"
-        identified = (
-            f"IDENTIFIED WITH plaintext_password BY '123', plaintext_password BY '456'"
-        )
+        identified = f"plaintext_password BY '123', plaintext_password BY '456'"
         create_user(user_name=user_name, identified=identified)
 
     with When("alter user with multiple authentication methods"):
-        node.query(f"ALTER USER {user_name} IDENTIFIED WITH {auth_methods_string}")
+        user_altered = False
+        if "no_password" in auth_methods_string and len(auth_methods) > 1:
+            node.query(
+                f"ALTER USER {user_name} IDENTIFIED WITH {auth_methods_string}",
+                exitcode=36,
+                message="DB::Exception: NO_PASSWORD Authentication method cannot co-exist with other authentication methods.",
+            )
+        else:
+            node.query(f"ALTER USER {user_name} IDENTIFIED WITH {auth_methods_string}")
+            user_altered = True
 
     with Then(
         "check that user can authenticate with correct passwords and can not authenticate with wrong passwords"
     ):
-        for password in correct_passwords:
-            node.query(
-                f"SELECT 1", settings=[("user", user_name), ("password", password)]
-            )
-        for password in wrong_passwords:
-            node.query(
-                f"SELECT 1",
-                settings=[("user", user_name), ("password", password)],
-                exitcode=4,
-                message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
-            )
+        if user_altered:
+            for password in correct_passwords:
+                node.query(
+                    f"SELECT 1", settings=[("user", user_name), ("password", password)]
+                )
+            for password in wrong_passwords:
+                node.query(
+                    f"SELECT 1",
+                    settings=[("user", user_name), ("password", password)],
+                    exitcode=4,
+                    message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+                )
+        else:
+            for passwords in ["123", "456"]:
+                node.query(
+                    f"SELECT 1",
+                    settings=[("user", user_name), ("password", passwords)],
+                )
+            for passwords in authentication_methods_with_passwords.values():
+                node.query(
+                    f"SELECT 1",
+                    settings=[("user", user_name), ("password", passwords)],
+                    exitcode=4,
+                    message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+                )
 
 
 @TestScenario
