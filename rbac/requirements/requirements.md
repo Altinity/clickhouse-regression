@@ -952,17 +952,6 @@ the user when connecting to the server
 when an account was created with `IDENTIFIED WITH DOUBLE_SHA1_HASH` clause
 and compare the calculated value to the one used in the `CREATE USER` statement.
 
-##### RQ.SRS-006.RBAC.User.Create.Password.Multiple
-version: 1.0  
-
-[ClickHouse] SHALL support specifying multiple authentication methods when creating user account.
-
-**Example:**  
-```sql
-CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';
-```
-In the example above `user1` can authenticate with 1, 2 or 3.
-
 ##### RQ.SRS-006.RBAC.User.Create.Host.Name
 version: 1.0
 
@@ -1111,34 +1100,6 @@ version: 1.0
 to some password as identification when altering user account using
 `IDENTIFIED WITH DOUBLE_SHA1_PASSWORD` clause in the `ALTER USER` statement.
 
-##### RQ.SRS-006.RBAC.User.Alter.AddIdentified
-version: 1.0
-
-[ClickHouse] SHALL support adding new authentication methods to the user while keeping the existing ones:
-```sql
-ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
-```
-
-##### RQ.SRS-006.RBAC.User.Alter.AddIdentified.NoPassword
-version: 1.0
-
-[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods.
-The below query should throw an error:
-```sql
-ALTER USER user1 ADD IDENTIFIED WITH no_password;
-```
-
-##### RQ.SRS-006.RBAC.User.Alter.ResetAuthenticationMethods
-version: 1.0
-
-[ClickHouse] SHALL support resetting authentication methods and adding the ones specified in the query:
-``` sql
-ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;
-```
-The behavior is similar to `ALTER USER IDENTIFIED WITH` which clears all authentication methods and keeps only the one found in the query.
-```sql
-ALTER USER user1 IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3'
-```
 
 ##### RQ.SRS-006.RBAC.User.Alter.Host.AddDrop
 version: 1.0
@@ -1295,6 +1256,104 @@ version: 1.0
 
 ```sql
 DROP USER [IF EXISTS] name [,...] [ON CLUSTER cluster_name]
+```
+
+#### Multiple authentication methods
+
+##### Schema
+
+Possible authentication methods are:
+```yaml
+authentication_methods:
+  - no_password
+  - plaintext_password
+  - sha256_password
+  - double_sha1_password
+  - ldap
+  - kerberos
+  - ssl_certificate
+  - bcrypt_password  
+  - ssh_key
+  - http
+  - jwt
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser
+version: 1.0  
+
+[ClickHouse] SHALL support specifying multiple authentication methods separated by commas
+when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.
+
+**Example:**  
+```sql
+CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';
+```
+In the example above `user1` can authenticate with 1, 2 or 3.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.NoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.
+
+The below query should throw an error:
+```sql
+CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser
+version: 1.0  
+
+[ClickHouse] SHALL support specifying multiple authentication methods separated by commas
+when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement. [Clickhouse] SHALL clear all the existing authentication methods and keep only ones specified in the query.
+
+**Example:**  
+```sql
+ALTER USER user1 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2', sha256_password BY '3';
+```
+In the example above `user1` can authenticate only with 1, 2 or 3.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword
+version: 1.0  
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
+
+The below query should throw an error:
+```sql
+ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified
+version: 1.0
+
+[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+The below query should throw an error:
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH no_password;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods
+version: 1.0
+
+[ClickHouse] SHALL support clearing all authentication methods and keeping only the most recent one using `RESET AUTHENTICATION METHODS TO NEW` clause in the `ALTER USER` statement.
+``` sql
+ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users
+version: 1.0  
+
+[ClickHouse] SHALL reflect the changes in `system.users` table in `auth_type` and `auth_params` columns when creating user with one or more authentication methods.
+
+For example,
+```sql
+SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';
 ```
 
 ### Role
