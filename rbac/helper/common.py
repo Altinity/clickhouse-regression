@@ -214,7 +214,7 @@ def create_user(
 
     if user_name is None:
         user_name = "user_" + getuid()
-        
+
     query = f"CREATE USER {user_name}"
 
     if identified:
@@ -227,6 +227,16 @@ def create_user(
     finally:
         with Finally("I drop the user if exists"):
             node.query(f"DROP USER IF EXISTS {user_name}")
+
+
+@TestStep(Given)
+def add_identified(self, user, identified, node=None, exitcode=None, message=None):
+    """Add new authentication methods to the user while keeping the existing ones."""
+    if node is None:
+        node = self.context.node
+
+    query = f"ALTER USER {user} ADD IDENTIFIED WITH {identified}"
+    node.query(query, exitcode=exitcode, message=message)
 
 
 def generate_hashed_password_with_salt(password, salt="some_salt"):
@@ -251,7 +261,7 @@ def generate_double_hashed_password(password):
 
 
 def generate_bcrypt_hash(password):
-    password_bytes = password.encode('utf-8')
+    password_bytes = password.encode("utf-8")
     salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password_bytes, salt).decode('utf-8')
+    hashed = bcrypt.hashpw(password_bytes, salt).decode("utf-8")
     return hashed
