@@ -1,5 +1,5 @@
 from testflows.core import *
-from testflows.combinatorics import product
+from testflows.combinatorics import combinations
 
 from rbac.requirements import *
 from rbac.helper.common import *
@@ -8,29 +8,52 @@ from helpers.common import getuid
 
 
 plaintext_password = "some_password_1"
-sha256_password = "some_password_2"
-sha256_hash_password = "some_password_3"
+plaintext_password_2 = "some_password_2"
+sha256_password = "some_password_3"
+sha256_password_2 = "some_password_4"
+sha256_hash_password = "some_password_5"
 sha256_hash = generate_hashed_password(password=sha256_hash_password)
-sha256_hash_salt_password = "some_password_4"
+sha256_hash_password_2 = "some_password_6"
+sha256_hash_2 = generate_hashed_password(password=sha256_hash_password_2)
+sha256_hash_salt_password = "some_password_7"
 salt, sha256_hash_salt = generate_hashed_password_with_salt(
     password=sha256_hash_salt_password
 )
-double_sha1_password = "some_password_5"
-double_sha1_hash_password = "some_password_6"
+sha256_hash_salt_password_2 = "some_password_8"
+salt_2, sha256_hash_salt_2 = generate_hashed_password_with_salt(
+    password=sha256_hash_salt_password_2
+)
+double_sha1_password = "some_password_9"
+double_sha1_password_2 = "some_password_10"
+double_sha1_hash_password = "some_password_11"
 double_sha1_hash = generate_double_hashed_password(password=double_sha1_hash_password)
-bycrypt_password = "some_password_7"
-bycrypt_hash_password = "some_password_8"
-bcrypt_hash = generate_bcrypt_hash(password=bycrypt_hash_password)
+double_sha1_hash_password_2 = "some_password_12"
+double_sha1_hash_2 = generate_double_hashed_password(
+    password=double_sha1_hash_password_2
+)
+bcrypt_password = "some_password_13"
+bcrypt_password_2 = "some_password_14"
+bcrypt_hash_password = "some_password_15"
+bcrypt_hash = generate_bcrypt_hash(password=bcrypt_hash_password)
+bcrypt_hash_password_2 = "some_password_16"
+bcrypt_hash_2 = generate_bcrypt_hash(password=bcrypt_hash_password_2)
 
 authentication_methods_with_passwords = {
     "no_password": "",
     f"plaintext_password BY '{plaintext_password}'": plaintext_password,
+    f"plaintext_password BY '{plaintext_password_2}'": plaintext_password_2,
     f"sha256_password BY '{sha256_password}'": sha256_password,
+    f"sha256_password BY '{sha256_password_2}'": sha256_password_2,
     f"sha256_hash BY '{sha256_hash}'": sha256_hash_password,
+    f"sha256_hash BY '{sha256_hash_2}'": sha256_hash_password_2,
     f"sha256_hash BY '{sha256_hash_salt}' SALT '{salt}'": sha256_hash_salt_password,
+    f"sha256_hash BY '{sha256_hash_salt_2}' SALT '{salt_2}'": sha256_hash_salt_password_2,
     f"double_sha1_password BY '{double_sha1_password}'": double_sha1_password,
+    f"double_sha1_password BY '{double_sha1_password_2}'": double_sha1_password_2,
     f"double_sha1_hash BY '{double_sha1_hash}'": double_sha1_hash_password,
-    f"bcrypt_password BY '{bycrypt_password}'": bycrypt_password,
+    f"double_sha1_hash BY '{double_sha1_hash_2}'": double_sha1_hash_password_2,
+    f"bcrypt_password BY '{bcrypt_password}'": bcrypt_password,
+    f"bcrypt_password BY '{bcrypt_password_2}'": bcrypt_password_2,
     # f"bcrypt_hash BY '$2a$12$6ioB1bATbU/GFVDi35HWiuMwi7.yCiFBGcRSmHdYMtsv9NuOT0TUS'": bycrypt_hash_password,
     # f"ssh_key BY KEY '{ssh_pub_key}' TYPE 'ssh-ed25519', KEY '{ssh_pub_key}' TYPE 'ssh-ed25519',",
     # "kerberos",
@@ -54,7 +77,7 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
         note(auth_methods_string)
 
     with And("create list of correct and wrong passwords for authentication"):
-        correct_passwords = [j[1] for j in auth_methods if j[1]]
+        correct_passwords = [j[1] for j in auth_methods]
         wrong_passwords = [
             j
             for j in authentication_methods_with_passwords.values()
@@ -79,6 +102,12 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
         "check that user can authenticate with correct passwords and can not authenticate with wrong passwords"
     ):
         if user_created:
+            if "no_password" in auth_methods_string:
+                exitcode, message = None, None
+            else:
+                exitcode = 4
+                message = f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name."
+
             for password in correct_passwords:
                 node.query(
                     f"SELECT 1", settings=[("user", user_name), ("password", password)]
@@ -87,8 +116,8 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
                 node.query(
                     f"SELECT 1",
                     settings=[("user", user_name), ("password", password)],
-                    exitcode=4,
-                    message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+                    exitcode=exitcode,
+                    message=message,
                 )
 
 
@@ -96,10 +125,21 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
 @Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser("1.0"))
 def create_user_with_multiple_auth_methods(self):
     """Check that user can be created with multiple authentication methods."""
-    with Pool(5) as executor:
-        for num, auth_methods in enumerate(
-            product(authentication_methods_with_passwords.items(), repeat=3)
-        ):
+    auth_methods = []
+
+    with Given("create list of combinations of authentication methods"):
+        with By("generate combinations of lengths 1, 2, and 3"):
+            for num in range(1, 4):
+                auth_methods.extend(
+                    combinations(
+                        authentication_methods_with_passwords.items(),
+                        num,
+                        with_replacement=True,
+                    )
+                )
+
+    with Pool(7) as executor:
+        for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
                 test=check_create_user_with_multiple_auth_methods,
@@ -121,7 +161,7 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
         note(auth_methods_string)
 
     with And("create list of correct and wrong passwords for authentication"):
-        correct_passwords = [j[1] for j in auth_methods if j[1]]
+        correct_passwords = [j[1] for j in auth_methods]
         wrong_passwords = [
             j
             for j in authentication_methods_with_passwords.values()
@@ -149,6 +189,12 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
         "check that user can authenticate with correct passwords and can not authenticate with wrong passwords"
     ):
         if user_altered:
+            if "no_password" in auth_methods_string:
+                exitcode, message = None, None
+            else:
+                exitcode = 4
+                message = f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name."
+
             for password in correct_passwords:
                 node.query(
                     f"SELECT 1", settings=[("user", user_name), ("password", password)]
@@ -157,8 +203,8 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
                 node.query(
                     f"SELECT 1",
                     settings=[("user", user_name), ("password", password)],
-                    exitcode=4,
-                    message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+                    exitcode=exitcode,
+                    message=message,
                 )
         else:
             for passwords in ["123", "456"]:
@@ -179,10 +225,21 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
 @Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser("1.0"))
 def alter_user_with_multiple_auth_methods(self):
     """Check that user can be altered with multiple authentication methods."""
+    auth_methods = []
+
+    with Given("create list of combinations of authentication methods"):
+        with By("generate combinations of lengths 1, 2, and 3"):
+            for num in range(1, 4):
+                auth_methods.extend(
+                    combinations(
+                        authentication_methods_with_passwords.items(),
+                        num,
+                        with_replacement=True,
+                    )
+                )
+
     with Pool(5) as executor:
-        for num, auth_methods in enumerate(
-            product(authentication_methods_with_passwords.items(), repeat=3)
-        ):
+        for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
                 test=check_alter_user_with_multiple_auth_methods,
