@@ -1,4 +1,5 @@
 from testflows.core import *
+from testflows.asserts import error
 from testflows.combinatorics import combinations
 
 from rbac.requirements import *
@@ -66,6 +67,17 @@ authentication_methods_with_passwords = {
 }
 
 
+def generate_auth_combinations(auth_methods_dict, max_length=3, with_replacement=True):
+    auth_combinations = []
+    for length in range(1, max_length + 1):
+        auth_combinations.extend(
+            combinations(
+                auth_methods_dict.items(), length, with_replacement=with_replacement
+            )
+        )
+    return auth_combinations
+
+
 @TestScenario
 def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
     """Check that all authentication methods can be added to the user."""
@@ -125,20 +137,10 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
 @Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser("1.0"))
 def create_user_with_multiple_auth_methods(self):
     """Check that user can be created with multiple authentication methods."""
-    auth_methods = []
-
-    with Given("create list of combinations of authentication methods"):
-        with By("generate combinations of lengths 1, 2, and 3"):
-            for num in range(1, 4):
-                auth_methods.extend(
-                    combinations(
-                        authentication_methods_with_passwords.items(),
-                        num,
-                        with_replacement=True,
-                    )
-                )
-
-    with Pool(7) as executor:
+    auth_methods = generate_auth_combinations(
+        auth_methods_dict=authentication_methods_with_passwords,
+    )
+    with Pool(3) as executor:
         for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
@@ -225,24 +227,172 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
 @Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser("1.0"))
 def alter_user_with_multiple_auth_methods(self):
     """Check that user can be altered with multiple authentication methods."""
-    auth_methods = []
-
-    with Given("create list of combinations of authentication methods"):
-        with By("generate combinations of lengths 1, 2, and 3"):
-            for num in range(1, 4):
-                auth_methods.extend(
-                    combinations(
-                        authentication_methods_with_passwords.items(),
-                        num,
-                        with_replacement=True,
-                    )
-                )
-
-    with Pool(5) as executor:
+    auth_methods = generate_auth_combinations(
+        auth_methods_dict=authentication_methods_with_passwords,
+    )
+    with Pool(3) as executor:
         for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
                 test=check_alter_user_with_multiple_auth_methods,
+                parallel=True,
+                executor=executor,
+            )(auth_methods=auth_methods)
+        join()
+
+
+@TestScenario
+@Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified("1.0"))
+def check_add_identified(self, auth_methods, node=None):
+    """Check that one or more authentication methods can be added to the existing user."""
+    if node is None:
+        node = self.context.node
+
+    with Given("create user with one authentication method"):
+        user_name = f"user_{getuid()}"
+        create_user(user_name=user_name, identified="plaintext_password BY '123'")
+
+    with When("add one or more authentication methods"):
+        user_altered = False
+        auth_methods_string = ", ".join(j[0] for j in auth_methods)
+        if "no_password" in auth_methods_string:
+            exitcode = 36
+            message = "DB::Exception: NO_PASSWORD Authentication method cannot co-exist with other authentication methods."
+            if len(auth_methods) == 1:  # auth_methods_string == "no_password"
+                message = "DB::Exception: The authentication method 'no_password' cannot be used with the ADD keyword."
+            add_identified(
+                user=user_name,
+                identified=auth_methods_string,
+                exitcode=exitcode,
+                message=message,
+            )
+        else:
+            add_identified(user=user_name, identified=auth_methods_string)
+            user_altered = True
+
+    with And("create a list of correct and wrong passwords for authentication"):
+        correct_passwords = [j[1] for j in auth_methods] + ["123"]
+        wrong_passwords = [
+            j
+            for j in authentication_methods_with_passwords.values()
+            if j not in correct_passwords
+        ]
+
+    with Then("check that user can authenticate with correct passwords"):
+        if user_altered:
+            for password in correct_passwords:
+                result = node.query(
+                    f"SELECT 1", settings=[("user", user_name), ("password", password)]
+                )
+                assert result.output == "1", error()
+        else:
+            result = node.query(
+                f"SELECT 1", settings=[("user", user_name), ("password", "123")]
+            )
+            assert result.output == "1", error()
+
+    with And("check that user can not authenticate with wrong passwords"):
+        if user_altered:
+            for password in wrong_passwords:
+                node.query(
+                    f"SELECT 1",
+                    settings=[("user", user_name), ("password", password)],
+                    exitcode=4,
+                    message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+                )
+        else:
+            for password in authentication_methods_with_passwords.values():
+                node.query(
+                    f"SELECT 1",
+                    settings=[("user", user_name), ("password", password)],
+                    exitcode=4,
+                    message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+                )
+
+
+@TestScenario
+def add_identified_with_multiple_auth_methods(self):
+    """Check that one or more authentication methods can be added to the existing user."""
+    auth_methods = generate_auth_combinations(
+        auth_methods_dict=authentication_methods_with_passwords,
+    )
+    with Pool(3) as executor:
+        for num, auth_methods in enumerate(auth_methods):
+            Scenario(
+                f"{num}",
+                test=check_add_identified,
+                parallel=True,
+                executor=executor,
+            )(auth_methods=auth_methods)
+        join()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods("1.0")
+)
+def check_reset_authentication_methods(self, auth_methods, node=None):
+    """Check that ALTER USER RESET AUTHENTICATION METHODS TO NEW resets all authentication methods
+    and  keeps the most recent added one."""
+    if node is None:
+        node = self.context.node
+
+    user_created = False
+
+    with Given("create user with multiple authentication methods"):
+        user_name = f"user_{getuid()}"
+        auth_methods_string = ", ".join(j[0] for j in auth_methods)
+        if "no_password" in auth_methods_string and len(auth_methods) > 1:
+            create_user(
+                user_name=user_name,
+                identified=auth_methods_string,
+                exitcode=36,
+                message="DB::Exception: NO_PASSWORD Authentication method cannot co-exist with other authentication methods.",
+            )
+        else:
+            create_user(user_name=user_name, identified=auth_methods_string)
+            user_created = True
+
+    if user_created:
+        with When("reset authentication methods"):
+            node.query(f"ALTER USER {user_name} RESET AUTHENTICATION METHODS TO NEW")
+
+        with Then(
+            "check that user can authenticate with only the most recent added method"
+        ):
+            password = auth_methods[-1][1]
+            result = node.query(
+                f"SELECT 1", settings=[("user", user_name), ("password", password)]
+            )
+            assert result.output == "1", error()
+
+        with And(
+            "check that user can not authenticate with other methods that were reset"
+        ):
+            reset_passwords = [j[1] for j in auth_methods[:-1]]
+            for password in reset_passwords:
+                node.query(
+                    f"SELECT 1",
+                    settings=[("user", user_name), ("password", password)],
+                    exitcode=4,
+                    message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+                )
+
+
+@TestScenario
+def reset_authentication_methods(self):
+    """Check that ALTER USER RESET AUTHENTICATION METHODS TO NEW resets all authentication methods
+    and  keeps the most recent added one."""
+    auth_methods = generate_auth_combinations(
+        auth_methods_dict=authentication_methods_with_passwords,
+        max_length=3,
+        with_replacement=False,
+    )
+    with Pool(3) as executor:
+        for num, auth_methods in enumerate(auth_methods):
+            Scenario(
+                f"{num}",
+                test=check_reset_authentication_methods,
                 parallel=True,
                 executor=executor,
             )(auth_methods=auth_methods)
@@ -255,5 +405,19 @@ def feature(self, node="clickhouse1"):
     """Check support of multiple authentication methods."""
     self.context.node = self.context.cluster.node(node)
 
-    Scenario(run=create_user_with_multiple_auth_methods)
-    Scenario(run=alter_user_with_multiple_auth_methods)
+    with Pool(4) as executor:
+        Scenario(
+            test=create_user_with_multiple_auth_methods,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(
+            test=alter_user_with_multiple_auth_methods, parallel=True, executor=executor
+        )()
+        Scenario(
+            test=add_identified_with_multiple_auth_methods,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(test=reset_authentication_methods, parallel=True, executor=executor)()
+        join()
