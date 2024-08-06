@@ -134,7 +134,10 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser("1.0"))
+@Requirements(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword("1.0"),
+)
 def create_user_with_multiple_auth_methods(self):
     """Check that user can be created with multiple authentication methods."""
     auth_methods = generate_auth_combinations(
@@ -224,7 +227,10 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser("1.0"))
+@Requirements(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword("1.0"),
+)
 def alter_user_with_multiple_auth_methods(self):
     """Check that user can be altered with multiple authentication methods."""
     auth_methods = generate_auth_combinations(
@@ -242,7 +248,10 @@ def alter_user_with_multiple_auth_methods(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified("1.0"))
+@Requirements(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword("1.0"),
+)
 def check_add_identified(self, auth_methods, node=None):
     """Check that one or more authentication methods can be added to the existing user."""
     if node is None:
@@ -385,7 +394,6 @@ def reset_authentication_methods(self):
     and  keeps the most recent added one."""
     auth_methods = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
-        max_length=3,
         with_replacement=False,
     )
     with Pool(3) as executor:
