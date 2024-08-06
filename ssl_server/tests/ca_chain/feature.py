@@ -41,7 +41,7 @@ def with_caconfig(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -86,7 +86,7 @@ def with_caconfig_missing_ca_in_chain(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -313,7 +313,7 @@ def without_caconfig(self, ca_store, ca_chain_crt, trusted_cas, nodes=None):
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -372,6 +372,7 @@ def without_caconfig_missing_trusted_ca(
                 with Then(
                     f"from {from_name} to {to_name}",
                     description=f"expect message {nodes_messages[(from_name, to_name)]}",
+                    flags=TE,
                 ):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
@@ -564,7 +565,7 @@ def server_certificate_with_chain(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -617,7 +618,7 @@ def server_certificate_with_chain_missing_ca(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
