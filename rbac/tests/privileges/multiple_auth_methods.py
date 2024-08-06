@@ -35,9 +35,9 @@ double_sha1_hash_2 = generate_double_hashed_password(
 bcrypt_password = "some_password_13"
 bcrypt_password_2 = "some_password_14"
 bcrypt_hash_password = "some_password_15"
-bcrypt_hash = generate_bcrypt_hash(password=bcrypt_hash_password)
+bcrypt_hash = generate_bcrypt_hash(password=bcrypt_hash_password).replace("$", "\$")
 bcrypt_hash_password_2 = "some_password_16"
-bcrypt_hash_2 = generate_bcrypt_hash(password=bcrypt_hash_password_2)
+bcrypt_hash_2 = generate_bcrypt_hash(password=bcrypt_hash_password_2).replace("$", "\$")
 
 authentication_methods_with_passwords = {
     "no_password": "",
@@ -55,7 +55,8 @@ authentication_methods_with_passwords = {
     f"double_sha1_hash BY '{double_sha1_hash_2}'": double_sha1_hash_password_2,
     f"bcrypt_password BY '{bcrypt_password}'": bcrypt_password,
     f"bcrypt_password BY '{bcrypt_password_2}'": bcrypt_password_2,
-    # f"bcrypt_hash BY '$2a$12$6ioB1bATbU/GFVDi35HWiuMwi7.yCiFBGcRSmHdYMtsv9NuOT0TUS'": bycrypt_hash_password,
+    f"bcrypt_hash BY '{bcrypt_hash}'": bcrypt_hash_password,
+    f"bcrypt_hash BY '{bcrypt_hash_2}'": bcrypt_hash_password_2,
     # f"ssh_key BY KEY '{ssh_pub_key}' TYPE 'ssh-ed25519', KEY '{ssh_pub_key}' TYPE 'ssh-ed25519',",
     # "kerberos",
     # "kerberos REALM 'realm'",
