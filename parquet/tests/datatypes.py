@@ -787,12 +787,14 @@ def selectdatewithfilter(self):
                 f"""
                 CREATE TABLE {table_name}
                 ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) WHERE NAMEVALIDFROM <= '2017-03-01'
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) WHERE NAMEVALIDFROM <= '2017-03-01' ORDER BY ORGUNITID
                 """
             )
 
         with And("I read the contents of the created table"):
-            import_read = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated")
+            import_read = node.query(
+                f"SELECT * FROM {table_name} ORDER BY ORGUNITID FORMAT TabSeparated"
+            )
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -811,7 +813,7 @@ def selectdatewithfilter(self):
 
         with And("I check the exported Parquet file's contents"):
             read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet) FORMAT TabSeparated"
+                f"SELECT * FROM file('{path_to_export}', Parquet) ORDER BY ORGUNITID FORMAT TabSeparated"
             )
 
         with Then("output must match the snapshot"):
