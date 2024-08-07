@@ -38,9 +38,9 @@ xfails = {
     + clean("-gcm'\", key_len=")
     + "??"
     + clean(", iv_len=12, aad=True/iv is too long"): [(Fail, "known issue")],
-    "encrypt/"
+    "encrypt/invalid plaintext data type/"
     + clean(
-        "invalid plaintext data type/data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\""
+        "data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\""
     ): [(Fail, "known issue as IPv6 is implemented as FixedString(16)")],
     # encrypt_mysql
     "encrypt_mysql/key or iv length for mode/"
