@@ -167,11 +167,12 @@ class ResultUploader:
         if isinstance(value, str) and value.startswith("Secret"):
             return
 
+        if value in bools.keys():
+            value = bools[value]
+            self.test_attributes["flags"][message["attribute_name"]] = value
+
         self.test_attributes[message["attribute_name"]] = value
         self.test_attributes["test_raw_attributes"][message["attribute_name"]] = value
-
-        if value in bools.keys():
-            self.test_attributes["flags"][message["attribute_name"]] = bools[value]
 
     def read_json_report(self, report: dict = None):
         """
@@ -414,7 +415,7 @@ class ResultUploader:
                 types_check=self.debug,
                 settings=settings,
             )
-            print(f"Inserted {r} records")
+            note(f"Inserted {r} records")
 
     def report_from_compressed_log(self, log_path=None):
         args = namedtuple(
