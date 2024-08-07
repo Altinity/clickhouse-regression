@@ -144,7 +144,7 @@ def create_user_with_multiple_auth_methods(self):
     auth_methods = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
     )
-    with Pool(3) as executor:
+    with Pool(4) as executor:
         for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
@@ -237,7 +237,7 @@ def alter_user_with_multiple_auth_methods(self):
     auth_methods = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
     )
-    with Pool(3) as executor:
+    with Pool(4) as executor:
         for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
@@ -326,7 +326,7 @@ def add_identified_with_multiple_auth_methods(self):
     auth_methods = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
     )
-    with Pool(3) as executor:
+    with Pool(4) as executor:
         for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
@@ -397,7 +397,7 @@ def reset_authentication_methods(self):
         auth_methods_dict=authentication_methods_with_passwords,
         with_replacement=False,
     )
-    with Pool(3) as executor:
+    with Pool(4) as executor:
         for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
