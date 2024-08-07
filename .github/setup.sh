@@ -72,10 +72,10 @@ else
   analyzer="without_analyzer"
 fi
 
-if [[ $args == *'--thread-fuzzer'* ]]; then
-  thread_fuzzer="with_thread_fuzzer"
+if [ "$enable_thread_fuzzer" == "true" ]; then
+    thread_fuzzer="with_thread_fuzzer"
 else
-  thread_fuzzer="without_thread_fuzzer"
+    thread_fuzzer="without_thread_fuzzer"
 fi
 
 JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
