@@ -361,10 +361,10 @@ def regression(
         for node in nodes["clickhouse"]:
             add_rbac_config_file(node=cluster.node(node))
 
-    # Feature(run=load("rbac.tests.syntax.feature", "feature"))
+    Feature(run=load("rbac.tests.syntax.feature", "feature"))
     Feature(run=load("rbac.tests.privileges.feature", "feature"))
-    # Feature(run=load("rbac.tests.views.feature", "feature"))
-    # Feature(run=load("rbac.tests.sql_security.feature", "feature"))
+    Feature(run=load("rbac.tests.views.feature", "feature"))
+    Feature(run=load("rbac.tests.sql_security.feature", "feature"))
 
 
 if main():
