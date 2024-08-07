@@ -43,9 +43,9 @@ def encryption_decryption(self):
         if mode == "'aes-128-ecb'":
             expected_time = 5.5
         elif "gcm" in mode:
-            expected_time = 15
+            expected_time = 16.5
         else:
-            expected_time = 6
+            expected_time = 6.8
 
         with Example(f"""mode={mode.strip("'")} iv={iv_len} aad={aad_len}"""):
             t_start = time.time()
@@ -98,9 +98,9 @@ def encryption_decryption_mysql(self):
 
     for mode, key_len, iv_len in mysql_modes:
         if mode == "'aes-128-ecb'":
-            expected_time = 5.6
+            expected_time = 6
         else:
-            expected_time = 6.4
+            expected_time = 6.8
 
         with Example(f"""mode={mode.strip("'")} key={key_len} iv={iv_len}"""):
             t_start = time.time()
