@@ -71,6 +71,7 @@ aggregate_functions = [
     "groupBitmapAnd",
     "groupBitmapOr",
     "groupBitmapXor",
+    "groupConcat",
     "groupUniqArray",
     "histogram",
     "intervalLengthSum",
@@ -100,6 +101,7 @@ aggregate_functions = [
     "nothingUInt64",
     "nth_value",
     "ntile",
+    "percent_rank",
     "quantile",
     "quantileBFloat16",
     "quantileBFloat16Weighted",
@@ -195,6 +197,7 @@ window_functions = [
     "exponentialTimeDecayedCount",
     "exponentialTimeDecayedAvg",
     "nonNegativeDerivative",
+    "percent_rank",
 ]
 
 parametric = [
