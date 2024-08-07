@@ -8,7 +8,7 @@ from aggregate_functions.tests.steps import aggregate_functions
 def feature(self):
     """Check if new aggregate functions was not added in system.functions table."""
 
-    with Check(""):
+    with Check("check current aggregate function list"):
         r = (
             current()
             .context.node.query(
