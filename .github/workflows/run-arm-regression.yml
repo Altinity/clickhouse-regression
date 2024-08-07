@@ -125,6 +125,7 @@ env:
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
   keeper_or_zookeeper: ${{ inputs.keeper_or_zookeeper }}
+  enable_thread_fuzzer: ${{ inputs.enable_thread_fuzzer }}
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --no-colors
