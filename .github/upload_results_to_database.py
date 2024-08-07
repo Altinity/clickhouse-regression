@@ -26,16 +26,24 @@ test_attributes: testflows_version, start_time, start_datetime, test_raw_attribu
 test_results: message_rtime_ms
 """
 
+
+ARTIFACT_BUCKET = "altinity-test-reports"
+DATABASE_HOST_VAR = "CHECKS_DATABASE_HOST"
+DATABASE_USER_VAR = "CHECKS_DATABASE_USER"
+DATABASE_PASSWORD_VAR = "CHECKS_DATABASE_PASSWORD"
+
 table_schema_attr_map = {
     "pr_info": {},  # {"pr_number": "pull_request_number"},
     "test_attributes": {
         "clickhouse_version": "version",
         "clickhouse_package": "package",
+        "base_os": None,
         "architecture": "arch",
         "keeper_package": "keeper_binary_path",
         "zookeeper_version": "zookeeper_version",
-        "attributes": "test_raw_attributes",
-        "flags": "flags",
+        "use_keeper": "use_keeper",
+        "stress": "stress",
+        "thread_fuzzer": "thread_fuzzer",
         "commit_hash": "commit.hash",
         "job_url": "job.url",
         "report_url": "report.url",
@@ -43,17 +51,40 @@ table_schema_attr_map = {
     },
     "test_results": {
         "test_duration_ms": "message_rtime_ms",
-        "result_type": "result_type",
+        "result": "result_type",
         "test_name": "test_name",
         "result_reason": "result_reason",
         "result_message": "result_message",
     },
 }
 
-ARTIFACT_BUCKET = "altinity-test-reports"
-DATABASE_HOST_VAR = "CHECKS_DATABASE_HOST"
-DATABASE_USER_VAR = "CHECKS_DATABASE_USER"
-DATABASE_PASSWORD_VAR = "CHECKS_DATABASE_PASSWORD"
+CREATE_TABLE_QUERY = """
+CREATE TABLE clickhouse_regression_results
+(
+    `clickhouse_version` LowCardinality(String),
+    `clickhouse_package` LowCardinality(String),
+    `base_os` LowCardinality(String),
+    `architecture` LowCardinality(String),
+    `keeper_package` LowCardinality(String),
+    `zookeeper_version` LowCardinality(String),
+    `use_keeper` Bool,
+    `thread_fuzzer` Bool,
+    `stress` Bool,
+    `commit_hash` String,
+    `job_url` LowCardinality(String),
+    `report_url` String,
+    `start_time` DateTime,
+    `test_duration_ms` UInt64,
+    `result` LowCardinality(String),
+    `test_name` String,
+    `result_reason` String,
+    `result_message` String,
+)
+ENGINE = MergeTree()
+ORDER BY start_time
+SETTINGS index_granularity = 8192;
+"""
+
 
 bools = {
     "True": True,
@@ -474,8 +505,7 @@ class ResultUploader:
 
 
 def argparser(parser: argparse.ArgumentParser):
-    parser.add_argument("--log-file", help="Path to the log file", required=True)
-    parser.add_argument("--debug-dump", action="store_true", help="Extra debug output")
+    parser.add_argument("--log-file", help="Path to the log file")
     parser.add_argument(
         "--local", action="store_true", help="Save results to csv instead of uploading"
     )
@@ -484,13 +514,30 @@ def argparser(parser: argparse.ArgumentParser):
     parser.add_argument("--db-host", help="Hostname of the ClickHouse database")
     parser.add_argument("--db-user", help="Database user to use for the upload")
     parser.add_argument("--db-password", help="Database password to use for the upload")
+    parser.add_argument("--debug-dump", action="store_true", help="Extra debug output")
+    parser.add_argument(
+        "--show-create", action="store_true", help="Show create table query"
+    )
 
 
 @TestModule
 @ArgumentParser(argparser)
 def upload(
-    self, log_file, debug_dump, local, db_name, table, db_host, db_user, db_password
+    self,
+    log_file,
+    debug_dump,
+    local,
+    db_name,
+    table,
+    db_host,
+    db_user,
+    db_password,
+    show_create,
 ):
+    if show_create:
+        note(CREATE_TABLE_QUERY)
+        return
+
     with Given("uploader instance"):
         R = ResultUploader(log_path=log_file, debug=debug_dump)
 
