@@ -133,6 +133,20 @@ xfails = {
             check_clickhouse_version(">=24.4"),
         )
     ],
+    "ca chain/:/:/missing :": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/67984",
+            check_clickhouse_version(">=24.4"),
+        )
+    ],
+    "ca chain/:/:/:/missing :": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/67984",
+            check_clickhouse_version(">=24.4"),
+        )
+    ],
 }
 
 xflags = {}
