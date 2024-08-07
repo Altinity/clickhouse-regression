@@ -42,8 +42,9 @@ table_schema_attr_map = {
         "keeper_package": "keeper_binary_path",
         "zookeeper_version": "zookeeper_version",
         "use_keeper": "use_keeper",
-        "stress": "stress",
         "thread_fuzzer": "thread_fuzzer",
+        "with_analyzer": "with_analyzer",
+        "stress": "stress",
         "commit_hash": "commit.hash",
         "job_url": "job.url",
         "report_url": "report.url",
@@ -69,6 +70,7 @@ CREATE TABLE clickhouse_regression_results
     `zookeeper_version` LowCardinality(String),
     `use_keeper` Bool,
     `thread_fuzzer` Bool,
+    `with_analyzer` Bool,
     `stress` Bool,
     `commit_hash` String,
     `job_url` LowCardinality(String),
@@ -547,7 +549,7 @@ def upload(
             R.run_local()
 
     else:
-        with When("uploading results to  database"):
+        with When("uploading results to database"):
             R.run_upload(
                 db=db_name,
                 table=table,
