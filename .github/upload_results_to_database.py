@@ -380,6 +380,9 @@ class ResultUploader:
         db_host=None,
         db_user=None,
         db_password=None,
+        db_port=None,
+        secure=None,
+        verify=None,
     ):
 
         with Given("database credentials"):
@@ -403,6 +406,9 @@ class ResultUploader:
                 db_host,
                 user=db_user,
                 password=db_password,
+                port=db_port,
+                secure="y" if secure else None,
+                verify=verify,
             )
 
         with When("inserting test results"):
@@ -484,6 +490,9 @@ class ResultUploader:
         db_user=None,
         db_password=None,
         log_path=None,
+        db_port=None,
+        secure=None,
+        verify=None,
     ):
         with By("reading log"):
             self.read_log(log_path=log_path)
@@ -504,6 +513,9 @@ class ResultUploader:
                 db_host=db_host,
                 db_user=db_user,
                 db_password=db_password,
+                db_port=db_port,
+                secure=secure,
+                verify=verify,
             )
 
 
@@ -517,6 +529,9 @@ def argparser(parser: argparse.ArgumentParser):
     parser.add_argument("--db-host", help="Hostname of the ClickHouse database")
     parser.add_argument("--db-user", help="Database user to use for the upload")
     parser.add_argument("--db-password", help="Database password to use for the upload")
+    parser.add_argument("--db-port", help="Database port to use for the upload")
+    parser.add_argument("--secure", action="store_true", help="Use secure connection")
+    parser.add_argument("--no-verify", action="store_true", help="Do not verify SSL")
     parser.add_argument("--debug-dump", action="store_true", help="Extra debug output")
     parser.add_argument(
         "--show-create", action="store_true", help="Show create table query"
@@ -535,6 +550,9 @@ def upload(
     db_host,
     db_user,
     db_password,
+    db_port,
+    secure,
+    no_verify,
     show_create,
 ):
     if show_create:
@@ -556,6 +574,9 @@ def upload(
                 db_host=db_host,
                 db_user=db_user,
                 db_password=db_password,
+                db_port=db_port,
+                secure=secure,
+                verify=not no_verify,
             )
 
 
