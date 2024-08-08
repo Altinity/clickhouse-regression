@@ -1647,23 +1647,23 @@ class Cluster(object):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
                         with Shell() as bash:
+                            log_path = f"_service_logs"
+                            bash(f"mkdir -p {log_path}")
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
                             nodes = bash(
                                 f"{self.docker_compose} ps --services"
                             ).output.split("\n")
                             debug(nodes)
                             for node in nodes:
-                                with By(f"getting log for {node}"):
-                                    log_path = f"../_instances"
-                                    snode = bash(
-                                        f"{self.docker_compose} logs {node} "
-                                        f"> {log_path}/{node}.log",
-                                        timeout=1000,
+                                snode = bash(
+                                    f"{self.docker_compose} logs {node} "
+                                    f"> ../{log_path}/{node}.log",
+                                    timeout=1000,
+                                )
+                                if snode.exitcode != 0:
+                                    xfail(
+                                        f"failed to get service log - exitcode {snode.exitcode}"
                                     )
-                                    if snode.exitcode != 0:
-                                        xfail(
-                                            f"failed to get service log - exitcode {snode.exitcode}"
-                                        )
 
                 self.down()
         finally:
