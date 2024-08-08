@@ -174,51 +174,69 @@ xfails = {
             check_clickhouse_version("<22.9"),
         )
     ],
-    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": (
-        Fail,
-        "need to investigate",
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": (
-        Fail,
-        "need to investigate",
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/retentionState/NULL value handling/*": (
-        Fail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/retentionState/single NULL value/*": (
-        Fail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/sequenceCountState/NULL value handling/*": (
-        Fail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/:/studentTTest*Merge/*": (
-        Fail,
-        issue_41176,
-        check_clickhouse_version("<23.3"),
-    ),
-    "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
-        Fail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/windowFunnelState/single NULL value/*": (
-        Fail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": (
-        Fail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
+    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": [
+        (
+            Fail,
+            "need to investigate",
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": [
+        (
+            Fail,
+            "need to investigate",
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/retentionState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/retentionState/single NULL value/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/sequenceCountState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/:/studentTTest*Merge/*": [
+        (
+            Fail,
+            issue_41176,
+            check_clickhouse_version("<23.3"),
+        )
+    ],
+    "/aggregate functions/state/windowFunnelState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/windowFunnelState/single NULL value/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
 }
 
 ffails = {
@@ -570,9 +588,9 @@ def regression(
         #     executor=executor,
         # )()
         join()
-    
+
     # Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
-    
+
 
 if main():
     regression()
