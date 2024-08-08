@@ -270,6 +270,11 @@ ffails = {
         Skip,
         "freeze not enabled with zero copy replication",
     ),
+    ":/alter/update delete": (
+        Skip,
+        "Not supported <22.8",
+        check_clickhouse_version(">=22.8"),
+    ),
 }
 
 

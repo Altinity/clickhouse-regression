@@ -1351,13 +1351,13 @@ class Cluster(object):
                 except:
                     self.clickhouse_specific_odbc_binary = None
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
+                    self.specific_clickhouse_binary_path
+                )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
+                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
+                    self.clickhouse_specific_odbc_binary
+                )
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 binary_source = self.clickhouse_binary_path
@@ -1370,32 +1370,34 @@ class Cluster(object):
 
             elif self.clickhouse_binary_path.startswith("docker://"):
                 if current().context.clickhouse_version is None:
-                    parsed_version = parse_version_from_docker_path(
-                        self.clickhouse_binary_path
-                    )
-                    if parsed_version:
-                        if not (  # What case are we trying to catch here?
-                            parsed_version.startswith(".")
-                            or parsed_version.endswith(".")
-                        ):
-                            current().context.clickhouse_version = parsed_version
+                    with Given("version from docker path"):
+                        parsed_version = parse_version_from_docker_path(
+                            self.clickhouse_binary_path
+                        )
+                        if parsed_version:
+                            if not (  # What case are we trying to catch here?
+                                parsed_version.startswith(".")
+                                or parsed_version.endswith(".")
+                            ):
+                                current().context.clickhouse_version = parsed_version
 
                 docker_path = self.clickhouse_binary_path
 
-                self.clickhouse_binary_path = get_binary_from_docker_container(
-                    docker_image=docker_path,
-                    container_binary_path="/usr/bin/clickhouse",
-                )
-                try:
-                    self.clickhouse_odbc_bridge_binary_path = (
-                        get_binary_from_docker_container(
-                            docker_image=docker_path,
-                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                            host_binary_path_suffix="_odbc_bridge",
-                        )
+                with Given("server binary from docker image", description=docker_path):
+                    self.clickhouse_binary_path = get_binary_from_docker_container(
+                        docker_image=docker_path,
+                        container_binary_path="/usr/bin/clickhouse",
                     )
-                except:
-                    pass
+                    try:
+                        self.clickhouse_odbc_bridge_binary_path = (
+                            get_binary_from_docker_container(
+                                docker_image=docker_path,
+                                container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                                host_binary_path_suffix="_odbc_bridge",
+                            )
+                        )
+                    except:
+                        pass
 
             if self.clickhouse_binary_path.endswith(".deb"):
                 deb_path = self.clickhouse_binary_path
@@ -1791,14 +1793,15 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
+                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
+                    self.clickhouse_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
+                    self.clickhouse_odbc_bridge_binary_path
+                    or os.path.join(
+                        os.path.dirname(self.clickhouse_binary_path),
+                        "clickhouse-odbc-bridge",
+                    )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""
