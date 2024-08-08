@@ -388,6 +388,7 @@ class ResultUploader:
         with Given("database credentials"):
             if db_host is None:
                 db_host = os.getenv(DATABASE_HOST_VAR)
+                assert db_host, "Failed to get database host from environment"
 
             if db_user is None:
                 db_user = os.getenv(DATABASE_USER_VAR)
