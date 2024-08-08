@@ -1,4 +1,6 @@
 import uuid
+import hashlib
+import bcrypt
 
 import testflows.settings as settings
 
@@ -200,3 +202,66 @@ def add_rbac_config_file(
         wait_healthy=False,
         modify=True,
     )
+
+
+@TestStep(Given)
+def create_user(
+    self, node=None, user_name=None, identified=None, exitcode=None, message=None
+):
+    """Create user with given name. If name is not provided, it will be generated."""
+    if node is None:
+        node = self.context.node
+
+    if user_name is None:
+        user_name = "user_" + getuid()
+
+    query = f"CREATE USER {user_name}"
+
+    if identified:
+        query += f" IDENTIFIED WITH {identified}"
+
+    try:
+        node.query(query, exitcode=exitcode, message=message)
+        yield user_name
+
+    finally:
+        with Finally("I drop the user if exists"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+
+@TestStep(Given)
+def add_identified(self, user, identified, node=None, exitcode=None, message=None):
+    """Add new authentication methods to the user while keeping the existing ones."""
+    if node is None:
+        node = self.context.node
+
+    query = f"ALTER USER {user} ADD IDENTIFIED WITH {identified}"
+    node.query(query, exitcode=exitcode, message=message)
+
+
+def generate_hashed_password_with_salt(password, salt="some_salt"):
+    """Generate hashed password with salt using sha256 algorithm."""
+    salted_password = password.encode("utf-8") + salt.encode("utf-8")
+    hashed_password = hashlib.sha256(salted_password).hexdigest()
+    return salt, hashed_password
+
+
+def generate_hashed_password(password):
+    """Generate hashed password using SHA-256 algorithm."""
+    hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    return hashed_password
+
+
+def generate_double_hashed_password(password):
+    """Generate double hashed password using SHA-1 algorithm."""
+    double_sha1_hash_password = hashlib.sha1(
+        hashlib.sha1(password.encode("utf-8")).digest()
+    ).hexdigest()
+    return double_sha1_hash_password
+
+
+def generate_bcrypt_hash(password):
+    password_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password_bytes, salt).decode("utf-8")
+    return hashed

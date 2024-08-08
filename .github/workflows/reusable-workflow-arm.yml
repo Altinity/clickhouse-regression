@@ -11,7 +11,6 @@ on:
       version:
         description: "Expected version. Example: 23.3.1.64"
         type: string
-        required: true
       suite:
         type: string
         description: "Test suite to run. Default: all"
@@ -67,6 +66,7 @@ env:
   PYTHONIOENCODING: utf-8
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
+  keeper_or_zookeeper: zookeeper
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --no-colors
@@ -74,7 +74,7 @@ env:
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" report.url="$SUITE_REPORT_INDEX_URL" arch="$(uname -i)"
+    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log ${{ inputs.extra_args }}
   artifact_paths: |
     ./report.html
@@ -123,7 +123,7 @@ jobs:
 
   aggregate_functions:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 240
+    timeout-minutes: 360
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
@@ -368,7 +368,7 @@ jobs:
 
   benchmark_aws:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 200
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
@@ -1306,7 +1306,7 @@ jobs:
 
   rbac:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}

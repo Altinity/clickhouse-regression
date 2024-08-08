@@ -89,6 +89,9 @@ def execute_query(
                 else "tests.post22.3"
             )
 
+        if is_with_analyzer(current().context.node):
+            snapshot_id += "_with_analyzer"
+
         with Then("I check output against snapshot"):
             with values() as that:
                 assert that(

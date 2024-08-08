@@ -140,10 +140,13 @@ def get_binary_from_docker_container(
         if host_binary_path_suffix:
             host_binary_path += host_binary_path_suffix
 
-    with Given(
-        "I get ClickHouse Keeper binary from docker container",
-        description=f"{docker_image}",
+    with By(
+        "I return host_binary_path if it already exists", description=host_binary_path
     ):
+        if os.path.exists(host_binary_path):
+            return host_binary_path
+
+    with And("copying binary from docker container", description=docker_image):
         with Shell() as bash:
             bash.timeout = 300
             bash(
@@ -457,7 +460,7 @@ class ZooKeeperNode(Node):
         with By(f"stopping {self.name}"):
             self.zk_server_command("stop")
 
-    def start_zookeeper(self, timeout=300, check_version=True):
+    def start_zookeeper(self, timeout=300, check_version=True, skip_if_running=False):
         """Start ZooKeeper server."""
         if check_version:
             r = self.zk_server_command("version")
@@ -465,7 +468,10 @@ class ZooKeeperNode(Node):
             current().context.zookeeper_version = version
 
         with By(f"starting {self.name}"):
-            self.zk_server_command("start", exitcode=0)
+            r = self.zk_server_command("start", no_checks=True)
+            if skip_if_running and "already running" in r.output:
+                return
+            assert r.exitcode == 0, error(r.output)
 
     def restart_zookeeper(self, timeout=300):
         """Restart ZooKeeper server."""
@@ -626,11 +632,15 @@ class ClickHouseNode(Node):
         thread_fuzzer=False,
         check_version=True,
         log_dir="/var/log/clickhouse-server",
+        skip_if_running=False,
     ):
         """Start ClickHouse server."""
         pid = self.clickhouse_pid()
         if pid:
-            raise RuntimeError(f"ClickHouse server already running with pid {pid}")
+            if skip_if_running:
+                return
+            else:
+                raise RuntimeError(f"ClickHouse server already running with pid {pid}")
 
         if thread_fuzzer:
             self.enable_thread_fuzzer()
@@ -1125,6 +1135,7 @@ class ClickHouseKeeperNode(Node):
         user=None,
         force_recovery=False,
         check_version=True,
+        skip_if_running=False,
     ):
         """Start ClickHouse Keeper."""
         if check_version:
@@ -1133,7 +1144,10 @@ class ClickHouseKeeperNode(Node):
 
         pid = self.keeper_pid()
         if pid:
-            raise RuntimeError(f"ClickHouse Keeper already running with pid {pid}")
+            if skip_if_running:
+                return
+            else:
+                raise RuntimeError(f"ClickHouse Keeper already running with pid {pid}")
 
         start_cmd = (
             "/usr/bin/clickhouse-keeper --config-file=/etc/clickhouse-keeper/keeper_config.xml"
@@ -1310,7 +1324,7 @@ class Cluster(object):
                 f"docker compose file '{docker_compose_file_path}' does not exist"
             )
 
-        if rm_instances_files:
+        if rm_instances_files and not reuse_env:
             shutil.rmtree(
                 os.path.join(docker_compose_project_dir, "..", "_instances"),
                 ignore_errors=True,
@@ -1356,32 +1370,34 @@ class Cluster(object):
 
             elif self.clickhouse_binary_path.startswith("docker://"):
                 if current().context.clickhouse_version is None:
-                    parsed_version = parse_version_from_docker_path(
-                        self.clickhouse_binary_path
-                    )
-                    if parsed_version:
-                        if not (  # What case are we trying to catch here?
-                            parsed_version.startswith(".")
-                            or parsed_version.endswith(".")
-                        ):
-                            current().context.clickhouse_version = parsed_version
+                    with Given("version from docker path"):
+                        parsed_version = parse_version_from_docker_path(
+                            self.clickhouse_binary_path
+                        )
+                        if parsed_version:
+                            if not (  # What case are we trying to catch here?
+                                parsed_version.startswith(".")
+                                or parsed_version.endswith(".")
+                            ):
+                                current().context.clickhouse_version = parsed_version
 
                 docker_path = self.clickhouse_binary_path
 
-                self.clickhouse_binary_path = get_binary_from_docker_container(
-                    docker_image=docker_path,
-                    container_binary_path="/usr/bin/clickhouse",
-                )
-                try:
-                    self.clickhouse_odbc_bridge_binary_path = (
-                        get_binary_from_docker_container(
-                            docker_image=docker_path,
-                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                            host_binary_path_suffix="_odbc_bridge",
-                        )
+                with Given("server binary from docker image", description=docker_path):
+                    self.clickhouse_binary_path = get_binary_from_docker_container(
+                        docker_image=docker_path,
+                        container_binary_path="/usr/bin/clickhouse",
                     )
-                except:
-                    pass
+                    try:
+                        self.clickhouse_odbc_bridge_binary_path = (
+                            get_binary_from_docker_container(
+                                docker_image=docker_path,
+                                container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                                host_binary_path_suffix="_odbc_bridge",
+                            )
+                        )
+                    except:
+                        pass
 
             if self.clickhouse_binary_path.endswith(".deb"):
                 deb_path = self.clickhouse_binary_path
@@ -1765,7 +1781,10 @@ class Cluster(object):
         """Bring cluster up."""
         if self.local:
             with Given("I am running in local mode"):
-                with Then("check --clickhouse-binary-path is specified"):
+                with Then(
+                    "check --clickhouse-binary-path is specified",
+                    description=self.clickhouse_binary_path,
+                ):
                     assert (
                         self.clickhouse_binary_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
@@ -1798,102 +1817,107 @@ class Cluster(object):
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
 
-        with Given("docker-compose"):
-            max_attempts = 5
-            max_up_attempts = 3
+        def start_cluster(max_up_attempts=3):
+            if not self.reuse_env:
+                with By("pulling images for all the services"):
+                    cmd = self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
+                        no_checks=True,
+                        timeout=timeout,
+                    )
+                    if cmd.exitcode != 0:
+                        return False
 
-            for attempt in range(max_attempts):
-                with When(f"attempt {attempt}/{max_attempts}"):
-                    with By("pulling images for all the services"):
+                with And("checking if any containers are already running"):
+                    self.command(
+                        None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                    )
+
+                with And("executing docker-compose down just in case it is up"):
+                    cmd = self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
+                        no_checks=True,
+                        timeout=timeout,
+                    )
+                    if cmd.exitcode != 0:
+                        return False
+
+                with And("checking if any containers are still left running"):
+                    self.command(
+                        None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                    )
+
+                with And(
+                    "creating a unique builder just in case docker-compose needs to build images"
+                ):
+                    self.command(
+                        None,
+                        f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
+                        exitcode=0,
+                    )
+
+            with By("executing docker-compose up"):
+                up_args = (
+                    "" if self.reuse_env else "--renew-anon-volumes --force-recreate"
+                )
+                for attempt in retries(count=max_up_attempts):
+                    with attempt:
                         cmd = self.command(
                             None,
-                            f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
-                            no_checks=True,
+                            f"set -o pipefail && {self.docker_compose} up {up_args} --timeout 600 -d 2>&1 | tee",
                             timeout=timeout,
-                        )
-                        if cmd.exitcode != 0:
-                            continue
-
-                    with And("checking if any containers are already running"):
-                        self.command(
-                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
-                        )
-
-                    with And("executing docker-compose down just in case it is up"):
-                        cmd = self.command(
-                            None,
-                            f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
                             no_checks=True,
-                            timeout=timeout,
                         )
-                        if cmd.exitcode != 0:
-                            continue
+                        if "port is already allocated" in cmd.output:
+                            port = re.search(
+                                r"Bind for .+:([0-9]+) failed", cmd.output
+                            ).group(1)
 
-                    with And("checking if any containers are still left running"):
-                        self.command(
-                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
-                        )
-
-                    with And(
-                        "creating a unique builder just in case docker-compose needs to build images"
-                    ):
-                        self.command(
-                            None,
-                            f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
-                            exitcode=0,
-                        )
-
-                    with And("executing docker-compose up"):
-                        for attempt in retries(count=max_up_attempts):
-                            with attempt:
-                                cmd = self.command(
-                                    None,
-                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
-                                    timeout=timeout,
-                                    no_checks=True,
-                                )
-                                if "port is already allocated" in cmd.output:
-                                    port = re.search(
-                                        r"Bind for .+:([0-9]+) failed", cmd.output
-                                    ).group(1)
-
-                                    ps = self.command(
-                                        None, f"docker ps | grep {port}", no_checks=True
-                                    )
-                                    conflict_env = ps.output.split()[-1]
-                                    raise RuntimeError(
-                                        f"Failed to allocate port {port}, already in use by {conflict_env}."
-                                    )
-
-                                assert cmd.exitcode == 0, error(cmd.output)
-                                assert "ERROR:" not in cmd.output, error(cmd.output)
-                                if "is unhealthy" not in cmd.output:
-                                    break
-
-                    with Then("check there are no unhealthy containers"):
-                        ps_cmd = self.command(
-                            None,
-                            f'set -o pipefail && {self.docker_compose} ps | tee | grep -v "Exit 0"',
-                        )
-                        if "is unhealthy" in cmd.output or "Exit" in ps_cmd.output:
-                            self.command(
-                                None,
-                                f"set -o pipefail && {self.docker_compose} logs | tee",
+                            ps = self.command(
+                                None, f"docker ps | grep {port}", no_checks=True
                             )
-                            continue
+                            conflict_env = ps.output.split()[-1]
+                            raise RuntimeError(
+                                f"Failed to allocate port {port}, already in use by {conflict_env}."
+                            )
 
-                    if (
-                        cmd.exitcode == 0
-                        and "is unhealthy" not in cmd.output
-                        and "Exit" not in ps_cmd.output
-                    ):
-                        break
+                        assert cmd.exitcode == 0, error(cmd.output)
+                        assert "ERROR:" not in cmd.output, error(cmd.output)
+                        if "is unhealthy" not in cmd.output:
+                            return True
+
+            with Then("check there are no unhealthy containers"):
+                ps_cmd = self.command(
+                    None,
+                    f'set -o pipefail && {self.docker_compose} ps | tee | grep -v "Exit 0"',
+                )
+                if "is unhealthy" in cmd.output or "Exit" in ps_cmd.output:
+                    self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} logs | tee",
+                    )
+                    return False
 
             if (
-                cmd.exitcode != 0
-                or "is unhealthy" in cmd.output
-                or "Exit" in ps_cmd.output
+                cmd.exitcode == 0
+                and "is unhealthy" not in cmd.output
+                and "Exit" not in ps_cmd.output
             ):
+                return True
+
+            return False
+
+        with Given("docker-compose"):
+            max_attempts = 5
+            for attempt in range(max_attempts):
+                with When(f"attempt {attempt}/{max_attempts}"):
+                    running = start_cluster(max_up_attempts=3)
+                if running:
+                    break
+
+            if not running:
                 fail("could not bring up docker-compose cluster")
 
         with Then("wait all nodes report healthy"):
@@ -1901,20 +1925,24 @@ class Cluster(object):
                 for name in self.nodes["zookeeper"]:
                     self.node(name).wait_healthy()
                     if name.startswith("zookeeper"):
-                        self.node(name).start_zookeeper()
+                        self.node(name).start_zookeeper(skip_if_running=self.reuse_env)
 
             for name in self.nodes["clickhouse"]:
                 self.node(name).wait_healthy()
                 if name == "clickhouse-different-versions":
                     self.node(name).start_clickhouse(
-                        thread_fuzzer=self.thread_fuzzer, check_version=False
+                        thread_fuzzer=self.thread_fuzzer,
+                        check_version=False,
+                        skip_if_running=self.reuse_env,
                     )
                 elif name.startswith("clickhouse"):
-                    self.node(name).start_clickhouse(thread_fuzzer=self.thread_fuzzer)
+                    self.node(name).start_clickhouse(
+                        thread_fuzzer=self.thread_fuzzer, skip_if_running=self.reuse_env
+                    )
 
             for name in self.nodes.get("keeper", []):
                 if name.startswith("keeper"):
-                    self.node(name).start_keeper()
+                    self.node(name).start_keeper(skip_if_running=self.reuse_env)
 
         self.running = True
 

@@ -37,6 +37,8 @@ funcs = [
     ("hypot(1,", 1, 43),
 ]
 
+decimal_support = ["pow(1,", "power(1,", "atan2(1,", "hypot(1,"]
+
 Examples_list = [
     tuple(list(func) + list(data_type) + [Name(f"{func[0]}) - {data_type[0]}")])
     for func in funcs
@@ -55,9 +57,6 @@ def math_int_inline(
     """Check mathematical functions with Int128, UInt128, Int256, and UInt256 using inline tests."""
     if node is None:
         node = self.context.node
-
-    if is_with_analyzer(node):
-        self.context.snapshot_id = f"tests.with_analyzer"
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
         with When(f"I check {func} with {int_type} using 1, max, and min"):
@@ -137,16 +136,18 @@ def math_dec_inline(self, func, expected_result, exitcode, node=None):
     if node is None:
         node = self.context.node
 
-    if is_with_analyzer(node):
-        self.context.snapshot_id = f"tests.with_analyzer"
-
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
         with When(f"I check {func} with Decimal256 using 1, max, and min"):
-            node.query(
-                f"SELECT {func} toDecimal256(1,0)), {func} toDecimal256('{max}',0)), {func} toDecimal256('{min}',0)) FORMAT TabSeparated",
-                exitcode=43,
-                message="Exception: Illegal type ",
-            )
+            if check_clickhouse_version("<24.6")(self) or func not in decimal_support:
+                node.query(
+                    f"SELECT {func} toDecimal256(1,0)), {func} toDecimal256('{max}',0)), {func} toDecimal256('{min}',0)) FORMAT TabSeparated",
+                    exitcode=43,
+                    message="Exception: Illegal type ",
+                )
+            else:
+                execute_query(
+                    f"SELECT {func} toDecimal256(1,0)), {func} toDecimal256('{max}',0)), {func} toDecimal256('{min}',0))",
+                )
 
     else:
         with When(f"I check {func} with Decimal256 using 1"):
@@ -189,11 +190,19 @@ def math_dec_table(self, func, expected_result, exitcode, node=None):
             with When(
                 f"I insert the output of {func} with Decimal256 using {value} into a table"
             ):
-                node.query(
-                    f"INSERT INTO {table_name} SELECT {func} toDecimal256('{value}',0))",
-                    exitcode=43,
-                    message="Exception: Illegal type ",
-                )
+                if (
+                    check_clickhouse_version("<24.6")(self)
+                    or func not in decimal_support
+                ):
+                    node.query(
+                        f"INSERT INTO {table_name} SELECT {func} toDecimal256('{value}',0))",
+                        exitcode=43,
+                        message="Exception: Illegal type ",
+                    )
+                else:
+                    node.query(
+                        f"INSERT INTO {table_name} SELECT {func} toDecimal256('{value}',0))",
+                    )
 
     else:
         for value in [1, max, min]:

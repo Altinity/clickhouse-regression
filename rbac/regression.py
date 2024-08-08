@@ -315,6 +315,10 @@ ffails = {
         issue_65134,
         check_clickhouse_version(">=24.3") and check_clickhouse_version("<24.5"),
     ),
+    "/rbac/privileges/multiple authentication methods": (
+        Skip,
+        "Under development",
+    ),
 }
 
 

@@ -376,7 +376,7 @@ def modify_sql_security_on_cluster(self):
 
         with And("I try to set SQL security to INVOKER for materialized view"):
             node_1.query(
-                f"ALTER TABLE {mv_name} ON CLUSTER MODIFY SQL SECURITY INVOKER",
+                f"ALTER TABLE {mv_name} ON CLUSTER replicated_cluster MODIFY SQL SECURITY INVOKER",
                 exitcode=141,
                 message="B::Exception: SQL SECURITY INVOKER can't be specified for MATERIALIZED VIEW.",
             )

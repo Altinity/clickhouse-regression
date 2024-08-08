@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240624.1152136.
+# document by TestFlows v2.0.240801.1140507.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -936,6 +936,7 @@ RQ_SRS_006_RBAC_User_Alter_Password_DoubleSha1Password = Requirement(
         "to some password as identification when altering user account using\n"
         "`IDENTIFIED WITH DOUBLE_SHA1_PASSWORD` clause in the `ALTER USER` statement.\n"
         "\n"
+        "\n"
     ),
     link=None,
     level=4,
@@ -1346,6 +1347,180 @@ RQ_SRS_006_RBAC_User_Drop_Syntax = Requirement(
     link=None,
     level=4,
     num="5.3.18.4",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support specifying multiple authentication methods separated by commas\n"
+        "when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.\n"
+        "\n"
+        "**Example:**  \n"
+        "```sql\n"
+        "CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';\n"
+        "```\n"
+        "In the example above `user1` can authenticate with 1, 2 or 3.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.2",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.NoPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.\n"
+        "\n"
+        "The below query should throw an error:\n"
+        "```sql\n"
+        "CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.3",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support specifying multiple authentication methods separated by commas\n"
+        "when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement. [Clickhouse] SHALL clear all the existing authentication methods and keep only ones specified in the query.\n"
+        "\n"
+        "**Example:**  \n"
+        "```sql\n"
+        "ALTER USER user1 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2', sha256_password BY '3';\n"
+        "```\n"
+        "In the example above `user1` can authenticate only with 1, 2 or 3.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.4",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "\n"
+        "The below query should throw an error:\n"
+        "```sql\n"
+        "ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.5",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "```sql\n"
+        "ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.6",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "The below query should throw an error:\n"
+        "```sql\n"
+        "ALTER USER user1 ADD IDENTIFIED WITH no_password;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.7",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support clearing all authentication methods and keeping only the most recent one using `RESET AUTHENTICATION METHODS TO NEW` clause in the `ALTER USER` statement.\n"
+        "``` sql\n"
+        "ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.8",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL reflect the changes in `system.users` table in `auth_type` and `auth_params` columns when creating user with one or more authentication methods.\n"
+        "\n"
+        "For example,\n"
+        "```sql\n"
+        "SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.9",
 )
 
 RQ_SRS_006_RBAC_Role = Requirement(
@@ -6784,8 +6959,8 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_SqlSecurityNotSpecified = Requireme
     num="5.18.5.5",
 )
 
-RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CascadingViews_Select = Requirement(
-    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select",
+RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CascadingViews = Requirement(
+    name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews",
     version="1.0",
     priority=None,
     group=None,
@@ -6835,7 +7010,7 @@ RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CascadingViews_Select = Requirement
         "| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for definer 1 <br> - SELECT on target 1 for definer 1 <br> - INSERT on target 1 for definer 1 <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |\n"
         "| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for definer 3 <br> - SELECT on target 3 for definer 3 |\n"
         "| MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br> - INSERT on target 3 for definer 3 |\n"
-        "| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for user <br> - INSERT on target 1 for user <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |\n"
+        "| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for user <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |\n"
         "| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for definer 3 <br> - SELECT on target 3 for definer 3 |\n"
         "| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br> - INSERT on target 3 for definer 3 |\n"
         "| MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for definer 2 <br> - SELECT on target 2 for definer 2 <br> - INSERT on target 2 for definer 2 | \n"
@@ -11232,6 +11407,48 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         Heading(name="RQ.SRS-006.RBAC.User.Drop.IfExists", level=4, num="5.3.18.2"),
         Heading(name="RQ.SRS-006.RBAC.User.Drop.OnCluster", level=4, num="5.3.18.3"),
         Heading(name="RQ.SRS-006.RBAC.User.Drop.Syntax", level=4, num="5.3.18.4"),
+        Heading(name="Multiple authentication methods", level=3, num="5.3.19"),
+        Heading(name="Schema", level=4, num="5.3.19.1"),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser",
+            level=4,
+            num="5.3.19.2",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.NoPassword",
+            level=4,
+            num="5.3.19.3",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser",
+            level=4,
+            num="5.3.19.4",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword",
+            level=4,
+            num="5.3.19.5",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified",
+            level=4,
+            num="5.3.19.6",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword",
+            level=4,
+            num="5.3.19.7",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods",
+            level=4,
+            num="5.3.19.8",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users",
+            level=4,
+            num="5.3.19.9",
+        ),
         Heading(name="Role", level=2, num="5.4"),
         Heading(name="RQ.SRS-006.RBAC.Role", level=3, num="5.4.1"),
         Heading(name="RQ.SRS-006.RBAC.Role.Privileges", level=3, num="5.4.2"),
@@ -11992,7 +12209,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             num="5.18.5.5",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select",
+            name="RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews",
             level=4,
             num="5.18.5.6",
         ),
@@ -12830,6 +13047,14 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_User_Drop_IfExists,
         RQ_SRS_006_RBAC_User_Drop_OnCluster,
         RQ_SRS_006_RBAC_User_Drop_Syntax,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users,
         RQ_SRS_006_RBAC_Role,
         RQ_SRS_006_RBAC_Role_Privileges,
         RQ_SRS_006_RBAC_Role_Variables,
@@ -13124,7 +13349,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefaultValues,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_SqlSecurityNotSpecified,
-        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CascadingViews_Select,
+        RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CascadingViews,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_Definer,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityDefiner_DefinerNotSpecified,
         RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_Select_SqlSecurityInvoker_Definer,
@@ -13775,7 +14000,7 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             * 5.18.5.3 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefaultValues](#rqsrs-006rbacsqlsecuritymaterializedviewdefaultvalues)
             * 5.18.5.4 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewdefinernotspecified)
             * 5.18.5.5 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.SqlSecurityNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewsqlsecuritynotspecified)
-            * 5.18.5.6 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select](#rqsrs-006rbacsqlsecuritymaterializedviewcascadingviewsselect)
+            * 5.18.5.6 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews](#rqsrs-006rbacsqlsecuritymaterializedviewcascadingviews)
             * 5.18.5.7 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefiner)
             * 5.18.5.8 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityDefiner.DefinerNotSpecified](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecuritydefinerdefinernotspecified)
             * 5.18.5.9 [RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.Select.SqlSecurityInvoker.Definer](#rqsrs-006rbacsqlsecuritymaterializedviewselectsqlsecurityinvokerdefiner)
@@ -14450,6 +14675,7 @@ version: 1.0
 to some password as identification when altering user account using
 `IDENTIFIED WITH DOUBLE_SHA1_PASSWORD` clause in the `ALTER USER` statement.
 
+
 ##### RQ.SRS-006.RBAC.User.Alter.Host.AddDrop
 version: 1.0
 
@@ -14605,6 +14831,104 @@ version: 1.0
 
 ```sql
 DROP USER [IF EXISTS] name [,...] [ON CLUSTER cluster_name]
+```
+
+#### Multiple authentication methods
+
+##### Schema
+
+Possible authentication methods are:
+```yaml
+authentication_methods:
+  - no_password
+  - plaintext_password
+  - sha256_password
+  - double_sha1_password
+  - ldap
+  - kerberos
+  - ssl_certificate
+  - bcrypt_password  
+  - ssh_key
+  - http
+  - jwt
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser
+version: 1.0  
+
+[ClickHouse] SHALL support specifying multiple authentication methods separated by commas
+when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.
+
+**Example:**  
+```sql
+CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1', plaintext_password BY '2', sha256_password BY '3';
+```
+In the example above `user1` can authenticate with 1, 2 or 3.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.NoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when creating user account using `IDENTIFIED WITH` clause in the `CREATE USER` statement.
+
+The below query should throw an error:
+```sql
+CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser
+version: 1.0  
+
+[ClickHouse] SHALL support specifying multiple authentication methods separated by commas
+when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement. [Clickhouse] SHALL clear all the existing authentication methods and keep only ones specified in the query.
+
+**Example:**  
+```sql
+ALTER USER user1 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2', sha256_password BY '3';
+```
+In the example above `user1` can authenticate only with 1, 2 or 3.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword
+version: 1.0  
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
+
+The below query should throw an error:
+```sql
+ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified
+version: 1.0
+
+[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+The below query should throw an error:
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH no_password;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods
+version: 1.0
+
+[ClickHouse] SHALL support clearing all authentication methods and keeping only the most recent one using `RESET AUTHENTICATION METHODS TO NEW` clause in the `ALTER USER` statement.
+``` sql
+ALTER USER user1 RESET AUTHENTICATION METHODS TO NEW;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users
+version: 1.0  
+
+[ClickHouse] SHALL reflect the changes in `system.users` table in `auth_type` and `auth_params` columns when creating user with one or more authentication methods.
+
+For example,
+```sql
+SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';
 ```
 
 ### Role
@@ -17014,7 +17338,7 @@ version: 1.0
 
 [ClickHouse] SHALL automatically set `SQL SECURITY` to `DEFINER` if `SQL SECURITY` is not specified and `DEFINER` is specified. 
 
-##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews.Select
+##### RQ.SRS-006.RBAC.SQLSecurity.MaterializedView.CascadingViews
 version: 1.0  
 
 Example of cascading materialized view with 3 definer users:
@@ -17058,7 +17382,7 @@ The following table shows which privileges are required for which user in order 
 | MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for definer 1 <br> - SELECT on target 1 for definer 1 <br> - INSERT on target 1 for definer 1 <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |
 | MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for definer 3 <br> - SELECT on target 3 for definer 3 |
 | MV 1 with definer 1 -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br> - INSERT on target 3 for definer 3 |
-| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for user <br> - INSERT on target 1 for user <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |
+| MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for user <br> - SELECT on target 2 for definer 3 <br> - INSERT on target 3 for definer 3 |
 | MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `SELECT` from view 3 | - SELECT on view 3 for user <br> - SELECT on target 2 for definer 3 <br> - SELECT on target 3 for definer 3 |
 | MV 1 without SQL security specified -> <br> MV 2 without SQL security specified -> <br> MV 3 with definer 3 | `INSERT` into view 3 | - INSERT on view 3 for user <br> - INSERT on target 3 for definer 3 |
 | MV 1 without SQL security specified -> <br> MV 2 with definer 2 -> <br> MV 3 without SQL security specified | `INSERT` into source table | - INSERT on source table for user <br> - SELECT on source table for user <br> - SELECT on target 1 for definer 2 <br> - SELECT on target 2 for definer 2 <br> - INSERT on target 2 for definer 2 | 

@@ -143,6 +143,9 @@ def check_active_path_attach_detached(self, engine):
         if check_clickhouse_version("<24.4")(self):
             exitcode, message = None, None
 
+        if check_clickhouse_version("<22.9")(self):
+            exitcode, message = 220, "DB::Exception: Duplicate interserver IO endpoint:"
+
         node.query(f"ATTACH TABLE {table1}", exitcode=exitcode, message=message)
 
     if check_clickhouse_version("<24.4")(self):
@@ -190,6 +193,9 @@ def check_active_path_uuid(self, engine):
         )
         if check_clickhouse_version("<24.4")(self):
             exitcode, message = None, None
+
+        if check_clickhouse_version("<22.9")(self):
+            exitcode, message = 220, "DB::Exception: Duplicate interserver IO endpoint:"
 
         attach_table_UUID(
             table=table2,

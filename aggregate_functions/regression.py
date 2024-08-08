@@ -11,7 +11,11 @@ from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.cluster import create_cluster
 from helpers.common import *
 
-from aggregate_functions.tests.steps import aggregate_functions, window_functions
+from aggregate_functions.tests.steps import (
+    aggregate_functions,
+    window_functions,
+    funcs_to_run_with_extra_data,
+)
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 issue_41176 = "https://github.com/ClickHouse/ClickHouse/issues/41176"
@@ -170,222 +174,239 @@ xfails = {
             check_clickhouse_version("<22.9"),
         )
     ],
+    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": [
+        (
+            Fail,
+            "need to investigate",
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": [
+        (
+            Fail,
+            "need to investigate",
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/retentionState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/retentionState/single NULL value/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/sequenceCountState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/:/studentTTest*Merge/*": [
+        (
+            Fail,
+            issue_41176,
+            check_clickhouse_version("<23.3"),
+        )
+    ],
+    "/aggregate functions/state/windowFunnelState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/windowFunnelState/single NULL value/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": [
+        (
+            Fail,
+            issue_57801,
+            check_clickhouse_version("<23"),
+        )
+    ],
 }
 
 ffails = {
-    "/aggregate functions/window_functions/ntile/*": (
+    "/aggregate functions/window_functions/ntile": (
         Skip,
         "ntile works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/analysisOfVariance/*": (
+    "/aggregate functions/analysisOfVariance": (
         Skip,
         "analysisOfVariance works from 22.10",
         check_clickhouse_version("<=22.9"),
     ),
-    "/aggregate functions/:/analysisOfVariance:/*": (
+    "/aggregate functions/:/analysisOfVariance:": (
         Skip,
         "analysisOfVariance works from 22.10",
         check_clickhouse_version("<=22.9"),
     ),
-    "/aggregate functions/corrMatrix/*": (
+    "/aggregate functions/corrMatrix": (
         Skip,
         "corrMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/:/corrMatrix:/*": (
+    "/aggregate functions/:/corrMatrix:": (
         Skip,
         "corrMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/covarSampMatrix/*": (
+    "/aggregate functions/covarSampMatrix": (
         Skip,
         "covarSampMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/:/covarSampMatrix:/*": (
+    "/aggregate functions/:/covarSampMatrix:": (
         Skip,
         "covarSampMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/covarPopMatrix/*": (
+    "/aggregate functions/covarPopMatrix": (
         Skip,
         "covarPopMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/:/covarPopMatrix:/*": (
+    "/aggregate functions/:/covarPopMatrix:": (
         Skip,
         "covarPopMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/groupArrayLast/*": (
+    "/aggregate functions/groupArrayLast": (
         Skip,
         "groupArrayLast works from 23",
         check_clickhouse_version("<23"),
     ),
-    "/aggregate functions/:/groupArrayLast:/*": (
+    "/aggregate functions/:/groupArrayLast:": (
         Skip,
         "groupArrayLast works from 23",
         check_clickhouse_version("<23"),
     ),
-    "/aggregate functions/groupArrayIntersect/*": (
+    "/aggregate functions/groupArrayIntersect": (
         Skip,
         "groupArrayIntersect works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/*/*groupArrayIntersect*/*": (
+    "/aggregate functions/:/*groupArrayIntersect*": (
         Skip,
         "groupArrayIntersect works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/groupArraySorted/*": (
+    "/aggregate functions/groupArraySorted": (
         Skip,
         "groupArraySorted works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/*/*groupArraySorted*/*": (
+    "/aggregate functions/:/*groupArraySorted*": (
         Skip,
         "groupArraySorted works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/kolmogorovSmirnovTest/*": (
+    "/aggregate functions/kolmogorovSmirnovTest": (
         Skip,
         "kolmogorovSmirnovTest works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/kolmogorovSmirnovTest:/*": (
+    "/aggregate functions/:/kolmogorovSmirnovTest:": (
         Skip,
         "kolmogorovSmirnovTest works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/quantileGK/*": (
+    "/aggregate functions/quantileGK": (
         Skip,
         "quantileGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/quantileGK:/*": (
+    "/aggregate functions/:/quantileGK:": (
         Skip,
         "quantileGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/quantilesGK/*": (
+    "/aggregate functions/quantilesGK": (
         Skip,
         "quantilesGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/quantilesGK:/*": (
+    "/aggregate functions/:/quantilesGK:": (
         Skip,
         "quantilesGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/largestTriangleThreeBuckets/*": (
+    "/aggregate functions/largestTriangleThreeBuckets": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
         check_clickhouse_version("<23.10"),
     ),
-    "/aggregate functions/:/largestTriangleThreeBuckets*/*": (
+    "/aggregate functions/:/largestTriangleThreeBuckets*": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
         check_clickhouse_version("<23.10"),
     ),
-    "/aggregate functions/first_value_respect_nulls/*": (
+    "/aggregate functions/first_value_respect_nulls": (
         Skip,
         "first_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/:/first_value_respect_nulls*/*": (
+    "/aggregate functions/:/first_value_respect_nulls*": (
         Skip,
         "first_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/last_value_respect_nulls/*": (
+    "/aggregate functions/last_value_respect_nulls": (
         Skip,
         "last_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/:/last_value_respect_nulls*/*": (
+    "/aggregate functions/:/last_value_respect_nulls*": (
         Skip,
         "last_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/flameGraph/*": (
+    "/aggregate functions/flameGraph": (
         Skip,
         "flameGraph works from 23.8",
         check_clickhouse_version("<23.8"),
     ),
-    "/aggregate functions/:/flameGraph*/*": (
+    "/aggregate functions/:/flameGraph*": (
         Skip,
         "flameGraph works from 23.8",
         check_clickhouse_version("<23.8"),
     ),
-    # states
-    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": (
-        XFail,
-        "need to investigate",
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": (
-        XFail,
-        "need to investigate",
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/retentionState/NULL value handling/*": (
-        XFail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/retentionState/single NULL value/*": (
-        XFail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/sequenceCountState/NULL value handling/*": (
-        XFail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/*/studentTTest*Merge/*": (
-        XFail,
-        issue_41176,
-        check_clickhouse_version("<23.3"),
-    ),
-    "/aggregate functions/state/windowFunnelState/NULL value handling/*": (
-        XFail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/windowFunnelState/single NULL value/*": (
-        XFail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": (
-        XFail,
-        issue_57801,
-        check_clickhouse_version("<23"),
-    ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/float64:/*": (
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/float64:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/nullable_float64_:/*": (
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/nullable_float64_:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_nullable_float64__:/*": (
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_nullable_float64__:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_float64_:/*": (
+    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_float64_:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/*/sumMapFiltered*/inf, -inf, nan/*": (
+    "/aggregate functions/:/sumMapFiltered*/inf, -inf, nan": (
         Skip,
         issue_58741,
         check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
-    "/aggregate functions/*/sumMapFilteredWithOverflow*/inf, -inf, nan/*": (
+    "/aggregate functions/:/sumMapFilteredWithOverflow*/inf, -inf, nan": (
         Skip,
         issue_58741,
         check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
@@ -405,7 +426,7 @@ ffails = {
         "approx_top_k works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/*/*approx_top_k*": (
+    "/aggregate functions/:/*approx_top_k*": (
         Skip,
         "approx_top_k works from 24.3",
         check_clickhouse_version("<24.3"),
@@ -415,10 +436,20 @@ ffails = {
         "approx_top_sum works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/*/*approx_top_sum*": (
+    "/aggregate functions/:/*approx_top_sum*": (
         Skip,
         "approx_top_sum works from 24.3",
         check_clickhouse_version("<24.3"),
+    ),
+    "/aggregate functions/groupConcat": (
+        Skip,
+        "groupConcat was introduced in 24.7",
+        check_clickhouse_version("<24.7"),
+    ),
+    "/aggregate functions/:/*groupConcat*": (
+        Skip,
+        "groupConcat was introduced in 24.7",
+        check_clickhouse_version("<24.7"),
     ),
 }
 
@@ -461,16 +492,25 @@ def regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    with And("table with all data types"):
+    with And("tables with all data types"):
         self.context.table = create_table(
             engine="MergeTree",
             columns=generate_all_column_types(),
             order_by_all_columns=False,
             order_by="tuple()",
         )
+        self.context.table_extra_data = create_table(
+            engine="MergeTree",
+            columns=generate_all_column_types(),
+            order_by_all_columns=False,
+            order_by="tuple()",
+        )
 
-    with And("I populate table with test data"):
+    with And("I populate tables with test data"):
         self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
+        self.context.table_extra_data.insert_test_data(
+            cardinality=5, shuffle_values=True
+        )
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 
@@ -548,6 +588,8 @@ def regression(
         #     executor=executor,
         # )()
         join()
+
+    # Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
 
 
 if main():

@@ -234,9 +234,7 @@ def check_storage_policy(self, source_storage_policy, destination_storage_policy
     ):
         if (
             source_storage_policy == destination_storage_policy
-            or check_clickhouse_version(
-                f">={version_when_attach_partition_with_different_keys_merged}"
-            )(self)
+            or check_clickhouse_version(f">=24.6")(self)
         ):
             exitcode, message = None, None
         else:
