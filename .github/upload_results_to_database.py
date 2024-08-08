@@ -60,7 +60,7 @@ table_schema_attr_map = {
 }
 
 CREATE_TABLE_QUERY = """
-CREATE TABLE clickhouse_regression_results
+CREATE TABLE clickhouse_regression_results ON CLUSTER '{cluster}'
 (
     `clickhouse_version` LowCardinality(String),
     `clickhouse_package` LowCardinality(String),
@@ -82,7 +82,7 @@ CREATE TABLE clickhouse_regression_results
     `result_reason` String,
     `result_message` String,
 )
-ENGINE = MergeTree()
+ENGINE = ReplicatedMergeTree('/clickhouse/{cluster}/tables/gh-data/clickhouse_regression_results', '{replica}')
 ORDER BY start_time
 SETTINGS index_granularity = 8192;
 """
