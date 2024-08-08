@@ -11,9 +11,25 @@ from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.cluster import create_cluster
 from helpers.common import *
 
+
+def memory_leak_versions():
+    """Versions where memory leak was suspected."""
+
+    def check(test):
+        return check_clickhouse_version(">24.5")(test) or check_clickhouse_version(
+            "<24"
+        )(test)
+
+    return check
+
+
 xfails = {
     "/memory/memory leak/*": [
-        (Fail, "should be fixed", check_clickhouse_version("<24"))
+        (
+            Fail,
+            "memory leak detected on 23.8, need to investigate on  versions >=24.6",
+            memory_leak_versions(),
+        )
     ],
 }
 

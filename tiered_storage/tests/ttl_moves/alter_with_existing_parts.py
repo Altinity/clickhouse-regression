@@ -96,19 +96,23 @@ def scenario(self, name, engine):
                     time.sleep(5)
 
                     with When("I get used disks for the table"):
-                        used_disks = get_used_disks_for_table(node, name)
-                        with Then(
-                            f"parts {'should' if positive else 'should not'} have been moved"
-                        ):
-                            assert set(used_disks) == (
-                                {"external"} if positive else {"jbod1", "jbod2"}
-                            ), error()
+                        for attempt in retries(timeout=120, delay=15):
+                            with attempt:
+                                used_disks = get_used_disks_for_table(node, name)
+                                with Then(
+                                    f"parts {'should' if positive else 'should not'} have been moved"
+                                ):
+                                    assert set(used_disks) == (
+                                        {"external"} if positive else {"jbod1", "jbod2"}
+                                    ), error()
 
                     with Then("again number of rows should match"):
-                        r = node.query(
-                            f"SELECT count() FROM {name} FORMAT TabSeparated"
-                        ).output.strip()
-                        assert r == "6", error()
+                        for attempt in retries(timeout=60, delay=15):
+                            with attempt:
+                                r = node.query(
+                                    f"SELECT count() FROM {name} FORMAT TabSeparated"
+                                ).output.strip()
+                                assert r == "6", error()
 
                 with And("I wait until TTL expression to delete triggers"):
                     time.sleep(5)

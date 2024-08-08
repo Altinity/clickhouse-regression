@@ -47,16 +47,19 @@ def define_s3_disk_storage_configuration(
                 "access_key_id": f"{access_key_id}",
                 "secret_access_key": f"{secret_access_key}",
             }
-            disks[f"{disk_name}_cached"] = (
-                {
-                    "type": "cache",
-                    "disk": disk_name,
-                    "path": f"{disk_name}_cache/",
-                    "max_size": "22548578304",
-                    "cache_on_write_operations": "1",
-                    "do_not_evict_index_and_mark_files": "1",
-                },
-            )
+            if check_clickhouse_version(">=22.8")(self):
+                disks[f"{disk_name}_cached"] = (
+                    {
+                        "type": "cache",
+                        "disk": disk_name,
+                        "path": f"{disk_name}_cache/",
+                        "max_size": "22548578304",
+                        "cache_on_write_operations": "1",
+                        "do_not_evict_index_and_mark_files": "1",
+                    },
+                )
+            else:
+                disks[f"{disk_name}_cached"] = disks[disk_name]
 
             if hasattr(self.context, "s3_options"):
                 disks[disk_name].update(self.context.s3_options)
@@ -2456,10 +2459,7 @@ def disk_tests(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
 
     with Given("a temporary s3 path"):
-        if self.context.storage == "gcs":
-            temp_s3_path = "disk"  # temporary_bucket_path does not support gcs yet
-        else:
-            temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
 
         self.context.uri = f"{uri}disk/{temp_s3_path}/"
         self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"

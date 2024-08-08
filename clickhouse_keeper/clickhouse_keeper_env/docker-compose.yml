@@ -331,6 +331,7 @@ services:
   bash-tools:
     image: altinityinfra/bash-tools:1.0
     hostname: bash-tools
+    init: true
     restart: "no"
     entrypoint:
       - /bin/sleep

@@ -1,0 +1,7 @@
+I_check_the_outputs_of_sign__with_Decimal256 = r"""
+a
+-1
+1
+1
+"""
+

@@ -11,7 +11,9 @@ from aggregate_functions.tests.argMin import scenario as checks
 @TestScenario
 @Name("argMax")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMax("1.0"))
-def scenario(self, func="argMax({params})", table=None, snapshot_id=None):
+def scenario(
+    self, func="argMax({params})", table=None, snapshot_id=None, extra_data=None
+):
     """Check argMax aggregate function by using the same tests as for argMin."""
     # https://github.com/ClickHouse/ClickHouse/pull/58139
 
@@ -23,6 +25,7 @@ def scenario(self, func="argMax({params})", table=None, snapshot_id=None):
         snapshot_id=snapshot_id,
         clickhouse_version=clickhouse_version,
         add_analyzer=True,
+        extra_data=extra_data,
     )
 
     if "Merge" in self.name:

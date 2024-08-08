@@ -4,13 +4,17 @@ Results for **the latest** scheduled workflow runs.
 
 | ClickHouse Version | Status |
 | ------------ | - |
+| **`head`** | [![Scheduled ClickHouse head](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml) |
 | **`latest`** | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
-| **`24.4`** | [![Scheduled ClickHouse 24.4 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-4.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-4.yml) |
+| **`24.7`** | [![Scheduled ClickHouse 24.7](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-7.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-7.yml) |
 | **`24.3`** | [![Scheduled ClickHouse 24.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml) |
-| **`23.8.11.29.altinitystable`** | [![Scheduled Altinity 23.8 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/runs/9574052708) |
+| **`24.3.5.47.altinitystable`** | [![Scheduled Altinity 24.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml) |
+| **`23.8.11.29.altinitystable`** | [![Scheduled Altinity 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml) |
 | **`23.3.19.33.altinitystable`** | [![Scheduled Altinity 23.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml) |
+| **`22.8.15.25.altinitystable`** | [![Scheduled Altinity 22.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml) |
+| **`22.3.15.34.altinitystable`** | [![Scheduled Altinity 22.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml) |
 
-## ClickHouse Tests in [TestFlows]
+## Regression Tests in [TestFlows] for ClickHouse®
 
 This directory contains integration tests written using [TestFlows] 
 that involves several ClickHouse instances, custom configs, ZooKeeper, etc.

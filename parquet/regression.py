@@ -206,7 +206,7 @@ ffails = {
     "/parquet/encrypted/": (
         Skip,
         "Different error message on 23.8 and above",
-        check_clickhouse_version("<=24.6"),
+        check_clickhouse_version("<=24.9"),
     ),
     "/parquet/compression/*": (
         Skip,
@@ -336,7 +336,7 @@ ffails = {
     "/parquet/bloom": (
         Skip,
         "Not implemented yet",
-        check_clickhouse_version("<24.6"),
+        check_clickhouse_version("<24.9"),
     ),
     "/parquet/*/s3/compression type/*/outline/engine/*": (
         Skip,

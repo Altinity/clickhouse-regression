@@ -1,5 +1,5 @@
 name: Run CI/CD on ARM
-run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite)}}${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
+run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite)}}${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
 
 on:
   workflow_dispatch:
@@ -17,6 +17,13 @@ on:
         description: "Expected version. Example: 23.3.13.7.altinitytest"
         type: string
         required: true
+        default: 23.8.5.17.altinitytest
+      keeper_or_zookeeper:
+        description: "Keeper or ZooKeeper"
+        type: choice
+        options:
+          - keeper
+          - zookeeper
       suite:
         description: "Test suite to run (default: all)"
         type: choice
@@ -80,6 +87,10 @@ on:
         description: "Testflows output style."
         type: choice
         options:
+          - nice-new-fails
+          - brisk-new-fails
+          - plain-new-fails
+          - pnice-new-fails
           - new-fails
           - classic
           - nice
@@ -113,6 +124,8 @@ env:
   PYTHONIOENCODING: utf-8
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
+  keeper_or_zookeeper: ${{ inputs.keeper_or_zookeeper }}
+  enable_thread_fuzzer: ${{ inputs.enable_thread_fuzzer }}
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --no-colors
@@ -120,7 +133,7 @@ env:
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" report.url="$SUITE_REPORT_INDEX_URL" arch="$(uname -i)"
+    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log ${{ inputs.extra_args }}
   artifact_paths: |
     ./report.html
@@ -152,7 +165,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -169,7 +182,7 @@ jobs:
 
   aggregate_functions:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 240
+    timeout-minutes: 360
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
@@ -186,7 +199,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -220,7 +233,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -255,7 +268,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               --only "/alter/replace partition/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -291,7 +304,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               --only "/alter/attach partition/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -327,7 +340,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               --only "/alter/move partition/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -362,7 +375,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               --only "/attach/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -397,7 +410,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -414,7 +427,7 @@ jobs:
 
   benchmark_aws:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 200
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
@@ -437,7 +450,7 @@ jobs:
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -476,7 +489,7 @@ jobs:
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -512,7 +525,7 @@ jobs:
               -u ${{ env.SUITE }}/benchmark.py
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -547,7 +560,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -582,7 +595,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               --ssl
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -618,7 +631,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -652,7 +665,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -686,7 +699,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -720,7 +733,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -754,7 +767,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -788,7 +801,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -822,7 +835,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -856,7 +869,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -890,7 +903,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -952,7 +965,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -986,7 +999,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1019,7 +1032,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1052,7 +1065,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1086,7 +1099,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1120,7 +1133,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1154,7 +1167,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1188,7 +1201,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1223,7 +1236,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1258,7 +1271,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               --storage minio
               --only "/parquet/minio/*"
               ${{ env.args }} || EXITCODE=$?; 
@@ -1295,7 +1308,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
               --aws-s3-region ${{ secrets.AWS_REGION }}
@@ -1335,7 +1348,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1352,7 +1365,7 @@ jobs:
 
   rbac:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
@@ -1369,7 +1382,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1409,7 +1422,7 @@ jobs:
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1448,7 +1461,7 @@ jobs:
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1484,7 +1497,7 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1518,7 +1531,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1552,7 +1565,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1586,7 +1599,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1625,7 +1638,7 @@ jobs:
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1664,7 +1677,7 @@ jobs:
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1698,7 +1711,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1734,7 +1747,7 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --with-minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1768,7 +1781,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }} ${{ inputs.enable_thread_fuzzer && '--thread-fuzzer' || '' }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE

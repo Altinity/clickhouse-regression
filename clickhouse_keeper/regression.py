@@ -46,14 +46,18 @@ xfails = {
     ":/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/tcp connection/:/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
-    "fips/server/:/tcp connection/:/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
-    "fips/:/:/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
-    ":/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
+    "fips/server/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/server/:/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/:/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    ":/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
     "fips/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
@@ -64,12 +68,27 @@ xfails = {
         (Fail, "not supported by SSL library")
     ],
     "ports ssl fips/:/:/just disabling "
-    + clean("TLSv1.1 suite connection should work"): [(Fail, "needs to be reviewed")],
+    + clean("TLSv1_1 suite connection should work"): [(Fail, "needs to be reviewed")],
     "/clickhouse keeper/cli converter/output dir invalid": [
         (Fail, "Improper behaviour <23.8", check_clickhouse_version("<23.8"))
     ],
     "/clickhouse keeper/cli converter/snapshot invalid dir": [
         (Fail, "Improper behaviour <23.8", check_clickhouse_version("<23.8"))
+    ],
+    "fips/clickhouse server acting as a client/:/:onnection:should:": [
+        (
+            Error,
+            "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
+            check_clickhouse_version(">=24.3"),
+            r"ExpectTimeoutError.+test_https_connection_with.+node.query\($",
+        )
+    ],
+    "fips/server/all protocols disabled/:/:/:/:": [
+        (
+            Fail,
+            "needs workaround https://github.com/ClickHouse/ClickHouse/issues/65187",
+            check_clickhouse_version(">=24.4"),
+        )
     ],
 }
 
@@ -82,11 +101,7 @@ ffails = {
         "test doesn't work from 23.3",
         check_clickhouse_version(">=23.3"),
     ),
-    "/clickhouse keeper/keeper cluster tests/zookeepers 3": (
-        XFail,
-        "unstable from 23.3",
-        check_clickhouse_version(">=23.3"),
-    ),
+    "/clickhouse keeper/keeper cluster tests/zookeepers 3": (XFail, "Not stable"),
     "/clickhouse keeper/keeper cluster tests/standalone keepers 3": (
         XFail,
         "Not stable",
