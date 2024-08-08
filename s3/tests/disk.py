@@ -47,16 +47,19 @@ def define_s3_disk_storage_configuration(
                 "access_key_id": f"{access_key_id}",
                 "secret_access_key": f"{secret_access_key}",
             }
-            disks[f"{disk_name}_cached"] = (
-                {
-                    "type": "cache",
-                    "disk": disk_name,
-                    "path": f"{disk_name}_cache/",
-                    "max_size": "22548578304",
-                    "cache_on_write_operations": "1",
-                    "do_not_evict_index_and_mark_files": "1",
-                },
-            )
+            if check_clickhouse_version(">=22.8")(self):
+                disks[f"{disk_name}_cached"] = (
+                    {
+                        "type": "cache",
+                        "disk": disk_name,
+                        "path": f"{disk_name}_cache/",
+                        "max_size": "22548578304",
+                        "cache_on_write_operations": "1",
+                        "do_not_evict_index_and_mark_files": "1",
+                    },
+                )
+            else:
+                disks[f"{disk_name}_cached"] = disks[disk_name]
 
             if hasattr(self.context, "s3_options"):
                 disks[disk_name].update(self.context.s3_options)

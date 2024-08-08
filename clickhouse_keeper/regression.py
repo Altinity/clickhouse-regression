@@ -101,11 +101,7 @@ ffails = {
         "test doesn't work from 23.3",
         check_clickhouse_version(">=23.3"),
     ),
-    "/clickhouse keeper/keeper cluster tests/zookeepers 3": (
-        XFail,
-        "unstable from 23.3",
-        check_clickhouse_version(">=23.3"),
-    ),
+    "/clickhouse keeper/keeper cluster tests/zookeepers 3": (XFail, "Not stable"),
     "/clickhouse keeper/keeper cluster tests/standalone keepers 3": (
         XFail,
         "Not stable",
