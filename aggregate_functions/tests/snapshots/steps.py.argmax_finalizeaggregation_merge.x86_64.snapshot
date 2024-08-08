@@ -14606,6 +14606,10 @@ _aggregate_functions_finalizeAggregation_argMaxfinalizeAggregation_string_that_e
 {"finalizeAggregation(CAST(unhex('02000000350004000000796F7500'), 'AggregateFunction(argMax, String ,String)'))":"5"}
 """
 
+_aggregate_functions_finalizeAggregation_argMaxfinalizeAggregation_user_example_0 = r"""
+{"finalizeAggregation(CAST(unhex('0101000000000000000001E06B08BB76010000'), 'AggregateFunction(argMax, Float64 ,Nullable(DateTime64(3)))'))":0}
+"""
+
 _aggregate_functions_finalizeAggregation_argMaxfinalizeAggregation_with_group_by_0 = r"""
 {"finalizeAggregation(CAST(unhex('0100000000000000000100'), 'AggregateFunction(argMax, UInt64 ,UInt8)'))":"0"}
 """
