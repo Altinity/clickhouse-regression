@@ -74,15 +74,17 @@ def create_user(
     if user_name is None:
         user_name = "user_" + getuid()
 
+    behavior = self.context.behavior
+
     query = CreateUser().set_username(user_name).set_identified()
 
     for i, auth_method in enumerate(auth_methods):
         query = auth_method(query)
 
     try:
-        self.context.model.behavior.append(query)
+        behavior.append(query)
         r = client.query(str(query), no_checks=True)
-        Then(test=self.context.model.expect(r))(r=r)
+        Then(test=self.context.model.expect(behavior))(r=r)
         yield query
     finally:
         with Finally("drop the user if exists"):
