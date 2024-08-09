@@ -1,1 +1,2 @@
-FROM altinityinfra/clickhouse-regression-multiarch:2.0
+ARG CLICKHOUSE_DOCKER_IMAGE
+FROM $CLICKHOUSE_DOCKER_IMAGE
