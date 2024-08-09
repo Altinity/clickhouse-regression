@@ -134,6 +134,13 @@ xfails = {
             "Bug when replacing partitions concurrently",
         )
     ],
+    "/alter/attach partition/conditions/indices/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/54896",
+            check_clickhouse_version("<23.3"),
+        )
+    ],
 }
 
 xflags = {}
