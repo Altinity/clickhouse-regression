@@ -57,6 +57,22 @@ class CreateUser(Query):
     [SETTINGS variable [= value] [MIN [=] min_value] [MAX [=] max_value] [READONLY | WRITABLE] | PROFILE 'profile_name'] [,...]
     """
 
+    __slots__ = (
+        "query",
+        "if_not_exists_flag",
+        "or_replace_flag",
+        "users",
+        "not_identified_flag",
+        "identification",
+        "hosts",
+        "valid_until",
+        "access_storage_type",
+        "default_role",
+        "default_database",
+        "grantees",
+        "settings",
+    )
+
     def __init__(self):
         super().__init__()
         self.query = "CREATE USER"
