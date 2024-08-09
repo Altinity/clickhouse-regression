@@ -6,7 +6,14 @@ from collections import namedtuple
 from .query import Query
 from .create_user import Identification, Setting
 
-User = namedtuple("User", ["name", "cluster", "renamed"], defaults=[None,]*2)
+User = namedtuple(
+    "User",
+    ["name", "cluster", "renamed"],
+    defaults=[
+        None,
+    ]
+    * 2,
+)
 
 
 class AlterUser(Query):
@@ -21,6 +28,7 @@ class AlterUser(Query):
     [GRANTEES {user | role | ANY | NONE} [,...] [EXCEPT {user | role} [,...]]]
     [SETTINGS variable [= value] [MIN [=] min_value] [MAX [=] max_value] [READONLY | WRITABLE] | PROFILE 'profile_name'] [,...]
     """
+
     def __init__(self):
         super().__init__()
         self.query = "ALTER USER"
@@ -44,7 +52,22 @@ class AlterUser(Query):
         return self.query
 
     def __repr__(self):
-        return f"AlterUser(query={repr(self.query)}, if_not_exists_flag={self.if_not_exists_flag}, users={self.users}, not_identified_flag={self.not_identified_flag}, identification={self.identification}, add_hosts={self.add_hosts}, drop_hosts={self.drop_hosts}, valid_until={self.valid_until}, default_role={self.default_role}, all_except_default_role={self.all_except_default_role}, grantees={self.grantees}, except_grantees={self.except_grantees}, settings={self.settings})"
+        return (
+            f"AlterUser("
+            "query={repr(self.query)}, "
+            "if_not_exists_flag={self.if_not_exists_flag}, "
+            "users={self.users}, "
+            "not_identified_flag={self.not_identified_flag}, "
+            "identification={self.identification}, "
+            "add_hosts={self.add_hosts}, "
+            "drop_hosts={self.drop_hosts}, "
+            "valid_until={self.valid_until}, "
+            "default_role={self.default_role}, "
+            "all_except_default_role={self.all_except_default_role}, "
+            "grantees={self.grantees}, "
+            "except_grantees={self.except_grantees}, "
+            "settings={self.settings})"
+        )
 
     def if_not_exists(self):
         self.if_not_exists_flag = True
