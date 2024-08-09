@@ -26,6 +26,13 @@ Identification = namedtuple(
     ]
     * 10,
 )
+Grantees = namedtuple(
+    "Grantees",
+    ["grantees", "except_grantees"],
+    defaults=[
+        None,
+    ],
+)
 Setting = namedtuple(
     "Setting",
     ["variable", "value", "min_value", "max_value", "readonly", "writable", "profile"],
@@ -64,7 +71,6 @@ class CreateUser(Query):
         self.default_role = None
         self.default_database = None
         self.grantees = None
-        self.except_grantees = None
         self.settings = []
 
     def __str__(self):
@@ -251,8 +257,7 @@ class CreateUser(Query):
         return self
 
     def grantees(self, grantees, except_grantees=None):
-        self.grantees = grantees
-        self.except_grantees = except_grantees
+        self.grantees = Grantees(grantees, except_grantees)
         self.query += f" GRANTEES {','.join(grantees)}"
         if except_grantees:
             self.query += f" EXCEPT {','.join(except_grantees)}"

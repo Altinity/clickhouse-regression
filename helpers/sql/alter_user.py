@@ -4,7 +4,7 @@ import hashlib
 from collections import namedtuple
 
 from .query import Query
-from .create_user import Identification, Setting
+from .create_user import Identification, Grantees, Setting
 
 User = namedtuple(
     "User",
@@ -44,7 +44,6 @@ class AlterUser(Query):
         self.default_role = None
         self.all_except_default_role = None
         self.grantees = None
-        self.except_grantees = None
         self.settings = []
         self._identification = self.identification
 
@@ -238,8 +237,7 @@ class AlterUser(Query):
         return self
 
     def grantees(self, grantees, except_grantees=None):
-        self.grantees = grantees
-        self.except_grantees = except_grantees
+        self.grantees = Grantees(grantees, except_grantees)
         self.query += f" GRANTEES {','.join(grantees)}"
         if except_grantees:
             self.query += f" EXCEPT {','.join(except_grantees)}"
