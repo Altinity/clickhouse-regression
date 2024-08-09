@@ -153,9 +153,19 @@ def non_mergetree_table(self):
     node = self.context.node
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
-    exitcode, message = io_error_message(
-        exitcode=48, message="Cannot replace partition from table"
-    )
+
+    with Given("I set expected exitcode and message"):
+        exitcode, message = io_error_message(
+            exitcode=48, message="Cannot replace partition from table"
+        )
+        if check_clickhouse_version("<23.1")(self):
+            table_uuid = node.query(
+                f"SELECT uuid FROM system.tables WHERE name = '{source_table}' FORMAT TabSeparated"
+            ).output
+            exitcode, message = io_error_message(
+                exitcode=48,
+                message=f"Table default.{source_table} ({table_uuid}) supports attachPartitionFrom only for MergeTree family of table engines.",
+            )
 
     with Given(
         "I create a destination table with a MergeTree engine partitioned by a column and a memory table that has no partitions"
