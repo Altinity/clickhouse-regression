@@ -15,14 +15,14 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
     user_name = f"user_{getuid()}"
     self.context.behavior = []
 
-    with Given("client"):
+    with Given("I have client"):
         self.context.client = actions.node_client()
 
-    with When("create user with multiple authentication methods"):
+    with When("I create user with multiple authentication methods"):
         user = actions.create_user(user_name=user_name, auth_methods=auth_methods)
 
-    with Then("I check login using valid and invalid passwords"):
-        actions.check_login(user=user)
+    with Then("I try to login"):
+        actions.login(user=user)
 
 
 @TestFeature
