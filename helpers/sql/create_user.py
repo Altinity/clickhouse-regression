@@ -49,6 +49,7 @@ class CreateUser(Query):
     [GRANTEES {user | role | ANY | NONE} [,...] [EXCEPT {user | role} [,...]]]
     [SETTINGS variable [= value] [MIN [=] min_value] [MAX [=] max_value] [READONLY | WRITABLE] | PROFILE 'profile_name'] [,...]
     """
+
     def __init__(self):
         super().__init__()
         self.query = "CREATE USER"
@@ -70,7 +71,23 @@ class CreateUser(Query):
         return self.query
 
     def __repr__(self):
-        return f"CreateUser(query={repr(self.query)}, if_not_exists_flag={self.if_not_exists_flag}, or_replace_flag={self.or_replace_flag}, users={self.users}, not_identified_flag={self.not_identified_flag}, identification={self.identification}, hosts={self.hosts}, valid_until={self.valid_until}, access_storage_type={self.access_storage_type}, default_role={self.default_role}, default_database={self.default_database}, grantees={self.grantees}, except_grantees={self.except_grantees}, settings={self.settings})"
+        return (
+            f"CreateUser("
+            "query={repr(self.query)}, "
+            "if_not_exists_flag={self.if_not_exists_flag}, "
+            "or_replace_flag={self.or_replace_flag}, "
+            "users={self.users}, "
+            "not_identified_flag={self.not_identified_flag}, "
+            "identification={self.identification}, "
+            "hosts={self.hosts}, "
+            "valid_until={self.valid_until}, "
+            "access_storage_type={self.access_storage_type}, "
+            "default_role={self.default_role}, "
+            "default_database={self.default_database}, "
+            "grantees={self.grantees}, "
+            "except_grantees={self.except_grantees}, "
+            "settings={self.settings})"
+        )
 
     def if_not_exists(self):
         self.if_not_exists_flag = True
