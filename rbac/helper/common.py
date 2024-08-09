@@ -187,7 +187,7 @@ def add_rbac_config_file(
         }
     }
 
-    node.command(f"mkdir {config_d_dir}")
+    node.command(f"mkdir -p {config_d_dir}")
 
     config = create_xml_config_content(
         entries, config_file=config_file, config_d_dir=config_d_dir, root="clickhouse"
