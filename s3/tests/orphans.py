@@ -102,7 +102,7 @@ def create_insert_and_drop(self):
 
             with When("I drop the table"):
                 for node in self.context.ch_nodes:
-                    delete_replica(node=node, table_name=table_name)
+                    delete_replica(node=node, table_name=table_name, timeout=120)
 
             with Then("I check for orphans"):
                 orphans = check_orphans()
