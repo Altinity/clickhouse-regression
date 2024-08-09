@@ -13,7 +13,7 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
         node = self.context.node
 
     user_name = f"user_{getuid()}"
-    self.context.model = models.Model()
+    self.context.behavior = []
 
     with Given("client"):
         self.context.client = actions.node_client()
@@ -29,6 +29,7 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
 @Name("create user")
 def feature(self, node=None):
     """Check that user can be created with multiple authentication methods."""
+    self.context.model = models.Model()
 
     if node is None:
         node = self.context.node
