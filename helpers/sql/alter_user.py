@@ -44,6 +44,7 @@ class AlterUser(Query):
         "all_except_default_role",
         "grantees",
         "settings",
+        "_identification",
     )
 
     def __init__(self):
