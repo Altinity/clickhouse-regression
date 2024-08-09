@@ -29,6 +29,23 @@ class AlterUser(Query):
     [SETTINGS variable [= value] [MIN [=] min_value] [MAX [=] max_value] [READONLY | WRITABLE] | PROFILE 'profile_name'] [,...]
     """
 
+    __slots__ = (
+        "query",
+        "if_not_exists_flag",
+        "users",
+        "not_identified_flag",
+        "identification",
+        "add_identification",
+        "reset_auth_methods_to_new",
+        "add_hosts",
+        "drop_hosts",
+        "valid_until",
+        "default_role",
+        "all_except_default_role",
+        "grantees",
+        "settings",
+    )
+
     def __init__(self):
         super().__init__()
         self.query = "ALTER USER"
