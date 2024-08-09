@@ -83,7 +83,7 @@ def check_counts(counts, timeout, node="clickhouse1", steps=True):
                     cmd = node.query(sql, parser=parser)
                     assert (
                         cmd.values["count"] >= counts or cmd.values["unique"] >= counts
-                    )
+                    ), f"Expected counts to be at least {counts}, but got count: {cmd.values['count']} and unique: {cmd.values['unique']}"
     except Exception:
         with (
             Finally(

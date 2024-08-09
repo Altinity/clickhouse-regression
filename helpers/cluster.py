@@ -1647,9 +1647,9 @@ class Cluster(object):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
                         with Shell() as bash:
-                            log_path = f"_service_logs"
-                            bash(f"mkdir -p {log_path}")
+                            log_path = f"../_service_logs"
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
+                            bash(f"mkdir -p {log_path}")
                             nodes = bash(
                                 f"{self.docker_compose} ps --services"
                             ).output.split("\n")
@@ -1657,7 +1657,7 @@ class Cluster(object):
                             for node in nodes:
                                 snode = bash(
                                     f"{self.docker_compose} logs {node} "
-                                    f"> ../{log_path}/{node}.log",
+                                    f"> {log_path}/{node}.log",
                                     timeout=1000,
                                 )
                                 if snode.exitcode != 0:
