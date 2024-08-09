@@ -134,6 +134,15 @@ def regression(
         )
         self.context.cluster = cluster
 
+    with And(
+        "I set a flag for performance suite based on the value of thread fuzzer",
+        description="We don't run performance suite if the thread fuzzer is enabled",
+    ):
+        if not cluster.thread_fuzzer:
+            flag = TE
+        else:
+            flag = SKIP
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
@@ -172,7 +181,7 @@ def regression(
             )
             Feature(
                 run=load("aes_encryption.tests.performance", "feature"),
-                flags=TE,
+                flags=flag,
                 parallel=True,
                 executor=pool,
             )
