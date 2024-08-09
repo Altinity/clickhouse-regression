@@ -154,7 +154,14 @@ def non_mergetree_table(self):
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
-    with Given("I set expected exitcode and message"):
+    with Given(
+        "I create a destination table with a MergeTree engine partitioned by a column and a memory table that has no partitions"
+    ):
+        create_merge_tree_and_memory_tables(
+            merge_tree_table=destination_table, memory_table=source_table
+        )
+
+    with And("I set expected exitcode and message"):
         exitcode, message = io_error_message(
             exitcode=48, message="Cannot replace partition from table"
         )
@@ -166,13 +173,6 @@ def non_mergetree_table(self):
                 exitcode=48,
                 message=f"Table default.{source_table} ({table_uuid}) supports attachPartitionFrom only for MergeTree family of table engines.",
             )
-
-    with Given(
-        "I create a destination table with a MergeTree engine partitioned by a column and a memory table that has no partitions"
-    ):
-        create_merge_tree_and_memory_tables(
-            merge_tree_table=destination_table, memory_table=source_table
-        )
 
     with Check(
         "that it is not possible to replace a partition on a MergeTree table from a Memory table"
@@ -204,15 +204,25 @@ def view(self):
     node = self.context.node
     destination_table = "destination_" + getuid()
     view_name = "view_" + getuid()
-    exitcode, message = io_error_message(
-        exitcode=48, message="Cannot replace partition from table"
-    )
 
     with Given("I have a MergeTree table partitioned by a column"):
         create_table_partitioned_by_column(table_name=destination_table)
 
     with When("I create a normal view"):
         node.query(f"CREATE VIEW {view_name} AS SELECT 1;")
+
+    with And("I set expected exitcode and message"):
+        exitcode, message = io_error_message(
+            exitcode=48, message="Cannot replace partition from table"
+        )
+        if check_clickhouse_version("<23.1")(self):
+            table_uuid = node.query(
+                f"SELECT uuid FROM system.tables WHERE name = '{view_name}' FORMAT TabSeparated"
+            ).output
+            exitcode, message = io_error_message(
+                exitcode=48,
+                message=f"Table default.{view_name} ({table_uuid}) supports attachPartitionFrom only for MergeTree family of table engines.",
+            )
 
     with Check(
         "I check that replacing partition on the destination table from the normal view outputs an error"
@@ -246,6 +256,19 @@ def materialized_view(self):
         node.query(
             f"CREATE MATERIALIZED VIEW {view_name} TO {destination_table} AS SELECT * FROM {destination_table};"
         )
+
+    with And("I set expected exitcode and message"):
+        exitcode, message = io_error_message(
+            exitcode=48, message="Cannot replace partition from table"
+        )
+        if check_clickhouse_version("<23.1")(self):
+            table_uuid = node.query(
+                f"SELECT uuid FROM system.tables WHERE name = '{view_name}' FORMAT TabSeparated"
+            ).output
+            exitcode, message = io_error_message(
+                exitcode=48,
+                message=f"Table default.{view_name} ({table_uuid}) supports attachPartitionFrom only for MergeTree family of table engines.",
+            )
 
     with Check(
         "I check that replacing partition on the destination table from the normal view outputs an error"
