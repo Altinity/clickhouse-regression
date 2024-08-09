@@ -8,6 +8,8 @@ from helpers.sql.create_user import CreateUser
 
 
 def partial(func, *args, **keywords):
+    """Create a new function with partial application of the given arguments and keywords."""
+
     @wraps(func)
     def newfunc(*fargs, **fkeywords):
         newkeywords = {**keywords, **fkeywords}
@@ -40,12 +42,10 @@ def generate_auth_combinations(auth_methods=None, max_length=3, with_replacement
             partial(CreateUser.set_with_bcrypt_hash, password="foo6"),
         ]
     auth_combinations = []
-
     for length in range(1, max_length + 1):
         auth_combinations.extend(
             combinations(auth_methods, length, with_replacement=with_replacement)
         )
-
     return auth_combinations
 
 
@@ -71,7 +71,6 @@ def create_user(
     """
     if client is None:
         client = self.context.client
-
     if user_name is None:
         user_name = "user_" + getuid()
 
@@ -81,10 +80,10 @@ def create_user(
         query = auth_method(query)
 
     try:
+        self.context.model.behavior.append(query)
         r = client.query(str(query), no_checks=True)
-        # FIXME: add model.expect
+        Then(test=self.context.model.expect(r))(r=r)
         yield query
-
     finally:
         with Finally("drop the user if exists"):
             client.query(f"DROP USER IF EXISTS {user_name}")
@@ -109,3 +108,46 @@ def check_login(self, user: CreateUser, node=None):
             )
             # FIXME: add model.expect
             # FIXME: I need a state for login {user, password, hostname, ip}
+
+
+@TestStep(Then)
+def expect_ok(self, r):
+    """Expect the query to be successful."""
+    # assert r.exitcode == 0, f"unexpected exitcode {r.exitcode}"
+    assert (
+        "DB::Exception" not in r.output
+    ), f"unexpected 'DB::Exception' in '{r.output}'"
+
+
+@TestStep(Then)
+def expect_error(self, r, exitcode, message):
+    """Expect given exitcode and message in the output."""
+    # assert r.exitcode == exitcode, f"expected exitcode {exitcode} but got {r.exitcode}"
+    assert "DB::Exception" in r.output, f"expected 'DB::Exception' in '{r.output}'"
+    assert message in r.output, f"expected '{message}' in '{r.output}'"
+
+
+@TestStep(Then)
+def expect_no_password_auth_cannot_coexist_with_others_error(self, r):
+    """Expect NO_PASSWORD Authentication method cannot co-exist with other authentication methods error."""
+    exitcode = 36
+    message = "NO_PASSWORD Authentication method cannot co-exist with other authentication methods."
+    expect_error(r=r, exitcode=exitcode, message=message)
+
+
+@TestStep(Then)
+def expect_no_password_cannot_be_used_with_add_keyword_error(self, r):
+    """Expect The authentication method 'no_password' cannot be used with the ADD keyword error."""
+    exitcode = 36
+    message = (
+        "The authentication method 'no_password' cannot be used with the ADD keyword."
+    )
+    expect_error(r=r, exitcode=exitcode, message=message)
+
+
+@TestStep(Then)
+def expect_password_is_incorrect_error(self, r):
+    """Expect Authentication failed: password is incorrect, or there is no user with such name error."""
+    exitcode = 4
+    message = f"Authentication failed: password is incorrect, or there is no user with such name."
+    expect_error(r=r, exitcode=exitcode, message=message)
