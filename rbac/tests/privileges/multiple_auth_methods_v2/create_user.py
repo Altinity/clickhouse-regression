@@ -3,6 +3,7 @@ from testflows.core import *
 from helpers.common import getuid
 
 import rbac.tests.privileges.multiple_auth_methods_v2.actions as actions
+import rbac.tests.privileges.multiple_auth_methods_v2.model as models
 
 
 @TestScenario
@@ -12,6 +13,7 @@ def check_create_user_with_multiple_auth_methods(self, auth_methods, node=None):
         node = self.context.node
 
     user_name = f"user_{getuid()}"
+    self.context.model = models.Model()
 
     with Given("client"):
         self.context.client = actions.node_client()
