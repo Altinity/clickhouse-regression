@@ -1384,6 +1384,7 @@ class Cluster(object):
                 docker_path = self.clickhouse_binary_path
 
                 with Given("server binary from docker image", description=docker_path):
+                    self.clickhouse_docker_image = docker_path.split("docker://", 1)[-1]
                     self.clickhouse_binary_path = get_binary_from_docker_container(
                         docker_image=docker_path,
                         container_binary_path="/usr/bin/clickhouse",
@@ -1813,6 +1814,7 @@ class Cluster(object):
                     "keeper" if self.use_keeper else "zookeeper"
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
+                self.environ["CLICKHOUSE_DOCKER_IMAGE"] = self.clickhouse_docker_image
 
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
