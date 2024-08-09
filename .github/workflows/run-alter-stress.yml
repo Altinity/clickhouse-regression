@@ -106,6 +106,9 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+  CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+  CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
   PYTHONIOENCODING: utf-8
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
