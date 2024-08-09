@@ -6,6 +6,8 @@ from functools import wraps
 from helpers.common import getuid
 from helpers.sql.create_user import CreateUser
 
+from rbac.tests.privileges.multiple_auth_methods_v2.model import UserLogin
+
 
 def partial(func, *args, **keywords):
     """Create a new function with partial application of the given arguments and keywords."""
@@ -74,17 +76,16 @@ def create_user(
     if user_name is None:
         user_name = "user_" + getuid()
 
-    behavior = self.context.behavior
-
     query = CreateUser().set_username(user_name).set_identified()
 
     for i, auth_method in enumerate(auth_methods):
         query = auth_method(query)
 
     try:
-        behavior.append(query)
         r = client.query(str(query), no_checks=True)
-        Then(test=self.context.model.expect(behavior))(r=r)
+        query.result = r
+        self.context.behavior.append(query)
+        Then(test=self.context.model.expect())(r=r)
         yield query
     finally:
         with Finally("drop the user if exists"):
@@ -92,24 +93,55 @@ def create_user(
 
 
 @TestStep(Then)
-def check_login(self, user: CreateUser, node=None):
-    """Check user login with valid and invalid passwords."""
+def successful_login(self, user: CreateUser, node=None):
+    """Check user can login with valid passwords."""
     if node is None:
         node = self.context.node
 
     for auth_method in user.identification:
         for username in user.usernames:
-            if auth_method.method == "no_password":
-                password = ""
-            else:
-                password = auth_method.password
+            password = auth_method.password
+            r = node.query(
+                f"SELECT current_user()",
+                settings=[("user", username.name), ("password", password or "")],
+                no_checks=True,
+            )
+            self.context.behavior.append(
+                UserLogin(username=username.name, password=password, result=r)
+            )
+            Then(test=self.context.model.expect())(r=r)
+
+
+@TestStep(Then)
+def wrong_password_login(self, user: CreateUser, node=None):
+    """Check user trying to login with invalid passwords."""
+    if node is None:
+        node = self.context.node
+
+    for auth_method in user.identification:
+        for username in user.usernames:
+            password = (auth_method.password or "") + "1"
             r = node.query(
                 f"SELECT current_user()",
                 settings=[("user", username.name), ("password", password)],
                 no_checks=True,
             )
-            # FIXME: add model.expect
-            # FIXME: I need a state for login {user, password, hostname, ip}
+            self.context.behavior.append(
+                UserLogin(username=username.name, password=password, result=r)
+            )
+            Then(test=self.context.model.expect())(r=r)
+
+
+# FIXME: try to login with old password after changing it
+# FIXME: try to login with password for a different user
+# FIXME: try to login with valid password but invalid username
+
+
+@TestStep(Then)
+def login(self, user: CreateUser, node=None):
+    """Check user trying to login with valid and invalid passwords."""
+    successful_login(user=user, node=node)
+    wrong_password_login(user=user, node=node)
 
 
 @TestStep(Then)
@@ -148,7 +180,7 @@ def expect_no_password_cannot_be_used_with_add_keyword_error(self, r):
 
 
 @TestStep(Then)
-def expect_password_is_incorrect_error(self, r):
+def expect_password_or_user_is_incorrect_error(self, r):
     """Expect Authentication failed: password is incorrect, or there is no user with such name error."""
     exitcode = 4
     message = f"Authentication failed: password is incorrect, or there is no user with such name."
