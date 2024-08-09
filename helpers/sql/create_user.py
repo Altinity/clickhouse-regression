@@ -78,9 +78,9 @@ class CreateUser(Query):
         self.query = "CREATE USER"
         self.if_not_exists = False
         self.or_replace = False
-        self.users = []
+        self.users: list[User] = []
         self.not_identified = None
-        self.identification = []
+        self.identification: list[Identification] = []
         self.hosts = None
         self.valid_until = None
         self.access_storage_type = None
@@ -127,18 +127,18 @@ class CreateUser(Query):
         self.query += user_clause
         return self
 
-    def set_identified(self):
+    def set_identified_with(self):
         if len(self.identification) < 2:
-            self.query += " IDENTIFIED"
+            self.query += " IDENTIFIED WITH"
         return self
 
     def _set_identification(self, method, value=None, extra=None):
         if len(self.identification) > 1:
             self.query += ","
         if value:
-            self.query += f" WITH {method} BY '{value}'"
+            self.query += f" {method} BY '{value}'"
         else:
-            self.query += f" WITH {method}"
+            self.query += f" {method}"
         if extra:
             self.query += f" {extra}"
         return self
