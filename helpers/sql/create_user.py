@@ -59,10 +59,10 @@ class CreateUser(Query):
 
     __slots__ = (
         "query",
-        "if_not_exists_flag",
-        "or_replace_flag",
+        "if_not_exists",
+        "or_replace",
         "users",
-        "not_identified_flag",
+        "not_identified",
         "identification",
         "hosts",
         "valid_until",
@@ -76,10 +76,10 @@ class CreateUser(Query):
     def __init__(self):
         super().__init__()
         self.query = "CREATE USER"
-        self.if_not_exists_flag = False
-        self.or_replace_flag = False
+        self.if_not_exists = False
+        self.or_replace = False
         self.users = []
-        self.not_identified_flag = None
+        self.not_identified = None
         self.identification = []
         self.hosts = None
         self.valid_until = None
@@ -89,39 +89,35 @@ class CreateUser(Query):
         self.grantees = None
         self.settings = []
 
-    def __str__(self):
-        return self.query
-
     def __repr__(self):
         return (
-            f"CreateUser("
-            "query={repr(self.query)}, "
-            "if_not_exists_flag={self.if_not_exists_flag}, "
-            "or_replace_flag={self.or_replace_flag}, "
-            "users={self.users}, "
-            "not_identified_flag={self.not_identified_flag}, "
-            "identification={self.identification}, "
-            "hosts={self.hosts}, "
-            "valid_until={self.valid_until}, "
-            "access_storage_type={self.access_storage_type}, "
-            "default_role={self.default_role}, "
-            "default_database={self.default_database}, "
-            "grantees={self.grantees}, "
-            "except_grantees={self.except_grantees}, "
-            "settings={self.settings})"
+            "CreateUser("
+            f"query={repr(self.query)}, "
+            f"if_not_exists={self.if_not_exists}, "
+            f"or_replace={self.or_replace}, "
+            f"users={self.users}, "
+            f"not_identified={self.not_identified}, "
+            f"identification={self.identification}, "
+            f"hosts={self.hosts}, "
+            f"valid_until={self.valid_until}, "
+            f"access_storage_type={self.access_storage_type}, "
+            f"default_role={self.default_role}, "
+            f"default_database={self.default_database}, "
+            f"grantees={self.grantees}, "
+            f"settings={self.settings})"
         )
 
-    def if_not_exists(self):
-        self.if_not_exists_flag = True
+    def set_if_not_exists(self):
+        self.if_not_exists = True
         self.query += " IF NOT EXISTS"
         return self
 
-    def or_replace(self):
-        self.or_replace_flag = True
+    def set_or_replace(self):
+        self.or_replace = True
         self.query += " OR REPLACE"
         return self
 
-    def user(self, name, cluster_name=None):
+    def set_user(self, name, cluster_name=None):
         self.users.append(User(name, cluster_name))
         user_clause = f" {name}"
         if cluster_name:
@@ -131,7 +127,7 @@ class CreateUser(Query):
         self.query += user_clause
         return self
 
-    def identified(self):
+    def set_identified(self):
         if len(self.identification) < 2:
             self.query += " IDENTIFIED"
         return self
@@ -147,36 +143,38 @@ class CreateUser(Query):
             self.query += f" {extra}"
         return self
 
-    def not_identified(self):
-        self.not_identified_flag = True
+    def set_not_identified(self):
+        self.not_identified = True
         self.query += " NOT IDENTIFIED"
+        return self
 
-    def by_password(self, password):
+    def set_by_password(self, password):
         self.identification.append(Identification("password", password))
         if len(self.identification) < 2:
             self.query += " BY"
         if len(self.identification) > 1:
             self.query += ","
         self.query += f" '{password}'"
+        return self
 
-    def with_no_password(self):
+    def set_with_no_password(self):
         self.identification.append(Identification("no_password"))
         return self._set_identification("no_password")
 
-    def with_plaintext_password(self, password):
+    def set_with_plaintext_password(self, password):
         self.identification.append(Identification("plaintext_password", password))
         return self._set_identification("plaintext_password", password)
 
-    def with_sha256_password(self, password):
+    def set_with_sha256_password(self, password):
         self.identification.append(Identification("sha256_password", password))
         return self._set_identification("sha256_password", password)
 
-    def with_sha256_hash(self, password):
+    def set_with_sha256_hash(self, password):
         hash_value = hashlib.sha256(password.encode("utf-8")).hexdigest()
         self.identification.append(Identification("sha256_hash", password, hash_value))
         return self._set_identification("sha256_hash", hash_value)
 
-    def with_sha256_hash_with_salt(self, password, salt):
+    def set_with_sha256_hash_with_salt(self, password, salt):
         salted_password = password.encode("utf-8") + salt.encode("utf-8")
         hash_value = hashlib.sha256(salted_password).hexdigest()
         self.identification.append(
@@ -186,11 +184,11 @@ class CreateUser(Query):
             "sha256_hash", hash_value, extra=f" SALT '{salt}'"
         )
 
-    def with_double_sha1_password(self, password):
+    def set_with_double_sha1_password(self, password):
         self.identification.append(Identification("double_sha1_password", password))
         return self._set_identification("double_sha1_password", password)
 
-    def with_double_sha1_hash(self, password):
+    def set_with_double_sha1_hash(self, password):
         hash_value = hash_value = hashlib.sha1(
             hashlib.sha1(password.encode("utf-8")).digest()
         ).hexdigest()
@@ -199,24 +197,24 @@ class CreateUser(Query):
         )
         return self._set_identification("double_sha1_hash", hash_value)
 
-    def with_bcrypt_password(self, password):
+    def set_with_bcrypt_password(self, password):
         self.identification.append(Identification("bcrypt_password", password))
         return self._set_identification("bcrypt_password", password)
 
-    def with_bcrypt_hash(self, password):
+    def set_with_bcrypt_hash(self, password):
         password_bytes = password.encode("utf-8")
         salt = bcrypt.gensalt()
         hash_value = bcrypt.hashpw(password_bytes, salt).decode("utf-8")
         self.identification.append(Identification("bcrypt_hash", password, hash_value))
         return self._set_identification("bcrypt_hash", hash_value)
 
-    def with_ldap_server(self, server_name):
+    def set_with_ldap_server(self, server_name):
         self.identification.append(
             Identification("ldap_server", server_name=server_name)
         )
         return self._set_identification("ldap SERVER", server_name)
 
-    def with_kerberos(self, realm=None):
+    def set_with_kerberos(self, realm=None):
         self.identification.append(Identification("kerberos", realm=realm))
         return (
             self._set_identification("kerberos REALM", realm)
@@ -224,7 +222,7 @@ class CreateUser(Query):
             else self._set_identification("kerberos")
         )
 
-    def with_ssl_certificate(self, cn=None, san=None):
+    def set_with_ssl_certificate(self, cn=None, san=None):
         self.identification.append(Identification("ssl_certificate", cn=cn, san=san))
         if cn:
             return self._set_identification("ssl_certificate CN", cn)
@@ -232,13 +230,13 @@ class CreateUser(Query):
             return self._set_identification("ssl_certificate SAN", san)
         return self
 
-    def with_ssh_key(self, public_key, key_type):
+    def set_with_ssh_key(self, public_key, key_type):
         self.identification.append(
             Identification("ssh_key", public_key=public_key, key_type=key_type)
         )
         return self._set_identification(f"ssh_key BY KEY {public_key} TYPE", key_type)
 
-    def with_http_server(self, server_name, scheme=None):
+    def set_with_http_server(self, server_name, scheme=None):
         self.identification.append(
             Identification("http_server", server_name=server_name, scheme=scheme)
         )
@@ -247,39 +245,39 @@ class CreateUser(Query):
         else:
             return self._set_identification("http SERVER", server_name)
 
-    def host(self, hosts):
+    def set_host(self, hosts):
         self.hosts = hosts
         self.query += f" HOST {hosts}"
         return self
 
-    def valid_until(self, datetime):
+    def set_valid_until(self, datetime):
         self.valid_until = datetime
         self.query += f" VALID UNTIL {datetime}"
         return self
 
-    def in_access_storage_type(self, access_storage_type):
+    def set_in_access_storage_type(self, access_storage_type):
         self.access_storage_type = access_storage_type
         self.query += f" IN {access_storage_type}"
         return self
 
-    def default_role(self, roles):
+    def set_default_role(self, roles):
         self.default_role = roles
         self.query += f" DEFAULT ROLE {','.join(roles)}"
         return self
 
-    def default_database(self, database):
+    def set_default_database(self, database):
         self.default_database = database
         self.query += f" DEFAULT DATABASE {database}"
         return self
 
-    def grantees(self, grantees, except_grantees=None):
+    def set_grantees(self, grantees, except_grantees=None):
         self.grantees = Grantees(grantees, except_grantees)
         self.query += f" GRANTEES {','.join(grantees)}"
         if except_grantees:
             self.query += f" EXCEPT {','.join(except_grantees)}"
         return self
 
-    def setting(
+    def set_setting(
         self,
         variable,
         value=None,
