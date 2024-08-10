@@ -27,10 +27,10 @@ def check_create_user(self, auth_methods, node=None):
         actions.login(user=user)
 
     with And("I try to login with slightly wrong password"):
-        actions.wrong_password_login(user=user)
+        actions.login_with_wrong_password(user=user)
 
     with And("I try to login with slightly wrong username"):
-        actions.wrong_username_login(user=user)
+        actions.login_with_wrong_username(user=user)
 
 
 @TestFeature
