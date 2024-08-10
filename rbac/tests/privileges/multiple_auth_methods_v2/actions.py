@@ -5,8 +5,8 @@ from functools import wraps
 
 from helpers.common import getuid
 from helpers.sql.create_user import CreateUser
-
-from rbac.tests.privileges.multiple_auth_methods_v2.model import UserLogin
+from helpers.sql.drop_user import DropUser
+from helpers.sql.select import Select
 
 
 def partial(func, *args, **keywords):
@@ -54,11 +54,43 @@ def generate_auth_combinations(auth_methods=None, max_length=3, with_replacement
 @TestStep(Given)
 def node_client(self, node=None):
     """Create a client for the node."""
+
     if node is None:
         node = self.context.node
 
     with node.client() as client:
         yield client
+
+
+@TestStep(When)
+def client_query(self, query, client=None, **kwargs):
+    """Execute query on the client. Add query to the behavior.
+    Use model to check the result."""
+
+    if client is None:
+        client = self.context.client
+
+    r = client.query(str(query), no_checks=True, **kwargs)
+    query.add_result(r)
+    self.context.behavior.append(query)
+
+    Then(test=self.context.model.expect())(r=r)
+
+
+@TestStep(When)
+def node_query(self, query, node=None, **kwargs):
+    """Execute query on the node. Add query to the behavior.
+    Use model to check the result."""
+
+    if node is None:
+        node = self.context.node
+
+    r = node.query(str(query), no_checks=True, **kwargs)
+    query.add_connection_options(kwargs.pop("settings", None))
+    query.add_result(r)
+    self.context.behavior.append(query)
+
+    Then(test=self.context.model.expect())(r=r)
 
 
 @TestStep(Given)
@@ -71,6 +103,7 @@ def create_user(
     """Create user with given name and authentication methods.
     If name is not provided, it will be generated.
     """
+
     if client is None:
         client = self.context.client
     if user_name is None:
@@ -78,58 +111,48 @@ def create_user(
 
     query = CreateUser().set_username(user_name).set_identified()
 
-    for i, auth_method in enumerate(auth_methods):
+    for auth_method in auth_methods:
         query = auth_method(query)
 
     try:
-        r = client.query(str(query), no_checks=True)
-        query.result = r
-        self.context.behavior.append(query)
-        Then(test=self.context.model.expect())(r=r)
+        client_query(query=query, client=client)
         yield query
     finally:
         with Finally("drop the user if exists"):
-            client.query(f"DROP USER IF EXISTS {user_name}")
+            query = DropUser().set_if_exists().set_username(user_name)
+            client_query(query=query, client=client)
 
 
 @TestStep(Then)
 def successful_login(self, user: CreateUser, node=None):
     """Check user can login with valid passwords."""
+
     if node is None:
         node = self.context.node
 
     for auth_method in user.identification:
         for username in user.usernames:
             password = auth_method.password
-            r = node.query(
-                f"SELECT current_user()",
+            node_query(
+                query=Select().set_query("SELECT current_user()"),
                 settings=[("user", username.name), ("password", password or "")],
-                no_checks=True,
             )
-            self.context.behavior.append(
-                UserLogin(username=username.name, password=password, result=r)
-            )
-            Then(test=self.context.model.expect())(r=r)
 
 
 @TestStep(Then)
 def wrong_password_login(self, user: CreateUser, node=None):
     """Check user trying to login with invalid passwords."""
+
     if node is None:
         node = self.context.node
 
     for auth_method in user.identification:
         for username in user.usernames:
             password = (auth_method.password or "") + "1"
-            r = node.query(
-                f"SELECT current_user()",
+            node_query(
+                query=Select().set_query(f"SELECT current_user()"),
                 settings=[("user", username.name), ("password", password)],
-                no_checks=True,
             )
-            self.context.behavior.append(
-                UserLogin(username=username.name, password=password, result=r)
-            )
-            Then(test=self.context.model.expect())(r=r)
 
 
 # FIXME: try to login with old password after changing it
@@ -140,6 +163,7 @@ def wrong_password_login(self, user: CreateUser, node=None):
 @TestStep(Then)
 def login(self, user: CreateUser, node=None):
     """Check user trying to login with valid and invalid passwords."""
+
     successful_login(user=user, node=node)
     wrong_password_login(user=user, node=node)
 
@@ -147,6 +171,7 @@ def login(self, user: CreateUser, node=None):
 @TestStep(Then)
 def expect_ok(self, r):
     """Expect the query to be successful."""
+
     # assert r.exitcode == 0, f"unexpected exitcode {r.exitcode}"
     assert (
         "DB::Exception" not in r.output
@@ -156,6 +181,7 @@ def expect_ok(self, r):
 @TestStep(Then)
 def expect_error(self, r, exitcode, message):
     """Expect given exitcode and message in the output."""
+
     # assert r.exitcode == exitcode, f"expected exitcode {exitcode} but got {r.exitcode}"
     assert "DB::Exception" in r.output, f"expected 'DB::Exception' in '{r.output}'"
     assert message in r.output, f"expected '{message}' in '{r.output}'"
@@ -164,6 +190,7 @@ def expect_error(self, r, exitcode, message):
 @TestStep(Then)
 def expect_no_password_auth_cannot_coexist_with_others_error(self, r):
     """Expect NO_PASSWORD Authentication method cannot co-exist with other authentication methods error."""
+
     exitcode = 36
     message = "NO_PASSWORD Authentication method cannot co-exist with other authentication methods."
     expect_error(r=r, exitcode=exitcode, message=message)
@@ -172,6 +199,7 @@ def expect_no_password_auth_cannot_coexist_with_others_error(self, r):
 @TestStep(Then)
 def expect_no_password_cannot_be_used_with_add_keyword_error(self, r):
     """Expect The authentication method 'no_password' cannot be used with the ADD keyword error."""
+
     exitcode = 36
     message = (
         "The authentication method 'no_password' cannot be used with the ADD keyword."
@@ -182,6 +210,7 @@ def expect_no_password_cannot_be_used_with_add_keyword_error(self, r):
 @TestStep(Then)
 def expect_password_or_user_is_incorrect_error(self, r):
     """Expect Authentication failed: password is incorrect, or there is no user with such name error."""
+
     exitcode = 4
     message = f"Authentication failed: password is incorrect, or there is no user with such name."
     expect_error(r=r, exitcode=exitcode, message=message)

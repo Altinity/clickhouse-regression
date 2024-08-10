@@ -6,8 +6,8 @@ from collections import namedtuple
 from .query import Query
 from .create_user import Identification, Grantees, Setting
 
-User = namedtuple(
-    "User",
+Username = namedtuple(
+    "Username",
     ["name", "cluster", "renamed"],
     defaults=[
         None,
@@ -32,7 +32,7 @@ class AlterUser(Query):
     __slots__ = (
         "query",
         "if_not_exists",
-        "users",
+        "usernames",
         "not_identified",
         "identification",
         "add_identification",
@@ -51,7 +51,7 @@ class AlterUser(Query):
         super().__init__()
         self.query = "ALTER USER"
         self.if_not_exists = False
-        self.users = []
+        self.usernames = []
         self.not_identified = None
         self.identification = []
         self.add_identification = []
@@ -68,9 +68,9 @@ class AlterUser(Query):
     def __repr__(self):
         return (
             "AlterUser("
-            f"query={repr(self.query)}, "
+            f"{super().__repr__()}"
             f"if_not_exists={self.if_not_exists}, "
-            f"users={self.users}, "
+            f"usernames={self.usernames}, "
             f"not_identified={self.not_identified}, "
             f"identification={self.identification}, "
             f"add_identification={self.add_identification}, "
@@ -90,13 +90,13 @@ class AlterUser(Query):
         return self
 
     def set_user(self, name, cluster_name=None, rename_to=None):
-        self.users.append(User(name, cluster_name, rename_to))
+        self.usernames.append(Username(name, cluster_name, rename_to))
         user_clause = f" {name}"
         if cluster_name:
             user_clause += f" ON CLUSTER {cluster_name}"
         if rename_to:
             user_clause += f" RENAME TO {rename_to}"
-        if len(self.users) > 1:
+        if len(self.usernames) > 1:
             self.query += ","
         self.query += user_clause
         return self
@@ -112,19 +112,31 @@ class AlterUser(Query):
             self.query += " ADD IDENTIFIED"
         return self
 
+    def set_add_identified_with(self):
+        self._identification = self.add_identification
+        if len(self.identification) < 2:
+            self.query += " ADD IDENTIFIED WITH"
+        return self
+
     def set_identified(self):
         self._identification = self.identification
         if len(self.identification) < 2:
             self.query += " IDENTIFIED"
         return self
 
+    def set_identified_with(self):
+        self._identification = self.identification
+        if len(self.identification) < 2:
+            self.query += " IDENTIFIED WITH"
+        return self
+
     def _set_identification(self, method, value=None, extra=None):
         if len(self._identification) > 1:
             self.query += ","
         if value:
-            self.query += f" WITH {method} BY '{value}'"
+            self.query += f" {method} BY '{value}'"
         else:
-            self.query += f" WITH {method}"
+            self.query += f" {method}"
         if extra:
             self.query += f" {extra}"
         return self
