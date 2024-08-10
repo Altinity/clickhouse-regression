@@ -164,7 +164,7 @@ def successful_login(self, user: CreateUser, node=None):
 
 
 @TestStep(Then)
-def wrong_password_login(self, user: CreateUser, node=None):
+def login_with_wrong_password(self, user: CreateUser, node=None):
     """Check user trying to login with invalid passwords."""
 
     if node is None:
@@ -180,7 +180,7 @@ def wrong_password_login(self, user: CreateUser, node=None):
 
 
 @TestStep(Then)
-def wrong_username_login(self, user: CreateUser, node=None):
+def login_with_wrong_username(self, user: CreateUser, node=None):
     """Check user trying to login with invalid
     username but valid password for some user."""
 
@@ -197,7 +197,9 @@ def wrong_username_login(self, user: CreateUser, node=None):
 
 
 @TestStep(Then)
-def other_user_password_login(self, user1: CreateUser, user2: CreateUser, node=None):
+def login_with_other_user_password(
+    self, user1: CreateUser, user2: CreateUser, node=None
+):
     """Check user trying to login with valid
     username but with valid password for another user."""
 

@@ -37,10 +37,10 @@ def check_alter_user(self, auth_methods, node=None):
         actions.login(user=altered_user)
 
     with And("I try to login with slightly invalid passwords"):
-        actions.wrong_password_login(user=altered_user)
+        actions.login_with_wrong_password(user=altered_user)
 
     with And("I try to login with slightly wrong username"):
-        actions.wrong_username_login(user=user)
+        actions.login_with_wrong_username(user=user)
 
 
 @TestFeature
