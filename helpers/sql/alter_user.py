@@ -89,7 +89,7 @@ class AlterUser(Query):
         self.query += " IF NOT EXISTS"
         return self
 
-    def set_user(self, name, cluster_name=None, rename_to=None):
+    def set_username(self, name, cluster_name=None, rename_to=None):
         self.usernames.append(Username(name, cluster_name, rename_to))
         user_clause = f" {name}"
         if cluster_name:
