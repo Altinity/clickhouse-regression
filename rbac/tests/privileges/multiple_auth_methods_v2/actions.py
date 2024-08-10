@@ -5,6 +5,7 @@ from functools import wraps
 
 from helpers.common import getuid
 from helpers.sql.create_user import CreateUser
+from helpers.sql.alter_user import AlterUser
 from helpers.sql.drop_user import DropUser
 from helpers.sql.select import Select
 
@@ -93,6 +94,29 @@ def node_query(self, query, node=None, **kwargs):
     Then(test=self.context.model.expect())(r=r)
 
 
+@TestStep(When)
+def alter_user(
+    self,
+    user,
+    auth_methods=None,
+    client=None,
+):
+    """Alter user and set new authentication methods."""
+
+    if client is None:
+        client = self.context.client
+
+    for username in user.usernames:
+        query = AlterUser().set_username(username.name).set_identified()
+
+        for auth_method in auth_methods:
+            query = auth_method(query)
+
+        client_query(query=query, client=client)
+
+        return query
+
+
 @TestStep(Given)
 def create_user(
     self,
@@ -155,9 +179,45 @@ def wrong_password_login(self, user: CreateUser, node=None):
             )
 
 
-# FIXME: try to login with old password after changing it
-# FIXME: try to login with password for a different user
-# FIXME: try to login with valid password but invalid username
+@TestStep(Then)
+def wrong_username_login(self, user: CreateUser, node=None):
+    """Check user trying to login with invalid
+    username but valid password for some user."""
+
+    if node is None:
+        node = self.context.node
+
+    for auth_method in user.identification:
+        for username in user.usernames:
+            password = auth_method.password or ""
+            node_query(
+                query=Select().set_query(f"SELECT current_user()"),
+                settings=[("user", username.name + "1"), ("password", password)],
+            )
+
+
+@TestStep(Then)
+def other_user_password_login(self, user1: CreateUser, user2: CreateUser, node=None):
+    """Check user trying to login with valid
+    username but with valid password for another user."""
+
+    if node is None:
+        node = self.context.node
+
+    def try_login(username, auth_method):
+        password = auth_method.password or ""
+        node_query(
+            query=Select().set_query(f"SELECT current_user()"),
+            settings=[("user", username.name), ("password", password)],
+        )
+
+    for auth_method in user2.identification:
+        for username in user1.usernames:
+            try_login(username, auth_method)
+
+    for auth_method in user1.identification:
+        for username in user2.usernames:
+            try_login(username, auth_method)
 
 
 @TestStep(Then)
@@ -165,7 +225,6 @@ def login(self, user: CreateUser, node=None):
     """Check user trying to login with valid and invalid passwords."""
 
     successful_login(user=user, node=node)
-    wrong_password_login(user=user, node=node)
 
 
 @TestStep(Then)
