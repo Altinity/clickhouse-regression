@@ -58,7 +58,6 @@ class CreateUser(Query):
     """
 
     __slots__ = (
-        "query",
         "if_not_exists",
         "or_replace",
         "usernames",
@@ -92,10 +91,10 @@ class CreateUser(Query):
     def __repr__(self):
         return (
             "CreateUser("
-            f"query={repr(self.query)}, "
+            f"{super().__repr__()}"
             f"if_not_exists={self.if_not_exists}, "
             f"or_replace={self.or_replace}, "
-            f"usernames={self.users}, "
+            f"usernames={self.usernames}, "
             f"not_identified={self.not_identified}, "
             f"identification={self.identification}, "
             f"hosts={self.hosts}, "
