@@ -94,7 +94,9 @@ xfails = {
     ":/manual move with downtime": [
         (Fail, "https://altinity.atlassian.net/browse/CH-124")
     ],
-    ":/ttl moves/alter with existing parts": [(Fail, "not yet supported")],
+    ":/ttl moves/alter with existing parts/:/inserted parts should:": [
+        (Fail, "not yet supported")
+    ],
     ":/ttl moves/alter policy and ttl with existing parts": [
         (Fail, "not yet supported")
     ],
@@ -108,10 +110,10 @@ xfails = {
     ":/ttl moves/alter column in ttl/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39808")
     ],
-    ":/ttl moves/delete/:": [
+    ":/ttl moves/delete/:/parts should be deleted": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
-    ":/ttl moves/defaults to delete": [
+    ":/ttl moves/defaults to delete/:/parts should be deleted": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
     ":/query parser": [
