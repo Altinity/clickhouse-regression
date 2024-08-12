@@ -135,6 +135,9 @@ xfails = {
     "minio/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
+    "minio/disk/log/:": [
+        (Fail, "Not working 22.3", check_clickhouse_version("<=22.3"))
+    ],
     "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
@@ -158,6 +161,9 @@ xfails = {
     "minio/zero copy replication/performance select": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
+    ],
+    "aws s3/zero copy replication/stale alter replica'": [
+        (Fail, "Timeout on 22.8", check_clickhouse_version("<=22.8"))
     ],
     "gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
