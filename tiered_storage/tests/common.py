@@ -8,13 +8,14 @@
 import random
 import tempfile
 import time
+from contextlib import contextmanager
 
 from testflows.core import *
 from testflows.asserts import error
+
 from helpers.cluster import QueryRuntimeException
+from helpers.common import create_xml_config_content, check_clickhouse_version
 from s3.tests.common import add_config
-from helpers.common import create_xml_config_content
-from contextlib import contextmanager
 
 
 def get_random_string(cluster, length, steps=True, *args, **kwargs):
@@ -141,29 +142,31 @@ def add_storage_config(
     }
     external_disk_name = "external_cache"
 
-    if with_minio:
-        disks["external"] = {
-            "type": "s3",
-            "endpoint": "http://minio:9001/root/data/",
-            "access_key_id": "minio",
-            "secret_access_key": "minio123",
-        }
-    elif with_aws_s3:
-        disks["external"] = {
-            "type": "s3",
-            "endpoint": f"{environ['S3_AMAZON_URI']}",
-            "access_key_id": f"{environ['S3_AMAZON_KEY_ID']}",
-            "secret_access_key": f"{environ['S3_AMAZON_ACCESS_KEY']}",
-        }
+    if check_clickhouse_version(">=22.8")(current()) and any(
+        (with_minio, with_aws_s3, with_gcs_s3)
+    ):
+        if with_minio:
+            disks["external"] = {
+                "type": "s3",
+                "endpoint": "http://minio:9001/root/data/",
+                "access_key_id": "minio",
+                "secret_access_key": "minio123",
+            }
+        elif with_aws_s3:
+            disks["external"] = {
+                "type": "s3",
+                "endpoint": f"{environ['S3_AMAZON_URI']}",
+                "access_key_id": f"{environ['S3_AMAZON_KEY_ID']}",
+                "secret_access_key": f"{environ['S3_AMAZON_ACCESS_KEY']}",
+            }
 
-    elif with_gcs_s3:
-        disks["external"] = {
-            "type": "s3",
-            "endpoint": f"{environ['GCS_URI']}",
-            "access_key_id": f"{environ['GCS_KEY_ID']}",
-            "secret_access_key": f"{environ['GCS_KEY_SECRET']}",
-        }
-
+        elif with_gcs_s3:
+            disks["external"] = {
+                "type": "s3",
+                "endpoint": f"{environ['GCS_URI']}",
+                "access_key_id": f"{environ['GCS_KEY_ID']}",
+                "secret_access_key": f"{environ['GCS_KEY_SECRET']}",
+            }
     else:
         disks["external"] = {"path": "/external/"}
         external_disk_name = "external"

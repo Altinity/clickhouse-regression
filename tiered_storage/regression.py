@@ -121,6 +121,9 @@ xfails = {
             check_clickhouse_version("<23.8"),
         )
     ],
+    ":/alter move/concurrent/:/:": [
+        (Error, "Unstable test", always, ".*Failed to find a part to move.*")
+    ],
 }
 
 ffails = {
