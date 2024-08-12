@@ -7,11 +7,21 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster, create_cluster
+from helpers.common import check_clickhouse_version
 from s3.regression import argparser as argparser_base, CaptureClusterArgs
 
 from s3.tests.common import *
 
-xfails = {}
+xfails = {
+    ":/queries/:": [
+        (
+            Fail,
+            "MEMORY_LIMIT_EXCEEDED on runners 22.3",
+            check_clickhouse_version("<=22.3"),
+            ".*MEMORY_LIMIT_EXCEEDED.*",
+        )
+    ],
+}
 
 ffails = {}
 
