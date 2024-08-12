@@ -26,7 +26,9 @@ def names(methods):
     return ",".join([method.__name__ for method in methods])
 
 
-def generate_auth_combinations(auth_methods=None, max_length=3, with_replacement=True):
+def create_user_auth_combinations(
+    auth_methods=None, max_length=3, with_replacement=False
+):
     """Generate combinations of authentication methods."""
     if auth_methods is None:
         auth_methods = [
@@ -35,14 +37,42 @@ def generate_auth_combinations(auth_methods=None, max_length=3, with_replacement
             partial(CreateUser.set_by_password, password="foo2"),
             partial(CreateUser.set_with_plaintext_password, password="foo3"),
             partial(CreateUser.set_with_sha256_password, password="foo4"),
-            partial(CreateUser.set_with_sha256_hash, password="foo4"),
+            partial(CreateUser.set_with_sha256_hash, password="foo5"),
             partial(
-                CreateUser.set_with_sha256_hash_with_salt, password="foo4", salt="salt1"
+                CreateUser.set_with_sha256_hash_with_salt, password="foo6", salt="salt1"
             ),
-            partial(CreateUser.set_with_double_sha1_password, password="foo5"),
-            partial(CreateUser.set_with_double_sha1_hash, password="foo5"),
-            partial(CreateUser.set_with_bcrypt_password, password="foo6"),
-            partial(CreateUser.set_with_bcrypt_hash, password="foo6"),
+            partial(CreateUser.set_with_double_sha1_password, password="foo7"),
+            partial(CreateUser.set_with_double_sha1_hash, password="foo8"),
+            partial(CreateUser.set_with_bcrypt_password, password="foo9"),
+            partial(CreateUser.set_with_bcrypt_hash, password="foo10"),
+        ]
+    auth_combinations = []
+    for length in range(1, max_length + 1):
+        auth_combinations.extend(
+            combinations(auth_methods, length, with_replacement=with_replacement)
+        )
+    return auth_combinations
+
+
+def alter_user_auth_combinations(
+    auth_methods=None, max_length=3, with_replacement=False
+):
+    """Generate combinations of alter user authentication methods."""
+    if auth_methods is None:
+        auth_methods = [
+            AlterUser.set_with_no_password,
+            partial(AlterUser.set_by_password, password="foo1"),
+            partial(AlterUser.set_by_password, password="foo2"),
+            partial(AlterUser.set_with_plaintext_password, password="foo3"),
+            partial(AlterUser.set_with_sha256_password, password="foo4"),
+            partial(AlterUser.set_with_sha256_hash, password="foo5"),
+            partial(
+                AlterUser.set_with_sha256_hash_with_salt, password="foo6", salt="salt1"
+            ),
+            partial(AlterUser.set_with_double_sha1_password, password="foo7"),
+            partial(AlterUser.set_with_double_sha1_hash, password="foo8"),
+            partial(AlterUser.set_with_bcrypt_password, password="foo9"),
+            partial(AlterUser.set_with_bcrypt_hash, password="foo10"),
         ]
     auth_combinations = []
     for length in range(1, max_length + 1):
@@ -79,14 +109,14 @@ def client_query(self, query, client=None, **kwargs):
 
 
 @TestStep(When)
-def node_query(self, query, node=None, **kwargs):
+def node_query(self, query, node=None, steps=False, **kwargs):
     """Execute query on the node. Add query to the behavior.
     Use model to check the result."""
 
     if node is None:
         node = self.context.node
 
-    r = node.query(str(query), no_checks=True, **kwargs)
+    r = node.query(str(query), no_checks=True, steps=False, **kwargs)
     query.add_connection_options(kwargs.pop("settings", None))
     query.add_result(r)
     self.context.behavior.append(query)
@@ -101,26 +131,121 @@ def alter_user(
     auth_methods=None,
     client=None,
 ):
-    """Alter user and set new authentication methods."""
+    """Alter user to set new authentication methods."""
+
+    # FIXME: can you rename a user and change its authentication methods in one query?
+
+    if client is None:
+        client = self.context.client
+
+    query = AlterUser()
+
+    for username in user.usernames:
+        query = query.set_username(
+            getattr(username, "renamed", None) or username.name,
+            cluster_name=username.cluster,
+        ).set_identified()
+
+    for auth_method in auth_methods:
+        query = auth_method(query)
+
+    client_query(query=query, client=client)
+
+    return query
+
+
+@TestStep(When)
+def alter_user_add(
+    self,
+    user,
+    auth_methods=None,
+    client=None,
+):
+    """Alter user to add new authentication methods."""
+
+    if client is None:
+        client = self.context.client
+
+    query = AlterUser()
+
+    for username in user.usernames:
+        query = query.set_username(
+            getattr(username, "renamed", None) or username.name,
+            cluster_name=username.cluster,
+        ).set_add_identified()
+
+    for auth_method in auth_methods:
+        query = auth_method(query)
+
+    client_query(query=query, client=client)
+
+    return query
+
+
+@TestStep(When)
+def alter_user_reset_to_new(
+    self,
+    user,
+    client=None,
+):
+    """Alter user to reset authentication methods to new (the last)."""
+
+    if client is None:
+        client = self.context.client
+
+    query = AlterUser()
+
+    for username in user.usernames:
+        query = query.set_username(
+            getattr(username, "renamed", None) or username.name,
+            cluster_name=username.cluster,
+        )
+
+    query.set_reset_authentication_methods_to_new()
+
+    client_query(query=query, client=client)
+
+    return query
+
+
+@TestStep(When)
+def drop_user(
+    self,
+    user,
+    if_exists=False,
+    access_storage_type=None,
+    client=None,
+):
+    """Drop user."""
 
     if client is None:
         client = self.context.client
 
     for username in user.usernames:
-        query = AlterUser().set_username(username.name).set_identified()
+        query = DropUser().set_username(username.name)
 
-        for auth_method in auth_methods:
-            query = auth_method(query)
+        if username.cluster:
+            query.set_on_cluster(username.cluster)
+
+        if if_exists:
+            query.set_if_exists()
+
+        if access_storage_type:
+            query.set_access_storage_type(access_storage_type)
 
         client_query(query=query, client=client)
 
-        return query
+    return query
+
+
+# FIXME: add support for multiple users on different clusters
 
 
 @TestStep(Given)
 def create_user(
     self,
     user_name=None,
+    on_cluster=None,
     auth_methods=None,
     client=None,
 ):
@@ -133,7 +258,9 @@ def create_user(
     if user_name is None:
         user_name = "user_" + getuid()
 
-    query = CreateUser().set_username(user_name).set_identified()
+    query = (
+        CreateUser().set_username(user_name, cluster_name=on_cluster).set_identified()
+    )
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -154,13 +281,18 @@ def successful_login(self, user: CreateUser, node=None):
     if node is None:
         node = self.context.node
 
-    for auth_method in user.identification:
-        for username in user.usernames:
-            password = auth_method.password
-            node_query(
-                query=Select().set_query("SELECT current_user()"),
-                settings=[("user", username.name), ("password", password or "")],
-            )
+    for auth_method in list(
+        user.identification + getattr(user, "add_identification", [])
+    ):
+        for username in list(user.usernames):
+            password = auth_method.password or ""
+            with By(
+                f"trying to login with {username.name} and {password} for {auth_method.method}"
+            ):
+                node_query(
+                    query=Select().set_query("SELECT current_user()"),
+                    settings=[("user", username.name), ("password", password)],
+                )
 
 
 @TestStep(Then)
@@ -170,13 +302,18 @@ def login_with_wrong_password(self, user: CreateUser, node=None):
     if node is None:
         node = self.context.node
 
-    for auth_method in user.identification:
-        for username in user.usernames:
+    for auth_method in list(
+        user.identification + getattr(user, "add_identification", [])
+    ):
+        for username in list(user.usernames):
             password = (auth_method.password or "") + "1"
-            node_query(
-                query=Select().set_query(f"SELECT current_user()"),
-                settings=[("user", username.name), ("password", password)],
-            )
+            with By(
+                f"trying to login with {username.name} and {password} for {auth_method.method}"
+            ):
+                node_query(
+                    query=Select().set_query(f"SELECT current_user()"),
+                    settings=[("user", username.name), ("password", password)],
+                )
 
 
 @TestStep(Then)
@@ -187,13 +324,18 @@ def login_with_wrong_username(self, user: CreateUser, node=None):
     if node is None:
         node = self.context.node
 
-    for auth_method in user.identification:
-        for username in user.usernames:
+    for auth_method in list(
+        user.identification + getattr(user, "add_identification", [])
+    ):
+        for username in list(user.usernames):
             password = auth_method.password or ""
-            node_query(
-                query=Select().set_query(f"SELECT current_user()"),
-                settings=[("user", username.name + "1"), ("password", password)],
-            )
+            with By(
+                f"trying to login with {username.name} and {password} for {auth_method.method}"
+            ):
+                node_query(
+                    query=Select().set_query(f"SELECT current_user()"),
+                    settings=[("user", username.name + "1"), ("password", password)],
+                )
 
 
 @TestStep(Then)
@@ -208,17 +350,24 @@ def login_with_other_user_password(
 
     def try_login(username, auth_method):
         password = auth_method.password or ""
-        node_query(
-            query=Select().set_query(f"SELECT current_user()"),
-            settings=[("user", username.name), ("password", password)],
-        )
+        with By(
+            f"trying to login with {username.name} and {password} for {auth_method.method}"
+        ):
+            node_query(
+                query=Select().set_query(f"SELECT current_user()"),
+                settings=[("user", username.name), ("password", password)],
+            )
 
-    for auth_method in user2.identification:
-        for username in user1.usernames:
+    for auth_method in list(
+        user2.identification + getattr(user2, "add_identification", [])
+    ):
+        for username in list(user1.usernames):
             try_login(username, auth_method)
 
-    for auth_method in user1.identification:
-        for username in user2.usernames:
+    for auth_method in list(
+        user1.identification + getattr(user1, "add_identification", [])
+    ):
+        for username in list(user2.usernames):
             try_login(username, auth_method)
 
 
@@ -274,4 +423,11 @@ def expect_password_or_user_is_incorrect_error(self, r):
 
     exitcode = 4
     message = f"Authentication failed: password is incorrect, or there is no user with such name."
+    expect_error(r=r, exitcode=exitcode, message=message)
+
+
+@TestStep(Then)
+def expect_there_is_no_user_error(self, r):
+    exitcode = 192
+    message = "There is no user"
     expect_error(r=r, exitcode=exitcode, message=message)

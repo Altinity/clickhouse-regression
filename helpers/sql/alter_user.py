@@ -148,11 +148,9 @@ class AlterUser(Query):
 
     def set_by_password(self, password):
         self._identification.append(Identification("password", password))
-        if len(self.identification) < 2:
-            self.query += " BY"
-        if len(self.identification) > 1:
+        if len(self._identification) > 1:
             self.query += ","
-        self.query += f" '{password}'"
+        self.query += f" BY '{password}'"
         return self
 
     def set_with_no_password(self):
