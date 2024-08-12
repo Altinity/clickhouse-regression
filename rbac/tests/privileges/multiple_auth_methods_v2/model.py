@@ -49,6 +49,20 @@ class Model:
         if "no_password" in auth_methods and len(auth_methods) > 1:
             return actions.expect_no_password_auth_cannot_coexist_with_others_error
 
+    def expect_no_password_cannot_be_used_with_add_keyword_error(self, behavior):
+        """Expect no password cannot be used with add keyword error."""
+        current = behavior[-1]
+
+        if isinstance(current, States.AlterUser):
+            if current.add_identification:
+                if any(
+                    auth_method.method == "no_password"
+                    for auth_method in current.add_identification
+                ):
+                    return (
+                        actions.expect_no_password_cannot_be_used_with_add_keyword_error
+                    )
+
     def expect_password_or_user_is_incorrect_error(self, behavior):
         """Expect password or user is incorrect error."""
         current = behavior[-1]
@@ -67,7 +81,7 @@ class Model:
                     if username.name == current.connection_options.get(
                         "user", "default"
                     ):
-                        auth_methods = state.identification
+                        auth_methods = list(state.identification)
 
             elif isinstance(state, States.DropUser) and not state.errored:
                 for username in state.usernames:
@@ -82,11 +96,11 @@ class Model:
                         "user", "default"
                     ):
                         if state.reset_auth_methods_to_new:
-                            auth_methods = auth_methods[-1]
+                            auth_methods = list([auth_methods[-1]])
                         elif state.identification:
-                            auth_methods = state.identification
+                            auth_methods = list(state.identification)
                         elif state.add_identification:
-                            auth_methods += state.add_identification
+                            auth_methods += list(state.add_identification)
                         else:
                             pass
 
@@ -101,6 +115,33 @@ class Model:
 
         return actions.expect_password_or_user_is_incorrect_error
 
+    def expect_there_no_user_error(self, behavior):
+        """Expect there is no user error."""
+        current = behavior[-1]
+
+        if not isinstance(current, States.AlterUser):
+            return
+
+        if not current.reset_auth_methods_to_new:
+            return
+
+        user_exists = False
+        user_names = [username.name for username in current.usernames]
+
+        for state in behavior[:-1]:
+            if isinstance(state, States.CreateUser) and not state.errored:
+                for username in state.usernames:
+                    if username.name in user_names:
+                        user_exists = True
+
+            elif isinstance(state, States.DropUser) and not state.errored:
+                for username in state.usernames:
+                    if username.name in user_names:
+                        user_exists = False
+
+        if not user_exists:
+            return actions.expect_there_is_no_user_error
+
     def expect(self, behavior=None):
         """Return expected result action for a given behavior."""
 
@@ -113,6 +154,8 @@ class Model:
 
         return (
             self.expect_no_password_auth_cannot_coexist_with_others_error(behavior)
+            or self.expect_no_password_cannot_be_used_with_add_keyword_error(behavior)
             or self.expect_password_or_user_is_incorrect_error(behavior)
+            or self.expect_there_no_user_error(behavior)
             or self.expect_ok(behavior)
         )

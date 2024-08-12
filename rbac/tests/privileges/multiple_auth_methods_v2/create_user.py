@@ -42,10 +42,10 @@ def feature(self, node=None):
     if node is None:
         node = self.context.node
 
-    auth_methods = actions.generate_auth_combinations(max_length=2)
+    auth_methods_combinations = actions.create_user_auth_combinations(max_length=2)
 
     with Pool(4) as executor:
-        for num, auth_methods in enumerate(auth_methods):
+        for num, auth_methods in enumerate(auth_methods_combinations):
             Scenario(
                 f"{num} {actions.names(auth_methods)}",
                 test=check_create_user,
