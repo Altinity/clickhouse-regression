@@ -4,7 +4,7 @@ from testflows.combinatorics import combinations
 from functools import wraps
 
 from helpers.common import getuid
-from helpers.sql.create_user import CreateUser
+from helpers.sql.create_user import CreateUser, Username
 from helpers.sql.alter_user import AlterUser
 from helpers.sql.drop_user import DropUser
 from helpers.sql.select import Select
@@ -127,8 +127,9 @@ def node_query(self, query, node=None, steps=False, **kwargs):
 @TestStep(When)
 def alter_user(
     self,
-    user,
-    auth_methods=None,
+    auth_methods,
+    user=None,
+    usernames=None,
     client=None,
 ):
     """Alter user to set new authentication methods."""
@@ -140,11 +141,15 @@ def alter_user(
 
     query = AlterUser()
 
-    for username in user.usernames:
+    usernames = usernames or user.usernames
+
+    for username in usernames:
         query = query.set_username(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
-        ).set_identified()
+        )
+
+    query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -157,7 +162,8 @@ def alter_user(
 @TestStep(When)
 def alter_user_add(
     self,
-    user,
+    user=None,
+    usernames=None,
     auth_methods=None,
     client=None,
 ):
@@ -168,7 +174,9 @@ def alter_user_add(
 
     query = AlterUser()
 
-    for username in user.usernames:
+    usernames = usernames or user.usernames
+
+    for username in usernames:
         query = query.set_username(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
@@ -185,7 +193,8 @@ def alter_user_add(
 @TestStep(When)
 def alter_user_reset_to_new(
     self,
-    user,
+    user=None,
+    usernames=None,
     client=None,
 ):
     """Alter user to reset authentication methods to new (the last)."""
@@ -195,7 +204,9 @@ def alter_user_reset_to_new(
 
     query = AlterUser()
 
-    for username in user.usernames:
+    usernames = usernames or user.usernames
+
+    for username in usernames:
         query = query.set_username(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
@@ -211,7 +222,8 @@ def alter_user_reset_to_new(
 @TestStep(When)
 def drop_user(
     self,
-    user,
+    user=None,
+    usernames=None,
     if_exists=False,
     access_storage_type=None,
     client=None,
@@ -221,7 +233,9 @@ def drop_user(
     if client is None:
         client = self.context.client
 
-    for username in user.usernames:
+    usernames = usernames or user.usernames
+
+    for username in usernames:
         query = DropUser().set_username(username.name)
 
         if username.cluster:
@@ -245,6 +259,7 @@ def drop_user(
 def create_user(
     self,
     user_name=None,
+    usernames=None,
     on_cluster=None,
     auth_methods=None,
     client=None,
@@ -255,12 +270,19 @@ def create_user(
 
     if client is None:
         client = self.context.client
-    if user_name is None:
-        user_name = "user_" + getuid()
 
-    query = (
-        CreateUser().set_username(user_name, cluster_name=on_cluster).set_identified()
-    )
+    query = CreateUser()
+
+    if user_name:
+        usernames = [Username(name=user_name, cluster=on_cluster)]
+
+    if not usernames:
+        raise ValueError("usernames are not provided")
+
+    for username in usernames:
+        query.set_username(name=username.name, cluster_name=username.cluster)
+
+    query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -270,8 +292,9 @@ def create_user(
         yield query
     finally:
         with Finally("drop the user if exists"):
-            query = DropUser().set_if_exists().set_username(user_name)
-            client_query(query=query, client=client)
+            for username in usernames:
+                query = DropUser().set_if_exists().set_username(username.name)
+                client_query(query=query, client=client)
 
 
 @TestStep(Then)
@@ -423,6 +446,15 @@ def expect_password_or_user_is_incorrect_error(self, r):
 
     exitcode = 4
     message = f"Authentication failed: password is incorrect, or there is no user with such name."
+    expect_error(r=r, exitcode=exitcode, message=message)
+
+
+@TestStep(Then)
+def expect_user_already_exists_error(self, r):
+    """Expect user already exists error."""
+
+    exitcode = 493
+    message = "already exists"
     expect_error(r=r, exitcode=exitcode, message=message)
 
 

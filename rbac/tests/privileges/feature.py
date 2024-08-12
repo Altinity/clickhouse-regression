@@ -463,7 +463,9 @@ def feature(self):
                 executor=pool,
             )
             Feature(
-                run=load("rbac.tests.privileges.multiple_auth_methods.feature", "feature"),
+                run=load(
+                    "rbac.tests.privileges.multiple_auth_methods.feature", "feature"
+                ),
                 parallel=True,
                 executor=pool,
             )
