@@ -31,7 +31,7 @@ class AlterUser(Query):
 
     __slots__ = (
         "query",
-        "if_not_exists",
+        "if_exists",
         "usernames",
         "not_identified",
         "identification",
@@ -50,7 +50,7 @@ class AlterUser(Query):
     def __init__(self):
         super().__init__()
         self.query = "ALTER USER"
-        self.if_not_exists = False
+        self.if_exists = False
         self.usernames = []
         self.not_identified = None
         self.identification = []
@@ -69,7 +69,7 @@ class AlterUser(Query):
         return (
             "AlterUser("
             f"{super().__repr__()}"
-            f"if_not_exists={self.if_not_exists}, "
+            f"if_exists={self.if_exists}, "
             f"usernames={self.usernames}, "
             f"not_identified={self.not_identified}, "
             f"identification={self.identification}, "
@@ -84,9 +84,9 @@ class AlterUser(Query):
             f"settings={self.settings})"
         )
 
-    def set_if_not_exists(self):
-        self.if_not_exists = True
-        self.query += " IF NOT EXISTS"
+    def set_if_exists(self):
+        self.if_exists = True
+        self.query += " IF EXISTS"
         return self
 
     def set_username(self, name, cluster_name=None, rename_to=None):

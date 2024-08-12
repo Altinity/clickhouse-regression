@@ -23,6 +23,33 @@ class Model:
         """Expect no error."""
         return actions.expect_ok
 
+    def expect_user_already_exists_error(self, behavior):
+        """Expect user already exists error."""
+        current = behavior[-1]
+
+        if not isinstance(current, States.CreateUser):
+            return
+
+        if current.if_not_exists:
+            return
+
+        user_exists = False
+        user_names = [username.name for username in current.usernames]
+
+        for state in behavior[:-1]:
+            if isinstance(state, States.CreateUser) and not state.errored:
+                for username in state.usernames:
+                    if username.name in user_names:
+                        user_exists = True
+
+            elif isinstance(state, States.DropUser) and not state.errored:
+                for username in state.usernames:
+                    if username.name in user_names:
+                        user_exists = False
+
+        if user_exists:
+            return actions.expect_user_already_exists_error
+
     def expect_no_password_auth_cannot_coexist_with_others_error(self, behavior):
         """Check for no password authentication method coexisting with others error."""
         current = behavior[-1]
@@ -100,6 +127,11 @@ class Model:
                         elif state.identification:
                             auth_methods = list(state.identification)
                         elif state.add_identification:
+                            _auth_methods = []
+                            for auth_method in auth_methods:
+                                if auth_method.method != "no_password":
+                                    _auth_methods.append(auth_method)
+                            auth_methods = _auth_methods
                             auth_methods += list(state.add_identification)
                         else:
                             pass
@@ -119,10 +151,10 @@ class Model:
         """Expect there is no user error."""
         current = behavior[-1]
 
-        if not isinstance(current, States.AlterUser):
+        if not isinstance(current, (States.AlterUser, States.DropUser)):
             return
 
-        if not current.reset_auth_methods_to_new:
+        if current.if_exists:
             return
 
         user_exists = False
@@ -157,5 +189,6 @@ class Model:
             or self.expect_no_password_cannot_be_used_with_add_keyword_error(behavior)
             or self.expect_password_or_user_is_incorrect_error(behavior)
             or self.expect_there_no_user_error(behavior)
+            or self.expect_user_already_exists_error(behavior)
             or self.expect_ok(behavior)
         )

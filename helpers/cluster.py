@@ -191,8 +191,9 @@ class QueryRuntimeException(Exception):
 
 
 class ClientQueryResult:
-    def __init__(self, query_result):
-        self.query_result = query_result
+    def __init__(self, output, errorcode=0):
+        self.raw_output = output
+        self.errorcode = errorcode
         self._output = None
 
     @property
@@ -200,16 +201,20 @@ class ClientQueryResult:
         """Return parsed query output."""
         if self._output is None:
             try:
-                if self.query_result:
+                if self.raw_output:
                     self._output = [
-                        json.loads(line) for line in self.query_result.splitlines()
+                        json.loads(line) for line in self.raw_output.splitlines()
                     ]
             except json.JSONDecodeError:
-                raise Exception(
-                    f"Failed to decode the query result as JSON: {self.query_result}"
-                )
-
+                self._output = self.raw_output
         return self._output
+
+    def __repr__(self):
+        lines = self.raw_output.strip().splitlines()
+        first_line = lines[0]
+        if len(first_line) > 30 or len(lines) > 1:
+            first_line = first_line[:30] + "..."
+        return f"{self.__class__.__name__}(output={first_line})"
 
 
 class Node(object):
@@ -298,6 +303,8 @@ class Node(object):
 
         @staticmethod
         def _parse_error_code(message):
+            if "🔥 Exception:" not in message:
+                return 0
             match = re.search(r"Code:\s*(\d+)", message)
 
             return int(match.group(1))
@@ -369,27 +376,28 @@ class Node(object):
                         retry_delay=retry_delay,
                     )
 
+            _output = query_result.split(self.prompt, 1)[-1]
+            _errorcode = self._parse_error_code(query_result)
+
             if no_checks:
-                return ClientQueryResult(query_result.split(self.prompt, 1)[-1])
+                return ClientQueryResult(_output, errorcode=_errorcode)
 
             if errorcode is not None:
-                with Then(f"exitcode should be {errorcode}", format_name=False):
-                    assert errorcode == self._parse_error_code(
-                        str(query_result)
-                    ), error()
+                with Then(f"errorcode should be {errorcode}", format_name=False):
+                    assert errorcode == _errorcode, error()
 
             if message is not None:
                 with Then(f"message should be {message}", format_name=False):
-                    assert message in query_result, error()
+                    assert message in _output, error()
 
             if not ignore_exception:
                 if message is None or "Exception:" not in message:
-                    if "🔥 Exception:" in query_result:
+                    if "🔥 Exception:" in _output:
                         if raise_on_exception:
-                            raise QueryRuntimeException(query_result.strip())
-                        assert False, error(query_result.strip())
+                            raise QueryRuntimeException(_output)
+                        assert False, error(_output)
 
-            return ClientQueryResult(query_result.split(self.prompt, 1)[-1])
+            return ClientQueryResult(_output, errorcode=_errorcode)
 
     @contextmanager
     def client(
