@@ -17,7 +17,7 @@ xfails = {
         (
             Fail,
             "MEMORY_LIMIT_EXCEEDED on runners 22.3",
-            check_clickhouse_version("<=22.3"),
+            check_clickhouse_version("<22.8"),
             ".*MEMORY_LIMIT_EXCEEDED.*",
         )
     ],

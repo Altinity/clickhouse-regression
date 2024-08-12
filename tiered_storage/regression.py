@@ -127,14 +127,14 @@ xfails = {
         (Error, "Unstable test", always, ".*Failed to find a part to move.*")
     ],
     ":/system tables": [
-        (Fail, "Not configured for 22.3", check_clickhouse_version("<=22.3"))
+        (Fail, "Not configured for 22.3", check_clickhouse_version("<22.8"))
     ],
-    ":/freeze": [(Fail, "Not working 22.3", check_clickhouse_version("<=22.3"))],
+    ":/freeze": [(Fail, "Not working 22.3", check_clickhouse_version("<22.8"))],
     ":/alter move/alter move/:": [
-        (Fail, "Not working 22.3", check_clickhouse_version("<=22.3"))
+        (Fail, "Not working 22.3", check_clickhouse_version("<22.8"))
     ],
-    ":/alter move/background move/:/:": [
-        (Fail, "Not working 22.3", check_clickhouse_version("<=22.3"))
+    ":/background move/:/:": [
+        (Fail, "Not working 22.3", check_clickhouse_version("<22.8"))
     ],
 }
 
