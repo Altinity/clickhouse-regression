@@ -107,6 +107,25 @@ def without_auth_type_syntax_error(self):
 
 
 @TestScenario
+@Name("identified by no_password")
+def identified_by_no_password(self):
+    """Check that IDENTIFIED BY no_password is not valid statement."""
+    with Given("construct query with syntax error"):
+        user_name = f"user_{getuid()}"
+        query = f"CREATE USER {user_name} IDENTIFIED BY no_password"
+        note(query)
+
+    with Then("expect syntax error"):
+        execute_query(query=query, expected=syntax_error)
+
+    with And("check that user was not created"):
+        login(
+            user_name=user_name,
+            expected=no_user_with_such_name(user_name),
+        )
+
+
+@TestScenario
 @Name("omit WITH and auth type")
 def omit_with_and_auth_type(self):
     """Check that it is possible to omit WITH keyword and auth type when creating user identified
@@ -153,25 +172,6 @@ def no_password_lower_case(self):
 
     with And("login without password"):
         login(user_name=user_name)
-
-
-@TestScenario
-@Name("identified by no_password")
-def identified_by_no_password(self):
-    """Check that IDENTIFIED BY no_password is not valid statement."""
-    with Given("construct query with syntax error"):
-        user_name = f"user_{getuid()}"
-        query = f"CREATE USER {user_name} IDENTIFIED BY no_password"
-        note(query)
-
-    with Then("expect syntax error"):
-        execute_query(query=query, expected=syntax_error)
-
-    with And("check that user was not created"):
-        login(
-            user_name=user_name,
-            expected=no_user_with_such_name(user_name),
-        )
 
 
 @TestScenario
