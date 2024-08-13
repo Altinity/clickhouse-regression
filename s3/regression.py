@@ -135,9 +135,7 @@ xfails = {
     "minio/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
-    "minio/disk/log/:": [
-        (Fail, "Not working 22.3", check_clickhouse_version("<=22.3"))
-    ],
+    "minio/disk/log/:": [(Fail, "Not working 22.X", check_clickhouse_version("<=23"))],
     "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
@@ -147,7 +145,6 @@ xfails = {
     ":/backup/:/metadata non restorable schema": [
         (Fail, "send_metadata is deprecated")
     ],
-    ":/backup/:/metadata:": ((Fail, "SYSTEM RESTART DISK is not implemented"),),
     ":/zero copy replication/the bucket should be cleaned up": [
         (Fail, "Data cleanup needs investigation")
     ],
@@ -280,6 +277,12 @@ ffails = {
         Skip,
         "Not supported <22.8",
         check_clickhouse_version(">=22.8"),
+    ),
+    ":/backup/:/metadata:": (XFail, "SYSTEM RESTART DISK is not implemented"),
+    ":/backup/:/system unfreeze": (
+        XFail,
+        "doesn't work <22.8",
+        check_clickhouse_version("<22.8"),
     ),
 }
 
