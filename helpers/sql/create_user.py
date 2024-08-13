@@ -5,7 +5,13 @@ from collections import namedtuple
 
 from .query import Query
 
-Username = namedtuple("Username", ["name", "cluster"])
+Username = namedtuple(
+    "Username",
+    ["name", "cluster"],
+    defaults=[
+        None,
+    ],
+)
 Identification = namedtuple(
     "Identification",
     [
