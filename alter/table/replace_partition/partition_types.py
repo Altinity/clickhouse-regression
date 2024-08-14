@@ -146,6 +146,15 @@ def replace_partition_with_different_partition_types(self):
         partition_with_empty_parts,
         partition_with_no_parts,
     }
+    if check_clickhouse_version("<22.8")(
+        self
+    ):  # lightweight delete was introduced in 22.8
+        values = {
+            table_with_compact_parts,
+            table_with_wide_parts,
+            table_with_compact_and_wide_parts,
+            partition_with_no_parts,
+        }
 
     check_replace_partition(
         destination_table=either(*values, i="destination_table"),
