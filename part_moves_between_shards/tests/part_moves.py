@@ -6,9 +6,6 @@ from part_moves_between_shards.tests.steps import *
 def one_part_move(
     self,
     table_engine="ReplicatedSummingMergeTree",
-    graphite=False,
-    collapsing=False,
-    vcollapsing=False,
 ):
     """Check that one part of data moves from one shard to another
     correct when `MOVE PART TO SHARD` query is used.
@@ -26,9 +23,6 @@ def one_part_move(
                 table_name=table_name,
                 cluster_name=cluster_name,
                 table_engine=table_engine,
-                graphite=graphite,
-                collapsing=collapsing,
-                vcollapsing=vcollapsing,
             )
 
         with And("I stop merges"):
@@ -44,25 +38,26 @@ def one_part_move(
             i = 0
             for name in ["clickhouse1", "clickhouse3"]:
                 i = i + 1
-                if graphite == True:
+                if "Graphite" in table_engine:
                     self.context.cluster.node(name).query(
                         "insert into "
                         f"{table_name} values "
                         f"(now(),'a',1,'b',{i},'c',now(),1,1,1)"
                     )
-                elif collapsing == True:
-                    self.context.cluster.node(name).query(
-                        "insert into " f"{table_name} values " f"(1, 1)"
-                    )
-                elif vcollapsing == True:
+                elif "VersionedCollapsing" in table_engine:
                     self.context.cluster.node(name).query(
                         "insert into " f"{table_name} values " f"(1, 1, 1)"
                     )
+                elif "Collapsing" in table_engine:
+                    self.context.cluster.node(name).query(
+                        "insert into " f"{table_name} values " f"(1, 1)"
+                    )
+
                 else:
                     simple_insert(table_name=table_name, node_name=name, value=i)
 
         with And("I move part from shard 1 to shard 3"):
-            if graphite == True:
+            if "Graphite" in table_engine:
                 node.query(
                     f"ALTER TABLE {table_name} MOVE PART '1_0_0_0' TO SHARD '/clickhouse/tables/"
                     f"replicated/03/{table_name}'"
@@ -141,7 +136,7 @@ def one_part_move_replicatedcollapsingmergetree(
     """Check that one part of data moves from one shard to another
     correct when `MOVE PART TO SHARD` query is used with ReplicatedCollapsingMergeTree engine.
     """
-    one_part_move(table_engine=table_engine, collapsing=True)
+    one_part_move(table_engine=table_engine)
 
 
 #
@@ -153,7 +148,7 @@ def one_part_move_replicatedversionedcollapsingmergetree(
     """Check that one part of data moves from one shard to another
     correct when `MOVE PART TO SHARD` query is used with ReplicatedVersionedCollapsingMergeTree engine.
     """
-    one_part_move(table_engine=table_engine, vcollapsing=True)
+    one_part_move(table_engine=table_engine)
 
 
 #
@@ -165,7 +160,7 @@ def one_part_move_replicatedgraphitemergetree(
     """Check that one part of data moves from one shard to another
     correct when `MOVE PART TO SHARD` query is used with ReplicatedGraphiteMergeTree engine.
     """
-    one_part_move(table_engine=table_engine, graphite=True)
+    one_part_move(table_engine=table_engine)
 
 
 @TestScenario
