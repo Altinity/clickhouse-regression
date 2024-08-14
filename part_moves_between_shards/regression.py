@@ -63,7 +63,6 @@ def regression(
 ):
     """ClickHouse regression when using parts moves."""
     nodes = {
-        "zookeeper": ("zookeeper",),
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse4"),
     }
 

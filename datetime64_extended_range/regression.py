@@ -93,6 +93,41 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/34831")
     ],
     "type conversion/to datetime/:": [(Fail, "needs to be investigated")],
+    "/datetime64 extended range/date time funcs/date diff/*1927-01-01*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/42308",
+            check_clickhouse_version("<22.9"),
+        )
+    ],
+    "/datetime64 extended range/date time funcs/date diff/*1927-12-31*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/42308",
+            check_clickhouse_version("<22.9"),
+        )
+    ],
+    "/datetime64 extended range/date time funcs/date diff/*2236-01-01*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/42308",
+            check_clickhouse_version("<22.9"),
+        )
+    ],
+    "/datetime64 extended range/date time funcs/date diff/*2236-12-31*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/42308",
+            check_clickhouse_version("<22.9"),
+        )
+    ],
+    "/datetime64 extended range/date time funcs/date diff/*2236-02-29*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/42308",
+            check_clickhouse_version("<22.9"),
+        )
+    ],
 }
 
 ffails = {

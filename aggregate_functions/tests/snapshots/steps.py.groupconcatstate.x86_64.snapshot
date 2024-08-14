@@ -6351,9 +6351,9 @@ _aggregate_functions_state_groupConcatState_with_another_aggregate_function = r"
 """
 
 _aggregate_functions_state_groupConcatState_with_another_aggregate_function_and_group_by = r"""
-{"hex(groupConcatState(x))":"010131","max(y)":null,"any(toTypeName(x))":"Nullable(Int8)"}
-{"hex(groupConcatState(x))":"010133","max(y)":"hello","any(toTypeName(x))":"Nullable(Int8)"}
-{"hex(groupConcatState(x))":"010135","max(y)":"you","any(toTypeName(x))":"Nullable(Int8)"}
+{"hex(groupConcatState(x))":"010131","y":null,"any(toTypeName(x))":"Nullable(Int8)"}
+{"hex(groupConcatState(x))":"010133","y":"hello","any(toTypeName(x))":"Nullable(Int8)"}
+{"hex(groupConcatState(x))":"010135","y":"you","any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_state_groupConcatState_with_group_by = r"""

@@ -12686,6 +12686,10 @@ _aggregate_functions_argMin_datatypes_permutations_Array_String__Nullable_DateTi
 {"argMin(array_string_, nullable_datetime_)":["TTTTTTTTTTTTTTTTTTTTTTTTTTTTT"],"any(toTypeName(array_string_))":"Array(String)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
 """
 
+_aggregate_functions_argMin_datatypes_permutations_Array_String__Nullable_DateTime______ = r"""
+{"argMin(array_string_, nullable_datetime_)":[""],"any(toTypeName(array_string_))":"Array(String)","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
 _aggregate_functions_argMin_datatypes_permutations_Array_String__Nullable_Date______ = r"""
 {"argMin(array_string_, nullable_date_)":[""],"any(toTypeName(array_string_))":"Array(String)","any(toTypeName(nullable_date_))":"Nullable(Date)"}
 """
@@ -13828,6 +13832,10 @@ _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Flo
 
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___Nullable_DateTime____OOOOOOOOOOOOOOO____6_498348655430028e_189_ = r"""
 {"argMin(map_string_lowcardinality_float64__, nullable_datetime_)":{"OOOOOOOOOOOOOOO":-6.498348655430028e189},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___Nullable_DateTime_______0_ = r"""
+{"argMin(map_string_lowcardinality_float64__, nullable_datetime_)":{"":0},"any(toTypeName(map_string_lowcardinality_float64__))":"Map(String, LowCardinality(Float64))","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
 """
 
 _aggregate_functions_argMin_datatypes_permutations_Map_String_LowCardinality_Float64___Nullable_Date________1_7976909999999999e_308_ = r"""

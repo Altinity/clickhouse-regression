@@ -17,6 +17,7 @@ from helpers.common import (
     attach_partition_from,
     attach_part,
     detach_part,
+    check_clickhouse_version,
 )
 from helpers.tables import (
     create_partitioned_table_with_compact_and_wide_parts,
@@ -86,7 +87,13 @@ def partition_with_empty_parts(self, table_name, bias=0):
         )
 
     with And("deleting all data from part in the partition"):
-        node.query(f"DELETE FROM {table_name} WHERE p == 1")
+        if check_clickhouse_version("<23.3")(self):
+            node.query(
+                f"DELETE FROM {table_name} WHERE p == 1",
+                settings=[("allow_experimental_lightweight_delete", 1)],
+            )
+        else:
+            node.query(f"DELETE FROM {table_name} WHERE p == 1")
 
 
 @TestCheck

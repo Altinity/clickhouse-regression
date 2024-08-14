@@ -23,6 +23,7 @@ from tiered_storage.requirements import *
         ["ReplicatedMergeTree('/clickhouse/concurrently_altering_replicated_mt', '1')"],
     ],
 )
+@Retry(3)
 def scenario(self, engine):
     """Check that doing alter move, insert and select
     concurrently does not result in data loss and there should

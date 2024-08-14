@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   #Run at 12:00 AM (UTC), Monday through Thursday
   schedule:
-    - cron: "0 0 * * 1-4"
+    - cron: "0 0 * * 1-5"
 
 jobs:
   altinitystable-23-3-x86-zookeeper:
@@ -25,6 +25,9 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
+      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
   altinitystable-23-3-arm-zookeeper:
     uses: ./.github/workflows/reusable-workflow-arm.yml
     with:
@@ -43,3 +46,6 @@ jobs:
       GCS_URI: ${{ secrets.GCS_URI }}
       GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
       GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
+      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}

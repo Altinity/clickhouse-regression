@@ -1207,15 +1207,18 @@ def default_s3_and_local_disk(
                 "secret_access_key": f"{self.context.secret_access_key}",
                 **disk_settings,
             },
-            "s3_cache": {
+        }
+        if check_clickhouse_version(">=22.8")(self):
+            disks["s3_cache"] = {
                 "type": "cache",
                 "disk": "external",
                 "path": "external_disk_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
                 "do_not_evict_index_and_mark_files": "1",
-            },
-        }
+            }
+        else:
+            disks["s3_cache"] = disks["external"]
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -1224,7 +1227,13 @@ def default_s3_and_local_disk(
                     {
                         "default_and_external": [
                             {"disk": "default"},
-                            {"disk": "s3_cache"},
+                            {
+                                "disk": (
+                                    "s3_cache"
+                                    if check_clickhouse_version(">=22.8")(self)
+                                    else "external"
+                                )
+                            },
                         ]
                     }
                 ]
@@ -1253,15 +1262,18 @@ def default_s3_and_local_volume(
                 "secret_access_key": f"{self.context.secret_access_key}",
                 **disk_settings,
             },
-            "s3_cache": {
+        }
+        if check_clickhouse_version(">=22.8")(self):
+            disks["s3_cache"] = {
                 "type": "cache",
                 "disk": "external",
                 "path": "external_disk_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
                 "do_not_evict_index_and_mark_files": "1",
-            },
-        }
+            }
+        else:
+            disks["s3_cache"] = disks["external"]
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
