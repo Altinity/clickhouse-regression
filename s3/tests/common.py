@@ -1227,7 +1227,13 @@ def default_s3_and_local_disk(
                     {
                         "default_and_external": [
                             {"disk": "default"},
-                            {"disk": "s3_cache"},
+                            {
+                                "disk": (
+                                    "s3_cache"
+                                    if check_clickhouse_version(">=22.8")(self)
+                                    else "external"
+                                )
+                            },
                         ]
                     }
                 ]
