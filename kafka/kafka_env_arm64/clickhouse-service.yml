@@ -18,3 +18,4 @@ services:
       - ${CLICKHOUSE_TESTS_DIR}/configs/dhparam.pem:/etc/clickhouse-server/dhparam.pem
       - ${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-base/config.xml:/etc/clickhouse-server/config.xml
       - ${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-base/users.xml:/etc/clickhouse-server/users.xml
+      - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"
