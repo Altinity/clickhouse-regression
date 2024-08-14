@@ -29,7 +29,7 @@ def many_auth_methods(self):
 
 
 @TestFeature
-@Name("syntax")
+@Name("many auth methods")
 def feature(self, node="clickhouse1"):
     """Check that user can have >= 1000 authentication methods."""
     self.context.node = self.context.cluster.node(node)
