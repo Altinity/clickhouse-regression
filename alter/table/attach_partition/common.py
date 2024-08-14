@@ -5,7 +5,7 @@ from testflows.core import *
 
 from helpers.tables import *
 
-version_when_attach_partition_with_different_keys_merged = "24.9"
+version_when_attach_partition_with_different_keys_merged = "24.10"
 
 
 def current_cpu():
@@ -1113,6 +1113,7 @@ def check_partition_was_detached(
 def check_part_was_detached(
     self,
     table,
+    number_of_active_parts,
     node=None,
     sort_column="p",
     part=None,
@@ -1131,11 +1132,13 @@ def check_part_was_detached(
         assert len(partition_values) > 0
 
     with And("I check that data from the part is not on the table"):
-        data = node.query(
-            f"SELECT name FROM system.parts WHERE name = '{part}' and table = '{table}' FORMAT TabSeparated"
-        ).output.strip()
+        number_of_active_parts_after_detach = int(
+            node.query(
+                f"SELECT count(name) FROM system.parts WHERE table = '{table}' and active = 1 FORMAT TabSeparated"
+            ).output.strip()
+        )
 
-        assert len(data) == 0
+        assert number_of_active_parts_after_detach == number_of_active_parts - 1
 
 
 @TestStep(Given)
