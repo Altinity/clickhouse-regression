@@ -28,7 +28,9 @@ def sanity_check(self, col_name, table):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupConcat("1.0"))
 def scenario(self, func="groupConcat({params})", table=None, snapshot_id=None):
     """Check groupConcat aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, add_analyzer=True
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

@@ -191,8 +191,9 @@ class QueryRuntimeException(Exception):
 
 
 class ClientQueryResult:
-    def __init__(self, query_result):
-        self.query_result = query_result
+    def __init__(self, output, errorcode=0):
+        self.raw_output = output
+        self.errorcode = errorcode
         self._output = None
 
     @property
@@ -200,16 +201,20 @@ class ClientQueryResult:
         """Return parsed query output."""
         if self._output is None:
             try:
-                if self.query_result:
+                if self.raw_output:
                     self._output = [
-                        json.loads(line) for line in self.query_result.splitlines()
+                        json.loads(line) for line in self.raw_output.splitlines()
                     ]
             except json.JSONDecodeError:
-                raise Exception(
-                    f"Failed to decode the query result as JSON: {self.query_result}"
-                )
-
+                self._output = self.raw_output
         return self._output
+
+    def __repr__(self):
+        lines = self.raw_output.strip().splitlines()
+        first_line = lines[0]
+        if len(first_line) > 30 or len(lines) > 1:
+            first_line = first_line[:30] + "..."
+        return f"{self.__class__.__name__}(output={first_line})"
 
 
 class Node(object):
@@ -298,6 +303,8 @@ class Node(object):
 
         @staticmethod
         def _parse_error_code(message):
+            if "🔥 Exception:" not in message:
+                return 0
             match = re.search(r"Code:\s*(\d+)", message)
 
             return int(match.group(1))
@@ -369,27 +376,28 @@ class Node(object):
                         retry_delay=retry_delay,
                     )
 
+            _output = query_result.split(self.prompt, 1)[-1]
+            _errorcode = self._parse_error_code(query_result)
+
             if no_checks:
-                return ClientQueryResult(query_result.split(self.prompt, 1)[-1])
+                return ClientQueryResult(_output, errorcode=_errorcode)
 
             if errorcode is not None:
-                with Then(f"exitcode should be {errorcode}", format_name=False):
-                    assert errorcode == self._parse_error_code(
-                        str(query_result)
-                    ), error()
+                with Then(f"errorcode should be {errorcode}", format_name=False):
+                    assert errorcode == _errorcode, error()
 
             if message is not None:
                 with Then(f"message should be {message}", format_name=False):
-                    assert message in query_result, error()
+                    assert message in _output, error()
 
             if not ignore_exception:
                 if message is None or "Exception:" not in message:
-                    if "🔥 Exception:" in query_result:
+                    if "🔥 Exception:" in _output:
                         if raise_on_exception:
-                            raise QueryRuntimeException(query_result.strip())
-                        assert False, error(query_result.strip())
+                            raise QueryRuntimeException(_output)
+                        assert False, error(_output)
 
-            return ClientQueryResult(query_result.split(self.prompt, 1)[-1])
+            return ClientQueryResult(_output, errorcode=_errorcode)
 
     @contextmanager
     def client(
@@ -1351,13 +1359,13 @@ class Cluster(object):
                 except:
                     self.clickhouse_specific_odbc_binary = None
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
+                    self.specific_clickhouse_binary_path
+                )
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
+                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
+                    self.clickhouse_specific_odbc_binary
+                )
 
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 binary_source = self.clickhouse_binary_path
@@ -1370,32 +1378,34 @@ class Cluster(object):
 
             elif self.clickhouse_binary_path.startswith("docker://"):
                 if current().context.clickhouse_version is None:
-                    parsed_version = parse_version_from_docker_path(
-                        self.clickhouse_binary_path
-                    )
-                    if parsed_version:
-                        if not (  # What case are we trying to catch here?
-                            parsed_version.startswith(".")
-                            or parsed_version.endswith(".")
-                        ):
-                            current().context.clickhouse_version = parsed_version
+                    with Given("version from docker path"):
+                        parsed_version = parse_version_from_docker_path(
+                            self.clickhouse_binary_path
+                        )
+                        if parsed_version:
+                            if not (  # What case are we trying to catch here?
+                                parsed_version.startswith(".")
+                                or parsed_version.endswith(".")
+                            ):
+                                current().context.clickhouse_version = parsed_version
 
                 docker_path = self.clickhouse_binary_path
 
-                self.clickhouse_binary_path = get_binary_from_docker_container(
-                    docker_image=docker_path,
-                    container_binary_path="/usr/bin/clickhouse",
-                )
-                try:
-                    self.clickhouse_odbc_bridge_binary_path = (
-                        get_binary_from_docker_container(
-                            docker_image=docker_path,
-                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                            host_binary_path_suffix="_odbc_bridge",
-                        )
+                with Given("server binary from docker image", description=docker_path):
+                    self.clickhouse_binary_path = get_binary_from_docker_container(
+                        docker_image=docker_path,
+                        container_binary_path="/usr/bin/clickhouse",
                     )
-                except:
-                    pass
+                    try:
+                        self.clickhouse_odbc_bridge_binary_path = (
+                            get_binary_from_docker_container(
+                                docker_image=docker_path,
+                                container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+                                host_binary_path_suffix="_odbc_bridge",
+                            )
+                        )
+                    except:
+                        pass
 
             if self.clickhouse_binary_path.endswith(".deb"):
                 deb_path = self.clickhouse_binary_path
@@ -1645,23 +1655,23 @@ class Cluster(object):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
                         with Shell() as bash:
+                            log_path = f"../_service_logs"
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
+                            bash(f"mkdir -p {log_path}")
                             nodes = bash(
                                 f"{self.docker_compose} ps --services"
                             ).output.split("\n")
                             debug(nodes)
                             for node in nodes:
-                                with By(f"getting log for {node}"):
-                                    log_path = f"../_instances"
-                                    snode = bash(
-                                        f"{self.docker_compose} logs {node} "
-                                        f"> {log_path}/{node}.log",
-                                        timeout=1000,
+                                snode = bash(
+                                    f"{self.docker_compose} logs {node} "
+                                    f"> {log_path}/{node}.log",
+                                    timeout=1000,
+                                )
+                                if snode.exitcode != 0:
+                                    xfail(
+                                        f"failed to get service log - exitcode {snode.exitcode}"
                                     )
-                                    if snode.exitcode != 0:
-                                        xfail(
-                                            f"failed to get service log - exitcode {snode.exitcode}"
-                                        )
 
                 self.down()
         finally:
@@ -1791,14 +1801,15 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
+                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
+                    self.clickhouse_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
+                    self.clickhouse_odbc_bridge_binary_path
+                    or os.path.join(
+                        os.path.dirname(self.clickhouse_binary_path),
+                        "clickhouse-odbc-bridge",
+                    )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""

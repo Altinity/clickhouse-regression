@@ -117,7 +117,7 @@ def scenario(self, engine):
                     tasks.append(p.submit(optimize_table, (n_other_per_batch,)))
 
                 for task in tasks:
-                    task.result(timeout=600)
+                    task.result(timeout=OPTIMIZE_FINAL_TIMEOUT * 3)
 
         with When("I check the server is still up"):
             r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()

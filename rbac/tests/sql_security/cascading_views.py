@@ -2320,9 +2320,7 @@ def check_cascade_mv_mv_mv(self):
 
 
 @TestFeature
-@Requirements(
-    RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CascadingViews("1.0")
-)
+@Requirements(RQ_SRS_006_RBAC_SQLSecurity_MaterializedView_CascadingViews("1.0"))
 @Name("cascading views")
 def feature(self, node="clickhouse1"):
     """Test cascading materialized views with different sql security options."""

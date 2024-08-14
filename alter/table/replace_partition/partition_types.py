@@ -5,7 +5,7 @@ from alter.table.replace_partition.common import (
     create_partitions_with_random_uint64,
 )
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid, replace_partition
+from helpers.common import getuid, replace_partition, check_clickhouse_version
 from helpers.tables import (
     create_partitioned_table_with_compact_and_wide_parts,
 )
@@ -73,8 +73,14 @@ def partition_with_empty_parts(self, table_name):
             node=node, table_name=table_name, number_of_values=100
         )
 
-    with And("deleting all data from evey part in the partition"):
-        node.query(f"DELETE FROM {table_name} WHERE p == 1;")
+    with And("deleting all data from every part in the partition"):
+        if check_clickhouse_version("<23.3")(self):
+            node.query(
+                f"DELETE FROM {table_name} WHERE p == 1;",
+                settings=[("allow_experimental_lightweight_delete", 1)],
+            )
+        else:
+            node.query(f"DELETE FROM {table_name} WHERE p == 1;")
 
 
 @TestStep(Given)
@@ -140,6 +146,15 @@ def replace_partition_with_different_partition_types(self):
         partition_with_empty_parts,
         partition_with_no_parts,
     }
+    if check_clickhouse_version("<22.8")(
+        self
+    ):  # lightweight delete was introduced in 22.8
+        values = {
+            table_with_compact_parts,
+            table_with_wide_parts,
+            table_with_compact_and_wide_parts,
+            partition_with_no_parts,
+        }
 
     check_replace_partition(
         destination_table=either(*values, i="destination_table"),

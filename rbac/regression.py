@@ -219,6 +219,16 @@ xfails = {
             check_clickhouse_version("<24.4"),
         ),
     ],
+    "/rbac/privileges/multiple authentication methods/syntax/create multiple users with multiple auth methods/*": [
+        (
+            Fail,
+            "multiple authentication methods were introduced in 24.8",
+            check_clickhouse_version("<24.8"),
+        )
+    ],
+    "/rbac/privileges/multiple authentication methods/syntax/create user without WITH after IDENTIFIED/*": [
+        (Fail, "Arthur should fix", check_clickhouse_version(">=24.8"))
+    ],
 }
 
 xflags = {

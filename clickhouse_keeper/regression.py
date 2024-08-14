@@ -90,6 +90,9 @@ xfails = {
             check_clickhouse_version(">=24.4"),
         )
     ],
+    "ports ssl fips/check clickhouse connection to keeper/:": [
+        (Fail, "Doesn't work on 22.3", check_clickhouse_version("<22.8"))
+    ],
 }
 
 
@@ -101,11 +104,7 @@ ffails = {
         "test doesn't work from 23.3",
         check_clickhouse_version(">=23.3"),
     ),
-    "/clickhouse keeper/keeper cluster tests/zookeepers 3": (
-        XFail,
-        "unstable from 23.3",
-        check_clickhouse_version(">=23.3"),
-    ),
+    "/clickhouse keeper/keeper cluster tests/zookeepers 3": (XFail, "Not stable"),
     "/clickhouse keeper/keeper cluster tests/standalone keepers 3": (
         XFail,
         "Not stable",
