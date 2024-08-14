@@ -55,5 +55,21 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
+            Feature(
+                run=load(
+                    "rbac.tests.privileges.multiple_auth_methods.many_auth_methods",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
+                    "rbac.tests.privileges.multiple_auth_methods.multiple_users",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
         finally:
             join()
