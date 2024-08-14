@@ -15,3 +15,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/dhparam.pem:/etc/clickhouse-server/config.d/dhparam.pem"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.crt:/etc/clickhouse-server/config.d/server.crt"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.key:/etc/clickhouse-server/config.d/server.key"
+      - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"
