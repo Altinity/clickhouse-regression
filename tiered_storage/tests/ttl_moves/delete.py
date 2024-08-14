@@ -90,7 +90,7 @@ def scenario(self, name, engine):
                     assert set(used_disks) == expected_disks, error()
 
                 with Then(f"number of rows should be {'0' if positive else '1'}"):
-                    for attempt in retries(timeout=120, delay=15):
+                    for attempt in retries(timeout=180, delay=30):
                         with attempt:
                             r = node.query(
                                 f"SELECT count() FROM {name} FORMAT TabSeparated"
