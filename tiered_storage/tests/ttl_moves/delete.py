@@ -50,7 +50,7 @@ def scenario(self, name, engine):
 
                 now = time.time()
                 wait_expire_1 = 0
-                wait_expire_2 = 10
+                wait_expire_2 = 30
                 time_1 = now + wait_expire_1
                 time_2 = now + wait_expire_1 + wait_expire_2
 
@@ -90,7 +90,7 @@ def scenario(self, name, engine):
                     assert set(used_disks) == expected_disks, error()
 
                 with Then(f"number of rows should be {'0' if positive else '1'}"):
-                    for attempt in retries(timeout=180, delay=30):
+                    for attempt in retries(timeout=30, delay=5):
                         with attempt:
                             r = node.query(
                                 f"SELECT count() FROM {name} FORMAT TabSeparated"
