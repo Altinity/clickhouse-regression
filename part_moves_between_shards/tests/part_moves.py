@@ -923,9 +923,6 @@ def feature(self):
     """Check part moves between shards."""
     global table_engine
     table_engine = "ReplicatedSummingMergeTree"
-    cluster = self.context.cluster
-    keeper_cluster_nodes = cluster.nodes["zookeeper"][0:1]
-    clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:4]
 
     with Given("I create remote config"):
         entries = {
@@ -941,11 +938,6 @@ def feature(self):
             ]
         }
         create_remote_configuration(entries=entries)
-
-    with And("I create 1 zookeeper cluster configuration"):
-        create_config_section(
-            control_nodes=keeper_cluster_nodes, cluster_nodes=clickhouse_cluster_nodes
-        )
 
     for scenario in loads(current_module(), Scenario):
         scenario()
