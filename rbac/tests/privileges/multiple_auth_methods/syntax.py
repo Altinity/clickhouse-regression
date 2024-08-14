@@ -4,7 +4,7 @@ from rbac.tests.privileges.multiple_auth_methods.errors import *
 
 @TestScenario
 @Name("create user without WITH after IDENTIFIED")
-def without_with_syntax_error(self):
+def create_user_identified_without_with_syntax_error(self):
     """Check that the WITH keyword cannot be omitted when creating a user with an identification
     method and a specified authentication type."""
     with Given("construct query with syntax error"):
@@ -19,6 +19,64 @@ def without_with_syntax_error(self):
         login(
             user_name=user_name,
             password="123",
+            expected=no_user_with_such_name(user_name),
+        )
+
+
+@TestScenario
+@Name("alter user without WITH after IDENTIFIED")
+def alter_user_identified_without_with_syntax_error(self):
+    """Check that the WITH keyword cannot be omitted when altering a user with an identification
+    method and a specified authentication type."""
+    with Given("create user with plaintext_password"):
+        user_name = f"user_{getuid()}"
+        query = f"CREATE USER {user_name} IDENTIFIED WITH plaintext_password BY '123';"
+        execute_query(query=query)
+
+    with And("construct ALTER USER query without WITH after IDENTIFIED"):
+        query = f"ALTER USER {user_name} IDENTIFIED plaintext_password BY '456'"
+        note(query)
+
+    with Then("expect to see syntax error"):
+        execute_query(query=query, expected=syntax_error)
+
+    with And("check that user can only login with initial password"):
+        login(
+            user_name=user_name,
+            password="123",
+        )
+        login(
+            user_name=user_name,
+            password="456",
+            expected=no_user_with_such_name(user_name),
+        )
+
+
+@TestScenario
+@Name("alter user without WITH after ADD IDENTIFIED")
+def alter_user_add_identified_without_with_syntax_error(self):
+    """Check that the WITH keyword cannot be omitted when adding an identification method to a user
+    with a specified authentication type."""
+    with Given("create user with plaintext_password"):
+        user_name = f"user_{getuid()}"
+        query = f"CREATE USER {user_name} IDENTIFIED WITH plaintext_password BY '123';"
+        execute_query(query=query)
+
+    with And("construct ALTER USER query without WITH after ADD IDENTIFIED"):
+        query = f"ALTER USER {user_name} ADD IDENTIFIED plaintext_password BY '456'"
+        note(query)
+
+    with Then("expect to see syntax error"):
+        execute_query(query=query, expected=syntax_error)
+
+    with And("check that user can only login with initial password"):
+        login(
+            user_name=user_name,
+            password="123",
+        )
+        login(
+            user_name=user_name,
+            password="456",
             expected=no_user_with_such_name(user_name),
         )
 
@@ -108,7 +166,7 @@ def without_auth_type_syntax_error(self):
 
 @TestScenario
 @Name("identified by no_password")
-def identified_by_no_password(self):
+def identified_by_no_password_syntax_error(self):
     """Check that IDENTIFIED BY no_password is not valid statement."""
     with Given("construct query with syntax error"):
         user_name = f"user_{getuid()}"
@@ -123,6 +181,87 @@ def identified_by_no_password(self):
             user_name=user_name,
             expected=no_user_with_such_name(user_name),
         )
+
+
+@TestScenario
+@Name("password without quotes")
+def password_without_quotes_syntax_error(self):
+    """Check that password should be in quotes."""
+    with Given("construct a query with password without quotes"):
+        user_name = f"user_{getuid()}"
+        query = f"CREATE USER {user_name} IDENTIFIED WITH plaintext_password BY some_password"
+        note(query)
+
+    with Then("expect syntax error"):
+        execute_query(query=query, expected=syntax_error)
+
+    with And("check that user was not created"):
+        login(
+            user_name=user_name,
+            expected=no_user_with_such_name(user_name),
+        )
+
+
+@TestScenario
+@Name("trailing coma")
+def trailing_coma_syntax_error(self):
+    """Check that trailing coma after auth method(s) is not allowed."""
+    with Given("CREATE with trailing coma"):
+        user_name = f"user_{getuid()}"
+        execute_query(
+            query=f"CREATE USER {user_name} IDENTIFIED WITH plaintext_password by '1',",
+            expected=syntax_error,
+        )
+
+    with And("create user with correct syntax"):
+        execute_query(
+            query=f"CREATE USER {user_name} IDENTIFIED WITH plaintext_password by '123'"
+        )
+
+    with And("ALTER USER ADD IDENTIFIED with trailing coma"):
+        query = f"ALTER USER {user_name} ADD IDENTIFIED WITH plaintext_password by '2', plaintext_password by '2',"
+        execute_query(query=query, expected=syntax_error)
+
+    with And("ALTER USER IDENTIFIED with trailing coma"):
+        query = f"ALTER USER {user_name} IDENTIFIED WITH plaintext_password by '3', plaintext_password by '4',"
+        execute_query(query=query, expected=syntax_error)
+
+    with And("CREATE USER IDENTIFIED BY with trailing coma"):
+        execute_query(
+            query=f"CREATE USER {user_name} IDENTIFIED BY '5', BY '7',",
+            expected=syntax_error,
+        )
+
+    with And("ALTER USER ADD IDENTIFIED BY with trailing coma"):
+        query = f"ALTER USER {user_name} ADD IDENTIFIED BY '6',"
+        execute_query(query=query, expected=syntax_error)
+
+    with And("ALTER USER IDENTIFIED BY with trailing coma"):
+        query = f"ALTER USER {user_name} IDENTIFIED BY '5',"
+        execute_query(query=query, expected=syntax_error)
+
+
+@TestScenario
+def many_auth_methods(self):
+    """Check that user can have 1000 auth methods."""
+    with Given("construct a query with user having 1000 auth methods"):
+        user_name = f"user_{getuid()}"
+        auth_methods = []
+        passwords = []
+        number_of_methods = 1000
+        for i in range(number_of_methods):
+            auth_methods.append(f"plaintext_password by '{i}'")
+            passwords.append(f"{i}")
+
+        auth_methods_string = ",".join(auth_methods)
+        query = f"CREATE USER {user_name} IDENTIFIED WITH {auth_methods_string}"
+
+    with Then("execute query"):
+        execute_query(query=query)
+
+    with And("login with every password"):
+        for password in passwords:
+            login(user_name=user_name, password=password)
 
 
 @TestScenario
