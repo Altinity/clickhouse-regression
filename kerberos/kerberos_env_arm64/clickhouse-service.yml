@@ -10,6 +10,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/kerberos/etc/krb5_arm64.conf:/etc/krb5.conf"
+      - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"
     environment:
       KRB5_CLIENT_KTNAME: /etc/krb5.keytab
       KRB5_KTNAME: /etc/krb5.keytab
