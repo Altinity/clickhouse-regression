@@ -141,6 +141,13 @@ xfails = {
             check_clickhouse_version("<23.3"),
         )
     ],
+    "attach partition/conditions/primary key/:": [
+        (
+            Fail,
+            "Bug fixed in 23 https://github.com/ClickHouse/ClickHouse/issues/41783",
+            check_clickhouse_version("<23"),
+        )
+    ],
 }
 
 xflags = {}
