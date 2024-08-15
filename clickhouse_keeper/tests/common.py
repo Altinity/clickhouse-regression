@@ -1078,7 +1078,7 @@ def flask_server(self, server_path, port, protocol, ciphers):
 
 @TestStep(Then)
 def test_https_connection_with_url_table_function(
-    self, success=True, options=None, node=None, port=None, timeout=5
+    self, success=True, options=None, node=None, port=None, timeout=1
 ):
     """Check reading data from an https server with specified clickhouse-server config."""
     if node is None:
@@ -1106,7 +1106,7 @@ def test_https_connection_with_url_table_function(
 
 @TestStep(Given)
 def test_https_connection_with_dictionary(
-    self, name=None, node=None, success=True, options=None, port=None, timeout=5
+    self, name=None, node=None, success=True, options=None, port=None, timeout=1
 ):
     """Check reading data from a dictionary sourced from an https server"""
     if node is None:
