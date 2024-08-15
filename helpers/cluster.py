@@ -1277,6 +1277,8 @@ class Cluster(object):
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
+        self.clickhouse_docker_image = None
+        self.keeper_docker_image = None
 
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
         with Shell() as bash:
@@ -1369,19 +1371,16 @@ class Cluster(object):
                     )
 
             elif self.clickhouse_binary_path.startswith("docker://"):
+                docker_path = self.clickhouse_binary_path
                 if current().context.clickhouse_version is None:
                     with Given("version from docker path"):
-                        parsed_version = parse_version_from_docker_path(
-                            self.clickhouse_binary_path
-                        )
+                        parsed_version = parse_version_from_docker_path(docker_path)
                         if parsed_version:
                             if not (  # What case are we trying to catch here?
                                 parsed_version.startswith(".")
                                 or parsed_version.endswith(".")
                             ):
                                 current().context.clickhouse_version = parsed_version
-
-                docker_path = self.clickhouse_binary_path
 
                 with Given("server binary from docker image", description=docker_path):
                     self.clickhouse_docker_image = docker_path.split("docker://", 1)[-1]
@@ -1432,10 +1431,10 @@ class Cluster(object):
                     )
 
             elif self.keeper_binary_path.startswith("docker://"):
+                docker_path = self.keeper_binary_path
+                self.keeper_docker_image = docker_path.split("docker://", 1)[-1]
                 if getsattr(current().context, "keeper_version", None) is None:
-                    parsed_version = parse_version_from_docker_path(
-                        self.keeper_binary_path
-                    )
+                    parsed_version = parse_version_from_docker_path(docker_path)
                     if parsed_version:
                         if not (
                             parsed_version.startswith(".")
@@ -1444,7 +1443,7 @@ class Cluster(object):
                             current().context.keeper_version = parsed_version
 
                 self.keeper_binary_path = get_binary_from_docker_container(
-                    docker_image=self.keeper_binary_path,
+                    docker_image=docker_path,
                     container_binary_path="/usr/bin/clickhouse-keeper",
                 )
 
@@ -1815,6 +1814,9 @@ class Cluster(object):
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
                 self.environ["CLICKHOUSE_DOCKER_IMAGE"] = self.clickhouse_docker_image
+                self.environ["KEEPER_DOCKER_IMAGE"] = (
+                    self.keeper_docker_image or self.clickhouse_docker_image
+                )
 
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
