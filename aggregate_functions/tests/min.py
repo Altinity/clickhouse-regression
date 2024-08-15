@@ -66,7 +66,7 @@ def scenario(self, func="min({params})", table=None, snapshot_id=None):
         column_name, column_type = column.name, column.datatype.name
 
         with Check(f"{column_type}"):
-            self.context.node.query(f"SELECT {column_name} from {table.name}")
+            self.context.node.query(f"SELECT {column_name} from {table.name} format Values")
             execute_query(
                 f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}"
             )
