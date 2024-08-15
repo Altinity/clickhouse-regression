@@ -141,11 +141,25 @@ xfails = {
             check_clickhouse_version("<23.3"),
         )
     ],
+    "/alter/attach partition/conditions/projections/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/54896",
+            check_clickhouse_version("<23.3"),
+        )
+    ],
     "attach partition/conditions/primary key/:": [
         (
             Fail,
             "Bug fixed in 23 https://github.com/ClickHouse/ClickHouse/issues/41783",
             check_clickhouse_version("<23"),
+        )
+    ],
+    "/alter/attach partition/part level/too high level/:/I check that part was not attached by checking the parts state": [
+        (
+            Fail,
+            "Need to investigate why part name stays the same",
+            check_clickhouse_version("<22.12"),
         )
     ],
 }
