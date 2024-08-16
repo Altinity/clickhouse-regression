@@ -1238,6 +1238,7 @@ class Cluster(object):
         self,
         local=False,
         clickhouse_binary_path=None,
+        base_os=None,
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
         nodes=None,
@@ -1277,7 +1278,7 @@ class Cluster(object):
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
-        self.clickhouse_docker_image = None
+        self.clickhouse_docker_image_name = None
         self.keeper_docker_image = None
 
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
@@ -1361,16 +1362,7 @@ class Cluster(object):
                     self.clickhouse_specific_odbc_binary
                 )
 
-            if self.clickhouse_binary_path.startswith(("http://", "https://")):
-                binary_source = self.clickhouse_binary_path
-                with Given(
-                    "I download ClickHouse server binary", description=binary_source
-                ):
-                    self.clickhouse_binary_path = download_http_binary(
-                        binary_source=binary_source
-                    )
-
-            elif self.clickhouse_binary_path.startswith("docker://"):
+            if self.clickhouse_binary_path.startswith("docker://"):
                 docker_path = self.clickhouse_binary_path
                 if current().context.clickhouse_version is None:
                     with Given("version from docker path"):
@@ -1383,7 +1375,9 @@ class Cluster(object):
                                 current().context.clickhouse_version = parsed_version
 
                 with Given("server binary from docker image", description=docker_path):
-                    self.clickhouse_docker_image = docker_path.split("docker://", 1)[-1]
+                    self.clickhouse_docker_image_name = docker_path.split(
+                        "docker://", 1
+                    )[-1]
                     self.clickhouse_binary_path = get_binary_from_docker_container(
                         docker_image=docker_path,
                         container_binary_path="/usr/bin/clickhouse",
@@ -1399,22 +1393,26 @@ class Cluster(object):
                     except:
                         pass
 
-            if self.clickhouse_binary_path.endswith(".deb"):
-                deb_path = self.clickhouse_binary_path
-                with Given("unpack deb package", description=deb_path):
-                    self.clickhouse_binary_path = unpack_deb(
-                        deb_binary_path=deb_path,
-                        program_name="clickhouse",
-                    )
-                    try:
-                        self.clickhouse_odbc_bridge_binary_path = unpack_deb(
-                            deb_binary_path=deb_path,
-                            program_name="clickhouse-odbc-bridge",
-                        )
-                    except:
-                        pass
+            else:
+                assert base_os is not None, error("base_os must be specified")
+                self.base_os = base_os.split("docker://", 1)[-1]
 
-            self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
+                if self.clickhouse_binary_path.startswith(("http://", "https://")):
+                    binary_source = self.clickhouse_binary_path
+                    with Given(
+                        "I download ClickHouse server package",
+                        description=binary_source,
+                    ):
+                        self.clickhouse_binary_path = download_http_binary(
+                            binary_source=binary_source
+                        )
+
+            package_name = os.path.basename(self.clickhouse_binary_path)
+            self.clickhouse_docker_image_name = (
+                f"clickhouse-regression:{self.base_os.replace(':','-')}-{package_name}"
+            )
+            # self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
+            self.clickhouse_binary_path = f"../binaries/{package_name}"
 
             with Shell() as bash:
                 bash.timeout = 300
@@ -1793,6 +1791,7 @@ class Cluster(object):
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
+                assert self.clickhouse_binary_path
                 self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
                     self.clickhouse_binary_path
                 )
@@ -1813,15 +1812,21 @@ class Cluster(object):
                     "keeper" if self.use_keeper else "zookeeper"
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
-                self.environ["CLICKHOUSE_DOCKER_IMAGE"] = self.clickhouse_docker_image
-                self.environ["KEEPER_DOCKER_IMAGE"] = (
-                    self.keeper_docker_image or self.clickhouse_docker_image
+                self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"] = (
+                    self.clickhouse_docker_image_name
+                )
+                self.environ["CLICKHOUSE_TESTS_BASE_OS"] = self.base_os
+                self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] = self.base_os.split(":")[
+                    0
+                ]
+                self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
+                    self.keeper_docker_image or self.clickhouse_docker_image_name
                 )
 
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
 
-        def start_cluster(max_up_attempts=3):
+        def start_cluster(max_up_attempts=1):
             if not self.reuse_env:
                 with By("pulling images for all the services"):
                     cmd = self.command(
@@ -2028,6 +2033,7 @@ def create_cluster(
     self,
     local=False,
     clickhouse_binary_path=None,
+    base_os=None,
     clickhouse_odbc_bridge_binary_path=None,
     collect_service_logs=False,
     configs_dir=None,
@@ -2048,6 +2054,7 @@ def create_cluster(
     with Cluster(
         local=local,
         clickhouse_binary_path=clickhouse_binary_path,
+        base_os=base_os,
         clickhouse_odbc_bridge_binary_path=clickhouse_odbc_bridge_binary_path,
         collect_service_logs=collect_service_logs,
         configs_dir=configs_dir,

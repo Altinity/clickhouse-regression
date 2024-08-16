@@ -2,13 +2,16 @@ version: "2.3"
 
 services:
   clickhouse:
-    # This looks weird, but it allows running subsequent docker-compose commands without CLICKHOUSE_DOCKER_IMAGE in the environment
-    image: $CLICKHOUSE_DOCKER_IMAGE
+    # This looks weird, but it allows running subsequent docker-compose commands without CLICKHOUSE_DOCKER_IMAGE_NAME in the environment
+    image: $CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME
+    pull_policy: never
     build:
-      context: .
-      dockerfile: clickhouse.Dockerfile
+      context: ..
+      dockerfile: docker-compose/${CLICKHOUSE_TESTS_BASE_OS_NAME:-clickhouse}.Dockerfile
       args:
-        CLICKHOUSE_DOCKER_IMAGE: $CLICKHOUSE_DOCKER_IMAGE
+        CLICKHOUSE_DOCKER_IMAGE_NAME: $CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME
+        CLICKHOUSE_PACKAGE: $CLICKHOUSE_TESTS_SERVER_BIN_PATH
+        BASE_OS: $CLICKHOUSE_TESTS_BASE_OS
 
     init: true
     expose:
