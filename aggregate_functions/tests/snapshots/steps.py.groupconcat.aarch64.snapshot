@@ -6351,9 +6351,9 @@ _aggregate_functions_groupConcat_with_another_aggregate_function = r"""
 """
 
 _aggregate_functions_groupConcat_with_another_aggregate_function_and_group_by = r"""
-{"groupConcat(x)":"1","max(y)":null,"any(toTypeName(x))":"Nullable(Int8)"}
-{"groupConcat(x)":"3","max(y)":"hello","any(toTypeName(x))":"Nullable(Int8)"}
-{"groupConcat(x)":"5","max(y)":"you","any(toTypeName(x))":"Nullable(Int8)"}
+{"groupConcat(x)":"1","y":null,"any(toTypeName(x))":"Nullable(Int8)"}
+{"groupConcat(x)":"3","y":"hello","any(toTypeName(x))":"Nullable(Int8)"}
+{"groupConcat(x)":"5","y":"you","any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_groupConcat_with_group_by = r"""

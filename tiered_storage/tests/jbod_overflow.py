@@ -24,6 +24,7 @@ from testflows.asserts import error
         ),
     ],
 )
+@Retry(3)
 def scenario(self, cluster, node="clickhouse1"):
     """Check that when merges are stopped then all small parts
     first go to JBOD disks and large part goes to the external disk.

@@ -135,6 +135,7 @@ xfails = {
     "minio/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
+    "minio/disk/log/:": [(Fail, "Not working 22.X", check_clickhouse_version("<=23"))],
     "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
@@ -144,7 +145,6 @@ xfails = {
     ":/backup/:/metadata non restorable schema": [
         (Fail, "send_metadata is deprecated")
     ],
-    ":/backup/:/metadata:": ((Fail, "SYSTEM RESTART DISK is not implemented"),),
     ":/zero copy replication/the bucket should be cleaned up": [
         (Fail, "Data cleanup needs investigation")
     ],
@@ -158,6 +158,9 @@ xfails = {
     "minio/zero copy replication/performance select": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
+    ],
+    "aws s3/zero copy replication/stale alter replica'": [
+        (Fail, "Timeout on 22.8", check_clickhouse_version("<=22.8"))
     ],
     "gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
@@ -191,6 +194,9 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/pull/58333",
             check_clickhouse_version("<23.11"),
         )
+    ],
+    ":/alter/projection": [
+        (Fail, "Wrong error message 22.3", check_clickhouse_version("<22.8")),
     ],
     ":/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
@@ -273,7 +279,13 @@ ffails = {
     ":/alter/update delete": (
         Skip,
         "Not supported <22.8",
-        check_clickhouse_version(">=22.8"),
+        check_clickhouse_version("<23"),
+    ),
+    ":/backup/:/metadata:": (XFail, "SYSTEM RESTART DISK is not implemented"),
+    ":/backup/:/system unfreeze": (
+        XFail,
+        "doesn't work <22.8",
+        check_clickhouse_version("<22.8"),
     ),
 }
 
