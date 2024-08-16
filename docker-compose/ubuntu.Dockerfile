@@ -1,6 +1,7 @@
 ARG BASE_OS
 FROM $BASE_OS
 
+ENV TZ=Europe/Berlin
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
 RUN apt-get update
