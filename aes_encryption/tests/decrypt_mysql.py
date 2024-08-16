@@ -136,41 +136,60 @@ def invalid_parameters(self):
     ciphertext = "unhex('AA1826B5F66A903C888D5DCDA9FB63D1D9CCA10EC55F59D6C00D37')"
 
     with Example("no parameters"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 0, expected 3 to 4"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
         aes_decrypt_mysql(
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 0, expected 3 to 4",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("missing key and mode"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 1"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
         aes_decrypt_mysql(
             ciphertext=ciphertext,
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 1",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("missing mode"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 2"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'123'",
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 2",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad key type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 3rd argument 'key' to function 'aes_decrypt_mysql'."
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="123",
             mode="'aes-128-ecb'",
-            exitcode=43,
-            message="DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad mode type - forgot quotes"):
+        exitcode = 47
         if is_with_analyzer(node=self.context.node):
-            exitcode = 47
             message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
         else:
-            exitcode = 47
             message = (
                 "DB::Exception: Missing columns: 'ecb' 'aes' while processing query"
             )
@@ -184,22 +203,33 @@ def invalid_parameters(self):
         )
 
     with Example("bad mode type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument #1 'mode'"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 1st argument 'mode' to function 'aes_decrypt_mysql'."
+
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
             mode="128",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument #1 'mode'",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad iv type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'aes_decrypt_mysql'."
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
             mode="'aes-128-cbc'",
             iv="128",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example(
@@ -237,25 +267,35 @@ def invalid_parameters(self):
         )
 
     with Example("aad passed by mistake"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
             mode="'aes-128-cbc'",
             iv="'0123456789123456'",
             aad="'aad'",
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("aad passed by mistake type - UInt8"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
             mode="'aes-128-gcm'",
             iv="'012345678912'",
             aad="123",
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example(
