@@ -1411,7 +1411,7 @@ class Cluster(object):
                         )
 
                 package_name = os.path.basename(self.clickhouse_binary_path)
-                self.clickhouse_docker_image_name = f"clickhouse-regression:{self.base_os.replace(':','-')}-{package_name}"
+                self.clickhouse_docker_image_name = f"clickhouse-regression:{self.base_os.replace(':','-').replace('/','-')}-{package_name}"
                 self.clickhouse_binary_path = os.path.relpath(
                     self.clickhouse_binary_path
                 )
@@ -1420,7 +1420,9 @@ class Cluster(object):
             #     bash.timeout = 300
             #     bash(f"chmod +x {self.clickhouse_binary_path}")
 
-        if self.keeper_binary_path:
+        if not self.keeper_binary_path:
+            self.keeper_base_os = self.base_os
+        else:
             if self.keeper_binary_path.startswith("docker://"):
                 docker_path = self.keeper_binary_path
                 self.keeper_docker_image_name = docker_path.split("docker://", 1)[-1]
@@ -1825,7 +1827,9 @@ class Cluster(object):
                 )
                 self.environ["CLICKHOUSE_TESTS_BASE_OS"] = self.base_os
                 self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] = (
-                    "clickhouse" if not self.base_os else self.base_os.split(":")[0]
+                    "clickhouse"
+                    if not self.base_os
+                    else self.base_os.split(":")[0].split("/")[-1]
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
                     self.keeper_docker_image_name or self.clickhouse_docker_image_name
@@ -1834,7 +1838,7 @@ class Cluster(object):
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] = (
                     "keeper"
                     if not self.keeper_base_os
-                    else self.keeper_base_os.split(":")[0]
+                    else self.keeper_base_os.split(":")[0].split("/")[-1]
                 )
 
             with And("I list environment variables to show their values"):
