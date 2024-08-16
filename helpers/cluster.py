@@ -1803,7 +1803,7 @@ class Cluster(object):
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
-                    self.keeper_binary_path or ""
+                    self.keeper_binary_path or self.clickhouse_binary_path or ""
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     self.zookeeper_version or ""
@@ -1821,6 +1821,11 @@ class Cluster(object):
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
                     self.keeper_docker_image or self.clickhouse_docker_image_name
+                )
+                self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] = (
+                    ""
+                    if self.keeper_docker_image
+                    else self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"]
                 )
 
             with And("I list environment variables to show their values"):
