@@ -1261,6 +1261,7 @@ class Cluster(object):
         self._control_shell = None
         self.environ = {} if (environ is None) else environ
         self.clickhouse_binary_path = clickhouse_binary_path
+        self.base_os = base_os
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
         self.zookeeper_version = zookeeper_version
@@ -1407,12 +1408,11 @@ class Cluster(object):
                             binary_source=binary_source
                         )
 
-            package_name = os.path.basename(self.clickhouse_binary_path)
-            self.clickhouse_docker_image_name = (
-                f"clickhouse-regression:{self.base_os.replace(':','-')}-{package_name}"
-            )
-            # self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
-            self.clickhouse_binary_path = f"../binaries/{package_name}"
+                package_name = os.path.basename(self.clickhouse_binary_path)
+                self.clickhouse_docker_image_name = f"clickhouse-regression:{self.base_os.replace(':','-')}-{package_name}"
+                self.clickhouse_binary_path = os.path.relpath(
+                    self.clickhouse_binary_path
+                )
 
             with Shell() as bash:
                 bash.timeout = 300
@@ -1816,9 +1816,9 @@ class Cluster(object):
                     self.clickhouse_docker_image_name
                 )
                 self.environ["CLICKHOUSE_TESTS_BASE_OS"] = self.base_os
-                self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] = self.base_os.split(":")[
-                    0
-                ]
+                self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] = (
+                    "" if not self.base_os else self.base_os.split(":")[0]
+                )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
                     self.keeper_docker_image or self.clickhouse_docker_image_name
                 )
@@ -1826,7 +1826,7 @@ class Cluster(object):
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
 
-        def start_cluster(max_up_attempts=1):
+        def start_cluster(max_up_attempts=3):
             if not self.reuse_env:
                 with By("pulling images for all the services"):
                     cmd = self.command(
@@ -1918,8 +1918,8 @@ class Cluster(object):
 
             return False
 
-        with Given("docker-compose"):
-            max_attempts = 5
+        with Given("start the cluster"):
+            max_attempts = 1
             for attempt in range(max_attempts):
                 with When(f"attempt {attempt}/{max_attempts}"):
                     running = start_cluster(max_up_attempts=3)
