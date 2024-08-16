@@ -2,12 +2,12 @@ version: "2.3"
 
 services:
   keeper:
-    image: $KEEPER_DOCKER_IMAGE
+    image: $CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE
     build:
       context: .
       dockerfile: keeper.Dockerfile
       args:
-        KEEPER_DOCKER_IMAGE: $KEEPER_DOCKER_IMAGE
+        KEEPER_DOCKER_IMAGE: $CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE
     expose:
       - "2181"
     init: true
