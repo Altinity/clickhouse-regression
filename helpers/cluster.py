@@ -1261,7 +1261,9 @@ class Cluster(object):
         self._control_shell = None
         self.environ = {} if (environ is None) else environ
         self.clickhouse_binary_path = clickhouse_binary_path
-        self.base_os = base_os
+        # Don't set base_os until we know if we have images or packages
+        self.base_os = None
+        self.keeper_base_os = None
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
         self.zookeeper_version = zookeeper_version
@@ -1280,7 +1282,7 @@ class Cluster(object):
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
         self.clickhouse_docker_image_name = None
-        self.keeper_docker_image = None
+        self.keeper_docker_image_name = None
 
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
         with Shell() as bash:
@@ -1414,23 +1416,14 @@ class Cluster(object):
                     self.clickhouse_binary_path
                 )
 
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"chmod +x {self.clickhouse_binary_path}")
+            # with Shell() as bash:
+            #     bash.timeout = 300
+            #     bash(f"chmod +x {self.clickhouse_binary_path}")
 
         if self.keeper_binary_path:
-            if self.keeper_binary_path.startswith(("http://", "https://")):
-                with Given(
-                    "I download ClickHouse Keeper server binary",
-                    description=f"{self.keeper_binary_path}",
-                ):
-                    self.keeper_binary_path = download_http_binary(
-                        binary_source=self.keeper_binary_path
-                    )
-
-            elif self.keeper_binary_path.startswith("docker://"):
+            if self.keeper_binary_path.startswith("docker://"):
                 docker_path = self.keeper_binary_path
-                self.keeper_docker_image = docker_path.split("docker://", 1)[-1]
+                self.keeper_docker_image_name = docker_path.split("docker://", 1)[-1]
                 if getsattr(current().context, "keeper_version", None) is None:
                     parsed_version = parse_version_from_docker_path(docker_path)
                     if parsed_version:
@@ -1445,20 +1438,34 @@ class Cluster(object):
                     container_binary_path="/usr/bin/clickhouse-keeper",
                 )
 
-            if self.keeper_binary_path.endswith(".deb"):
-                with Given(
-                    "unpack deb package", description=f"{self.keeper_binary_path}"
-                ):
-                    self.keeper_binary_path = unpack_deb(
-                        deb_binary_path=self.keeper_binary_path,
-                        program_name="clickhouse-keeper",
-                    )
+            else:
+                assert base_os is not None, error("base_os must be specified")
+                self.keeper_base_os = base_os.split("docker://", 1)[-1]
 
-            self.keeper_binary_path = os.path.abspath(self.keeper_binary_path)
+                if self.keeper_binary_path.startswith(("http://", "https://")):
+                    with Given(
+                        "I download ClickHouse Keeper server binary",
+                        description=f"{self.keeper_binary_path}",
+                    ):
+                        self.keeper_binary_path = download_http_binary(
+                            binary_source=self.keeper_binary_path
+                        )
 
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"chmod +x {self.keeper_binary_path}")
+                # if self.keeper_binary_path.endswith(".deb"):
+                #     with Given(
+                #         "unpack deb package", description=f"{self.keeper_binary_path}"
+                #     ):
+                #         self.keeper_binary_path = unpack_deb(
+                #             deb_binary_path=self.keeper_binary_path,
+                #             program_name="clickhouse-keeper",
+                #         )
+                package_name = os.path.basename(self.keeper_binary_path)
+                self.keeper_docker_image_name = f"clickhouse-regression:{self.keeper_base_os.replace(':','-')}-{package_name}"
+                self.keeper_binary_path = os.path.relpath(self.keeper_binary_path)
+
+            # with Shell() as bash:
+            #     bash.timeout = 300
+            #     bash(f"chmod +x {self.keeper_binary_path}")
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1787,7 +1794,8 @@ class Cluster(object):
                         self.clickhouse_binary_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
-                    assert os.path.exists(self.clickhouse_binary_path)
+                    if self.base_os:  # check that we are not in docker mode
+                        assert os.path.exists(self.clickhouse_binary_path)
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
@@ -1817,15 +1825,16 @@ class Cluster(object):
                 )
                 self.environ["CLICKHOUSE_TESTS_BASE_OS"] = self.base_os
                 self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] = (
-                    "" if not self.base_os else self.base_os.split(":")[0]
+                    "clickhouse" if not self.base_os else self.base_os.split(":")[0]
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
-                    self.keeper_docker_image or self.clickhouse_docker_image_name
+                    self.keeper_docker_image_name or self.clickhouse_docker_image_name
                 )
+                self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS"] = self.keeper_base_os
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] = (
-                    ""
-                    if self.keeper_docker_image
-                    else self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"]
+                    "keeper"
+                    if not self.keeper_base_os
+                    else self.keeper_base_os.split(":")[0]
                 )
 
             with And("I list environment variables to show their values"):
