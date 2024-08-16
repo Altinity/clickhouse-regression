@@ -7,7 +7,7 @@ from aggregate_functions.requirements import (
 @TestCheck
 def datatype(self, func, table, col_name):
     """Check different column types."""
-    self.context.node.query(f"select {col_name} from {table.name} format values")
+    # self.context.node.query(f"select {col_name} from {table.name} format values")
     execute_query(
         f"SELECT {func.format(params=col_name)}, any(toTypeName({col_name})) FROM {table.name}"
     )
