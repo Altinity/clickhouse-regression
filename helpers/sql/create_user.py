@@ -5,7 +5,13 @@ from collections import namedtuple
 
 from .query import Query
 
-User = namedtuple("User", ["name", "cluster"])
+Username = namedtuple(
+    "Username",
+    ["name", "cluster"],
+    defaults=[
+        None,
+    ],
+)
 Identification = namedtuple(
     "Identification",
     [
@@ -58,10 +64,9 @@ class CreateUser(Query):
     """
 
     __slots__ = (
-        "query",
         "if_not_exists",
         "or_replace",
-        "users",
+        "usernames",
         "not_identified",
         "identification",
         "hosts",
@@ -78,7 +83,7 @@ class CreateUser(Query):
         self.query = "CREATE USER"
         self.if_not_exists = False
         self.or_replace = False
-        self.users: list[User] = []
+        self.usernames: list[Username] = []
         self.not_identified = None
         self.identification: list[Identification] = []
         self.hosts = None
@@ -92,10 +97,10 @@ class CreateUser(Query):
     def __repr__(self):
         return (
             "CreateUser("
-            f"query={repr(self.query)}, "
+            f"{super().__repr__()}"
             f"if_not_exists={self.if_not_exists}, "
             f"or_replace={self.or_replace}, "
-            f"users={self.users}, "
+            f"usernames={self.usernames}, "
             f"not_identified={self.not_identified}, "
             f"identification={self.identification}, "
             f"hosts={self.hosts}, "
@@ -117,14 +122,19 @@ class CreateUser(Query):
         self.query += " OR REPLACE"
         return self
 
-    def set_user(self, name, cluster_name=None):
-        self.users.append(User(name, cluster_name))
+    def set_username(self, name, cluster_name=None):
+        self.usernames.append(Username(name, cluster_name))
         user_clause = f" {name}"
         if cluster_name:
             user_clause += f" ON CLUSTER {cluster_name}"
-        if len(self.users) > 1:
+        if len(self.usernames) > 1:
             self.query += ","
         self.query += user_clause
+        return self
+
+    def set_identified(self):
+        if len(self.identification) < 2:
+            self.query += " IDENTIFIED"
         return self
 
     def set_identified_with(self):
@@ -150,11 +160,9 @@ class CreateUser(Query):
 
     def set_by_password(self, password):
         self.identification.append(Identification("password", password))
-        if len(self.identification) < 2:
-            self.query += " BY"
         if len(self.identification) > 1:
             self.query += ","
-        self.query += f" '{password}'"
+        self.query += f" BY '{password}'"
         return self
 
     def set_with_no_password(self):

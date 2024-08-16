@@ -147,7 +147,7 @@ def regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    with Pool(5) as pool:
+    with Pool(6) as pool:
         try:
             Feature(
                 run=load("aes_encryption.tests.encrypt", "feature"),

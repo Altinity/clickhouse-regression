@@ -80,7 +80,7 @@ def scenario(
 
         with Check(f"{column_type}"):
             params = f"{column_name} = 0, {column_name} = 1"
-            self.context.node.query(f"select {column_name} from {table.name}")
+            # self.context.node.query(f"select {column_name} from {table.name}")
             execute_query(
                 f"SELECT {func.format(params=params)}, any(toTypeName(1)), any(toTypeName(1)) FROM {table.name}"
             )

@@ -123,17 +123,15 @@ def create_test_table(
     table_name="test_table",
     cluster_name="'cluster_1replica_3shard'",
     table_engine="ReplicatedSummingMergeTree",
-    graphite=False,
-    collapsing=False,
-    vcollapsing=False,
 ):
     """Table creation step."""
     cluster = self.context.cluster
     node = self.context.cluster.node("clickhouse1")
+    retry_args = {"timeout": 30, "delay": 1}
 
     with Given("I create table"):
-        if graphite == True:
-            retry(node.query, timeout=100, delay=1)(
+        if "Graphite" in table_engine:
+            retry(node.query, **retry_args)(
                 f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
                 f" (d Date, a String, b UInt8, x String, y Int8, Path String, "
                 f"Time DateTime, Value Float64, col UInt64, Timestamp Int64) "
@@ -148,23 +146,8 @@ def create_test_table(
                 steps=False,
             )
 
-        elif collapsing == True:
-            retry(node.query, timeout=100, delay=1)(
-                f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
-                f" (v UInt64, sign Int8 DEFAULT 1) "
-                f"ENGINE = {table_engine}('/clickhouse/tables"
-                "/replicated/{shard}"
-                f"/{table_name}'"
-                ", '{replica}', sign) "
-                "ORDER BY tuple() "
-                "SETTINGS assign_part_uuids=1,"
-                " part_moves_between_shards_enable=1,"
-                " part_moves_between_shards_delay_seconds=0;",
-                steps=False,
-            )
-
-        elif vcollapsing == True:
-            retry(node.query, timeout=100, delay=1)(
+        elif "VersionedCollapsing" in table_engine:
+            retry(node.query, **retry_args)(
                 f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
                 f" (v UInt64, sign Int8 DEFAULT 1, version UInt64) "
                 f"ENGINE = {table_engine}('/clickhouse/tables"
@@ -178,8 +161,38 @@ def create_test_table(
                 steps=False,
             )
 
+        elif "Collapsing" in table_engine:
+            retry(node.query, **retry_args)(
+                f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
+                f" (v UInt64, sign Int8 DEFAULT 1) "
+                f"ENGINE = {table_engine}('/clickhouse/tables"
+                "/replicated/{shard}"
+                f"/{table_name}'"
+                ", '{replica}', sign) "
+                "ORDER BY tuple() "
+                "SETTINGS assign_part_uuids=1,"
+                " part_moves_between_shards_enable=1,"
+                " part_moves_between_shards_delay_seconds=0;",
+                steps=False,
+            )
+
+        elif "Summing" in table_engine:
+            retry(node.query, **retry_args)(
+                f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
+                f" (v UInt64) "
+                f"ENGINE = {table_engine}('/clickhouse/tables"
+                "/replicated/{shard}"
+                f"/{table_name}'"
+                ", '{replica}', v) "
+                "ORDER BY tuple() "
+                "SETTINGS assign_part_uuids=1,"
+                " part_moves_between_shards_enable=1,"
+                " part_moves_between_shards_delay_seconds=3;",
+                steps=False,
+            )
+
         else:
-            retry(node.query, timeout=100, delay=1)(
+            retry(node.query, **retry_args)(
                 f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
                 f" (v UInt64) "
                 f"ENGINE = {table_engine}('/clickhouse/tables"
@@ -200,9 +213,6 @@ def create_test_table_with_insert(
     table_name="test_table",
     cluster_name="'cluster_1replica_3shard'",
     table_engine="ReplicatedSummingMergeTree",
-    graphite=False,
-    collapsing=False,
-    vcollapsing=False,
 ):
     """Table creation step with simple data insert."""
 
@@ -211,9 +221,6 @@ def create_test_table_with_insert(
             table_name=table_name,
             cluster_name=cluster_name,
             table_engine=table_engine,
-            graphite=graphite,
-            collapsing=collapsing,
-            vcollapsing=vcollapsing,
         )
 
     with And("I stop merges"):
