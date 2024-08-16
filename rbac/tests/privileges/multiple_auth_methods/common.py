@@ -1,11 +1,7 @@
 from testflows.core import *
-from testflows.asserts import error
 from testflows.combinatorics import combinations
 
-from rbac.requirements import *
 from rbac.helper.common import *
-
-from helpers.common import getuid
 
 
 plaintext_password = "some_password_1"
@@ -77,3 +73,36 @@ def generate_auth_combinations(auth_methods_dict, max_length=2, with_replacement
             )
         )
     return auth_combinations
+
+
+@TestStep(Then)
+def execute_query(self, query, expected=None, node=None, exitcode=None, message=None):
+    if node is None:
+        node = self.context.node
+
+    if expected is not None:
+        exitcode, message = expected()
+
+    r = node.query(query, exitcode=exitcode, message=message)
+    return r.output
+
+
+@TestStep(Then)
+def login(
+    self, user_name, password="", node=None, exitcode=None, message=None, expected=None
+):
+    if node is None:
+        node = self.context.node
+
+    if exitcode is None:
+        message = user_name
+
+    if expected is not None:
+        exitcode, message = expected()
+
+    node.query(
+        f"SELECT currentUser()",
+        settings=[("user", user_name), ("password", password)],
+        exitcode=exitcode,
+        message=message,
+    )

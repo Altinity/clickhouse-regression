@@ -110,33 +110,54 @@ def invalid_parameters(self):
     ciphertext = "unhex('AA1826B5F66A903C888D5DCDA9FB63D1D9CCA10EC55F59D6C00D37')"
 
     with Example("no parameters"):
-        decrypt(
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function decrypt provided 0, expected 3 to 5",
-        )
+        if check_clickhouse_version("<24.7")(self):
+            decrypt(
+                exitcode=42,
+                message="DB::Exception: Incorrect number of arguments for function decrypt provided 0, expected 3 to 5",
+            )
+        else:
+            decrypt(
+                exitcode=42,
+                message="DB::Exception: An incorrect number of arguments was specified for function 'decrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 0 arguments",
+            )
 
     with Example("missing key and mode"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function decrypt provided 1"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'decrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 1 argument"
         decrypt(
             ciphertext=ciphertext,
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function decrypt provided 1",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("missing mode"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function decrypt provided 2"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'decrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 2 arguments"
         decrypt(
             ciphertext=ciphertext,
             key="'123'",
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function decrypt provided 2",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad key type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3"
+        else:
+            message = "DB::Exception: Received from localhost:9000. DB::Exception: A value of illegal type was provided as 3rd argument 'key' to function 'decrypt'."
         decrypt(
             ciphertext=ciphertext,
             key="123",
             mode="'aes-128-ecb'",
-            exitcode=43,
-            message="DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad mode type - forgot quotes"):
@@ -158,33 +179,48 @@ def invalid_parameters(self):
         )
 
     with Example("bad mode type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #1 'mode'"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 1st argument 'mode' to function 'decrypt'. Expected: decryption mode string, got: UInt8"
         decrypt(
             ciphertext=ciphertext,
             key="'0123456789123456'",
             mode="128",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument #1 'mode'",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad iv type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'decrypt'. Expected: Initialization vector binary string, got: UInt8"
         decrypt(
             ciphertext=ciphertext,
             key="'0123456789123456'",
             mode="'aes-128-cbc'",
             iv="128",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad aad type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 4th argument 'AAD' to function 'decrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8"
         decrypt(
             ciphertext=ciphertext,
             key="'0123456789123456'",
             mode="'aes-128-gcm'",
             iv="'012345678912'",
             aad="123",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example(
