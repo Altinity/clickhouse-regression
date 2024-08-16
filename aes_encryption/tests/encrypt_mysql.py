@@ -121,7 +121,7 @@ def invalid_parameters(self):
 
     with Example("bad mode type - forgot quotes"):
         exitcode = 47
-        if is_with_analyzer(node=self.context.node):    
+        if is_with_analyzer(node=self.context.node):
             message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
         else:
             message = (
@@ -298,13 +298,18 @@ def invalid_plaintext_data_type(self, data_type, value):
         "I try to encrypt plaintext with invalid data type",
         description=f"{data_type} with value {value}",
     ):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument"
+        else:
+            message = "DB::Exception: A value of illegal type was provided"
         aes_encrypt_mysql(
             plaintext=value,
             key="'0123456789123456'",
             mode="'aes-128-cbc'",
             iv="'0123456789123456'",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument",
+            exitcode=exitcode,
+            message=message,
         )
 
 

@@ -46,41 +46,61 @@ def invalid_parameters(self):
     we call it with invalid parameters.
     """
     with Example("no parameters"):
-        encrypt(
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function encrypt provided 0, expected 3 to 5",
-        )
+        if check_clickhouse_version("<24.7")(self):
+            encrypt(
+                exitcode=42,
+                message="DB::Exception: Incorrect number of arguments for function encrypt provided 0, expected 3 to 5",
+            )
+        else:
+            encrypt(
+                exitcode=42,
+                message="DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 0 arguments",
+            )
 
     with Example("missing key and mode"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function encrypt provided 1"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 1 argument"
         encrypt(
             plaintext="'hello there'",
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function encrypt provided 1",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("missing mode"):
+        exitcode = 42
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Incorrect number of arguments for function encrypt provided 2"
+        else:
+            message = "DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 2 arguments"
         encrypt(
             plaintext="'hello there'",
             key="'123'",
-            exitcode=42,
-            message="DB::Exception: Incorrect number of arguments for function encrypt provided 2",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad key type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 3rd argument 'key' to function 'encrypt'. Expected: encryption key binary string, got: UInt8"
         encrypt(
             plaintext="'hello there'",
             key="123",
             mode="'aes-128-ecb'",
-            exitcode=43,
-            message="DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad mode type - forgot quotes"):
+        exitcode = 47
         if is_with_analyzer(node=self.context.node):
-            exitcode = 47
             message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
         else:
-            exitcode = 47
             message = (
                 "DB::Exception: Missing columns: 'ecb' 'aes' while processing query"
             )
@@ -94,33 +114,48 @@ def invalid_parameters(self):
         )
 
     with Example("bad mode type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument #1 'mode'"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 1st argument 'mode' to function 'encrypt'. Expected: encryption mode string, got: UInt8"
         encrypt(
             plaintext="'hello there'",
             key="'0123456789123456'",
             mode="128",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument #1 'mode'",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad iv type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'encrypt'. Expected: Initialization vector binary string, got: UInt8"
         encrypt(
             plaintext="'hello there'",
             key="'0123456789123456'",
             mode="'aes-128-cbc'",
             iv="128",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example("bad aad type - UInt8"):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 4th argument 'AAD' to function 'encrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8"
         encrypt(
             plaintext="'hello there'",
             key="'0123456789123456'",
             mode="'aes-128-gcm'",
             iv="'012345678912'",
             aad="123",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Example(
@@ -296,13 +331,18 @@ def invalid_plaintext_data_type(self, data_type, value):
         "I try to encrypt plaintext with invalid data type",
         description=f"{data_type} with value {value}",
     ):
+        exitcode = 43
+        if check_clickhouse_version("<24.7")(self):
+            message = "DB::Exception: Illegal type of argument"
+        else:
+            message = f"DB::Exception: A value of illegal type was provided as 2nd argument 'input' to function 'encrypt'."
         encrypt(
             plaintext=value,
             key="'0123456789123456'",
             mode="'aes-128-cbc'",
             iv="'0123456789123456'",
-            exitcode=43,
-            message="DB::Exception: Illegal type of argument",
+            exitcode=exitcode,
+            message=message,
         )
 
 
