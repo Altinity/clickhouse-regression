@@ -7,8 +7,7 @@ RUN apt-get install -y ca-certificates
 ARG CLICKHOUSE_PACKAGE
 
 # Debugging
-RUN dd if=/dev/urandom of=/tmp/skipcache bs=1M count=1
-RUN echo "CLICKHOUSE_PACKAGE: $CLICKHOUSE_PACKAGE"
+RUN echo "CLICKHOUSE_PACKAGE: $CLICKHOUSE_PACKAGE" > /tmp/clickhouse_package
 
 RUN test -n "$CLICKHOUSE_PACKAGE"
 COPY $CLICKHOUSE_PACKAGE /tmp/clickhouse.deb
