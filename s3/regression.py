@@ -290,7 +290,7 @@ ffails = {
 }
 
 
-@TestModule
+@TestFeature
 @Name("minio")
 def minio_regression(
     self,
@@ -365,7 +365,7 @@ def minio_regression(
         )
 
 
-@TestModule
+@TestFeature
 @Name("aws s3")
 def aws_s3_regression(
     self,
@@ -452,7 +452,7 @@ def aws_s3_regression(
         Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
-@TestModule
+@TestFeature
 @Name("gcs")
 def gcs_regression(
     self,
@@ -579,7 +579,7 @@ def regression(
         )
 
     assert storage_module is not None
-    Module(test=storage_module)(
+    Feature(test=storage_module)(
         cluster_args=cluster_args,
         with_analyzer=with_analyzer,
         **storage_module_kwargs,
