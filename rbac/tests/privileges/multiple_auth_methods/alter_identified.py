@@ -1,4 +1,14 @@
-from rbac.tests.privileges.multiple_auth_methods.common import *
+from testflows.core import *
+from testflows.asserts import error
+
+from rbac.tests.privileges.multiple_auth_methods.common import (
+    create_user,
+    generate_auth_combinations,
+    authentication_methods_with_passwords,
+)
+from rbac.requirements import *
+
+from helpers.common import getuid
 
 
 @TestScenario
