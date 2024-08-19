@@ -219,6 +219,9 @@ xfails = {
             check_clickhouse_version("<24.4"),
         ),
     ],
+    "/rbac/privileges/multiple authentication methods/syntax/invalid query ALTER USER ADD NOT IDENTIFIED/*": [
+        (Fail, "Under discussion", check_clickhouse_version(">24.7")),
+    ],
 }
 
 xflags = {
