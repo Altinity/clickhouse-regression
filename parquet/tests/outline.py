@@ -54,7 +54,9 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
                 assert that(
                     snapshot(
                         import_column_structure.output.strip(),
-                        name=snapshot_name,
+                        name=snapshot_name + "_22_4"
+                        if check_clickhouse_version("<=22.4")(self)
+                        else snapshot_name,
                         id=snapshot_id,
                         mode=snapshot.CHECK,
                     )
