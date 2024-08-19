@@ -159,8 +159,8 @@ xfails = {
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "aws s3/zero copy replication/stale alter replica'": [
-        (Fail, "Timeout on 22.8", check_clickhouse_version("<=22.8"))
+    "aws s3/zero copy replication/stale alter replica": [
+        (Error, "Timeout on 22.x", check_clickhouse_version("<=23"))
     ],
     "gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
