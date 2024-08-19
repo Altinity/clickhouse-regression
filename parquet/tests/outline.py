@@ -56,6 +56,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
                         import_column_structure.output.strip(),
                         name=snapshot_name,
                         id=snapshot_id,
+                        mode=snapshot.CHECK,
                     )
                 ), error()
 
