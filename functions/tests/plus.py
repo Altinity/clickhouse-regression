@@ -35,8 +35,9 @@ def floats(self, client=None):
 @Name("plus")
 def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
+    bash_tools = self.context.cluster.node("bash-tools")
 
-    with self.context.node.client() as client:
+    with bash_tools.client(client_args={"host": node}) as client:
         self.context.client = client
         for scenario in loads(current_module(), Scenario):
             scenario()
