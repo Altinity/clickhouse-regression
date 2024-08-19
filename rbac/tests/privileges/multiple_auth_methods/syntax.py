@@ -411,6 +411,29 @@ def alter_user_trailing_comma_syntax_error(self):
             common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
 
 
+@TestScenario
+@Name("invalid query ALTER USER ADD NOT IDENTIFIED")
+def alter_user_add_not_identified_syntax_error(self):
+    """Check that ALTER USER ADD NOT IDENTIFIED is invalid query."""
+    try:
+        with Given("create user with no password"):
+            user_name = f"user_{getuid()}"
+            common.execute_query(query=f"CREATE USER {user_name}")
+
+        with When("construct ALTER USER ADD NOT IDENTIFIED query"):
+            query = f"ALTER USER {user_name} ADD NOT IDENTIFIED"
+            note(query)
+
+        with Then("expect syntax error"):
+            common.execute_query(query=query, expected=errors.syntax_error)
+
+        with And("check that user can login without password"):
+            common.login(user_name=user_name)
+    finally:
+        with Finally("drop user"):
+            common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
 @TestFeature
 @Name("syntax")
 def feature(self, node="clickhouse1"):
