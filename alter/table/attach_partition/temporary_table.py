@@ -16,10 +16,11 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
     """Check if it is possible to use attach partition with temporary tables."""
 
     node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
     table_name = getuid()
 
     with Given("I open a single clickhouse instance"):
-        with node.client() as client:
+        with bash_tools.client(client_args={"host": node.name}) as client:
             with Given(
                 "I create a table",
                 description=f"""
@@ -114,6 +115,7 @@ def check_attach_partition_from_with_temporary_tables(
     """Check if it is possible to use attach partition from with temporary tables."""
 
     node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
     destination_table_name = "destination_" + getuid()
     source_table_name = "source_" + getuid()
 
@@ -132,7 +134,7 @@ def check_attach_partition_from_with_temporary_tables(
             )
 
     with Given("I open a single clickhouse instance"):
-        with node.client() as client:
+        with bash_tools.client(client_args={"host": node.name}) as client:
             with Given(
                 "I create two tables with specified engines and types",
                 description=f"""
