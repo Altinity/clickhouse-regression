@@ -63,6 +63,11 @@ services:
       zookeeper1:
         condition: service_healthy
 
+  bash-tools:
+    extends:
+      file: ../../docker-compose/bash-tools.yml
+      service: bash-tools
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:
