@@ -106,3 +106,37 @@ def login(
         exitcode=exitcode,
         message=message,
     )
+
+
+@TestStep(Given)
+def change_server_settings(
+    self,
+    entries=None,
+    setting=None,
+    value=None,
+    modify=False,
+    restart=True,
+    format=None,
+    user=None,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    preprocessed_name="config.xml",
+    node=None,
+):
+    """Create configuration file and add it to the server."""
+    if entries is None:
+        entries = {
+            f"{setting}": f"{value}",
+        }
+    with By("converting config file content to xml"):
+        config = create_xml_config_content(
+            entries,
+            "change_settings.xml",
+            config_d_dir=config_d_dir,
+            preprocessed_name=preprocessed_name,
+        )
+        if format is not None:
+            for key, value in format.items():
+                config.content = config.content.replace(key, value)
+
+    with And("adding xml config file to the server"):
+        return add_config(config, restart=restart, modify=modify, user=user, node=node)

@@ -57,6 +57,14 @@ def feature(self):
             )
             Feature(
                 run=load(
+                    "rbac.tests.privileges.multiple_auth_methods.sanity",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
                     "rbac.tests.privileges.multiple_auth_methods.many_auth_methods",
                     "feature",
                 ),
@@ -71,5 +79,13 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
+            # Feature(
+            #     run=load(
+            #         "rbac.tests.privileges.multiple_auth_methods.on_cluster",
+            #         "feature",
+            #     ),
+            #     parallel=True,
+            #     executor=pool,
+            # )
         finally:
             join()
