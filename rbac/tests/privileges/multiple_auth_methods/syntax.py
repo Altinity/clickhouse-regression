@@ -436,9 +436,7 @@ def alter_user_add_not_identified_syntax_error(self):
 
 @TestFeature
 @Name("syntax")
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check syntax when creating or altering user with one or multiple auth methods."""
-    self.context.node = self.context.cluster.node(node)
-
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario, flags=TE)

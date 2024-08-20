@@ -140,11 +140,11 @@ def create_user_with_multiple_auth_methods(self, auth_methods, node=None):
 @Name("check create user with multiple auth methods")
 def check_create_user_with_multiple_auth_methods(self):
     """Run create user with multiple auth methods test with all combinations of auth methods."""
-    auth_methods = generate_auth_combinations(
+    auth_methods_combinations = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
     )
     with Pool(6) as executor:
-        for num, auth_methods in enumerate(auth_methods):
+        for num, auth_methods in enumerate(auth_methods_combinations):
             Scenario(
                 f"{num}",
                 test=create_user_with_multiple_auth_methods,
