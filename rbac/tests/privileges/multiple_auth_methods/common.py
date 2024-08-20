@@ -2,6 +2,8 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from rbac.helper.common import *
+from helpers.sql.create_user import CreateUser
+import rbac.tests.privileges.multiple_auth_methods.actions as actions
 
 
 plaintext_password = "some_password_1"
@@ -106,3 +108,67 @@ def login(
         exitcode=exitcode,
         message=message,
     )
+
+
+@TestStep(Given)
+def change_server_settings(
+    self,
+    entries=None,
+    setting=None,
+    value=None,
+    modify=False,
+    restart=True,
+    format=None,
+    user=None,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    preprocessed_name="config.xml",
+    node=None,
+):
+    """Create configuration file and add it to the server."""
+    if entries is None:
+        entries = {
+            f"{setting}": f"{value}",
+        }
+    with By("converting config file content to xml"):
+        config = create_xml_config_content(
+            entries,
+            "change_settings.xml",
+            config_d_dir=config_d_dir,
+            preprocessed_name=preprocessed_name,
+        )
+        if format is not None:
+            for key, value in format.items():
+                config.content = config.content.replace(key, value)
+
+    with And("adding xml config file to the server"):
+        return add_config(config, restart=restart, modify=modify, user=user, node=node)
+
+
+@TestStep(Given)
+def create_user_with_two_plaintext_passwords(self, user_name):
+    """I create user with two plain text passwords"""
+
+    user_auth_methods = [
+        actions.partial(CreateUser.set_with_plaintext_password, password="123"),
+        actions.partial(CreateUser.set_with_plaintext_password, password="456"),
+    ]
+
+    return actions.create_user(user_name=user_name, auth_methods=user_auth_methods)
+
+
+@TestStep(Then)
+def check_login(self, user, altered_user=None):
+    """Check login with old and new authentication methods."""
+
+    with Then("I try to login using old authentication methods"):
+        actions.login(user=user)
+
+    if altered_user:
+        with And("I try to login using new authentication methods"):
+            actions.login(user=altered_user)
+
+        with And("I try to login with slightly invalid passwords"):
+            actions.login_with_wrong_password(user=altered_user)
+
+        with And("I try to login with slightly wrong username"):
+            actions.login_with_wrong_username(user=altered_user)

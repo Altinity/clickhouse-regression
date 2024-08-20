@@ -22,4 +22,3 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/system_unfreeze.xml:/etc/clickhouse-server/config.d/system_unfreeze.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
-      - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"

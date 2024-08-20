@@ -1,7 +1,7 @@
 import testflows.settings as settings
 from testflows.core import current, debug
 
-import rbac.tests.privileges.multiple_auth_methods_v2.actions as actions
+import rbac.tests.privileges.multiple_auth_methods.actions as actions
 
 from helpers.sql.create_user import CreateUser
 from helpers.sql.alter_user import AlterUser
