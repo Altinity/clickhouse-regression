@@ -120,7 +120,7 @@ def check_changing_auth_methods(self, auth_methods, node=None):
 
 
 @TestScenario
-@Name("check alter user identified with multiple auth methods")
+@Name("changing auth methods")
 def changing_auth_methods(self):
     """Check that user can be altered with all combinations of multiple authentication methods."""
     auth_methods = generate_auth_combinations(
@@ -161,7 +161,7 @@ def check_changing_auth_methods_v2(self, auth_methods, node=None):
 
 
 @TestScenario
-@Name("changing auth methods")
+@Name("changing auth methods v2")
 def changing_auth_methods_v2(self):
     """Check that user can be altered with multiple authentication methods."""
     self.context.model = models.Model()

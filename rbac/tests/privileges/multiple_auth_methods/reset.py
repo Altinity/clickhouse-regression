@@ -87,7 +87,7 @@ def check_reset_to_new(self, auth_methods, node=None):
 
 
 @TestScenario
-@Name("check alter user reset auth methods")
+@Name("check resetting auth methods")
 def resetting_auth_methods(self):
     """Run test that check RESET AUTHENTICATION METHODS TO NEW with different auth methods combinations."""
     auth_methods = generate_auth_combinations(
@@ -131,7 +131,7 @@ def check_reset_to_new_v2(self, auth_methods, node=None):
 
 
 @TestScenario
-@Name("resetting auth methods")
+@Name("check resetting auth methods v2")
 def resetting_auth_methods_v2(self):
     """Run test that check RESET AUTHENTICATION METHODS TO NEW with different auth methods combinations."""
     self.context.model = models.Model()
@@ -151,7 +151,7 @@ def resetting_auth_methods_v2(self):
 
 
 @TestFeature
-@Name("reset authentication methods")
+@Name("reset to new")
 def feature(self, node="clickhouse1"):
     """Check support of ALTER USER RESET AUTHENTICATION METHODS TO NEW statement."""
     self.context.node = self.context.cluster.node(node)
