@@ -6,8 +6,8 @@ from helpers.sql.create_user import CreateUser, Username
 from helpers.sql.alter_user import AlterUser
 from helpers.sql.drop_user import DropUser
 
-import rbac.tests.privileges.multiple_auth_methods_v2.actions as actions
-import rbac.tests.privileges.multiple_auth_methods_v2.model as models
+import rbac.tests.privileges.multiple_auth_methods.actions as actions
+import rbac.tests.privileges.multiple_auth_methods.model as models
 
 
 @TestStep(Given)
@@ -125,7 +125,7 @@ def combination_of_actions(self, combination, node=None):
 @Name("combinations")
 def feature(self, number_of_actions=3):
     """Check different combinations of sequences of creating,
-    altering and droping users with multiple authentication methods.
+    altering and dropping users with multiple authentication methods.
     """
     ways = []
     self.context.model = models.Model()
