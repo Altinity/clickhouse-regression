@@ -1,13 +1,17 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from rbac.requirements import *
 from rbac.tests.privileges.multiple_auth_methods.common import (
     create_user,
     generate_auth_combinations,
     authentication_methods_with_passwords,
-    add_identified
+    check_login,
+    create_user_with_two_plaintext_passwords,
+    add_identified,
 )
-from rbac.requirements import *
+import rbac.tests.privileges.multiple_auth_methods.actions as actions
+import rbac.tests.privileges.multiple_auth_methods.model as models
 
 from helpers.common import getuid
 
@@ -17,7 +21,7 @@ from helpers.common import getuid
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified("1.0"),
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword("1.0"),
 )
-def check_add_identified(self, auth_methods, node=None):
+def check_adding_auth_methods(self, auth_methods, node=None):
     """Check that one or more authentication methods can be added to the user
     using ALTER USER ADD IDENTIFIED statement."""
     node = node or self.context.node
@@ -113,11 +117,10 @@ def check_add_identified(self, auth_methods, node=None):
             assert system_auth_type == "plaintext_password", error()
 
 
-@TestFeature
-@Name("add identified")
-def feature(self, node="clickhouse1"):
-    """Check support of ALTER USER ADD IDENTIFIED statement with one or multiple
-    authentication methods."""
+@TestScenario
+@Name("adding auth methods")
+def adding_auth_methods(self, node="clickhouse1"):
+    """Check that multiple authentication methods can be added to a user."""
     self.context.node = self.context.cluster.node(node)
     auth_methods = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
@@ -126,8 +129,62 @@ def feature(self, node="clickhouse1"):
         for num, auth_methods in enumerate(auth_methods):
             Scenario(
                 f"{num}",
-                test=check_add_identified,
+                test=check_adding_auth_methods,
                 parallel=True,
                 executor=executor,
             )(auth_methods=auth_methods)
+        join()
+
+
+@TestScenario
+def check_adding_auth_methods_v2(self, auth_methods, node=None):
+    """Check adding new authentication methods."""
+    if node is None:
+        node = self.context.node
+
+    user_name = f"user_{getuid()}"
+    self.context.behavior = []
+
+    with Given("I have client"):
+        self.context.client = actions.node_client()
+
+    with And("I create user with two plain text passwords"):
+        user = create_user_with_two_plaintext_passwords(user_name=user_name)
+
+    with When("I alter user to add authentication methods"):
+        altered_user = actions.alter_user_add(user=user, auth_methods=auth_methods)
+
+    with Then("I try to login"):
+        check_login(user=user, altered_user=altered_user)
+
+
+@TestScenario
+@Name("adding auth methods v2")
+def adding_auth_methods_v2(self):
+    """Check that multiple authentication methods can be added to a user."""
+    self.context.model = models.Model()
+    node = self.context.node
+
+    auth_methods_combinations = actions.alter_user_auth_combinations(max_length=2)
+
+    with Pool(4) as executor:
+        for num, auth_methods in enumerate(auth_methods_combinations):
+            Scenario(
+                f"#{num} {actions.names(auth_methods)}",
+                test=check_adding_auth_methods,
+                parallel=True,
+                executor=executor,
+            )(node=node, auth_methods=auth_methods)
+        join()
+
+
+@TestFeature
+@Name("add identified")
+def feature(self, node="clickhouse1"):
+    """Check support of ALTER USER ADD IDENTIFIED statement with one or multiple
+    authentication methods."""
+    self.context.node = self.context.cluster.node(node)
+    with Pool(2) as executor:
+        Scenario(test=adding_auth_methods, parallel=True, executor=executor)()
+        # Scenario(test=adding_auth_methods_v2, parallel=True, executor=executor)()
         join()
