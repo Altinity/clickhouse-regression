@@ -171,7 +171,7 @@ def adding_auth_methods_v2(self):
         for num, auth_methods in enumerate(auth_methods_combinations):
             Scenario(
                 f"#{num} {actions.names(auth_methods)}",
-                test=check_adding_auth_methods,
+                test=check_adding_auth_methods_v2,
                 parallel=True,
                 executor=executor,
             )(node=node, auth_methods=auth_methods)
@@ -179,7 +179,7 @@ def adding_auth_methods_v2(self):
 
 
 @TestFeature
-@Name("add identified")
+@Name("alter add identified")
 def feature(self, node="clickhouse1"):
     """Check support of ALTER USER ADD IDENTIFIED statement with one or multiple
     authentication methods."""
