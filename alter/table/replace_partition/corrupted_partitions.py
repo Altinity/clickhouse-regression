@@ -22,7 +22,9 @@ def corrupt_parts_on_table_partition(self, table_name, parts, bits_to_corrupt=15
     ):
         for part in parts:
             node.command(
-                f"corrupt_file /var/lib/clickhouse/data/default/{table_name}/{part}/data.bin {bits_to_corrupt}"
+                "/usr/bin/bash-tools/python3 /usr/bin/corrupt_file "
+                f"/var/lib/clickhouse/data/default/{table_name}/{part}/data.bin {bits_to_corrupt}",
+                message="Corrupted",
             )
 
 
