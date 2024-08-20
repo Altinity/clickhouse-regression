@@ -160,9 +160,8 @@ def check_create_user_with_multiple_auth_methods(self):
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser("1.0"),
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword("1.0"),
 )
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check that user can be created with multiple authentication methods."""
-    self.context.node = self.context.cluster.node(node)
     with Pool(2) as executor:
         # Scenario(test=check_create_user_v2, parallel=True, executor=executor)()
         Scenario(

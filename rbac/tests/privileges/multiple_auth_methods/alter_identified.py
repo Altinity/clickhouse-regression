@@ -186,9 +186,8 @@ def changing_auth_methods_v2(self):
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser("1.0"),
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword("1.0"),
 )
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check support of multiple authentication methods in ALTER USER IDENTIFIED WITH statement."""
-    self.context.node = self.context.cluster.node(node)
     with Pool(2) as executor:
         Scenario(test=changing_auth_methods, parallel=True, executor=executor)()
         # Scenario(test=changing_auth_methods_v2, parallel=True, executor=executor)()

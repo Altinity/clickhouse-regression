@@ -91,10 +91,8 @@ def create_user_not_identified(self):
 
 @TestFeature
 @Name("sanity check")
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check syntax when creating or altering user with one or multiple auth methods."""
-    self.context.node = self.context.cluster.node(node)
-
     with Pool(3) as executor:
         for scenario in loads(current_module(), Scenario):
             Scenario(run=scenario, flags=TE, parallel=True, executor=executor)

@@ -5,8 +5,9 @@ from rbac.helper.common import *
 
 @TestFeature
 @Name("multiple authentication methods")
-def feature(self):
+def feature(self, node="clickhouse1"):
     """Check that multiple authentication methods support."""
+    self.context.node = self.context.cluster.node(node)
     with Pool(4) as pool:
         try:
             Feature(
@@ -18,7 +19,7 @@ def feature(self):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.add_identified",
+                    "rbac.tests.privileges.multiple_auth_methods.alter_add_identified",
                     "feature",
                 ),
                 parallel=True,
@@ -79,13 +80,21 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
-            # Feature(
-            #     run=load(
-            #         "rbac.tests.privileges.multiple_auth_methods.on_cluster",
-            #         "feature",
-            #     ),
-            #     parallel=True,
-            #     executor=pool,
-            # )
+            Feature(
+                run=load(
+                    "rbac.tests.privileges.multiple_auth_methods.on_cluster",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
+                    "rbac.tests.privileges.multiple_auth_methods.combinations",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
         finally:
             join()
