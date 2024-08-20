@@ -38,3 +38,5 @@ struct_datetime64_UTC_2_structure = r""""stateId\tTuple(idNum Nullable(Int32), s
 
 tuple_of_nulls_structure = r"""'b_struct\tTuple(b_c_int Nullable(Int32))'"""
 
+large_map_2_structure_22_4 = r"""'raw_header\tMap(String, String)'"""
+
