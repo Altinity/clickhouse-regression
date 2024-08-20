@@ -2,6 +2,8 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from rbac.helper.common import *
+from helpers.sql.create_user import CreateUser
+import rbac.tests.privileges.multiple_auth_methods.actions as actions
 
 
 plaintext_password = "some_password_1"
@@ -140,3 +142,33 @@ def change_server_settings(
 
     with And("adding xml config file to the server"):
         return add_config(config, restart=restart, modify=modify, user=user, node=node)
+
+
+@TestStep(Given)
+def create_user_with_two_plaintext_passwords(self, user_name):
+    """I create user with two plain text passwords"""
+
+    user_auth_methods = [
+        actions.partial(CreateUser.set_with_plaintext_password, password="123"),
+        actions.partial(CreateUser.set_with_plaintext_password, password="456"),
+    ]
+
+    return actions.create_user(user_name=user_name, auth_methods=user_auth_methods)
+
+
+@TestStep(Then)
+def check_login(self, user, altered_user=None):
+    """Check login with old and new authentication methods."""
+
+    with Then("I try to login using old authentication methods"):
+        actions.login(user=user)
+
+    if altered_user:
+        with And("I try to login using new authentication methods"):
+            actions.login(user=altered_user)
+
+        with And("I try to login with slightly invalid passwords"):
+            actions.login_with_wrong_password(user=altered_user)
+
+        with And("I try to login with slightly wrong username"):
+            actions.login_with_wrong_username(user=altered_user)
