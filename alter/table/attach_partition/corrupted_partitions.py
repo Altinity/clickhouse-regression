@@ -60,7 +60,7 @@ def corrupt_parts_on_table_partition_detached(
             temp_path = f"/share/corrupt_files/{table_name}/detached/{part}/"
 
             node.command(
-                f"mkdir -p {originaltemp_path_path} && cp {original_path}data.bin {temp_path}"
+                f"mkdir -p {temp_path} && cp {original_path}data.bin {temp_path}"
             )
             bash_tools.command(f"corrupt_file {temp_path}data.bin {bits_to_corrupt}")
             node.command(f"cp {temp_path}data.bin {original_path}")
