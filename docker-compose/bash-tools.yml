@@ -12,3 +12,4 @@ services:
       - infinity
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"
+      - "${CLICKHOUSE_TESTS_DIR}/../helpers/corrupt_file:/usr/bin/corrupt_file"

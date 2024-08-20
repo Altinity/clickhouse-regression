@@ -25,14 +25,20 @@ after_attach_detached_part = {"1_1_1_0": "1_4_4_0", "1_2_2_0": "1_2_2_0"}
 def corrupt_parts_on_table_partition(self, table_name, parts, bits_to_corrupt=1500000):
     """Corrupt the selected part file."""
     node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
 
     with By(
         f"executing a corrupt_file script that will flip {bits_to_corrupt} bits on the {parts} part of the {table_name} table"
     ):
         for part in parts:
+            original_path = f"/var/lib/clickhouse/data/default/{table_name}/{part}/"
+            temp_path = f"/share/corrupt_files/{table_name}/{part}/"
+
             node.command(
-                f"corrupt_file /var/lib/clickhouse/data/default/{table_name}/{part}/data.bin {bits_to_corrupt}"
+                f"mkdir -p {temp_path} && cp {original_path}data.bin {temp_path}"
             )
+            bash_tools.command(f"corrupt_file {temp_path}data.bin {bits_to_corrupt}")
+            node.command(f"cp {temp_path}data.bin {original_path}")
 
 
 @TestStep(When)
@@ -41,14 +47,23 @@ def corrupt_parts_on_table_partition_detached(
 ):
     """Corrupt the selected part file."""
     node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
 
     with By(
         f"executing a corrupt_file script that will flip {bits_to_corrupt} bits on the {parts} part of the {table_name} table"
     ):
+        node.command("mkdir -p /share/corrupt_files/" + table_name)
         for part in parts:
-            node.command(
-                f"corrupt_file /var/lib/clickhouse/data/default/{table_name}/detached/{part}/data.bin {bits_to_corrupt}"
+            original_path = (
+                f"/var/lib/clickhouse/data/default/{table_name}/detached/{part}/"
             )
+            temp_path = f"/share/corrupt_files/{table_name}/detached/{part}/"
+
+            node.command(
+                f"mkdir -p {originaltemp_path_path} && cp {original_path}data.bin {temp_path}"
+            )
+            bash_tools.command(f"corrupt_file {temp_path}data.bin {bits_to_corrupt}")
+            node.command(f"cp {temp_path}data.bin {original_path}")
 
 
 @TestCheck
