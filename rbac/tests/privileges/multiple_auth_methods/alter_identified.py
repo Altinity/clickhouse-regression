@@ -1,18 +1,22 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from rbac.requirements import *
 from rbac.tests.privileges.multiple_auth_methods.common import (
     create_user,
     generate_auth_combinations,
     authentication_methods_with_passwords,
+    check_login,
+    create_user_with_two_plaintext_passwords,
 )
-from rbac.requirements import *
+import rbac.tests.privileges.multiple_auth_methods.actions as actions
+import rbac.tests.privileges.multiple_auth_methods.model as models
 
 from helpers.common import getuid
 
 
 @TestScenario
-def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
+def check_changing_auth_methods(self, auth_methods, node=None):
     """Check that ALTER USER IDENTIFIED WITH statement with multiple authentication methods
     clears previous methods and sets new ones listed in the query."""
     if node is None:
@@ -115,6 +119,67 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
             assert sorted(system_auth_types) == sorted(auth_types), error()
 
 
+@TestScenario
+@Name("check alter user identified with multiple auth methods")
+def changing_auth_methods(self):
+    """Check that user can be altered with all combinations of multiple authentication methods."""
+    auth_methods = generate_auth_combinations(
+        auth_methods_dict=authentication_methods_with_passwords,
+    )
+    with Pool(4) as executor:
+        for num, auth_methods in enumerate(auth_methods):
+            Scenario(
+                f"{num}",
+                test=check_changing_auth_methods,
+                parallel=True,
+                executor=executor,
+            )(auth_methods=auth_methods)
+        join()
+
+
+@TestScenario
+def check_changing_auth_methods_v2(self, auth_methods, node=None):
+    """Check that ALTER USER IDENTIFIED WITH statement with multiple authentication methods
+    clears previous methods and sets new ones listed in the query."""
+    if node is None:
+        node = self.context.node
+
+    user_name = f"user_{getuid()}"
+    self.context.behavior = []
+
+    with Given("I have client"):
+        self.context.client = actions.node_client()
+
+    with And("I create user with two plain text passwords"):
+        user = create_user_with_two_plaintext_passwords(user_name=user_name)
+
+    with When("I alter user to change authentication methods"):
+        altered_user = actions.alter_user(user=user, auth_methods=auth_methods)
+
+    with Then("I try to login"):
+        check_login(user=user, altered_user=altered_user)
+
+
+@TestScenario
+@Name("changing auth methods")
+def changing_auth_methods_v2(self):
+    """Check that user can be altered with multiple authentication methods."""
+    self.context.model = models.Model()
+    node = self.context.node
+
+    auth_methods_combinations = actions.alter_user_auth_combinations(max_length=2)
+
+    with Pool(4) as executor:
+        for num, auth_methods in enumerate(auth_methods_combinations):
+            Scenario(
+                f"#{num} {actions.names(auth_methods)}",
+                test=check_changing_auth_methods_v2,
+                parallel=True,
+                executor=executor,
+            )(node=node, auth_methods=auth_methods)
+        join()
+
+
 @TestFeature
 @Name("alter identified")
 @Requirements(
@@ -124,15 +189,7 @@ def check_alter_user_with_multiple_auth_methods(self, auth_methods, node=None):
 def feature(self, node="clickhouse1"):
     """Check support of multiple authentication methods in ALTER USER IDENTIFIED WITH statement."""
     self.context.node = self.context.cluster.node(node)
-    auth_methods = generate_auth_combinations(
-        auth_methods_dict=authentication_methods_with_passwords,
-    )
-    with Pool(4) as executor:
-        for num, auth_methods in enumerate(auth_methods):
-            Scenario(
-                f"{num}",
-                test=check_alter_user_with_multiple_auth_methods,
-                parallel=True,
-                executor=executor,
-            )(auth_methods=auth_methods)
+    with Pool(2) as executor:
+        Scenario(test=changing_auth_methods, parallel=True, executor=executor)()
+        # Scenario(test=changing_auth_methods_v2, parallel=True, executor=executor)()
         join()
