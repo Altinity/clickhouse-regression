@@ -31,7 +31,9 @@ def corrupt_parts_on_table_partition(self, table_name, parts, bits_to_corrupt=15
     ):
         for part in parts:
             node.command(
-                f"corrupt_file /var/lib/clickhouse/data/default/{table_name}/{part}/data.bin {bits_to_corrupt}"
+                "/usr/bin/bash-tools/python3 /usr/bin/corrupt_file "
+                f"/var/lib/clickhouse/data/default/{table_name}/{part}/data.bin {bits_to_corrupt}",
+                message="Corrupted",
             )
 
 
@@ -45,9 +47,12 @@ def corrupt_parts_on_table_partition_detached(
     with By(
         f"executing a corrupt_file script that will flip {bits_to_corrupt} bits on the {parts} part of the {table_name} table"
     ):
+
         for part in parts:
             node.command(
-                f"corrupt_file /var/lib/clickhouse/data/default/{table_name}/detached/{part}/data.bin {bits_to_corrupt}"
+                "/usr/bin/bash-tools/python3 /usr/bin/corrupt_file "
+                f"/var/lib/clickhouse/data/default/{table_name}/detached/{part}/data.bin {bits_to_corrupt}",
+                message="Corrupted",
             )
 
 
