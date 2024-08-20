@@ -159,8 +159,8 @@ xfails = {
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "aws s3/zero copy replication/stale alter replica'": [
-        (Fail, "Timeout on 22.8", check_clickhouse_version("<=22.8"))
+    "aws s3/zero copy replication/stale alter replica": [
+        (Error, "Timeout on 22.x", check_clickhouse_version("<=23"))
     ],
     "gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
@@ -290,7 +290,7 @@ ffails = {
 }
 
 
-@TestModule
+@TestFeature
 @Name("minio")
 def minio_regression(
     self,
@@ -365,7 +365,7 @@ def minio_regression(
         )
 
 
-@TestModule
+@TestFeature
 @Name("aws s3")
 def aws_s3_regression(
     self,
@@ -452,7 +452,7 @@ def aws_s3_regression(
         Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
-@TestModule
+@TestFeature
 @Name("gcs")
 def gcs_regression(
     self,
@@ -579,7 +579,7 @@ def regression(
         )
 
     assert storage_module is not None
-    Module(test=storage_module)(
+    Feature(test=storage_module)(
         cluster_args=cluster_args,
         with_analyzer=with_analyzer,
         **storage_module_kwargs,

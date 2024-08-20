@@ -117,7 +117,7 @@ def convert_output(s):
     return "\n".join(
         [
             l.strip()
-            for i, l in enumerate(re.sub("\s+\|\s+", "\t", s).strip().splitlines())
+            for i, l in enumerate(re.sub(r"\s+\|\s+", "\t", s).strip().splitlines())
             if i != 1
         ]
     )
