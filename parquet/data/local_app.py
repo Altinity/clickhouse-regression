@@ -7,14 +7,14 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route("/<path:file_name>", methods=["GET"])
 def read_file(file_name):
     """Read binary data from specified file."""
-    path = f"/var/lib/app_files/{file_name}"
+    path = f"/share/app_files/{file_name}"
     return send_file(path)
 
 
 @app.route("/<path:file_name>", methods=["POST"])
 def write_file(file_name):
     """Append binary data to specified file."""
-    with open(f"/var/lib/app_files/{file_name}", "ab") as file:
+    with open(f"/share/app_files/{file_name}", "ab") as file:
         file.write(request.data)
     return ""
 
@@ -26,4 +26,4 @@ def life_check():
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
