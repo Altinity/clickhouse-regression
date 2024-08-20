@@ -94,9 +94,7 @@ def add_many_auth_methods_to_user(self):
 
 @TestFeature
 @Name("many auth methods")
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check that user can have 1000 authentication methods."""
-    self.context.node = self.context.cluster.node(node)
-
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario, flags=TE)

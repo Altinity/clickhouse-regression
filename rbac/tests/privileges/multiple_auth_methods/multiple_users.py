@@ -57,9 +57,7 @@ def multiple_users_multiple_auth_methods(self):
 
 @TestFeature
 @Name("multiple users")
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check multiple auth methods support when creating more that one user in same query."""
-    self.context.node = self.context.cluster.node(node)
-
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario, flags=TE)

@@ -152,9 +152,8 @@ def resetting_auth_methods_v2(self):
 
 @TestFeature
 @Name("reset to new")
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check support of ALTER USER RESET AUTHENTICATION METHODS TO NEW statement."""
-    self.context.node = self.context.cluster.node(node)
     with Pool(2) as executor:
         Scenario(test=resetting_auth_methods, parallel=True, executor=executor)()
         # Scenario(test=resetting_auth_methods_v2, parallel=True, executor=executor)()

@@ -119,9 +119,8 @@ def check_adding_auth_methods(self, auth_methods, node=None):
 
 @TestScenario
 @Name("adding auth methods")
-def adding_auth_methods(self, node="clickhouse1"):
+def adding_auth_methods(self):
     """Check that multiple authentication methods can be added to a user."""
-    self.context.node = self.context.cluster.node(node)
     auth_methods = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
     )
@@ -180,10 +179,9 @@ def adding_auth_methods_v2(self):
 
 @TestFeature
 @Name("alter add identified")
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check support of ALTER USER ADD IDENTIFIED statement with one or multiple
     authentication methods."""
-    self.context.node = self.context.cluster.node(node)
     with Pool(2) as executor:
         Scenario(test=adding_auth_methods, parallel=True, executor=executor)()
         # Scenario(test=adding_auth_methods_v2, parallel=True, executor=executor)()
