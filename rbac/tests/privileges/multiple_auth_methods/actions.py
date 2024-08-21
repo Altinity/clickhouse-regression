@@ -26,6 +26,11 @@ def names(methods):
     return ",".join([method.__name__ for method in methods])
 
 
+def with_required(auth_methods):
+    """Check if the first authentication method requires WITH keyword."""
+    return "set_with" in auth_methods[0].__name__
+
+
 def create_user_auth_combinations(
     auth_methods=None, max_length=3, with_replacement=False
 ):
@@ -148,8 +153,11 @@ def alter_user(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
         )
-
-    query.set_identified()
+        
+    if with_required(auth_methods):
+        query = query.set_add_identified_with()
+    else:
+        query = query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -180,7 +188,12 @@ def alter_user_add(
         query = query.set_username(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
-        ).set_add_identified()
+        )
+        
+    if with_required(auth_methods):
+        query = query.set_add_identified_with()
+    else:
+        query = query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -282,7 +295,10 @@ def create_user(
     for username in usernames:
         query.set_username(name=username.name, cluster_name=username.cluster)
 
-    query.set_identified()
+    if with_required(auth_methods):
+        query.set_identified_with()
+    else:
+        query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
