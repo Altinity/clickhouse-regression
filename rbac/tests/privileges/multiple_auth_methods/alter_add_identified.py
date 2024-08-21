@@ -39,13 +39,13 @@ def check_adding_auth_methods(self, auth_methods, node=None):
             if len(auth_methods) == 1:  # auth_methods_string == "no_password"
                 message = "DB::Exception: The authentication method 'no_password' cannot be used with the ADD keyword."
             add_identified(
-                user=user_name,
+                user_name=user_name,
                 identified=auth_methods_string,
                 exitcode=exitcode,
                 message=message,
             )
         else:
-            add_identified(user=user_name, identified=auth_methods_string)
+            add_identified(user_name=user_name, identified=auth_methods_string)
             user_altered = True
 
     with And("create a list of correct and wrong passwords for authentication"):

@@ -123,11 +123,11 @@ def check_changing_auth_methods(self, auth_methods, node=None):
 @Name("changing auth methods")
 def changing_auth_methods(self):
     """Check that user can be altered with all combinations of multiple authentication methods."""
-    auth_methods = generate_auth_combinations(
+    auth_methods_combinations = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
     )
     with Pool(4) as executor:
-        for num, auth_methods in enumerate(auth_methods):
+        for num, auth_methods in enumerate(auth_methods_combinations):
             Scenario(
                 f"{num}",
                 test=check_changing_auth_methods,

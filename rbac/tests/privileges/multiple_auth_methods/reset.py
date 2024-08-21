@@ -90,11 +90,11 @@ def check_reset_to_new(self, auth_methods, node=None):
 @Name("check resetting auth methods")
 def resetting_auth_methods(self):
     """Run test that check RESET AUTHENTICATION METHODS TO NEW with different auth methods combinations."""
-    auth_methods = generate_auth_combinations(
+    auth_methods_combinations = generate_auth_combinations(
         auth_methods_dict=authentication_methods_with_passwords,
     )
     with Pool(4) as executor:
-        for num, auth_methods in enumerate(auth_methods):
+        for num, auth_methods in enumerate(auth_methods_combinations):
             Scenario(
                 f"{num}",
                 test=check_reset_to_new,
