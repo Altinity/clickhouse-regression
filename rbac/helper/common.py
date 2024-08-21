@@ -206,7 +206,14 @@ def add_rbac_config_file(
 
 @TestStep(Given)
 def create_user(
-    self, node=None, user_name=None, identified=None, exitcode=None, message=None
+    self,
+    node=None,
+    user_name=None,
+    identified=None,
+    exitcode=None,
+    message=None,
+    cluster=None,
+    expected=None,
 ):
     """Create user with given name. If name is not provided, it will be generated."""
     if node is None:
@@ -215,7 +222,13 @@ def create_user(
     if user_name is None:
         user_name = "user_" + getuid()
 
+    if expected is not None:
+        exitcode, message = expected
+
     query = f"CREATE USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
 
     if identified:
         query += f" IDENTIFIED WITH {identified}"
@@ -230,13 +243,64 @@ def create_user(
 
 
 @TestStep(Given)
-def add_identified(self, user, identified, node=None, exitcode=None, message=None):
+def add_identified(self, user_name, identified, node=None, exitcode=None, message=None, cluster=None, expected=None):
     """Add new authentication methods to the user while keeping the existing ones."""
     if node is None:
         node = self.context.node
+        
+    if expected is not None:
+        exitcode, message = expected
 
-    query = f"ALTER USER {user} ADD IDENTIFIED WITH {identified}"
+    query = f"ALTER USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
+
+    query += f" ADD IDENTIFIED WITH {identified}"
+    
     node.query(query, exitcode=exitcode, message=message)
+
+
+@TestStep(Given)
+def alter_identified(
+    self,
+    user_name,
+    identified,
+    node=None,
+    exitcode=None,
+    message=None,
+    cluster=None,
+    expected=None,
+):
+    """Change user's authentication methods."""
+    if node is None:
+        node = self.context.node
+
+    if expected is not None:
+        exitcode, message = expected
+
+    query = f"ALTER USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
+
+    query += f" IDENTIFIED WITH {identified}"
+    node.query(query, exitcode=exitcode, message=message)
+
+
+@TestStep(Given)
+def reset_auth_methods_to_new(self, user_name, cluster=None, node=None):
+    if node is None:
+        node = self.context.node
+
+    query = f"ALTER USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
+
+    query += f" RESET AUTHENTICATION METHODS TO NEW"
+
+    node.query(query)
 
 
 def generate_hashed_password_with_salt(password, salt="some_salt"):
