@@ -1,0 +1,14 @@
+version: "2.3"
+
+services:
+  bash-tools:
+    image: altinityinfra/clickhouse-regression-multiarch:2.0
+    hostname: bash-tools
+    init: true
+    restart: "no"
+    entrypoint:
+      - /bin/sleep
+    command:
+      - infinity
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"
