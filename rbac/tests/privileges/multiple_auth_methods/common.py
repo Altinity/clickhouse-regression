@@ -66,7 +66,7 @@ authentication_methods_with_passwords = {
 }
 
 
-def generate_auth_combinations(auth_methods_dict, max_length=2, with_replacement=True):
+def generate_auth_combinations(auth_methods_dict, max_length=2, with_replacement=False):
     auth_combinations = []
     for length in range(1, max_length + 1):
         auth_combinations.extend(
@@ -91,7 +91,7 @@ def execute_query(self, query, expected=None, node=None, exitcode=None, message=
 
 @TestStep(Then)
 def login(
-    self, user_name, password="", node=None, exitcode=None, message=None, expected=None
+    self, user_name, password="", node=None, exitcode=None, message=None, expected=None, nodes=None
 ):
     if node is None:
         node = self.context.node
@@ -102,12 +102,15 @@ def login(
     if expected is not None:
         exitcode, message = expected()
 
-    node.query(
-        f"SELECT currentUser()",
-        settings=[("user", user_name), ("password", password)],
-        exitcode=exitcode,
-        message=message,
-    )
+    nodes = nodes or [node]
+    
+    for node in nodes:
+        node.query(
+            f"SELECT currentUser()",
+            settings=[("user", user_name), ("password", password)],
+            exitcode=exitcode,
+            message=message,
+        )
 
 
 @TestStep(Given)
