@@ -24,5 +24,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/client_fips.xml:/etc/clickhouse-client/config.d/fips.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/config.xml:/etc/clickhouse-client/config.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"
 

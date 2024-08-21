@@ -15,7 +15,7 @@ def insert_into_engine(self):
     with Given("I have a table with a `URL` engine"):
         table = create_table(
             name=table_name,
-            engine=f"URL('http://127.0.0.1:5000/{table_name}.Parquet', 'Parquet')",
+            engine=f"URL('http://bash-tools:5000/{table_name}.Parquet', 'Parquet')",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
@@ -29,7 +29,7 @@ def insert_into_engine(self):
         "I check that the data inserted into the table was correctly written to the file"
     ):
         node.command(
-            f"cp /var/lib/app_files/{table_name}.Parquet /var/lib/clickhouse/user_files/{table_name}.Parquet"
+            f"cp /share/app_files/{table_name}.Parquet /var/lib/clickhouse/user_files/{table_name}.Parquet"
         )
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
@@ -54,7 +54,7 @@ def select_from_engine(self):
     with Given("I attach a table with a `URL` engine on top of a Parquet file"):
         create_table(
             name=table_name,
-            engine="URL('http://127.0.0.1:5000/data_NONE.Parquet', 'Parquet')",
+            engine="URL('http://bash-tools:5000/data_NONE.Parquet', 'Parquet')",
             columns=table_columns,
         )
 
@@ -86,7 +86,7 @@ def engine_to_file_to_engine(self):
     with Given("I have a table with a `URL` engine"):
         table0 = create_table(
             name=table0_name,
-            engine=f"URL('http://127.0.0.1:5000/{table0_name}.Parquet', 'Parquet')",
+            engine=f"URL('http://bash-tools:5000/{table0_name}.Parquet', 'Parquet')",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
@@ -100,7 +100,7 @@ def engine_to_file_to_engine(self):
         "I check that the data inserted into the table was correctly written into the file"
     ):
         node.command(
-            f"cp /var/lib/app_files/{table0_name}.Parquet /var/lib/clickhouse/user_files/{table0_name}.Parquet"
+            f"cp /share/app_files/{table0_name}.Parquet /var/lib/clickhouse/user_files/{table0_name}.Parquet"
         )
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table0_name}.Parquet",
@@ -109,13 +109,13 @@ def engine_to_file_to_engine(self):
 
     with When("I copy of the Parquet source file to a new directory"):
         node.command(
-            f"cp /var/lib/app_files/{table0_name}.Parquet /var/lib/app_files/{table1_name}.Parquet"
+            f"cp /share/app_files/{table0_name}.Parquet /share/app_files/{table1_name}.Parquet"
         )
 
     with Given("I have a table with a `URL` engine"):
         table1 = create_table(
             name=table1_name,
-            engine=f"URL('http://127.0.0.1:5000/{table1_name}.Parquet', 'Parquet')",
+            engine=f"URL('http://bash-tools:5000/{table1_name}.Parquet', 'Parquet')",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
@@ -175,7 +175,7 @@ def insert_into_engine_from_file(self, compression_type):
     with Given("I have a table with a `URL` engine"):
         create_table(
             name=table_name,
-            engine=f"URL('http://127.0.0.1:5000/{table_name}.Parquet', 'Parquet')",
+            engine=f"URL('http://bash-tools:5000/{table_name}.Parquet', 'Parquet')",
             columns=table_columns,
         )
 
@@ -225,7 +225,7 @@ def engine_select_output_to_file(self, compression_type):
     with Given("I have a table with a `URL` engine"):
         table = create_table(
             name=table_name,
-            engine=f"URL('http://127.0.0.1:5000/{table_name}.Parquet', 'Parquet')",
+            engine=f"URL('http://bash-tools:5000/{table_name}.Parquet', 'Parquet')",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
@@ -284,7 +284,7 @@ def insert_into_function(self):
         description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         node.query(
-            f"INSERT INTO FUNCTION url('http://127.0.0.1:5000/{file_name}', 'Parquet', '{func_def}') VALUES {','.join(total_values)}",
+            f"INSERT INTO FUNCTION url('http://bash-tools:5000/{file_name}', 'Parquet', '{func_def}') VALUES {','.join(total_values)}",
             settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
@@ -292,7 +292,7 @@ def insert_into_function(self):
         "I insert the data from the 'file' table function into a MergeTree engine table"
     ):
         node.command(
-            f"cp /var/lib/app_files/{file_name} /var/lib/clickhouse/user_files/{file_name}"
+            f"cp /share/app_files/{file_name} /var/lib/clickhouse/user_files/{file_name}"
         )
         node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/{file_name}' FORMAT Parquet",
@@ -321,7 +321,7 @@ def select_from_function_manual_cast_types(self):
         for column in table_columns:
             with Check(f"{column.name}"):
                 execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM url('http://127.0.0.1:5000/data_NONE.Parquet', 'Parquet', '{table_def}')"
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM url('http://bash-tools:5000/data_NONE.Parquet', 'Parquet', '{table_def}')"
                 )
 
 
@@ -340,7 +340,7 @@ def select_from_function_auto_cast_types(self):
         for column in table_columns:
             with Check(f"{column.name}"):
                 execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM url('http://127.0.0.1:5000/data_NONE.Parquet', 'Parquet')"
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM url('http://bash-tools:5000/data_NONE.Parquet', 'Parquet')"
                 )
 
 
@@ -405,12 +405,13 @@ def function(self):
 def feature(self, node="clickhouse1"):
     """Run checks for `URL()` table engine and `url` table function when used with Parquet format."""
     self.context.node = self.context.cluster.node(node)
+    bash_tools = self.context.cluster.node("bash-tools")
 
     with Given("I have a directory for the flask server"):
-        self.context.node.command("mkdir /var/lib/app_files")
-        self.context.node.command("cp /var/lib/test_files/* /var/lib/app_files")
+        bash_tools.command("mkdir /share/app_files")
+        bash_tools.command("cp /var/lib/test_files/* /share/app_files")
 
-    with self.context.cluster.shell(self.context.node.name) as bash:
+    with self.context.cluster.shell("bash-tools") as bash:
         cmd = "python3 /var/lib/test_files/local_app.py"
 
         try:

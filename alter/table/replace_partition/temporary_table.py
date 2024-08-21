@@ -14,6 +14,7 @@ from helpers.tables import create_table_partitioned_by_column
 def from_temporary_to_regular(self):
     """Check that it is possible to replace partition from the temporary table into a regular MergeTree table."""
     node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
     destination_table = "destination_" + getuid()
     source_table = "temporary_source_" + getuid()
 
@@ -24,7 +25,7 @@ def from_temporary_to_regular(self):
         create_partitions_with_random_uint64(table_name=destination_table)
 
     with And("I open a single clickhouse instance"):
-        with node.client() as client:
+        with bash_tools.client(client_args={"host": node.name}) as client:
             with When(
                 "I create a temporary table with the same structure as the destination table"
             ):
@@ -68,11 +69,12 @@ def from_temporary_to_regular(self):
 def from_temporary_to_temporary_table(self):
     """Check that it is not possible to replace partition from the temporary table into another temporary table."""
     node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
     destination_table = "temporary_destination_" + getuid()
     source_table = "temporary_source_" + getuid()
 
     with Given("I open a single clickhouse instance"):
-        with node.client() as client:
+        with bash_tools.client(client_args={"host": node.name}) as client:
             with And("I create two temporary tables with the same structure"):
                 client.query(
                     f"CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
@@ -113,11 +115,12 @@ def from_temporary_to_temporary_table(self):
 def from_regular_to_temporary(self):
     """Check that it is not possible to replace partition from the regular table into temporary table."""
     node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
     destination_table = "temporary_destination_" + getuid()
     source_table = "source_" + getuid()
 
     with Given("I open a single clickhouse instance"):
-        with node.client() as client:
+        with bash_tools.client(client_args={"host": node.name}) as client:
             with And(
                 "I create one temporary table and one regular table with the same structure"
             ):

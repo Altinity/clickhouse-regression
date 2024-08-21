@@ -94,7 +94,9 @@ def node_client(self, node=None):
     if node is None:
         node = self.context.node
 
-    with node.client() as client:
+    bash_tools = self.context.cluster.node("bash-tools")
+
+    with bash_tools.client(client_args={"host", node.name}) as client:
         yield client
 
 
