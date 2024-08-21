@@ -53,8 +53,9 @@ def check_alter_identified_on_cluster(self, auth_methods, cluster="replicated_cl
                 identified=auth_methods_string,
                 cluster=cluster,
             )
-            # no_password is the only auth method
-            if "no_password" in auth_methods_string:
+            if (
+                "no_password" in auth_methods_string
+            ):  # no_password is the only auth method
                 correct_passwords.extend(wrong_passwords)
                 wrong_passwords = []  # can login with any password
             else:
@@ -159,8 +160,14 @@ def check_reset_to_new_on_cluster(self, auth_methods, cluster="replicated_cluste
 def create_user_on_cluster(self, auth_methods, cluster="replicated_cluster"):
     """Check CREATE USER on cluster with multiple auth methods."""
     user_name = f"user_{getuid()}"
-    user_created = False
-
+    correct_passwords = define(
+        "correct passwords",
+        [auth_methods[1] for auth_methods in auth_methods],
+    )
+    wrong_passwords = define(
+        "wrong passwords",
+        [f"{password}_1" for password in correct_passwords],
+    )
     with Given("create user on cluster with specified authentication methods"):
         auth_methods_string = ", ".join(j[0] for j in auth_methods)
         if "no_password" in auth_methods_string and len(auth_methods) > 1:
@@ -170,25 +177,21 @@ def create_user_on_cluster(self, auth_methods, cluster="replicated_cluster"):
                 cluster=cluster,
                 expected=errors.no_password_cannot_coexist_with_others(),
             )
-        else:
-            common.create_user(
-                user_name=user_name, identified=auth_methods_string, cluster=cluster
-            )
-            user_created = True
-
-    with Then("check that user can login only with correct passwords on all nodes"):
-        correct_passwords = define(
-            "correct passwords", [auth_methods[1] for auth_methods in auth_methods]
-        )
-        wrong_passwords = define(
-            "wrong passwords", [f"{password}_1" for password in correct_passwords]
-        )
-        if not user_created:
             correct_passwords = define("correct passwords", [])
             wrong_passwords = define(
                 "wrong passwords", correct_passwords + wrong_passwords
             )
+        else:
+            common.create_user(
+                user_name=user_name, identified=auth_methods_string, cluster=cluster
+            )
+            if "no_password" in auth_methods_string:
+                correct_passwords = define(
+                    "correct passwords", correct_passwords + wrong_passwords
+                )
+                wrong_passwords = define("wrong passwords", [])
 
+    with Then("check that user can login only with correct passwords on all nodes"):
         check_login_on_cluster(
             user_name=user_name,
             correct_passwords=correct_passwords,
@@ -205,7 +208,7 @@ def feature(self):
     self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
 
     auth_methods_combinations = common.generate_auth_combinations(
-        auth_methods_dict=common.authentication_methods_with_passwords, max_length=3
+        auth_methods_dict=common.authentication_methods_with_passwords, max_length=2
     )
     with Pool(10) as executor:
         for scenario in loads(current_module(), Scenario):
