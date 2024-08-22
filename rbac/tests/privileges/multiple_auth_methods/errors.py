@@ -11,6 +11,14 @@ def no_password_cannot_coexist_with_others():
     return exitcode, message
 
 
+def user_can_not_be_created_updated():
+    exitcode, message = (
+        36,
+        "DB::Exception: User can not be created/updated because it exceeds the allowed quantity of authentication methods per user.",
+    )
+    return exitcode, message
+
+
 def no_user_with_such_name(user_name):
     def return_exitcode_and_message():
         exitcode, message = (
