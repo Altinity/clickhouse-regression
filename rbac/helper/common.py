@@ -210,10 +210,12 @@ def create_user(
     node=None,
     user_name=None,
     identified=None,
+    identified_by=None,
     exitcode=None,
     message=None,
     cluster=None,
     expected=None,
+    not_identified=False,
 ):
     """Create user with given name. If name is not provided, it will be generated."""
     if node is None:
@@ -233,6 +235,12 @@ def create_user(
     if identified:
         query += f" IDENTIFIED WITH {identified}"
 
+    if identified_by:
+        query += f" IDENTIFIED BY {identified_by}"
+
+    if not_identified:
+        query += " NOT IDENTIFIED"
+
     try:
         node.query(query, exitcode=exitcode, message=message)
         yield user_name
@@ -243,11 +251,21 @@ def create_user(
 
 
 @TestStep(Given)
-def add_identified(self, user_name, identified, node=None, exitcode=None, message=None, cluster=None, expected=None):
+def add_identified(
+    self,
+    user_name,
+    identified=None,
+    identified_by=None,
+    node=None,
+    exitcode=None,
+    message=None,
+    cluster=None,
+    expected=None,
+):
     """Add new authentication methods to the user while keeping the existing ones."""
     if node is None:
         node = self.context.node
-        
+
     if expected is not None:
         exitcode, message = expected
 
@@ -256,8 +274,12 @@ def add_identified(self, user_name, identified, node=None, exitcode=None, messag
     if cluster is not None:
         query += f" ON CLUSTER {cluster}"
 
-    query += f" ADD IDENTIFIED WITH {identified}"
-    
+    if identified:
+        query += f" ADD IDENTIFIED WITH {identified}"
+
+    if identified_by:
+        query += f" ADD IDENTIFIED BY {identified_by}"
+
     node.query(query, exitcode=exitcode, message=message)
 
 
@@ -265,12 +287,14 @@ def add_identified(self, user_name, identified, node=None, exitcode=None, messag
 def alter_identified(
     self,
     user_name,
-    identified,
+    identified=None,
+    identified_by=None,
     node=None,
     exitcode=None,
     message=None,
     cluster=None,
     expected=None,
+    not_identified=False,
 ):
     """Change user's authentication methods."""
     if node is None:
@@ -284,14 +308,27 @@ def alter_identified(
     if cluster is not None:
         query += f" ON CLUSTER {cluster}"
 
-    query += f" IDENTIFIED WITH {identified}"
+    if identified:
+        query += f" IDENTIFIED WITH {identified}"
+
+    if identified_by:
+        query += f" IDENTIFIED BY {identified_by}"
+
+    if not_identified:
+        query += " NOT IDENTIFIED"
+
     node.query(query, exitcode=exitcode, message=message)
 
 
 @TestStep(Given)
-def reset_auth_methods_to_new(self, user_name, cluster=None, node=None):
+def reset_auth_methods_to_new(
+    self, user_name, cluster=None, node=None, expected=None, exitcode=None, message=None
+):
     if node is None:
         node = self.context.node
+
+    if expected is not None:
+        exitcode, message = expected
 
     query = f"ALTER USER {user_name}"
 
@@ -300,7 +337,7 @@ def reset_auth_methods_to_new(self, user_name, cluster=None, node=None):
 
     query += f" RESET AUTHENTICATION METHODS TO NEW"
 
-    node.query(query)
+    node.query(query, exitcode=exitcode, message=message)
 
 
 def generate_hashed_password_with_salt(password, salt="some_salt"):
