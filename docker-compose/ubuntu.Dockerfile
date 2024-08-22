@@ -3,7 +3,7 @@ FROM $BASE_OS
 
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-git
+
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
 RUN apt-get update
