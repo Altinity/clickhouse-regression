@@ -1,6 +1,7 @@
 from testflows.core import *
+from testflows.asserts import error
 
-from helpers.common import getuid, get_settings_value
+from helpers.common import getuid, get_settings_value, check_clickhouse_version
 
 import rbac.tests.privileges.multiple_auth_methods.common as common
 import rbac.tests.privileges.multiple_auth_methods.errors as errors
@@ -99,6 +100,29 @@ def check_default_value_of_setting(self):
 
     with Then("check that default value is 100"):
         assert default_value == "100", f"expected 100, got {default_value}"
+
+
+@TestScenario
+def column_types_in_system_table(self):
+    """Check the column types of the 'system.users' table."""
+
+    node = self.context.node
+
+    with By("check the type of auth_type column of system.users table"):
+        typename = node.query(f"SELECT toTypeName(auth_type) FROM system.users").output
+        if check_clickhouse_version("<24.9")(self):
+            assert "Enum" in typename, error()
+        else:
+            assert "Array(Enum" in typename, error()
+
+    with By("check the type of auth_params column of system.users table"):
+        typename = node.query(
+            f"SELECT toTypeName(auth_params) FROM system.users"
+        ).output
+        if check_clickhouse_version("<24.9")(self):
+            assert "String" in typename, error()
+        else:
+            assert "Array(String)" in typename, error()
 
 
 @TestFeature
