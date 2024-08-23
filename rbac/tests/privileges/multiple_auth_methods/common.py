@@ -93,7 +93,14 @@ def execute_query(self, query, expected=None, node=None, exitcode=None, message=
 
 @TestStep(Then)
 def login(
-    self, user_name, password="", node=None, exitcode=None, message=None, expected=None, nodes=None
+    self,
+    user_name,
+    password="",
+    node=None,
+    exitcode=None,
+    message=None,
+    expected=None,
+    nodes=None,
 ):
     if node is None:
         node = self.context.node
@@ -105,7 +112,7 @@ def login(
         exitcode, message = expected()
 
     nodes = nodes or [node]
-    
+
     for node in nodes:
         node.query(
             f"SELECT currentUser()",
@@ -177,31 +184,45 @@ def check_login(self, user, altered_user=None):
 
         with And("I try to login with slightly wrong username"):
             actions.login_with_wrong_username(user=altered_user)
-            
+
 
 @TestStep(Then)
-def check_changes_reflected_in_system_table(self, user_name, correct_passwords, node=None):
+def check_changes_reflected_in_system_table(
+    self, user_name, correct_passwords, node=None
+):
     """Check that changes in user's authentication methods are reflected in the system.users table."""
-
     if node is None:
         node = self.context.node
-        
+
     system_auth_types_length = node.query(
         f"SELECT length(auth_type) FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
     ).output
-    assert system_auth_types_length == str(len(correct_passwords)), error()
-    
-    create_user_query = node.query(f"SHOW CREATE USER {user_name} FORMAT TabSeparated").output
-    
-    for i in range(int(system_auth_types_length)):
-        system_auth_type = node.query(
-            f"SELECT auth_type[{i+1}] FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
+
+    if len(correct_passwords) > 0:
+        assert system_auth_types_length == str(len(correct_passwords)), error()
+
+        create_user_command = f"SHOW CREATE USER {user_name} FORMAT TabSeparated"
+        create_user_query_output = node.query(create_user_command).output
+
+        for i in range(len(correct_passwords)):
+            system_auth_type = node.query(
+                f"SELECT auth_type[{i+1}] FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
+            ).output
+            assert system_auth_type in create_user_query_output, error()
+    else:
+        assert system_auth_types_length == "", error()
+        exitcode, message = errors.no_user(user_name)()
+        node.query(
+            f"SHOW CREATE USER {user_name} FORMAT TabSeparated",
+            exitcode=exitcode,
+            message=message,
         ).output
-        assert system_auth_type in create_user_query, error()
-    
+
 
 @TestStep(Then)
-def check_login_with_correct_and_wrong_passwords(self, user_name, wrong_passwords=[], correct_passwords=[]):
+def check_login_with_correct_and_wrong_passwords(
+    self, user_name, wrong_passwords=[], correct_passwords=[]
+):
     """Validate user login."""
     for password in correct_passwords:
         login(user_name=user_name, password=password)
