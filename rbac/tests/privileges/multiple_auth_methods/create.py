@@ -1,17 +1,13 @@
 from testflows.core import *
-from testflows.asserts import error
 
 from rbac.requirements import *
-from rbac.tests.privileges.multiple_auth_methods.common import (
-    create_user,
-    generate_auth_combinations,
-    authentication_methods_with_passwords,
-)
+
 import rbac.tests.privileges.multiple_auth_methods.actions as actions
 import rbac.tests.privileges.multiple_auth_methods.model as models
+import rbac.tests.privileges.multiple_auth_methods.errors as errors
+import rbac.tests.privileges.multiple_auth_methods.common as common
 
 from helpers.common import getuid
-
 
 # FIXME: add test to check login with another user's password
 @TestScenario
@@ -62,86 +58,59 @@ def check_create_user_v2(self, node=None):
 
 
 @TestScenario
-def create_user_with_multiple_auth_methods(self, auth_methods, node=None):
+def create_user_with_multiple_auth_methods(self, auth_methods):
     """Check that user can be created with multiple authentication methods."""
-    if node is None:
-        node = self.context.node
+    node = self.context.node
 
     with Given("concatenate authentication methods"):
         auth_methods_string = ", ".join(j[0] for j in auth_methods)
         note(auth_methods_string)
 
     with And("create list of correct and wrong passwords for authentication"):
-        correct_passwords = [j[1] for j in auth_methods]
-        wrong_passwords = [
-            j
-            for j in authentication_methods_with_passwords.values()
-            if j not in correct_passwords
-        ]
+        correct_passwords = define("correct passwords", [])
+        wrong_passwords = define("wrong passwords", [j[1] for j in auth_methods])
 
     with When("create user with multiple authentication methods"):
         user_name = f"user_{getuid()}"
-        user_created = False
         if "no_password" in auth_methods_string and len(auth_methods) > 1:
-            create_user(
+            common.create_user(
                 user_name=user_name,
                 identified=auth_methods_string,
-                exitcode=36,
-                message="DB::Exception: NO_PASSWORD Authentication method cannot co-exist with other authentication methods.",
+                expected=errors.no_password_cannot_coexist_with_others(),
             )
         else:
-            create_user(user_name=user_name, identified=auth_methods_string)
-            user_created = True
-
-    with Then(
-        "check that user can authenticate with correct passwords and can not authenticate with wrong passwords"
-    ):
-        if user_created:
+            common.create_user(user_name=user_name, identified=auth_methods_string)
             if "no_password" in auth_methods_string:
-                exitcode, message = None, None
+                correct_passwords = define("new correct passwords", [""])
+                wrong_passwords = define("new wrong passwords", [])
             else:
-                exitcode = 4
-                message = f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name."
+                correct_passwords = define("new correct passwords", wrong_passwords)
+                wrong_passwords = define(
+                    "new wrong passwords",
+                    [f"wrong_{password}" for password in correct_passwords],
+                )
 
-            for password in correct_passwords:
-                node.query(
-                    f"SELECT 1", settings=[("user", user_name), ("password", password)]
-                )
-            for password in wrong_passwords:
-                node.query(
-                    f"SELECT 1",
-                    settings=[("user", user_name), ("password", password)],
-                    exitcode=exitcode,
-                    message=message,
-                )
+    with Then("check that user can only login with correct passwords"):
+        common.check_login_with_correct_and_wrong_passwords(
+            user_name=user_name,
+            correct_passwords=correct_passwords,
+            wrong_passwords=wrong_passwords,
+        )
 
     with And(
-        "check that creating a user with multiple authentication methods updates the system.users table"
+        "check that creating a user with multiple auth methods updates the system.users table"
     ):
-        if user_created:
-            auth_types = [
-                j[0].split(" ")[0].replace("hash", "password") for j in auth_methods
-            ]
-            system_auth_types_length = node.query(
-                f"SELECT length(auth_type) FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
-            ).output
-            assert system_auth_types_length == str(len(auth_types)), error()
-            system_auth_types = []
-            for i in range(int(system_auth_types_length)):
-                system_auth_type = node.query(
-                    f"SELECT auth_type[{i+1}] FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
-                ).output
-                system_auth_types.append(system_auth_type)
-
-            assert sorted(system_auth_types) == sorted(auth_types), error()
+        common.check_changes_reflected_in_system_table(
+            user_name=user_name, correct_passwords=correct_passwords
+        )
 
 
 @TestScenario
 @Name("check create user with multiple auth methods")
 def check_create_user_with_multiple_auth_methods(self):
     """Run create user with multiple auth methods test with all combinations of auth methods."""
-    auth_methods_combinations = generate_auth_combinations(
-        auth_methods_dict=authentication_methods_with_passwords,
+    auth_methods_combinations = common.generate_auth_combinations(
+        auth_methods_dict=common.authentication_methods_with_passwords,
     )
     with Pool(6) as executor:
         for num, auth_methods in enumerate(auth_methods_combinations):
