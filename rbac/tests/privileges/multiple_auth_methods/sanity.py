@@ -1,6 +1,6 @@
 from testflows.core import *
 
-from helpers.common import getuid
+from helpers.common import getuid, get_settings_value
 
 import rbac.tests.privileges.multiple_auth_methods.common as common
 import rbac.tests.privileges.multiple_auth_methods.errors as errors
@@ -87,6 +87,18 @@ def create_user_not_identified(self):
     finally:
         with Finally("drop user"):
             common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
+@TestScenario
+def check_default_value_of_setting(self):
+    """Check that default value of `max_authentication_methods_per_user` is 100."""
+    with Given("get default value of `max_authentication_methods_per_user`"):
+        default_value = get_settings_value(
+            "max_authentication_methods_per_user", table="system.server_settings"
+        )
+
+    with Then("check that default value is 100"):
+        assert default_value == "100", f"expected 100, got {default_value}"
 
 
 @TestFeature
