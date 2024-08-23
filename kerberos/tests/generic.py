@@ -87,22 +87,13 @@ def invalid_server_ticket(self):
 
     with Then("I start kerberos server again"):
         self.context.krb_server.start()
-        ch_nodes[2].command("kdestroy")
-        attempts = 0
-        while attempts < 20:
-            attempts += 1
-            kinit_no_keytab(node=ch_nodes[2])
-            create_server_principal(node=ch_nodes[0])
-            if (
-                ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
-                == "kerberos_user"
-            ):
-                break
-            time.sleep(1)
-            debug(test_select_query(node=ch_nodes[0]))
-        else:
-            assert False, error()
-        ch_nodes[2].command("kdestroy")
+        kdestroy(ch_nodes[2])
+        for attempt in retries(timeout=30, delay=1):
+            with attempt:
+                kinit_no_keytab(node=ch_nodes[2])
+                user = ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
+                assert user == "kerberos_user", error()
+        kdestroy(ch_nodes[2])
 
     with And("I expect the user to be default"):
         assert r.output == "default", error()
@@ -115,6 +106,7 @@ def invalid_client_ticket(self):
     no valid ticket (or the existing ticket is outdated).
     """
     ch_nodes = self.context.ch_nodes
+    kerberos = self.context.krb_server
 
     with Given("kinit for client"):
         kinit_no_keytab(node=ch_nodes[2], lifetime_option="-l 00:00:05")
@@ -133,8 +125,10 @@ def invalid_client_ticket(self):
 
     with Finally(""):
         try:
-            retry(ch_nodes[2].command, timeout=30, delay=1)(
-                f"echo pwd | kinit -l 10:00 kerberos_user", exitcode=0
+            retry(kerberos.command, timeout=30, delay=1)(
+                f"echo pwd | kinit -l 10:00 kerberos_user",
+                exitcode=0,
+                shell_command="sh",
             )
 
             for attempt in retries(timeout=30, delay=1):
@@ -145,7 +139,7 @@ def invalid_client_ticket(self):
                     ):
                         break
         finally:
-            ch_nodes[2].command("kdestroy")
+            kdestroy(ch_nodes[2])
 
 
 @TestCase
@@ -176,7 +170,7 @@ def kerberos_unreachable_valid_tickets(self):
 
     with Finally("I start kerberos server again"):
         self.context.krb_server.start()
-        ch_nodes[2].command("kdestroy")
+        kdestroy(ch_nodes[2])
         attempts = 0
         while attempts < 20:
             attempts += 1
@@ -189,7 +183,7 @@ def kerberos_unreachable_valid_tickets(self):
             time.sleep(1)
         else:
             assert False, error()
-        ch_nodes[2].command("kdestroy")
+        kdestroy(ch_nodes[2])
 
 
 @TestScenario
@@ -241,19 +235,12 @@ def kerberos_server_restarted(self):
         r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with And("I wait for kerberos to be healthy"):
-        ch_nodes[2].command("kdestroy")
-        attempts = 0
-        while attempts < 20:
-            attempts += 1
-            kinit_no_keytab(node=ch_nodes[2])
-            if (
-                ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
-                == "kerberos_user"
-            ):
-                break
-            time.sleep(1)
-        else:
-            assert False, error()
+        kdestroy(ch_nodes[2])
+        for attempt in retries(timeout=30, delay=1):
+            with attempt:
+                kinit_no_keytab(node=ch_nodes[2])
+                user = ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
+                assert user == "kerberos_user", error()
 
     with Then(f"I expect kerberos_user"):
         assert r.output == "kerberos_user", error()
@@ -302,9 +289,9 @@ def user_deleted(self):
         r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
 
     with Then(f"I expect error"):
-        assert ("Authentication failed: password is incorrect" in r.output) and (
-            "or there is no user with such name" in r.output
-        ), error()
+        message = r.output
+        assert "Authentication failed: password is incorrect" in message, error()
+        assert "or there is no user with such name" in message, error()
 
 
 @TestScenario

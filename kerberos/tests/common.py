@@ -55,34 +55,51 @@ def test_select_query(
 @TestStep(Given)
 def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 10:00"):
     """Helper for obtaining Kerberos ticket for client"""
+    kerberos = self.context.krb_server
     try:
-        node.command("echo pwd | kinit admin/admin", no_checks=True)
-        node.command(
-            f'kadmin -w pwd -q "add_principal -pw pwd {principal}"', no_checks=True
-        )
-        node.command(f"echo pwd | kinit {lifetime_option} {principal}", no_checks=True)
+        kerberos.command("echo pwd | kinit admin/admin", shell_command="sh")
+        kerberos.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"')
+        kerberos.command(f"echo pwd | kinit {lifetime_option} {principal}")
+        kerberos.command("ls /tmp/krb5cc_*")  # debug
+        kerberos.command("mv /tmp/krb5cc_0 /share/")
+        node.command("cp /share/krb5cc_0 /tmp/krb5cc_0")
         yield
     finally:
-        node.command("kdestroy", no_checks=True)
+        kdestroy(node)
 
 
 @TestStep(Given)
 def create_server_principal(self, node):
     """Helper for obtaining Kerberos ticket for server"""
+    kerberos = self.context.krb_server
     try:
-        node.command("echo pwd | kinit admin/admin", no_checks=True)
-        node.command(
-            f'kadmin -w pwd -q "add_principal -randkey HTTP/{self.context.env}-{node.name}-1.krbnet"',
-            no_checks=True,
+        kerberos.command(
+            "echo pwd | kinit admin/admin", no_checks=True, shell_command="sh"
         )
-        node.command(
-            f'kadmin -w pwd -q "ktadd -k /etc/krb5.keytab HTTP/{self.context.env}-{node.name}-1.krbnet"',
-            no_checks=True,
+        kerberos.command(
+            f'kadmin -w pwd -q "add_principal -randkey HTTP/{self.context.env}-{node.name}-1.krbnet"'
         )
+        kerberos.command(
+            f'kadmin -w pwd -q "ktadd -k /share/krb5.keytab HTTP/{self.context.env}-{node.name}-1.krbnet"'
+        )
+        node.command("cp /share/krb5.keytab /etc/krb5.keytab")
+        kerberos.command("ls /tmp/krb5cc_*")  # debug
+        kerberos.command("mv /tmp/krb5cc_0 /share/")
+        node.command("cp /share/krb5cc_0 /tmp/krb5cc_0")
         yield
     finally:
-        node.command("kdestroy", no_checks=True)
+        kdestroy(node)
         node.command("rm /etc/krb5.keytab", no_checks=True)
+
+
+def kdestroy(node):
+    """Helper for destroying Kerberos ticket"""
+    # Cannot guarantee availability of kdestroy command
+    # node.command("kdestroy", no_checks=True, shell_command="sh")
+    # current().context.krb_server.command(
+    #     f"kdestroy -c /tmp/krb5cc_0", shell_command="sh"
+    # )
+    node.command("rm /tmp/krb5cc_*", no_checks=True)
 
 
 @TestStep(Given)
@@ -223,7 +240,7 @@ def check_wrong_config(
             assert exitcode == 0, error()
 
         with When("I restart ClickHouse to apply the config changes"):
-            node.command("kdestroy")
+            kdestroy(node)
             # time.sleep(1)
             if output:
                 node.restart(safe=False, wait_healthy=True)
