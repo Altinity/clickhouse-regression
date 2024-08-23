@@ -5,4 +5,10 @@ ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # install curl, base image could be alpine
-RUN apt-get update && apt-get install -y curl
+RUN if [ -f /etc/alpine-release ]; then \
+    apk update && \
+    apk add --no-cache curl; \
+    else \
+    apt-get update && \
+    apt-get install -y curl; \
+    fi
