@@ -155,11 +155,8 @@ def alter_user(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
         )
-        
-    if with_required(auth_methods):
-        query = query.set_add_identified_with()
-    else:
-        query = query.set_identified()
+
+    query = query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -191,11 +188,8 @@ def alter_user_add(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
         )
-        
-    if with_required(auth_methods):
-        query = query.set_add_identified_with()
-    else:
-        query = query.set_identified()
+
+    query = query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -297,10 +291,7 @@ def create_user(
     for username in usernames:
         query.set_username(name=username.name, cluster_name=username.cluster)
 
-    if with_required(auth_methods):
-        query.set_identified_with()
-    else:
-        query.set_identified()
+    query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -443,18 +434,7 @@ def expect_no_password_auth_cannot_coexist_with_others_error(self, r):
     """Expect NO_PASSWORD Authentication method cannot co-exist with other authentication methods error."""
 
     exitcode = 36
-    message = "NO_PASSWORD Authentication method cannot co-exist with other authentication methods."
-    expect_error(r=r, exitcode=exitcode, message=message)
-
-
-@TestStep(Then)
-def expect_no_password_cannot_be_used_with_add_keyword_error(self, r):
-    """Expect The authentication method 'no_password' cannot be used with the ADD keyword error."""
-
-    exitcode = 36
-    message = (
-        "The authentication method 'no_password' cannot be used with the ADD keyword."
-    )
+    message = "DB::Exception: Authentication method 'no_password' cannot co-exist with other authentication methods."
     expect_error(r=r, exitcode=exitcode, message=message)
 
 
