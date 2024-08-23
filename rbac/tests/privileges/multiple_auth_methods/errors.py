@@ -11,6 +11,17 @@ def no_password_cannot_coexist_with_others():
     return exitcode, message
 
 
+def no_user(user_name):
+    def return_exitcode_and_message():
+        exitcode, message = (
+            192,
+            f"DB::Exception: There is no user `{user_name}` in user directories. (UNKNOWN_USER)",
+        )
+        return exitcode, message
+
+    return return_exitcode_and_message
+
+
 def user_can_not_be_created_updated():
     exitcode, message = (
         36,
