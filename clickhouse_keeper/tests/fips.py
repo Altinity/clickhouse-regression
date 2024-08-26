@@ -277,7 +277,7 @@ def url_table_function(self):
     port = 5001
     default_ciphers = '"ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"'
     server_file_path = "https_" + getuid() + ".py"
-    node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
 
     tls_versions_supported = {
         "TLS": True,
@@ -287,7 +287,7 @@ def url_table_function(self):
     }
 
     with Given("I make a copy of the flask server file"):
-        node.command(f"cp /https_app_file.py {server_file_path}")
+        bash_tools.command(f"cp /https_app_file.py {server_file_path}")
 
     for tls_version, should_work in tls_versions_supported.items():
         with Check(
@@ -349,7 +349,7 @@ def url_table_function(self):
             test_https_connection_with_url_table_function(port=port, success=False)
 
     with Finally("I remove the flask server file"):
-        node.command(f"rm -f {server_file_path}")
+        bash_tools.command(f"rm -f {server_file_path}")
 
 
 @TestOutline
@@ -358,7 +358,7 @@ def dictionary(self):
     port = 5001
     default_ciphers = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"
     server_file_path = "https_" + getuid() + ".py"
-    node = self.context.node
+    bash_tools = self.context.cluster.node("bash-tools")
 
     tls_versions_supported = {
         "TLS": True,
@@ -368,7 +368,7 @@ def dictionary(self):
     }
 
     with Given("I make a copy of the flask server file"):
-        node.command(f"cp /https_app_file.py {server_file_path}")
+        bash_tools.command(f"cp /https_app_file.py {server_file_path}")
 
     for tls_version, should_work in tls_versions_supported.items():
         with Check(
@@ -429,7 +429,7 @@ def dictionary(self):
             test_https_connection_with_dictionary(port=port, success=False, timeout=5)
 
     with Finally("I remove the flask server file"):
-        node.command(f"rm -f {server_file_path}")
+        bash_tools.command(f"rm -f {server_file_path}")
 
 
 @TestScenario
@@ -629,8 +629,21 @@ def server_as_client(self):
             entries=entries, config_file="ssl_cipher_list.xml", restart=True
         )
 
-    with And("I generate private key and certificate for https server"):
-        create_crt_and_key(name="https_server", common_name="127.0.0.1")
+    with Given("I generate private key and certificate for https server"):
+        my_own_ca_key, my_own_ca_crt, node_ca_crt = certs_for_flask(
+            my_own_ca_key_passphrase="",
+            server_key_passphrase="",
+            common_name="bash-tools",
+            node=self.context.cluster.node("bash-tools"),
+        )
+        create_crt_and_key(
+            name="https_server",
+            common_name="bash-tools",
+            node=self.context.cluster.node("bash-tools"),
+            node_ca_crt=node_ca_crt,
+            my_own_ca_key=my_own_ca_key,
+            my_own_ca_crt=my_own_ca_crt,
+        )
 
     Feature(run=url_table_function)
     Feature(run=dictionary)
