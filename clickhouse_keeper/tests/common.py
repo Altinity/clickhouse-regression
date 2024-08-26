@@ -1002,7 +1002,14 @@ def clickhouse_server_verification_mode(self, mode):
 
 @TestStep(Given)
 def create_crt_and_key(
-    self, name, node=None, common_name="", node_ca_crt=None, signed=True
+    self,
+    name,
+    node=None,
+    common_name="",
+    node_ca_crt=None,
+    my_own_ca_crt=None,
+    my_own_ca_key=None,
+    signed=True,
 ):
     """Create certificate and private key with specified name."""
     if node is None:
@@ -1010,6 +1017,12 @@ def create_crt_and_key(
 
     if node_ca_crt is None:
         node_ca_crt = self.context.node_ca_crt
+
+    if my_own_ca_crt is None and signed:
+        my_own_ca_crt = self.context.my_own_ca_crt
+
+    if my_own_ca_key is None and signed:
+        my_own_ca_key = self.context.my_own_ca_key
 
     with Given("I generate private key"):
         private_key = create_rsa_private_key(outfile=f"{name}.key", passphrase="")
@@ -1026,8 +1039,8 @@ def create_crt_and_key(
         crt = sign_certificate(
             outfile=f"{name}.crt",
             csr=csr,
-            ca_certificate=current().context.my_own_ca_crt if signed else None,
-            ca_key=current().context.my_own_ca_key if signed else private_key,
+            ca_certificate=my_own_ca_crt if signed else None,
+            ca_key=my_own_ca_key if signed else private_key,
             ca_passphrase="",
         )
 
@@ -1043,10 +1056,92 @@ def create_crt_and_key(
 
 
 @TestStep(Given)
+def certs_for_flask(
+    self,
+    my_own_ca_key_passphrase,
+    server_key_passphrase,
+    common_name,
+    node,
+):
+    """Enable basic SSL server configuration."""
+
+    my_own_ca_key = "my_own_ca.key"
+    my_own_ca_crt = "my_own_ca.crt"
+    server_key = "server.key"
+    server_csr = "server.csr"
+    server_crt = "server.crt"
+    dh_params = "dh_params.pem"
+
+    with Given("A directory for certificates"):
+        node.command(f"mkdir -p /etc/flask-server")
+        node_server_crt = "/etc/flask-server/" + os.path.basename(server_crt)
+        node_server_key = "/etc/flask-server/" + os.path.basename(server_key)
+        node_dh_params = "/etc/flask-server/" + os.path.basename(dh_params)
+
+    with And("I create my own CA key"):
+        my_own_ca_key = create_rsa_private_key(
+            outfile=my_own_ca_key, passphrase=my_own_ca_key_passphrase
+        )
+        debug(f"{my_own_ca_key}")
+
+    with And("I create my own CA certificate"):
+        my_own_ca_crt = create_ca_certificate(
+            outfile=my_own_ca_crt,
+            key=my_own_ca_key,
+            passphrase=my_own_ca_key_passphrase,
+            common_name="root",
+        )
+
+    with And("I generate DH parameters"):
+        dh_params = create_dh_params(outfile=dh_params)
+
+    with And("I generate server key"):
+        server_key = create_rsa_private_key(
+            outfile=server_key, passphrase=server_key_passphrase
+        )
+
+    with And("I generate server certificate signing request"):
+        server_csr = create_certificate_signing_request(
+            outfile=server_csr,
+            common_name=common_name,
+            key=server_key,
+            passphrase=server_key_passphrase,
+        )
+
+    with And("I sign server certificate with my own CA"):
+        server_crt = sign_certificate(
+            outfile=server_crt,
+            csr=server_csr,
+            ca_certificate=my_own_ca_crt,
+            ca_key=my_own_ca_key,
+            ca_passphrase=my_own_ca_key_passphrase,
+        )
+
+    with And("I add certificate to node"):
+        node_ca_crt = add_trusted_ca_certificate(node=node, certificate=my_own_ca_crt)
+        self.context.node_ca_crt = node_ca_crt
+
+    with And("I copy server certificate, key and dh params", description=f"{node}"):
+        copy(dest_node=node, src_path=server_crt, dest_path=node_server_crt)
+        copy(dest_node=node, src_path=server_key, dest_path=node_server_key)
+        copy(dest_node=node, src_path=dh_params, dest_path=node_dh_params)
+
+    with And("I validate server certificate"):
+        validate_certificate(
+            certificate=node_server_crt, ca_certificate=node_ca_crt, node=node
+        )
+
+    with And("I set correct permission on server key file"):
+        node.command(f'chmod 600 "{node_server_key}"')
+
+    return my_own_ca_key, my_own_ca_crt, node_ca_crt
+
+
+@TestStep(Given)
 @Retry(count=3)
 def flask_server(self, server_path, port, protocol, ciphers):
     """Run specified flask server"""
-    node = self.context.node
+    node = self.context.cluster.node("bash-tools")
     with self.context.cluster.shell(node.name) as bash:
         cmd = f"python3 {server_path} --port={port} --protocol={protocol} --ciphers={ciphers}"
 
@@ -1098,7 +1193,7 @@ def test_https_connection_with_url_table_function(
 
     with Then("I read data from the server using `url` table function"):
         node.query(
-            f"SELECT * FROM url('https://127.0.0.1:{port}/data', 'CSV') FORMAT CSV",
+            f"SELECT * FROM url('https://bash-tools:{port}/data', 'CSV') FORMAT CSV",
             message=message,
             timeout=timeout,
         )
@@ -1130,7 +1225,7 @@ def test_https_connection_with_dictionary(
     try:
         with When("I create a dictionary using an https source"):
             node.query(
-                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://127.0.0.1:{port}/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())",
+                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://bash-tools:{port}/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())",
                 timeout=timeout,
             )
 
