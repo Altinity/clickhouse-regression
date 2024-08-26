@@ -1072,7 +1072,6 @@ def https_server_url_function_connection(
             add_ssl_client_configuration_file(entries=options, restart=True)
 
     with Then("I read data from the server using `url` table function"):
-        node.command(f'curl https://bash-tools:{port}/data')
         node.query(
             f"SELECT * FROM url('https://bash-tools:{port}/data', 'CSV') FORMAT CSV",
             message=message,
