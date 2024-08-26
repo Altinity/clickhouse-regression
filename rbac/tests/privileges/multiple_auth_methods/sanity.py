@@ -125,6 +125,44 @@ def column_types_in_system_table(self):
             assert "Array(String)" in typename, error()
 
 
+@TestScenario
+def check_add_to_no_password(self):
+    """Check that when adding authentication methods to a user identified with NO_PASSWORD,
+    NO_PASSWORD will be replaced with the new methods."""
+
+    user_name = f"user_{getuid()}"
+
+    with Given("create user with NO_PASSWORD"):
+        common.create_user(user_name=user_name, identified="NO_PASSWORD")
+
+    with When("add authentication methods to t  he user"):
+        identified = "plaintext_password BY '123', plaintext_password BY '456'"
+        common.alter_identified(user_name=user_name, identified=identified)
+        correct_passwords = ["123", "456"]
+
+    with Then("check that user can login with new authentication methods"):
+        for password in correct_passwords:
+            common.login(user_name=user_name, password=password)
+
+    with And("check that user can not login with no password"):
+        common.login(
+            user_name=user_name,
+            password=None,
+            expected=errors.wrong_password(user_name),
+        )
+
+    with And("check that NO_PASSWORD is not in SHOW CREATE USER"):
+        create_user = self.context.node.query(f"SHOW CREATE USER {user_name}").output
+        assert "no_password" not in create_user.lower(), error()
+
+    with And(
+        "check that changed authentication methods are reflected in system.users table"
+    ):
+        common.check_changes_reflected_in_system_table(
+            user_name=user_name, correct_passwords=correct_passwords
+        )
+
+
 @TestFeature
 @Name("sanity check")
 def feature(self):
