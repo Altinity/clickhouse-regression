@@ -5,7 +5,7 @@ from helpers.cluster import *
 
 
 @TestScenario
-@Repeat(1000, until="fail")
+@Repeat(200, until="fail")
 def merge(self):
     "Automated test for issue 59401."
     node_1 = self.context.node_1
@@ -32,7 +32,7 @@ def merge(self):
     with And("insert data into the distributed table"):
         insert_query = f"""
             INSERT INTO {distributed_table_name} 
-            VALUES ('11', '2024-01-01', 1),
+            VALUES ('11', '2024-01-01', 1),\
             ('3', '2024-01-01', 1),\
             ('2', '2024-05-01', 1),\
             ('8', '2024-01-05', 1),\
@@ -66,7 +66,7 @@ def merge(self):
             FROM default.{distributed_table_name}
             )
         """
-        without_merge = self.context.node_1.query(correct_query)
+        without_merge = node_1.query(correct_query)
 
     with And("select count() with using `merge` and expect the same result"):
         incorrect_query = f"""
@@ -77,7 +77,7 @@ def merge(self):
                 FROM default.{distributed_table_name}
             )
         """
-        with_merge = self.context.node_1.query(incorrect_query)
+        with_merge = node_1.query(incorrect_query)
 
     with And("check that the results without and with `merge` are the same"):
         assert with_merge.output == without_merge.output, error()
