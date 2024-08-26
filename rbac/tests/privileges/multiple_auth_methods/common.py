@@ -221,9 +221,12 @@ def check_changes_reflected_in_system_table(
 
 @TestStep(Then)
 def check_login_with_correct_and_wrong_passwords(
-    self, user_name, wrong_passwords=[], correct_passwords=[]
+    self, user_name, wrong_passwords=[], correct_passwords=[], node=None
 ):
     """Validate user login."""
+    if node is None:
+        node = self.context.node
+
     for password in correct_passwords:
         login(user_name=user_name, password=password)
 
@@ -231,5 +234,22 @@ def check_login_with_correct_and_wrong_passwords(
         login(
             user_name=user_name,
             password=password,
+            expected=errors.wrong_password(user_name),
+        )
+
+
+@TestStep(Then)
+def check_login_with_correct_and_wrong_passwords_on_cluster(
+    self, user_name, wrong_passwords, correct_passwords
+):
+    """Validate user login on all nodes."""
+    for password in correct_passwords:
+        login(user_name=user_name, password=password, nodes=self.context.nodes)
+
+    for password in wrong_passwords:
+        login(
+            user_name=user_name,
+            password=password,
+            nodes=self.context.nodes,
             expected=errors.wrong_password(user_name),
         )

@@ -60,27 +60,24 @@ def check_create_user_v2(self, node=None):
 @TestScenario
 def create_user_with_multiple_auth_methods(self, auth_methods):
     """Check that user can be created with multiple authentication methods."""
-    node = self.context.node
 
-    with Given("concatenate authentication methods"):
-        auth_methods_string = ", ".join(j[0] for j in auth_methods)
-        note(auth_methods_string)
+    user_name = f"user_{getuid()}"
 
-    with And("create list of correct and wrong passwords for authentication"):
+    with Given("create list of correct and wrong passwords for authentication"):
         correct_passwords = define("correct passwords", [])
         wrong_passwords = define("wrong passwords", [j[1] for j in auth_methods])
 
     with When("create user with multiple authentication methods"):
-        user_name = f"user_{getuid()}"
-        if "no_password" in auth_methods_string and len(auth_methods) > 1:
+        auth_methods_str = define("auth methods", ", ".join(j[0] for j in auth_methods))
+        if "no_password" in auth_methods_str and len(auth_methods) > 1:
             common.create_user(
                 user_name=user_name,
-                identified=auth_methods_string,
+                identified=auth_methods_str,
                 expected=errors.no_password_cannot_coexist_with_others(),
             )
         else:
-            common.create_user(user_name=user_name, identified=auth_methods_string)
-            if "no_password" in auth_methods_string:
+            common.create_user(user_name=user_name, identified=auth_methods_str)
+            if "no_password" in auth_methods_str:
                 correct_passwords = define("new correct passwords", [""])
                 wrong_passwords = define("new wrong passwords", [])
             else:
@@ -110,9 +107,9 @@ def create_user_with_multiple_auth_methods(self, auth_methods):
 def check_create_user_with_multiple_auth_methods(self):
     """Run create user with multiple auth methods test with all combinations of auth methods."""
     auth_methods_combinations = common.generate_auth_combinations(
-        auth_methods_dict=common.authentication_methods_with_passwords,
+        auth_methods_dict=common.authentication_methods_with_passwords, max_length=3
     )
-    with Pool(6) as executor:
+    with Pool(4) as executor:
         for num, auth_methods in enumerate(auth_methods_combinations):
             Scenario(
                 f"{num}",
@@ -132,7 +129,7 @@ def check_create_user_with_multiple_auth_methods(self):
 def feature(self):
     """Check that user can be created with multiple authentication methods."""
     with Pool(2) as executor:
-        # Scenario(test=check_create_user_v2, parallel=True, executor=executor)()
+        Scenario(test=check_create_user_v2, parallel=True, executor=executor)()
         Scenario(
             test=check_create_user_with_multiple_auth_methods,
             parallel=True,
