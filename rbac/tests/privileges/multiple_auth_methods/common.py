@@ -228,13 +228,14 @@ def check_login_with_correct_and_wrong_passwords(
         node = self.context.node
 
     for password in correct_passwords:
-        login(user_name=user_name, password=password)
+        login(user_name=user_name, password=password, node=node)
 
     for password in wrong_passwords:
         login(
             user_name=user_name,
             password=password,
             expected=errors.wrong_password(user_name),
+            node=node,
         )
 
 

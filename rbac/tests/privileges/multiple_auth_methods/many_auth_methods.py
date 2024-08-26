@@ -25,9 +25,9 @@ def create_user_with_many_auth_methods(self):
                 f"plaintext_password by '{password}'" for password in passwords
             ]
             auth_methods_string = ",".join(auth_methods)
-            query = f"CREATE USER {user_name} IDENTIFIED WITH {auth_methods_string}"
+            query = define("query", f"CREATE USER {user_name} IDENTIFIED WITH {auth_methods_string}")
 
-        with Then("execute CREATE USER query with 1000 auth methods"):
+        with Then("execute create user query with 1000 auth methods"):
             common.execute_query(query=query)
 
         with And("login with every password"):
