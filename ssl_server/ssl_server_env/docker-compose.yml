@@ -68,6 +68,14 @@ services:
       zookeeper:
         condition: service_healthy
 
+  bash-tools:
+    extends:
+      file: ../../docker-compose/bash-tools.yml
+      service: bash-tools
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/https_app_file.py:/https_app_file.py"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/http_app_file.py:/http_app_file.py"
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:

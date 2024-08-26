@@ -3,7 +3,7 @@ from testflows.core import *
 from ssl_server.tests.common import *
 from ssl_server.tests.ssl_context import enable_ssl
 from ssl_server.requirements import *
-from clickhouse_keeper.tests.common import flask_server
+from clickhouse_keeper.tests.common import flask_server, certs_for_flask
 
 default_ciphers = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"
 
@@ -23,7 +23,7 @@ def http_server_url_function_checks(self):
 
     with Check("I read data from the http server using `url` table function"):
         output = node.query(
-            "SELECT * FROM url('http://127.0.0.1:5000/data', 'CSV') FORMAT CSV"
+            "SELECT * FROM url('http://bash-tools:5000/data', 'CSV') FORMAT CSV"
         ).output
         assert output == "12345", error()
 
@@ -138,11 +138,24 @@ def feature(self, node="clickhouse1"):
     """Check clickhouse-server connections using `url` table function."""
     self.context.node = self.context.cluster.node(node)
 
-    with Given("I enable SSL"):
-        enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
+    with Given("I generate private key and certificate for https server"):
+        my_own_ca_key, my_own_ca_crt, node_ca_crt = certs_for_flask(
+            my_own_ca_key_passphrase="",
+            server_key_passphrase="",
+            common_name="bash-tools",
+            node=self.context.cluster.node("bash-tools"),
+        )
+        create_crt_and_key(
+            name="https_server",
+            common_name="bash-tools",
+            node=self.context.cluster.node("bash-tools"),
+            node_ca_crt=node_ca_crt,
+            my_own_ca_key=my_own_ca_key,
+            my_own_ca_crt=my_own_ca_crt,
+        )
 
-    with And("I generate private key and certificate for https server"):
-        create_crt_and_key(name="https_server", common_name="127.0.0.1")
+    with Given("I enable SSL for clickhouse-server"):
+        enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
     Suite(run=https_server_url_function_checks)
     Suite(run=http_server_url_function_checks)
