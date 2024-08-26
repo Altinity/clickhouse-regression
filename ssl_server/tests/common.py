@@ -998,7 +998,14 @@ def clickhouse_server_verification_mode(self, mode):
 
 @TestStep(Given)
 def create_crt_and_key(
-    self, name, node=None, common_name="", node_ca_crt=None, signed=True
+    self,
+    name,
+    node=None,
+    common_name="",
+    node_ca_crt=None,
+    my_own_ca_crt=None,
+    my_own_ca_key=None,
+    signed=True,
 ):
     """Create certificate and private key with specified name."""
     if node is None:
@@ -1006,6 +1013,12 @@ def create_crt_and_key(
 
     if node_ca_crt is None:
         node_ca_crt = self.context.node_ca_crt
+
+    if my_own_ca_crt is None and signed:
+        my_own_ca_crt = self.context.my_own_ca_crt
+
+    if my_own_ca_key is None and signed:
+        my_own_ca_key = self.context.my_own_ca_key
 
     with Given("I generate private key"):
         private_key = create_rsa_private_key(outfile=f"{name}.key", passphrase="")
@@ -1022,8 +1035,8 @@ def create_crt_and_key(
         crt = sign_certificate(
             outfile=f"{name}.crt",
             csr=csr,
-            ca_certificate=current().context.my_own_ca_crt if signed else None,
-            ca_key=current().context.my_own_ca_key if signed else private_key,
+            ca_certificate=my_own_ca_crt if signed else None,
+            ca_key=my_own_ca_key if signed else private_key,
             ca_passphrase="",
         )
 
@@ -1059,8 +1072,9 @@ def https_server_url_function_connection(
             add_ssl_client_configuration_file(entries=options, restart=True)
 
     with Then("I read data from the server using `url` table function"):
+        node.command(f'curl https://bash-tools:{port}/data')
         node.query(
-            f"SELECT * FROM url('https://127.0.0.1:{port}/data', 'CSV') FORMAT CSV",
+            f"SELECT * FROM url('https://bash-tools:{port}/data', 'CSV') FORMAT CSV",
             message=message,
             timeout=timeout,
         )
@@ -1098,7 +1112,7 @@ def https_server_https_dictionary_connection(
     try:
         with When("I create a dictionary using an https source"):
             node.query(
-                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://127.0.0.1:{port}/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())",
+                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://bash-tools:{port}/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())",
                 timeout=timeout,
             )
 
