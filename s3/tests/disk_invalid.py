@@ -138,8 +138,10 @@ def access_failed(self):
             "default": {"volumes": {"default": {"disk": "default"}}},
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
-
-    invalid_s3_storage_config(disks, policies, message="Access Denied", tail=300)
+    message = (
+        "AccessDenied" if check_clickhouse_version(">=23.8")(self) else "Access Denied"
+    )
+    invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
 @TestScenario
@@ -250,8 +252,10 @@ def access_default(self):
             "default": {"volumes": {"default": {"disk": "default"}}},
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
-
-    invalid_s3_storage_config(disks, policies, message="Access Denied", tail=300)
+    message = (
+        "AccessDenied" if check_clickhouse_version(">=23.8")(self) else "Access Denied"
+    )
+    invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
 @TestScenario
