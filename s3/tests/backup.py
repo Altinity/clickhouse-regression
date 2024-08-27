@@ -1142,7 +1142,9 @@ def aws_s3(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with aws s3 storage."""
 
     with Given("a temporary s3 path"):
-        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/backup")
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/backup_bucket"
+        )
 
         self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
         self.context.bucket_path = f"{bucket_prefix}/{temp_s3_path}/backup_bucket"
@@ -1157,9 +1159,12 @@ def aws_s3(self, uri, bucket_prefix):
 def gcs(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with gcs storage."""
 
-    self.context.uri = f"{uri}backup_bucket/"
-    self.context.bucket_name = f"{bucket_prefix}/backup_bucket"
-    self.context.bucket_path = None
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/backup_bucket"
+        )
+        self.context.uri = f"{uri}backup_bucket/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/backup_bucket/{temp_s3_path}"
 
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
@@ -1172,7 +1177,9 @@ def minio(self, uri, bucket_prefix):
     """Test manual backup and metadata back up with minio storage."""
 
     with Given("a temporary s3 path"):
-        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/backup")
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/backup_bucket"
+        )
 
         self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
         self.context.bucket_path = f"{bucket_prefix}/{temp_s3_path}/backup_bucket"
