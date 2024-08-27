@@ -50,3 +50,11 @@ def wrong_password(user_name):
         return exitcode, message
 
     return return_exitcode_and_message
+
+
+def create_user_query_is_not_allowed_to_have_add():
+    exitcode, message = (
+        36,
+        "DB::Exception: Create user query is not allowed to have ADD IDENTIFIED, remove the ADD keyword.",
+    )
+    return exitcode, message
