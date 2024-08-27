@@ -194,29 +194,38 @@ def check_changes_reflected_in_system_table(
     if node is None:
         node = self.context.node
 
-    system_auth_types_length = node.query(
-        f"SELECT length(auth_type) FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
-    ).output
-
-    if len(correct_passwords) > 0:
-        assert system_auth_types_length == str(len(correct_passwords)), error()
-
-        create_user_command = f"SHOW CREATE USER {user_name} FORMAT TabSeparated"
-        create_user_query_output = node.query(create_user_command).output
-
-        for i in range(len(correct_passwords)):
-            system_auth_type = node.query(
-                f"SELECT auth_type[{i+1}] FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
-            ).output
-            assert system_auth_type in create_user_query_output, error()
-    else:
-        assert system_auth_types_length == "", error()
-        exitcode, message = errors.no_user(user_name)()
-        node.query(
-            f"SHOW CREATE USER {user_name} FORMAT TabSeparated",
-            exitcode=exitcode,
-            message=message,
+    with By("check the number of authentication methods in system.users table"):
+        system_auth_types_length = node.query(
+            f"SELECT length(auth_type) FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
         ).output
+
+    with And(
+        "check that number of correct passwords is equal to the number of authentication methods"
+    ):
+        if len(correct_passwords) > 0:
+            assert system_auth_types_length == str(len(correct_passwords)), error()
+        else:
+            assert system_auth_types_length == "", error()
+
+    with And(
+        "check that auth methods from system.users are the same as in SHOW CREATE USER"
+    ):
+        if len(correct_passwords) > 0:
+            create_user_command = f"SHOW CREATE USER {user_name} FORMAT TabSeparated"
+            create_user_query_output = node.query(create_user_command).output
+
+            for i in range(len(correct_passwords)):
+                system_auth_type = node.query(
+                    f"SELECT auth_type[{i+1}] FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
+                ).output
+                assert system_auth_type in create_user_query_output, error()
+        else:
+            exitcode, message = errors.no_user(user_name)()
+            node.query(
+                f"SHOW CREATE USER {user_name} FORMAT TabSeparated",
+                exitcode=exitcode,
+                message=message,
+            )
 
 
 @TestStep(Then)

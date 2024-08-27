@@ -434,6 +434,21 @@ def alter_user_add_not_identified_syntax_error(self):
             common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
 
 
+@TestScenario
+@Name("invalid create with alter add identified")
+def invalid_create_with_alter_add_identified(self):
+
+    user_name = f"user_{getuid()}"
+    with Given("create user without authentication methods"):
+        common.create_user(user_name=user_name)
+
+    with Then("execute invalid alter query"):
+        common.execute_query(
+            query=f"CREATE USER {user_name} ADD IDENTIFIED WITH plaintext_password BY '1'",
+            expected=errors.create_user_query_is_not_allowed_to_have_add,
+        )
+
+
 @TestFeature
 @Name("syntax")
 def feature(self):
