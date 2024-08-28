@@ -32,7 +32,7 @@ def check_adding_auth_methods(self, auth_methods):
     with When("add one or more authentication methods to the user"):
         auth_methods_str = define("auth methods", ", ".join(j[0] for j in auth_methods))
         if "no_password" in auth_methods_str:
-            exitcode, message = errors.no_password_cannot_coexist_with_others()
+            exitcode, message = errors.syntax_error()
             common.add_identified(
                 user_name=user_name,
                 identified=auth_methods_str,

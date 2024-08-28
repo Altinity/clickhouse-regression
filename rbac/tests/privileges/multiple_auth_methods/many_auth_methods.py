@@ -25,7 +25,10 @@ def create_user_with_many_auth_methods(self):
                 f"plaintext_password by '{password}'" for password in passwords
             ]
             auth_methods_string = ",".join(auth_methods)
-            query = define("query", f"CREATE USER {user_name} IDENTIFIED WITH {auth_methods_string}")
+            query = define(
+                "query",
+                f"CREATE USER {user_name} IDENTIFIED WITH {auth_methods_string}",
+            )
 
         with Then("execute create user query with 1000 auth methods"):
             common.execute_query(query=query)
@@ -55,18 +58,22 @@ def create_user_with_many_auth_methods(self):
 @TestScenario
 def add_many_auth_methods_to_user(self):
     """Check that 1000 authentication methods can be added to user."""
-    with Given("set max_authentication_methods_per_user to 1000"):
-        number_of_auth_methods = 1000
+    with Given("set max_authentication_methods_per_user to 1001"):
+        number_of_auth_methods = 1001
         common.change_server_settings(
             setting="max_authentication_methods_per_user", value=number_of_auth_methods
         )
 
-    with And("create user with NO_PASSWORD auth method"):
+    with And("create user with one plaintext password auth method"):
         user_name = f"user_{getuid()}"
-        helper.create_user(user_name=user_name, identified="NO_PASSWORD")
+        initial_password = "initial_password"
+        helper.create_user(
+            user_name=user_name,
+            identified=f"plaintext_password by '{initial_password}'",
+        )
 
-    with And("add 1000 auth methods to user"):
-        passwords = [str(i) for i in range(number_of_auth_methods)]
+    with And(f"add {number_of_auth_methods-1} auth methods to user"):
+        passwords = [str(i) for i in range(number_of_auth_methods - 1)]
         queries = [
             f"ALTER USER {user_name} ADD IDENTIFIED WITH plaintext_password by '{password}'"
             for password in passwords
@@ -75,7 +82,7 @@ def add_many_auth_methods_to_user(self):
         common.execute_query(query=combined_query)
 
     with Then("login with every password"):
-        for password in passwords:
+        for password in passwords + [initial_password]:
             common.login(user_name=user_name, password=password)
 
     with And("login with NO_PASSWORD and expect error"):

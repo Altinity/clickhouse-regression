@@ -445,7 +445,7 @@ def invalid_create_with_alter_add_identified(self):
     with Then("execute invalid alter query"):
         common.execute_query(
             query=f"CREATE USER {user_name} ADD IDENTIFIED WITH plaintext_password BY '1'",
-            expected=errors.create_user_query_is_not_allowed_to_have_add,
+            expected=errors.syntax_error,
         )
 
 
