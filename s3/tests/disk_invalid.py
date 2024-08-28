@@ -196,7 +196,11 @@ def access_failed_skip_check(self):
                     message="DB::Exception:",
                     exitcode=243,
                 )
-                assert "user/qa-test is not authorized" in r.output, error()
+                assert (
+                    "user/qa-test is not authorized"
+                    if self.context.storage == "aws_s3"
+                    else "DB::Exception: Message: Access Denied" in r.output
+                ), error()
         else:
             with Given(
                 f"""I create table using S3 storage policy external,
