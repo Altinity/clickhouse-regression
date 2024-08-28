@@ -84,7 +84,7 @@ def check_alter_add_identified_on_cluster(
                 user_name=user_name,
                 identified=auth_methods_str,
                 cluster=cluster,
-                expected=errors.no_password_cannot_coexist_with_others(),
+                expected=errors.syntax_error(),
             )
         else:
             correct_passwords = define(
