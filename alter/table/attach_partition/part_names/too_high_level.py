@@ -255,6 +255,6 @@ def reset_when_equal_to_legacy_max_level(self):
 
     for engine, partition_key in product(engines, partition_keys):
         Scenario(
-            f"{engine}",
+            f"{engine} {partition_key}",
             test=check_reset_when_equal_to_legacy_max_level,
         )(engine=engine, partition_key=partition_key)
