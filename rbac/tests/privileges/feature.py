@@ -7,7 +7,7 @@ from rbac.helper.common import *
 @Name("privileges")
 def feature(self):
     """Check RBAC privileges."""
-    with Pool(10) as pool:
+    with Pool(7) as pool:
         try:
             Feature(
                 run=load("rbac.tests.privileges.insert", "feature"),
