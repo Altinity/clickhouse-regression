@@ -4,3 +4,5 @@ min_max_zero_offset_structure_22_4 = r"""'l_partkey\tInt32'"""
 
 bloom_filter_structure_22_4 = r"""'String\tString'"""
 
+bloom_filter_structure = r"""'String\tNullable(String)'"""
+
