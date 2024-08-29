@@ -1434,7 +1434,7 @@ def check_cascade_mv_definer_mv_definer_mv_definer(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             definer_one_source_privileges,
@@ -1564,7 +1564,7 @@ def check_cascade_mv_mv_definer_mv_definer(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             definer_two_target_one_privileges,
@@ -1688,7 +1688,7 @@ def check_cascade_mv_definer_mv_mv_definer(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             definer_one_source_privileges,
@@ -1806,7 +1806,7 @@ def check_cascade_mv_mv_mv_definer(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             user_target_one_privileges,
@@ -1922,7 +1922,7 @@ def check_cascade_mv_mv_definer_mv(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             user_target_two_privileges,
@@ -2047,7 +2047,7 @@ def check_cascade_mv_definer_mv_definer_mv(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             user_target_two_privileges,
@@ -2173,7 +2173,7 @@ def check_cascade_mv_definer_mv_mv(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             user_target_two_privileges,
@@ -2286,7 +2286,7 @@ def check_cascade_mv_mv_mv(self):
             for item in covering_array
         ]
 
-    with Pool(7) as executor:
+    with Pool(3) as executor:
         for (
             user_source_privileges,
             user_target_one_privileges,
@@ -2326,11 +2326,35 @@ def feature(self, node="clickhouse1"):
     """Test cascading materialized views with different sql security options."""
     self.context.node = self.context.cluster.node(node)
 
-    Scenario(run=check_cascade_mv_definer_mv_definer_mv_definer)
-    Scenario(run=check_cascade_mv_mv_definer_mv_definer)
-    Scenario(run=check_cascade_mv_definer_mv_mv_definer)
-    Scenario(run=check_cascade_mv_mv_mv_definer)
-    Scenario(run=check_cascade_mv_mv_definer_mv)
-    Scenario(run=check_cascade_mv_definer_mv_definer_mv)
-    Scenario(run=check_cascade_mv_definer_mv_mv)
-    Scenario(run=check_cascade_mv_mv_mv)
+    with Pool(3) as executor:
+        Scenario(
+            test=check_cascade_mv_definer_mv_definer_mv_definer,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(
+            test=check_cascade_mv_mv_definer_mv_definer,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(
+            test=check_cascade_mv_definer_mv_mv_definer,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(
+            test=check_cascade_mv_mv_mv_definer, parallel=True, executor=executor
+        )()
+        Scenario(
+            test=check_cascade_mv_mv_definer_mv, parallel=True, executor=executor
+        )()
+        Scenario(
+            test=check_cascade_mv_definer_mv_definer_mv,
+            parallel=True,
+            executor=executor,
+        )()
+        Scenario(
+            test=check_cascade_mv_definer_mv_mv, parallel=True, executor=executor
+        )()
+        Scenario(test=check_cascade_mv_mv_mv, parallel=True, executor=executor)()
+        join()
