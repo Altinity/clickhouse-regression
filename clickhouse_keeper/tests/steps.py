@@ -485,7 +485,7 @@ def stop_keepers(self, cluster_nodes=None):
                     pid = node.command("cat /tmp/clickhouse-keeper.pid").output.strip()
                     node.command(f"kill -TERM {pid}", exitcode=0)
             with And("checking pid does not exist"):
-                retry(node.command, timeout=100, delay=1)(
+                retry(node.command, timeout=100, delay=10)(
                     f"ps {pid}", exitcode=1, steps=False
                 )
 
@@ -1543,14 +1543,10 @@ def start_standalone_keeper(
     try:
         with Given("I stop all ClickHouse server nodes"):
             for name in cluster_nodes:
-                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
-                    safe=False
-                )
+                cluster.node(name).stop_clickhouse(safe=False)
 
             for name in control_nodes:
-                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
-                    safe=False
-                )
+                cluster.node(name).stop_clickhouse(safe=False)
 
         with And("I clean ClickHouse Keeper server nodes"):
             clean_coordination_on_all_nodes()
