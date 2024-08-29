@@ -2326,35 +2326,11 @@ def feature(self, node="clickhouse1"):
     """Test cascading materialized views with different sql security options."""
     self.context.node = self.context.cluster.node(node)
 
-    with Pool(3) as executor:
-        Scenario(
-            test=check_cascade_mv_definer_mv_definer_mv_definer,
-            parallel=True,
-            executor=executor,
-        )()
-        Scenario(
-            test=check_cascade_mv_mv_definer_mv_definer,
-            parallel=True,
-            executor=executor,
-        )()
-        Scenario(
-            test=check_cascade_mv_definer_mv_mv_definer,
-            parallel=True,
-            executor=executor,
-        )()
-        Scenario(
-            test=check_cascade_mv_mv_mv_definer, parallel=True, executor=executor
-        )()
-        Scenario(
-            test=check_cascade_mv_mv_definer_mv, parallel=True, executor=executor
-        )()
-        Scenario(
-            test=check_cascade_mv_definer_mv_definer_mv,
-            parallel=True,
-            executor=executor,
-        )()
-        Scenario(
-            test=check_cascade_mv_definer_mv_mv, parallel=True, executor=executor
-        )()
-        Scenario(test=check_cascade_mv_mv_mv, parallel=True, executor=executor)()
-        join()
+    Scenario(run=check_cascade_mv_definer_mv_definer_mv_definer)
+    Scenario(run=check_cascade_mv_mv_definer_mv_definer)
+    Scenario(run=check_cascade_mv_definer_mv_mv_definer)
+    Scenario(run=check_cascade_mv_mv_mv_definer)
+    Scenario(run=check_cascade_mv_mv_definer_mv)
+    Scenario(run=check_cascade_mv_definer_mv_definer_mv)
+    Scenario(run=check_cascade_mv_definer_mv_mv)
+    Scenario(run=check_cascade_mv_mv_mv)
