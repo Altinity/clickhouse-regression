@@ -485,7 +485,7 @@ def stop_keepers(self, cluster_nodes=None):
                     pid = node.command("cat /tmp/clickhouse-keeper.pid").output.strip()
                     node.command(f"kill -TERM {pid}", exitcode=0)
             with And("checking pid does not exist"):
-                retry(node.command, timeout=100, delay=1)(
+                retry(node.command, timeout=100, delay=10)(
                     f"ps {pid}", exitcode=1, steps=False
                 )
 
