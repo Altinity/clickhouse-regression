@@ -26,6 +26,11 @@ def names(methods):
     return ",".join([method.__name__ for method in methods])
 
 
+def with_required(auth_methods):
+    """Check if the first authentication method requires WITH keyword."""
+    return "set_with" in auth_methods[0].__name__
+
+
 def create_user_auth_combinations(
     auth_methods=None, max_length=3, with_replacement=False
 ):
@@ -91,7 +96,7 @@ def node_client(self, node=None):
 
     bash_tools = self.context.cluster.node("bash-tools")
 
-    with bash_tools.client(client_args={"host", node.name}) as client:
+    with bash_tools.client(client_args={"host": node.name}) as client:
         yield client
 
 
@@ -151,7 +156,7 @@ def alter_user(
             cluster_name=username.cluster,
         )
 
-    query.set_identified()
+    query = query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -182,7 +187,9 @@ def alter_user_add(
         query = query.set_username(
             getattr(username, "renamed", None) or username.name,
             cluster_name=username.cluster,
-        ).set_add_identified()
+        )
+
+    query = query.set_identified()
 
     for auth_method in auth_methods:
         query = auth_method(query)
@@ -427,18 +434,7 @@ def expect_no_password_auth_cannot_coexist_with_others_error(self, r):
     """Expect NO_PASSWORD Authentication method cannot co-exist with other authentication methods error."""
 
     exitcode = 36
-    message = "NO_PASSWORD Authentication method cannot co-exist with other authentication methods."
-    expect_error(r=r, exitcode=exitcode, message=message)
-
-
-@TestStep(Then)
-def expect_no_password_cannot_be_used_with_add_keyword_error(self, r):
-    """Expect The authentication method 'no_password' cannot be used with the ADD keyword error."""
-
-    exitcode = 36
-    message = (
-        "The authentication method 'no_password' cannot be used with the ADD keyword."
-    )
+    message = "DB::Exception: Authentication method 'no_password' cannot co-exist with other authentication methods."
     expect_error(r=r, exitcode=exitcode, message=message)
 
 

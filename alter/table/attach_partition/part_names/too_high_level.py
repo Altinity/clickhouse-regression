@@ -153,7 +153,7 @@ def too_high_level(self):
 
 @TestScenario
 def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
-    """Check that part level is reseted to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
+    """Check that part level is reset to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
     with Given("I have a table with data"):
         table_name = "source_" + getuid()
         create_MergeTree_table_with_data(
@@ -209,7 +209,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
         ).output
         assert table_before == table_after, error()
 
-    with And("I check that part level was reseted"):
+    with And("I check that part level was reset"):
         parts_after = self.context.node.query(
             f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name FORMAT TabSeparated"
         ).output
@@ -231,7 +231,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
     )
 )
 def reset_when_equal_to_legacy_max_level(self):
-    """Run test to check that part level is reseted to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
+    """Run test to check that part level is reset to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
 
     engines = [
         "MergeTree",
@@ -255,6 +255,6 @@ def reset_when_equal_to_legacy_max_level(self):
 
     for engine, partition_key in product(engines, partition_keys):
         Scenario(
-            f"{engine}",
+            f"{engine} {partition_key}",
             test=check_reset_when_equal_to_legacy_max_level,
         )(engine=engine, partition_key=partition_key)

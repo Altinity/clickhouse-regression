@@ -1,9 +1,11 @@
 from testflows.core import *
+from testflows.asserts import error
 from testflows.combinatorics import combinations
 
 from rbac.helper.common import *
 from helpers.sql.create_user import CreateUser
 import rbac.tests.privileges.multiple_auth_methods.actions as actions
+import rbac.tests.privileges.multiple_auth_methods.errors as errors
 
 
 plaintext_password = "some_password_1"
@@ -66,7 +68,7 @@ authentication_methods_with_passwords = {
 }
 
 
-def generate_auth_combinations(auth_methods_dict, max_length=2, with_replacement=True):
+def generate_auth_combinations(auth_methods_dict, max_length=2, with_replacement=False):
     auth_combinations = []
     for length in range(1, max_length + 1):
         auth_combinations.extend(
@@ -91,7 +93,14 @@ def execute_query(self, query, expected=None, node=None, exitcode=None, message=
 
 @TestStep(Then)
 def login(
-    self, user_name, password="", node=None, exitcode=None, message=None, expected=None
+    self,
+    user_name,
+    password="",
+    node=None,
+    exitcode=None,
+    message=None,
+    expected=None,
+    nodes=None,
 ):
     if node is None:
         node = self.context.node
@@ -102,12 +111,15 @@ def login(
     if expected is not None:
         exitcode, message = expected()
 
-    node.query(
-        f"SELECT currentUser()",
-        settings=[("user", user_name), ("password", password)],
-        exitcode=exitcode,
-        message=message,
-    )
+    nodes = nodes or [node]
+
+    for node in nodes:
+        node.query(
+            f"SELECT currentUser()",
+            settings=[("user", user_name), ("password", password)],
+            exitcode=exitcode,
+            message=message,
+        )
 
 
 @TestStep(Given)
@@ -172,3 +184,82 @@ def check_login(self, user, altered_user=None):
 
         with And("I try to login with slightly wrong username"):
             actions.login_with_wrong_username(user=altered_user)
+
+
+@TestStep(Then)
+def check_changes_reflected_in_system_table(
+    self, user_name, correct_passwords, node=None
+):
+    """Check that changes in user's authentication methods are reflected in the system.users table."""
+    if node is None:
+        node = self.context.node
+
+    with By("check the number of authentication methods in system.users table"):
+        system_auth_types_length = node.query(
+            f"SELECT length(auth_type) FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
+        ).output
+
+    with And(
+        "check that number of correct passwords is equal to the number of authentication methods"
+    ):
+        if len(correct_passwords) > 0:
+            assert system_auth_types_length == str(len(correct_passwords)), error()
+        else:
+            assert system_auth_types_length == "", error()
+
+    with And(
+        "check that auth methods from system.users are the same as in SHOW CREATE USER"
+    ):
+        if len(correct_passwords) > 0:
+            create_user_command = f"SHOW CREATE USER {user_name} FORMAT TabSeparated"
+            create_user_query_output = node.query(create_user_command).output
+
+            for i in range(len(correct_passwords)):
+                system_auth_type = node.query(
+                    f"SELECT auth_type[{i+1}] FROM system.users WHERE name='{user_name}' FORMAT TabSeparated"
+                ).output
+                assert system_auth_type in create_user_query_output, error()
+        else:
+            exitcode, message = errors.no_user(user_name)()
+            node.query(
+                f"SHOW CREATE USER {user_name} FORMAT TabSeparated",
+                exitcode=exitcode,
+                message=message,
+            )
+
+
+@TestStep(Then)
+def check_login_with_correct_and_wrong_passwords(
+    self, user_name, wrong_passwords=[], correct_passwords=[], node=None
+):
+    """Validate user login."""
+    if node is None:
+        node = self.context.node
+
+    for password in correct_passwords:
+        login(user_name=user_name, password=password, node=node)
+
+    for password in wrong_passwords:
+        login(
+            user_name=user_name,
+            password=password,
+            expected=errors.wrong_password(user_name),
+            node=node,
+        )
+
+
+@TestStep(Then)
+def check_login_with_correct_and_wrong_passwords_on_cluster(
+    self, user_name, wrong_passwords, correct_passwords
+):
+    """Validate user login on all nodes."""
+    for password in correct_passwords:
+        login(user_name=user_name, password=password, nodes=self.context.nodes)
+
+    for password in wrong_passwords:
+        login(
+            user_name=user_name,
+            password=password,
+            nodes=self.context.nodes,
+            expected=errors.wrong_password(user_name),
+        )

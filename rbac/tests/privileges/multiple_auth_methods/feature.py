@@ -42,14 +42,6 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.system_table",
-                    "feature",
-                ),
-                parallel=True,
-                executor=pool,
-            )
-            Feature(
-                run=load(
                     "rbac.tests.privileges.multiple_auth_methods.syntax",
                     "feature",
                 ),
@@ -98,3 +90,10 @@ def feature(self, node="clickhouse1"):
             )
         finally:
             join()
+
+    Feature(
+        run=load(
+            "rbac.tests.privileges.multiple_auth_methods.server_setting.feature",
+            "feature",
+        ),
+    )

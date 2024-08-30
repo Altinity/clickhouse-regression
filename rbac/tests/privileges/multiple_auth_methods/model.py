@@ -87,7 +87,7 @@ class Model:
                     for auth_method in current.add_identification
                 ):
                     return (
-                        actions.expect_no_password_cannot_be_used_with_add_keyword_error
+                        actions.expect_no_password_auth_cannot_coexist_with_others_error
                     )
 
     def expect_password_or_user_is_incorrect_error(self, behavior):

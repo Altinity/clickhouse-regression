@@ -18,6 +18,7 @@ def mixed_keepers_5(self):
                 cluster_nodes=cluster.nodes["clickhouse"][:9],
                 control_nodes=cluster.nodes["clickhouse"][0:5],
                 rest_cluster_nodes=cluster.nodes["clickhouse"][5:9],
+                create_certificates=False,
             )
         else:
             ssl = False
@@ -98,6 +99,7 @@ def mixed_keepers_4(self):
                 cluster_nodes=cluster.nodes["clickhouse"][:9],
                 control_nodes=cluster.nodes["clickhouse"][0:4],
                 rest_cluster_nodes=cluster.nodes["clickhouse"][4:9],
+                create_certificates=False,
             )
         else:
             ssl = False
@@ -175,6 +177,7 @@ def mixed_keepers_3(self):
                 cluster_nodes=cluster.nodes["clickhouse"][:9],
                 control_nodes=cluster.nodes["clickhouse"][0:3],
                 rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
+                create_certificates=False,
             )
         else:
             ssl = False
@@ -254,6 +257,7 @@ def mixed_keepers_2(self):
                 cluster_nodes=cluster.nodes["clickhouse"][:9],
                 control_nodes=cluster.nodes["clickhouse"][0:2],
                 rest_cluster_nodes=cluster.nodes["clickhouse"][2:9],
+                create_certificates=False,
             )
         else:
             ssl = False
@@ -328,6 +332,7 @@ def mixed_keepers_1(self):
                 cluster_nodes=cluster.nodes["clickhouse"][:9],
                 control_nodes=cluster.nodes["clickhouse"][0:1],
                 rest_cluster_nodes=cluster.nodes["clickhouse"][1:9],
+                create_certificates=False,
             )
         else:
             ssl = False
@@ -471,7 +476,9 @@ def standalone_keepers_3(self):
 
     try:
         start_standalone_keeper(
-            cluster_nodes=cluster_nodes, control_nodes=control_nodes
+            cluster_nodes=cluster_nodes,
+            control_nodes=control_nodes,
+            create_certificates=False,
         )
 
         with Given("Receive UID"):
@@ -548,7 +555,9 @@ def standalone_keepers_2(self):
 
     try:
         start_standalone_keeper(
-            cluster_nodes=cluster_nodes, control_nodes=control_nodes
+            cluster_nodes=cluster_nodes,
+            control_nodes=control_nodes,
+            create_certificates=False,
         )
 
         with Given("Receive UID"):
@@ -621,7 +630,9 @@ def standalone_keepers_1(self):
 
     try:
         start_standalone_keeper(
-            cluster_nodes=cluster_nodes, control_nodes=control_nodes
+            cluster_nodes=cluster_nodes,
+            control_nodes=control_nodes,
+            create_certificates=False,
         )
 
         with Given("Receive UID"):
@@ -691,5 +702,9 @@ def feature(self):
     """Check 2N+1 cluster configurations for
     clickhouse-keeper and zookeeper.
     """
+    if self.context.ssl == "true":
+        with Given("I create server certificates"):
+            create_server_certificates()
+
     for scenario in loads(current_module(), Scenario):
         scenario()

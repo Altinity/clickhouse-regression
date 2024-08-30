@@ -112,27 +112,17 @@ class AlterUser(Query):
             self.query += " ADD IDENTIFIED"
         return self
 
-    def set_add_identified_with(self):
-        self._identification = self.add_identification
-        if len(self.identification) < 2:
-            self.query += " ADD IDENTIFIED WITH"
-        return self
-
     def set_identified(self):
         self._identification = self.identification
         if len(self.identification) < 2:
             self.query += " IDENTIFIED"
         return self
 
-    def set_identified_with(self):
-        self._identification = self.identification
-        if len(self.identification) < 2:
-            self.query += " IDENTIFIED WITH"
-        return self
-
     def _set_identification(self, method, value=None, extra=None):
         if len(self._identification) > 1:
             self.query += ","
+        else:
+            self.query += " WITH"
         if value:
             self.query += f" {method} BY '{value}'"
         else:
