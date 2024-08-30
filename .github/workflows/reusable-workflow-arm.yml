@@ -31,6 +31,9 @@ on:
         description: "Extra test program arguments. Default: none (empty string)."
         type: string
         default: ""
+      artifact_name:
+        description: "Artifact name. Default: artifacts"
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -797,7 +800,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   extended_precision_data_types:
