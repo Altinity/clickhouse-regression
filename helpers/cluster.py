@@ -1239,6 +1239,62 @@ class ClickHouseKeeperNode(Node):
             self.start_keeper(timeout=timeout, user=user)
 
 
+class PackageDownloader:
+    """Download and unpack packages."""
+
+    package_formats = (".deb", ".rpm", ".tar.gz", ".tar", ".tgz")
+
+    def __init__(self, source, program_name="clickhouse"):
+        self.source = source
+        self.binary_path = None
+        self.docker_image = None
+        self.program_name = program_name
+        self.package_path = None
+        self.package_version = None
+
+        if source.startswith("docker://"):
+            self.get_binary_from_docker(source)
+
+        elif source.startswith(("http://", "https://")):
+            self.get_binary_from_url(source)
+
+        elif source.endswith(self.package_formats):
+            self.get_binary_from_package(source)
+
+    def get_binary_from_docker(
+        self, source, container_binary_path="/usr/bin/clickhouse"
+    ):
+        self.docker_image = source.split("docker://", 1)[1]
+
+        self.package_version = parse_version_from_docker_path(self.docker_image)
+        self.binary_path = get_binary_from_docker_container(
+            docker_image=source,
+            container_binary_path=container_binary_path,
+        )
+
+    def get_binary_from_url(self, source):
+        path = download_http_binary(binary_source=source)
+        if path.endswith(self.package_formats):
+            self.get_binary_from_package(path)
+        else:
+            self.binary_path = path
+
+    def get_binary_from_package(self, source):
+        self.package_path = source
+        if source.endswith(".deb"):
+            self.get_binary_from_deb(source, self.program_name)
+        elif source.endswith(".rpm"):
+            pass
+        elif source.endswith((".tar.gz", ".tar", ".tgz")):
+            pass
+
+    def get_binary_from_deb(self, source):
+        self.binary_path = unpack_deb(
+            deb_binary_path=source,
+            program_name=self.program_name,
+        )
+
+
 class Cluster(object):
     """Simple object around docker-compose cluster."""
 
@@ -1431,47 +1487,25 @@ class Cluster(object):
         if not self.keeper_binary_path:
             self.keeper_base_os = self.base_os
         else:
-            if self.keeper_binary_path.startswith("docker://"):
-                docker_path = self.keeper_binary_path
-                self.keeper_docker_image_name = docker_path.split("docker://", 1)[-1]
-                if getsattr(current().context, "keeper_version", None) is None:
-                    parsed_version = parse_version_from_docker_path(docker_path)
-                    if parsed_version:
-                        if not (
-                            parsed_version.startswith(".")
-                            or parsed_version.endswith(".")
-                        ):
-                            current().context.keeper_version = parsed_version
+            keeper_package = PackageDownloader(
+                self.keeper_binary_path, program_name="clickhouse-keeper"
+            )
+            if (
+                getsattr(current().context, "keeper_version", None) is None
+                and keeper_package.package_version
+            ):
+                current().context.keeper_version = keeper_package.package_version
+            self.keeper_binary_path = keeper_package.binary_path
 
-                self.keeper_binary_path = get_binary_from_docker_container(
-                    docker_image=docker_path,
-                    container_binary_path="/usr/bin/clickhouse-keeper",
-                )
-
+            if keeper_package.docker_image:
+                self.keeper_docker_image_name = keeper_package.docker_image
             else:
                 assert base_os is not None, error("base_os must be specified")
                 self.keeper_base_os = base_os.split("docker://", 1)[-1]
 
-                if self.keeper_binary_path.startswith(("http://", "https://")):
-                    with Given(
-                        "I download ClickHouse Keeper server binary",
-                        description=f"{self.keeper_binary_path}",
-                    ):
-                        self.keeper_binary_path = download_http_binary(
-                            binary_source=self.keeper_binary_path
-                        )
-
-                # if self.keeper_binary_path.endswith(".deb"):
-                #     with Given(
-                #         "unpack deb package", description=f"{self.keeper_binary_path}"
-                #     ):
-                #         self.keeper_binary_path = unpack_deb(
-                #             deb_binary_path=self.keeper_binary_path,
-                #             program_name="clickhouse-keeper",
-                #         )
-                package_name = os.path.basename(self.keeper_binary_path)
-                self.keeper_docker_image_name = f"clickhouse-regression:{self.keeper_base_os.replace(':','-')}-{package_name}"
-                self.keeper_binary_path = os.path.relpath(self.keeper_binary_path)
+                package_name = os.path.basename(keeper_package.package_path)
+                self.keeper_docker_image_name = f"clickhouse-regression:{self.keeper_base_os.replace(':','-').replace('/','-')}-{package_name}"
+                self.keeper_binary_path = os.path.relpath(keeper_package.package_path)
 
             # with Shell() as bash:
             #     bash.timeout = 300
