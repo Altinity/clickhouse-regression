@@ -179,6 +179,8 @@ services:
     extends:
       file: ../../docker-compose/keeper-service.yml
       service: keeper1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper/"
 
   clickhouse1:
     extends:
