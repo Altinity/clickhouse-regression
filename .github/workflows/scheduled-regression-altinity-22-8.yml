@@ -12,6 +12,7 @@ jobs:
     with:
       package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
       version: '22.8.15.25'
+      artifact_name: altinitystable-22-8-x86-zookeeper
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
@@ -33,6 +34,7 @@ jobs:
     with:
       package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
       version: '22.8.15.25'
+      artifact_name: altinitystable-22-8-arm-zookeeper
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
