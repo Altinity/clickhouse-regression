@@ -1261,15 +1261,13 @@ class PackageDownloader:
         elif source.endswith(self.package_formats):
             self.get_binary_from_package(source)
 
-    def get_binary_from_docker(
-        self, source, container_binary_path="/usr/bin/clickhouse"
-    ):
+    def get_binary_from_docker(self, source):
         self.docker_image = source.split("docker://", 1)[1]
 
         self.package_version = parse_version_from_docker_path(self.docker_image)
         self.binary_path = get_binary_from_docker_container(
             docker_image=source,
-            container_binary_path=container_binary_path,
+            container_binary_path=f"/usr/bin/{self.program_name}",
         )
 
     def get_binary_from_url(self, source):
@@ -1282,7 +1280,7 @@ class PackageDownloader:
     def get_binary_from_package(self, source):
         self.package_path = source
         if source.endswith(".deb"):
-            self.get_binary_from_deb(source, self.program_name)
+            self.get_binary_from_deb(source)
         elif source.endswith(".rpm"):
             pass
         elif source.endswith((".tar.gz", ".tar", ".tgz")):
@@ -1429,55 +1427,29 @@ class Cluster(object):
                     self.clickhouse_specific_odbc_binary
                 )
 
-            if self.clickhouse_binary_path.startswith("docker://"):
-                docker_path = self.clickhouse_binary_path
-                if current().context.clickhouse_version is None:
-                    with Given("version from docker path"):
-                        parsed_version = parse_version_from_docker_path(docker_path)
-                        if parsed_version:
-                            if not (  # What case are we trying to catch here?
-                                parsed_version.startswith(".")
-                                or parsed_version.endswith(".")
-                            ):
-                                current().context.clickhouse_version = parsed_version
+            clickhouse_package = PackageDownloader(
+                self.clickhouse_binary_path, program_name="clickhouse"
+            )
+            if (
+                getsattr(current().context, "clickhouse_version", None) is None
+                and clickhouse_package.package_version
+            ):
+                current().context.clickhouse_version = (
+                    clickhouse_package.package_version
+                )
 
-                with Given("server binary from docker image", description=docker_path):
-                    self.clickhouse_docker_image_name = docker_path.split(
-                        "docker://", 1
-                    )[-1]
-                    self.clickhouse_binary_path = get_binary_from_docker_container(
-                        docker_image=docker_path,
-                        container_binary_path="/usr/bin/clickhouse",
-                    )
-                    try:
-                        self.clickhouse_odbc_bridge_binary_path = (
-                            get_binary_from_docker_container(
-                                docker_image=docker_path,
-                                container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                                host_binary_path_suffix="_odbc_bridge",
-                            )
-                        )
-                    except:
-                        pass
+            self.clickhouse_binary_path = clickhouse_package.binary_path
 
+            if clickhouse_package.docker_image:
+                self.clickhouse_docker_image_name = clickhouse_package.docker_image
             else:
                 assert base_os is not None, error("base_os must be specified")
                 self.base_os = base_os.split("docker://", 1)[-1]
 
-                if self.clickhouse_binary_path.startswith(("http://", "https://")):
-                    binary_source = self.clickhouse_binary_path
-                    with Given(
-                        "I download ClickHouse server package",
-                        description=binary_source,
-                    ):
-                        self.clickhouse_binary_path = download_http_binary(
-                            binary_source=binary_source
-                        )
-
-                package_name = os.path.basename(self.clickhouse_binary_path)
+                package_name = os.path.basename(clickhouse_package.package_path)
                 self.clickhouse_docker_image_name = f"clickhouse-regression:{self.base_os.replace(':','-').replace('/','-')}-{package_name}"
                 self.clickhouse_binary_path = os.path.relpath(
-                    self.clickhouse_binary_path
+                    clickhouse_package.package_path
                 )
 
             # with Shell() as bash:
