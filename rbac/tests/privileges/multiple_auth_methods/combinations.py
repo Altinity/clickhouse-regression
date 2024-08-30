@@ -1,5 +1,5 @@
 from testflows.core import *
-from testflows.combinatorics import combinations, product
+from testflows.combinatorics import product
 
 from helpers.common import getuid
 from helpers.sql.create_user import CreateUser, Username
@@ -16,6 +16,7 @@ def create_user_auth_methods_combinations(self):
     create_auth_methods = [
         actions.partial(CreateUser.set_with_plaintext_password, password="foo3"),
         actions.partial(CreateUser.set_with_sha256_password, password="foo4"),
+        actions.partial(CreateUser.set_by_password, password="foo5"),
     ]
 
     auth_methods_combinations = actions.create_user_auth_combinations(
@@ -32,6 +33,7 @@ def alter_user_auth_methods_combinations(self):
     alter_auth_methods = [
         actions.partial(AlterUser.set_with_plaintext_password, password="foo3"),
         actions.partial(AlterUser.set_with_sha256_password, password="foo4"),
+        actions.partial(AlterUser.set_by_password, password="foo5"),
     ]
 
     auth_methods_combinations = actions.alter_user_auth_combinations(
@@ -121,9 +123,9 @@ def combination_of_actions(self, combination, node=None):
                 actions.login(user=user)
 
 
-@TestFeature
-@Name("combinations")
-def feature(self, number_of_actions=3):
+@TestScenario
+@Name("different combinations of actions")
+def different_combinations(self, number_of_actions=3):
     """Check different combinations of sequences of creating,
     altering and dropping users with multiple authentication methods.
     """
@@ -145,9 +147,49 @@ def feature(self, number_of_actions=3):
     with And("a way to drop user"):
         ways += ways_to_drop()
 
-    with Pool(4) as executor:
+    with Pool(7) as executor:
         for i, combination in enumerate(product(ways, repeat=number_of_actions)):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
             )(combination=combination)
         join()
+        
+
+@TestScenario
+@Name("different combinations of actions starting with create")
+def different_combinations_starting_with_create(self):
+    """Check different combinations of sequences of creating,
+    altering and dropping users with multiple authentication methods.
+    """
+    ways_to_create = []
+    ways_to_alter = []
+    self.context.model = models.Model()
+
+    with Given("ways to create user with multiple authentication methods"):
+        ways_to_create += ways_to_create_user()
+
+    with And("ways change users authentication methods"):
+        ways_to_alter += ways_to_change()
+
+    with And("ways to add authentication methods to existing user"):
+        ways_to_alter += ways_to_add()
+
+    with And("ways to reset users authentications methods to new"):
+        ways_to_alter += ways_to_reset_to_new()
+
+    with Pool(7) as executor:
+        for i, combination in enumerate(product(ways_to_create, ways_to_alter, ways_to_alter)):
+            Scenario(
+                f"#{i}", test=combination_of_actions, parallel=True, executor=executor
+            )(combination=combination)
+        join()
+        
+        
+@TestFeature
+@Name("combinations")
+def feature(self, number_of_actions=3):
+    """Check different combinations of sequences of creating,
+    altering and dropping users with multiple authentication methods.
+    """
+    Scenario(run=different_combinations)
+    Scenario(run=different_combinations_starting_with_create)

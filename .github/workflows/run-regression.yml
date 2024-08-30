@@ -430,7 +430,7 @@ jobs:
 
   benchmark_aws:
     runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 200
+    timeout-minutes: 240
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws

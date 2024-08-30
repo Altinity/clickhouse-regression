@@ -1419,13 +1419,13 @@ class Cluster(object):
                 except:
                     self.clickhouse_specific_odbc_binary = None
 
-                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
-                    self.specific_clickhouse_binary_path
-                )
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_BINARY"
+                ] = self.specific_clickhouse_binary_path
 
-                self.environ["CLICKHOUSE_SPECIFIC_ODBC_BINARY"] = (
-                    self.clickhouse_specific_odbc_binary
-                )
+                self.environ[
+                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
+                ] = self.clickhouse_specific_odbc_binary
 
             clickhouse_package = PackageDownloader(
                 self.clickhouse_binary_path, program_name="clickhouse"

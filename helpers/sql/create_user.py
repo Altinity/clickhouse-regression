@@ -137,14 +137,11 @@ class CreateUser(Query):
             self.query += " IDENTIFIED"
         return self
 
-    def set_identified_with(self):
-        if len(self.identification) < 2:
-            self.query += " IDENTIFIED WITH"
-        return self
-
     def _set_identification(self, method, value=None, extra=None):
         if len(self.identification) > 1:
             self.query += ","
+        else:
+            self.query += " WITH"
         if value:
             self.query += f" {method} BY '{value}'"
         else:

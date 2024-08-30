@@ -1,6 +1,7 @@
 from testflows.core import *
+from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, get_settings_value, check_clickhouse_version
 
 import rbac.tests.privileges.multiple_auth_methods.common as common
 import rbac.tests.privileges.multiple_auth_methods.errors as errors
@@ -87,6 +88,79 @@ def create_user_not_identified(self):
     finally:
         with Finally("drop user"):
             common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
+@TestScenario
+def check_default_value_of_setting(self):
+    """Check that default value of `max_authentication_methods_per_user` is 100."""
+    with Given("get default value of `max_authentication_methods_per_user`"):
+        default_value = get_settings_value(
+            "max_authentication_methods_per_user", table="system.server_settings"
+        )
+
+    with Then("check that default value is 100"):
+        assert default_value == "100", f"expected 100, got {default_value}"
+
+
+@TestScenario
+def column_types_in_system_table(self):
+    """Check the column types of the 'system.users' table."""
+
+    node = self.context.node
+
+    with By("check the type of auth_type column of system.users table"):
+        typename = node.query(f"SELECT toTypeName(auth_type) FROM system.users").output
+        if check_clickhouse_version("<24.9")(self):
+            assert "Enum" in typename, error()
+        else:
+            assert "Array(Enum" in typename, error()
+
+    with By("check the type of auth_params column of system.users table"):
+        typename = node.query(
+            f"SELECT toTypeName(auth_params) FROM system.users"
+        ).output
+        if check_clickhouse_version("<24.9")(self):
+            assert "String" in typename, error()
+        else:
+            assert "Array(String)" in typename, error()
+
+
+@TestScenario
+def check_add_to_no_password(self):
+    """Check that when adding authentication methods to a user identified with NO_PASSWORD,
+    NO_PASSWORD will be replaced with the new methods."""
+
+    user_name = f"user_{getuid()}"
+
+    with Given("create user with NO_PASSWORD"):
+        common.create_user(user_name=user_name, identified="NO_PASSWORD")
+
+    with When("add authentication methods to t  he user"):
+        identified = "plaintext_password BY '123', plaintext_password BY '456'"
+        common.alter_identified(user_name=user_name, identified=identified)
+        correct_passwords = ["123", "456"]
+
+    with Then("check that user can login with new authentication methods"):
+        for password in correct_passwords:
+            common.login(user_name=user_name, password=password)
+
+    with And("check that user can not login with no password"):
+        common.login(
+            user_name=user_name,
+            password=None,
+            expected=errors.wrong_password(user_name),
+        )
+
+    with And("check that NO_PASSWORD is not in SHOW CREATE USER"):
+        create_user = self.context.node.query(f"SHOW CREATE USER {user_name}").output
+        assert "no_password" not in create_user.lower(), error()
+
+    with And(
+        "check that changed authentication methods are reflected in system.users table"
+    ):
+        common.check_changes_reflected_in_system_table(
+            user_name=user_name, correct_passwords=correct_passwords
+        )
 
 
 @TestFeature
