@@ -1082,7 +1082,7 @@ def create_server_certificates(
 ):
     """Create server certificates for ClickHouse server nodes."""
     if nodes is None:
-        nodes = self.context.cluster.nodes["clickhouse"][0:13]
+        nodes = self.context.cluster.nodes["clickhouse"]
 
     my_own_ca_key = "my_own_ca.key"
     my_own_ca_crt = "my_own_ca.crt"
@@ -1165,9 +1165,11 @@ def create_open_ssl(
     config_d_dir="/etc/clickhouse-server/config.d/",
     config_file="ssl_conf.xml",
     nodes=None,
+    create_certificates=True,
 ):
-    with Given("I create server certificates"):
-        create_server_certificates(nodes=nodes)
+    if create_certificates:
+        with Given("I create server certificates"):
+            create_server_certificates(nodes=nodes)
 
     with Given("I create remote config"):
         try:
@@ -1431,6 +1433,7 @@ def start_mixed_keeper_ssl(
     rest_cluster_nodes=None,
     test_setting_name="startup_timeout",
     test_setting_value="30000",
+    create_certificates=True,
 ):
     """Start 9 nodes ClickHouse server with one shared 3 nodes shard Keeper."""
     cluster = self.context.cluster
@@ -1465,7 +1468,7 @@ def start_mixed_keeper_ssl(
             )
 
         with And("I create server openSSL config"):
-            create_open_ssl()
+            create_open_ssl(create_certificates=create_certificates)
 
         with And("I create client openSSL config"):
             create_client_ssl()
@@ -1526,6 +1529,7 @@ def start_standalone_keeper(
     test_setting_name="startup_timeout",
     test_setting_value="30000",
     ssl=None,
+    create_certificates=True,
 ):
     if ssl is None:
         if self.context.ssl == "true":
@@ -1562,7 +1566,7 @@ def start_standalone_keeper(
                 )
 
             with And("I create server openSSL config"):
-                create_open_ssl()
+                create_open_ssl(create_certificates=create_certificates)
 
             with And("I create client openSSL config"):
                 create_client_ssl()
