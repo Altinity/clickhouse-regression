@@ -8,12 +8,13 @@ services:
       context: ..
       dockerfile: docker-compose/${CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME:-keeper}.Dockerfile
       args:
+        KEEPER_DOCKER_IMAGE: $CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE
         CLICKHOUSE_PACKAGE: $CLICKHOUSE_TESTS_KEEPER_BIN_PATH
         BASE_OS: $CLICKHOUSE_TESTS_KEEPER_BASE_OS
-        KEEPER_DOCKER_IMAGE: $CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE
+
+    init: true
     expose:
       - "2181"
-    init: true
     environment:
       - KEEPER_SERVER_ID=1
     volumes:
