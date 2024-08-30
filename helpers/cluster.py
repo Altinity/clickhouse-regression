@@ -1456,11 +1456,14 @@ class Cluster(object):
             #     bash.timeout = 300
             #     bash(f"chmod +x {self.clickhouse_binary_path}")
 
-        if not self.keeper_binary_path:
-            self.keeper_base_os = self.base_os
-        else:
+        if self.keeper_binary_path:
             keeper_package = PackageDownloader(
-                self.keeper_binary_path, program_name="clickhouse-keeper"
+                self.keeper_binary_path,
+                program_name=(
+                    "clickhouse-keeper"
+                    if "keeper" in self.keeper_binary_path
+                    else "clickhouse"
+                ),
             )
             if (
                 getsattr(current().context, "keeper_version", None) is None
@@ -1478,6 +1481,10 @@ class Cluster(object):
                 package_name = os.path.basename(keeper_package.package_path)
                 self.keeper_docker_image_name = f"clickhouse-regression:{self.keeper_base_os.replace(':','-').replace('/','-')}-{package_name}"
                 self.keeper_binary_path = os.path.relpath(keeper_package.package_path)
+        else:
+            self.keeper_base_os = self.base_os
+            self.keeper_docker_image_name = self.clickhouse_docker_image_name
+            self.keeper_binary_path = self.clickhouse_binary_path
 
             # with Shell() as bash:
             #     bash.timeout = 300
@@ -1827,7 +1834,7 @@ class Cluster(object):
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
-                    self.keeper_binary_path or self.clickhouse_binary_path or ""
+                    self.keeper_binary_path or ""
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     self.zookeeper_version or ""
@@ -1846,7 +1853,7 @@ class Cluster(object):
                     else self.base_os.split(":")[0].split("/")[-1]
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
-                    self.keeper_docker_image_name or self.clickhouse_docker_image_name
+                    self.keeper_docker_image_name
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS"] = self.keeper_base_os
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] = (
