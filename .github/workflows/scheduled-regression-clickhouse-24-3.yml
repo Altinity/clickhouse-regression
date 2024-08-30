@@ -30,7 +30,6 @@ jobs:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
-      suite: example
       artifact_name: "clickhouse-24-3-x86-with-analyzer_zookeeper"
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
@@ -56,7 +55,6 @@ jobs:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
-      suite: example
       artifact_name: "clickhouse-24-3-arm-with-analyzer_zookeeper"
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
@@ -81,7 +79,6 @@ jobs:
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      suite: example
       artifact_name: "clickhouse-24-3-x86_zookeeper"
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
@@ -106,7 +103,6 @@ jobs:
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      suite: example
       artifact_name: "clickhouse-24-3-arm_zookeeper"
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
