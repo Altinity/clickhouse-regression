@@ -157,7 +157,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -177,7 +177,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -191,7 +191,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -211,7 +211,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -225,7 +225,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -245,7 +245,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -260,7 +260,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -281,7 +281,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-replace-partition-artifacts
@@ -296,7 +296,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -317,7 +317,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-attach-partition-artifacts
@@ -332,7 +332,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -353,7 +353,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-move-partition-artifacts
@@ -367,7 +367,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -388,7 +388,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -402,7 +402,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -422,7 +422,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -437,7 +437,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_aws' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -462,7 +462,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: benchmark-aws-artifacts
@@ -477,7 +477,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_gcs' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -501,7 +501,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: benchmark-gcs-artifacts
@@ -516,7 +516,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -537,7 +537,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: benchmark-minio-artifacts
@@ -552,7 +552,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -572,7 +572,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -587,7 +587,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -608,7 +608,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -623,7 +623,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -643,7 +643,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -657,7 +657,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -677,7 +677,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -691,7 +691,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -711,7 +711,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -725,7 +725,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -745,7 +745,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -759,7 +759,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -779,7 +779,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -793,7 +793,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -813,7 +813,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -827,7 +827,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -847,7 +847,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -861,7 +861,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -881,7 +881,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -895,7 +895,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'functions' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -915,7 +915,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -927,7 +927,7 @@ jobs:
   #     SUITE: clickhouse/functional
   #   if: ${{ inputs.suite == 'all' || inputs.suite == 'functional' }}
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
 
   #     - name: Setup
   #       run: .github/setup.sh
@@ -943,7 +943,7 @@ jobs:
   #       if: always()
   #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-  #     - uses: actions/upload-artifact@v3
+  #     - uses: actions/upload-artifact@v4
   #       if: always()
   #       with:
   #         name: clickhouse-functional-artifacts
@@ -957,7 +957,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -977,7 +977,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -991,7 +991,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1010,7 +1010,7 @@ jobs:
       - name: Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1024,7 +1024,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1043,7 +1043,7 @@ jobs:
       - name: Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1057,7 +1057,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1077,7 +1077,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ldap-authentication-artifacts
@@ -1091,7 +1091,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1111,7 +1111,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ldap-external_user_directory-artifacts
@@ -1125,7 +1125,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1145,7 +1145,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ldap-role_mapping-artifacts
@@ -1159,7 +1159,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1179,7 +1179,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1193,7 +1193,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'memory' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1213,7 +1213,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1228,7 +1228,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' || inputs.suite == 'parquet_all'}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1248,7 +1248,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1263,7 +1263,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1285,7 +1285,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-minio-artifacts
@@ -1300,7 +1300,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all'}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1326,7 +1326,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-aws-artifacts
@@ -1340,7 +1340,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1360,7 +1360,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1374,7 +1374,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1394,7 +1394,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1409,7 +1409,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_aws' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1434,7 +1434,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-aws-artifacts
@@ -1449,7 +1449,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_gcs' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1473,7 +1473,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-gcs-artifacts
@@ -1488,7 +1488,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1509,7 +1509,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-minio-artifacts
@@ -1523,7 +1523,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1543,7 +1543,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1557,7 +1557,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1577,7 +1577,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1591,7 +1591,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1611,7 +1611,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1626,7 +1626,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1650,7 +1650,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-aws-artifacts
@@ -1665,7 +1665,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1689,7 +1689,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-gcs-artifacts
@@ -1703,7 +1703,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1723,7 +1723,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
@@ -1738,7 +1738,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1759,7 +1759,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-minio-artifacts
@@ -1773,7 +1773,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -1793,7 +1793,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
