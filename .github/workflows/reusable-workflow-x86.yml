@@ -798,7 +798,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-${{ inputs.version }}-artifacts
+          name: ${{ env.SUITE }}-${{ github.job }}-artifacts
           path: ${{ env.artifact_paths}}
 
   extended_precision_data_types:
