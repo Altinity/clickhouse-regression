@@ -45,9 +45,9 @@ remote_entries = {
 
 ssl_entries = {
     "server": {
-        "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
-        "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
-        "dhParamsFile": "/etc/clickhouse-server/config.d/dhparam.pem",
+        "certificateFile": "/etc/clickhouse-server/server.crt",
+        "privateKeyFile": "/etc/clickhouse-server/server.key",
+        "dhParamsFile": "/etc/clickhouse-server/dh_params.pem",
         "verificationMode": "none",
         "loadDefaultCAFile": "true",
         "cacheSessions": "true",
@@ -485,7 +485,7 @@ def stop_keepers(self, cluster_nodes=None):
                     pid = node.command("cat /tmp/clickhouse-keeper.pid").output.strip()
                     node.command(f"kill -TERM {pid}", exitcode=0)
             with And("checking pid does not exist"):
-                retry(node.command, timeout=100, delay=1)(
+                retry(node.command, timeout=100, delay=10)(
                     f"ps {pid}", exitcode=1, steps=False
                 )
 
@@ -1005,11 +1005,11 @@ remote_entries_ssl = {
 
 _entries_open_ssl = {
     "server": {
-        "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
-        "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
-        "dhParamsFile": "/etc/clickhouse-server/config.d/dhparam.pem",
+        "certificateFile": "/etc/clickhouse-server/server.crt",
+        "privateKeyFile": "/etc/clickhouse-server/server.key",
+        "dhParamsFile": "/etc/clickhouse-server/dh_params.pem",
         "verificationMode": "none",
-        "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        "caConfig": "/etc/clickhouse-server/my_own_ca.crt",
         "loadDefaultCAFile": "false",
         "cacheSessions": "true",
         "requireTLSv1_2": "true",
@@ -1018,9 +1018,9 @@ _entries_open_ssl = {
         "preferServerCiphers": "true",
     },
     "client": {
-        "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
-        "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
-        "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        "certificateFile": "/etc/clickhouse-server/server.crt",
+        "privateKeyFile": "/etc/clickhouse-server/server.key",
+        "caConfig": "/etc/clickhouse-server/my_own_ca.crt",
         "loadDefaultCAFile": "false",
         "cacheSessions": "true",
         "requireTLSv1_2": "true",
@@ -1035,9 +1035,9 @@ _entries_client_ssl = {
     "secure": "true",
     "openSSL": {
         "client": {
-            "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
-            "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
-            "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+            "certificateFile": "/etc/clickhouse-server/server.crt",
+            "privateKeyFile": "/etc/clickhouse-server/server.key",
+            "caConfig": "/etc/clickhouse-server/my_own_ca.crt",
             "loadDefaultCAFile": "false",
             "cacheSessions": "true",
             "requireTLSv1_2": "true",
@@ -1074,12 +1074,101 @@ def create_client_ssl(
 
 
 @TestStep(Given)
+def create_server_certificates(
+    self,
+    nodes=None,
+    my_own_ca_key_passphrase="",
+    server_key_passphrase="",
+):
+    """Create server certificates for ClickHouse server nodes."""
+    if nodes is None:
+        nodes = self.context.cluster.nodes["clickhouse"][0:13]
+
+    my_own_ca_key = "my_own_ca.key"
+    my_own_ca_crt = "my_own_ca.crt"
+    server_key = "server.key"
+    server_csr = "server.csr"
+    server_crt = "server.crt"
+    dh_params = "dh_params.pem"
+
+    node_server_ca_crt = "/etc/clickhouse-server/" + os.path.basename(my_own_ca_crt)
+    node_server_crt = "/etc/clickhouse-server/" + os.path.basename(server_crt)
+    node_server_key = "/etc/clickhouse-server/" + os.path.basename(server_key)
+    node_dh_params = "/etc/clickhouse-server/" + os.path.basename(dh_params)
+
+    with Given("I create my own CA key"):
+        my_own_ca_key = create_rsa_private_key(
+            outfile=my_own_ca_key, passphrase=my_own_ca_key_passphrase
+        )
+        debug(f"{my_own_ca_key}")
+
+    with And("I create my own CA certificate"):
+        my_own_ca_crt = create_ca_certificate(
+            outfile=my_own_ca_crt,
+            key=my_own_ca_key,
+            passphrase=my_own_ca_key_passphrase,
+            common_name="root",
+        )
+
+    with And("I generate DH parameters"):
+        dh_params = create_dh_params(outfile=dh_params)
+
+    with And("I generate server key"):
+        server_key = create_rsa_private_key(
+            outfile=server_key, passphrase=server_key_passphrase
+        )
+
+    for node in nodes:
+        node = self.context.cluster.node(node)
+
+        with And("I generate server certificate signing request"):
+            server_csr_req = create_certificate_signing_request(
+                outfile=server_csr,
+                common_name=node.name,
+                key=server_key,
+                passphrase=server_key_passphrase,
+            )
+
+        with And("I sign server certificate with my own CA"):
+            server_crt_signed = sign_certificate(
+                outfile=server_crt,
+                csr=server_csr_req,
+                ca_certificate=my_own_ca_crt,
+                ca_key=my_own_ca_key,
+                ca_passphrase=my_own_ca_key_passphrase,
+            )
+
+        with And("I copy server certificate, key and dh params", description=f"{node}"):
+            copy(dest_node=node, src_path=my_own_ca_crt, dest_path=node_server_ca_crt)
+            copy(dest_node=node, src_path=server_crt_signed, dest_path=node_server_crt)
+            copy(dest_node=node, src_path=server_key, dest_path=node_server_key)
+            copy(dest_node=node, src_path=dh_params, dest_path=node_dh_params)
+
+        with And("I add ca certificate to node"):
+            node_ca_crt = add_trusted_ca_certificate(
+                node=node, certificate=my_own_ca_crt
+            )
+
+        with And("I validate server certificate"):
+            validate_certificate(
+                certificate=node_server_crt, ca_certificate=node_ca_crt, node=node
+            )
+
+        with And("I set correct permission on server key file"):
+            node.command(f'chmod 600 "{node_server_key}"')
+            node.command(f"ls -l /etc/clickhouse-server/")
+
+
+@TestStep(Given)
 def create_open_ssl(
     self,
     config_d_dir="/etc/clickhouse-server/config.d/",
     config_file="ssl_conf.xml",
     nodes=None,
 ):
+    with Given("I create server certificates"):
+        create_server_certificates(nodes=nodes)
+
     with Given("I create remote config"):
         try:
             create_configuration_ssl(
@@ -1454,14 +1543,10 @@ def start_standalone_keeper(
     try:
         with Given("I stop all ClickHouse server nodes"):
             for name in cluster_nodes:
-                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
-                    safe=False
-                )
+                cluster.node(name).stop_clickhouse(safe=False)
 
             for name in control_nodes:
-                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
-                    safe=False
-                )
+                cluster.node(name).stop_clickhouse(safe=False)
 
         with And("I clean ClickHouse Keeper server nodes"):
             clean_coordination_on_all_nodes()
