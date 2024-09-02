@@ -234,7 +234,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-replace-partition-artifacts
+          name: ${{ env.SUITE }}-replace-partition-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_attach_partition:
@@ -270,7 +270,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-attach-partition-artifacts
+          name: ${{ env.SUITE }}-attach-partition-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   alter_move_partition:
@@ -306,7 +306,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-move-partition-artifacts
+          name: ${{ env.SUITE }}-move-partition-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   attach:
@@ -415,7 +415,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: benchmark-aws-artifacts
+          name: benchmark-aws-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   benchmark_gcs:
@@ -454,7 +454,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: benchmark-gcs-artifacts
+          name: benchmark-gcs-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   benchmark_minio:
@@ -490,7 +490,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: benchmark-minio-artifacts
+          name: benchmark-minio-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
@@ -1030,7 +1030,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ldap-authentication-artifacts
+          name: ldap-authentication-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
@@ -1064,7 +1064,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ldap-external_user_directory-artifacts
+          name: ldap-external_user_directory-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
@@ -1098,7 +1098,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ldap-role_mapping-artifacts
+          name: ldap-role_mapping-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   lightweight_delete:
@@ -1238,7 +1238,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-minio-artifacts
+          name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   parquet_aws_s3:
@@ -1279,7 +1279,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-aws-artifacts
+          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
@@ -1387,7 +1387,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-aws-artifacts
+          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
@@ -1426,7 +1426,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-gcs-artifacts
+          name: ${{ env.SUITE }}-gcs-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   s3_minio:
@@ -1462,7 +1462,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-minio-artifacts
+          name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   selects:
@@ -1603,7 +1603,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-aws-artifacts
+          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
@@ -1642,7 +1642,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-gcs-artifacts
+          name: ${{ env.SUITE }}-gcs-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   tiered_storage_local:
@@ -1712,7 +1712,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-minio-artifacts
+          name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   window_functions:
