@@ -329,9 +329,7 @@ services:
         condition: service_healthy
 
   bash-tools:
-    extends:
-      file: ../../docker-compose/bash-tools.yml
-      service: bash-tools
+    image: altinityinfra/bash-tools:1.0
     hostname: bash-tools
     init: true
     restart: "no"
