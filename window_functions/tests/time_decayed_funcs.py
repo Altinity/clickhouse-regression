@@ -45,8 +45,6 @@ def exponentialTimeDecayedFunc(
         ("DateTime64TZ", "f_timestamp64tz"),
     ]
 
-    exitcode = 36
-
     for time_datatype, time_column in time_columns:
         with Example(f"{time_datatype} time column"):
             execute_query(
@@ -80,27 +78,21 @@ def exponentialTimeDecayedFunc(
             )
 
     with Example("check decay length with invalid number of arguments"):
-        if check_clickhouse_version(">=24.8")(self):
-            exitcode = 42
-        else:
-            exitcode = 36
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1,2)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
     with Example("check decay length with extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}({','.join(['1']*extremely_large_number_of_arguments)})(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
     with Example("check decay length with column argument"):
-        if check_clickhouse_version(">=24.8")(self) and not is_with_analyzer(node=self.context.node):
-            exitcode = 42
-        elif is_with_analyzer(node=self.context.node):
+        if is_with_analyzer(node=self.context.node):
             exitcode = 36
         else:
             exitcode = 47
@@ -122,20 +114,16 @@ def exponentialTimeDecayedFunc(
         )
 
     with Example("check invalid number of arguments"):
-        if check_clickhouse_version(">=24.8")(self):
-            exitcode = 42
-        else:
-            exitcode = 36
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(id, id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly two arguments",
         )
 
     with Example("check extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp, {','.join(['id']*extremely_large_number_of_arguments)}) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly two arguments",
         )
 
@@ -147,7 +135,7 @@ def exponentialTimeDecayedFunc(
     with Example(f"check using as a non-window aggregate function"):
         execute_query(
             f"SELECT anyLast(id), anyLast(time), {funcname}(10)(id, time) FROM values('id Int8, time DateTime', (1,1),(1,2),(2,3),(3,3),(3,5))",
-            exitcode=exitcode,
+            exitcode=36,
             message=f"Exception: The function '{funcname}' can only be used as a window function, not as an aggregate function",
         )
 
@@ -161,7 +149,7 @@ def exponentialTimeDecayedFunc(
             execute_query(
                 f"SELECT id, time, {funcname}(1)(id, time) OVER () FROM values('id Int8, time Nullable(DateTime)', (1,1),(1,2),(2,3),(3,NULL),(3,5))",
                 message="Exception: Argument 1 must be DateTime, DateTime64 or a number",
-                exitcode=exitcode,
+                exitcode=36,
             )
 
     for data_type in value_datatypes:
@@ -174,7 +162,7 @@ def exponentialTimeDecayedFunc(
         with Example(f"check input value with unsupported {data_type} type"):
             execute_query(
                 f"SELECT id, time, {funcname}(2.2)(id, time) OVER () FROM values('id {data_type}, time DateTime', (1,1),(1,2),(2,3),(3,4),(3,5))",
-                exitcode=exitcode,
+                exitcode=36,
                 message="Exception: Argument 0 must be a number",
             )
 
@@ -319,8 +307,6 @@ def exponentialTimeDecayedCount(self, extremely_large_number_of_arguments=1000):
         ("DateTime64TZ", "f_timestamp64tz"),
     ]
 
-    exitcode = 36
-
     for time_datatype, time_column in time_columns:
         with Example(f"{time_datatype} time column"):
             execute_query(
@@ -346,34 +332,30 @@ def exponentialTimeDecayedCount(self, extremely_large_number_of_arguments=1000):
         )
 
     with Example("check decay length with invalid number of arguments"):
-        if check_clickhouse_version(">=24.8")(self):
-            exitcode = 42
-        else:
-            exitcode = 36
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1,2)(f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
     with Example("check decay length with extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}({','.join(['1']*extremely_large_number_of_arguments)})(f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
     with Example("check invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly one argument",
         )
 
     with Example("check extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(f_timestamp, {','.join(['f_timestamp']*extremely_large_number_of_arguments)}) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=exitcode,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly one argument",
         )
 
@@ -383,9 +365,7 @@ def exponentialTimeDecayedCount(self, extremely_large_number_of_arguments=1000):
         )
 
     with Example("check decay length with column argument"):
-        if check_clickhouse_version(">=24.8")(self):
-            exitcode = 42
-        elif is_with_analyzer(node=self.context.node):
+        if is_with_analyzer(node=self.context.node):
             exitcode = 36
         else:
             exitcode = 47
@@ -402,15 +382,9 @@ def exponentialTimeDecayedCount(self, extremely_large_number_of_arguments=1000):
         )
 
     with Example(f"check using as a non-window aggregate function"):
-
-        if check_clickhouse_version(">=24.8")(self):
-            exitcode = 42
-        else:
-            exitcode = 36
-
         execute_query(
             f"SELECT anyLast(id), anyLast(time), {funcname}(10)(time) FROM values('id Int8, time DateTime', (1,1),(1,2),(2,3),(3,3),(3,5))",
-            exitcode=exitcode,
+            exitcode=36,
             message=f"Exception: The function '{funcname}' can only be used as a window function, not as an aggregate function",
         )
 
@@ -424,7 +398,7 @@ def exponentialTimeDecayedCount(self, extremely_large_number_of_arguments=1000):
             execute_query(
                 f"SELECT id, time, {funcname}(1)(time) OVER () FROM values('id Int8, time Nullable(DateTime)', (1,1),(2,2),(2,3),(3,NULL),(3,5))",
                 message="Exception: Argument 0 must be DateTime, DateTime64 or a number",
-                exitcode=exitcode,
+                exitcode=36,
             )
 
     for decay_datatype in decay_datatypes:
