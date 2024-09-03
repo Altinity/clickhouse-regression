@@ -104,6 +104,15 @@ def replicated_table_cluster(
                         )
 
 
+@TestStep(When)
+def detach_from_table(self, table_name: str, item: str, node=None, exitcode=0):
+    """Detach an item from a table."""
+    if node is None:
+        node = current().context.node
+
+    node.query(f"ALTER TABLE {table_name} DETACH {item}", exitcode=exitcode)
+
+
 @TestScenario
 def update_delete(self):
     """Test that ALTER UPDATE and DELETE execute without errors."""
@@ -545,7 +554,9 @@ def drop(self, drop_item, detach_first):
 
     if detach_first:
         with When("I detach a partition from the first table"):
-            nodes[1].query(f"ALTER TABLE {table_name} DETACH {drop_item}", exitcode=0)
+            retry(detach_from_table, timeout=30, delay=3)(
+                table_name=table_name, item=drop_item, node=nodes[1]
+            )
 
         with And("I drop the detached partition"):
             nodes[1].query(
@@ -555,7 +566,11 @@ def drop(self, drop_item, detach_first):
 
     else:
         with When("I drop the partition"):
-            nodes[1].query(f"ALTER TABLE {table_name} DROP {drop_item}", exitcode=0)
+            for attempt in retries(timeout=30, delay=3):
+                with attempt:
+                    nodes[1].query(
+                        f"ALTER TABLE {table_name} DROP {drop_item}", exitcode=0
+                    )
 
     with Then("I check the number of rows on the first table on all nodes"):
         for node in nodes:
@@ -644,8 +659,8 @@ def detach(self, detach_item):
         part_row_count = int(r.output)
 
     with When("I detach a partition from the first table"):
-        nodes[1].query(
-            f"ALTER TABLE {source_table_name} DETACH {detach_item}", exitcode=0
+        retry(detach_from_table, timeout=30, delay=3)(
+            table_name=source_table_name, item=detach_item, node=nodes[1]
         )
 
     with Then("I check the number of rows on all nodes"):
