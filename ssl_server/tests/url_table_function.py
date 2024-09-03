@@ -153,7 +153,7 @@ def feature(self, node="clickhouse1"):
             my_own_ca_key=my_own_ca_key,
             my_own_ca_crt=my_own_ca_crt,
         )
-    pause()
+
     with Given("I enable SSL for clickhouse-server"):
         enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
