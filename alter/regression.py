@@ -180,6 +180,7 @@ ffails = {
     "/alter/move partition/move to self": (
         XFail,
         "https://github.com/ClickHouse/ClickHouse/issues/62459",
+        check_clickhouse_version("<24.4"),
     ),
 }
 
