@@ -1,3 +1,5 @@
+import random
+
 from testflows.core import *
 from testflows.combinatorics import product
 
@@ -115,13 +117,10 @@ def ways_to_drop(self, cluster=None):
 
 
 @TestScenario
-def combination_of_actions(self, combination, node=None):
+def combination_of_actions(self, combination):
     """Check combination of actions."""
     self.context.behavior = []
     usernames = [Username(name="user_" + getuid())]
-
-    if node is None:
-        node = self.context.node
 
     with Given("I have client"):
         self.context.client = actions.node_client()
@@ -141,29 +140,29 @@ def combination_of_actions(self, combination, node=None):
 
 @TestScenario
 @Name("different combinations of actions")
-def different_combinations(self, cluster=None):
+def different_combinations_on_cluster(self, cluster=None):
     """Check different combinations of sequences of creating,
-    altering and dropping users with multiple authentication methods.
+    altering and dropping users with multiple authentication methods on cluster.
     """
     ways_to_create = []
     ways_to_alter = []
     self.context.model = models.Model()
 
-    with Given("ways to create user with multiple authentication methods"):
+    with Given("ways to create user with multiple authentication methods on cluster"):
         ways_to_create += ways_to_create_user(cluster=cluster)
 
-    with And("ways change users authentication methods"):
+    with And("ways change users authentication methods on cluster"):
         ways_to_alter += ways_to_change(cluster=cluster)
 
-    with And("ways to add authentication methods to existing user"):
+    with And("ways to add authentication methods to existing user on cluster"):
         ways_to_alter += ways_to_add(cluster=cluster)
 
-    with And("ways to reset users authentications methods to new"):
+    with And("ways to reset users authentications methods to new on cluster"):
         ways_to_alter += ways_to_reset_to_new(cluster=cluster)
 
     combinations = product(ways_to_create, ways_to_alter, ways_to_alter)
 
-    with Pool(10) as executor:
+    with Pool(7) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}",
