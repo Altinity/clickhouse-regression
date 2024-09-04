@@ -147,13 +147,6 @@ def check_move_partition(
     with Then(
         f"I check that partitions were moved when source table partition_id - {source_partition_key}, source table engine - {source_engine}, destination table engine - {destination_engine}:"
     ):
-        source_partition_data = (
-            get_node(self, "source")
-            .query(f"SELECT count() FROM {source_table_name} FORMAT TabSeparated")
-            .output
-        )
-        assert int(source_partition_data) == 0
-
         destination_partition_data = get_node(self, "destination").query(
             f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
         )
