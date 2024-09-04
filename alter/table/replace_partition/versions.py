@@ -22,9 +22,9 @@ def save_binary_to_another_directory(self):
     node_with_different_version.command(
         "cp /usr/bin/clickhouse /usr/bin/clickhouse_different_version"
     )
-    node_with_different_version.command(
-        "cp /usr/bin/clickhouse-odbc-bridge /usr/bin/clickhouse_different_version"
-    )
+    # node_with_different_version.command(
+    #     "cp /usr/bin/clickhouse-odbc-bridge /usr/bin/clickhouse_different_version"
+    # )
 
 
 @TestStep(When)
