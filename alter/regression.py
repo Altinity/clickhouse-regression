@@ -162,6 +162,20 @@ xfails = {
             check_clickhouse_version("<22.12"),
         )
     ],
+    "/alter/attach partition/operations on attached partitions/multiple operations/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/68052",
+            check_clickhouse_version("<24.3.6"),
+        )
+    ],
+    "/alter/attach partition/partition key/attach partition from with id/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/68052",
+            check_clickhouse_version("<24.3.6"),
+        )
+    ],
 }
 
 xflags = {}
