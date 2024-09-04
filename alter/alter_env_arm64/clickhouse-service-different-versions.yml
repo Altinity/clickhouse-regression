@@ -1,4 +1,4 @@
-version: '2.3'
+version: "2.3"
 
 services:
   clickhouse-different-versions:
@@ -17,4 +17,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
-      - "${CLICKHOUSE_SPECIFIC_BINARY:-/tmp/clickhouse-server_23.3.13.7.altinitytest}:/usr/bin/clickhouse"
+      - "${CLICKHOUSE_SPECIFIC_BINARY:-/tmp/clickhouse-server_23.3.13.7.altinitytest}:/usr/bin/clickhouse_different_version/clickhouse"
