@@ -7,7 +7,7 @@ from .query import Query
 
 Username = namedtuple(
     "Username",
-    ["name", "cluster"],
+    ["name"],
     defaults=[
         None,
     ],
@@ -67,6 +67,7 @@ class CreateUser(Query):
         "if_not_exists",
         "or_replace",
         "usernames",
+        "on_cluster",
         "not_identified",
         "identification",
         "hosts",
@@ -84,6 +85,7 @@ class CreateUser(Query):
         self.if_not_exists = False
         self.or_replace = False
         self.usernames: list[Username] = []
+        self.on_cluster = None
         self.not_identified = None
         self.identification: list[Identification] = []
         self.hosts = None
@@ -101,6 +103,7 @@ class CreateUser(Query):
             f"if_not_exists={self.if_not_exists}, "
             f"or_replace={self.or_replace}, "
             f"usernames={self.usernames}, "
+            f"on_cluster={self.on_cluster}, "
             f"not_identified={self.not_identified}, "
             f"identification={self.identification}, "
             f"hosts={self.hosts}, "
@@ -122,14 +125,17 @@ class CreateUser(Query):
         self.query += " OR REPLACE"
         return self
 
-    def set_username(self, name, cluster_name=None):
-        self.usernames.append(Username(name, cluster_name))
+    def set_username(self, name):
+        self.usernames.append(Username(name))
         user_clause = f" {name}"
-        if cluster_name:
-            user_clause += f" ON CLUSTER {cluster_name}"
         if len(self.usernames) > 1:
             self.query += ","
         self.query += user_clause
+        return self
+
+    def set_on_cluster(self, cluster_name):
+        self.on_cluster = cluster_name
+        self.query += f" ON CLUSTER {cluster_name}"
         return self
 
     def set_identified(self):
