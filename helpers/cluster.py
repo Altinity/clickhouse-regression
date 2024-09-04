@@ -1261,6 +1261,9 @@ class PackageDownloader:
         elif source.endswith(self.package_formats):
             self.get_binary_from_package(source)
 
+        else:
+            self.binary_path = source
+
     def get_binary_from_docker(self, source):
         self.docker_image = source.split("docker://", 1)[1]
 
@@ -1400,32 +1403,13 @@ class Cluster(object):
 
         if self.clickhouse_binary_path:
             if self.use_specific_version:
-                docker_image = self.use_specific_version
-                assert docker_image.startswith("docker://"), error(
-                    "use_specific_version must be a docker image path"
+                alternate_clickhouse_package = PackageDownloader(
+                    self.use_specific_version, program_name="clickhouse"
                 )
-                self.specific_clickhouse_binary_path = get_binary_from_docker_container(
-                    docker_image=docker_image,
-                    container_binary_path="/usr/bin/clickhouse",
+
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
+                    alternate_clickhouse_package.binary_path
                 )
-                try:
-                    self.clickhouse_specific_odbc_binary = (
-                        get_binary_from_docker_container(
-                            docker_image=docker_image,
-                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                            host_binary_path_suffix="_odbc_bridge",
-                        )
-                    )
-                except:
-                    self.clickhouse_specific_odbc_binary = None
-
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
-
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
 
             clickhouse_package = PackageDownloader(
                 self.clickhouse_binary_path, program_name="clickhouse"
