@@ -1486,10 +1486,14 @@ def postgresql(self):
                 f"CREATE ROW POLICY {pol_name} ON default.{table_name} FOR SELECT USING x = 2 TO {user_name}"
             )
 
-        with Then("I select from table using postgress"):
-            psql_out = node.command(
-                f"(set -o pipefail && PGPASSWORD=x psql -p 9005 -h 127.0.0.1 -U {user_name} default -c'SELECT * FROM {table_name}' | tee)"
-            ).output
+        with Then("I select from table using postgres"):
+            psql_out = (
+                self.context.cluster.node("bash-tools")
+                .command(
+                    f"(set -o pipefail && PGPASSWORD=x psql -p 9005 -h {node.name} -U {user_name} default -c'SELECT * FROM {table_name}' | tee)"
+                )
+                .output
+            )
             assert psql_out == " x \n---\n 2\n(1 row)", error()
 
     finally:
