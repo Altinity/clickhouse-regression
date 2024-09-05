@@ -1,8 +1,10 @@
-version: '2.3'
+version: "2.3"
 
 services:
   clickhouse:
-    image: altinityinfra/clickhouse-functional-test:1.0
+    extends:
+      file: ../../docker-compose/clickhouse-service.yml
+      service: clickhouse
     init: true
     expose:
       - "9000" # remote
@@ -37,7 +39,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/embedded.xml:/etc/clickhouse-server/embedded.xml"
-      - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-benchmark:/usr/bin/clickhouse-benchmark"
       - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-client:/usr/bin/clickhouse-client"
       - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-compressor:/usr/bin/clickhouse-compressor"
