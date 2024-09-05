@@ -153,7 +153,7 @@ def different_combinations(self, number_of_actions=3):
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
             )(combination=combination)
         join()
-        
+
 
 @TestScenario
 @Name("different combinations of actions starting with create")
@@ -178,13 +178,15 @@ def different_combinations_starting_with_create(self):
         ways_to_alter += ways_to_reset_to_new()
 
     with Pool(7) as executor:
-        for i, combination in enumerate(product(ways_to_create, ways_to_alter, ways_to_alter)):
+        for i, combination in enumerate(
+            product(ways_to_create, ways_to_alter, ways_to_alter)
+        ):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
             )(combination=combination)
         join()
-        
-        
+
+
 @TestFeature
 @Name("combinations")
 def feature(self, number_of_actions=3):

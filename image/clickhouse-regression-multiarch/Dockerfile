@@ -31,6 +31,7 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     locales \
     curl \
     unzip \
+    netcat \
     krb5-kdc \
     krb5-admin-server \
     && rm -rf \
