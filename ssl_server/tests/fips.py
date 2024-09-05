@@ -768,19 +768,14 @@ def server_as_client(self):
         )
 
     with Given("I generate private key and certificate for https server"):
-        my_own_ca_key, my_own_ca_crt, node_ca_crt = certs_for_flask(
-            my_own_ca_key_passphrase="",
-            server_key_passphrase="",
-            common_name="bash-tools",
-            node=self.context.cluster.node("bash-tools"),
+        bash_tools = self.context.cluster.node("bash-tools")
+        add_trusted_ca_certificate(
+            node=bash_tools, certificate=self.context.my_own_ca_crt
         )
         create_crt_and_key(
             name="https_server",
             common_name="bash-tools",
-            node=self.context.cluster.node("bash-tools"),
-            node_ca_crt=node_ca_crt,
-            my_own_ca_key=my_own_ca_key,
-            my_own_ca_crt=my_own_ca_crt,
+            node=bash_tools,
         )
 
     Feature(run=url_table_function)
