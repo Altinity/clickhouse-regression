@@ -45,7 +45,9 @@ def change_clickhouse_version(self):
 
     with And("checking the current version"):
         version = node_with_different_version.query("SELECT version()").output
-        assert version != self.context.clickhouse_version
+        assert (
+            version != self.context.clickhouse_version
+        ), f"{version} == {self.context.clickhouse_version}"
 
 
 @TestStep(When)
@@ -71,7 +73,9 @@ def revert_clickhouse_version(self):
 
     with And("checking the current version"):
         version = node_with_different_version.query("SELECT version()").output
-        assert version == self.context.clickhouse_version
+        assert check_clickhouse_version(version)(
+            self
+        ), f"{version} != {self.context.clickhouse_version}"
 
 
 @TestCheck
