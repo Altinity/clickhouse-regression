@@ -11,14 +11,11 @@ services:
         KEEPER_DOCKER_IMAGE: $CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE
         CLICKHOUSE_PACKAGE: $CLICKHOUSE_TESTS_KEEPER_BIN_PATH
         BASE_OS: $CLICKHOUSE_TESTS_KEEPER_BASE_OS
-
     init: true
     expose:
       - "2181"
     environment:
       - KEEPER_SERVER_ID=1
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
     healthcheck:
       test: "echo 1"
       interval: 10s
@@ -37,15 +34,21 @@ services:
     hostname: keeper1
     environment:
       - KEEPER_SERVER_ID=1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
   keeper2:
     extends: keeper
     hostname: keeper2
     environment:
       - KEEPER_SERVER_ID=2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
 
   keeper3:
     extends: keeper
     hostname: keeper3
     environment:
       - KEEPER_SERVER_ID=3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
