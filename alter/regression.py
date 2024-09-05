@@ -13,22 +13,6 @@ from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.datatypes import *
 
 
-def argparser(parser):
-    """Custom argparser that adds a --use-specific-clickhouse-version option."""
-    base_argparser(parser)
-
-    parser.add_argument(
-        "--use-specific-clickhouse-version",
-        type=str,
-        dest="use_specific_version",
-        help="used for the tests that use different versions of clickhouse, there is a main version used for all "
-        "tests which is set by --clickhouse-binary-path variable, this argument fetches additional clickhouse "
-        "binary and stores it inside a container along the main version",
-        metavar="path",
-        default="docker://altinity/clickhouse-server:23.3.13.7.altinitytest",
-    )
-
-
 xfails = {
     "/alter/replace partition/concurrent merges and mutations/mutations on unrelated partition": [
         (
@@ -200,7 +184,7 @@ ffails = {
 
 
 @TestModule
-@ArgumentParser(argparser)
+@ArgumentParser(base_argparser)
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
@@ -211,7 +195,6 @@ def regression(
     self,
     cluster_args,
     clickhouse_version,
-    use_specific_version,
     stress=None,
     with_analyzer=False,
 ):
@@ -238,7 +221,6 @@ def regression(
             **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
-            use_specific_version=use_specific_version,
         )
         self.context.cluster = cluster
 

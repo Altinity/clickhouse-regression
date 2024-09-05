@@ -14,6 +14,47 @@ from helpers.common import getuid, check_clickhouse_version
 
 
 @TestStep(Given)
+def get_initial_version_binary(self, binary_path):
+    """Get the initial ClickHouse version binary."""
+    cluster = self.context.cluster
+    specific_clickhouse_binary_path = cluster.get_binary_from_docker_container(
+        docker_image=binary_path,
+        container_binary_path="/usr/bin/clickhouse",
+    )
+
+    clickhouse_specific_odbc_binary = cluster.get_binary_from_docker_container(
+        docker_image=binary_path,
+        container_binary_path="/usr/bin/clickhouse-odbc-bridge",
+        host_binary_path_suffix="_odbc_bridge",
+    )
+
+    return specific_clickhouse_binary_path, clickhouse_specific_odbc_binary
+
+
+@TestStep(Given)
+def copy_clickhouse_binary(self, binary_path):
+    """Copy the existing binary file to the separate directory in order to save it."""
+    node_with_different_version = self.context.node_with_different_version
+
+    with By("copying the ClickHouse binary to the container"):
+        (
+            specific_clickhouse_binary_path,
+            clickhouse_specific_odbc_binary,
+        ) = get_initial_version_binary(binary_path=binary_path)
+
+    container_id = self.context.cluster.node_container_id(
+        node=node_with_different_version.name
+    )
+    initial_version_binary = self.context.initial_version_binary
+    self.context.cluster.bash(None).send(
+        f"docker cp {specific_clickhouse_binary_path} {container_id}:/clickhouse_main_version/"
+    )
+    self.context.cluster.bash(None).send(
+        f"docker cp {clickhouse_specific_odbc_binary} {container_id}:/clickhouse_main_version/"
+    )
+
+
+@TestStep(Given)
 def save_binary_to_another_directory(self):
     """Copy the existing binary file to the separate directory in order to save it."""
     node_with_different_version = self.context.node_with_different_version

@@ -1339,34 +1339,6 @@ class Cluster(object):
             )
 
         if self.clickhouse_binary_path:
-            if self.use_specific_version:
-                docker_image = self.use_specific_version
-                assert docker_image.startswith("docker://"), error(
-                    "use_specific_version must be a docker image path"
-                )
-                self.specific_clickhouse_binary_path = get_binary_from_docker_container(
-                    docker_image=docker_image,
-                    container_binary_path="/usr/bin/clickhouse",
-                )
-                try:
-                    self.clickhouse_specific_odbc_binary = (
-                        get_binary_from_docker_container(
-                            docker_image=docker_image,
-                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                            host_binary_path_suffix="_odbc_bridge",
-                        )
-                    )
-                except:
-                    self.clickhouse_specific_odbc_binary = None
-
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
-
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
-
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
                 binary_source = self.clickhouse_binary_path
                 with Given(
