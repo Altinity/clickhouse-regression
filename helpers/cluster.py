@@ -459,7 +459,7 @@ class ZooKeeperNode(Node):
 
         with And("checking pid does not exist"):
             retry(self.command, timeout=timeout, delay=3)(
-                f"ps {pid}", steps=False, exitcode=1
+                f"ps {pid} | grep -v grep | grep ' {pid} '", steps=False, exitcode=1
             )
 
     def stop_zookeeper(self, timeout=300):
@@ -623,7 +623,11 @@ class ClickHouseNode(Node):
                     if i > 0 and i % 20 == 0:
                         self.command(f"kill -KILL {pid}", steps=False)
                     if (
-                        self.command(f"ps {pid}", steps=False, no_checks=True).exitcode
+                        self.command(
+                            f"ps {pid} | grep -v grep | grep ' clickhouse.server '",
+                            steps=False,
+                            no_checks=True,
+                        ).exitcode
                         != 1
                     ):
                         fail("pid still alive")
