@@ -76,21 +76,21 @@ def wrong_number_of_arguments_or_types(self):
     with Example("missing timestamp"):
         execute_query(
             f"SELECT id, metric, ts, nonNegativeDerivative(metric) OVER (ORDER BY id ASC) AS nnd FROM {table}",
-            exitcode=exitcode,
+            exitcode=exitcode if check_clickhouse_version("<24.8")(self) else 42,
             message=message,
         )
 
     with Example("missing metric"):
         execute_query(
             f"SELECT id, metric, ts, nonNegativeDerivative(ts) OVER (ORDER BY id ASC) AS nnd FROM {table}",
-            exitcode=exitcode,
+            exitcode=exitcode if check_clickhouse_version("<24.8")(self) else 42,
             message=message,
         )
 
     with Example("missing metric with interval"):
         execute_query(
             f"SELECT id, metric, ts, nonNegativeDerivative(INTERVAL 3 SECOND) OVER (ORDER BY id ASC) AS nnd FROM {table}",
-            exitcode=exitcode,
+            exitcode=exitcode if check_clickhouse_version("<24.8")(self) else 42,
             message=message,
         )
 
@@ -104,7 +104,7 @@ def wrong_number_of_arguments_or_types(self):
     with Example("empty"):
         execute_query(
             f"SELECT id, metric, ts, nonNegativeDerivative() OVER (ORDER BY id ASC) AS nnd FROM {table}",
-            exitcode=exitcode,
+            exitcode=exitcode if check_clickhouse_version("<24.8")(self) else 42,
             message=message,
         )
 
