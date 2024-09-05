@@ -1,11 +1,14 @@
 version: '2.3'
 
 services:
+
   kerberos:
     extends:
       file: kerberos-service.yml
       service: kerberos
     hostname: kerberos
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   clickhouse1:
     extends:
@@ -17,6 +20,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/users.d:/etc/clickhouse-server/users.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   clickhouse2:
     extends:
@@ -28,6 +32,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/users.d:/etc/clickhouse-server/users.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   clickhouse3:
     extends:
@@ -39,6 +44,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/users.d:/etc/clickhouse-server/users.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
