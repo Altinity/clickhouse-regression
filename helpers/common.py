@@ -127,7 +127,7 @@ def instrument_clickhouse_server_log(
         node = self.context.node
 
     with By("getting current log size"):
-        cmd = node.command(f"stat --format=%s {clickhouse_server_log}")
+        cmd = node.command(f"stat -c %s {clickhouse_server_log}")
         if (
             cmd.output
             == f"stat: cannot stat '{clickhouse_server_log}': No such file or directory"
@@ -155,7 +155,7 @@ def instrument_clickhouse_server_log(
             )
 
         with And("getting current log size at the end of the test"):
-            cmd = node.command(f"stat --format=%s {clickhouse_server_log}")
+            cmd = node.command(f"stat -c %s {clickhouse_server_log}")
             end_logsize = cmd.output.split(" ")[0].strip()
 
         dump_log = always_dump or (settings.debug and not self.parent.result)
