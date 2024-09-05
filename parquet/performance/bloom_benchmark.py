@@ -8,6 +8,7 @@ append_path(sys.path, "../..")
 
 from helpers.cluster import create_cluster
 from helpers.common import experimental_analyzer
+from helpers.argparser import CaptureClusterArgs
 
 from parquet.performance.tests.bloom.generate_report import generate_bloom_report
 
@@ -64,12 +65,11 @@ def argparser(parser):
 @TestModule
 @ArgumentParser(argparser)
 @Name("bloom benchmark")
+@CaptureClusterArgs
 def regression(
     self,
-    local,
+    cluster_args,
     clickhouse_version,
-    clickhouse_binary_path,
-    collect_service_logs,
     with_analyzer,
     stress,
 ):
@@ -83,9 +83,7 @@ def regression(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_binary_path=clickhouse_binary_path,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
             docker_compose_project_dir=os.path.join(
