@@ -6,7 +6,7 @@ services:
     pull_policy: never
     build:
       context: ..
-      dockerfile: docker-compose/${CLICKHOUSE_TESTS_BASE_OS_NAME:-clickhouse}.Dockerfile
+      dockerfile: docker-compose/base_os/${CLICKHOUSE_TESTS_BASE_OS_NAME:-clickhouse}.Dockerfile
       args:
         CLICKHOUSE_DOCKER_IMAGE_NAME: $CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME
         CLICKHOUSE_PACKAGE: $CLICKHOUSE_TESTS_SERVER_BIN_PATH
