@@ -417,7 +417,7 @@ def add_config(
             with And("I get the current log size"):
                 cmd = node.cluster.command(
                     None,
-                    f"stat --format=%s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
                 )
                 logsize = cmd.output.split(" ")[0].strip()
 

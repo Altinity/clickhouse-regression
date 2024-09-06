@@ -94,7 +94,7 @@ def gcs_truncate_err_log(self, table_name, node=None):
 
     with Given("I note the error log size before the test."):
         cmd = node.command(
-            f"stat --format=%s {'/var/log/clickhouse-server/clickhouse-server.err.log'}"
+            f"stat -c %s {'/var/log/clickhouse-server/clickhouse-server.err.log'}"
         )
         if (
             cmd.output
@@ -114,7 +114,7 @@ def gcs_truncate_err_log(self, table_name, node=None):
 
     with When("I get error log size at the end of the test"):
         cmd = node.command(
-            f"stat --format=%s '/var/log/clickhouse-server/clickhouse-server.err.log'"
+            f"stat -c %s '/var/log/clickhouse-server/clickhouse-server.err.log'"
         )
         end_logsize = cmd.output.split(" ")[0].strip()
 
