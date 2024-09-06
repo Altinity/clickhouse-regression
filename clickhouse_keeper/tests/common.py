@@ -826,6 +826,7 @@ def add_trusted_ca_certificate(
                 "Adding " in cmd.output
                 or "Replacing " in cmd.output
                 or "Updating " in cmd.output
+                or cmd.output == ""  # no output on alpine
             ), error()
 
         with And("exitcode is 0"):
