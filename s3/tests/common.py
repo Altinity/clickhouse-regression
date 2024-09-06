@@ -70,7 +70,7 @@ def add_config(
             with And("I get the current log size"):
                 cmd = node.cluster.command(
                     None,
-                    f"stat --format=%s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
                 )
                 logsize = cmd.output.split(" ")[0].strip()
 
@@ -249,7 +249,7 @@ def invalid_s3_storage_config(
 
         with Then("Get the current log size"):
             cmd = node.command(
-                f"stat --format=%s /var/log/clickhouse-server/clickhouse-server.err.log"
+                f"stat -c %s /var/log/clickhouse-server/clickhouse-server.err.log"
             )
             start_logsize = cmd.output.split(" ")[0].strip()
 
@@ -272,7 +272,7 @@ def invalid_s3_storage_config(
 
         with And("Get the current log size at the end of the test"):
             cmd = node.command(
-                f"stat --format=%s /var/log/clickhouse-server/clickhouse-server.err.log"
+                f"stat -c %s /var/log/clickhouse-server/clickhouse-server.err.log"
             )
             end_logsize = cmd.output.split(" ")[0].strip()
 
