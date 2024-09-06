@@ -7,7 +7,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
 RUN apt-get update
-RUN apt-get install -y ca-certificates curl
+RUN apt-get install -y ca-certificates curl openssl
 
 ARG CLICKHOUSE_PACKAGE
 
