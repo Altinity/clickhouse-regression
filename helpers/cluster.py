@@ -1268,6 +1268,13 @@ class PackageDownloader:
         else:
             self.binary_path = source
 
+        if not self.package_version and self.binary_path:
+            with Shell() as bash:
+                self.package_version = bash(
+                    f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                ).output.strip(".")
+            pause(self.package_version)
+
     def get_binary_from_docker(self, source):
         self.docker_image = source.split("docker://", 1)[1]
 
