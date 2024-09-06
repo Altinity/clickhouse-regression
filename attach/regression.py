@@ -20,7 +20,7 @@ xfails = {
 }
 
 ffails = {
-    "/attach/replica_path/check replica path intersection": (
+    "/attach/replica path/check replica path intersection": (
         Skip,
         "Crashes before 24.4",
         check_clickhouse_version("<24.4"),
