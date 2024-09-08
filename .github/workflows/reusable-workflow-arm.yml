@@ -35,29 +35,9 @@ on:
         description: "Artifact name. Default: artifacts"
         type: string
     secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      AWS_REPORT_REGION:
-        required: true
       DOCKER_USERNAME:
         required: true
       DOCKER_PASSWORD:
-        required: true
-      AWS_BUCKET:
-        required: true
-      AWS_REGION:
-        required: true
-      AWS_KEY_ID:
-        required: true
-      AWS_ACCESS_KEY:
-        required: true
-      GCS_URI:
-        required: true
-      GCS_KEY_ID:
-        required: true
-      GCS_KEY_SECRET:
         required: true
       CHECKS_DATABASE_HOST:
         required: true
@@ -67,9 +47,6 @@ on:
         required: true
 
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
@@ -1160,47 +1137,6 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  parquet_aws_s3:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all'}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --only "/parquet/aws s3/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
