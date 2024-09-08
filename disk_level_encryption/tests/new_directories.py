@@ -52,8 +52,8 @@ def new_directories(self, node=None):
         add_encrypted_disk_configuration(entries=entries_in_this_test, restart=True)
 
     with And("I check new directory appeared"):
-        r = node.command("ls /disk_local/encrypted/")
-        assert r.output == "\x1b[0m\x1b[01;34mqkrq\x1b[0m", error()
+        r = node.command("ls --color=never /disk_local/encrypted/")
+        assert r.output == "qkrq", error()
 
     with And("I create a table that uses encrypted disk"):
         table_name = create_table(policy="local_encrypted")
