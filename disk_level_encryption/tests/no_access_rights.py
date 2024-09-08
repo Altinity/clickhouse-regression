@@ -129,8 +129,8 @@ def changing_rights_one_large_insert(self, node=None):
     with Given("I create local disk folder on the server"):
         create_directory(path=disk_local)
 
-    add_group_on_node(groupname="clickhouse_user")
-    add_user_on_node(groupname="clickhouse_user", username="clickhouse_user")
+    add_group_on_node(groupname="clickhouse_group")
+    add_user_on_node(groupname="clickhouse_group", username="clickhouse_user")
 
     try:
         with Given("I stop clickhouse to start it from clickhouse user"):
@@ -188,8 +188,8 @@ def changing_rights_many_small_inserts(self, node=None):
     with Given("I create local disk folder on the server"):
         create_directory(path=disk_local)
 
-    add_group_on_node(groupname="clickhouse_user")
-    add_user_on_node(groupname="clickhouse_user", username="clickhouse_user")
+    add_group_on_node(groupname="clickhouse_group")
+    add_user_on_node(groupname="clickhouse_group", username="clickhouse_user")
 
     try:
         with Given("I stop clickhouse to start it from clickhouse user"):
