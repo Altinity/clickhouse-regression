@@ -13,7 +13,13 @@ RUN case $(arch) in \
     aarch64) ln -sf /lib/ld-2.31.so /lib/ld-linux-aarch64.so.1 ;; \
     esac
 
-RUN apk add --no-cache ca-certificates bash tzdata curl openssl
+# Install dependencies
+# bash - tests expect it
+# tzdata - for setting timezone
+# curl - for testing http api
+# openssl - for testing https
+# shadow - for useradd
+RUN apk add --no-cache ca-certificates bash tzdata curl openssl shadow
 
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
