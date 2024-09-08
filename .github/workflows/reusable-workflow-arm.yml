@@ -35,6 +35,12 @@ on:
         description: "Artifact name. Default: artifacts"
         type: string
     secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_REPORT_REGION:
+        required: true
       DOCKER_USERNAME:
         required: true
       DOCKER_PASSWORD:
