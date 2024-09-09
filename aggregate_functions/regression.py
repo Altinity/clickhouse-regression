@@ -308,6 +308,62 @@ xfails = {
             check_clickhouse_version("<22.6"),
         )
     ],
+    "/aggregate functions/maxMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/maxMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
 }
 
 ffails = {
