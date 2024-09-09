@@ -8,7 +8,7 @@ from .create_user import Identification, Grantees, Setting
 
 Username = namedtuple(
     "Username",
-    ["name", "cluster", "renamed"],
+    ["name", "renamed"],
     defaults=[
         None,
     ]
@@ -33,6 +33,7 @@ class AlterUser(Query):
         "query",
         "if_exists",
         "usernames",
+        "on_cluster",
         "not_identified",
         "identification",
         "add_identification",
@@ -52,6 +53,7 @@ class AlterUser(Query):
         self.query = "ALTER USER"
         self.if_exists = False
         self.usernames = []
+        self.on_cluster = None
         self.not_identified = None
         self.identification = []
         self.add_identification = []
@@ -71,6 +73,7 @@ class AlterUser(Query):
             f"{super().__repr__()}"
             f"if_exists={self.if_exists}, "
             f"usernames={self.usernames}, "
+            f"on_cluster={self.on_cluster}, "
             f"not_identified={self.not_identified}, "
             f"identification={self.identification}, "
             f"add_identification={self.add_identification}, "
@@ -89,16 +92,19 @@ class AlterUser(Query):
         self.query += " IF EXISTS"
         return self
 
-    def set_username(self, name, cluster_name=None, rename_to=None):
-        self.usernames.append(Username(name, cluster_name, rename_to))
+    def set_username(self, name, rename_to=None):
+        self.usernames.append(Username(name, rename_to))
         user_clause = f" {name}"
-        if cluster_name:
-            user_clause += f" ON CLUSTER {cluster_name}"
         if rename_to:
             user_clause += f" RENAME TO {rename_to}"
         if len(self.usernames) > 1:
             self.query += ","
         self.query += user_clause
+        return self
+
+    def set_on_cluster(self, cluster_name):
+        self.on_cluster = cluster_name
+        self.query += f" ON CLUSTER {cluster_name}"
         return self
 
     def set_reset_authentication_methods_to_new(self):
