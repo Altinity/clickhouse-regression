@@ -18,6 +18,7 @@ from aggregate_functions.tests.steps import (
 )
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
+issue_41057 = "https://github.com/ClickHouse/ClickHouse/issues/41057"
 issue_41176 = "https://github.com/ClickHouse/ClickHouse/issues/41176"
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
 issue_44511 = (
@@ -235,6 +236,132 @@ xfails = {
             Fail,
             issue_57801,
             check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/sumMapFiltered/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMapFilteredState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMapFilteredWithOverflow/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMapFilteredWithOverflowState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMapWithOverflow/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMapWithOverflowState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/maxMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/maxMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
         )
     ],
 }

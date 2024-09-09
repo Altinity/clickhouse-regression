@@ -62,15 +62,6 @@ def scenario(self, func="min({params})", table=None, snapshot_id=None):
             f"SELECT {func.format(params='x')}, any(toTypeName(x)) FROM values('x Float64', (nan), (2.3), (inf), (6.7), (-inf), (5))"
         )
 
-    for column in table.columns:
-        column_name, column_type = column.name, column.datatype.name
-
-        with Check(f"{column_type}"):
-            # self.context.node.query(f"SELECT {column_name} from {table.name} format Values")
-            execute_query(
-                f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}"
-            )
-
     with Pool(6) as executor:
         for column in table.columns:
             column_name, column_type = column.name, column.datatype.name
