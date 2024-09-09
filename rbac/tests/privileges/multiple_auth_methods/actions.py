@@ -138,6 +138,7 @@ def alter_user(
     user=None,
     usernames=None,
     client=None,
+    on_cluster=None,
 ):
     """Alter user to set new authentication methods."""
 
@@ -151,10 +152,10 @@ def alter_user(
     usernames = usernames or user.usernames
 
     for username in usernames:
-        query = query.set_username(
-            getattr(username, "renamed", None) or username.name,
-            cluster_name=username.cluster,
-        )
+        query = query.set_username(getattr(username, "renamed", None) or username.name)
+
+    if on_cluster is not None:
+        query.set_on_cluster(cluster_name=on_cluster)
 
     query = query.set_identified()
 
@@ -173,6 +174,7 @@ def alter_user_add(
     usernames=None,
     auth_methods=None,
     client=None,
+    on_cluster=None,
 ):
     """Alter user to add new authentication methods."""
 
@@ -184,10 +186,10 @@ def alter_user_add(
     usernames = usernames or user.usernames
 
     for username in usernames:
-        query = query.set_username(
-            getattr(username, "renamed", None) or username.name,
-            cluster_name=username.cluster,
-        )
+        query = query.set_username(getattr(username, "renamed", None) or username.name)
+
+    if on_cluster is not None:
+        query.set_on_cluster(cluster_name=on_cluster)
 
     query = query.set_identified()
 
@@ -205,6 +207,7 @@ def alter_user_reset_to_new(
     user=None,
     usernames=None,
     client=None,
+    on_cluster=None,
 ):
     """Alter user to reset authentication methods to new (the last)."""
 
@@ -216,10 +219,10 @@ def alter_user_reset_to_new(
     usernames = usernames or user.usernames
 
     for username in usernames:
-        query = query.set_username(
-            getattr(username, "renamed", None) or username.name,
-            cluster_name=username.cluster,
-        )
+        query = query.set_username(getattr(username, "renamed", None) or username.name)
+
+    if on_cluster is not None:
+        query.set_on_cluster(cluster_name=on_cluster)
 
     query.set_reset_authentication_methods_to_new()
 
@@ -236,6 +239,7 @@ def drop_user(
     if_exists=False,
     access_storage_type=None,
     client=None,
+    on_cluster=None,
 ):
     """Drop user."""
 
@@ -247,11 +251,11 @@ def drop_user(
     for username in usernames:
         query = DropUser().set_username(username.name)
 
-        if username.cluster:
-            query.set_on_cluster(username.cluster)
-
         if if_exists:
             query.set_if_exists()
+
+        if on_cluster is not None:
+            query.set_on_cluster(on_cluster)
 
         if access_storage_type:
             query.set_access_storage_type(access_storage_type)
@@ -283,13 +287,16 @@ def create_user(
     query = CreateUser()
 
     if user_name:
-        usernames = [Username(name=user_name, cluster=on_cluster)]
+        usernames = [Username(name=user_name)]
 
     if not usernames:
         raise ValueError("usernames are not provided")
 
     for username in usernames:
-        query.set_username(name=username.name, cluster_name=username.cluster)
+        query.set_username(name=username.name)
+
+    if on_cluster is not None:
+        query.set_on_cluster(cluster_name=on_cluster)
 
     query.set_identified()
 
@@ -302,8 +309,10 @@ def create_user(
     finally:
         with Finally("drop the user if exists"):
             for username in usernames:
-                query = DropUser().set_if_exists().set_username(username.name)
-                client_query(query=query, client=client)
+                drop_query = DropUser().set_if_exists().set_username(username.name)
+                if on_cluster is not None:
+                    drop_query.set_on_cluster(cluster_name=on_cluster)
+                client_query(query=drop_query, client=client)
 
 
 @TestStep(Then)
