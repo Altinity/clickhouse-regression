@@ -354,6 +354,7 @@ def login_with_wrong_password(self, user: CreateUser, node=None):
                 node_query(
                     query=Select().set_query(f"SELECT current_user()"),
                     settings=[("user", username.name), ("password", password)],
+                    node=node,
                 )
 
 
@@ -369,13 +370,17 @@ def login_with_wrong_username(self, user: CreateUser, node=None):
         user.identification + getattr(user, "add_identification", [])
     ):
         for username in list(user.usernames):
-            password = auth_method.password or ""
-            with By(
-                f"trying to login with {username.name} and {password} for {auth_method.method}"
-            ):
+            if auth_method.password:
+                password = auth_method.password
+                message = f"trying to login with {username.name} and {password} for {auth_method.method} auth method"
+            else:
+                password = ""
+                message = f"trying to login with {username.name} and {auth_method.method} auth method"
+            with By(message):
                 node_query(
                     query=Select().set_query(f"SELECT current_user()"),
                     settings=[("user", username.name + "1"), ("password", password)],
+                    node=node,
                 )
 
 
@@ -436,6 +441,15 @@ def expect_error(self, r, exitcode, message):
     # assert r.exitcode == exitcode, f"expected exitcode {exitcode} but got {r.exitcode}"
     assert "DB::Exception" in r.output, f"expected 'DB::Exception' in '{r.output}'"
     assert message in r.output, f"expected '{message}' in '{r.output}'"
+
+
+@TestStep(Then)
+def expect_syntax_error(self, r):
+    """Expect syntax error."""
+
+    exitcode = 62
+    message = "DB::Exception: Syntax error: failed at position"
+    expect_error(r=r, exitcode=exitcode, message=message)
 
 
 @TestStep(Then)
