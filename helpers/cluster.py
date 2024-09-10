@@ -1797,7 +1797,9 @@ class Cluster(object):
                         self.clickhouse_binary_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
-                    assert os.path.exists(self.clickhouse_binary_path)
+                    assert os.path.exists(
+                        self.clickhouse_binary_path
+                    ), self.clickhouse_binary_path
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
@@ -1918,13 +1920,21 @@ class Cluster(object):
 
         with Given("docker-compose"):
             max_attempts = 5
-            for attempt in range(max_attempts):
-                with When(f"attempt {attempt}/{max_attempts}"):
-                    running = start_cluster(max_up_attempts=3)
-                if running:
-                    break
+            all_running = False
+            try:
+                for attempt in range(max_attempts):
+                    with When(f"attempt {attempt}/{max_attempts}"):
+                        all_running = start_cluster(max_up_attempts=3)
+                    if all_running:
+                        break
+            except:
+                with When("making sure any running containers are stopped"):
+                    self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
+                    )
 
-            if not running:
+            if not all_running:
                 fail("could not bring up docker-compose cluster")
 
         with Then("wait all nodes report healthy"):
