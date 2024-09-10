@@ -372,6 +372,16 @@ ffails = {
         "ntile works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
+    "/aggregate functions/window_functions/nonNegativeDerivative": (
+        Skip,
+        "nonNegativeDerivative was introduced in 22.6",
+        check_clickhouse_version("<22.6"),
+    ),
+    "/aggregate functions/window_functions/nth value": (
+        Skip,
+        "nth value was introduced in 22.5",
+        check_clickhouse_version("<22.5"),
+    ),
     "/aggregate functions/analysisOfVariance": (
         Skip,
         "analysisOfVariance works from 22.10",
