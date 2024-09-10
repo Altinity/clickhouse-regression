@@ -1268,18 +1268,20 @@ class PackageDownloader:
         else:
             self.binary_path = source
 
-        if not self.package_version and self.binary_path:
+        if self.binary_path:
             with Shell() as bash:
-                self.package_version = bash(
-                    f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
-                ).output.strip(".")
+                if os.path.relpath(self.binary_path).startswith("../.."):
+                    # Binary is outside of the build context, move it to where docker can find it
+                    new_path = f"{current_dir()}/../binaries/{os.path.basename(self.binary_path)}"
+                    bash(f"cp {self.binary_path} {new_path}")
+                    self.binary_path = os.path.relpath(new_path)
 
-        if self.binary_path and os.path.relpath(self.binary_path).startswith("../.."):
-            p = shutil.copyfile(
-                self.binary_path,
-                f"{current_dir()}/../binaries/{os.path.basename(self.binary_path)}",
-            )
-            self.binary_path = os.path.relpath(p)
+                bash(f"chmod +x {self.binary_path}")
+
+                if not self.package_version:
+                    self.package_version = bash(
+                        f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                    ).output.strip(".")
 
     def get_binary_from_docker(self, source):
         self.docker_image = source.split("docker://", 1)[1]
@@ -1460,10 +1462,7 @@ class Cluster(object):
                     self.clickhouse_docker_image_name = (
                         f"clickhouse-regression:{base_os_name}-binary"
                     )
-
                     with Shell() as bash:
-                        bash.timeout = 300
-                        bash(f"chmod +x {self.clickhouse_binary_path}")
                         bash(  # Force rebuild
                             f"docker rmi --force regression-{self.clickhouse_docker_image_name}"
                         )
@@ -1504,8 +1503,6 @@ class Cluster(object):
                         f"clickhouse-regression:{base_os_name}-binary"
                     )
                     with Shell() as bash:
-                        bash.timeout = 300
-                        bash(f"chmod +x {self.keeper_binary_path}")
                         bash(  # Force rebuild
                             f"docker rmi --force regression-{self.keeper_docker_image_name}"
                         )
