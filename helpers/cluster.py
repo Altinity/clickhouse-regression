@@ -1274,6 +1274,13 @@ class PackageDownloader:
                     f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
                 ).output.strip(".")
 
+        if self.binary_path and os.path.relpath(self.binary_path).startswith("../.."):
+            p = shutil.copyfile(
+                self.binary_path,
+                f"{current_dir()}/../binaries/{os.path.basename(self.binary_path)}",
+            )
+            self.binary_path = os.path.relpath(p)
+
     def get_binary_from_docker(self, source):
         self.docker_image = source.split("docker://", 1)[1]
 
@@ -1439,16 +1446,27 @@ class Cluster(object):
             else:
                 assert base_os is not None, error("base_os must be specified")
                 self.base_os = base_os.split("docker://", 1)[-1]
+                base_os_name = self.base_os.replace(":", "-").replace("/", "-")
 
-                package_name = os.path.basename(clickhouse_package.package_path)
-                self.clickhouse_docker_image_name = f"clickhouse-regression:{self.base_os.replace(':','-').replace('/','-')}-{package_name}"
-                self.clickhouse_binary_path = os.path.relpath(
-                    clickhouse_package.package_path
-                )
+                if clickhouse_package.package_path:
+                    package_name = os.path.basename(clickhouse_package.package_path)
+                    self.clickhouse_docker_image_name = (
+                        f"clickhouse-regression:{base_os_name}-{package_name}"
+                    )
+                    self.clickhouse_binary_path = os.path.relpath(
+                        clickhouse_package.package_path
+                    )
+                else:
+                    self.clickhouse_docker_image_name = (
+                        f"clickhouse-regression:{base_os_name}-binary"
+                    )
 
-            # with Shell() as bash:
-            #     bash.timeout = 300
-            #     bash(f"chmod +x {self.clickhouse_binary_path}")
+                    with Shell() as bash:
+                        bash.timeout = 300
+                        bash(f"chmod +x {self.clickhouse_binary_path}")
+                        bash(  # Force rebuild
+                            f"docker rmi --force regression-{self.clickhouse_docker_image_name}"
+                        )
 
         if self.keeper_binary_path:
             keeper_package = PackageDownloader(
@@ -1471,18 +1489,31 @@ class Cluster(object):
             else:
                 assert base_os is not None, error("base_os must be specified")
                 self.keeper_base_os = base_os.split("docker://", 1)[-1]
+                base_os_name = self.keeper_base_os.replace(":", "-").replace("/", "-")
 
-                package_name = os.path.basename(keeper_package.package_path)
-                self.keeper_docker_image_name = f"clickhouse-regression:{self.keeper_base_os.replace(':','-').replace('/','-')}-{package_name}"
-                self.keeper_binary_path = os.path.relpath(keeper_package.package_path)
+                if keeper_package.package_path:
+                    package_name = os.path.basename(keeper_package.package_path)
+                    self.keeper_docker_image_name = (
+                        f"clickhouse-regression:{base_os_name}-{package_name}"
+                    )
+                    self.keeper_binary_path = os.path.relpath(
+                        keeper_package.package_path
+                    )
+                else:
+                    self.keeper_docker_image_name = (
+                        f"clickhouse-regression:{base_os_name}-binary"
+                    )
+                    with Shell() as bash:
+                        bash.timeout = 300
+                        bash(f"chmod +x {self.keeper_binary_path}")
+                        bash(  # Force rebuild
+                            f"docker rmi --force regression-{self.keeper_docker_image_name}"
+                        )
+
         else:
             self.keeper_base_os = self.base_os
             self.keeper_docker_image_name = self.clickhouse_docker_image_name
             self.keeper_binary_path = self.clickhouse_binary_path
-
-            # with Shell() as bash:
-            #     bash.timeout = 300
-            #     bash(f"chmod +x {self.keeper_binary_path}")
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()

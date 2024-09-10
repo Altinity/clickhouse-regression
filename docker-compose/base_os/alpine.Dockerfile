@@ -34,6 +34,14 @@ ARG CLICKHOUSE_PACKAGE
 RUN echo "CLICKHOUSE_PACKAGE: $CLICKHOUSE_PACKAGE" > /tmp/clickhouse_package
 RUN test -n "$CLICKHOUSE_PACKAGE"
 
-COPY $CLICKHOUSE_PACKAGE /tmp/clickhouse.tgz
-RUN tar xvzf /tmp/clickhouse.tgz --strip-components=1 -C /
-RUN rm /tmp/clickhouse.tgz /install -r
+ARG CLICKHOUSE_PACKAGE
+COPY $CLICKHOUSE_PACKAGE /tmp/
+# Check if it's a tgz file
+RUN if [ $(echo $CLICKHOUSE_PACKAGE | grep -c ".tgz") -eq 1 ]; then \
+    tar xvzf /tmp/*.tgz --strip-components=1 -C / ; \
+    rm -v /tmp/*.tgz /install -r; \
+  else \
+    cp /tmp/* /usr/bin/; \
+    chmod +x /usr/bin/clickhouse; \
+    rm -v /tmp/*; \
+  fi;
