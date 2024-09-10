@@ -10,6 +10,10 @@ _aggregate_functions_merge_uniqUpToMerge_Array_DateTime64_3___0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Array(DateTime64(3)))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Array_DateTime64_3___0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Array(DateTime64(3)))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Array_DateTime64_3____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Array(DateTime64(3)))'))":"6"}
 """
@@ -218,6 +222,10 @@ _aggregate_functions_merge_uniqUpToMerge_Array_Nullable_DateTime64_3____0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Array(Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Array_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Array(Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Array_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Array(Nullable(DateTime64(3))))'))":"6"}
 """
@@ -335,6 +343,10 @@ _aggregate_functions_merge_uniqUpToMerge_Bool_0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_DateTime64_3__0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), DateTime64(3))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_DateTime64_3__0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), DateTime64(3))'))":"6"}
 """
 
@@ -546,6 +558,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Bool_DateTime64_3___0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Bool, DateTime64(3)))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Bool_DateTime64_3___0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Bool, DateTime64(3)))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Bool_DateTime64_3____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Bool, DateTime64(3)))'))":"6"}
 """
@@ -754,6 +770,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Bool_Nullable_DateTime64_3____0 = r
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Bool, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Bool_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Bool, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Bool_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Bool, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -875,6 +895,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_DateTime_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_DateTime_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(DateTime, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_DateTime_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(DateTime, DateTime64(3)))'))":"6"}
 """
 
@@ -1086,6 +1110,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_DateTime_Nullable_DateTime64_3____0
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(DateTime, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_DateTime_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(DateTime, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_DateTime_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(DateTime, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -1207,6 +1235,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Date_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_Date_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Date, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_Date_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Date, DateTime64(3)))'))":"6"}
 """
 
@@ -1418,6 +1450,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Date_Nullable_DateTime64_3____0 = r
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Date, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Date_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Date, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Date_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Date, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -1539,6 +1575,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_FixedString_51__Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_FixedString_51__DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(FixedString(51), DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_FixedString_51__DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(FixedString(51), DateTime64(3)))'))":"6"}
 """
 
@@ -1750,6 +1790,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_FixedString_51__Nullable_DateTime64
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(FixedString(51), Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_FixedString_51__Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(FixedString(51), Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_FixedString_51__Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(FixedString(51), Nullable(DateTime64(3))))'))":"6"}
 """
@@ -1871,6 +1915,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int128_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_Int128_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int128, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_Int128_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int128, DateTime64(3)))'))":"6"}
 """
 
@@ -2082,6 +2130,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int128_Nullable_DateTime64_3____0 =
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int128, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Int128_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int128, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Int128_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int128, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -2203,6 +2255,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int16_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_Int16_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int16, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_Int16_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int16, DateTime64(3)))'))":"6"}
 """
 
@@ -2414,6 +2470,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int16_Nullable_DateTime64_3____0 = 
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int16, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Int16_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int16, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Int16_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int16, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -2535,6 +2595,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int32_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_Int32_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int32, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_Int32_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int32, DateTime64(3)))'))":"6"}
 """
 
@@ -2746,6 +2810,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int32_Nullable_DateTime64_3____0 = 
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int32, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Int32_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int32, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Int32_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int32, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -2867,6 +2935,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int64_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_Int64_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int64, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_Int64_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int64, DateTime64(3)))'))":"6"}
 """
 
@@ -3078,6 +3150,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int64_Nullable_DateTime64_3____0 = 
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int64, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Int64_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int64, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Int64_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int64, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -3199,6 +3275,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int8_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_Int8_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int8, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_Int8_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int8, DateTime64(3)))'))":"6"}
 """
 
@@ -3410,6 +3490,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_Int8_Nullable_DateTime64_3____0 = r
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int8, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_Int8_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int8, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_Int8_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(Int8, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -3531,6 +3615,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_FixedString_51___Boo
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_FixedString_51___DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(FixedString(51)), DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_FixedString_51___DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(FixedString(51)), DateTime64(3)))'))":"6"}
 """
 
@@ -3742,6 +3830,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_FixedString_51___Nul
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(FixedString(51)), Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(FixedString(51)), Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(FixedString(51)), Nullable(DateTime64(3))))'))":"6"}
 """
@@ -3863,6 +3955,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_String__Bool__0 = r"
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_String__DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(String), DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_String__DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(String), DateTime64(3)))'))":"6"}
 """
 
@@ -4074,6 +4170,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_String__Nullable_Dat
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(String), Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_String__Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(String), Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(LowCardinality(String), Nullable(DateTime64(3))))'))":"6"}
 """
@@ -4195,6 +4295,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_String_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_String_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(String, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_String_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(String, DateTime64(3)))'))":"6"}
 """
 
@@ -4406,6 +4510,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_String_Nullable_DateTime64_3____0 =
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(String, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_String_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(String, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_String_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(String, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -4527,6 +4635,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt128_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt128_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt128, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt128_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt128, DateTime64(3)))'))":"6"}
 """
 
@@ -4738,6 +4850,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt128_Nullable_DateTime64_3____0 
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt128, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt128_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt128, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt128_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt128, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -4859,6 +4975,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt16_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt16_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt16, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt16_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt16, DateTime64(3)))'))":"6"}
 """
 
@@ -5070,6 +5190,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt16_Nullable_DateTime64_3____0 =
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt16, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt16_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt16, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt16_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt16, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -5191,6 +5315,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt32_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt32_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt32, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt32_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt32, DateTime64(3)))'))":"6"}
 """
 
@@ -5402,6 +5530,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt32_Nullable_DateTime64_3____0 =
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt32, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt32_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt32, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt32_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt32, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -5523,6 +5655,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt64_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt64_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt64, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt64_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt64, DateTime64(3)))'))":"6"}
 """
 
@@ -5734,6 +5870,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt64_Nullable_DateTime64_3____0 =
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt64, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt64_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt64, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt64_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt64, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -5855,6 +5995,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt8_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt8_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt8, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt8_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt8, DateTime64(3)))'))":"6"}
 """
 
@@ -6066,6 +6210,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UInt8_Nullable_DateTime64_3____0 = 
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt8, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_UInt8_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt8, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_UInt8_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UInt8, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -6187,6 +6335,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UUID_Bool__0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Map_UUID_DateTime64_3___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UUID, DateTime64(3)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Map_UUID_DateTime64_3___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UUID, DateTime64(3)))'))":"6"}
 """
 
@@ -6398,6 +6550,10 @@ _aggregate_functions_merge_uniqUpToMerge_Map_UUID_Nullable_DateTime64_3____0 = r
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UUID, Nullable(DateTime64(3))))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Map_UUID_Nullable_DateTime64_3____0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UUID, Nullable(DateTime64(3))))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Map_UUID_Nullable_DateTime64_3_____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Map(UUID, Nullable(DateTime64(3))))'))":"6"}
 """
@@ -6522,6 +6678,10 @@ _aggregate_functions_merge_uniqUpToMerge_Nullable_DateTime64_3___0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('0106'), 'AggregateFunction(uniqUpTo(5), Nullable(DateTime64(3)))'))":"6"}
 """
 
+_aggregate_functions_merge_uniqUpToMerge_Nullable_DateTime64_3___0__22_8 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('0106'), 'AggregateFunction(uniqUpTo(5), Nullable(DateTime64(3)))'))":"6"}
+"""
+
 _aggregate_functions_merge_uniqUpToMerge_Nullable_DateTime64_3____22_8_0 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('0106'), 'AggregateFunction(uniqUpTo(5), Nullable(DateTime64(3)))'))":"6"}
 """
@@ -6607,6 +6767,10 @@ _aggregate_functions_merge_uniqUpToMerge_String_0 = r"""
 """
 
 _aggregate_functions_merge_uniqUpToMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String___0 = r"""
+{"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Tuple(UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128, Float32, Float64, Decimal(38, 38), Date, DateTime, DateTime64(3), Bool, String, FixedString(51), UUID, Nullable(UInt8), Nullable(UInt16), Nullable(UInt32), Nullable(UInt64), Nullable(UInt128), Nullable(Int8), Nullable(Int16), Nullable(Int32), Nullable(Int64), Nullable(Int128), Nullable(Float32), Nullable(Float64), Nullable(Decimal(38, 38)), Nullable(Date), Nullable(DateTime), Nullable(DateTime64(3)), Nullable(Bool), Nullable(String), Nullable(FixedString(51)), Nullable(UUID), LowCardinality(UInt8), LowCardinality(UInt16), LowCardinality(UInt32), LowCardinality(UInt64), LowCardinality(UInt128), LowCardinality(Int8), LowCardinality(Int16), LowCardinality(Int32), LowCardinality(Int64), LowCardinality(Int128), LowCardinality(Float32), LowCardinality(Float64), LowCardinality(Date), LowCardinality(DateTime), LowCardinality(Bool), LowCardinality(String), LowCardinality(FixedString(51)), LowCardinality(UUID), Array(String), Map(String, LowCardinality(Float64)), Tuple(String)))'))":"6"}
+"""
+
+_aggregate_functions_merge_uniqUpToMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String___0__22_8 = r"""
 {"uniqUpToMerge(5)(CAST(unhex('06'), 'AggregateFunction(uniqUpTo(5), Tuple(UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128, Float32, Float64, Decimal(38, 38), Date, DateTime, DateTime64(3), Bool, String, FixedString(51), UUID, Nullable(UInt8), Nullable(UInt16), Nullable(UInt32), Nullable(UInt64), Nullable(UInt128), Nullable(Int8), Nullable(Int16), Nullable(Int32), Nullable(Int64), Nullable(Int128), Nullable(Float32), Nullable(Float64), Nullable(Decimal(38, 38)), Nullable(Date), Nullable(DateTime), Nullable(DateTime64(3)), Nullable(Bool), Nullable(String), Nullable(FixedString(51)), Nullable(UUID), LowCardinality(UInt8), LowCardinality(UInt16), LowCardinality(UInt32), LowCardinality(UInt64), LowCardinality(UInt128), LowCardinality(Int8), LowCardinality(Int16), LowCardinality(Int32), LowCardinality(Int64), LowCardinality(Int128), LowCardinality(Float32), LowCardinality(Float64), LowCardinality(Date), LowCardinality(DateTime), LowCardinality(Bool), LowCardinality(String), LowCardinality(FixedString(51)), LowCardinality(UUID), Array(String), Map(String, LowCardinality(Float64)), Tuple(String)))'))":"6"}
 """
 
