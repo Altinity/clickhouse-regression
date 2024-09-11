@@ -248,7 +248,7 @@ class ResultUploader:
             "EXCEPTION",  # is always step type
             "STOP",
         ]:
-            print(data)
+            pprint(data)
             raise ValueError(f"Unknown message keyword: {message_keyword}")
 
     def report_url(self) -> str:
@@ -278,8 +278,12 @@ class ResultUploader:
         # The test log could be truncated, so we can't rely on the message_rtime
         # of the most recent result message for the total duration
         self.duration_ms = (self.last_message_time - self.run_start_time) * 1000
-        # If the log is truncated, this is the status of the last test
-        self.status = self.test_results[-1]["result_type"]
+
+        if self.test_results:
+            # If the log is truncated, this is the status of the last test
+            self.status = self.test_results[-1]["result_type"]
+        else:
+            self.status = "Unknown"
 
     def read_pr_info(self):
 
@@ -467,18 +471,21 @@ class ResultUploader:
     def run_local(self, log_path=None):
         with By("reading log"):
             self.read_log(log_path=log_path)
+            if not self.test_results:
+                print("No results to upload")
+                return
 
         with And("fetching PR info"):
             self.read_pr_info()
 
         if self.debug:
-            with And("writing native csv"):
-                self.write_native_csv()
-
             with And("printing debug info"):
                 pprint(self.pr_info, indent=2)
                 pprint(self.test_attributes, indent=2)
                 pprint(self.test_results[-1], indent=2)
+
+            with And("writing native csv"):
+                self.write_native_csv()
 
         with And("writing table csv"):
             self.write_csv()
@@ -497,6 +504,9 @@ class ResultUploader:
     ):
         with By("reading log"):
             self.read_log(log_path=log_path)
+            if not self.test_results:
+                print("No results to upload")
+                return
 
         with And("fetching PR info"):
             self.read_pr_info()
