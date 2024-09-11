@@ -1,6 +1,8 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from rbac.requirements import *
+
 from helpers.common import getuid, get_settings_value, check_clickhouse_version
 
 import rbac.tests.privileges.multiple_auth_methods.common as common
@@ -126,6 +128,11 @@ def column_types_in_system_table(self):
 
 
 @TestScenario
+@Requirement(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddToNoPassword(
+        "1.0"
+    ),
+)
 def check_add_to_no_password(self):
     """Check that when adding authentication methods to a user identified with NO_PASSWORD,
     NO_PASSWORD will be replaced with the new methods."""
