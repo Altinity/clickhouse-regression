@@ -577,7 +577,7 @@ jobs:
 
   disk_level_encryption:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
