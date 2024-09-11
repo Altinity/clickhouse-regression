@@ -364,7 +364,50 @@ xfails = {
             check_clickhouse_version("<22.6"),
         )
     ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
 }
+
 
 ffails = {
     "/aggregate functions/window_functions/ntile": (
