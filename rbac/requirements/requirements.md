@@ -1269,11 +1269,11 @@ authentication_methods:
   - plaintext_password
   - sha256_password
   - double_sha1_password
+  - bcrypt_password  
+  - ssh_key
   - ldap
   - kerberos
   - ssl_certificate
-  - bcrypt_password  
-  - ssh_key
   - http
   - jwt
 ```
@@ -1300,6 +1300,13 @@ The below query should throw an error:
 CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
 ```
 
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.MultipleUserNames
+version: 1.0  
+[ClickHouse] SHALL support creating multiple user accounts with multiple authentication methods in the `CREATE USER` statement.
+```sql
+CREATE USER user1, user2 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2';
+```
+
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser
 version: 1.0  
 
@@ -1314,7 +1321,7 @@ In the example above `user1` can authenticate only with 1, 2 or 3.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword
 version: 1.0  
-[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL not allow to use `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
 
 The below query should throw an error:
 ```sql
@@ -1324,18 +1331,28 @@ ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified
 version: 1.0
 
-[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support adding one or more new authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
 ```sql
 ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
 ```
 
-##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddNoPassword
 version: 1.0
 
 [ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
 The below query should throw an error:
 ```sql
 ALTER USER user1 ADD IDENTIFIED WITH no_password;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddToNoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add new authentication methods to user identified with `no_password` authentication methods.
+
+The below query should throw an error if user has `no_password` authentication method.
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2';
 ```
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods
@@ -1355,6 +1372,20 @@ For example,
 ```sql
 SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';
 ```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.WithoutAuthType
+version: 1.0  
+[ClickHouse] SHALL allow to omit `WITH` clause and not specify authentication type when creating or altering user account. In this case the default authentication method will be used.
+
+**Example:**  
+```sql
+CREATE USER user1 IDENTIFIED by '1', by '3'
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith
+version: 1.0  
+[Clickhouse] SHALL allow to specify multiple auth methods with and without `WITH` clause in the same query.
+
 
 ### Role
 

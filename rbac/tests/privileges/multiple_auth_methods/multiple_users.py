@@ -2,6 +2,8 @@ import random
 
 from testflows.core import *
 
+from rbac.requirements import *
+
 from helpers.common import getuid
 
 import rbac.tests.privileges.multiple_auth_methods.common as common
@@ -56,6 +58,11 @@ def multiple_users_multiple_auth_methods(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_MultipleUserNames(
+        "1.0"
+    )
+)
 @Name("multiple users")
 def feature(self):
     """Check multiple auth methods support when creating more that one user in same query."""

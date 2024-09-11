@@ -11,10 +11,6 @@ from helpers.common import getuid
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified("1.0"),
-    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword("1.0"),
-)
 def check_adding_auth_methods(self, auth_methods):
     """Check that one or more authentication methods can be added to the user
     using `ALTER USER ADD IDENTIFIED` statement."""
@@ -124,6 +120,11 @@ def adding_auth_methods_v2(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddNoPassword("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddToNoPassword("1.0"),
+)
 @Name("alter add identified")
 def feature(self):
     """Check support of ALTER USER ADD IDENTIFIED statement with one or multiple
