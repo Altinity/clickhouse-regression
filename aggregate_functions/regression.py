@@ -308,13 +308,122 @@ xfails = {
             check_clickhouse_version("<22.6"),
         )
     ],
+    "/aggregate functions/maxMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/maxMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
 }
+
 
 ffails = {
     "/aggregate functions/window_functions/ntile": (
         Skip,
         "ntile works from 23.5",
         check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/window_functions/nonNegativeDerivative": (
+        Skip,
+        "nonNegativeDerivative was introduced in 22.6",
+        check_clickhouse_version("<22.6"),
+    ),
+    "/aggregate functions/window_functions/nth value": (
+        Skip,
+        "nth value was introduced in 22.5",
+        check_clickhouse_version("<22.5"),
     ),
     "/aggregate functions/analysisOfVariance": (
         Skip,
