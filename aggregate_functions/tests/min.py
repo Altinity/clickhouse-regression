@@ -18,7 +18,11 @@ def datatype(self, func, table, col_name):
 def scenario(self, func="min({params})", table=None, snapshot_id=None):
     """Check min aggregate function."""
 
-    if check_clickhouse_version(">=24.1")(self):
+    if check_clickhouse_version(">=24.8")(self):
+        clickhouse_version = (
+            ">=24.8"  # https://github.com/ClickHouse/ClickHouse/issues/69518
+        )
+    elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
     elif check_clickhouse_version(">=23.12")(self):
         clickhouse_version = ">=23.12"

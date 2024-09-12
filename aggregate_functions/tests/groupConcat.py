@@ -30,7 +30,7 @@ def sanity_check(self, col_name, table):
 def scenario(self, func="groupConcat({params})", table=None, snapshot_id=None):
     """Check groupConcat aggregate function."""
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, add_analyzer=True
+        snapshot_id=snapshot_id, clickhouse_version=">=24.8", add_analyzer=True
     )
 
     if "Merge" in self.name:

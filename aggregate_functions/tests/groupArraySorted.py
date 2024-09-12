@@ -17,8 +17,17 @@ def datatype(self, func, table, col_name):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArraySorted("1.0"))
 def scenario(self, func="groupArraySorted({params})", table=None, snapshot_id=None):
     """Check groupArraySorted aggregate function."""
+    if check_clickhouse_version(">=24.8")(self):
+        clickhouse_version = (
+            ">=24.8"  # https://github.com/ClickHouse/ClickHouse/issues/69518
+        )
+    else:
+        clickhouse_version = ">=23.2"
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.2", add_analyzer=True
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if table is None:
