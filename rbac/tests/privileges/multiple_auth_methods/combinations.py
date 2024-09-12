@@ -6,6 +6,8 @@ from helpers.sql.create_user import CreateUser, Username
 from helpers.sql.alter_user import AlterUser
 from helpers.sql.drop_user import DropUser
 
+from rbac.requirements import *
+
 import rbac.tests.privileges.multiple_auth_methods.actions as actions
 import rbac.tests.privileges.multiple_auth_methods.model as models
 
@@ -188,6 +190,9 @@ def different_combinations_starting_with_create(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_MixedWithAndWithoutWith("1.0"),
+)
 @Name("combinations")
 def feature(self, number_of_actions=3):
     """Check different combinations of sequences of creating,
