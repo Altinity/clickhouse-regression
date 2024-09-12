@@ -4,6 +4,14 @@ from aggregate_functions.requirements import (
 )
 
 
+@TestCheck
+def datatype(self, func, table, col_name):
+    """Check different column types."""
+    execute_query(
+        f"SELECT {func.format(params=col_name)}, any(toTypeName({col_name})) FROM {table.name}",
+    )
+
+
 @TestScenario
 @Name("groupArraySorted")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArraySorted("1.0"))
@@ -76,8 +84,13 @@ def scenario(self, func="groupArraySorted({params})", table=None, snapshot_id=No
                 f"SELECT {_func.format(params='x')}, any(toTypeName(x))  FROM values('x Float64', ({v}))"
             )
 
-    for column in table.columns:
-        with Check(f"{column.datatype.name}"):
-            execute_query(
-                f"SELECT {_func.format(params=column.name)}, any(toTypeName({column.name})) FROM {table.name}"
-            )
+    with Pool(6) as executor:
+        for column in table.columns:
+            column_name, column_type = column.name, column.datatype.name
+            Check(
+                f"{column_type}",
+                test=datatype,
+                parallel=True,
+                executor=executor,
+            )(func=_func, table=table, col_name=column_name)
+        join()
