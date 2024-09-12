@@ -1395,6 +1395,26 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword = Requi
     num="5.3.19.3",
 )
 
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_MultipleUserNames = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.MultipleUserNames",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL support creating multiple user accounts with multiple authentication methods in the `CREATE USER` statement.\n"
+        "```sql\n"
+        "CREATE USER user1, user2 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.4",
+)
+
 RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser = Requirement(
     name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser",
     version="1.0",
@@ -1417,7 +1437,7 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.19.4",
+    num="5.3.19.5",
 )
 
 RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword = Requirement(
@@ -1429,7 +1449,7 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword = Requir
     uid=None,
     description=(
         "  \n"
-        "[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "[ClickHouse] SHALL not allow to use `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
         "\n"
         "The below query should throw an error:\n"
         "```sql\n"
@@ -1439,7 +1459,7 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword = Requir
     ),
     link=None,
     level=4,
-    num="5.3.19.5",
+    num="5.3.19.6",
 )
 
 RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified = Requirement(
@@ -1450,7 +1470,7 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
+        "[ClickHouse] SHALL support adding one or more new authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.\n"
         "```sql\n"
         "ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';\n"
         "```\n"
@@ -1458,11 +1478,11 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.19.6",
+    num="5.3.19.7",
 )
 
-RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword = Requirement(
-    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword",
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddNoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddNoPassword",
     version="1.0",
     priority=None,
     group=None,
@@ -1478,7 +1498,28 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword = Re
     ),
     link=None,
     level=4,
-    num="5.3.19.7",
+    num="5.3.19.8",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddToNoPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddToNoPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not allow to add new authentication methods to user identified with `no_password` authentication methods.\n"
+        "\n"
+        "The below query should throw an error if user has `no_password` authentication method.\n"
+        "```sql\n"
+        "ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.9",
 )
 
 RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods = Requirement(
@@ -1497,7 +1538,7 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods = 
     ),
     link=None,
     level=4,
-    num="5.3.19.8",
+    num="5.3.19.10",
 )
 
 RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users = Requirement(
@@ -1520,7 +1561,47 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.19.9",
+    num="5.3.19.11",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_WithoutAuthType = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.WithoutAuthType",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[ClickHouse] SHALL allow to omit `WITH` clause and not specify authentication type when creating or altering user account. In this case the default authentication method will be used.\n"
+        "\n"
+        "**Example:**  \n"
+        "```sql\n"
+        "CREATE USER user1 IDENTIFIED by '1', by '3'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.12",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_MixedWithAndWithoutWith = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL allow to specify multiple auth methods with and without `WITH` clause in the same query.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.13",
 )
 
 RQ_SRS_006_RBAC_Role = Requirement(
@@ -11420,34 +11501,54 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             num="5.3.19.3",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser",
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.MultipleUserNames",
             level=4,
             num="5.3.19.4",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword",
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser",
             level=4,
             num="5.3.19.5",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified",
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword",
             level=4,
             num="5.3.19.6",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword",
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified",
             level=4,
             num="5.3.19.7",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods",
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddNoPassword",
             level=4,
             num="5.3.19.8",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users",
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddToNoPassword",
             level=4,
             num="5.3.19.9",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods",
+            level=4,
+            num="5.3.19.10",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.System.Users",
+            level=4,
+            num="5.3.19.11",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.WithoutAuthType",
+            level=4,
+            num="5.3.19.12",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith",
+            level=4,
+            num="5.3.19.13",
         ),
         Heading(name="Role", level=2, num="5.4"),
         Heading(name="RQ.SRS-006.RBAC.Role", level=3, num="5.4.1"),
@@ -13049,12 +13150,16 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_User_Drop_Syntax,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_CreateUser_MultipleUserNames,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AlterUser_NoPassword,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified,
-        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_NoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddNoPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddToNoPassword,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_ResetAuthenticationMethods,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_WithoutAuthType,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_MixedWithAndWithoutWith,
         RQ_SRS_006_RBAC_Role,
         RQ_SRS_006_RBAC_Role_Privileges,
         RQ_SRS_006_RBAC_Role_Variables,
@@ -14844,11 +14949,11 @@ authentication_methods:
   - plaintext_password
   - sha256_password
   - double_sha1_password
+  - bcrypt_password  
+  - ssh_key
   - ldap
   - kerberos
   - ssl_certificate
-  - bcrypt_password  
-  - ssh_key
   - http
   - jwt
 ```
@@ -14875,6 +14980,13 @@ The below query should throw an error:
 CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
 ```
 
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.MultipleUserNames
+version: 1.0  
+[ClickHouse] SHALL support creating multiple user accounts with multiple authentication methods in the `CREATE USER` statement.
+```sql
+CREATE USER user1, user2 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2';
+```
+
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser
 version: 1.0  
 
@@ -14889,7 +15001,7 @@ In the example above `user1` can authenticate only with 1, 2 or 3.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword
 version: 1.0  
-[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL not allow to use `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
 
 The below query should throw an error:
 ```sql
@@ -14899,18 +15011,28 @@ ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified
 version: 1.0
 
-[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support adding one or more new authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
 ```sql
 ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
 ```
 
-##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddNoPassword
 version: 1.0
 
 [ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
 The below query should throw an error:
 ```sql
 ALTER USER user1 ADD IDENTIFIED WITH no_password;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddToNoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add new authentication methods to user identified with `no_password` authentication methods.
+
+The below query should throw an error if user has `no_password` authentication method.
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2';
 ```
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods
@@ -14930,6 +15052,20 @@ For example,
 ```sql
 SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';
 ```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.WithoutAuthType
+version: 1.0  
+[ClickHouse] SHALL allow to omit `WITH` clause and not specify authentication type when creating or altering user account. In this case the default authentication method will be used.
+
+**Example:**  
+```sql
+CREATE USER user1 IDENTIFIED by '1', by '3'
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith
+version: 1.0  
+[Clickhouse] SHALL allow to specify multiple auth methods with and without `WITH` clause in the same query.
+
 
 ### Role
 
