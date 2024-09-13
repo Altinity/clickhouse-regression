@@ -29,9 +29,8 @@ sudo modprobe zram
 MemTotal=$(grep -Po "(?<=MemTotal:)\s+\d+" /proc/meminfo) # KiB
 Percent=200
 ZRAM_SIZE=$(($MemTotal / 1024 / 1024 * $Percent / 100)) # Convert to GiB
-sudo zramctl --size ${ZRAM_SIZE}GiB --algorithm zstd /dev/zram0
-sudo mkswap /dev/zram0
-sudo swapon -p 100 /dev/zram0
+./retry.sh 30 2 sudo zramctl --size ${ZRAM_SIZE}GiB --algorithm zstd /dev/zram0
+sudo mkswap /dev/zram0 && sudo swapon -p 100 /dev/zram0
 
 echo "Install docker-compose..."
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
