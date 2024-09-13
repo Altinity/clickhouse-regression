@@ -29,8 +29,8 @@ sudo modprobe zram
 MemTotal=$(grep -Po "(?<=MemTotal:)\s+\d+" /proc/meminfo) # KiB
 Ratio=2
 SIZE=$(($MemTotal * 1024 * $Ratio)) # Convert to bytes
-sudo echo -n "${SIZE}" > /sys/block/zram0/disksize
-sudo echo -n "zstd" > /sys/block/zram0/comp_algorithm
+sudo sh -c "echo -n ${SIZE} > /sys/block/zram0/disksize"
+sudo sh -c "echo -n zstd > /sys/block/zram0/comp_algorithm"
 sudo mkswap /dev/zram0
 sudo swapon -p 100 /dev/zram0
 
