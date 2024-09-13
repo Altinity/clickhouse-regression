@@ -24,15 +24,15 @@ echo PATH=$PATH >>$GITHUB_ENV
 ./retry.sh 60 2 "pip install -r requirements.txt"
 
 echo "Set up zram..."
-apt-get install -y linux-modules-extra-$(uname -r)
-modprobe zram
+sudo apt-get install -y linux-modules-extra-$(uname -r)
+sudo modprobe zram
 MemTotal=$(grep -Po "(?<=MemTotal:)\s+\d+" /proc/meminfo) # KiB
 Ratio=2
 SIZE=$(($MemTotal * 1024 * $Ratio)) # Convert to bytes
-echo -n "${SIZE}" > /sys/block/zram0/disksize
-echo -n "zstd" > /sys/block/zram0/comp_algorithm
-mkswap /dev/zram0
-swapon -p 100 /dev/zram0
+sudo echo -n "${SIZE}" > /sys/block/zram0/disksize
+sudo echo -n "zstd" > /sys/block/zram0/comp_algorithm
+sudo mkswap /dev/zram0
+sudo swapon -p 100 /dev/zram0
 
 echo "Install docker-compose..."
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
