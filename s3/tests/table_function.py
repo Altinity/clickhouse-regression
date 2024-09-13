@@ -16,42 +16,27 @@ def syntax(self):
     node = current().context.node
     expected = "427"
 
-    try:
-        with Given("I create a table"):
-            simple_table(node=node, name=table1_name, policy="default")
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
 
-        with And("I create a second table for comparison"):
-            simple_table(node=node, name=table2_name, policy="default")
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
 
-        with And(f"I store simple data in the first table {table1_name}"):
-            node.query(f"INSERT INTO {table1_name} VALUES (427)")
+    with And(f"I store simple data in the first table {table1_name}"):
+        node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-        with When(f"I export the data to S3 using the table function"):
-            insert_to_s3_function(filename="syntax.csv", table_name=table1_name)
+    with When(f"I export the data to S3 using the table function"):
+        insert_to_s3_function(filename="syntax.csv", table_name=table1_name)
 
-        with And(f"I import the data from S3 into the second table {table2_name}"):
-            insert_from_s3_function(filename="syntax.csv", table_name=table2_name)
+    with And(f"I import the data from S3 into the second table {table2_name}"):
+        insert_from_s3_function(filename="syntax.csv", table_name=table2_name)
 
-        with Then(
-            f"""I check that a simple SELECT * query on the second table
-                   {table2_name} returns matching data"""
-        ):
-            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-            assert r == expected, error()
-
-    finally:
-        with Finally("I overwrite the S3 data with empty data"):
-            with By(f"I drop the first table {table1_name}"):
-                node.query(f"DROP TABLE IF EXISTS {table1_name} SYNC")
-
-            with And(f"I create the table again {table1_name}"):
-                simple_table(node=node, name=table1_name, policy="default")
-
-            with And(
-                f"""I export the empty table {table1_name} to S3 at the
-                      location where I want to overwrite data"""
-            ):
-                insert_to_s3_function(filename="syntax.csv", table_name=table1_name)
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {table2_name} returns matching data"""
+    ):
+        r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+        assert r == expected, error()
 
 
 @TestOutline(Scenario)
@@ -643,8 +628,13 @@ def ssec(self):
 @Name("table function")
 def aws_s3(self, uri, bucket_prefix):
 
-    self.context.uri = uri
-    self.context.bucket_path = bucket_prefix
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/table_function"
+        )
+
+        self.context.uri = f"{uri}table_function/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"
 
     outline()
 
@@ -657,8 +647,13 @@ def aws_s3(self, uri, bucket_prefix):
 @Name("table function")
 def gcs(self, uri, bucket_prefix):
 
-    self.context.uri = uri
-    self.context.bucket_path = bucket_prefix
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/table_function"
+        )
+
+        self.context.uri = f"{uri}table_function/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"
 
     outline()
 
@@ -668,7 +663,12 @@ def gcs(self, uri, bucket_prefix):
 @Name("table function")
 def minio(self, uri, bucket_prefix):
 
-    self.context.uri = uri
-    self.context.bucket_path = bucket_prefix
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/table_function"
+        )
+
+        self.context.uri = f"{uri}table_function/{temp_s3_path}/"
+        self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"
 
     outline()

@@ -6,9 +6,12 @@
 #  prior written permission is obtained from Altinity LTD.
 #
 import random
-from tiered_storage.tests.common import produce_alter_move
+
 from testflows.core import *
 from testflows.asserts import error
+
+from helpers.common import check_clickhouse_version
+from tiered_storage.tests.common import produce_alter_move
 
 
 @TestOutline(Scenario)
@@ -30,6 +33,11 @@ def scenario(self, engine):
     table_name = "table_" + engine.split("(")[0].lower()
 
     random.seed(200)
+
+    OPTIMIZE_FINAL_TIMEOUT = 200
+    if check_clickhouse_version(">=24.4")(self):
+        # https://github.com/ClickHouse/ClickHouse/pull/62067
+        OPTIMIZE_FINAL_TIMEOUT = 600
 
     with When("I create table"):
         node.query(
@@ -89,7 +97,7 @@ def scenario(self, engine):
                     node.query(
                         f"OPTIMIZE TABLE {table_name} FINAL",
                         steps=False,
-                        timeout=200,
+                        timeout=OPTIMIZE_FINAL_TIMEOUT,
                         raise_on_exception=True,
                     )
 
@@ -109,7 +117,7 @@ def scenario(self, engine):
                     tasks.append(p.submit(optimize_table, (n_other_per_batch,)))
 
                 for task in tasks:
-                    task.result(timeout=600)
+                    task.result(timeout=OPTIMIZE_FINAL_TIMEOUT * 3)
 
         with When("I check the server is still up"):
             r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()

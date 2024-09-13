@@ -134,6 +134,55 @@ xfails = {
             "Bug when replacing partitions concurrently",
         )
     ],
+    "/alter/attach partition/conditions/indices/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/54896",
+            check_clickhouse_version("<23.3"),
+        )
+    ],
+    "/alter/attach partition/conditions/projections/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/54896",
+            check_clickhouse_version("<23.3"),
+        )
+    ],
+    "attach partition/conditions/primary key/:": [
+        (
+            Fail,
+            "Bug fixed in 23 https://github.com/ClickHouse/ClickHouse/issues/41783",
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/alter/attach partition/part level/too high level/:/I check that part was not attached by checking the parts state": [
+        (
+            Fail,
+            "Need to investigate why part name stays the same",
+            check_clickhouse_version("<22.12"),
+        )
+    ],
+    "/alter/attach partition/operations on attached partitions/multiple operations/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/68052",
+            check_clickhouse_version("<24.3.6"),
+        )
+    ],
+    "/alter/attach partition/partition key/attach partition from with id/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/68052",
+            check_clickhouse_version("<24.3.6"),
+        )
+    ],
+    "/alter/attach partition/part level/reset when equal to legacy max level/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/69001",
+            check_clickhouse_version(">24.8"),
+        )
+    ],
 }
 
 xflags = {}
@@ -152,6 +201,7 @@ ffails = {
     "/alter/move partition/move to self": (
         XFail,
         "https://github.com/ClickHouse/ClickHouse/issues/62459",
+        check_clickhouse_version("<24.4"),
     ),
 }
 

@@ -187,13 +187,18 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
         with And(
             "I select and save the data from the reference table and from the newly created table"
         ):
+            if check_clickhouse_version(">23.9")(self):
+                order = "ALL"
+            else:
+                order = "tuple(*)"
+
             table1 = node.query(
-                f"SELECT * FROM {reference_table_name} ORDER BY ALL FORMAT TabSeparated",
+                f"SELECT * FROM {reference_table_name} ORDER BY {order} FORMAT TabSeparated",
                 use_file=True,
                 file_output=f"output_{getuid()}",
             )
             table2 = node.query(
-                f"SELECT * FROM {table_name} ORDER BY ALL FORMAT TabSeparated",
+                f"SELECT * FROM {table_name} ORDER BY {order} FORMAT TabSeparated",
                 use_file=True,
                 file_output=f"output_{getuid()}",
             )
@@ -209,13 +214,20 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
                 f"INSERT INTO {table_name} FROM INFILE '{path}' {'COMPRESSION ' + compression if compression and compression != 'NONE' else ''} FORMAT Parquet"
             )
 
+        if check_clickhouse_version(">23.9")(self):
+            order = "ALL"
+        else:
+            order = "tuple(*)"
+
         with Pool(3) as executor:
-            sql = "SELECT {column_name}, toTypeName({column_name}) FROM {table_name} ORDER BY ALL"
+            sql = "SELECT {column_name}, toTypeName({column_name}) FROM {table_name} ORDER BY {order}"
             for column in table.columns:
                 if reference_table_name:
                     r = current().context.node.query(
                         sql.format(
-                            column_name=column.name, table_name=reference_table_name
+                            column_name=column.name,
+                            table_name=reference_table_name,
+                            order=order,
                         )
                         + " FORMAT JSONEachRow",
                         exitcode=0,
@@ -227,7 +239,9 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=sql.format(column_name=column.name, table_name=table.name),
+                    sql=sql.format(
+                        column_name=column.name, table_name=table.name, order=order
+                    ),
                     expected=r.output.strip() if reference_table_name else None,
                 )
             join()

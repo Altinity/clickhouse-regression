@@ -106,7 +106,7 @@ def scenario(
             "permutations",
             description="sanity check most common column type permutations",
         ):
-            with Pool(3) as executor:
+            with Pool(5) as executor:
                 columns = [
                     col
                     for col in table.columns
@@ -121,7 +121,6 @@ def scenario(
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
-                note(permutation)
 
                 for col1, col2 in permutations:
                     col1_name, col1_type = col1.name, col1.datatype.name

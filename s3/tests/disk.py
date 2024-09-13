@@ -47,16 +47,17 @@ def define_s3_disk_storage_configuration(
                 "access_key_id": f"{access_key_id}",
                 "secret_access_key": f"{secret_access_key}",
             }
-            disks[f"{disk_name}_cached"] = (
-                {
-                    "type": "cache",
-                    "disk": disk_name,
-                    "path": f"{disk_name}_cache/",
-                    "max_size": "22548578304",
-                    "cache_on_write_operations": "1",
-                    "do_not_evict_index_and_mark_files": "1",
-                },
-            )
+            if check_clickhouse_version(">=22.8")(self):
+                disks[f"{disk_name}_cached"] = (
+                    {
+                        "type": "cache",
+                        "disk": disk_name,
+                        "path": f"{disk_name}_cache/",
+                        "max_size": "22548578304",
+                        "cache_on_write_operations": "1",
+                        "do_not_evict_index_and_mark_files": "1",
+                    },
+                )
 
             if hasattr(self.context, "s3_options"):
                 disks[disk_name].update(self.context.s3_options)
@@ -448,21 +449,26 @@ def multiple_storage(self):
         )
 
     with And("I have a storage policy configured to use both S3 disks at once"):
-        policies = {
-            "default": {"volumes": {"default": {"disk": "default"}}},
-            "external_nocache": {
-                "volumes": {
-                    "default": {"disk": "first_external"},
-                    "external": {"disk": "second_external"},
-                }
-            },
-            "external": {
-                "volumes": {
-                    "default": {"disk": "first_external_cached"},
-                    "external": {"disk": "second_external_cached"},
-                }
-            },
-        }
+        if check_clickhouse_version(">=22.8")(self):
+            policies = {
+                "default": {"volumes": {"default": {"disk": "default"}}},
+                "external": {
+                    "volumes": {
+                        "default": {"disk": "first_external_cached"},
+                        "external": {"disk": "second_external_cached"},
+                    }
+                },
+            }
+        else:
+            policies = {
+                "default": {"volumes": {"default": {"disk": "default"}}},
+                "external": {
+                    "volumes": {
+                        "default": {"disk": "first_external"},
+                        "external": {"disk": "second_external"},
+                    }
+                },
+            }
 
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
@@ -545,21 +551,26 @@ def multiple_storage_query(self):
         )
 
     with And("I have a storage policy configured to use both S3 disks at once"):
-        policies = {
-            "default": {"volumes": {"default": {"disk": "default"}}},
-            "external_nocache": {
-                "volumes": {
-                    "default": {"disk": "first_external"},
-                    "external": {"disk": "second_external"},
-                }
-            },
-            "external": {
-                "volumes": {
-                    "default": {"disk": "first_external_cached"},
-                    "external": {"disk": "second_external_cached"},
-                }
-            },
-        }
+        if check_clickhouse_version(">=22.8")(self):
+            policies = {
+                "default": {"volumes": {"default": {"disk": "default"}}},
+                "external": {
+                    "volumes": {
+                        "default": {"disk": "first_external_cached"},
+                        "external": {"disk": "second_external_cached"},
+                    }
+                },
+            }
+        else:
+            policies = {
+                "default": {"volumes": {"default": {"disk": "default"}}},
+                "external": {
+                    "volumes": {
+                        "default": {"disk": "first_external"},
+                        "external": {"disk": "second_external"},
+                    }
+                },
+            }
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
@@ -655,11 +666,16 @@ def add_storage(self):
         with And("I have a storage policy configured to use the S3 disk"):
             policies = {
                 "default": {"volumes": {"default": {"disk": "default"}}},
-                "external_nocache": {
-                    "volumes": {"external1": {"disk": "first_external"}}
-                },
                 "external": {
-                    "volumes": {"external1": {"disk": "first_external_cached"}}
+                    "volumes": {
+                        "external1": {
+                            "disk": (
+                                "first_external_cached"
+                                if check_clickhouse_version(">=22.8")(self)
+                                else "first_external"
+                            )
+                        }
+                    },
                 },
             }
 
@@ -685,11 +701,16 @@ def add_storage(self):
         with And("I have a storage policy configured to use the new S3 disk"):
             policies = {
                 "default": {"volumes": {"default": {"disk": "default"}}},
-                "external_nocache": {
-                    "volumes": {"external": {"disk": "second_external"}}
-                },
                 "external": {
-                    "volumes": {"external1": {"disk": "second_external_cached"}}
+                    "volumes": {
+                        "external1": {
+                            "disk": (
+                                "second_external_cached"
+                                if check_clickhouse_version(">=22.8")(self)
+                                else "second_external"
+                            )
+                        }
+                    }
                 },
             }
 
@@ -1415,7 +1436,11 @@ def performance_ttl_move(self):
                 "volumes": {
                     "default": {"disk": "default"},
                     "external": {
-                        "disk": "external_cached",
+                        "disk": (
+                            "external_cached"
+                            if check_clickhouse_version(">=22.8")(self)
+                            else "external"
+                        ),
                         "perform_ttl_move_on_insert": "1",
                     },
                 }
@@ -1424,7 +1449,11 @@ def performance_ttl_move(self):
                 "volumes": {
                     "default": {"disk": "default"},
                     "external": {
-                        "disk": "external_cached",
+                        "disk": (
+                            "external_cached"
+                            if check_clickhouse_version(">=22.8")(self)
+                            else "external"
+                        ),
                         "perform_ttl_move_on_insert": "0",
                     },
                 }
@@ -1511,7 +1540,11 @@ def perform_ttl_move_on_insert(self, bool_value):
                 "volumes": {
                     "default": {"disk": "default"},
                     "external": {
-                        "disk": "external_cached",
+                        "disk": (
+                            "external_cached"
+                            if check_clickhouse_version(">=22.8")(self)
+                            else "external"
+                        ),
                         "perform_ttl_move_on_insert": f"{bool_value}",
                     },
                 }
@@ -1577,7 +1610,13 @@ def perform_ttl_move_on_insert_default(self):
             "tiered": {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": f"{disk_name}_cached"},
+                    "external": {
+                        "disk": (
+                            f"{disk_name}_cached"
+                            if check_clickhouse_version(">=22.8")(self)
+                            else disk_name
+                        )
+                    },
                 }
             },
         }
@@ -2141,7 +2180,13 @@ def alter_on_cluster_modify_ttl(self):
             "tiered": {
                 "volumes": {
                     "default": {"disk": "default"},
-                    "external": {"disk": "external_cached"},
+                    "external": {
+                        "disk": (
+                            "external_cached"
+                            if check_clickhouse_version(">=22.8")(self)
+                            else "external"
+                        )
+                    },
                 }
             },
         }
@@ -2456,10 +2501,7 @@ def disk_tests(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
 
     with Given("a temporary s3 path"):
-        if self.context.storage == "gcs":
-            temp_s3_path = "disk"  # temporary_bucket_path does not support gcs yet
-        else:
-            temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
+        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
 
         self.context.uri = f"{uri}disk/{temp_s3_path}/"
         self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"

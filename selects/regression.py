@@ -106,7 +106,7 @@ xfails = {
     "final/force/alias/group by with :/distr_TinyLog_:/*": [
         (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
     ],
-    "final/force/alias/group by with :/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+    "final/force/alias/group by with :/distr_ReplicatedMergeTree_table:/*": [
         (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
     ],
     "final/force/alias/order by :/distr_Log_:/*": [

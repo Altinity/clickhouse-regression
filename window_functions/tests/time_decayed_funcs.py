@@ -80,14 +80,14 @@ def exponentialTimeDecayedFunc(
     with Example("check decay length with invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1,2)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
     with Example("check decay length with extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}({','.join(['1']*extremely_large_number_of_arguments)})(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
@@ -116,14 +116,14 @@ def exponentialTimeDecayedFunc(
     with Example("check invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(id, id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly two arguments",
         )
 
     with Example("check extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp, {','.join(['id']*extremely_large_number_of_arguments)}) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly two arguments",
         )
 
@@ -334,28 +334,28 @@ def exponentialTimeDecayedCount(self, extremely_large_number_of_arguments=1000):
     with Example("check decay length with invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1,2)(f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
     with Example("check decay length with extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}({','.join(['1']*extremely_large_number_of_arguments)})(f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"Exception: Function {funcname} takes exactly one parameter",
         )
 
     with Example("check invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(id, f_timestamp) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly one argument",
         )
 
     with Example("check extremely large invalid number of arguments"):
         execute_query(
             f"SELECT id, f_timestamp AS time, {funcname}(1)(f_timestamp, {','.join(['f_timestamp']*extremely_large_number_of_arguments)}) OVER () AS w FROM datetimes2 ORDER BY id LIMIT 10",
-            exitcode=36,
+            exitcode=36 if check_clickhouse_version("<24.8")(self) else 42,
             message=f"DB::Exception: Function {funcname} takes exactly one argument",
         )
 

@@ -123,7 +123,7 @@ def check_active_path_attach_detached(self, engine):
 
     with And("I attach table with the same replica path on the first node"):
         table2 = "table2_" + getuid()
-        uuid = getuid()
+        uuid = getuid().replace("_", "-")
         attach_table_UUID(
             table=table2,
             table_id=table_id,
@@ -142,6 +142,9 @@ def check_active_path_attach_detached(self, engine):
         )
         if check_clickhouse_version("<24.4")(self):
             exitcode, message = None, None
+
+        if check_clickhouse_version("<22.9")(self):
+            exitcode, message = 220, "DB::Exception: Duplicate interserver IO endpoint:"
 
         node.query(f"ATTACH TABLE {table1}", exitcode=exitcode, message=message)
 
@@ -182,7 +185,7 @@ def check_active_path_uuid(self, engine):
         )
 
     with Then("I attach table with same replica path and expect an exception"):
-        uuid = getuid()
+        uuid = getuid().replace("_", "-")
         table2 = "table2_" + getuid()
         exitcode, message = (
             253,
@@ -190,6 +193,9 @@ def check_active_path_uuid(self, engine):
         )
         if check_clickhouse_version("<24.4")(self):
             exitcode, message = None, None
+
+        if check_clickhouse_version("<22.9")(self):
+            exitcode, message = 220, "DB::Exception: Duplicate interserver IO endpoint:"
 
         attach_table_UUID(
             table=table2,

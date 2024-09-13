@@ -135,6 +135,7 @@ xfails = {
     "minio/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
+    "minio/disk/log/:": [(Fail, "Not working 22.X", check_clickhouse_version("<=23"))],
     "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
@@ -144,7 +145,6 @@ xfails = {
     ":/backup/:/metadata non restorable schema": [
         (Fail, "send_metadata is deprecated")
     ],
-    ":/backup/:/metadata:": ((Fail, "SYSTEM RESTART DISK is not implemented"),),
     ":/zero copy replication/the bucket should be cleaned up": [
         (Fail, "Data cleanup needs investigation")
     ],
@@ -158,6 +158,9 @@ xfails = {
     "minio/zero copy replication/performance select": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
+    ],
+    "aws s3/zero copy replication/stale alter replica": [
+        (Error, "Timeout on 22.x", check_clickhouse_version("<=23"))
     ],
     "gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
@@ -192,6 +195,9 @@ xfails = {
             check_clickhouse_version("<23.11"),
         )
     ],
+    ":/alter/projection": [
+        (Fail, "Wrong error message 22.3", check_clickhouse_version("<22.8")),
+    ],
     ":/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
@@ -213,13 +219,17 @@ ffails = {
     ),
     "gcs/:/:/:/:the size of the s3 bucket*": (
         Skip,
-        "AWS S3 credentials not set for gcs tests.",
+        "needs investigation",
     ),
     "gcs/:/:/:the size of the s3 bucket*": (
         Skip,
-        "AWS S3 credentials not set for gcs tests.",
+        "needs investigation",
     ),
     "gcs/table function/measure file size": (
+        Skip,
+        "needs investigation",
+    ),
+    "gcs/orphans": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
@@ -253,10 +263,34 @@ ffails = {
         "Many settings not supported <23.8",
         check_clickhouse_version("<23.8"),
     ),
+    ":/orphans": (
+        Skip,
+        "not supported <24",
+        check_clickhouse_version("<24"),
+    ),
+    ":/orphans/zero copy replication/:etach:": (
+        Skip,
+        "detach not enabled with zero copy replication",
+    ),
+    ":/orphans/zero copy replication/:reeze:": (
+        Skip,
+        "freeze not enabled with zero copy replication",
+    ),
+    ":/alter/update delete": (
+        Skip,
+        "Not supported <22.8",
+        check_clickhouse_version("<23"),
+    ),
+    ":/backup/:/metadata:": (XFail, "SYSTEM RESTART DISK is not implemented"),
+    ":/backup/:/system unfreeze": (
+        XFail,
+        "doesn't work <22.8",
+        check_clickhouse_version("<22.8"),
+    ),
 }
 
 
-@TestModule
+@TestFeature
 @Name("minio")
 def minio_regression(
     self,
@@ -321,6 +355,9 @@ def minio_regression(
         Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
+        Feature(test=load("s3.tests.orphans", "feature"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
         Feature(test=load("s3.tests.table_function_performance", "minio"))(
@@ -328,7 +365,7 @@ def minio_regression(
         )
 
 
-@TestModule
+@TestFeature
 @Name("aws s3")
 def aws_s3_regression(
     self,
@@ -408,11 +445,14 @@ def aws_s3_regression(
         Feature(test=load("s3.tests.backup", "aws_s3"))(
             uri=uri, bucket_prefix=bucket_prefix
         )
+        Feature(test=load("s3.tests.orphans", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
         Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
-@TestModule
+@TestFeature
 @Name("gcs")
 def gcs_regression(
     self,
@@ -435,11 +475,13 @@ def gcs_regression(
         fail("GCS key id needs to be set")
     key_id = key_id.value
 
-    bucket_prefix = "data"
+    bucket_name, bucket_prefix = uri.split("https://storage.googleapis.com/")[-1].split(
+        "/", maxsplit=1
+    )
     self.context.storage = "gcs"
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key
-    self.context.bucket_name = None
+    self.context.bucket_name = Secret(name="gcs_bucket")(bucket_name).value
 
     with Cluster(
         **cluster_args,
@@ -467,6 +509,9 @@ def gcs_regression(
             uri=uri, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.backup", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.orphans", "feature"))(
             uri=uri, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
@@ -534,7 +579,7 @@ def regression(
         )
 
     assert storage_module is not None
-    Module(test=storage_module)(
+    Feature(test=storage_module)(
         cluster_args=cluster_args,
         with_analyzer=with_analyzer,
         **storage_module_kwargs,

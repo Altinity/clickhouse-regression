@@ -1,4 +1,6 @@
 import uuid
+import hashlib
+import bcrypt
 
 import testflows.settings as settings
 
@@ -185,7 +187,7 @@ def add_rbac_config_file(
         }
     }
 
-    node.command(f"mkdir {config_d_dir}")
+    node.command(f"mkdir -p {config_d_dir}")
 
     config = create_xml_config_content(
         entries, config_file=config_file, config_d_dir=config_d_dir, root="clickhouse"
@@ -200,3 +202,167 @@ def add_rbac_config_file(
         wait_healthy=False,
         modify=True,
     )
+
+
+@TestStep(Given)
+def create_user(
+    self,
+    node=None,
+    user_name=None,
+    identified=None,
+    identified_by=None,
+    exitcode=None,
+    message=None,
+    cluster=None,
+    expected=None,
+    not_identified=False,
+):
+    """Create user with given name. If name is not provided, it will be generated."""
+    if node is None:
+        node = self.context.node
+
+    if user_name is None:
+        user_name = "user_" + getuid()
+
+    if expected is not None:
+        exitcode, message = expected
+
+    query = f"CREATE USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
+
+    if identified:
+        query += f" IDENTIFIED WITH {identified}"
+
+    if identified_by:
+        query += f" IDENTIFIED BY {identified_by}"
+
+    if not_identified:
+        query += " NOT IDENTIFIED"
+
+    try:
+        node.query(query, exitcode=exitcode, message=message)
+        yield user_name
+
+    finally:
+        with Finally("I drop the user if exists"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+
+@TestStep(Given)
+def add_identified(
+    self,
+    user_name,
+    identified=None,
+    identified_by=None,
+    node=None,
+    exitcode=None,
+    message=None,
+    cluster=None,
+    expected=None,
+):
+    """Add new authentication methods to the user while keeping the existing ones."""
+    if node is None:
+        node = self.context.node
+
+    if expected is not None:
+        exitcode, message = expected
+
+    query = f"ALTER USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
+
+    if identified:
+        query += f" ADD IDENTIFIED WITH {identified}"
+
+    if identified_by:
+        query += f" ADD IDENTIFIED BY {identified_by}"
+
+    node.query(query, exitcode=exitcode, message=message)
+
+
+@TestStep(Given)
+def alter_identified(
+    self,
+    user_name,
+    identified=None,
+    identified_by=None,
+    node=None,
+    exitcode=None,
+    message=None,
+    cluster=None,
+    expected=None,
+    not_identified=False,
+):
+    """Change user's authentication methods."""
+    if node is None:
+        node = self.context.node
+
+    if expected is not None:
+        exitcode, message = expected
+
+    query = f"ALTER USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
+
+    if identified:
+        query += f" IDENTIFIED WITH {identified}"
+
+    if identified_by:
+        query += f" IDENTIFIED BY {identified_by}"
+
+    if not_identified:
+        query += " NOT IDENTIFIED"
+
+    node.query(query, exitcode=exitcode, message=message)
+
+
+@TestStep(Given)
+def reset_auth_methods_to_new(
+    self, user_name, cluster=None, node=None, expected=None, exitcode=None, message=None
+):
+    if node is None:
+        node = self.context.node
+
+    if expected is not None:
+        exitcode, message = expected
+
+    query = f"ALTER USER {user_name}"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
+
+    query += f" RESET AUTHENTICATION METHODS TO NEW"
+
+    node.query(query, exitcode=exitcode, message=message)
+
+
+def generate_hashed_password_with_salt(password, salt="some_salt"):
+    """Generate hashed password with salt using sha256 algorithm."""
+    salted_password = password.encode("utf-8") + salt.encode("utf-8")
+    hashed_password = hashlib.sha256(salted_password).hexdigest()
+    return salt, hashed_password
+
+
+def generate_hashed_password(password):
+    """Generate hashed password using SHA-256 algorithm."""
+    hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    return hashed_password
+
+
+def generate_double_hashed_password(password):
+    """Generate double hashed password using SHA-1 algorithm."""
+    double_sha1_hash_password = hashlib.sha1(
+        hashlib.sha1(password.encode("utf-8")).digest()
+    ).hexdigest()
+    return double_sha1_hash_password
+
+
+def generate_bcrypt_hash(password):
+    password_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password_bytes, salt).decode("utf-8")
+    return hashed

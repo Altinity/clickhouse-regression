@@ -83,7 +83,7 @@ xfails = {
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
             None,
-            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+            r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
     "zookeepe:/fips/ECDHE-ECDSA-AES256-GCM-SHA384/:": [
@@ -91,7 +91,7 @@ xfails = {
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
             None,
-            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+            r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
     "zookeepe:/fips/AES128-GCM-SHA256/:": [
@@ -99,7 +99,7 @@ xfails = {
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
             None,
-            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+            r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
     "zookeepe:/fips/AES256-GCM-SHA384/:": [
@@ -107,7 +107,7 @@ xfails = {
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
             None,
-            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+            r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
     ":/https server:checks/:onnection:should:": [
@@ -118,10 +118,32 @@ xfails = {
             r"ExpectTimeoutError.+https_server[\w]+connection.+node.query\($",
         )
     ],
+    "fips/clickhouse server acting as a client/:/:onnection:should:": [
+        (
+            Error,
+            "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
+            check_clickhouse_version(">=24.3"),
+            r"ExpectTimeoutError.+test_https_connection_with.+node.query\($",
+        )
+    ],
     "fips/server/all protocols disabled/tcp connection/clickhouse-client/:/:": [
         (
             Fail,
             "needs workaround https://github.com/ClickHouse/ClickHouse/issues/65187",
+            check_clickhouse_version(">=24.4"),
+        )
+    ],
+    "ca chain/:/:/missing :": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/67984",
+            check_clickhouse_version(">=24.4"),
+        )
+    ],
+    "ca chain/:/:/:/missing :": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/67984",
             check_clickhouse_version(">=24.4"),
         )
     ],

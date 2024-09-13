@@ -111,7 +111,7 @@ def create_and_populate_table(
     :param name: core table name
     :param populate: populates table default: True
     :param engine: core table engine
-    :param extre_table_col: core table extre_table_col
+    :param extra_table_col: core table extra_table_col
     :param final_modifier_available: true if `FINAL` modifier available for engine
     """
 

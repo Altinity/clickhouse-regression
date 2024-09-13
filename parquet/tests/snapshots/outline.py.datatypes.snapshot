@@ -102,3 +102,71 @@ user_data_structure = r"""'registration_dttm\tNullable(DateTime64(9))\t\t\t\t\t\
 
 uuid_2_structure = r"""'u\tNullable(FixedString(16))'"""
 
+arrow_timestamp_structure_22_4 = r"""'Time\tDateTime64(6)'"""
+
+arrow_timestamp_ms_structure_22_4 = r"""'Time\tDateTime64(3)'"""
+
+binary_values_structure_22_4 = r"""'foo\tString'"""
+
+binary_string_structure_22_4 = r"""'data\tString'"""
+
+blob_structure_22_4 = r"""'ids\tInt64\t\t\t\t\t\nblobs\tString\t\t\t\t\t\nstrings\tString'"""
+
+byte_array_structure_22_4 = r"""'value\tDecimal(4, 2)'"""
+
+column_name_structure_22_4 = r"""'str_val\tString\t\t\t\t\t\nhello\\\\x00world\tString'"""
+
+decimal_with_filter_structure_22_4 = r"""'l_orderkey\tInt32\t\t\t\t\t\nl_partkey\tInt32\t\t\t\t\t\nl_suppkey\tInt32\t\t\t\t\t\nl_linenumber\tInt32\t\t\t\t\t\nl_quantity\tInt32\t\t\t\t\t\nl_extendedprice\tDecimal(15, 2)\t\t\t\t\t\nl_discount\tDecimal(15, 2)\t\t\t\t\t\nl_tax\tDecimal(15, 2)\t\t\t\t\t\nl_returnflag\tString\t\t\t\t\t\nl_linestatus\tString\t\t\t\t\t\nl_shipdate\tDate32\t\t\t\t\t\nl_commitdate\tDate32\t\t\t\t\t\nl_receiptdate\tDate32\t\t\t\t\t\nl_shipinstruct\tString\t\t\t\t\t\nl_shipmode\tString\t\t\t\t\t\nl_comment\tString'"""
+
+decimal_various_precision_structure_22_4 = r"""'l1\tDecimal(3, 2)\t\t\t\t\t\nl2\tDecimal(8, 2)\t\t\t\t\t\nl3\tDecimal(15, 2)\t\t\t\t\t\nl4\tDecimal(30, 2)'"""
+
+decimal_15_2_structure_22_4 = r"""'id\tInt64\t\t\t\t\t\nid_string\tString'"""
+
+fixed_length_decimal_structure_22_4 = r"""'value\tDecimal(25, 2)'"""
+
+fixed_length_legacy_structure_22_4 = r"""'value\tDecimal(13, 2)'"""
+
+h2oai_structure3123_22_4 = r"""'id1\tLowCardinality(String)\t\t\t\t\t\nid2\tLowCardinality(String)\t\t\t\t\t\nid3\tString\t\t\t\t\t\nid4\tFloat64\t\t\t\t\t\nid5\tFloat64\t\t\t\t\t\nid6\tFloat64\t\t\t\t\t\nv1\tFloat64\t\t\t\t\t\nv2\tFloat64\t\t\t\t\t\nv3\tFloat64'"""
+
+f1_structure_22_4 = r"""'i\tInt32\t\t\t\t\t\nj\tInt32\t\t\t\t\t\nx\tInt32'"""
+
+f2_structure_22_4 = r"""'i\tInt32\t\t\t\t\t\nj\tInt32'"""
+
+int32_decimal_structure_22_4 = r"""'value\tDecimal(4, 2)'"""
+
+int64_structure1_22_4 = r"""'seq\tInt64'"""
+
+int64_decimal_structure_22_4 = r"""'value\tDecimal(10, 2)'"""
+
+json_structure_22_4 = r"""'BLOCK_NUMBER\tInt32\t\t\t\t\t\nBLOCK_TIMESTAMP\tDateTime64(6)\t\t\t\t\t\nBLOCK_HASH\tString\t\t\t\t\t\nTX_HASH\tString\t\t\t\t\t\nNONCE\tFloat64\t\t\t\t\t\nPOSITION\tInt32\t\t\t\t\t\nORIGIN_FUNCTION_SIGNATURE\tString\t\t\t\t\t\nFROM_ADDRESS\tString\t\t\t\t\t\nTO_ADDRESS\tString\t\t\t\t\t\nETH_VALUE\tFloat64\t\t\t\t\t\nTX_FEE\tFloat64\t\t\t\t\t\nGAS_PRICE\tFloat64\t\t\t\t\t\nGAS_LIMIT\tInt32\t\t\t\t\t\nGAS_USED\tFloat64\t\t\t\t\t\nCUMULATIVE_GAS_USED\tFloat64\t\t\t\t\t\nINPUT_DATA\tString\t\t\t\t\t\nSTATUS\tString\t\t\t\t\t\nTX_JSON\tArray(String)\t\t\t\t\t\n__row_index\tInt32'"""
+
+int64_negative_structure_22_4 = r"""'dt\tString\t\t\t\t\t\ndt2\tInt64\t\t\t\t\t\ndt3\tDateTime64(9)'"""
+
+nullbytes_structure_22_4 = r"""'42\tInt32\t\t\t\t\t\nhello world\tString'"""
+
+multiple_nullbytes_structure_22_4 = r"""'i\tInt32\t\t\t\t\t\nv\tString'"""
+
+pandas_arrow_timestamp_structure_22_4 = r"""'foo\tDate32'"""
+
+parquet_go_structure_22_4 = r"""'FirstName\tString\t\t\t\t\t\nData\tString'"""
+
+pyspark_structure_22_4 = r"""'year\tInt64\t\t\t\t\t\nquarter\tInt64\t\t\t\t\t\nmonth\tInt64\t\t\t\t\t\ndayofmonth\tInt64\t\t\t\t\t\ndayofweek\tInt64\t\t\t\t\t\nflightdate\tString\t\t\t\t\t\nuniquecarrier\tString\t\t\t\t\t\nairlineid\tFloat64\t\t\t\t\t\ncarrier\tString\t\t\t\t\t\nflightnum\tString\t\t\t\t\t\noriginairportid\tInt64\t\t\t\t\t\noriginairportseqid\tInt64\t\t\t\t\t\norigincitymarketid\tInt64\t\t\t\t\t\norigin\tString\t\t\t\t\t\norigincityname\tString\t\t\t\t\t\noriginstate\tString\t\t\t\t\t\noriginstatefips\tString\t\t\t\t\t\noriginstatename\tString\t\t\t\t\t\noriginwac\tFloat64\t\t\t\t\t\ndestairportid\tInt64\t\t\t\t\t\ndestairportseqid\tInt64\t\t\t\t\t\ndestcitymarketid\tInt64\t\t\t\t\t\ndest\tString\t\t\t\t\t\ndestcityname\tString\t\t\t\t\t\ndeststate\tString\t\t\t\t\t\ndeststatefips\tString\t\t\t\t\t\ndeststatename\tString\t\t\t\t\t\ndestwac\tFloat64\t\t\t\t\t\ncrsdeptime\tFloat64\t\t\t\t\t\ndeptime\tFloat64\t\t\t\t\t\ndepdelay\tFloat64\t\t\t\t\t\ndepdelayminutes\tFloat64\t\t\t\t\t\ndepdel15\tFloat64\t\t\t\t\t\ndeparturedelaygroups\tFloat64\t\t\t\t\t\ndeptimeblk\tString\t\t\t\t\t\ncrsarrtime\tFloat64\t\t\t\t\t\narrtime\tFloat64\t\t\t\t\t\narrdelay\tFloat64\t\t\t\t\t\narrdelayminutes\tFloat64\t\t\t\t\t\narrdel15\tFloat64\t\t\t\t\t\narrivaldelaygroups\tFloat64\t\t\t\t\t\narrtimeblk\tString\t\t\t\t\t\ncancelled\tInt64\t\t\t\t\t\ndiverted\tInt64\t\t\t\t\t\ncrselapsedtime\tFloat64\t\t\t\t\t\nactualelapsedtime\tFloat64\t\t\t\t\t\nflights\tFloat64\t\t\t\t\t\ndistance\tFloat64\t\t\t\t\t\ndistancegroup\tInt64'"""
+
+pyspark_structure_2_22_4 = r"""'s_store_sk\tInt32\t\t\t\t\t\ns_store_id\tString\t\t\t\t\t\ns_rec_start_date\tDate32\t\t\t\t\t\ns_rec_end_date\tDate32\t\t\t\t\t\ns_closed_date_sk\tInt32\t\t\t\t\t\ns_store_name\tString\t\t\t\t\t\ns_number_employees\tInt32\t\t\t\t\t\ns_floor_space\tInt32\t\t\t\t\t\ns_hours\tString\t\t\t\t\t\ns_manager\tString\t\t\t\t\t\ns_market_id\tInt32\t\t\t\t\t\ns_geography_class\tString\t\t\t\t\t\ns_market_desc\tString\t\t\t\t\t\ns_market_manager\tString\t\t\t\t\t\ns_division_id\tInt32\t\t\t\t\t\ns_division_name\tString\t\t\t\t\t\ns_company_id\tInt32\t\t\t\t\t\ns_company_name\tString\t\t\t\t\t\ns_street_number\tString\t\t\t\t\t\ns_street_name\tString\t\t\t\t\t\ns_street_type\tString\t\t\t\t\t\ns_suite_number\tString\t\t\t\t\t\ns_city\tString\t\t\t\t\t\ns_county\tString\t\t\t\t\t\ns_state\tString\t\t\t\t\t\ns_zip\tString\t\t\t\t\t\ns_country\tString\t\t\t\t\t\ns_gmt_offset\tDecimal(5, 2)\t\t\t\t\t\ns_tax_precentage\tDecimal(5, 2)'"""
+
+decimal_table_name_structure_22_4 = r"""'dec4\tDecimal(4, 1)\t\t\t\t\t\ndec9\tDecimal(9, 3)\t\t\t\t\t\ndec18\tDecimal(18, 5)\t\t\t\t\t\nCAST(-999999999999999999999999999999999.99999 AS DECIMAL(38,5))\tDecimal(38, 5)'"""
+
+string_structure_22_4 = r"""'id\tInt32\t\t\t\t\t\nvalue\tString'"""
+
+user_data_structure_22_4 = r"""'registration_dttm\tDateTime64(9)\t\t\t\t\t\nid\tInt32\t\t\t\t\t\nfirst_name\tString\t\t\t\t\t\nlast_name\tString\t\t\t\t\t\nemail\tString\t\t\t\t\t\ngender\tString\t\t\t\t\t\nip_address\tString\t\t\t\t\t\ncc\tString\t\t\t\t\t\ncountry\tString\t\t\t\t\t\nbirthdate\tString\t\t\t\t\t\nsalary\tFloat64\t\t\t\t\t\ntitle\tString\t\t\t\t\t\ncomments\tString'"""
+
+timestamp_ms_ns_structure_22_4 = r""""Received exception from server (version 22.3.15):\nCode: 636. DB::Exception: Received from localhost:9000. DB::Exception: Cannot extract table structure from Parquet format file. Error: Unsupported Parquet type 'time64' of an input column 'time_val'.. (CANNOT_EXTRACT_TABLE_STRUCTURE)\n(query: DESCRIBE TABLE file('datatypes/date_stats.parquet', Parquet) FORMAT TabSeparated\n)""" + '"'
+
+int32_2_structure_22_4 = r""""Received exception from server (version 22.3.15):\nCode: 636. DB::Exception: Received from localhost:9000. DB::Exception: Cannot extract table structure from Parquet format file. Error: Unsupported Parquet type 'large_utf8' of an input column 'call_type'.. (CANNOT_EXTRACT_TABLE_STRUCTURE)\n(query: DESCRIBE TABLE file('datatypes/bug4442.parquet', Parquet) FORMAT TabSeparated\n)""" + '"'
+
+timestamp_timezone_structure_22_4 = r""""TimeRecStart\tDateTime64(3, \\'UTC\\')""" + '"'
+
+unsigned_structure_22_4 = r"""'a\tUInt8\t\t\t\t\t\nb\tUInt16\t\t\t\t\t\nc\tInt64\t\t\t\t\t\nd\tUInt64'"""
+
+unsigned_stats_structure_22_4 = r"""'utiny\tUInt8\t\t\t\t\t\nusmall\tUInt16\t\t\t\t\t\nuint\tInt64\t\t\t\t\t\nubig\tUInt64'"""
+

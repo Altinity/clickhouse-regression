@@ -13,12 +13,18 @@ from aggregate_functions.tests.any import scenario as checks
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Entropy("1.0"))
 def scenario(self, func="entropy({params})", table=None, snapshot_id=None):
     """Check entropy aggregate function by using the same tests as for any."""
-    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
+    if check_clickhouse_version(">=24.8")(self):
+        clickhouse_version = (
+            ">=24.8"  # https://github.com/ClickHouse/ClickHouse/issues/69518
+        )
+    elif check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(
+        self
+    ):
         clickhouse_version = ">=24.3"
-    elif check_clickhouse_version("<23.12")(self):
-        clickhouse_version = ">=23.2"
-    else:
+    elif check_clickhouse_version(">=23.12")(self):
         clickhouse_version = ">=23.12"
+    else:
+        clickhouse_version = ">=23.2"
 
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id,

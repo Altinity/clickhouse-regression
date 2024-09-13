@@ -106,9 +106,13 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+  CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+  CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
   PYTHONIOENCODING: utf-8
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
+  keeper_or_zookeeper: zookeeper
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --no-colors
@@ -140,7 +144,7 @@ jobs:
     if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -163,7 +167,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-aws-x86-artifacts
@@ -178,7 +182,7 @@ jobs:
     if: ${{ contains('all gcs', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -200,7 +204,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-gcs-x86-artifacts
@@ -215,7 +219,7 @@ jobs:
     if: ${{ contains('all minio', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -234,7 +238,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-minio-x86-artifacts
@@ -249,7 +253,7 @@ jobs:
     if: ${{ contains('all local', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -268,7 +272,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-local-x86-artifacts
@@ -283,7 +287,7 @@ jobs:
     if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -306,7 +310,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-aws-arm-artifacts
@@ -321,7 +325,7 @@ jobs:
     if: ${{ contains('all gcs', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -343,7 +347,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-gcs-arm-artifacts
@@ -358,7 +362,7 @@ jobs:
     if: ${{ contains('all minio', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -377,7 +381,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-minio-arm-artifacts
@@ -392,7 +396,7 @@ jobs:
     if: ${{ contains('all local', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -411,7 +415,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alter-stress-local-arm-artifacts

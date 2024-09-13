@@ -1209,10 +1209,20 @@ def no_table(self, node=None):
         )
 
     with And("I try to create a row policy on a database"):
-        exitcode = 0 if check_clickhouse_version("=23.3.13.7.altinitystable") else 62
+        exitcode = (
+            0
+            if (
+                check_clickhouse_version(">=23.5")(self)
+                or check_clickhouse_version("=23.3.19.33.altinitystable")(self)
+            )
+            else 62
+        )
         message = (
             ""
-            if check_clickhouse_version("=23.3.13.7.altinitystable")
+            if (
+                check_clickhouse_version(">=23.5")(self)
+                or check_clickhouse_version("=23.3.19.33.altinitystable")(self)
+            )
             else "Exception: Syntax error"
         )
         node.query(
@@ -1476,10 +1486,14 @@ def postgresql(self):
                 f"CREATE ROW POLICY {pol_name} ON default.{table_name} FOR SELECT USING x = 2 TO {user_name}"
             )
 
-        with Then("I select from table using postgress"):
-            psql_out = node.command(
-                f"(set -o pipefail && PGPASSWORD=x psql -p 9005 -h 127.0.0.1 -U {user_name} default -c'SELECT * FROM {table_name}' | tee)"
-            ).output
+        with Then("I select from table using postgres"):
+            psql_out = (
+                self.context.cluster.node("bash-tools")
+                .command(
+                    f"(set -o pipefail && PGPASSWORD=x psql -p 9005 -h {node.name} -U {user_name} default -c'SELECT * FROM {table_name}' | tee)"
+                )
+                .output
+            )
             assert psql_out == " x \n---\n 2\n(1 row)", error()
 
     finally:

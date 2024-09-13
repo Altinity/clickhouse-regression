@@ -65,7 +65,11 @@ def rank(self):
 def dense_rank(self):
     """Check that dense_rank window function can not be used as an aggregate functions."""
     arguments = "sample_data"
-    check(func="dense_rank", arguments=arguments)
+    execute_query(
+        f"SELECT dense_rank({arguments}) FROM values('sample_data UInt8, sample_index UInt8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))",
+        exitcode=36,
+        message=f"DB::Exception: The function",
+    )
 
 
 @TestScenario

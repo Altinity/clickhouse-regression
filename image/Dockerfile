@@ -30,6 +30,7 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     gnupg \
     locales \
     curl \
+    netcat \
     unzip \
     && rm -rf \
         /var/lib/apt/lists/* \

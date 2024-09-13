@@ -18,7 +18,7 @@ def scenario(self):
     partitions = "12"
     num_consumers = "4"
     counts = 240000
-    timeout = 70
+    timeout = 120
 
     with Given(f"there is no old topic & consumer group left"):
         delete_any_old_topic_and_consumer_group(

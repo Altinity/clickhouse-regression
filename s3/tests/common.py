@@ -786,8 +786,13 @@ def get_bucket_size(
             return sum(obj._size for obj in objects)
 
     with By("querying with aws cli", description=f"bucket: {name}, prefix: {prefix}"):
+        aws = "aws"
+
+        if self.context.storage == "gcs":
+            aws = f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} aws --endpoint-url=https://storage.googleapis.com/"
+
         cmd = (
-            f"aws s3 ls s3://{name}/{prefix} --recursive --summarize | "
+            f"{aws} s3 ls s3://{name}/{prefix} --recursive --summarize | "
             "grep -Po --color=never '(?<=Total Size: )(.+)'"
         )
         result = self.context.node.command(cmd, steps=False, no_checks=True)
@@ -1113,6 +1118,7 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
     assert self.context.storage in [
         "minio",
         "aws_s3",
+        "gcs",
     ], f"Unsupported storage: {self.context.storage}"
 
     if bucket_name is None:
@@ -1141,6 +1147,16 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
 
                 node.command(
                     f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                )
+
+            elif self.context.storage == "gcs":
+                node = current().context.node
+                node.command(
+                    (
+                        f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key}"
+                        f" aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                        " --endpoint=https://storage.googleapis.com/"
+                    )
                 )
 
 
@@ -1191,15 +1207,18 @@ def default_s3_and_local_disk(
                 "secret_access_key": f"{self.context.secret_access_key}",
                 **disk_settings,
             },
-            "s3_cache": {
+        }
+        if check_clickhouse_version(">=22.8")(self):
+            disks["s3_cache"] = {
                 "type": "cache",
                 "disk": "external",
                 "path": "external_disk_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
                 "do_not_evict_index_and_mark_files": "1",
-            },
-        }
+            }
+        else:
+            disks["s3_cache"] = disks["external"]
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -1208,7 +1227,13 @@ def default_s3_and_local_disk(
                     {
                         "default_and_external": [
                             {"disk": "default"},
-                            {"disk": "s3_cache"},
+                            {
+                                "disk": (
+                                    "s3_cache"
+                                    if check_clickhouse_version(">=22.8")(self)
+                                    else "external"
+                                )
+                            },
                         ]
                     }
                 ]
@@ -1237,15 +1262,18 @@ def default_s3_and_local_volume(
                 "secret_access_key": f"{self.context.secret_access_key}",
                 **disk_settings,
             },
-            "s3_cache": {
+        }
+        if check_clickhouse_version(">=22.8")(self):
+            disks["s3_cache"] = {
                 "type": "cache",
                 "disk": "external",
                 "path": "external_disk_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
                 "do_not_evict_index_and_mark_files": "1",
-            },
-        }
+            }
+        else:
+            disks["s3_cache"] = disks["external"]
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
