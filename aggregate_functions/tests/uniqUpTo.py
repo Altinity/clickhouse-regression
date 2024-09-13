@@ -7,6 +7,14 @@ from aggregate_functions.requirements import (
 )
 
 
+@TestCheck
+def datatype(self, func, table, col_name):
+    """Check different column types."""
+    execute_query(
+        f"SELECT {func.format(params=col_name)}, any(toTypeName({col_name})) FROM {table.name}"
+    )
+
+
 @TestScenario
 @Name("uniqUpTo")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_UniqUpTo("1.0"))
@@ -78,8 +86,13 @@ def scenario(self, func="uniqUpTo({params})", table=None, snapshot_id=None):
                 f"SELECT {func.format(params='x')}, any(toTypeName(x))  FROM values('x Float64', ({v}))"
             )
 
-    for column in table.columns:
-        with Check(f"{column.datatype.name}"):
-            execute_query(
-                f"SELECT {func.format(params=column.name)}, any(toTypeName({column.name})) FROM {table.name}"
-            )
+    with Pool(6) as executor:
+        for column in table.columns:
+            column_name, column_type = column.name, column.datatype.name
+            Check(
+                f"{column_type}",
+                test=datatype,
+                parallel=True,
+                executor=executor,
+            )(func=func, table=table, col_name=column_name)
+        join()

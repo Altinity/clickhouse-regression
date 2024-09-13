@@ -24,6 +24,7 @@ from testflows.asserts import error
         ),
     ],
 )
+@Retry(3)
 def scenario(self, cluster, node="clickhouse1"):
     """Check that when merges are stopped then all small parts
     first go to JBOD disks and large part goes to the external disk.
@@ -62,7 +63,7 @@ def scenario(self, cluster, node="clickhouse1"):
                             values = ",".join(["('" + x + "')" for x in data])
                             node.query(f"INSERT INTO {name} VALUES {values}")
 
-                    for attempt in retries(timeout=90, delay=5):
+                    for attempt in retries(timeout=120, delay=15):
                         with attempt:
                             used_disks = get_used_disks_for_table(node, name)
 

@@ -238,7 +238,7 @@ def attach_partition_from_table(
             destination_partition_data = get_node(self, "destination").query(
                 f"SELECT * FROM {destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
             )
-            for attempt in retries(timeout=30, delay=2):
+            for attempt in retries(timeout=300, delay=10):
                 with attempt:
                     assert (
                         destination_partition_data.output

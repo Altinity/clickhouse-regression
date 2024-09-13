@@ -49,7 +49,7 @@ def https_server_url_function_checks(self):
             timeout=5,
         )
 
-    with Check(f"TLSv1.2 suite connection should work"):
+    with Check(f"TLSv1_2 suite connection should work"):
         https_server_url_function_connection(
             options={
                 "requireTLSv1_2": "true",
@@ -68,7 +68,7 @@ def https_server_url_function_checks(self):
             timeout=5,
         )
 
-    with Check("TLSv1.1 suite connection should be rejected"):
+    with Check("TLSv1_1 suite connection should be rejected"):
         https_server_url_function_connection(
             options={
                 "requireTLSv1_1": "true",
@@ -78,7 +78,7 @@ def https_server_url_function_checks(self):
             timeout=5,
         )
 
-    with Check("TLSv1.3 suite connection should be rejected"):
+    with Check("TLSv1_3 suite connection should be rejected"):
         https_server_url_function_connection(
             options={
                 "requireTLSv1_3": "true",
@@ -94,13 +94,13 @@ def https_server_url_function_checks(self):
             success=True,
         )
 
-    with Check(f"just disabling TLSv1.1 suite connection should work"):
+    with Check(f"just disabling TLSv1_1 suite connection should work"):
         https_server_url_function_connection(
             options={"disableProtocols": "tlsv1_1"},
             success=True,
         )
 
-    with Check(f"just disabling TLSv1.3 suite connection should work"):
+    with Check(f"just disabling TLSv1_3 suite connection should work"):
         https_server_url_function_connection(
             options={"disableProtocols": "tlsv1_3"},
             success=True,

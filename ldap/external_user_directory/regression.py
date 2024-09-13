@@ -63,8 +63,8 @@ ffails = {
     # 23.3
     "/external user directory/restart/parallel login": (
         XFail,
-        "fails on 23.3",
-        check_clickhouse_version(">=23"),
+        "fails on 22.3",
+        check_clickhouse_version(">=22"),
     ),
     "/external user directory/roles/not present role added": (
         XFail,

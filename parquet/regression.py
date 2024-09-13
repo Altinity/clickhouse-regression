@@ -141,12 +141,6 @@ xfails = {
             "Needs Investigation. The issue seems to be from the tests side, not a bug.",
         )
     ],
-    "/parquet/fastparquet/*": [
-        (
-            Fail,
-            "Needs Investigation. The issue seems to be from the tests side, not a bug.",
-        )
-    ],
     "/parquet/postgresql/compression type/*/postgresql engine to parquet file to postgresql engine": [
         (
             Fail,
@@ -218,7 +212,52 @@ ffails = {
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/columnwithnull2": (
+    "/parquet/datatypes/columnwithnull*": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/date": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/largedouble": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/maps": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/nullsinid": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/pandasdecimal": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/selectdatewithfilter": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/singlenull": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/unsupportednull": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/*": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
@@ -263,51 +302,6 @@ ffails = {
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/complex/tupleofnulls": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/nestedstruct*": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/nestedallcomplex": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/nested map": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/largestruct2": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/complex null": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/big tuple with nulls": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/arraystring": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
-    "/parquet/complex/bytearraydictionary": (
-        Skip,
-        "Unsupported on 22.8",
-        check_clickhouse_version("<23.3"),
-    ),
     "/parquet/*/s3/compression type/*/engine/engine to file to engine/": (
         Skip,
         "Unsupported on 22.8",
@@ -336,12 +330,15 @@ ffails = {
     "/parquet/bloom": (
         Skip,
         "Not implemented yet",
-        check_clickhouse_version("<24.9"),
     ),
     "/parquet/*/s3/compression type/*/outline/engine/*": (
         Skip,
         "Unsupported compression type",
     ),
+    "/parquet/fastparquet/*": (
+        Skip,
+        "Unsupported"
+    )
 }
 
 

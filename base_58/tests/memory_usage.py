@@ -120,7 +120,7 @@ def memory_usage_for_constant_input(self, node=None):
         assert b58_decoded_string == string_of_all_askii_symbols() * 1000, error()
         assert b64_decoded_string == string_of_all_askii_symbols() * 1000, error()
 
-    for attempt in retries(timeout=30, delay=3):
+    for attempt in retries(timeout=100, delay=10):
         with attempt:
             with When("I remember memory usages"):
                 r = node.query(

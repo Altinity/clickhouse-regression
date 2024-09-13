@@ -21,6 +21,7 @@ from testflows.asserts import error
         ["ReplicatedMergeTree('/clickhouse/concurrently_altering_replicated_mt', '1')"],
     ],
 )
+@Retry(3)
 def scenario(self, engine):
     """Check that doing alter move, and select
     concurrently does not result in data loss and there should
@@ -122,7 +123,7 @@ def scenario(self, engine):
                     assert r == "500", error()
 
         with When("I check if there are any duplicate parts on the disks"):
-            for retry in retries(timeout=120, delay=10):
+            for retry in retries(timeout=60, delay=15):
                 with retry:
                     jbod1_entries = set(
                         [

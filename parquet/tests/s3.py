@@ -29,6 +29,11 @@ def insert_into_engine(self):
     with Then(
         "I check that the data inserted into the table was correctly written to the file"
     ):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
+
         check_source_file_on_s3(
             file=table_name + ".Parquet",
             compression_type=f"'{compression_type.lower()}'",
@@ -68,6 +73,10 @@ def select_from_engine(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -76,7 +85,7 @@ def select_from_engine(self):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}",
                 )
             join()
 
@@ -108,6 +117,11 @@ def engine_to_file_to_engine(self):
     with Check(
         "I check that the data inserted into the table was correctly written into the file"
     ):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
+
         check_source_file_on_s3(
             file=table0_name + ".Parquet",
             compression_type=f"'{compression_type.lower()}'",
@@ -124,6 +138,10 @@ def engine_to_file_to_engine(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
         with Pool(3) as executor:
             for column in columns:
                 Check(
@@ -132,7 +150,7 @@ def engine_to_file_to_engine(self):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}",
                 )
             join()
 
@@ -164,6 +182,10 @@ def insert_into_engine_from_file(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -172,7 +194,7 @@ def insert_into_engine_from_file(self):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}",
                 )
             join()
 
@@ -207,6 +229,11 @@ def engine_select_output_to_file(self):
     with Check(
         "I check that the data inserted into the table was correctly written to the file"
     ):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
+
         check_source_file_on_s3(
             file=table_name + ".Parquet",
             compression_type=f"'{compression_type.lower()}'",
@@ -249,6 +276,11 @@ def insert_into_function(self):
     with Check(
         "I check that the data inserted into the table function was correctly written to the file"
     ):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
+
         check_source_file_on_s3(
             file=file_name + ".Parquet",
             compression_type=f"'{compression_type.lower()}'",
@@ -283,6 +315,10 @@ def select_from_function_manual_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -292,7 +328,7 @@ def select_from_function_manual_cast_types(self):
                     executor=executor,
                 )(
                     sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
-                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{table_def}')"
+                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{table_def}')",
                 )
             join()
 
@@ -324,6 +360,10 @@ def select_from_function_auto_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
+        if check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
+            "<24.3"
+        )(self):
+            self.context.snapshot_id = "parquet_s3_before_24_3"
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -333,7 +373,7 @@ def select_from_function_auto_cast_types(self):
                     executor=executor,
                 )(
                     sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
-                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')"
+                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')",
                 )
             join()
 

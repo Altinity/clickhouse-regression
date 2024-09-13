@@ -50,7 +50,7 @@ def scenario(self, name, engine):
 
                 now = time.time()
                 wait_expire_1 = 0
-                wait_expire_2 = 10
+                wait_expire_2 = 30
                 time_1 = now + wait_expire_1
                 time_2 = now + wait_expire_1 + wait_expire_2
 

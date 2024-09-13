@@ -41,7 +41,7 @@ def with_caconfig(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -86,7 +86,7 @@ def with_caconfig_missing_ca_in_chain(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -111,6 +111,10 @@ def with_caconfig_missing_first_ca_in_chain_on_one_node(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_ca_chain.crt')}",
             certificates=cas[1:],
         )
+
+    with And("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
+        error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
 
     with_caconfig_missing_ca_in_chain(
         ca_store=ca_store,
@@ -151,6 +155,10 @@ def with_caconfig_missing_last_ca_in_chain_on_one_node(
             certificates=cas[:-1],
         )
 
+    with And("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
+        error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+
     with_caconfig_missing_ca_in_chain(
         ca_store=ca_store,
         nodes_ca_chain_crt={
@@ -189,6 +197,10 @@ def with_caconfig_missing_middle_ca_in_chain_on_one_node(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_ca_chain.crt')}",
             certificates=(cas[:-2] + cas[2:]),
         )
+
+    with And("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
+        error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
 
     with_caconfig_missing_ca_in_chain(
         ca_store=ca_store,
@@ -241,6 +253,9 @@ def with_caconfig_missing_ca_in_chain_on_all_nodes(self, ca_store, ca_chain_crt,
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_last_ca_chain.crt')}",
             certificates=cas[:-1],
         )
+
+    with And("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
 
     with_caconfig_missing_ca_in_chain(
         ca_store=ca_store,
@@ -298,7 +313,7 @@ def without_caconfig(self, ca_store, ca_chain_crt, trusted_cas, nodes=None):
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -357,6 +372,7 @@ def without_caconfig_missing_trusted_ca(
                 with Then(
                     f"from {from_name} to {to_name}",
                     description=f"expect message {nodes_messages[(from_name, to_name)]}",
+                    flags=TE,
                 ):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
@@ -374,6 +390,10 @@ def without_caconfig_missing_first_trusted_ca_on_one_node(
     fails with certificate verify error and connections from any nodes other than
     clickhouse1 to clickhouse1 fails as well with unknown CA error.
     """
+
+    with Given("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
+        error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
 
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
@@ -407,6 +427,10 @@ def without_caconfig_missing_last_trusted_ca_on_one_node(
     clickhouse1 to clickhouse1 fails as well with unknown CA error.
     """
 
+    with Given("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
+        error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
         ca_chain_crt=ca_chain_crt,
@@ -439,6 +463,10 @@ def without_caconfig_missing_middle_trusted_ca_on_one_node(
     clickhouse1 to clickhouse1 fails as well with unknown CA error.
     """
 
+    with Given("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
+        error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
         ca_chain_crt=ca_chain_crt,
@@ -466,6 +494,9 @@ def without_caconfig_missing_trusted_ca_on_all_nodes(self, ca_store, ca_chain_cr
     """Check when one of the CAs in the chain is missing in the system trust store
     on different nodes.
     """
+
+    with Given("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
 
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
@@ -534,7 +565,7 @@ def server_certificate_with_chain(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -587,7 +618,7 @@ def server_certificate_with_chain_missing_ca(
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
-                with Then(f"from {from_name} to {to_name}"):
+                with Then(f"from {from_name} to {to_name}", flags=TE):
                     check_secure_connection(
                         from_node=self.context.cluster.node(from_name),
                         to_node=self.context.cluster.node(to_name),
@@ -609,6 +640,10 @@ def server_certificate_with_chain_missing_ca_on_one_node(
     We will check that connections from clickhouse1 to any other node including itself
     fails with certificate verify error and connections from any nodes other than
     clickhouse1 to clickhouse1 fails as well with unknown CA error."""
+
+    with Given("the expected error messages"):
+        error_certificate_verify_failed = get_error_certificate_verify_failed()
+        error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
 
     server_certificate_with_chain_missing_ca(
         ca_store=ca_store,

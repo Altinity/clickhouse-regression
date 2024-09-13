@@ -41,7 +41,7 @@ def check_too_high_level_attach_partition(self, engine, partition_key):
             table_name=table_name,
             part_name=part_name,
         )
-        high_level = str(2**32 + 1)
+        high_level = str(2 ** 32 + 1)
         new_part_name = "_".join(part_name.split("_")[:-1] + [high_level])
         rename_detached_part(
             table_name=table_name,
@@ -55,11 +55,13 @@ def check_too_high_level_attach_partition(self, engine, partition_key):
             partition=partition,
         )
 
-    with And("I check that part was not attached"):
+    with And("I check that part was not attached by checking the table state"):
         table_after = self.context.node.query(
             f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
         assert table_before != table_after, error()
+
+    with And("I check that part was not attached by checking the parts state"):
         parts_after = self.context.node.query(
             f"SELECT name FROM system.parts WHERE table = '{table_name}' ORDER BY name FORMAT TabSeparated"
         ).output
@@ -93,7 +95,7 @@ def check_too_high_level_attach_part(self, engine, partition_key):
             table_name=table_name,
             part_name=part_name,
         )
-        high_level = str(2**32 + 1)
+        high_level = str(2 ** 32 + 1)
         new_part_name = "_".join(part_name.split("_")[:-1] + [high_level])
         rename_detached_part(
             table_name=table_name,
@@ -151,7 +153,7 @@ def too_high_level(self):
 
 @TestScenario
 def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
-    """Check that part level is reseted to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
+    """Check that part level is reset to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
     with Given("I have a table with data"):
         table_name = "source_" + getuid()
         create_MergeTree_table_with_data(
@@ -181,7 +183,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
             table_name=table_name,
             part_name=part_name,
         )
-        high_level = str(2**32 - 1)
+        high_level = str(2 ** 32 - 1)
         new_part_name = "_".join(part_name.split("_")[:-1] + [high_level])
         rename_detached_part(
             table_name=table_name,
@@ -207,7 +209,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
         ).output
         assert table_before == table_after, error()
 
-    with And("I check that part level was reseted"):
+    with And("I check that part level was reset"):
         parts_after = self.context.node.query(
             f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active ORDER BY name FORMAT TabSeparated"
         ).output
@@ -229,7 +231,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
     )
 )
 def reset_when_equal_to_legacy_max_level(self):
-    """Run test to check that part level is reseted to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
+    """Run test to check that part level is reset to MAX_LEVEL when it is equal to the LEGACY_MAX_LEVEL."""
 
     engines = [
         "MergeTree",
@@ -253,6 +255,6 @@ def reset_when_equal_to_legacy_max_level(self):
 
     for engine, partition_key in product(engines, partition_keys):
         Scenario(
-            f"{engine}",
+            f"{engine} {partition_key}",
             test=check_reset_when_equal_to_legacy_max_level,
         )(engine=engine, partition_key=partition_key)

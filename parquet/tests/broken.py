@@ -7,10 +7,17 @@ from helpers.common import *
 from parquet.tests.outline import import_export
 
 
-def io_error_message(error):
+@TestStep(Given)
+def io_error_message(self, error):
+    exitcode = 124 if check_clickhouse_version("<=22.4")(self) else 36
+    message = (
+        f"Exception: Cannot extract table structure from Parquet format file. Error: IOError: {error}"
+        if check_clickhouse_version("<=22.4")(self)
+        else f"Exception: IOError: {error}: Cannot extract table structure from Parquet format file"
+    )
     return (
-        36,
-        f"Exception: IOError: {error}: Cannot extract table structure from Parquet format file",
+        exitcode,
+        message,
     )
 
 
@@ -19,12 +26,13 @@ def io_error_message(error):
 def read_broken_date(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken date values."""
     node = self.context.node
-    exitcode, message = io_error_message("DATE can only annotate INT32")
 
     with Given("I have a Parquet file with broken date value"):
         broken_date_parquet = os.path.join("broken", "broken_date.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="DATE can only annotate INT32")
+
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
@@ -41,12 +49,13 @@ def read_broken_date(self):
 def read_broken_int(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken int values."""
     node = self.context.node
-    exitcode, message = io_error_message("INT_32 can only annotate INT32")
 
     with Given("I have a Parquet file with broken int value"):
         broken_date_parquet = os.path.join("broken", "broken_int.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="INT_32 can only annotate INT32")
+
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
@@ -63,12 +72,13 @@ def read_broken_int(self):
 def read_broken_bigint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken bigint values."""
     node = self.context.node
-    exitcode, message = io_error_message("INT_64 can only annotate INT64")
 
     with Given("I have a Parquet file with broken bigint value"):
         broken_date_parquet = os.path.join("broken", "broken_bigint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="INT_64 can only annotate INT64")
+
         node.query(
             f"""CREATE TABLE imported_from_parquet
             ENGINE = MergeTree
@@ -86,11 +96,12 @@ def read_broken_bigint(self):
 def read_broken_smallint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken smallint values."""
     node = self.context.node
-    exitcode, message = io_error_message("INT_16 can only annotate INT32")
 
     with Given("I have a Parquet file with broken smallint value"):
         broken_date_parquet = os.path.join("broken", "broken_smallint.parquet")
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="INT_16 can only annotate INT32")
+
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
@@ -107,12 +118,13 @@ def read_broken_smallint(self):
 def read_broken_tinyint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken tinyint values."""
     node = self.context.node
-    exitcode, message = io_error_message("INT_8 can only annotate INT32")
 
     with Given("I have a Parquet file with broken tinyint value"):
         broken_date_parquet = os.path.join("broken", "broken_tinyint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="INT_8 can only annotate INT32")
+
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
@@ -129,12 +141,13 @@ def read_broken_tinyint(self):
 def read_broken_uint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken date values."""
     node = self.context.node
-    exitcode, message = io_error_message("UINT_32 can only annotate INT32")
 
     with Given("I have a Parquet file with broken uint value"):
         broken_date_parquet = os.path.join("broken", "broken_uinteger.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="UINT_32 can only annotate INT32")
+
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
@@ -151,12 +164,13 @@ def read_broken_uint(self):
 def read_broken_ubigint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken Ubigint values."""
     node = self.context.node
-    exitcode, message = io_error_message("UINT_64 can only annotate INT64")
 
     with Given("I have a Parquet file with broken ubigint value"):
         broken_date_parquet = os.path.join("broken", "broken_ubigint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="UINT_64 can only annotate INT64")
+
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
@@ -175,12 +189,13 @@ def read_broken_ubigint(self):
 def read_broken_usmallint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken Usmallint values."""
     node = self.context.node
-    exitcode, message = io_error_message("UINT_16 can only annotate INT32")
 
     with Given("I have a Parquet file with broken usmallint value"):
         broken_date_parquet = os.path.join("broken", "broken_usmallint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="UINT_16 can only annotate INT32")
+
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
@@ -200,12 +215,13 @@ def read_broken_utinyint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken Utinyint values."""
     node = self.context.node
     table_name = "table_" + getuid()
-    exitcode, message = io_error_message("UINT_8 can only annotate INT32")
 
     with Given("I have a Parquet file with broken usmallint value"):
         broken_date_parquet = os.path.join("broken", "broken_utinyint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(error="UINT_8 can only annotate INT32")
+
         node.query(
             f"""
             CREATE TABLE {table_name}
@@ -225,12 +241,15 @@ def read_broken_timestamp_ms(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken timestamp (ms) values."""
     node = self.context.node
     table_name = "table_" + getuid()
-    exitcode, message = io_error_message("TIMESTAMP_MILLIS can only annotate INT64")
 
     with Given("I have a Parquet file with broken timestamp (ms) value"):
         broken_date_parquet = os.path.join("broken", "broken_timestamp_ms.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(
+            error="TIMESTAMP_MILLIS can only annotate INT64"
+        )
+
         node.query(
             f"""
             CREATE TABLE {table_name}
@@ -251,12 +270,14 @@ def read_broken_timestamp_us(self):
     node = self.context.node
     table_name = "table_" + getuid()
 
-    exitcode, message = io_error_message("TIMESTAMP_MICROS can only annotate INT64")
-
     with Given("I have a Parquet file with broken timestamp (us) value"):
         broken_date_parquet = os.path.join("broken", "broken_timestamp.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
+        exitcode, message = io_error_message(
+            error="TIMESTAMP_MICROS can only annotate INT64"
+        )
+
         node.query(
             f"""
             CREATE TABLE {table_name}
@@ -296,10 +317,13 @@ def string(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with invalid string value."""
     with Given(r"I have a Parquet file with TREL\xC3 as a string value"):
         broken_date_parquet = os.path.join("broken", "invalid.parquet")
-
-    import_export(
-        snapshot_name="invalid_string_1_structure", import_file=broken_date_parquet
+    snapshot_name = (
+        "invalid_string_1_structure_22.3"
+        if check_clickhouse_version("<=22.4")(self)
+        else "invalid_string_1_structure"
     )
+
+    import_export(snapshot_name=snapshot_name, import_file=broken_date_parquet)
 
 
 @TestFeature

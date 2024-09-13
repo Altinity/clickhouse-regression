@@ -88,7 +88,7 @@ def execute_query(
                 if check_clickhouse_version("<22.3")(current())
                 else "tests.post22.3"
             )
-            
+
         if is_with_analyzer(current().context.node):
             snapshot_id += "_with_analyzer"
 

@@ -51,8 +51,13 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                 """
             )
 
+            if check_clickhouse_version(">23.9")(self):
+                order = "ALL"
+            else:
+                order = "tuple(*)"
+
             table_values = node.query(
-                f"SELECT * FROM {table_name} ORDER BY ALL FORMAT TabSeparated"
+                f"SELECT * FROM {table_name} ORDER BY {order} FORMAT TabSeparated"
             )
 
         with Then("I check that the output is correct"):
@@ -155,8 +160,12 @@ def million_extensions(self):
 )
 def fastparquet_globs(self):
     """Importing multiple Parquet files using the glob patterns from a single directory."""
+    if check_clickhouse_version(">23.9")(self):
+        order_by = "ALL"
+    else:
+        order_by = "tuple(*)"
     for example in self.examples:
-        select_with_glob(query=example[0], snapshot_name=example[1], order_by="ALL")
+        select_with_glob(query=example[0], snapshot_name=example[1], order_by=order_by)
 
 
 @TestFeature

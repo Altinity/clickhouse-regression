@@ -38,9 +38,9 @@ xfails = {
     + clean("-gcm'\", key_len=")
     + "??"
     + clean(", iv_len=12, aad=True/iv is too long"): [(Fail, "known issue")],
-    "encrypt/"
+    "encrypt/invalid plaintext data type/"
     + clean(
-        "invalid plaintext data type/data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\""
+        "data_type='IPv6', value=\"toIPv6('2001:0db8:0000:85a3:0000:0000:ac1f:8001')\""
     ): [(Fail, "known issue as IPv6 is implemented as FixedString(16)")],
     # encrypt_mysql
     "encrypt_mysql/key or iv length for mode/"
@@ -134,11 +134,20 @@ def regression(
         )
         self.context.cluster = cluster
 
+    with And(
+        "I set a flag for performance suite based on the value of thread fuzzer",
+        description="We don't run performance suite if the thread fuzzer is enabled",
+    ):
+        if not cluster.thread_fuzzer:
+            flag = TE
+        else:
+            flag = SKIP
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    with Pool(5) as pool:
+    with Pool(6) as pool:
         try:
             Feature(
                 run=load("aes_encryption.tests.encrypt", "feature"),
@@ -172,7 +181,7 @@ def regression(
             )
             Feature(
                 run=load("aes_encryption.tests.performance", "feature"),
-                flags=TE,
+                flags=flag,
                 parallel=True,
                 executor=pool,
             )

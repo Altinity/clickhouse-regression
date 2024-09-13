@@ -138,8 +138,10 @@ def access_failed(self):
             "default": {"volumes": {"default": {"disk": "default"}}},
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
-
-    invalid_s3_storage_config(disks, policies, message="Access Denied", tail=300)
+    message = (
+        "AccessDenied" if check_clickhouse_version(">=23.8")(self) else "Access Denied"
+    )
+    invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
 @TestScenario
@@ -183,7 +185,7 @@ def access_failed_skip_check(self):
                 f"""I create table using S3 storage policy external,
                     expecting failure because there is no access to the S3 bucket"""
             ):
-                node.query(
+                r = node.query(
                     f"""
                     CREATE TABLE {name} (
                         d UInt64
@@ -191,13 +193,18 @@ def access_failed_skip_check(self):
                     ORDER BY d
                     SETTINGS storage_policy='external'
                 """,
-                    message="""DB::Exception: Message: Access Denied""",
+                    message="DB::Exception:",
                     exitcode=243,
                 )
+                assert (
+                    "user/qa-test is not authorized"
+                    if self.context.storage == "aws_s3"
+                    else "DB::Exception: Message: Access Denied" in r.output
+                ), error()
         else:
             with Given(
                 f"""I create table using S3 storage policy external,
-                    expecting success because there is no access check to this
+                    expecting failure because there is no access check to this
                     disk"""
             ):
                 simple_table(node=node, name=name)
@@ -207,9 +214,9 @@ def access_failed_skip_check(self):
                     because there is no access to the S3 bucket"""
             ):
                 message = (
-                    """DB::Exception: Access Denied."""
+                    "DB::Exception: Access Denied."
                     if check_clickhouse_version("<22.9")(self)
-                    else """DB::Exception: Message: Access Denied"""
+                    else "DB::Exception: Message: Access Denied"
                 )
                 node.query(
                     f"INSERT INTO {name} VALUES (427)",
@@ -250,8 +257,10 @@ def access_default(self):
             "default": {"volumes": {"default": {"disk": "default"}}},
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
-
-    invalid_s3_storage_config(disks, policies, message="Access Denied", tail=300)
+    message = (
+        "AccessDenied" if check_clickhouse_version(">=23.8")(self) else "Access Denied"
+    )
+    invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
 @TestScenario

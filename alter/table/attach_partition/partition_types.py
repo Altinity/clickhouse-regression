@@ -17,6 +17,7 @@ from helpers.common import (
     attach_partition_from,
     attach_part,
     detach_part,
+    check_clickhouse_version,
 )
 from helpers.tables import (
     create_partitioned_table_with_compact_and_wide_parts,
@@ -86,7 +87,13 @@ def partition_with_empty_parts(self, table_name, bias=0):
         )
 
     with And("deleting all data from part in the partition"):
-        node.query(f"DELETE FROM {table_name} WHERE p == 1")
+        if check_clickhouse_version("<23.3")(self):
+            node.query(
+                f"DELETE FROM {table_name} WHERE p == 1",
+                settings=[("allow_experimental_lightweight_delete", 1)],
+            )
+        else:
+            node.query(f"DELETE FROM {table_name} WHERE p == 1")
 
 
 @TestCheck
@@ -181,8 +188,13 @@ def check_attach_part(self, table):
     parts = self.context.node.query(
         f"SELECT name from system.parts where table='{table_name}' FORMAT TabSeparated"
     ).output.split("\n")
+    number_of_active_parts = int(
+        self.context.node.query(
+            f"SELECT count(active) from system.parts where table='{table_name}' and active = 1 FORMAT TabSeparated"
+        ).output
+    )
 
-    if len(parts) == 0:
+    if number_of_active_parts == 0:
         skip("No parts")
 
     part = parts[0]
@@ -195,8 +207,7 @@ def check_attach_part(self, table):
 
     with When("I check that the partition was detached from the table"):
         check_part_was_detached(
-            table=table_name,
-            part=part,
+            table=table_name, part=part, number_of_active_parts=number_of_active_parts
         )
 
     with When("I attach partition from the table"):
@@ -222,6 +233,14 @@ def attach_partition_detached_with_different_partition_types(self):
         table_with_compact_and_wide_parts,
         partition_with_empty_parts,
     }
+    if check_clickhouse_version("<22.8")(
+        self
+    ):  # lightweight delete was introduced in 22.8
+        values = {
+            table_with_compact_parts,
+            table_with_wide_parts,
+            table_with_compact_and_wide_parts,
+        }
 
     check_attach_partition(
         table=either(*values, i="table"),
@@ -238,6 +257,14 @@ def attach_part_detached_with_different_partition_types(self):
         table_with_compact_and_wide_parts,
         partition_with_empty_parts,
     }
+    if check_clickhouse_version("<22.8")(
+        self
+    ):  # lightweight delete was introduced in 22.8
+        values = {
+            table_with_compact_parts,
+            table_with_wide_parts,
+            table_with_compact_and_wide_parts,
+        }
 
     check_attach_part(
         table=either(*values, i="table"),
