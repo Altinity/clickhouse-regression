@@ -2,9 +2,9 @@ name: Scheduled ClickHouse head
 run-name: Scheduled ClickHouse head
 on:
   workflow_dispatch:
-  #Run at 12:00 AM (UTC), Monday through Thursday
+  #Run At 00:00 (UTC) on Sunday, Tuesday, and Thursday
   schedule:
-    - cron: "0 0 * * 1-5"
+    - cron: "0 0 * * 0,2,4"
 
 jobs:
   clickhouse-head-x86-with-analyzer-zookeeper:
