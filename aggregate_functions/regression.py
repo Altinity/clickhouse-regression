@@ -36,6 +36,7 @@ issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
 issue_58727 = "https://github.com/ClickHouse/ClickHouse/issues/58727"
 issue_58741 = "https://github.com/ClickHouse/ClickHouse/issues/58741"
 issue_64745 = "https://github.com/ClickHouse/ClickHouse/issues/64745"
+issue_69192 = "https://github.com/ClickHouse/ClickHouse/issues/69192"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -405,6 +406,34 @@ xfails = {
             "Different intermediate state representation of zero",
             check_clickhouse_version("<22.4"),
         )
+    ],
+    "/aggregate functions/mannWhitneyUTest/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/function_list/untested function distinctJSONPathsAndTypes": [
+        (
+            Fail,
+            "Tests are not implemented for distinctJSONPathsAndTypes function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
+    "/aggregate functions/function_list/untested function distinctJSONPaths": [
+        (
+            Fail,
+            "Tests are not implemented for distinctJSONPaths function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
+    "/aggregate functions/function_list/untested function distinctDynamicTypes": [
+        (
+            Fail,
+            "Tests are not implemented for distinctDynamicTypes function.",
+            check_clickhouse_version(">=24.9"),
+        ),
     ],
 }
 
