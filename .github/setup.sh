@@ -11,6 +11,15 @@ sudo rm -rf /var/lib/apt/lists/*
 sudo rm -rf /var/cache/debconf
 sudo rm -rf /tmp/*
 
+echo "Set up zram..."
+MemTotal=$(grep -Po "(?<=MemTotal:)\s+\d+" /proc/meminfo) # KiB
+Ratio=2
+SIZE=$(($MemTotal * 1024 * $Ratio)) # Convert to bytes
+echo -n "${SIZE}" > /sys/block/zram0/disksize
+echo -n "zstd" > /sys/block/zram0/comp_algorithm
+mkswap /dev/zram0
+swapon -p 100 /dev/zram0
+
 echo "Install Python modules..."
 sudo apt-get clean
 sudo apt-get update
