@@ -27,10 +27,9 @@ echo "Set up zram..."
 sudo apt-get install -y linux-modules-extra-$(uname -r)
 sudo modprobe zram
 MemTotal=$(grep -Po "(?<=MemTotal:)\s+\d+" /proc/meminfo) # KiB
-Ratio=2
-SIZE=$(($MemTotal * 1024 * $Ratio)) # Convert to bytes
-sudo sh -c "echo -n ${SIZE} > /sys/block/zram0/disksize"
-sudo sh -c "echo -n zstd > /sys/block/zram0/comp_algorithm"
+Percent=200
+ZRAM_SIZE=$(($MemTotal / 1024 * $Percent / 100)) # Convert to GiB
+sudo zramctl --size ${ZRAM_SIZE}G --algorithm zstd /dev/zram0
 sudo mkswap /dev/zram0
 sudo swapon -p 100 /dev/zram0
 
