@@ -414,6 +414,20 @@ xfails = {
             check_clickhouse_version(">=24.9"),
         )
     ],
+    "/aggregate functions/merge/mannWhitneyUTestMerge/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/finalizeAggregation/mannWhitneyUTest_finalizeAggregation_Merge/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
     "/aggregate functions/function_list/untested function distinctJSONPathsAndTypes": [
         (
             Fail,
