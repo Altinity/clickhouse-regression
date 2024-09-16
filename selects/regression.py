@@ -76,7 +76,7 @@ xfails = {
     "final/force/alias/count with alias/distr_TinyLog_:/*": [
         (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
     ],
-    "final/force/alias/count with alias/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+    "final/force/alias/count with alias/distr_ReplicatedMergeTree_table:/*": [
         (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
     ],
     "final/force/alias/distinct with alias/distr_Log_:/*": [
@@ -91,7 +91,7 @@ xfails = {
     "final/force/alias/distinct with alias/distr_TinyLog_:/*": [
         (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
     ],
-    "final/force/alias/distinct with alias/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+    "final/force/alias/distinct with alias/distr_ReplicatedMergeTree_table:/*": [
         (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
     ],
     "final/force/alias/group by with :/distr_Log_:/*": [
@@ -121,7 +121,7 @@ xfails = {
     "final/force/alias/order by :/distr_TinyLog_:/*": [
         (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
     ],
-    "final/force/alias/order by :/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+    "final/force/alias/order by :/distr_ReplicatedMergeTree_table:/*": [
         (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
     ],
     "final/force/alias/limit :/distr_Log_:/*": [
@@ -136,7 +136,7 @@ xfails = {
     "final/force/alias/limit :/distr_TinyLog_:/*": [
         (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
     ],
-    "final/force/alias/limit :/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+    "final/force/alias/limit :/distr_ReplicatedMergeTree_table:/*": [
         (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
     ],
     "final/force/alias/select nested subquery with alias/distr_Log_:/*": [
@@ -151,7 +151,7 @@ xfails = {
     "final/force/alias/select nested subquery with alias/distr_TinyLog_:/*": [
         (Fail, "Storage TinyLog doesn't support FINAL.", check_analyzer())
     ],
-    "final/force/alias/select nested subquery with alias/distr_ReplicatedMergeTree_table_sharded_replicated_clusterdistributed_replicated/*": [
+    "final/force/alias/select nested subquery with alias/distr_ReplicatedMergeTree_table:/*": [
         (Fail, "Storage ReplicatedMergeTree doesn't support FINAL.", check_analyzer())
     ],
 }
