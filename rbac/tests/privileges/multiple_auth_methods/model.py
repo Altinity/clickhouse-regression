@@ -52,52 +52,81 @@ class Model:
 
     def expect_no_password_auth_cannot_coexist_with_others_error(self, behavior):
         """Check for no password authentication method coexisting with others error."""
-        current = behavior[-1]
+        current_ = behavior[-1]
 
-        auth_methods = []
-
-        if isinstance(current, States.CreateUser):
-            auth_methods = [
-                auth_method.method for auth_method in current.identification
-            ]
-
-        elif isinstance(current, States.AlterUser):
-            if current.identification:
-                auth_methods = [
-                    auth_method.method for auth_method in current.identification
-                ]
-            elif current.add_identification:
-                auth_methods = [
-                    auth_method.method for auth_method in current.add_identification
-                ]
-        else:
+        if not isinstance(current_, States.Query):
             return
 
-        if "no_password" in auth_methods and len(auth_methods) > 1:
-            return actions.expect_no_password_auth_cannot_coexist_with_others_error
+        auth_methods = {node: [] for node in current().context.nodes}
 
-    def expect_no_password_cannot_be_used_with_add_keyword_error(self, behavior):
-        """Expect no password cannot be used with add keyword error."""
+        for node in current().context.nodes:
+            if isinstance(current_, States.CreateUser):
+                auth_methods[node] = [
+                    auth_method.method for auth_method in current_.identification[node]
+                ]
+
+            elif isinstance(current_, States.AlterUser):
+                if current_.identification[node]:
+                    auth_methods[node] = [
+                        auth_method.method
+                        for auth_method in current_.identification[node]
+                    ]
+        
+                if current_.add_identification[node]:
+                    for state in behavior[:-1]:
+                        if isinstance(state, States.CreateUser) and not state.errored:
+                            auth_methods[node] = [
+                                auth_method.method
+                                for auth_method in state.identification[node]
+                            ]
+                        elif isinstance(state, States.DropUser) and not state.errored:
+                            auth_methods = {
+                                node: [] for node in current().context.nodes
+                            }
+                        elif isinstance(state, States.AlterUser) and not state.errored:
+                            if state.identification[node]:
+                                auth_methods[node] = [
+                                    auth_method.method
+                                    for auth_method in state.identification[node]
+                                ]
+                            elif state.add_identification[node]:
+                                auth_methods_ = []
+                                for auth_method_ in state.add_identification[node]:
+                                    if auth_method_.method != "no_password":
+                                        auth_methods_.append(auth_method_)
+                                auth_methods[node] += auth_methods_
+                            elif state.reset_auth_methods_to_new[node]:
+                                auth_methods[node] = [auth_methods[node][-1]]
+                            else:
+                                raise ValueError("Unexpected alter user state")
+                            
+                    auth_methods[node] += current_.add_identification[node]
+            else:
+                return
+
+            if "no_password" in auth_methods[node] and len(auth_methods[node]) > 1:
+                return actions.expect_no_password_auth_cannot_coexist_with_others_error
+
+    def expect_no_password_cannot_be_used_with_add_keyword_error(self, behavior, node):
+        """Expect syntax error when no password is used with add keyword."""
         current = behavior[-1]
 
         if isinstance(current, States.AlterUser):
-            if current.add_identification:
+            if current.add_identification[node]:
                 if any(
                     auth_method.method == "no_password"
-                    for auth_method in current.add_identification
+                    for auth_method in current.add_identification[node]
                 ):
-                    return (
-                        actions.expect_no_password_auth_cannot_coexist_with_others_error
-                    )
+                    return actions.expect_syntax_error
 
-    def expect_password_or_user_is_incorrect_error(self, behavior):
+    def expect_password_or_user_is_incorrect_error(self, behavior, node):
         """Expect password or user is incorrect error."""
-        current = behavior[-1]
+        current_ = behavior[-1]
 
-        if not isinstance(current, States.Query):
+        if not isinstance(current_, States.Query):
             return
 
-        if not current.connection_options:
+        if not current_.connection_options:
             return
 
         auth_methods = None
@@ -105,34 +134,34 @@ class Model:
         for state in behavior[:-1]:
             if isinstance(state, States.CreateUser) and not state.errored:
                 for username in state.usernames:
-                    if username.name == current.connection_options.get(
+                    if username.name == current_.connection_options.get(
                         "user", "default"
                     ):
-                        auth_methods = list(state.identification)
+                        auth_methods = list(state.identification[node])
 
             elif isinstance(state, States.DropUser) and not state.errored:
                 for username in state.usernames:
-                    if username.name == current.connection_options.get(
+                    if username.name == current_.connection_options.get(
                         "user", "default"
                     ):
                         auth_methods = None
 
             elif isinstance(state, States.AlterUser) and not state.errored:
                 for username in state.usernames:
-                    if username.name == current.connection_options.get(
+                    if username.name == current_.connection_options.get(
                         "user", "default"
                     ):
-                        if state.reset_auth_methods_to_new:
+                        if state.reset_auth_methods_to_new[node]:
                             auth_methods = list([auth_methods[-1]])
-                        elif state.identification:
-                            auth_methods = list(state.identification)
-                        elif state.add_identification:
+                        elif state.identification[node]:
+                            auth_methods = list(state.identification[node])
+                        elif state.add_identification[node]:
                             _auth_methods = []
                             for auth_method in auth_methods:
                                 if auth_method.method != "no_password":
                                     _auth_methods.append(auth_method)
                             auth_methods = _auth_methods
-                            auth_methods += list(state.add_identification)
+                            auth_methods += list(state.add_identification[node])
                         else:
                             pass
 
@@ -140,7 +169,7 @@ class Model:
             for auth_method in auth_methods:
                 if auth_method.method == "no_password":
                     return
-                if auth_method.password == current.connection_options.get(
+                if auth_method.password == current_.connection_options.get(
                     "password", ""
                 ):
                     return
@@ -149,16 +178,16 @@ class Model:
 
     def expect_there_no_user_error(self, behavior):
         """Expect there is no user error."""
-        current = behavior[-1]
+        current_ = behavior[-1]
 
-        if not isinstance(current, (States.AlterUser, States.DropUser)):
+        if not isinstance(current_, (States.AlterUser, States.DropUser)):
             return
 
-        if current.if_exists:
+        if current_.if_exists:
             return
 
         user_exists = False
-        user_names = [username.name for username in current.usernames]
+        user_names = [username.name for username in current_.usernames]
 
         for state in behavior[:-1]:
             if isinstance(state, States.CreateUser) and not state.errored:
@@ -174,21 +203,26 @@ class Model:
         if not user_exists:
             return actions.expect_there_is_no_user_error
 
-    def expect(self, behavior=None):
+    def expect(self, behavior=None, node=None):
         """Return expected result action for a given behavior."""
 
         if behavior is None:
             behavior = current().context.behavior
+
+        if node is None:
+            node = current().context.node
 
         if settings.debug:
             for i, state in enumerate(behavior):
                 debug(f"{i}: {repr(state)}")
 
         return (
-            self.expect_no_password_auth_cannot_coexist_with_others_error(behavior)
-            or self.expect_no_password_cannot_be_used_with_add_keyword_error(behavior)
-            or self.expect_password_or_user_is_incorrect_error(behavior)
+            self.expect_no_password_cannot_be_used_with_add_keyword_error(
+                behavior, node
+            )
             or self.expect_there_no_user_error(behavior)
+            or self.expect_no_password_auth_cannot_coexist_with_others_error(behavior)
+            or self.expect_password_or_user_is_incorrect_error(behavior, node)
             or self.expect_user_already_exists_error(behavior)
             or self.expect_ok(behavior)
         )

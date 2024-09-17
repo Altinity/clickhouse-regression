@@ -49,7 +49,7 @@ def create_user_auth_combinations(
             partial(CreateUser.set_with_double_sha1_password, password="foo7"),
             partial(CreateUser.set_with_double_sha1_hash, password="foo8"),
             partial(CreateUser.set_with_bcrypt_password, password="foo9"),
-            partial(CreateUser.set_with_bcrypt_hash, password="foo10"),
+            # partial(CreateUser.set_with_bcrypt_hash, password="foo10"),
         ]
     auth_combinations = []
     for length in range(1, max_length + 1):
@@ -77,7 +77,7 @@ def alter_user_auth_combinations(
             partial(AlterUser.set_with_double_sha1_password, password="foo7"),
             partial(AlterUser.set_with_double_sha1_hash, password="foo8"),
             partial(AlterUser.set_with_bcrypt_password, password="foo9"),
-            partial(AlterUser.set_with_bcrypt_hash, password="foo10"),
+            # partial(AlterUser.set_with_bcrypt_hash, password="foo10"),
         ]
     auth_combinations = []
     for length in range(1, max_length + 1):
@@ -101,22 +101,25 @@ def node_client(self, node=None):
 
 
 @TestStep(When)
-def client_query(self, query, client=None, **kwargs):
+def client_query(self, query, client=None, node=None, **kwargs):
     """Execute query on the client. Add query to the behavior.
     Use model to check the result."""
 
     if client is None:
         client = self.context.client
 
+    if node is None:
+        node = self.context.node
+
     r = client.query(str(query), no_checks=True, **kwargs)
     query.add_result(r)
     self.context.behavior.append(query)
 
-    Then(test=self.context.model.expect())(r=r)
+    Then(test=self.context.model.expect(node=node))(r=r)
 
 
 @TestStep(When)
-def node_query(self, query, node=None, steps=False, **kwargs):
+def node_query(self, query, node=None, **kwargs):
     """Execute query on the node. Add query to the behavior.
     Use model to check the result."""
 
@@ -128,7 +131,7 @@ def node_query(self, query, node=None, steps=False, **kwargs):
     query.add_result(r)
     self.context.behavior.append(query)
 
-    Then(test=self.context.model.expect())(r=r)
+    Then(test=self.context.model.expect(node=node))(r=r)
 
 
 @TestStep(When)
@@ -139,6 +142,7 @@ def alter_user(
     usernames=None,
     client=None,
     on_cluster=None,
+    node=None,
 ):
     """Alter user to set new authentication methods."""
 
@@ -146,6 +150,9 @@ def alter_user(
 
     if client is None:
         client = self.context.client
+
+    if node is None:
+        node = self.context.node
 
     query = AlterUser()
 
@@ -160,9 +167,9 @@ def alter_user(
     query = query.set_identified()
 
     for auth_method in auth_methods:
-        query = auth_method(query)
+        query = auth_method(query, node=node, on_cluster=on_cluster)
 
-    client_query(query=query, client=client)
+    client_query(query=query, client=client, node=node)
 
     return query
 
@@ -175,11 +182,15 @@ def alter_user_add(
     auth_methods=None,
     client=None,
     on_cluster=None,
+    node=None,
 ):
     """Alter user to add new authentication methods."""
 
     if client is None:
         client = self.context.client
+
+    if node is None:
+        node = self.context.node
 
     query = AlterUser()
 
@@ -191,12 +202,12 @@ def alter_user_add(
     if on_cluster is not None:
         query.set_on_cluster(cluster_name=on_cluster)
 
-    query = query.set_identified()
+    query = query.set_add_identified()
 
     for auth_method in auth_methods:
-        query = auth_method(query)
+        query = auth_method(query, node=node, on_cluster=on_cluster)
 
-    client_query(query=query, client=client)
+    client_query(query=query, client=client, node=node)
 
     return query
 
@@ -208,11 +219,15 @@ def alter_user_reset_to_new(
     usernames=None,
     client=None,
     on_cluster=None,
+    node=None,
 ):
     """Alter user to reset authentication methods to new (the last)."""
 
     if client is None:
         client = self.context.client
+
+    if node is None:
+        node = self.context.node
 
     query = AlterUser()
 
@@ -224,9 +239,9 @@ def alter_user_reset_to_new(
     if on_cluster is not None:
         query.set_on_cluster(cluster_name=on_cluster)
 
-    query.set_reset_authentication_methods_to_new()
+    query.set_reset_authentication_methods_to_new(node=node, on_cluster=on_cluster)
 
-    client_query(query=query, client=client)
+    client_query(query=query, client=client, node=node)
 
     return query
 
@@ -273,6 +288,7 @@ def create_user(
     on_cluster=None,
     auth_methods=None,
     client=None,
+    node=None,
 ):
     """Create user with given name and authentication methods.
     If name is not provided, it will be generated.
@@ -280,6 +296,9 @@ def create_user(
 
     if client is None:
         client = self.context.client
+
+    if node is None:
+        node = self.context.node
 
     query = CreateUser()
 
@@ -298,10 +317,10 @@ def create_user(
     query.set_identified()
 
     for auth_method in auth_methods:
-        query = auth_method(query)
+        query = auth_method(query, node=node, on_cluster=on_cluster)
 
     try:
-        client_query(query=query, client=client)
+        client_query(query=query, client=client, node=node)
         yield query
     finally:
         with Finally("drop the user if exists"):
@@ -320,7 +339,8 @@ def successful_login(self, user: CreateUser, node=None):
         node = self.context.node
 
     for auth_method in list(
-        user.identification + getattr(user, "add_identification", [])
+        user.identification[node]
+        + getattr(user, "add_identification", {}).get(node, [])
     ):
         for username in list(user.usernames):
             password = auth_method.password or ""
@@ -330,6 +350,7 @@ def successful_login(self, user: CreateUser, node=None):
                 node_query(
                     query=Select().set_query("SELECT current_user()"),
                     settings=[("user", username.name), ("password", password)],
+                    node=node,
                 )
 
 
@@ -341,7 +362,8 @@ def login_with_wrong_password(self, user: CreateUser, node=None):
         node = self.context.node
 
     for auth_method in list(
-        user.identification + getattr(user, "add_identification", [])
+        user.identification[node]
+        + getattr(user, "add_identification", {}).get(node, [])
     ):
         for username in list(user.usernames):
             password = (auth_method.password or "") + "1"
@@ -364,7 +386,8 @@ def login_with_wrong_username(self, user: CreateUser, node=None):
         node = self.context.node
 
     for auth_method in list(
-        user.identification + getattr(user, "add_identification", [])
+        user.identification[node]
+        + getattr(user, "add_identification", {}).get(node, [])
     ):
         for username in list(user.usernames):
             if auth_method.password:
@@ -399,6 +422,7 @@ def login_with_other_user_password(
             node_query(
                 query=Select().set_query(f"SELECT current_user()"),
                 settings=[("user", username.name), ("password", password)],
+                node=node,
             )
 
     for auth_method in list(

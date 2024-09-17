@@ -173,6 +173,79 @@ def different_combinations_on_cluster(self, cluster=None):
         join()
 
 
+@TestScenario
+def combination_of_actions_on_random_node(self, combination, cluster=None):
+    """Check combination of actions."""
+    self.context.behavior = []
+    usernames = [Username(name="user_" + getuid())]
+    queries = []
+
+    node = random.choice(self.context.nodes)
+
+    if cluster is not None:
+        cluster = random.choice([None, cluster])
+
+    for i, action in enumerate(combination):
+        with When(f"I perform action {i} {action.__name__}"):
+            if action.__name__ == "create_user":
+                query = action(usernames=usernames, client=node)
+            else:
+                query = action(
+                    usernames=usernames, client=node, on_cluster=cluster, node=node
+                )
+            if not isinstance(query, DropUser):
+                queries.append(query)
+
+        with Then("try to login on first node"):
+            for user in queries:
+                actions.login(user=user, node=self.context.nodes[0])
+
+        with And("try to login on second node"):
+            for user in queries:
+                actions.login(user=user, node=self.context.nodes[1])
+
+        with And("try to login on third node"):
+            for user in queries:
+                actions.login(user=user, node=self.context.nodes[2])
+
+
+@TestScenario
+@Name("different combinations of actions on random nodes")
+def different_combinations_on_random_nodes(self, cluster=None):
+    """Check different combinations of sequences of creating,
+    altering and dropping users with multiple authentication methods
+    on random nodes from the cluster.
+    """
+    ways_to_create = []
+    ways_to_alter = []
+    self.context.model = models.Model()
+
+    with Given("ways to create user with multiple authentication methods on cluster"):
+        ways_to_create += ways_to_create_user(cluster=cluster)
+        # ways_to_create += ways_to_create_user()
+
+    with And("ways change users authentication methods"):
+        ways_to_alter += ways_to_change()
+
+    with And("ways to add authentication methods to existing user"):
+        ways_to_alter += ways_to_add()
+
+    with And("ways to reset users authentications methods to new"):
+        ways_to_alter += ways_to_reset_to_new()
+
+    combinations = list(product(ways_to_create, ways_to_alter, ways_to_alter))
+
+    with Pool(7) as executor:
+        for i, combination in enumerate(combinations):
+            Scenario(
+                f"#{i} {combination[0].name} {combination[1].name} {combination[2].name}",
+                test=combination_of_actions_on_random_node,
+                parallel=True,
+                executor=executor,
+            )(combination=combination, cluster=cluster)
+        join()
+
+
 @TestFeature
 @Name("combinations on cluster")
 def feature(self):
@@ -180,4 +253,6 @@ def feature(self):
     altering and dropping users with multiple authentication methods.
     """
     cluster = "replicated_cluster"
-    Scenario(test=different_combinations)(cluster=cluster)
+
+    Scenario(test=different_combinations_on_cluster)(cluster=cluster)
+    Scenario(test=different_combinations_on_random_nodes)(cluster=cluster)
