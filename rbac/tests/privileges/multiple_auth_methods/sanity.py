@@ -128,7 +128,7 @@ def column_types_in_system_table(self):
 
 
 @TestScenario
-@Requirement(
+@Requirements(
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddToNoPassword(
         "1.0"
     ),
@@ -168,6 +168,53 @@ def check_add_to_no_password(self):
         common.check_changes_reflected_in_system_table(
             user_name=user_name, correct_passwords=correct_passwords
         )
+
+
+@TestScenario
+def different_auth_methods_on_different_node(
+    self, cluster="replicated_cluster", **kwargs
+):
+    """Check that on cluster statements with multiple authentication methods
+    work correctly when user has different authentication methods on different nodes."""
+
+    user_name = f"user_{getuid()}"
+    with Given("create user on cluster with no_password authentication method"):
+        common.create_user(
+            user_name=user_name,
+            identified="no_password",
+            cluster=cluster,
+        )
+
+    with And("set different authentication methods on different nodes"):
+        common.alter_identified(
+            user_name=user_name,
+            identified="sha256_password BY '1', plaintext_password BY '2'",
+            node=self.context.node,
+        )
+        common.alter_identified(
+            user_name=user_name,
+            identified="plaintext_password BY '3', sha256_password BY '4'",
+            node=self.context.node_2,
+        )
+        common.alter_identified(
+            user_name=user_name,
+            identified="plaintext_password BY '5', bcrypt_password BY '6'",
+            node=self.context.node_3,
+        )
+
+    with When("reset authentication methods to new on cluster"):
+        common.reset_auth_methods_to_new(user_name=user_name, cluster=cluster)
+
+    with Then("check that user can not login with other passwords"):
+        for correct, wrong, node in zip(
+            [["2"], ["4"], ["6"]], [["1"], ["3"], ["5"]], self.context.nodes
+        ):
+            common.check_login_with_correct_and_wrong_passwords(
+                user_name=user_name,
+                correct_passwords=correct,
+                wrong_passwords=wrong,
+                node=node,
+            )
 
 
 @TestFeature
