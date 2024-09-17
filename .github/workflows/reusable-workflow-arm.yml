@@ -45,20 +45,6 @@ on:
         required: true
       DOCKER_PASSWORD:
         required: true
-      AWS_BUCKET:
-        required: true
-      AWS_REGION:
-        required: true
-      AWS_KEY_ID:
-        required: true
-      AWS_ACCESS_KEY:
-        required: true
-      GCS_URI:
-        required: true
-      GCS_KEY_ID:
-        required: true
-      GCS_KEY_SECRET:
-        required: true
       CHECKS_DATABASE_HOST:
         required: true
       CHECKS_DATABASE_USER:
@@ -378,85 +364,6 @@ jobs:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  benchmark_aws:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 240
-    env:
-      SUITE: ontime_benchmark
-      STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_aws' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/benchmark.py
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: benchmark-aws-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  benchmark_gcs:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 240
-    env:
-      SUITE: ontime_benchmark
-      STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_gcs' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/benchmark.py
-              --storage gcs
-              --gcs-uri ${{ secrets.GCS_URI }}
-              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: benchmark-gcs-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
   benchmark_minio:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
@@ -561,7 +468,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
+          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-ssl-artifacts
           path: ${{ env.artifact_paths}}
 
   clickhouse_keeper_failover:
@@ -669,7 +576,7 @@ jobs:
 
   disk_level_encryption:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
@@ -1241,47 +1148,6 @@ jobs:
           name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  parquet_aws_s3:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all'}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --only "/parquet/aws s3/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
   part_moves_between_shards:
     runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
     timeout-minutes: 180
@@ -1348,85 +1214,6 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  s3_aws:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 300
-    env:
-      SUITE: s3
-      STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_aws' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  s3_gcs:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: s3
-      STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_gcs' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage gcs
-              --gcs-uri ${{ secrets.GCS_URI }}
-              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-gcs-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   s3_minio:
@@ -1565,84 +1352,6 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  tiered_storage_aws:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-      STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --with-s3amazon
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  tiered_storage_gcs:
-    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-      STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --with-s3gcs
-              --gcs-uri ${{ secrets.GCS_URI }}
-              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-gcs-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   tiered_storage_local:

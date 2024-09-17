@@ -160,6 +160,13 @@ xfails = {
             check_clickhouse_version("<24.3.6"),
         )
     ],
+    "/alter/attach partition/part level/reset when equal to legacy max level/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/69001",
+            check_clickhouse_version(">24.8"),
+        )
+    ],
 }
 
 xflags = {}

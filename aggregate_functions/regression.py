@@ -18,6 +18,7 @@ from aggregate_functions.tests.steps import (
 )
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
+issue_41057 = "https://github.com/ClickHouse/ClickHouse/issues/41057"
 issue_41176 = "https://github.com/ClickHouse/ClickHouse/issues/41176"
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
 issue_44511 = (
@@ -35,6 +36,7 @@ issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
 issue_58727 = "https://github.com/ClickHouse/ClickHouse/issues/58727"
 issue_58741 = "https://github.com/ClickHouse/ClickHouse/issues/58741"
 issue_64745 = "https://github.com/ClickHouse/ClickHouse/issues/64745"
+issue_69192 = "https://github.com/ClickHouse/ClickHouse/issues/69192"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -237,13 +239,234 @@ xfails = {
             check_clickhouse_version("<23"),
         )
     ],
+    "/aggregate functions/sumMapFiltered/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMapFilteredState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMapFilteredWithOverflow/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMapFilteredWithOverflowState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMapWithOverflow/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMapWithOverflowState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/sumMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/sumMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/maxMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/maxMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMappedArrays/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMappedArraysState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/minMap_alias/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/minMap_aliasState/datatypes/permutations/*LowCardinality*": [
+        (
+            Fail,
+            issue_41057,
+            check_clickhouse_version("<22.6"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/mannWhitneyUTest/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/merge/mannWhitneyUTestMerge/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/finalizeAggregation/mannWhitneyUTest_finalizeAggregation_Merge/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/function_list/untested function distinctJSONPathsAndTypes": [
+        (
+            Fail,
+            "Tests are not implemented for distinctJSONPathsAndTypes function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
+    "/aggregate functions/function_list/untested function distinctJSONPaths": [
+        (
+            Fail,
+            "Tests are not implemented for distinctJSONPaths function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
+    "/aggregate functions/function_list/untested function distinctDynamicTypes": [
+        (
+            Fail,
+            "Tests are not implemented for distinctDynamicTypes function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
 }
+
 
 ffails = {
     "/aggregate functions/window_functions/ntile": (
         Skip,
         "ntile works from 23.5",
         check_clickhouse_version("<23.5"),
+    ),
+    "/aggregate functions/window_functions/nonNegativeDerivative": (
+        Skip,
+        "nonNegativeDerivative was introduced in 22.6",
+        check_clickhouse_version("<22.6"),
+    ),
+    "/aggregate functions/window_functions/nth value": (
+        Skip,
+        "nth value was introduced in 22.5",
+        check_clickhouse_version("<22.5"),
     ),
     "/aggregate functions/analysisOfVariance": (
         Skip,

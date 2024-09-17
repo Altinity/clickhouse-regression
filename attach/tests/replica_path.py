@@ -9,8 +9,10 @@ def check_replica_path_intersection(self):
     """Check that replica path intersection is not allowed."""
     first_table_name = "first_table_" + getuid()
     second_table_name = "second_table_" + getuid()
+    node_1 = self.context.node_1
+    node_2 = self.context.node_2
 
-    with Given("I create table on cluster"):
+    with Given("I create `first table` on cluster with replica path of `second table`"):
         columns = [
             Column(name="id", datatype=Int32()),
         ]
@@ -21,27 +23,25 @@ def check_replica_path_intersection(self):
             cluster="replicated_cluster",
             columns=columns,
             order_by="id",
-            node=self.context.node_1,
+            node=node_1,
         )
 
-    with And("I insert data"):
-        self.context.node_1.query(
-            f"INSERT INTO {first_table_name} SELECT * FROM numbers(100000000)"
-        )
+    with And("I insert data into `first table`"):
+        node_1.query(f"INSERT INTO {first_table_name} SELECT * FROM numbers(100000000)")
 
-    with And("I rename table"):
-        self.context.node_1.query(
-            f"RENAME TABLE {first_table_name} TO {second_table_name}"
-        )
+    with And("I rename table 'first_table' to 'second_table'"):
+        node_1.query(f"RENAME TABLE {first_table_name} TO {second_table_name}")
 
-    with When("I attach table"):
-        uuid = getuid()
+    with When(
+        "I attach `second table` with the same replica path as `first table` on second node"
+    ):
+        uuid = getuid().replace("_", "-")
         if check_clickhouse_version(">=24.4")(self):
             exitcode, message = (
                 253,
                 "DB::Exception: There already is an active replica with this replica path",
             )
-            self.context.node_2.query(
+            node_2.query(
                 f"ATTACH TABLE {second_table_name} UUID '{uuid}' (id Int32)"
                 + f"ENGINE = ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/default/{second_table_name}',"
                 "'{replica}') ORDER BY id SETTINGS index_granularity = 8192",
@@ -49,8 +49,18 @@ def check_replica_path_intersection(self):
                 message=message,
             )
         else:
+            with When(
+                "I attach `second table` with the same replica path as `first table` on second node"
+            ):
+                uuid = getuid().replace("_", "-")
+                node_2.query(
+                    f"ATTACH TABLE {second_table_name} UUID '{uuid}' (id Int32)"
+                    + f"ENGINE = ReplicatedMergeTree('/clickhouse/tables/replicated_cluster/default/{second_table_name}',"
+                    "'{replica}') ORDER BY id SETTINGS index_granularity = 8192",
+                )
+
             with And("I check system.replicas"):
-                assert self.context.node_2.query(
+                assert node_2.query(
                     f"""
                     SELECT
                         table,
@@ -65,9 +75,9 @@ def check_replica_path_intersection(self):
                 )
 
             with And("I drop second table"):
-                self.context.node_2.query(f"DROP TABLE {second_table_name} SYNC")
+                node_2.query(f"DROP TABLE {second_table_name} SYNC")
 
-            with And("I create table second table"):
+            with And("I create table `second table`"):
                 columns = [
                     Column(name="id", datatype=Int32()),
                 ]
@@ -77,22 +87,24 @@ def check_replica_path_intersection(self):
                     + "'{replica}')",
                     columns=columns,
                     order_by="id",
-                    node=self.context.node_2,
+                    node=node_2,
                 )
 
-            with And("I insert data"):
-                self.context.node_2.query(
+            with Then("I insert data"):
+                node_2.query(
                     f"INSERT INTO {second_table_name} SELECT * FROM numbers(400000000)"
                 )
 
-            with And("I insert into first table"):
-                self.context.node_2.query(
+            with Then("I insert into first table"):
+                node_2.query(
                     f"INSERT INTO {first_table_name} SELECT * FROM numbers(500000000)"
                 )
 
+            # sometimes I got Fatal
+
 
 @TestFeature
-@Name("replica_path")
+@Name("replica path")
 def feature(self):
     self.context.node_1 = self.context.cluster.node("clickhouse1")
     self.context.node_2 = self.context.cluster.node("clickhouse2")

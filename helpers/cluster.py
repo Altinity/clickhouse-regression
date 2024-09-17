@@ -595,33 +595,39 @@ class ClickHouseNode(Node):
                     ), error()
 
     def clickhouse_pid(self):
-        """Return ClickHouse server pid if present
-        otherwise return None.
         """
-        if self.command("ls /tmp/clickhouse-server.pid", no_checks=True).exitcode == 0:
-            return self.command("cat /tmp/clickhouse-server.pid").output.strip()
+        Return ClickHouse server pid if present otherwise return None.
+        """
+        r = self.command("cat /tmp/clickhouse-server.pid", no_checks=True, steps=False)
+        if r.exitcode == 0:
+            return r.output.strip()
         return None
 
     def stop_clickhouse(self, timeout=300, safe=True, signal="TERM"):
         """Stop ClickHouse server."""
+        with By("capturing pid"):
+            pid = self.clickhouse_pid()
+            if pid is None:  # we have crashed or already stopped
+                return
+
         if safe:
-            self.query("SYSTEM STOP MOVES")
-            self.query("SYSTEM STOP MERGES")
-            self.query("SYSTEM FLUSH LOGS")
-            with By("waiting for 5 sec for moves and merges to stop"):
-                time.sleep(5)
-            with And("forcing to sync everything to disk"):
-                self.command("sync", timeout=300, exitcode=0)
+            with By("stopping ClickHouse server gracefully"):
+                self.query("SYSTEM STOP MOVES")
+                self.query("SYSTEM STOP MERGES")
+                self.query("SYSTEM FLUSH LOGS")
+                with By("waiting for 5 sec for moves and merges to stop"):
+                    time.sleep(5)
+                with And("forcing to sync everything to disk"):
+                    self.command("sync", timeout=300, exitcode=0)
 
         with By(f"sending kill -{signal} to ClickHouse server process on {self.name}"):
-            pid = self.clickhouse_pid()
-            self.command(f"kill -{signal} {pid}", exitcode=0, steps=False)
+            self.command(f"kill -{signal} {pid}", no_checks=True, steps=False)
 
         with And("checking pid does not exist"):
             for i, attempt in enumerate(retries(timeout=100, delay=3)):
                 with attempt:
                     if i > 0 and i % 20 == 0:
-                        self.command(f"kill -KILL {pid}", steps=False)
+                        self.command(f"kill -KILL {pid}", no_checks=True, steps=False)
                     if (
                         self.command(f"ps {pid}", steps=False, no_checks=True).exitcode
                         != 1
@@ -693,8 +699,7 @@ class ClickHouseNode(Node):
         self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None
     ):
         """Restart ClickHouse server."""
-        if self.clickhouse_pid():
-            self.stop_clickhouse(timeout=timeout, safe=safe)
+        self.stop_clickhouse(timeout=timeout, safe=safe)
 
         self.start_clickhouse(timeout=timeout, wait_healthy=wait_healthy, user=user)
 
@@ -1769,7 +1774,9 @@ class Cluster(object):
                         self.clickhouse_binary_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
-                    assert os.path.exists(self.clickhouse_binary_path)
+                    assert os.path.exists(
+                        self.clickhouse_binary_path
+                    ), self.clickhouse_binary_path
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
@@ -1890,13 +1897,21 @@ class Cluster(object):
 
         with Given("docker-compose"):
             max_attempts = 5
-            for attempt in range(max_attempts):
-                with When(f"attempt {attempt}/{max_attempts}"):
-                    running = start_cluster(max_up_attempts=3)
-                if running:
-                    break
+            all_running = False
+            try:
+                for attempt in range(max_attempts):
+                    with When(f"attempt {attempt}/{max_attempts}"):
+                        all_running = start_cluster(max_up_attempts=3)
+                    if all_running:
+                        break
+            except:
+                with When("making sure any running containers are stopped"):
+                    self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
+                    )
 
-            if not running:
+            if not all_running:
                 fail("could not bring up docker-compose cluster")
 
         with Then("wait all nodes report healthy"):

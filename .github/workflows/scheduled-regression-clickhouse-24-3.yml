@@ -2,9 +2,9 @@ name: Scheduled ClickHouse 24.3
 run-name: Scheduled ClickHouse 24.3
 on:
   workflow_dispatch:
-  #Run at 12:00 AM (UTC), Monday through Thursday
+  #Run at 00:00 AM (UTC) on Sunday
   schedule:
-    - cron: "0 0 * * 1-5"
+    - cron: "0 0 * * 0"
 
 jobs:
   get_clickhouse_version:
@@ -37,13 +37,6 @@ jobs:
       AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      GCS_URI: ${{ secrets.GCS_URI }}
-      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
@@ -62,13 +55,6 @@ jobs:
       AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      GCS_URI: ${{ secrets.GCS_URI }}
-      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
@@ -86,13 +72,6 @@ jobs:
       AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      GCS_URI: ${{ secrets.GCS_URI }}
-      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
@@ -110,13 +89,6 @@ jobs:
       AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      GCS_URI: ${{ secrets.GCS_URI }}
-      GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-      GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
