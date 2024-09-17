@@ -58,3 +58,39 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
+  clickhouse-latest-x86-with-analyzer-keeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-x86.yml
+    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: "clickhouse-latest-x86-with-analyzer-keeper"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
+  clickhouse-latest-arm-with-analyzer-keeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-arm.yml
+    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: "clickhouse-latest-arm-with-analyzer-keeper"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
