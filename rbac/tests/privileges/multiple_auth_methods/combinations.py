@@ -197,6 +197,10 @@ def different_combinations_starting_with_create(self):
 @TestFeature
 @Requirements(
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_MixedWithAndWithoutWith("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_PlaintextPassword("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Sha256Password("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_BcryptPassword("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_DoubleSha1Password("1.0"),
 )
 @Name("combinations")
 def feature(self):

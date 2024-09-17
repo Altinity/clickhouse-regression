@@ -1594,14 +1594,166 @@ RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_MixedWithAndWithoutWith = Req
     type=None,
     uid=None,
     description=(
-        "  \n"
-        "[Clickhouse] SHALL allow to specify multiple auth methods with and without `WITH` clause in the same query.\n"
-        "\n"
+        "   \n"
+        "[ClickHouse] SHALL allow specifying multiple authentication methods in a single query, with or without the WITH clause.\n"
         "\n"
     ),
     link=None,
     level=4,
     num="5.3.19.13",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_PlaintextPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.PlaintextPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the plaintext_password authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.14",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Sha256Password = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Sha256Password",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the sha256_password and sha256_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.15",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_DoubleSha1Password = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.DoubleSha1Password",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the double_sha1_password and double_sha1_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.16",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_BcryptPassword = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.BcryptPassword",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the bcrypt_password and bcrypt_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.17",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Ldap = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ldap",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the ldap server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.18",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Kerberos = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Kerberos",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the kerberos authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.19",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Ssl_certificate = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssl_certificate",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the ssl_certificate authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.20",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Ssh_key = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssh_key",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the ssh_key authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.21",
+)
+
+RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_HttpServer = Requirement(
+    name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.HttpServer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "[Clickhouse] SHALL support specifying the http server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.19.22",
 )
 
 RQ_SRS_006_RBAC_Role = Requirement(
@@ -11550,6 +11702,51 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             level=4,
             num="5.3.19.13",
         ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.PlaintextPassword",
+            level=4,
+            num="5.3.19.14",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Sha256Password",
+            level=4,
+            num="5.3.19.15",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.DoubleSha1Password",
+            level=4,
+            num="5.3.19.16",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.BcryptPassword",
+            level=4,
+            num="5.3.19.17",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ldap",
+            level=4,
+            num="5.3.19.18",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Kerberos",
+            level=4,
+            num="5.3.19.19",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssl_certificate",
+            level=4,
+            num="5.3.19.20",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssh_key",
+            level=4,
+            num="5.3.19.21",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.HttpServer",
+            level=4,
+            num="5.3.19.22",
+        ),
         Heading(name="Role", level=2, num="5.4"),
         Heading(name="RQ.SRS-006.RBAC.Role", level=3, num="5.4.1"),
         Heading(name="RQ.SRS-006.RBAC.Role.Privileges", level=3, num="5.4.2"),
@@ -13160,6 +13357,15 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_System_Users,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_WithoutAuthType,
         RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_MixedWithAndWithoutWith,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_PlaintextPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Sha256Password,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_DoubleSha1Password,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_BcryptPassword,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Ldap,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Kerberos,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Ssl_certificate,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_Ssh_key,
+        RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_HttpServer,
         RQ_SRS_006_RBAC_Role,
         RQ_SRS_006_RBAC_Role_Privileges,
         RQ_SRS_006_RBAC_Role_Variables,
@@ -15063,9 +15269,44 @@ CREATE USER user1 IDENTIFIED by '1', by '3'
 ```
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith
-version: 1.0  
-[Clickhouse] SHALL allow to specify multiple auth methods with and without `WITH` clause in the same query.
+version: 1.0   
+[ClickHouse] SHALL allow specifying multiple authentication methods in a single query, with or without the WITH clause.
 
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.PlaintextPassword
+version: 1.0  
+[Clickhouse] SHALL support specifying the plaintext_password authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Sha256Password
+version: 1.0  
+[Clickhouse] SHALL support specifying the sha256_password and sha256_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.DoubleSha1Password
+version: 1.0  
+[Clickhouse] SHALL support specifying the double_sha1_password and double_sha1_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.BcryptPassword
+version: 1.0  
+[Clickhouse] SHALL support specifying the bcrypt_password and bcrypt_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ldap
+version: 1.0  
+[Clickhouse] SHALL support specifying the ldap server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Kerberos
+version: 1.0  
+[Clickhouse] SHALL support specifying the kerberos authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssl_certificate
+version: 1.0  
+[Clickhouse] SHALL support specifying the ssl_certificate authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssh_key
+version: 1.0  
+[Clickhouse] SHALL support specifying the ssh_key authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.HttpServer
+version: 1.0  
+[Clickhouse] SHALL support specifying the http server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ### Role
 

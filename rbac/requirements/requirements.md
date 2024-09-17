@@ -1383,9 +1383,44 @@ CREATE USER user1 IDENTIFIED by '1', by '3'
 ```
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith
-version: 1.0  
-[Clickhouse] SHALL allow to specify multiple auth methods with and without `WITH` clause in the same query.
+version: 1.0   
+[ClickHouse] SHALL allow specifying multiple authentication methods in a single query, with or without the WITH clause.
 
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.PlaintextPassword
+version: 1.0  
+[Clickhouse] SHALL support specifying the plaintext_password authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Sha256Password
+version: 1.0  
+[Clickhouse] SHALL support specifying the sha256_password and sha256_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.DoubleSha1Password
+version: 1.0  
+[Clickhouse] SHALL support specifying the double_sha1_password and double_sha1_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.BcryptPassword
+version: 1.0  
+[Clickhouse] SHALL support specifying the bcrypt_password and bcrypt_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ldap
+version: 1.0  
+[Clickhouse] SHALL support specifying the ldap server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Kerberos
+version: 1.0  
+[Clickhouse] SHALL support specifying the kerberos authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssl_certificate
+version: 1.0  
+[Clickhouse] SHALL support specifying the ssl_certificate authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssh_key
+version: 1.0  
+[Clickhouse] SHALL support specifying the ssh_key authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.HttpServer
+version: 1.0  
+[Clickhouse] SHALL support specifying the http server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ### Role
 
