@@ -141,10 +141,14 @@ def get_binary_from_docker_container(
             host_binary_path += host_binary_path_suffix
 
     with By(
-        "I return host_binary_path if it already exists", description=host_binary_path
+        "I return host_binary_path if it already exists and version patch is specified",
+        description=host_binary_path,
     ):
         if os.path.exists(host_binary_path):
-            return host_binary_path
+            version = docker_image.split(":")[-1]
+            version_components = version.split(".")
+            if len(version_components) >= 3:
+                return host_binary_path
 
     with And("copying binary from docker container", description=docker_image):
         with Shell() as bash:
