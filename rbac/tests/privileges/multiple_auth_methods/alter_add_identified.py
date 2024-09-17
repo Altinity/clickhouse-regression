@@ -122,8 +122,12 @@ def adding_auth_methods_v2(self):
 @TestFeature
 @Requirements(
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified("1.0"),
-    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddNoPassword("1.0"),
-    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddToNoPassword("1.0"),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddNoPassword(
+        "1.0"
+    ),
+    RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_AddIdentified_AddToNoPassword(
+        "1.0"
+    ),
 )
 @Name("alter add identified")
 def feature(self):
