@@ -265,9 +265,6 @@ def drop_user(
     return query
 
 
-# FIXME: add support for multiple users on different clusters
-
-
 @TestStep(Given)
 def create_user(
     self,

@@ -149,7 +149,7 @@ def different_combinations(self, number_of_actions=3):
     with And("a way to drop user"):
         ways += ways_to_drop()
 
-    with Pool(7) as executor:
+    with Pool(4) as executor:
         for i, combination in enumerate(product(ways, repeat=number_of_actions)):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
@@ -179,10 +179,15 @@ def different_combinations_starting_with_create(self):
     with And("ways to reset users authentications methods to new"):
         ways_to_alter += ways_to_reset_to_new()
 
-    with Pool(7) as executor:
-        for i, combination in enumerate(
-            product(ways_to_create, ways_to_alter, ways_to_alter)
-        ):
+    combinations = list(product(ways_to_create, ways_to_alter, ways_to_alter))
+
+    if self.context.stress:
+        combinations = list(
+            product(ways_to_create, ways_to_alter, ways_to_alter, ways_to_alter)
+        )
+
+    with Pool(4) as executor:
+        for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
             )(combination=combination)
@@ -194,7 +199,7 @@ def different_combinations_starting_with_create(self):
     RQ_SRS_006_RBAC_User_MultipleAuthenticationMethods_MixedWithAndWithoutWith("1.0"),
 )
 @Name("combinations")
-def feature(self, number_of_actions=3):
+def feature(self):
     """Check different combinations of sequences of creating,
     altering and dropping users with multiple authentication methods.
     """
