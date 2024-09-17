@@ -167,6 +167,9 @@ xfails = {
     "/parquet/remote": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")
     ],
+    "parquet/minio/s3": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")
+    ],
 }
 
 
