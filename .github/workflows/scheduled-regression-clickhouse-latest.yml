@@ -58,37 +58,3 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-latest-x86-zookeeper:
-    needs: get_clickhouse_version
-    uses: ./.github/workflows/reusable-workflow-x86.yml
-    name: "x86-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
-    with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      artifact_name: "clickhouse-latest-x86-zookeeper"
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
-      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
-      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-latest-arm-zookeeper:
-    needs: get_clickhouse_version
-    uses: ./.github/workflows/reusable-workflow-arm.yml
-    name: "arm-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
-    with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      artifact_name: "clickhouse-latest-arm-zookeeper"
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
-      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
-      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
