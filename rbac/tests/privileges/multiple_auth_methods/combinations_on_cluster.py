@@ -34,10 +34,10 @@ def create_user_auth_methods_combinations(self, max_length=2):
 def alter_user_auth_methods_combinations(self, max_length=2):
     """Combinations of ALTER USER with different authentication methods."""
     alter_auth_methods = [
-        actions.partial(AlterUser.set_with_plaintext_password, password="foo5"),
-        actions.partial(AlterUser.set_with_sha256_password, password="foo6"),
-        actions.partial(AlterUser.set_by_password, password="foo7"),
-        actions.partial(AlterUser.set_with_sha256_hash, password="foo8"),
+        actions.partial(AlterUser.set_with_plaintext_password, password="foo6"),
+        actions.partial(AlterUser.set_with_sha256_password, password="foo7"),
+        actions.partial(AlterUser.set_by_password, password="foo8"),
+        actions.partial(AlterUser.set_with_sha256_hash, password="foo9"),
     ]
 
     auth_methods_combinations = actions.alter_user_auth_combinations(
@@ -174,8 +174,8 @@ def different_combinations_on_cluster(self, cluster=None):
 
 
 @TestFeature
-@Name("combinations")
-def feature(self, number_of_actions=1):
+@Name("combinations on cluster")
+def feature(self):
     """Check different combinations of sequences of creating,
     altering and dropping users with multiple authentication methods.
     """

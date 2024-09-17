@@ -18,10 +18,15 @@ def datatype(self, func, table, col_name):
 def sanity_check(self, col_name, table):
     """Check that groupConcat is the same as arrayStringConcat(groupArray(column))."""
     node = self.context.node
-    query_1 = f"SELECT groupConcat({col_name}) FROM {table.name}"
-    query_2 = f"SELECT arrayStringConcat(groupArray({col_name})) FROM {table.name}"
-    # node.query(f"SELECT {col_name} FROM {table.name} FORMAT Values")
-    assert node.query(query_1).output == node.query(query_2).output, error()
+    groupConcat_query = f"SELECT groupConcat({col_name}) FROM {table.name}"
+    arrayStringConcat_query = (
+        f"SELECT arrayStringConcat(groupArray({col_name})) FROM {table.name}"
+    )
+    node.query(f"SELECT {col_name} FROM {table.name} FORMAT Values")
+    assert (
+        node.query(groupConcat_query).output
+        == node.query(arrayStringConcat_query).output
+    ), error()
 
 
 @TestScenario
@@ -29,8 +34,16 @@ def sanity_check(self, col_name, table):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupConcat("1.0"))
 def scenario(self, func="groupConcat({params})", table=None, snapshot_id=None):
     """Check groupConcat aggregate function."""
+    if check_clickhouse_version(">=24.9")(self):
+        clickhouse_version = (
+            ">=24.9"  # https://github.com/ClickHouse/ClickHouse/pull/69455
+        )
+    else:
+        clickhouse_version = ">=24.8"
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=24.8", add_analyzer=True
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if "Merge" in self.name:
@@ -106,7 +119,10 @@ def scenario(self, func="groupConcat({params})", table=None, snapshot_id=None):
     if "State" not in self.name:
         with Pool(5) as executor:
             for column in table.columns:
-                if "FixedString(51)" in column.datatype.name:
+                if (
+                    "FixedString(51)" in column.datatype.name
+                    and check_clickhouse_version("<24.9")(self)
+                ):
                     with Check(f"sanity check datatype {column.datatype.name}"):
                         skip("https://github.com/ClickHouse/ClickHouse/issues/67977")
                 else:

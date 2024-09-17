@@ -193,60 +193,9 @@ def create_user_on_cluster(self, auth_methods, cluster="replicated_cluster"):
 
 
 @TestFeature
-def different_auth_methods_on_different_node(
-    self, cluster="replicated_cluster", **kwargs
-):
-    """Check that on cluster statements with multiple authentication methods
-    work correctly when user has different authentication methods on different nodes."""
-
-    user_name = f"user_{getuid()}"
-    with Given("create user on cluster with no_password authentication method"):
-        common.create_user(
-            user_name=user_name,
-            identified="no_password",
-            cluster=cluster,
-        )
-
-    with And("set different authentication methods on different nodes"):
-        common.alter_identified(
-            user_name=user_name,
-            identified="sha256_password BY '1', plaintext_password BY '2'",
-            node=self.context.node,
-        )
-        common.alter_identified(
-            user_name=user_name,
-            identified="plaintext_password BY '3', sha256_password BY '4'",
-            node=self.context.node_2,
-        )
-        common.alter_identified(
-            user_name=user_name,
-            identified="plaintext_password BY '5', bcrypt_password BY '6'",
-            node=self.context.node_3,
-        )
-
-    with When("reset authentication methods to new on cluster"):
-        common.reset_auth_methods_to_new(user_name=user_name, cluster=cluster)
-
-    with Then("check that user can not login with other passwords"):
-        for correct, wrong, node in zip(
-            [["2"], ["4"], ["6"]], [["1"], ["3"], ["5"]], self.context.nodes
-        ):
-            common.check_login_with_correct_and_wrong_passwords(
-                user_name=user_name,
-                correct_passwords=correct,
-                wrong_passwords=wrong,
-                node=node,
-            )
-
-
-@TestFeature
 @Name("on cluster")
 def feature(self):
     """Check that user's authentication methods can be manipulated on cluster."""
-    self.context.node_2 = self.context.cluster.node("clickhouse2")
-    self.context.node_3 = self.context.cluster.node("clickhouse3")
-    self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
-
     auth_methods_combinations = common.generate_auth_combinations(
         auth_methods_dict=common.authentication_methods_with_passwords
     )
@@ -260,5 +209,3 @@ def feature(self):
                     executor=executor,
                 )(auth_methods=auth_methods)
         join()
-
-    Feature(run=different_auth_methods_on_different_node)

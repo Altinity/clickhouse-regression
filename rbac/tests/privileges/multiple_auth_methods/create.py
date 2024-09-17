@@ -46,7 +46,7 @@ def check_create_user_v2(self, node=None):
 
     auth_methods_combinations = actions.create_user_auth_combinations(max_length=2)
 
-    with Pool(5) as executor:
+    with Pool(4) as executor:
         for num, auth_methods in enumerate(auth_methods_combinations):
             Scenario(
                 f"{num} {actions.names(auth_methods)}",
