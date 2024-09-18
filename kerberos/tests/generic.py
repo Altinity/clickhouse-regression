@@ -26,13 +26,13 @@ def xml_configured_user(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for client"):
-        kinit_no_keytab(node=ch_nodes[2])
+        kinit_no_keytab(node=self.context.bash_tools)
 
     with And("kinit for server"):
         create_server_principal(node=ch_nodes[0])
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+        r = self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
 
     with Then(f"I expect 'kerberos_user'"):
         assert r.output == "kerberos_user", error()
@@ -45,7 +45,7 @@ def rbac_configured_user(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for client"):
-        kinit_no_keytab(node=ch_nodes[2], principal="krb_rbac")
+        kinit_no_keytab(node=self.context.bash_tools, principal="krb_rbac")
 
     with And("kinit for server"):
         create_server_principal(node=ch_nodes[0])
@@ -56,7 +56,7 @@ def rbac_configured_user(self):
         )
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+        r = self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
 
     with Then("I restore server original state"):
         ch_nodes[0].query("DROP USER krb_rbac")
@@ -74,7 +74,7 @@ def invalid_server_ticket(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for client"):
-        kinit_no_keytab(node=ch_nodes[2])
+        kinit_no_keytab(node=self.context.bash_tools)
 
     with And("setting up server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -83,17 +83,19 @@ def invalid_server_ticket(self):
         self.context.krb_server.stop()
 
     with When("I attempt to authenticate as kerberos_user"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+        r = self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
 
     with Then("I start kerberos server again"):
         self.context.krb_server.start()
-        kdestroy(ch_nodes[2])
+        kdestroy(self.context.bash_tools)
         for attempt in retries(timeout=30, delay=1):
             with attempt:
-                kinit_no_keytab(node=ch_nodes[2])
-                user = ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
+                kinit_no_keytab(node=self.context.bash_tools)
+                user = self.context.bash_tools.command(
+                    test_select_query(node=ch_nodes[0])
+                ).output
                 assert user == "kerberos_user", error()
-        kdestroy(ch_nodes[2])
+        kdestroy(self.context.bash_tools)
 
     with And("I expect the user to be default"):
         assert r.output == "default", error()
@@ -109,7 +111,7 @@ def invalid_client_ticket(self):
     kerberos = self.context.krb_server
 
     with Given("kinit for client"):
-        kinit_no_keytab(node=ch_nodes[2], lifetime_option="-l 00:00:05")
+        kinit_no_keytab(node=self.context.bash_tools, lifetime_option="-l 00:00:05")
 
     with And("setting up server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -118,7 +120,7 @@ def invalid_client_ticket(self):
         time.sleep(10)
 
     with When("I attempt to authenticate as kerberos_user"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+        r = self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
 
     with Then("I expect the user to be default"):
         assert r.output == "default", error()
@@ -134,12 +136,14 @@ def invalid_client_ticket(self):
             for attempt in retries(timeout=30, delay=1):
                 with attempt:
                     if (
-                        ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
+                        self.context.bash_tools.command(
+                            test_select_query(node=ch_nodes[0])
+                        ).output
                         == "kerberos_user"
                     ):
                         break
         finally:
-            kdestroy(ch_nodes[2])
+            kdestroy(self.context.bash_tools)
 
 
 @TestCase
@@ -151,39 +155,41 @@ def kerberos_unreachable_valid_tickets(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for client"):
-        kinit_no_keytab(node=ch_nodes[2])
+        kinit_no_keytab(node=self.context.bash_tools)
 
     with And("setting up server principal"):
         create_server_principal(node=ch_nodes[0])
 
     with And("make sure server obtained ticket"):
-        ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+        self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
 
     with And("I kill kerberos-server"):
         self.context.krb_server.stop()
 
     with When("I attempt to authenticate as kerberos_user"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+        r = self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
 
     with Then("I expect the user to be default"):
         assert r.output == "kerberos_user", error()
 
     with Finally("I start kerberos server again"):
         self.context.krb_server.start()
-        kdestroy(ch_nodes[2])
+        kdestroy(self.context.bash_tools)
         attempts = 0
         while attempts < 20:
             attempts += 1
-            kinit_no_keytab(node=ch_nodes[2])
+            kinit_no_keytab(node=self.context.bash_tools)
             if (
-                ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
+                self.context.bash_tools.command(
+                    test_select_query(node=ch_nodes[0])
+                ).output
                 == "kerberos_user"
             ):
                 break
             time.sleep(1)
         else:
             assert False, error()
-        kdestroy(ch_nodes[2])
+        kdestroy(self.context.bash_tools)
 
 
 @TestScenario
@@ -193,7 +199,7 @@ def kerberos_not_configured(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for client"):
-        kinit_no_keytab(node=ch_nodes[2], principal="unkerberized")
+        kinit_no_keytab(node=self.context.bash_tools, principal="unkerberized")
 
     with And("Kinit for server"):
         create_server_principal(node=ch_nodes[0])
@@ -204,7 +210,9 @@ def kerberos_not_configured(self):
         )
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
+        r = self.context.bash_tools.command(
+            test_select_query(node=ch_nodes[0]), no_checks=True
+        )
 
     with Then("I expect authentication failure"):
         assert "Authentication failed" in r.output, error()
@@ -221,25 +229,29 @@ def kerberos_server_restarted(self):
     krb_server = self.context.krb_server
 
     with Given("I obtain keytab for user"):
-        kinit_no_keytab(node=ch_nodes[2])
+        kinit_no_keytab(node=self.context.bash_tools)
     with And("I create server principal"):
         create_server_principal(node=ch_nodes[0])
     with And("I obtain server ticket"):
-        ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
+        self.context.bash_tools.command(
+            test_select_query(node=ch_nodes[0]), no_checks=True
+        )
     with By("I dump, restart and restore kerberos server"):
         krb_server.command("kdb5_util dump dump.dmp", shell_command="/bin/sh")
         krb_server.restart()
         krb_server.command("kdb5_util load dump.dmp", shell_command="/bin/sh")
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+        r = self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
 
     with And("I wait for kerberos to be healthy"):
-        kdestroy(ch_nodes[2])
+        kdestroy(self.context.bash_tools)
         for attempt in retries(timeout=30, delay=1):
             with attempt:
-                kinit_no_keytab(node=ch_nodes[2])
-                user = ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
+                kinit_no_keytab(node=self.context.bash_tools)
+                user = self.context.bash_tools.command(
+                    test_select_query(node=ch_nodes[0])
+                ).output
                 assert user == "kerberos_user", error()
 
     with Then(f"I expect kerberos_user"):
@@ -253,13 +265,15 @@ def invalid_user(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("I obtain keytab for invalid user"):
-        kinit_no_keytab(node=ch_nodes[2], principal="invalid")
+        kinit_no_keytab(node=self.context.bash_tools, principal="invalid")
 
     with And("I create server principal"):
         create_server_principal(node=ch_nodes[0])
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
+        r = self.context.bash_tools.command(
+            test_select_query(node=ch_nodes[0]), no_checks=True
+        )
 
     with Then(f"I expect default"):
         assert ("Authentication failed: password is incorrect" in r.output) and (
@@ -274,7 +288,7 @@ def user_deleted(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("I obtain keytab for a user"):
-        kinit_no_keytab(node=ch_nodes[2], principal="krb_rbac")
+        kinit_no_keytab(node=self.context.bash_tools, principal="krb_rbac")
 
     with And("I create server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -286,7 +300,9 @@ def user_deleted(self):
         ch_nodes[0].query("DROP USER krb_rbac")
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
+        r = self.context.bash_tools.command(
+            test_select_query(node=ch_nodes[0]), no_checks=True
+        )
 
     with Then(f"I expect error"):
         message = r.output
@@ -301,7 +317,7 @@ def authentication_performance(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("I obtain keytab for a user"):
-        kinit_no_keytab(node=ch_nodes[2])
+        kinit_no_keytab(node=self.context.bash_tools)
 
     with And("I create server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -314,13 +330,13 @@ def authentication_performance(self):
     with When("I measure kerberos auth time"):
         start_time_krb = time.time()
         for i in range(100):
-            ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
+            self.context.bash_tools.command(test_select_query(node=ch_nodes[0]))
         krb_time = (time.time() - start_time_krb) / 100
 
     with And("I measure password auth time"):
         start_time_usual = time.time()
         for i in range(100):
-            ch_nodes[2].command(
+            self.context.bash_tools.command(
                 f"echo 'SELECT 1 FORMAT TabSeparated' | curl 'http://pwd_user:pwd@clickhouse1:8123/' -d @-"
             )
         usual_time = (time.time() - start_time_usual) / 100
@@ -344,9 +360,7 @@ def generic(self):
         self.context.cluster.node(f"clickhouse{i}") for i in range(1, 4)
     ]
     self.context.krb_server = self.context.cluster.node("kerberos")
-    self.context.clients = [
-        self.context.cluster.node(f"krb-client{i}") for i in range(1, 6)
-    ]
+    self.context.bash_tools = self.context.cluster.node("bash-tools")
 
     for scenario in loads(current_module(), Scenario, Suite):
         Scenario(run=scenario, flags=TE)  # , setup=instrument_clickhouse_server_log)

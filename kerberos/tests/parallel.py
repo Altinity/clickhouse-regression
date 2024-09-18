@@ -10,8 +10,8 @@ def valid_requests_same_credentials(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for clients"):
-        kinit_no_keytab(node=ch_nodes[1])
-        kinit_no_keytab(node=ch_nodes[2])
+        kinit_no_keytab(node=self.context.bash_tools)
+        kinit_no_keytab(node=self.context.bash_tools_2)
 
     with And("create server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -23,8 +23,8 @@ def valid_requests_same_credentials(self):
         tasks = []
         with Pool(2) as pool:
             with When("I try simultaneous authentication"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].command,)))
-                tasks.append(pool.submit(helper, (ch_nodes[2].command,)))
+                tasks.append(pool.submit(helper, (self.context.bash_tools.command,)))
+                tasks.append(pool.submit(helper, (self.context.bash_tools_2.command,)))
                 tasks[0].result(timeout=200)
                 tasks[1].result(timeout=200)
 
@@ -40,8 +40,8 @@ def valid_requests_different_credentials(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for clients"):
-        kinit_no_keytab(node=ch_nodes[1], principal="krb1")
-        kinit_no_keytab(node=ch_nodes[2], principal="krb2")
+        kinit_no_keytab(node=self.context.bash_tools, principal="krb1")
+        kinit_no_keytab(node=self.context.bash_tools_2, principal="krb2")
 
     with And("create server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -61,8 +61,8 @@ def valid_requests_different_credentials(self):
                 )
 
             with When("I try simultaneous authentication for valid and invalid"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].command,)))
-                tasks.append(pool.submit(helper, (ch_nodes[2].command,)))
+                tasks.append(pool.submit(helper, (self.context.bash_tools.command,)))
+                tasks.append(pool.submit(helper, (self.context.bash_tools_2.command,)))
                 tasks[0].result(timeout=200)
                 tasks[1].result(timeout=200)
 
@@ -82,8 +82,8 @@ def valid_invalid(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for clients"):
-        kinit_no_keytab(node=ch_nodes[2])
-        kinit_no_keytab(node=ch_nodes[1], principal="invalid_user")
+        kinit_no_keytab(node=self.context.bash_tools_2)
+        kinit_no_keytab(node=self.context.bash_tools, principal="invalid_user")
 
     with And("create server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -95,8 +95,12 @@ def valid_invalid(self):
         tasks = []
         with Pool(2) as pool:
             with When("I try simultaneous authentication for valid and invalid"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].command,)))  # invalid
-                tasks.append(pool.submit(helper, (ch_nodes[2].command,)))  # valid
+                tasks.append(
+                    pool.submit(helper, (self.context.bash_tools.command,))
+                )  # invalid
+                tasks.append(
+                    pool.submit(helper, (self.context.bash_tools_2.command,))
+                )  # valid
 
             with Then(f"I expect have auth failure"):
                 assert tasks[1].result(timeout=300).output == "kerberos_user", error()
@@ -110,8 +114,8 @@ def deletion(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for clients"):
-        kinit_no_keytab(node=ch_nodes[1], principal="krb1")
-        kinit_no_keytab(node=ch_nodes[2], principal="krb2")
+        kinit_no_keytab(node=self.context.bash_tools, principal="krb1")
+        kinit_no_keytab(node=self.context.bash_tools_2, principal="krb2")
 
     with And("create server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -136,8 +140,12 @@ def deletion(self):
                 ch_nodes[0].query("GRANT ACCESS MANAGEMENT ON *.* TO krb2")
 
             with When("I try simultaneous authentication for valid and invalid"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].command, "krb2")))
-                tasks.append(pool.submit(helper, (ch_nodes[2].command, "krb1")))
+                tasks.append(
+                    pool.submit(helper, (self.context.bash_tools.command, "krb2"))
+                )
+                tasks.append(
+                    pool.submit(helper, (self.context.bash_tools_2.command, "krb1"))
+                )
                 tasks[0].result(timeout=200)
                 tasks[1].result(timeout=200)
 
@@ -158,7 +166,7 @@ def kerberos_and_nonkerberos(self):
     ch_nodes = self.context.ch_nodes
 
     with Given("kinit for clients"):
-        kinit_no_keytab(node=ch_nodes[2])
+        kinit_no_keytab(node=self.context.bash_tools_2)
 
     with And("create server principal"):
         create_server_principal(node=ch_nodes[0])
@@ -173,10 +181,10 @@ def kerberos_and_nonkerberos(self):
         with Pool(2) as pool:
             with When("I try simultaneous authentication for valid and invalid"):
                 tasks.append(
-                    pool.submit(helper, (ch_nodes[1].command, False))
+                    pool.submit(helper, (self.context.bash_tools.command, False))
                 )  # non-kerberos
                 tasks.append(
-                    pool.submit(helper, (ch_nodes[2].command, True))
+                    pool.submit(helper, (self.context.bash_tools_2.command, True))
                 )  # kerberos
 
             with Then(f"I expect have auth failure"):
@@ -193,9 +201,8 @@ def parallel(self):
         self.context.cluster.node(f"clickhouse{i}") for i in range(1, 4)
     ]
     self.context.krb_server = self.context.cluster.node("kerberos")
-    self.context.clients = [
-        self.context.cluster.node(f"krb-client{i}") for i in range(1, 6)
-    ]
+    self.context.bash_tools = self.context.cluster.node("bash-tools")
+    self.context.bash_tools_2 = self.context.cluster.node("bash-tools-2")
 
     for scenario in loads(current_module(), Scenario, Suite):
         Scenario(run=scenario, flags=TE)

@@ -46,6 +46,32 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/users.d:/etc/clickhouse-server/users.d"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
+  bash-tools:
+    extends:
+      file: ../../docker-compose/bash-tools.yml
+      service: bash-tools
+    hostname: bash-tools
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/kerberos/etc/krb5_arm64.conf:/etc/krb5.conf"
+    environment:
+      KRB5_CLIENT_KTNAME: /etc/krb5.keytab
+      KRB5_KTNAME: /etc/krb5.keytab
+      KRB5CCNAME: /tmp/krb5cc_0
+
+  bash-tools-2:
+    extends:
+      file: ../../docker-compose/bash-tools.yml
+      service: bash-tools
+    hostname: bash-tools
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/kerberos/etc/krb5_arm64.conf:/etc/krb5.conf"
+    environment:
+      KRB5_CLIENT_KTNAME: /etc/krb5.keytab
+      KRB5_KTNAME: /etc/krb5.keytab
+      KRB5CCNAME: /tmp/krb5cc_0
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:
