@@ -161,13 +161,16 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/63701",
         )
     ],
-    "/parquet/query": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")],
-    "/parquet/file": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")],
-    "/parquet/url": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")],
-    "/parquet/remote": [
+    "/parquet/query/*": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")],
+    "/parquet/file/*": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")],
+    "/parquet/url/*": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")],
+    "/parquet/remote/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")
     ],
-    "parquet/minio/s3": [
+    "/parquet/minio/s3/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")
+    ],
+    "/parquet/aws s3/s3/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/69585")
     ],
 }
