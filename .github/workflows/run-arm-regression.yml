@@ -29,6 +29,8 @@ on:
         type: choice
         options:
           - all
+          - all_aws
+          - all_gcs
           - aes_encryption
           - aggregate_functions
           - atomic_insert
@@ -434,7 +436,7 @@ jobs:
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_aws' }}
+    if: ${{ contains('all benchmark_all benchmark_aws all_aws', inputs.suite)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -474,7 +476,7 @@ jobs:
     env:
       SUITE: ontime_benchmark
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_gcs' }}
+    if: ${{ contains('all benchmark_all benchmark_gcs all_gcs', inputs.suite)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -938,7 +940,7 @@ jobs:
   #             --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
   #             --clickhouse-version ${{ env.version }}
   #             ${{ env.args }} 
-  
+
   #     - name: Create and upload logs
   #       if: always()
   #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1297,7 +1299,7 @@ jobs:
     env:
       SUITE: parquet
       STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all'}}
+    if: ${{ contains('all parquet_s3 parquet_all all_aws', inputs.suite)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -1406,7 +1408,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_aws' }}
+    if: ${{ contains('all s3_all s3_aws all_aws', inputs.suite)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -1446,7 +1448,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_gcs' }}
+    if: ${{ contains('all s3_all s3_gcs all_gcs', inputs.suite)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -1623,7 +1625,7 @@ jobs:
     env:
       SUITE: tiered_storage
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' }}
+    if: ${{ contains('all tiered_storage_all tiered_storage_aws all_aws', inputs.suite)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -1662,7 +1664,7 @@ jobs:
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' }}
+    if: ${{ contains('all tiered_storage_all tiered_storage_gcs all_gcs', inputs.suite)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
