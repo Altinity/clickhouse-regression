@@ -462,15 +462,13 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
-            Feature(
-                run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.feature", "feature"
-                ),
-                parallel=True,
-                executor=pool,
-            )
 
         finally:
             join()
 
     Feature(test=load("rbac.tests.privileges.system.shutdown", "feature"))
+    Feature(
+        run=load("rbac.tests.privileges.multiple_auth_methods.feature", "feature"),
+        parallel=True,
+        executor=pool,
+    )
