@@ -55,22 +55,21 @@ def test_select_query(
 @TestStep(Given)
 def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 10:00"):
     """Helper for obtaining Kerberos ticket for client"""
-    kerberos = self.context.krb_server
     try:
-        kerberos.command("echo pwd | kinit admin/admin", shell_command="sh")
-        kerberos.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"')
-        kerberos.command(f"echo pwd | kinit {lifetime_option} {principal}")
-        kerberos.command("ls /tmp/krb5cc_*")  # debug
-        kerberos.command("mv /tmp/krb5cc_0 /share/")
-        node.command("cp /share/krb5cc_0 /tmp/krb5cc_0")
+        node.command("echo pwd | kinit admin/admin", shell_command="sh")
+        node.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"')
+        node.command(f"echo pwd | kinit {lifetime_option} {principal}")
         yield
     finally:
-        kdestroy(node)
-
+        node.command("kdestroy", no_checks=True, shell_command="sh")
 
 @TestStep(Given)
 def create_server_principal(self, node):
-    """Helper for obtaining Kerberos ticket for server"""
+    """
+    Helper for obtaining Kerberos ticket for server
+    
+    Ticket is copied manually to avoid requiring kinit to be installed.
+    """
     kerberos = self.context.krb_server
     try:
         kerberos.command(
