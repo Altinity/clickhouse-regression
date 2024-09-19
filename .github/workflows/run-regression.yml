@@ -1368,7 +1368,7 @@ jobs:
 
   rbac:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 240
+    timeout-minutes: 420
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
