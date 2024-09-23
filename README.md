@@ -17,6 +17,20 @@ Results for **the latest** scheduled workflow runs.
 | **`22.8.15.25.altinitystable`** | [![Scheduled Altinity 22.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml) |
 | **`22.3.15.34.altinitystable`** | [![Scheduled Altinity 22.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml) |
 
+### Timetable of Scheduled Regression Runs
+
+| Day           | latest & head | Every Other Version |
+|---------------|---------------|---------------------|
+| **Sunday**    | **✅ Yes**     | **✅ Yes**           |
+| **Monday**    | ❌ No          | ❌ No                |
+| **Tuesday**   | **✅ Yes**     | ❌ No                |
+| **Wednesday** | ❌ No          | ❌ No                |
+| **Thursday**  | **✅ Yes**     | ❌ No                |
+| **Friday**    | ❌ No          | ❌ No                |
+| **Saturday**  | ❌ No          | ❌ No                |
+
+
+
 ## Regression Tests in [TestFlows] for ClickHouse®
 
 This directory contains integration tests written using [TestFlows] 
