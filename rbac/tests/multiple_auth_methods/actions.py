@@ -113,7 +113,12 @@ def client_query(self, query, client=None, node=None, **kwargs):
 
     r = client.query(str(query), no_checks=True, **kwargs)
     query.add_result(r)
-    self.context.behavior.append(query)
+
+    if hasattr(self.context, "behavior_appending_lock"):
+        with self.context.behavior_appending_lock:
+            self.context.behavior.append(query)
+    else:
+        self.context.behavior.append(query)
 
     Then(test=self.context.model.expect(node=node))(r=r)
 

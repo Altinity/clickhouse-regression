@@ -9,6 +9,7 @@ from testflows.asserts import error
 
 from aes_encryption.requirements.requirements import *
 from aes_encryption.tests.common import *
+import aes_encryption.tests.errors as errors
 
 
 @TestOutline
@@ -186,14 +187,7 @@ def invalid_parameters(self):
         )
 
     with Example("bad mode type - forgot quotes"):
-        exitcode = 47
-        if is_with_analyzer(node=self.context.node):
-            message = "DB::Exception: Unknown expression or function identifier 'aes' in scope SELECT"
-        else:
-            message = (
-                "DB::Exception: Missing columns: 'ecb' 'aes' while processing query"
-            )
-
+        exitcode, message = errors.forgot_quotes()
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
