@@ -71,6 +71,8 @@ elif [[ $artifacts == 'builds' ]]; then
     artifact_s3_dir="$pr_number/$build_sha/regression"
   elif [[ $event_name == "release" || $event_name == "push" ]]; then
     artifact_s3_dir="0/$build_sha/regression"
+  elif [[ $event_name == "workflow_dispatch" ]]; then
+    artifact_s3_dir="maintenance/$GITHUB_RUN_ID/regression"
   fi
 
 fi
