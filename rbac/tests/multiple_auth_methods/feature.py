@@ -12,7 +12,7 @@ def feature(self, node="clickhouse1"):
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
 
-    with Pool(7) as pool:
+    with Pool(5) as pool:
         try:
             Feature(
                 run=load(
@@ -92,6 +92,7 @@ def feature(self, node="clickhouse1"):
                 parallel=True,
                 executor=pool,
             )
+
         finally:
             join()
 
@@ -104,6 +105,12 @@ def feature(self, node="clickhouse1"):
     Feature(
         run=load(
             "rbac.tests.privileges.multiple_auth_methods.many_auth_methods",
+            "feature",
+        ),
+    )
+    Feature(
+        run=load(
+            "rbac.tests.privileges.multiple_auth_methods.parallel_modification",
             "feature",
         ),
     )

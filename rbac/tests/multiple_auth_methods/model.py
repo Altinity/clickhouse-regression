@@ -1,5 +1,5 @@
 import testflows.settings as settings
-from testflows.core import current, debug
+from testflows.core import *
 
 import rbac.tests.privileges.multiple_auth_methods.actions as actions
 
@@ -71,7 +71,7 @@ class Model:
                         auth_method.method
                         for auth_method in current_.identification[node]
                     ]
-        
+
                 if current_.add_identification[node]:
                     for state in behavior[:-1]:
                         if isinstance(state, States.CreateUser) and not state.errored:
@@ -99,7 +99,7 @@ class Model:
                                 auth_methods[node] = [auth_methods[node][-1]]
                             else:
                                 raise ValueError("Unexpected alter user state")
-                            
+
                     auth_methods[node] += current_.add_identification[node]
             else:
                 return
@@ -226,3 +226,33 @@ class Model:
             or self.expect_user_already_exists_error(behavior)
             or self.expect_ok(behavior)
         )
+
+
+@TestStep(Then)
+def dummy_expect_ok(self, r):
+    """Dummy expect ok."""
+
+    assert True
+
+
+class Model2:
+    """Multiple user authentication methods model."""
+
+    def expect_ok(self, behavior):
+        """Expect no error."""
+        return dummy_expect_ok
+
+    def expect(self, behavior=None, node=None):
+        """Return expected result action for a given behavior."""
+
+        if behavior is None:
+            behavior = current().context.behavior
+
+        if node is None:
+            node = current().context.node
+
+        if settings.debug:
+            for i, state in enumerate(behavior):
+                debug(f"{i}: {repr(state)}")
+
+        return self.expect_ok(behavior)
