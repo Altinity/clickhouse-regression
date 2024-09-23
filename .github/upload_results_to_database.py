@@ -27,10 +27,10 @@ test_results: message_rtime_ms
 """
 
 
-ARTIFACT_BUCKET = "altinity-test-reports"
 DATABASE_HOST_VAR = "CHECKS_DATABASE_HOST"
 DATABASE_USER_VAR = "CHECKS_DATABASE_USER"
 DATABASE_PASSWORD_VAR = "CHECKS_DATABASE_PASSWORD"
+REPORT_URL_VAR = "SUITE_REPORT_INDEX_URL"
 
 table_schema_attr_map = {
     "pr_info": {},  # {"pr_number": "pull_request_number"},
@@ -253,20 +253,9 @@ class ResultUploader:
 
     def report_url(self) -> str:
         """
-        Construct the URL to the test report in the S3 bucket.
         This is a fallback if test_attributes report.url does not exist.
         """
-        storage = (
-            "/" + json.loads(self.test_attributes["storages"].replace("'", '"'))[0]
-            if self.test_attributes.get("storages")
-            else ""
-        )
-
-        return (
-            f"https://{ARTIFACT_BUCKET}.s3.amazonaws.com/index.html#"
-            f"clickhouse/{self.test_attributes['clickhouse_version']}/{self.test_attributes['job.id']}/testflows/"
-            f"{self.test_attributes['arch']}/{self.suite}{storage}/"
-        )
+        return os.getenv(REPORT_URL_VAR)
 
     def read_raw_log(self, log_lines=None):
         """
@@ -341,7 +330,10 @@ class ResultUploader:
             common_attributes[key] = self.test_attributes.get(value, None)
 
         if common_attributes["report_url"] is None:
-            common_attributes["report_url"] = self.report_url()
+            url = self.report_url()
+            if url is None:
+                fail("No report URL found in test attributes or in environment")
+            common_attributes["report_url"] = url
 
         for key in table_schema_attr_map["test_results"].keys():
             common_attributes[key] = None
