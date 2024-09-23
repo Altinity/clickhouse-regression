@@ -17,7 +17,7 @@ Results for **the latest** scheduled workflow runs.
 | **`22.8.15.25.altinitystable`** | [![Scheduled Altinity 22.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml) |
 | **`22.3.15.34.altinitystable`** | [![Scheduled Altinity 22.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml/badge.svg?event=schedule)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml) |
 
-### Timetable of scheduled regression runs
+### Timetable of Scheduled Regression Runs
 
 | Day           | latest & head | Every Other Version |
 |---------------|---------------|---------------------|
