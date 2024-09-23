@@ -467,6 +467,3 @@ def feature(self):
             join()
 
     Feature(test=load("rbac.tests.privileges.system.shutdown", "feature"))
-    Feature(
-        run=load("rbac.tests.privileges.multiple_auth_methods.feature", "feature"),
-    )

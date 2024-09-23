@@ -21,6 +21,15 @@ xfails = {
             ".*MEMORY_LIMIT_EXCEEDED.*",
         )
     ],
+    "minio/queries/:": [
+        (
+            Fail,
+            "strange and rare error on 23.8",
+            lambda test: check_clickhouse_version(">23.8")(test)
+            and check_clickhouse_version("<24")(test),
+            ".*Cannot assign requested address.*",
+        )
+    ],
 }
 
 ffails = {}

@@ -65,12 +65,7 @@ def missing_expr_error(self):
 )
 def invalid_expr_error(self):
     """Check that defining of partition clause with invalid expr returns an error."""
-    exitcode = 47
-    message = "Exception: Missing columns: 'foo'"
-
-    if is_with_analyzer(node=self.context.node):
-        message = "DB::Exception: Unknown expression identifier 'foo'"
-
+    exitcode, message = invalid_expression_error()
     self.context.node.query(
         "SELECT sum(number) OVER (PARTITION BY foo) FROM numbers(1,3) FORMAT TabSeparated",
         exitcode=exitcode,

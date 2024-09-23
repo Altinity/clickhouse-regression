@@ -12,25 +12,25 @@ def feature(self, node="clickhouse1"):
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
 
-    with Pool(7) as pool:
+    with Pool(5) as pool:
         try:
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.create", "feature"
+                    "rbac.tests.multiple_auth_methods.create", "feature"
                 ),
                 parallel=True,
                 executor=pool,
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.reset", "feature"
+                    "rbac.tests.multiple_auth_methods.reset", "feature"
                 ),
                 parallel=True,
                 executor=pool,
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.alter_add_identified",
+                    "rbac.tests.multiple_auth_methods.alter_add_identified",
                     "feature",
                 ),
                 parallel=True,
@@ -38,7 +38,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.alter_identified",
+                    "rbac.tests.multiple_auth_methods.alter_identified",
                     "feature",
                 ),
                 parallel=True,
@@ -46,7 +46,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.syntax",
+                    "rbac.tests.multiple_auth_methods.syntax",
                     "feature",
                 ),
                 parallel=True,
@@ -54,7 +54,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.sanity",
+                    "rbac.tests.multiple_auth_methods.sanity",
                     "feature",
                 ),
                 parallel=True,
@@ -62,7 +62,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.multiple_users",
+                    "rbac.tests.multiple_auth_methods.multiple_users",
                     "feature",
                 ),
                 parallel=True,
@@ -70,7 +70,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.on_cluster",
+                    "rbac.tests.multiple_auth_methods.on_cluster",
                     "feature",
                 ),
                 parallel=True,
@@ -78,7 +78,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.combinations",
+                    "rbac.tests.multiple_auth_methods.combinations",
                     "feature",
                 ),
                 parallel=True,
@@ -86,24 +86,31 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.privileges.multiple_auth_methods.combinations_on_cluster",
+                    "rbac.tests.multiple_auth_methods.combinations_on_cluster",
                     "feature",
                 ),
                 parallel=True,
                 executor=pool,
             )
+
         finally:
             join()
 
     Feature(
         run=load(
-            "rbac.tests.privileges.multiple_auth_methods.server_setting.feature",
+            "rbac.tests.multiple_auth_methods.server_setting.feature",
             "feature",
         ),
     )
     Feature(
         run=load(
-            "rbac.tests.privileges.multiple_auth_methods.many_auth_methods",
+            "rbac.tests.multiple_auth_methods.many_auth_methods",
+            "feature",
+        ),
+    )
+    Feature(
+        run=load(
+            "rbac.tests.multiple_auth_methods.parallel_modification",
             "feature",
         ),
     )
