@@ -370,7 +370,7 @@ def regression(
     Feature(run=load("rbac.tests.views.feature", "feature"))
     Feature(run=load("rbac.tests.sql_security.feature", "feature"))
     Feature(
-        run=load("rbac.tests.privileges.multiple_auth_methods.feature", "feature"),
+        run=load("rbac.tests.multiple_auth_methods.feature", "feature"),
     )
 
 
