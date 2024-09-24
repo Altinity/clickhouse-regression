@@ -245,18 +245,8 @@ def move_partition(self):
             source_partition_key = destination_partition_key = partition_key
             source_table = destination_table = table
 
-            source_partition_key_str = (
-                source_partition_key.replace("(", "_")
-                .replace(")", "_")
-                .replace(",", "_")
-                .replace("%", "mod")
-            )
-            destination_partition_key_str = (
-                destination_partition_key.replace("(", "_")
-                .replace(")", "_")
-                .replace(",", "_")
-                .replace("%", "mod")
-            )
+            source_partition_key_str = clean_name(source_partition_key)
+            destination_partition_key_str = clean_name(destination_partition_key)
 
             Scenario(
                 f"combination partition keys  {source_partition_key_str} {destination_partition_key_str}  tables  {source_table.__name__} {destination_table.__name__}",
