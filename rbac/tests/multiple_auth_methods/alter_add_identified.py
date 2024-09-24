@@ -2,10 +2,10 @@ from testflows.core import *
 
 from rbac.requirements import *
 
-import rbac.tests.privileges.multiple_auth_methods.actions as actions
-import rbac.tests.privileges.multiple_auth_methods.model as models
-import rbac.tests.privileges.multiple_auth_methods.errors as errors
-import rbac.tests.privileges.multiple_auth_methods.common as common
+import rbac.tests.multiple_auth_methods.actions as actions
+import rbac.tests.multiple_auth_methods.model as models
+import rbac.tests.multiple_auth_methods.errors as errors
+import rbac.tests.multiple_auth_methods.common as common
 
 from helpers.common import getuid
 
