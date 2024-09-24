@@ -231,7 +231,6 @@ class Model:
 @TestStep(Then)
 def dummy_expect_ok(self, r):
     """Dummy expect ok."""
-
     assert True
 
 

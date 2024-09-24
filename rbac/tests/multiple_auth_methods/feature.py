@@ -104,9 +104,9 @@ def feature(self, node="clickhouse1"):
             "feature",
         ),
     )
-    # Feature(
-    #     run=load(
-    #         "rbac.tests.multiple_auth_methods.parallel_modification",
-    #         "feature",
-    #     ),
-    # )
+    Feature(
+        run=load(
+            "rbac.tests.multiple_auth_methods.parallel_modification",
+            "feature",
+        ),
+    )
