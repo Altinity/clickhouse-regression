@@ -4,8 +4,8 @@ from testflows.combinatorics import combinations
 
 from rbac.helper.common import *
 from helpers.sql.create_user import CreateUser
-import rbac.tests.privileges.multiple_auth_methods.actions as actions
-import rbac.tests.privileges.multiple_auth_methods.errors as errors
+import rbac.tests.multiple_auth_methods.actions as actions
+import rbac.tests.multiple_auth_methods.errors as errors
 
 
 plaintext_password = "some_password_1"

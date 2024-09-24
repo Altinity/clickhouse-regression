@@ -3,8 +3,8 @@ from testflows.core import *
 from rbac.requirements import *
 
 from helpers.common import getuid
-from rbac.tests.privileges.multiple_auth_methods.server_setting.common import *
-import rbac.tests.privileges.multiple_auth_methods.common as common
+from rbac.tests.multiple_auth_methods.server_setting.common import *
+import rbac.tests.multiple_auth_methods.common as common
 
 
 @TestScenario

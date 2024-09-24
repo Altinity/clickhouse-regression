@@ -8,8 +8,8 @@ from helpers.sql.create_user import CreateUser, Username
 from helpers.sql.alter_user import AlterUser
 from helpers.sql.drop_user import DropUser
 
-import rbac.tests.privileges.multiple_auth_methods.actions as actions
-import rbac.tests.privileges.multiple_auth_methods.model as models
+import rbac.tests.multiple_auth_methods.actions as actions
+import rbac.tests.multiple_auth_methods.model as models
 
 
 @TestStep(Given)

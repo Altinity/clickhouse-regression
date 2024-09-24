@@ -5,8 +5,8 @@ from rbac.requirements import *
 
 from helpers.common import getuid, get_settings_value, check_clickhouse_version
 
-import rbac.tests.privileges.multiple_auth_methods.common as common
-import rbac.tests.privileges.multiple_auth_methods.errors as errors
+import rbac.tests.multiple_auth_methods.common as common
+import rbac.tests.multiple_auth_methods.errors as errors
 
 
 @TestScenario

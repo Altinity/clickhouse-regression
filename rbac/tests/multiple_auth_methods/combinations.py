@@ -8,8 +8,8 @@ from helpers.sql.drop_user import DropUser
 
 from rbac.requirements import *
 
-import rbac.tests.privileges.multiple_auth_methods.actions as actions
-import rbac.tests.privileges.multiple_auth_methods.model as models
+import rbac.tests.multiple_auth_methods.actions as actions
+import rbac.tests.multiple_auth_methods.model as models
 
 
 @TestStep(Given)
