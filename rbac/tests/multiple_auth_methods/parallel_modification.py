@@ -3,6 +3,7 @@ import random
 
 from testflows.core import *
 from testflows.combinatorics import product
+from testflows.asserts import error
 
 from helpers.common import getuid
 from helpers.sql.create_user import Username
@@ -28,6 +29,17 @@ def run_action_in_parallel(self, action, usernames, node=None):
         node = self.context.node
 
     return action(usernames=usernames, client=node)
+
+
+@TestStep(Then)
+def check_server_is_running(self, node=None):
+    """Check if server is running after all actions."""
+    current_user = node.query(f"SELECT current_user()").output
+    assert current_user == "default", error()
+    users = node.query(f"SHOW USERS").output.splitlines()
+    if len(users) > 1:
+        for user in users:
+            node.query(f"SHOW CREATE USER {user}")
 
 
 @TestScenario
@@ -59,6 +71,9 @@ def combination_of_actions(self, combination, node=None):
                 query = action(usernames=usernames)
                 if not isinstance(query, DropUser):
                     queries.append(query)
+
+    with Then("check if server is running"):
+        check_server_is_running(node=node)
 
 
 @TestScenario
