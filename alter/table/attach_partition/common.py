@@ -5,7 +5,7 @@ from testflows.core import *
 
 from helpers.tables import *
 
-version_when_attach_partition_with_different_keys_merged = "24.10"
+version_when_attach_partition_with_different_keys_merged = "24.11"
 
 
 def current_cpu():
