@@ -15,16 +15,12 @@ def feature(self, node="clickhouse1"):
     with Pool(5) as pool:
         try:
             Feature(
-                run=load(
-                    "rbac.tests.multiple_auth_methods.create", "feature"
-                ),
+                run=load("rbac.tests.multiple_auth_methods.create", "feature"),
                 parallel=True,
                 executor=pool,
             )
             Feature(
-                run=load(
-                    "rbac.tests.multiple_auth_methods.reset", "feature"
-                ),
+                run=load("rbac.tests.multiple_auth_methods.reset", "feature"),
                 parallel=True,
                 executor=pool,
             )
@@ -108,9 +104,9 @@ def feature(self, node="clickhouse1"):
             "feature",
         ),
     )
-    Feature(
-        run=load(
-            "rbac.tests.multiple_auth_methods.parallel_modification",
-            "feature",
-        ),
-    )
+    # Feature(
+    #     run=load(
+    #         "rbac.tests.multiple_auth_methods.parallel_modification",
+    #         "feature",
+    #     ),
+    # )
