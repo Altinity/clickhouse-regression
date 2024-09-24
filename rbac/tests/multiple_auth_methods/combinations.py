@@ -192,7 +192,6 @@ def different_combinations_starting_with_create(self):
     if not self.context.stress:
         combinations = random.sample(combinations, len(combinations) // 10)
 
-
     with Pool(4) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
@@ -214,5 +213,11 @@ def feature(self):
     """Check different combinations of sequences of creating,
     altering and dropping users with multiple authentication methods.
     """
-    Scenario(run=different_combinations)
-    Scenario(run=different_combinations_starting_with_create)
+    with Pool(2) as executor:
+        Scenario(run=different_combinations, parallel=True, executor=executor)
+        Scenario(
+            run=different_combinations_starting_with_create,
+            parallel=True,
+            executor=executor,
+        )
+        join()

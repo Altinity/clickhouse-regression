@@ -199,7 +199,7 @@ def feature(self):
     auth_methods_combinations = common.generate_auth_combinations(
         auth_methods_dict=common.authentication_methods_with_passwords
     )
-    with Pool(10) as executor:
+    with Pool(4) as executor:
         for scenario in loads(current_module(), Scenario):
             for num, auth_methods in enumerate(auth_methods_combinations):
                 Scenario(
