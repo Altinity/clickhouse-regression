@@ -1,3 +1,5 @@
+import random
+
 from testflows.core import *
 from testflows.combinatorics import product
 
@@ -149,6 +151,10 @@ def different_combinations(self, number_of_actions=3):
     with And("a way to drop user"):
         ways += ways_to_drop()
 
+    combinations = list(product(ways, repeat=number_of_actions))
+    if not self.context.stress:
+        combinations = random.sample(combinations, len(combinations) // 5)
+
     with Pool(4) as executor:
         for i, combination in enumerate(product(ways, repeat=number_of_actions)):
             Scenario(
@@ -179,12 +185,13 @@ def different_combinations_starting_with_create(self):
     with And("ways to reset users authentications methods to new"):
         ways_to_alter += ways_to_reset_to_new()
 
-    combinations = list(product(ways_to_create, ways_to_alter, ways_to_alter))
+    combinations = list(
+        product(ways_to_create, ways_to_alter, ways_to_alter, ways_to_alter)
+    )
 
-    if self.context.stress:
-        combinations = list(
-            product(ways_to_create, ways_to_alter, ways_to_alter, ways_to_alter)
-        )
+    if not self.context.stress:
+        combinations = random.sample(combinations, len(combinations) // 10)
+
 
     with Pool(4) as executor:
         for i, combination in enumerate(combinations):

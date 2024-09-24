@@ -160,7 +160,9 @@ def different_combinations_on_cluster(self, cluster=None):
     with And("ways to reset users authentications methods to new on cluster"):
         ways_to_alter += ways_to_reset_to_new(cluster=cluster)
 
-    combinations = product(ways_to_create, ways_to_alter, ways_to_alter)
+    combinations = list(product(ways_to_create, ways_to_alter, ways_to_alter))
+    if not self.context.stress:
+        combinations = random.sample(combinations, len(combinations) // 5)
 
     with Pool(7) as executor:
         for i, combination in enumerate(combinations):
@@ -234,6 +236,9 @@ def different_combinations_on_random_nodes(self, cluster=None):
         ways_to_alter += ways_to_reset_to_new()
 
     combinations = list(product(ways_to_create, ways_to_alter, ways_to_alter))
+
+    if not self.context.stress:
+        combinations = random.sample(combinations, len(combinations) // 5)
 
     with Pool(7) as executor:
         for i, combination in enumerate(combinations):
