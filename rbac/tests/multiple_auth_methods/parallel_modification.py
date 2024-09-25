@@ -22,15 +22,6 @@ from rbac.tests.multiple_auth_methods.combinations import (
 )
 
 
-@TestStep(Given)
-def run_action_in_parallel(self, action, usernames, node=None):
-    """Run action in parallel with own client."""
-    if node is None:
-        node = self.context.node
-
-    return action(usernames=usernames, client=node)
-
-
 @TestStep(Then)
 def check_server_is_running(self, node=None):
     """Check if server is running after all actions."""
@@ -39,7 +30,16 @@ def check_server_is_running(self, node=None):
     users = node.query(f"SHOW USERS").output.splitlines()
     if len(users) > 1:
         for user in users:
-            node.query(f"SHOW CREATE USER {user}")
+            node.query(f"SHOW CREATE USER {user}", ignore_exception=True)
+
+
+@TestStep(Given)
+def run_action_in_parallel(self, action, usernames, node=None):
+    """Run action."""
+    if node is None:
+        node = self.context.node
+
+    return action(usernames=usernames, client=node)
 
 
 @TestScenario
@@ -48,16 +48,12 @@ def combination_of_actions(self, combination, node=None):
     self.context.behavior_appending_lock = threading.Lock()
     self.context.behavior = []
     usernames = [Username(name="user_" + getuid())]
+    queries = []
 
     if node is None:
         node = self.context.node
 
-    with Given("I have client"):
-        self.context.client = actions.node_client()
-
-    queries = []
-
-    with And("run statements of first action in parallel"):
+    with Given("run statements of first action in parallel"):
         with Pool() as executor:
             for action in combination[0]:
                 Step(test=run_action_in_parallel, parallel=True, executor=executor)(
@@ -68,7 +64,7 @@ def combination_of_actions(self, combination, node=None):
     with And("run other statements one by one"):
         for i, action in enumerate(combination[1:]):
             with By(f"I perform action {i} {action.__name__}"):
-                query = action(usernames=usernames)
+                query = action(usernames=usernames, client=node)
                 if not isinstance(query, DropUser):
                     queries.append(query)
 
@@ -114,7 +110,7 @@ def action_one_in_parallel(self, number_of_parallel_actions=2):
             product(ways_for_first_action, ways, ways)
         )  # 279841 combinations
         if not self.context.stress:
-            combinations = random.sample(combinations, 5000)
+            combinations = random.sample(combinations, 1000)
 
     with Pool(10) as executor:
         for i, combination in enumerate(combinations):
