@@ -162,7 +162,7 @@ def different_combinations_on_cluster(self, cluster=None):
 
     combinations = list(product(ways_to_create, ways_to_alter, ways_to_alter))
     if not self.context.stress:
-        combinations = random.sample(combinations, len(combinations) // 5)
+        combinations = random.sample(combinations, 1000)
 
     with Pool(7) as executor:
         for i, combination in enumerate(combinations):
@@ -238,7 +238,7 @@ def different_combinations_on_random_nodes(self, cluster=None):
     combinations = list(product(ways_to_create, ways_to_alter, ways_to_alter))
 
     if not self.context.stress:
-        combinations = random.sample(combinations, len(combinations) // 5)
+        combinations = random.sample(combinations, 1000)
 
     with Pool(7) as executor:
         for i, combination in enumerate(combinations):

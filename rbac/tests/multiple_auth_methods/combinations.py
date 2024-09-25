@@ -153,7 +153,7 @@ def different_combinations(self, number_of_actions=3):
 
     combinations = list(product(ways, repeat=number_of_actions))
     if not self.context.stress:
-        combinations = random.sample(combinations, len(combinations) // 5)
+        combinations = random.sample(combinations, 1000)
 
     with Pool(4) as executor:
         for i, combination in enumerate(product(ways, repeat=number_of_actions)):
@@ -190,7 +190,7 @@ def different_combinations_starting_with_create(self):
     )
 
     if not self.context.stress:
-        combinations = random.sample(combinations, len(combinations) // 10)
+        combinations = random.sample(combinations, 1000)
 
     with Pool(4) as executor:
         for i, combination in enumerate(combinations):
