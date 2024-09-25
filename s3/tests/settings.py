@@ -99,7 +99,9 @@ def check_setting_combination(
     join()
 
     with Then("I check that the replicas are consistent", flags=TE):
-        check_consistency(nodes=self.context.ch_nodes, table_name=table_name)
+        check_consistency(
+            nodes=self.context.ch_nodes, table_name=table_name, sync_timeout=60
+        )
 
 
 @TestScenario
