@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   #Run at 00:00 AM (UTC) on Sunday
   schedule:
-    - cron: "0 0 * * 0"
+    - cron: "0 0 * * 6"
 
 jobs:
   clickhouse-22-3-x86-zookeeper:

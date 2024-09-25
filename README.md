@@ -21,13 +21,13 @@ Results for **the latest** scheduled workflow runs.
 
 | Day           | latest & head | Every Other Version |
 |---------------|---------------|---------------------|
-| **Sunday**    | **✅ Yes**     | **✅ Yes**           |
+| **Sunday**    | ❌ No          | ❌ No                |
 | **Monday**    | ❌ No          | ❌ No                |
 | **Tuesday**   | **✅ Yes**     | ❌ No                |
 | **Wednesday** | ❌ No          | ❌ No                |
 | **Thursday**  | **✅ Yes**     | ❌ No                |
 | **Friday**    | ❌ No          | ❌ No                |
-| **Saturday**  | ❌ No          | ❌ No                |
+| **Saturday**  | **✅ Yes**     | **✅ Yes**           |
 
 
 
