@@ -85,6 +85,7 @@ def regression(
     bucket_path = "data/benchmark"
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.stress = stress
 
     if storages is None:
         storages = ["minio"]
