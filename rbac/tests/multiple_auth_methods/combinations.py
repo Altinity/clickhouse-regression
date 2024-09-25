@@ -156,7 +156,7 @@ def different_combinations(self, number_of_actions=3):
         combinations = random.sample(combinations, 1000)
 
     with Pool(4) as executor:
-        for i, combination in enumerate(product(ways, repeat=number_of_actions)):
+        for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
             )(combination=combination)
