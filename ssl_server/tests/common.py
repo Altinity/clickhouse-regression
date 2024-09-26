@@ -546,7 +546,8 @@ def create_ca_certificate(
         try:
             with bash(
                 f"openssl req -new -{type} -days {days} -key {key} "
-                f"-{hash} -extensions {extensions} -out {outfile}",
+                f"-{hash} -extensions {extensions} -out {outfile} "
+                '-addext "basicConstraints=critical,CA:TRUE" -addext "keyUsage=keyCertSign, cRLSign"',
                 name="openssl",
                 asynchronous=True,
             ) as cmd:
