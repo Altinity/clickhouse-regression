@@ -1269,11 +1269,11 @@ authentication_methods:
   - plaintext_password
   - sha256_password
   - double_sha1_password
+  - bcrypt_password  
+  - ssh_key
   - ldap
   - kerberos
   - ssl_certificate
-  - bcrypt_password  
-  - ssh_key
   - http
   - jwt
 ```
@@ -1300,6 +1300,13 @@ The below query should throw an error:
 CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_password BY '2';
 ```
 
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.MultipleUserNames
+version: 1.0  
+[ClickHouse] SHALL support creating multiple user accounts with multiple authentication methods in the `CREATE USER` statement.
+```sql
+CREATE USER user1, user2 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2';
+```
+
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser
 version: 1.0  
 
@@ -1314,7 +1321,7 @@ In the example above `user1` can authenticate only with 1, 2 or 3.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword
 version: 1.0  
-[ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL not allow to use `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
 
 The below query should throw an error:
 ```sql
@@ -1324,18 +1331,28 @@ ALTER USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256_
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified
 version: 1.0
 
-[ClickHouse] SHALL support adding one or more new ;authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
+[ClickHouse] SHALL support adding one or more new authentication methods to the user while keeping the existing ones using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
 ```sql
 ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2', plaintext_password by '3';
 ```
 
-##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.NoPassword
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddNoPassword
 version: 1.0
 
 [ClickHouse] SHALL not allow to add `no_password` authentication method with other authentication methods using `ADD IDENTIFIED WITH` clause in the `ALTER USER` statement.
 The below query should throw an error:
 ```sql
 ALTER USER user1 ADD IDENTIFIED WITH no_password;
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AddIdentified.AddToNoPassword
+version: 1.0
+
+[ClickHouse] SHALL not allow to add new authentication methods to user identified with `no_password` authentication methods.
+
+The below query should throw an error if user has `no_password` authentication method.
+```sql
+ALTER USER user1 ADD IDENTIFIED WITH plaintext_password by '1', bcrypt_password by '2';
 ```
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.ResetAuthenticationMethods
@@ -1355,6 +1372,55 @@ For example,
 ```sql
 SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';
 ```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.WithoutAuthType
+version: 1.0  
+[ClickHouse] SHALL allow to omit `WITH` clause and not specify authentication type when creating or altering user account. In this case the default authentication method will be used.
+
+**Example:**  
+```sql
+CREATE USER user1 IDENTIFIED by '1', by '3'
+```
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith
+version: 1.0   
+[ClickHouse] SHALL allow specifying multiple authentication methods in a single query, with or without the WITH clause.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.PlaintextPassword
+version: 1.0  
+[Clickhouse] SHALL support specifying the plaintext_password authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Sha256Password
+version: 1.0  
+[Clickhouse] SHALL support specifying the sha256_password and sha256_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.DoubleSha1Password
+version: 1.0  
+[Clickhouse] SHALL support specifying the double_sha1_password and double_sha1_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.BcryptPassword
+version: 1.0  
+[Clickhouse] SHALL support specifying the bcrypt_password and bcrypt_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ldap
+version: 1.0  
+[Clickhouse] SHALL support specifying the ldap server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Kerberos
+version: 1.0  
+[Clickhouse] SHALL support specifying the kerberos authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssl_certificate
+version: 1.0  
+[Clickhouse] SHALL support specifying the ssl_certificate authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssh_key
+version: 1.0  
+[Clickhouse] SHALL support specifying the ssh_key authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.HttpServer
+version: 1.0  
+[Clickhouse] SHALL support specifying the http server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ### Role
 

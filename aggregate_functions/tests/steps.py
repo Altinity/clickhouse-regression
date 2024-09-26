@@ -47,6 +47,7 @@ aggregate_functions = [
     "deltaSum",
     "deltaSumTimestamp",
     "dense_rank",
+    "denseRank",
     "entropy",
     "exponentialMovingAverage",
     "exponentialTimeDecayedAvg",
@@ -102,6 +103,7 @@ aggregate_functions = [
     "nth_value",
     "ntile",
     "percent_rank",
+    "percentRank",
     "quantile",
     "quantileBFloat16",
     "quantileBFloat16Weighted",
@@ -190,6 +192,7 @@ window_functions = [
     "ntile",
     "rank",
     "dense_rank",
+    "denseRank",
     "lagInFrame",
     "leadInFrame",
     "exponentialTimeDecayedSum",
@@ -198,6 +201,7 @@ window_functions = [
     "exponentialTimeDecayedAvg",
     "nonNegativeDerivative",
     "percent_rank",
+    "percentRank",
 ]
 
 parametric = [

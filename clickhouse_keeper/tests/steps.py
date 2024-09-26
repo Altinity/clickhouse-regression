@@ -591,7 +591,7 @@ def table_insert(
     if node is None:
         node = self.context.cluster.node(node_name)
     retry(node.query, timeout=100, delay=1)(
-        f"INSERT INTO {table_name}(Id, partition) values ({values})",
+        f"INSERT INTO {table_name} (Id, partition) values ({values})",
         exitcode=exitcode,
         steps=False,
     )
@@ -609,8 +609,10 @@ def table_select(
     """
     if node is None:
         node = self.context.cluster.node(node_name)
-    retry(node.query, timeout=100, delay=1)(
-        f"SELECT * FROM {table_name} FORMAT CSV", message=message, steps=False
+    retry(node.query, timeout=100, delay=10)(
+        f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT CSV",
+        message=message,
+        steps=False,
     )
 
 

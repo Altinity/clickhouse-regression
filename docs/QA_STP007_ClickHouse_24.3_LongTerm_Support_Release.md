@@ -9,15 +9,19 @@
 
 ## Execution Summary
 
-**Completed:**
+**Completed:** August 31, 2024
 
 **Test Results:**
 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.3-lts/
 
+**Build Report:**
+
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.5.48.altinityfips/2024-08-30T17-37-09.905/report.html
+
 **Summary:**
 
-Started to execute test plan on July 1, 2024 and ended on July 19, 2024.
+Started to execute test plan on July 1, 2024 and ended on August 31, 2024.
 
 ## Table of Contents
 
@@ -174,41 +178,45 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3
 
 | Test Suite  | Result                                        | Comments |
 | --- |-----------------------------------------------| --- |
-| Stateless | [In progress](#stateless)                     |   |
-| Stateful | [In progress](#stateful)                      |   |
-| Stress | [In progress](#stress)                        |  Not executed  |
-| Integration | [In progress](#integration)                   |   |
-| Key Value | [In progress](#key-value)                     |   |
-| Engines  | [In progress](#engines)                       | Not executed  |
-| Parquet | [In progress](#parquet)                       |   |
-| Tiered Storage (Local) | [In progress](#tiered-storage)                |   |
-| Tiered Storage (MinIO) | [In progress](#tiered-storage)                |   |
-| Tiered Storage (AWS) | [In progress](#tiered-storage)                |   |
-| Tiered Storage (GCS) | [In progress](#tiered-storage)                |   |
-| S3 (AWS) | [In progress*](#s3)                           |  |
-| S3 (MinIO) | [In progress](#s3)                            |   |
-| S3 (GCS) | [In progress](#s3)                            |   |
-| Selects | [In progress](#selects)                       |   |
-[ Session Timezone | [In progress](#session-timezone)              |   |
-| AES Encryption | [In progress](#aes-encryption)                |   |
-| Atomic Insert | [In progress](#atomic-insert)                 |   |
-| Base58 | [In progress](#base58)                        |   |
-| DNS | [In progress](#dns)                           |   |
-| Kafka | [In progress](#kafka)                         |   |
-| Kerberos | [In progress](#kerberos)                      |   |
-| DateTime64 Extended Range | [In progress](#datetime64-extended-range)     |   |
-| Extended Precision Data Types | [In progress](#extended-precision-data-types) |   |
-| LDAP | [In progress](#ldap)                          |   |
-| RBAC | [In progress](#rbac)                          |   |
-| Window Functions | [In progress*](#window-functions)             |   |
-| SSL Server | [In progress](#ssl-server)                    |   |
-| Disk Level Encryption | [In progress](#disk-level-encryption)         |   |
-| ClickHouse Keeper | [In progress](#clickhouse-keeper)             |   |
-| Data Types | [In progress](#data-types)                    |   |
-| Ontime Bechmark | [In progress](#ontime-benchmark)              
-| Part Moves Between Shards | [In progress](#part-moves-between-shards)     |   |
-| Lightweight Delete | [In progress](#lightweight-delete)            |    |
-| Aggregate Functions | [In progress](#aggregate-functions)           |   |
+| Stateless | [*Pass](#stateless)                     |   |
+| Stateful | [Pass](#stateful)                      |   |
+| Stress | [Pass](#stress)                        |  Not executed  |
+| Integration | [*Pass](#integration)                   |   |
+| Key Value | [Pass](#key-value)                     |   |
+| Engines  | [Pass](#engines)                       | Not executed  |
+| Parquet | [Pass](#parquet)                       |   |
+| Parquet (AWS) | [Pass](#parquet)                       |   |
+| Parquet (Minio)| [Pass](#parquet)                       |   |
+| Memory | [Pass](#memory)                       |   |
+| Tiered Storage (Local) | [Pass](#tiered-storage)                |   |
+| Tiered Storage (MinIO) | [Pass](#tiered-storage)                |   |
+| Tiered Storage (AWS) | [Pass](#tiered-storage)                |   |
+| Tiered Storage (GCS) | [Pass](#tiered-storage)                |   |
+| S3 (AWS) | [Pass](#s3)                           |  |
+| S3 (MinIO) | [Pass](#s3)                            |   |
+| S3 (GCS) | [Pass](#s3)                            |   |
+| Selects | [Pass](#selects)                       |   |
+[ Session Timezone | [Pass](#session-timezone)              |   |
+| AES Encryption | [Pass](#aes-encryption)                |   |
+| Alter | [Pass](#alter)                 |   |
+| Atomic Insert | [Pass](#atomic-insert)                 |   |
+| Base58 | [Pass](#base58)                        |   |
+| DNS | [Pass](#dns)                           |   |
+| Kafka | [Pass](#kafka)                         |   |
+| Kerberos | [Pass](#kerberos)                      |   |
+| DateTime64 Extended Range | [Pass](#datetime64-extended-range)     |   |
+| Extended Precision Data Types | [Pass](#extended-precision-data-types) |   |
+| LDAP | [Pass](#ldap)                          |   |
+| RBAC | [Pass](#rbac)                          |   |
+| Window Functions | [Pass](#window-functions)             |   |
+| SSL Server | [Pass](#ssl-server)                    |   |
+| Disk Level Encryption | [Pass](#disk-level-encryption)         |   |
+| ClickHouse Keeper | [Pass](#clickhouse-keeper)             |   |
+| Data Types | [Pass](#data-types)                    |   |
+| Benchmark | [Pass](#benchmark)              
+| Part Moves Between Shards | [Pass](#part-moves-between-shards)     |   |
+| Lightweight Delete | [Pass](#lightweight-delete)            |    |
+| Aggregate Functions | [Pass](#aggregate-functions)           |   |
 | Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)            |   |
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                           |    |
@@ -222,8 +230,8 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [Pass](#tableau)                       |   |
 | Superset | [Pass](#superset)                             |   |
-| Trivy | [In progress](#trivy)                         |   |
-| Scout | [In progress](#scout)                         |   |
+| Trivy | [Pass](#trivy)                         |   |
+| Scout | [Pass](#scout)                         |   |
 
 ## Scope
 
@@ -464,7 +472,7 @@ Results:
 
 Altinity DNS integration tests.
 
-#### Ontime Benchmark
+#### Benchmark
 
 Results:
 

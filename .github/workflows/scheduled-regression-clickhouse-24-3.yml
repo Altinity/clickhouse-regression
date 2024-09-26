@@ -2,9 +2,9 @@ name: Scheduled ClickHouse 24.3
 run-name: Scheduled ClickHouse 24.3
 on:
   workflow_dispatch:
-  #Run at 12:00 AM (UTC), Monday through Thursday
+  #Run at 00:00 AM (UTC) on Sunday
   schedule:
-    - cron: "0 0 * * 1-5"
+    - cron: "0 0 * * 6"
 
 jobs:
   get_clickhouse_version:
@@ -49,40 +49,6 @@ jobs:
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
       artifact_name: "clickhouse-24-3-arm-with-analyzer_zookeeper"
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
-      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
-      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-24-3-x86_zookeeper:
-    needs: get_clickhouse_version
-    uses: ./.github/workflows/reusable-workflow-x86.yml
-    name: "x86-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
-    with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      artifact_name: "clickhouse-24-3-x86_zookeeper"
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
-      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
-      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-24-3-arm_zookeeper:
-    needs: get_clickhouse_version
-    uses: ./.github/workflows/reusable-workflow-arm.yml
-    name: "arm-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
-    with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      artifact_name: "clickhouse-24-3-arm_zookeeper"
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}

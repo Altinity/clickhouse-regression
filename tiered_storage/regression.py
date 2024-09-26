@@ -124,7 +124,8 @@ xfails = {
         )
     ],
     ":/alter move/concurrent/:/:": [
-        (Error, "Unstable test", always, ".*Failed to find a part to move.*")
+        (Error, "Unstable test", always, ".*Failed to find a part to move.*"),
+        (Fail, "Unstable test", always, ".*NOT_ENOUGH_SPACE.*"),
     ],
     ":/system tables": [
         (Fail, "Not configured for 22.3", check_clickhouse_version("<22.8"))

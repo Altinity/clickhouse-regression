@@ -141,10 +141,14 @@ def get_binary_from_docker_container(
             host_binary_path += host_binary_path_suffix
 
     with By(
-        "I return host_binary_path if it already exists", description=host_binary_path
+        "I return host_binary_path if it already exists and version patch is specified",
+        description=host_binary_path,
     ):
         if os.path.exists(host_binary_path):
-            return host_binary_path
+            version = docker_image.split(":")[-1]
+            version_components = version.split(".")
+            if len(version_components) >= 3:
+                return host_binary_path
 
     with And("copying binary from docker container", description=docker_image):
         with Shell() as bash:
@@ -595,33 +599,39 @@ class ClickHouseNode(Node):
                     ), error()
 
     def clickhouse_pid(self):
-        """Return ClickHouse server pid if present
-        otherwise return None.
         """
-        if self.command("ls /tmp/clickhouse-server.pid", no_checks=True).exitcode == 0:
-            return self.command("cat /tmp/clickhouse-server.pid").output.strip()
+        Return ClickHouse server pid if present otherwise return None.
+        """
+        r = self.command("cat /tmp/clickhouse-server.pid", no_checks=True, steps=False)
+        if r.exitcode == 0:
+            return r.output.strip()
         return None
 
     def stop_clickhouse(self, timeout=300, safe=True, signal="TERM"):
         """Stop ClickHouse server."""
+        with By("capturing pid"):
+            pid = self.clickhouse_pid()
+            if pid is None:  # we have crashed or already stopped
+                return
+
         if safe:
-            self.query("SYSTEM STOP MOVES")
-            self.query("SYSTEM STOP MERGES")
-            self.query("SYSTEM FLUSH LOGS")
-            with By("waiting for 5 sec for moves and merges to stop"):
-                time.sleep(5)
-            with And("forcing to sync everything to disk"):
-                self.command("sync", timeout=300, exitcode=0)
+            with By("stopping ClickHouse server gracefully"):
+                self.query("SYSTEM STOP MOVES")
+                self.query("SYSTEM STOP MERGES")
+                self.query("SYSTEM FLUSH LOGS")
+                with By("waiting for 5 sec for moves and merges to stop"):
+                    time.sleep(5)
+                with And("forcing to sync everything to disk"):
+                    self.command("sync", timeout=300, exitcode=0)
 
         with By(f"sending kill -{signal} to ClickHouse server process on {self.name}"):
-            pid = self.clickhouse_pid()
-            self.command(f"kill -{signal} {pid}", exitcode=0, steps=False)
+            self.command(f"kill -{signal} {pid}", no_checks=True, steps=False)
 
         with And("checking pid does not exist"):
             for i, attempt in enumerate(retries(timeout=100, delay=3)):
                 with attempt:
                     if i > 0 and i % 20 == 0:
-                        self.command(f"kill -KILL {pid}", steps=False)
+                        self.command(f"kill -KILL {pid}", no_checks=True, steps=False)
                     if (
                         self.command(
                             f"ps {pid} | grep -v grep | grep ' clickhouse.server '",
@@ -697,8 +707,7 @@ class ClickHouseNode(Node):
         self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None
     ):
         """Restart ClickHouse server."""
-        if self.clickhouse_pid():
-            self.stop_clickhouse(timeout=timeout, safe=safe)
+        self.stop_clickhouse(timeout=timeout, safe=safe)
 
         self.start_clickhouse(timeout=timeout, wait_healthy=wait_healthy, user=user)
 

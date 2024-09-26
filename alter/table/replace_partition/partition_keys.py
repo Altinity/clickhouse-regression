@@ -6,6 +6,7 @@ from testflows.combinatorics import product
 from alter.table.attach_partition.common import (
     partitioned_MergeTree,
     version_when_attach_partition_with_different_keys_merged,
+    clean_name,
 )
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, check_clickhouse_version
@@ -218,18 +219,8 @@ def replace_partition_partition_key(self):
     partition_keys_pairs = product(source_partition_keys, destination_partition_keys)
     with Pool(10) as executor:
         for source_partition_key, destination_partition_key in partition_keys_pairs:
-            source_partition_key_str = (
-                source_partition_key.replace("(", "_")
-                .replace(")", "_")
-                .replace(",", "_")
-                .replace("%", "mod")
-            )
-            destination_partition_key_str = (
-                destination_partition_key.replace("(", "_")
-                .replace(")", "_")
-                .replace(",", "_")
-                .replace("%", "mod")
-            )
+            source_partition_key_str = clean_name(source_partition_key)
+            destination_partition_key_str = clean_name(destination_partition_key)
 
             Scenario(
                 f"combination partition keys {source_partition_key_str} {destination_partition_key_str}",

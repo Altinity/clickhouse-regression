@@ -36,6 +36,7 @@ issue_57801 = "https://github.com/ClickHouse/ClickHouse/issues/57801"
 issue_58727 = "https://github.com/ClickHouse/ClickHouse/issues/58727"
 issue_58741 = "https://github.com/ClickHouse/ClickHouse/issues/58741"
 issue_64745 = "https://github.com/ClickHouse/ClickHouse/issues/64745"
+issue_69192 = "https://github.com/ClickHouse/ClickHouse/issues/69192"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -364,7 +365,92 @@ xfails = {
             check_clickhouse_version("<22.6"),
         )
     ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Float32,Float32/*": [
+        (
+            Fail,
+            "Different intermediate state representation of zero",
+            check_clickhouse_version("<22.4"),
+        )
+    ],
+    "/aggregate functions/mannWhitneyUTest/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/merge/mannWhitneyUTestMerge/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/finalizeAggregation/mannWhitneyUTest_finalizeAggregation_Merge/*": [
+        (
+            Fail,
+            issue_69192,
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
+    "/aggregate functions/function_list/untested function distinctJSONPathsAndTypes": [
+        (
+            Fail,
+            "Tests are not implemented for distinctJSONPathsAndTypes function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
+    "/aggregate functions/function_list/untested function distinctJSONPaths": [
+        (
+            Fail,
+            "Tests are not implemented for distinctJSONPaths function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
+    "/aggregate functions/function_list/untested function distinctDynamicTypes": [
+        (
+            Fail,
+            "Tests are not implemented for distinctDynamicTypes function.",
+            check_clickhouse_version(">=24.9"),
+        ),
+    ],
 }
+
 
 ffails = {
     "/aggregate functions/window_functions/ntile": (
@@ -725,9 +811,9 @@ def regression(
         #     executor=executor,
         # )()
         join()
-
-    # Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
-
+    
+    Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
+    
 
 if main():
     regression()
