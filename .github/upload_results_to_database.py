@@ -37,7 +37,7 @@ table_schema_attr_map = {
     "test_attributes": {
         "clickhouse_version": "version",
         "clickhouse_package": "package",
-        "base_os": None,
+        "base_os": "base_os",
         "architecture": "arch",
         "keeper_package": "keeper_binary_path",
         "zookeeper_version": "zookeeper_version",
