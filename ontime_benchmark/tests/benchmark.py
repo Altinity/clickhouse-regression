@@ -178,8 +178,14 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                     )
 
         with When("I insert data into the ontime table in parallel"):
-            start_year = 1987
-            end_year = 2015
+
+            if self.context.stress:
+                start_year = 1987
+                end_year = 2015
+            else:
+                start_year = 2000
+                end_year = 2012
+
             for retry in retries(timeout=60, delay=0.1):
                 with retry:
                     Step(
