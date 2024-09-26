@@ -213,11 +213,8 @@ def feature(self):
     """Check different combinations of sequences of creating,
     altering and dropping users with multiple authentication methods.
     """
-    with Pool(2) as executor:
-        Scenario(run=different_combinations, parallel=True, executor=executor)
-        Scenario(
-            run=different_combinations_starting_with_create,
-            parallel=True,
-            executor=executor,
-        )
-        join()
+
+    Scenario(run=different_combinations)
+    Scenario(
+        run=different_combinations_starting_with_create,
+    )
