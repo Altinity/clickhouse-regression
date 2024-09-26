@@ -1290,12 +1290,20 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullabl
 {"argMax(map_date_lowcardinality_nullable_int64___, string)":{},"any(toTypeName(map_date_lowcardinality_nullable_int64___))":"Map(Date, LowCardinality(Nullable(Int64)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_Int64____String___1970_01_01___None_ = r"""
+{"argMax(map_date_lowcardinality_nullable_int64___, string)":{"1970-01-01":null},"any(toTypeName(map_date_lowcardinality_nullable_int64___))":"Map(Date, LowCardinality(Nullable(Int64)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_Int8____String___2149_06_06___127_ = r"""
 {"argMax(map_date_lowcardinality_nullable_int8___, string)":{"2149-06-06":127},"any(toTypeName(map_date_lowcardinality_nullable_int8___))":"Map(Date, LowCardinality(Nullable(Int8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_String____String___ = r"""
 {"argMax(map_date_lowcardinality_nullable_string___, string)":{},"any(toTypeName(map_date_lowcardinality_nullable_string___))":"Map(Date, LowCardinality(Nullable(String)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_String____String___1970_01_01___None_ = r"""
+{"argMax(map_date_lowcardinality_nullable_string___, string)":{"1970-01-01":null},"any(toTypeName(map_date_lowcardinality_nullable_string___))":"Map(Date, LowCardinality(Nullable(String)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_UInt128____String___2015_12_29____229347445829966019923992160261358247935__ = r"""
@@ -1316,6 +1324,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullabl
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_UInt8____String___ = r"""
 {"argMax(map_date_lowcardinality_nullable_uint8___, string)":{},"any(toTypeName(map_date_lowcardinality_nullable_uint8___))":"Map(Date, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_UInt8____String___1970_01_01___None_ = r"""
+{"argMax(map_date_lowcardinality_nullable_uint8___, string)":{"1970-01-01":null},"any(toTypeName(map_date_lowcardinality_nullable_uint8___))":"Map(Date, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Date_LowCardinality_Nullable_UUID____String___2004_01_24____ef44f94b_3b41_311f_3c75_a7d7e9854335__ = r"""
@@ -1586,6 +1598,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_FixedString_51__LowCardinal
 {"argMax(map_fixedstring_51__lowcardinality_nullable_float32___, string)":{},"any(toTypeName(map_fixedstring_51__lowcardinality_nullable_float32___))":"Map(FixedString(51), LowCardinality(Nullable(Float32)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_FixedString_51__LowCardinality_Nullable_Float32____String____x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00___None_ = r"""
+{"argMax(map_fixedstring_51__lowcardinality_nullable_float32___, string)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null},"any(toTypeName(map_fixedstring_51__lowcardinality_nullable_float32___))":"Map(FixedString(51), LowCardinality(Nullable(Float32)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_FixedString_51__LowCardinality_Nullable_Float64____String___oooooooooooo_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00____1_7157275729664434e_58_ = r"""
 {"argMax(map_fixedstring_51__lowcardinality_nullable_float64___, string)":{"oooooooooooo\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":-1.7157275729664434e58},"any(toTypeName(map_fixedstring_51__lowcardinality_nullable_float64___))":"Map(FixedString(51), LowCardinality(Nullable(Float64)))","any(toTypeName(string))":"String"}
 """
@@ -1632,6 +1648,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_FixedString_51__LowCardinal
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_FixedString_51__LowCardinality_Nullable_UInt8____String___ = r"""
 {"argMax(map_fixedstring_51__lowcardinality_nullable_uint8___, string)":{},"any(toTypeName(map_fixedstring_51__lowcardinality_nullable_uint8___))":"Map(FixedString(51), LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_FixedString_51__LowCardinality_Nullable_UInt8____String____x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00___None_ = r"""
+{"argMax(map_fixedstring_51__lowcardinality_nullable_uint8___, string)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null},"any(toTypeName(map_fixedstring_51__lowcardinality_nullable_uint8___))":"Map(FixedString(51), LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_FixedString_51__LowCardinality_Nullable_UUID____String___NNNNNNNNNNNNNNNNNNN_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00____7f21ddfe_eeac_c023_bc8a_bba23aeef10a__ = r"""
@@ -1898,6 +1918,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int128_LowCardinality_Nulla
 {"argMax(map_int128_lowcardinality_nullable_fixedstring_51____, string)":{},"any(toTypeName(map_int128_lowcardinality_nullable_fixedstring_51____))":"Map(Int128, LowCardinality(Nullable(FixedString(51))))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int128_LowCardinality_Nullable_FixedString_51_____String___0___None_ = r"""
+{"argMax(map_int128_lowcardinality_nullable_fixedstring_51____, string)":{"0":null},"any(toTypeName(map_int128_lowcardinality_nullable_fixedstring_51____))":"Map(Int128, LowCardinality(Nullable(FixedString(51))))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int128_LowCardinality_Nullable_Float32____String___122953259261198283096405547656555972608___1_687199e_38_ = r"""
 {"argMax(map_int128_lowcardinality_nullable_float32___, string)":{"122953259261198283096405547656555972608":1.687199e38},"any(toTypeName(map_int128_lowcardinality_nullable_float32___))":"Map(Int128, LowCardinality(Nullable(Float32)))","any(toTypeName(string))":"String"}
 """
@@ -1912,6 +1936,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int128_LowCardinality_Nulla
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int128_LowCardinality_Nullable_Int16____String___ = r"""
 {"argMax(map_int128_lowcardinality_nullable_int16___, string)":{},"any(toTypeName(map_int128_lowcardinality_nullable_int16___))":"Map(Int128, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int128_LowCardinality_Nullable_Int16____String___0___None_ = r"""
+{"argMax(map_int128_lowcardinality_nullable_int16___, string)":{"0":null},"any(toTypeName(map_int128_lowcardinality_nullable_int16___))":"Map(Int128, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int128_LowCardinality_Nullable_Int32____String___57950763763711586919965662067576356864____1535070170_ = r"""
@@ -2234,6 +2262,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int16_LowCardinality_Nullab
 {"argMax(map_int16_lowcardinality_nullable_int32___, string)":{},"any(toTypeName(map_int16_lowcardinality_nullable_int32___))":"Map(Int16, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int16_LowCardinality_Nullable_Int32____String___0___None_ = r"""
+{"argMax(map_int16_lowcardinality_nullable_int32___, string)":{"0":null},"any(toTypeName(map_int16_lowcardinality_nullable_int32___))":"Map(Int16, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int16_LowCardinality_Nullable_Int64____String___23968_____1274155976913831714__ = r"""
 {"argMax(map_int16_lowcardinality_nullable_int64___, string)":{"23968":"-1274155976913831714"},"any(toTypeName(map_int16_lowcardinality_nullable_int64___))":"Map(Int16, LowCardinality(Nullable(Int64)))","any(toTypeName(string))":"String"}
 """
@@ -2244,6 +2276,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int16_LowCardinality_Nullab
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int16_LowCardinality_Nullable_String____String___ = r"""
 {"argMax(map_int16_lowcardinality_nullable_string___, string)":{},"any(toTypeName(map_int16_lowcardinality_nullable_string___))":"Map(Int16, LowCardinality(Nullable(String)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int16_LowCardinality_Nullable_String____String___0___None_ = r"""
+{"argMax(map_int16_lowcardinality_nullable_string___, string)":{"0":null},"any(toTypeName(map_int16_lowcardinality_nullable_string___))":"Map(Int16, LowCardinality(Nullable(String)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int16_LowCardinality_Nullable_UInt128____String____13877____267811268709485209155846440573514582015__ = r"""
@@ -2522,6 +2558,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullab
 {"argMax(map_int32_lowcardinality_nullable_datetime___, string)":{},"any(toTypeName(map_int32_lowcardinality_nullable_datetime___))":"Map(Int32, LowCardinality(Nullable(DateTime)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_DateTime____String___0___None_ = r"""
+{"argMax(map_int32_lowcardinality_nullable_datetime___, string)":{"0":null},"any(toTypeName(map_int32_lowcardinality_nullable_datetime___))":"Map(Int32, LowCardinality(Nullable(DateTime)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_Date____String____1479272851____2015_02_25__ = r"""
 {"argMax(map_int32_lowcardinality_nullable_date___, string)":{"-1479272851":"2015-02-25"},"any(toTypeName(map_int32_lowcardinality_nullable_date___))":"Map(Int32, LowCardinality(Nullable(Date)))","any(toTypeName(string))":"String"}
 """
@@ -2544,6 +2584,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullab
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_Int16____String___ = r"""
 {"argMax(map_int32_lowcardinality_nullable_int16___, string)":{},"any(toTypeName(map_int32_lowcardinality_nullable_int16___))":"Map(Int32, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_Int16____String___0___None_ = r"""
+{"argMax(map_int32_lowcardinality_nullable_int16___, string)":{"0":null},"any(toTypeName(map_int32_lowcardinality_nullable_int16___))":"Map(Int32, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_Int32____String____1263806410___668831728_ = r"""
@@ -2580,6 +2624,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullab
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_UInt8____String___ = r"""
 {"argMax(map_int32_lowcardinality_nullable_uint8___, string)":{},"any(toTypeName(map_int32_lowcardinality_nullable_uint8___))":"Map(Int32, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_UInt8____String___0___None_ = r"""
+{"argMax(map_int32_lowcardinality_nullable_uint8___, string)":{"0":null},"any(toTypeName(map_int32_lowcardinality_nullable_uint8___))":"Map(Int32, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int32_LowCardinality_Nullable_UUID____String___1883643641____eaf9fc3c_05a0_2286_66a9_434941cfcc2f__ = r"""
@@ -2858,6 +2906,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int64_LowCardinality_Nullab
 {"argMax(map_int64_lowcardinality_nullable_int128___, string)":{},"any(toTypeName(map_int64_lowcardinality_nullable_int128___))":"Map(Int64, LowCardinality(Nullable(Int128)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int64_LowCardinality_Nullable_Int128____String___0___None_ = r"""
+{"argMax(map_int64_lowcardinality_nullable_int128___, string)":{"0":null},"any(toTypeName(map_int64_lowcardinality_nullable_int128___))":"Map(Int64, LowCardinality(Nullable(Int128)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int64_LowCardinality_Nullable_Int16____String___6743447517946761763___7057_ = r"""
 {"argMax(map_int64_lowcardinality_nullable_int16___, string)":{"6743447517946761763":7057},"any(toTypeName(map_int64_lowcardinality_nullable_int16___))":"Map(Int64, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
 """
@@ -2884,6 +2936,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_Int64_LowCardinality_Nullab
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int64_LowCardinality_Nullable_UInt16____String___ = r"""
 {"argMax(map_int64_lowcardinality_nullable_uint16___, string)":{},"any(toTypeName(map_int64_lowcardinality_nullable_uint16___))":"Map(Int64, LowCardinality(Nullable(UInt16)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_Int64_LowCardinality_Nullable_UInt16____String___0___None_ = r"""
+{"argMax(map_int64_lowcardinality_nullable_uint16___, string)":{"0":null},"any(toTypeName(map_int64_lowcardinality_nullable_uint16___))":"Map(Int64, LowCardinality(Nullable(UInt16)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_Int64_LowCardinality_Nullable_UInt32____String____7069656408127594330___1490013078_ = r"""
@@ -3466,6 +3522,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_FixedString_
 {"argMax(map_lowcardinality_fixedstring_51___lowcardinality_nullable_bool___, string)":{},"any(toTypeName(map_lowcardinality_fixedstring_51___lowcardinality_nullable_bool___))":"Map(LowCardinality(FixedString(51)), LowCardinality(Nullable(Bool)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Bool____String____x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00___None_ = r"""
+{"argMax(map_lowcardinality_fixedstring_51___lowcardinality_nullable_bool___, string)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null},"any(toTypeName(map_lowcardinality_fixedstring_51___lowcardinality_nullable_bool___))":"Map(LowCardinality(FixedString(51)), LowCardinality(Nullable(Bool)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_DateTime____String___ggggggggggggggggggggggggggggggggggggg_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00____2011_09_26_18_01_06__ = r"""
 {"argMax(map_lowcardinality_fixedstring_51___lowcardinality_nullable_datetime___, string)":{"ggggggggggggggggggggggggggggggggggggg\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2011-09-26 18:01:06"},"any(toTypeName(map_lowcardinality_fixedstring_51___lowcardinality_nullable_datetime___))":"Map(LowCardinality(FixedString(51)), LowCardinality(Nullable(DateTime)))","any(toTypeName(string))":"String"}
 """
@@ -3500,6 +3560,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_FixedString_
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int64____String___ = r"""
 {"argMax(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int64___, string)":{},"any(toTypeName(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int64___))":"Map(LowCardinality(FixedString(51)), LowCardinality(Nullable(Int64)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int64____String____x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00___None_ = r"""
+{"argMax(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int64___, string)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null},"any(toTypeName(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int64___))":"Map(LowCardinality(FixedString(51)), LowCardinality(Nullable(Int64)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int8____String___ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00____71_ = r"""
@@ -3782,8 +3846,16 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowC
 {"argMax(map_lowcardinality_string__lowcardinality_nullable_bool___, string)":{},"any(toTypeName(map_lowcardinality_string__lowcardinality_nullable_bool___))":"Map(LowCardinality(String), LowCardinality(Nullable(Bool)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowCardinality_Nullable_Bool____String______None_ = r"""
+{"argMax(map_lowcardinality_string__lowcardinality_nullable_bool___, string)":{"":null},"any(toTypeName(map_lowcardinality_string__lowcardinality_nullable_bool___))":"Map(LowCardinality(String), LowCardinality(Nullable(Bool)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowCardinality_Nullable_DateTime____String___ = r"""
 {"argMax(map_lowcardinality_string__lowcardinality_nullable_datetime___, string)":{},"any(toTypeName(map_lowcardinality_string__lowcardinality_nullable_datetime___))":"Map(LowCardinality(String), LowCardinality(Nullable(DateTime)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowCardinality_Nullable_DateTime____String______None_ = r"""
+{"argMax(map_lowcardinality_string__lowcardinality_nullable_datetime___, string)":{"":null},"any(toTypeName(map_lowcardinality_string__lowcardinality_nullable_datetime___))":"Map(LowCardinality(String), LowCardinality(Nullable(DateTime)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowCardinality_Nullable_Date____String___XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX____2004_07_20__ = r"""
@@ -3804,6 +3876,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowC
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowCardinality_Nullable_Int128____String___ = r"""
 {"argMax(map_lowcardinality_string__lowcardinality_nullable_int128___, string)":{},"any(toTypeName(map_lowcardinality_string__lowcardinality_nullable_int128___))":"Map(LowCardinality(String), LowCardinality(Nullable(Int128)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowCardinality_Nullable_Int128____String______None_ = r"""
+{"argMax(map_lowcardinality_string__lowcardinality_nullable_int128___, string)":{"":null},"any(toTypeName(map_lowcardinality_string__lowcardinality_nullable_int128___))":"Map(LowCardinality(String), LowCardinality(Nullable(Int128)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_LowCardinality_String__LowCardinality_Nullable_Int16____String___ooooooooooooooooooooooooooooooooooo___30744_ = r"""
@@ -4102,8 +4178,16 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nulla
 {"argMax(map_string_lowcardinality_nullable_datetime___, string)":{},"any(toTypeName(map_string_lowcardinality_nullable_datetime___))":"Map(String, LowCardinality(Nullable(DateTime)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_DateTime____String______None_ = r"""
+{"argMax(map_string_lowcardinality_nullable_datetime___, string)":{"":null},"any(toTypeName(map_string_lowcardinality_nullable_datetime___))":"Map(String, LowCardinality(Nullable(DateTime)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_Date____String___ = r"""
 {"argMax(map_string_lowcardinality_nullable_date___, string)":{},"any(toTypeName(map_string_lowcardinality_nullable_date___))":"Map(String, LowCardinality(Nullable(Date)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_Date____String______None_ = r"""
+{"argMax(map_string_lowcardinality_nullable_date___, string)":{"":null},"any(toTypeName(map_string_lowcardinality_nullable_date___))":"Map(String, LowCardinality(Nullable(Date)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_FixedString_51_____String___AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA____qqqqqqqqqqqqqqqqqqqqq_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00__ = r"""
@@ -4118,6 +4202,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nulla
 {"argMax(map_string_lowcardinality_nullable_float64___, string)":{},"any(toTypeName(map_string_lowcardinality_nullable_float64___))":"Map(String, LowCardinality(Nullable(Float64)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_Float64____String______None_ = r"""
+{"argMax(map_string_lowcardinality_nullable_float64___, string)":{"":null},"any(toTypeName(map_string_lowcardinality_nullable_float64___))":"Map(String, LowCardinality(Nullable(Float64)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_Int128____String_______170141183460469231722463931679029329921__ = r"""
 {"argMax(map_string_lowcardinality_nullable_int128___, string)":{"":"170141183460469231722463931679029329921"},"any(toTypeName(map_string_lowcardinality_nullable_int128___))":"Map(String, LowCardinality(Nullable(Int128)))","any(toTypeName(string))":"String"}
 """
@@ -4128,6 +4216,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nulla
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_Int32____String___ = r"""
 {"argMax(map_string_lowcardinality_nullable_int32___, string)":{},"any(toTypeName(map_string_lowcardinality_nullable_int32___))":"Map(String, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_Int32____String______None_ = r"""
+{"argMax(map_string_lowcardinality_nullable_int32___, string)":{"":null},"any(toTypeName(map_string_lowcardinality_nullable_int32___))":"Map(String, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_Int64____String___fff_____5074999322449135645__ = r"""
@@ -4160,6 +4252,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nulla
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_UInt8____String___ = r"""
 {"argMax(map_string_lowcardinality_nullable_uint8___, string)":{},"any(toTypeName(map_string_lowcardinality_nullable_uint8___))":"Map(String, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_UInt8____String______None_ = r"""
+{"argMax(map_string_lowcardinality_nullable_uint8___, string)":{"":null},"any(toTypeName(map_string_lowcardinality_nullable_uint8___))":"Map(String, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_String_LowCardinality_Nullable_UUID____String___cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc____bcb7167b_b497_fb68_d94f_45cd25c3633b__ = r"""
@@ -4448,6 +4544,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt128_LowCardinality_Null
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt128_LowCardinality_Nullable_Int64____String___ = r"""
 {"argMax(map_uint128_lowcardinality_nullable_int64___, string)":{},"any(toTypeName(map_uint128_lowcardinality_nullable_int64___))":"Map(UInt128, LowCardinality(Nullable(Int64)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt128_LowCardinality_Nullable_Int64____String___0___None_ = r"""
+{"argMax(map_uint128_lowcardinality_nullable_int64___, string)":{"0":null},"any(toTypeName(map_uint128_lowcardinality_nullable_int64___))":"Map(UInt128, LowCardinality(Nullable(Int64)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt128_LowCardinality_Nullable_Int8____String___0____128_ = r"""
@@ -4758,6 +4858,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt16_LowCardinality_Nulla
 {"argMax(map_uint16_lowcardinality_nullable_int16___, string)":{},"any(toTypeName(map_uint16_lowcardinality_nullable_int16___))":"Map(UInt16, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int16____String___0___None_ = r"""
+{"argMax(map_uint16_lowcardinality_nullable_int16___, string)":{"0":null},"any(toTypeName(map_uint16_lowcardinality_nullable_int16___))":"Map(UInt16, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int32____String___10296____891631863_ = r"""
 {"argMax(map_uint16_lowcardinality_nullable_int32___, string)":{"10296":-891631863},"any(toTypeName(map_uint16_lowcardinality_nullable_int32___))":"Map(UInt16, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
 """
@@ -4768,6 +4872,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt16_LowCardinality_Nulla
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int8____String___ = r"""
 {"argMax(map_uint16_lowcardinality_nullable_int8___, string)":{},"any(toTypeName(map_uint16_lowcardinality_nullable_int8___))":"Map(UInt16, LowCardinality(Nullable(Int8)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int8____String___0___None_ = r"""
+{"argMax(map_uint16_lowcardinality_nullable_int8___, string)":{"0":null},"any(toTypeName(map_uint16_lowcardinality_nullable_int8___))":"Map(UInt16, LowCardinality(Nullable(Int8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_String____String___65535____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ__ = r"""
@@ -5076,6 +5184,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt32_LowCardinality_Nulla
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt32_LowCardinality_Nullable_Int32____String___ = r"""
 {"argMax(map_uint32_lowcardinality_nullable_int32___, string)":{},"any(toTypeName(map_uint32_lowcardinality_nullable_int32___))":"Map(UInt32, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt32_LowCardinality_Nullable_Int32____String___0___None_ = r"""
+{"argMax(map_uint32_lowcardinality_nullable_int32___, string)":{"0":null},"any(toTypeName(map_uint32_lowcardinality_nullable_int32___))":"Map(UInt32, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt32_LowCardinality_Nullable_Int64____String___1551244137_____8974081434635507209__ = r"""
@@ -5390,6 +5502,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt64_LowCardinality_Nulla
 {"argMax(map_uint64_lowcardinality_nullable_int16___, string)":{},"any(toTypeName(map_uint64_lowcardinality_nullable_int16___))":"Map(UInt64, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt64_LowCardinality_Nullable_Int16____String___0___None_ = r"""
+{"argMax(map_uint64_lowcardinality_nullable_int16___, string)":{"0":null},"any(toTypeName(map_uint64_lowcardinality_nullable_int16___))":"Map(UInt64, LowCardinality(Nullable(Int16)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt64_LowCardinality_Nullable_Int32____String___92795593271599480___178890318_ = r"""
 {"argMax(map_uint64_lowcardinality_nullable_int32___, string)":{"92795593271599480":178890318},"any(toTypeName(map_uint64_lowcardinality_nullable_int32___))":"Map(UInt64, LowCardinality(Nullable(Int32)))","any(toTypeName(string))":"String"}
 """
@@ -5424,6 +5540,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt64_LowCardinality_Nulla
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt64_LowCardinality_Nullable_UInt8____String___ = r"""
 {"argMax(map_uint64_lowcardinality_nullable_uint8___, string)":{},"any(toTypeName(map_uint64_lowcardinality_nullable_uint8___))":"Map(UInt64, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt64_LowCardinality_Nullable_UInt8____String___0___None_ = r"""
+{"argMax(map_uint64_lowcardinality_nullable_uint8___, string)":{"0":null},"any(toTypeName(map_uint64_lowcardinality_nullable_uint8___))":"Map(UInt64, LowCardinality(Nullable(UInt8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt64_LowCardinality_Nullable_UUID____String___15383848863112559749____800c30e5_98cc_2640_f38e_fd8523f6734e__ = r"""
@@ -5686,6 +5806,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt8_LowCardinality_Nullab
 {"argMax(map_uint8_lowcardinality_nullable_date___, string)":{},"any(toTypeName(map_uint8_lowcardinality_nullable_date___))":"Map(UInt8, LowCardinality(Nullable(Date)))","any(toTypeName(string))":"String"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Date____String___0___None_ = r"""
+{"argMax(map_uint8_lowcardinality_nullable_date___, string)":{"0":null},"any(toTypeName(map_uint8_lowcardinality_nullable_date___))":"Map(UInt8, LowCardinality(Nullable(Date)))","any(toTypeName(string))":"String"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_FixedString_51_____String___221____jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj_x00_x00_x00_x00_x00_x00_x00_x00_x00_x00__ = r"""
 {"argMax(map_uint8_lowcardinality_nullable_fixedstring_51____, string)":{"221":"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"},"any(toTypeName(map_uint8_lowcardinality_nullable_fixedstring_51____))":"Map(UInt8, LowCardinality(Nullable(FixedString(51))))","any(toTypeName(string))":"String"}
 """
@@ -5716,6 +5840,10 @@ _aggregate_functions_extra_data_argMax_datatypes_Map_UInt8_LowCardinality_Nullab
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int8____String___ = r"""
 {"argMax(map_uint8_lowcardinality_nullable_int8___, string)":{},"any(toTypeName(map_uint8_lowcardinality_nullable_int8___))":"Map(UInt8, LowCardinality(Nullable(Int8)))","any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int8____String___0___None_ = r"""
+{"argMax(map_uint8_lowcardinality_nullable_int8___, string)":{"0":null},"any(toTypeName(map_uint8_lowcardinality_nullable_int8___))":"Map(UInt8, LowCardinality(Nullable(Int8)))","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_String____String___109____uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu__ = r"""
@@ -8174,6 +8302,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinalit
 {"argMax(string, map_int128_lowcardinality_nullable_date___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_date___))":"Map(Int128, LowCardinality(Nullable(Date)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Date____iiiii = r"""
+{"argMax(string, map_int128_lowcardinality_nullable_date___)":"iiiii","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_date___))":"Map(Int128, LowCardinality(Nullable(Date)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_FixedString_51_____ = r"""
 {"argMax(string, map_int128_lowcardinality_nullable_fixedstring_51____)":"","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_fixedstring_51____))":"Map(Int128, LowCardinality(Nullable(FixedString(51))))"}
 """
@@ -8182,8 +8314,16 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinalit
 {"argMax(string, map_int128_lowcardinality_nullable_float32___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_float32___))":"Map(Int128, LowCardinality(Nullable(Float32)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Float32____cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
+{"argMax(string, map_int128_lowcardinality_nullable_float32___)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_float32___))":"Map(Int128, LowCardinality(Nullable(Float32)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Float64____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
 {"argMax(string, map_int128_lowcardinality_nullable_float64___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_float64___))":"Map(Int128, LowCardinality(Nullable(Float64)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Float64____rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
+{"argMax(string, map_int128_lowcardinality_nullable_float64___)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_float64___))":"Map(Int128, LowCardinality(Nullable(Float64)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Int128____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -8192,6 +8332,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinalit
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Int16____ = r"""
 {"argMax(string, map_int128_lowcardinality_nullable_int16___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_int16___))":"Map(Int128, LowCardinality(Nullable(Int16)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Int32____ = r"""
+{"argMax(string, map_int128_lowcardinality_nullable_int32___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_int32___))":"Map(Int128, LowCardinality(Nullable(Int32)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Int32____cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
@@ -8204,6 +8348,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinalit
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Int8____MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM = r"""
 {"argMax(string, map_int128_lowcardinality_nullable_int8___)":"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_int8___))":"Map(Int128, LowCardinality(Nullable(Int8)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_Int8____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
+{"argMax(string, map_int128_lowcardinality_nullable_int8___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_int8___))":"Map(Int128, LowCardinality(Nullable(Int8)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_String____MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM = r"""
@@ -8224,6 +8372,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinalit
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_UInt64____ = r"""
 {"argMax(string, map_int128_lowcardinality_nullable_uint64___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_uint64___))":"Map(Int128, LowCardinality(Nullable(UInt64)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_UInt8____MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM = r"""
+{"argMax(string, map_int128_lowcardinality_nullable_uint8___)":"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM","any(toTypeName(string))":"String","any(toTypeName(map_int128_lowcardinality_nullable_uint8___))":"Map(Int128, LowCardinality(Nullable(UInt8)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int128_LowCardinality_Nullable_UInt8____gggggggggggggggggggggggggggggggggggg = r"""
@@ -8486,6 +8638,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality
 {"argMax(string, map_int16_lowcardinality_nullable_datetime___)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_datetime___))":"Map(Int16, LowCardinality(Nullable(DateTime)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Date____ = r"""
+{"argMax(string, map_int16_lowcardinality_nullable_date___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_date___))":"Map(Int16, LowCardinality(Nullable(Date)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Date____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
 {"argMax(string, map_int16_lowcardinality_nullable_date___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_date___))":"Map(Int16, LowCardinality(Nullable(Date)))"}
 """
@@ -8494,8 +8650,16 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality
 {"argMax(string, map_int16_lowcardinality_nullable_fixedstring_51____)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_fixedstring_51____))":"Map(Int16, LowCardinality(Nullable(FixedString(51))))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_FixedString_51_____gggggggggggggggggggggggggggggggggggg = r"""
+{"argMax(string, map_int16_lowcardinality_nullable_fixedstring_51____)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_fixedstring_51____))":"Map(Int16, LowCardinality(Nullable(FixedString(51))))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Float32____ = r"""
 {"argMax(string, map_int16_lowcardinality_nullable_float32___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_float32___))":"Map(Int16, LowCardinality(Nullable(Float32)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Float64____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
+{"argMax(string, map_int16_lowcardinality_nullable_float64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_float64___))":"Map(Int16, LowCardinality(Nullable(Float64)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Float64____iiiii = r"""
@@ -8504,6 +8668,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Int128____cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
 {"argMax(string, map_int16_lowcardinality_nullable_int128___)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_int128___))":"Map(Int16, LowCardinality(Nullable(Int128)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Int16____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
+{"argMax(string, map_int16_lowcardinality_nullable_int16___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_int16___))":"Map(Int16, LowCardinality(Nullable(Int16)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Int16____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
@@ -8516,6 +8684,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Int64____ = r"""
 {"argMax(string, map_int16_lowcardinality_nullable_int64___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_int64___))":"Map(Int16, LowCardinality(Nullable(Int64)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Int8____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
+{"argMax(string, map_int16_lowcardinality_nullable_int8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_int8___))":"Map(Int16, LowCardinality(Nullable(Int8)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_Int8____iiiii = r"""
@@ -8542,12 +8714,20 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality
 {"argMax(string, map_int16_lowcardinality_nullable_uint64___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_uint64___))":"Map(Int16, LowCardinality(Nullable(UInt64)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_UInt64____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
+{"argMax(string, map_int16_lowcardinality_nullable_uint64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_uint64___))":"Map(Int16, LowCardinality(Nullable(UInt64)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_UInt8____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
 {"argMax(string, map_int16_lowcardinality_nullable_uint8___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_uint8___))":"Map(Int16, LowCardinality(Nullable(UInt8)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_UUID____gggggggggggggggggggggggggggggggggggg = r"""
 {"argMax(string, map_int16_lowcardinality_nullable_uuid___)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_uuid___))":"Map(Int16, LowCardinality(Nullable(UUID)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_Nullable_UUID____rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
+{"argMax(string, map_int16_lowcardinality_nullable_uuid___)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(map_int16_lowcardinality_nullable_uuid___))":"Map(Int16, LowCardinality(Nullable(UUID)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int16_LowCardinality_String___PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
@@ -8806,6 +8986,14 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality
 {"argMax(string, map_int32_lowcardinality_nullable_date___)":"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_date___))":"Map(Int32, LowCardinality(Nullable(Date)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_Date____iiiii = r"""
+{"argMax(string, map_int32_lowcardinality_nullable_date___)":"iiiii","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_date___))":"Map(Int32, LowCardinality(Nullable(Date)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_FixedString_51_____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
+{"argMax(string, map_int32_lowcardinality_nullable_fixedstring_51____)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_fixedstring_51____))":"Map(Int32, LowCardinality(Nullable(FixedString(51))))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_FixedString_51_____gggggggggggggggggggggggggggggggggggg = r"""
 {"argMax(string, map_int32_lowcardinality_nullable_fixedstring_51____)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_fixedstring_51____))":"Map(Int32, LowCardinality(Nullable(FixedString(51))))"}
 """
@@ -8818,6 +9006,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality
 {"argMax(string, map_int32_lowcardinality_nullable_float64___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_float64___))":"Map(Int32, LowCardinality(Nullable(Float64)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_Float64____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
+{"argMax(string, map_int32_lowcardinality_nullable_float64___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_float64___))":"Map(Int32, LowCardinality(Nullable(Float64)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_Int128____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
 {"argMax(string, map_int32_lowcardinality_nullable_int128___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_int128___))":"Map(Int32, LowCardinality(Nullable(Int128)))"}
 """
@@ -8828,6 +9020,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_Int32____ = r"""
 {"argMax(string, map_int32_lowcardinality_nullable_int32___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_int32___))":"Map(Int32, LowCardinality(Nullable(Int32)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_Int32____cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
+{"argMax(string, map_int32_lowcardinality_nullable_int32___)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_int32___))":"Map(Int32, LowCardinality(Nullable(Int32)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_Int64____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
@@ -8854,8 +9050,16 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality
 {"argMax(string, map_int32_lowcardinality_nullable_uint32___)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_uint32___))":"Map(Int32, LowCardinality(Nullable(UInt32)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_UInt64____MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM = r"""
+{"argMax(string, map_int32_lowcardinality_nullable_uint64___)":"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_uint64___))":"Map(Int32, LowCardinality(Nullable(UInt64)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_UInt64____iiiii = r"""
 {"argMax(string, map_int32_lowcardinality_nullable_uint64___)":"iiiii","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_uint64___))":"Map(Int32, LowCardinality(Nullable(UInt64)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_UInt8____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
+{"argMax(string, map_int32_lowcardinality_nullable_uint8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int32_lowcardinality_nullable_uint8___))":"Map(Int32, LowCardinality(Nullable(UInt8)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int32_LowCardinality_Nullable_UInt8____gggggggggggggggggggggggggggggggggggg = r"""
@@ -9118,8 +9322,16 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality
 {"argMax(string, map_int64_lowcardinality_nullable_datetime___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_datetime___))":"Map(Int64, LowCardinality(Nullable(DateTime)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_DateTime____gggggggggggggggggggggggggggggggggggg = r"""
+{"argMax(string, map_int64_lowcardinality_nullable_datetime___)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_datetime___))":"Map(Int64, LowCardinality(Nullable(DateTime)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Date____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
 {"argMax(string, map_int64_lowcardinality_nullable_date___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_date___))":"Map(Int64, LowCardinality(Nullable(Date)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_FixedString_51_____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
+{"argMax(string, map_int64_lowcardinality_nullable_fixedstring_51____)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_fixedstring_51____))":"Map(Int64, LowCardinality(Nullable(FixedString(51))))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_FixedString_51_____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -9130,8 +9342,16 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality
 {"argMax(string, map_int64_lowcardinality_nullable_float32___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_float32___))":"Map(Int64, LowCardinality(Nullable(Float32)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Float64____ = r"""
+{"argMax(string, map_int64_lowcardinality_nullable_float64___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_float64___))":"Map(Int64, LowCardinality(Nullable(Float64)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Float64____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
 {"argMax(string, map_int64_lowcardinality_nullable_float64___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_float64___))":"Map(Int64, LowCardinality(Nullable(Float64)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Int128____cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
+{"argMax(string, map_int64_lowcardinality_nullable_int128___)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_int128___))":"Map(Int64, LowCardinality(Nullable(Int128)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Int128____iiiii = r"""
@@ -9142,8 +9362,16 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality
 {"argMax(string, map_int64_lowcardinality_nullable_int16___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_int16___))":"Map(Int64, LowCardinality(Nullable(Int16)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Int32____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
+{"argMax(string, map_int64_lowcardinality_nullable_int32___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_int32___))":"Map(Int64, LowCardinality(Nullable(Int32)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Int32____cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc = r"""
 {"argMax(string, map_int64_lowcardinality_nullable_int32___)":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_int32___))":"Map(Int64, LowCardinality(Nullable(Int32)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Int64____gggggggggggggggggggggggggggggggggggg = r"""
+{"argMax(string, map_int64_lowcardinality_nullable_int64___)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_int64___))":"Map(Int64, LowCardinality(Nullable(Int64)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_Int64____rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
@@ -9156,6 +9384,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_String____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
 {"argMax(string, map_int64_lowcardinality_nullable_string___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_string___))":"Map(Int64, LowCardinality(Nullable(String)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_UInt128____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
+{"argMax(string, map_int64_lowcardinality_nullable_uint128___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int64_lowcardinality_nullable_uint128___))":"Map(Int64, LowCardinality(Nullable(UInt128)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int64_LowCardinality_Nullable_UInt128____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
@@ -9426,6 +9658,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_
 {"argMax(string, map_int8_lowcardinality_int8__)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_int8__))":"Map(Int8, LowCardinality(Int8))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Bool____gggggggggggggggggggggggggggggggggggg = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_bool___)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_bool___))":"Map(Int8, LowCardinality(Nullable(Bool)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Bool____iiiii = r"""
 {"argMax(string, map_int8_lowcardinality_nullable_bool___)":"iiiii","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_bool___))":"Map(Int8, LowCardinality(Nullable(Bool)))"}
 """
@@ -9446,8 +9682,16 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_
 {"argMax(string, map_int8_lowcardinality_nullable_float32___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_float32___))":"Map(Int8, LowCardinality(Nullable(Float32)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Float32____rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_float32___)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_float32___))":"Map(Int8, LowCardinality(Nullable(Float32)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Float64____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
 {"argMax(string, map_int8_lowcardinality_nullable_float64___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_float64___))":"Map(Int8, LowCardinality(Nullable(Float64)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Float64____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_float64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_float64___))":"Map(Int8, LowCardinality(Nullable(Float64)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Int128____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
@@ -9462,6 +9706,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_
 {"argMax(string, map_int8_lowcardinality_nullable_int32___)":"gggggggggggggggggggggggggggggggggggg","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_int32___))":"Map(Int8, LowCardinality(Nullable(Int32)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Int32____rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_int32___)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_int32___))":"Map(Int8, LowCardinality(Nullable(Int32)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Int64____ = r"""
 {"argMax(string, map_int8_lowcardinality_nullable_int64___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_int64___))":"Map(Int8, LowCardinality(Nullable(Int64)))"}
 """
@@ -9470,12 +9718,24 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_
 {"argMax(string, map_int8_lowcardinality_nullable_int8___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_int8___))":"Map(Int8, LowCardinality(Nullable(Int8)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_Int8____PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_int8___)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_int8___))":"Map(Int8, LowCardinality(Nullable(Int8)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_String____ = r"""
 {"argMax(string, map_int8_lowcardinality_nullable_string___)":"","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_string___))":"Map(Int8, LowCardinality(Nullable(String)))"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_String____rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_string___)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_string___))":"Map(Int8, LowCardinality(Nullable(String)))"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_UInt128____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
 {"argMax(string, map_int8_lowcardinality_nullable_uint128___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_uint128___))":"Map(Int8, LowCardinality(Nullable(UInt128)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_UInt16____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_uint16___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_uint16___))":"Map(Int8, LowCardinality(Nullable(UInt16)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_UInt16____iiiii = r"""
@@ -9496,6 +9756,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_UUID____NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN = r"""
 {"argMax(string, map_int8_lowcardinality_nullable_uuid___)":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_uuid___))":"Map(Int8, LowCardinality(Nullable(UUID)))"}
+"""
+
+_aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_Nullable_UUID____rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
+{"argMax(string, map_int8_lowcardinality_nullable_uuid___)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(map_int8_lowcardinality_nullable_uuid___))":"Map(Int8, LowCardinality(Nullable(UUID)))"}
 """
 
 _aggregate_functions_extra_data_argMax_datatypes_String_Map_Int8_LowCardinality_String___rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
