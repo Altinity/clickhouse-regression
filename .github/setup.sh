@@ -23,6 +23,15 @@ echo PATH=$PATH >>$GITHUB_ENV
 
 ./retry.sh 60 2 "pip install -r requirements.txt"
 
+echo "Set up zram..."
+sudo apt-get install -y linux-modules-extra-$(uname -r)
+sudo modprobe zram
+MemTotal=$(grep -Po "(?<=MemTotal:)\s+\d+" /proc/meminfo) # KiB
+Percent=200
+ZRAM_SIZE=$(($MemTotal / 1024 / 1024 * $Percent / 100)) # Convert to GiB
+./retry.sh 30 2 sudo zramctl --size ${ZRAM_SIZE}GiB --algorithm zstd /dev/zram0
+sudo mkswap /dev/zram0 && sudo swapon -p 100 /dev/zram0
+
 echo "Install docker-compose..."
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -62,6 +71,8 @@ elif [[ $artifacts == 'builds' ]]; then
     artifact_s3_dir="$pr_number/$build_sha/regression"
   elif [[ $event_name == "release" || $event_name == "push" ]]; then
     artifact_s3_dir="0/$build_sha/regression"
+  elif [[ $event_name == "workflow_dispatch" ]]; then
+    artifact_s3_dir="maintenance/$GITHUB_REF_NAME/$GITHUB_RUN_ID/regression"
   fi
 
 fi

@@ -16,9 +16,18 @@ xfails = {
     ":/queries/:": [
         (
             Fail,
-            "MEMORY_LIMIT_EXCEEDED on runners 22.3",
-            check_clickhouse_version("<22.8"),
+            "MEMORY_LIMIT_EXCEEDED on runners 22.X",
+            check_clickhouse_version("<23"),
             ".*MEMORY_LIMIT_EXCEEDED.*",
+        )
+    ],
+    "minio/queries/:": [
+        (
+            Fail,
+            "strange and rare error on 23.8",
+            lambda test: check_clickhouse_version(">23.8")(test)
+            and check_clickhouse_version("<24")(test),
+            ".*Cannot assign requested address.*",
         )
     ],
 }
@@ -76,6 +85,7 @@ def regression(
     bucket_path = "data/benchmark"
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.stress = stress
 
     if storages is None:
         storages = ["minio"]

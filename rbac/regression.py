@@ -318,19 +318,10 @@ ffails = {
         issue_65134,
         check_clickhouse_version(">=24.3") and check_clickhouse_version("<24.5"),
     ),
-    "/rbac/privileges/multiple authentication methods/multiple users/create multiple users with multiple auth methods": (
-        Skip,
-        "multiple authentication methods were introduced in 24.8",
-        check_clickhouse_version("<24.8"),
-    ),
-    "/rbac/privileges/multiple authentication methods/many auth methods": (
-        Skip,
-        "multiple authentication methods were introduced in 24.8",
-        check_clickhouse_version("<24.10"),
-    ),
     "/rbac/privileges/multiple authentication methods": (
         Skip,
-        "Under development",
+        "multiple authentication methods were introduced in 24.9",
+        check_clickhouse_version("<24.9"),
     ),
 }
 
@@ -358,6 +349,9 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
+    note(self.context.stress)
+    note(stress)
+
     with Given("docker-compose cluster"):
         cluster = create_cluster(
             **cluster_args,
@@ -378,6 +372,9 @@ def regression(
     Feature(run=load("rbac.tests.privileges.feature", "feature"))
     Feature(run=load("rbac.tests.views.feature", "feature"))
     Feature(run=load("rbac.tests.sql_security.feature", "feature"))
+    Feature(
+        run=load("rbac.tests.multiple_auth_methods.feature", "feature"),
+    )
 
 
 if main():

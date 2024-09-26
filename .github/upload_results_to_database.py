@@ -27,10 +27,10 @@ test_results: message_rtime_ms
 """
 
 
-ARTIFACT_BUCKET = "altinity-test-reports"
 DATABASE_HOST_VAR = "CHECKS_DATABASE_HOST"
 DATABASE_USER_VAR = "CHECKS_DATABASE_USER"
 DATABASE_PASSWORD_VAR = "CHECKS_DATABASE_PASSWORD"
+REPORT_URL_VAR = "SUITE_REPORT_INDEX_URL"
 
 table_schema_attr_map = {
     "pr_info": {},  # {"pr_number": "pull_request_number"},
@@ -248,25 +248,14 @@ class ResultUploader:
             "EXCEPTION",  # is always step type
             "STOP",
         ]:
-            print(data)
+            pprint(data)
             raise ValueError(f"Unknown message keyword: {message_keyword}")
 
     def report_url(self) -> str:
         """
-        Construct the URL to the test report in the S3 bucket.
         This is a fallback if test_attributes report.url does not exist.
         """
-        storage = (
-            "/" + json.loads(self.test_attributes["storages"].replace("'", '"'))[0]
-            if self.test_attributes.get("storages")
-            else ""
-        )
-
-        return (
-            f"https://{ARTIFACT_BUCKET}.s3.amazonaws.com/index.html#"
-            f"clickhouse/{self.test_attributes['clickhouse_version']}/{self.test_attributes['job.id']}/testflows/"
-            f"{self.test_attributes['arch']}/{self.suite}{storage}/"
-        )
+        return os.getenv(REPORT_URL_VAR)
 
     def read_raw_log(self, log_lines=None):
         """
@@ -278,8 +267,12 @@ class ResultUploader:
         # The test log could be truncated, so we can't rely on the message_rtime
         # of the most recent result message for the total duration
         self.duration_ms = (self.last_message_time - self.run_start_time) * 1000
-        # If the log is truncated, this is the status of the last test
-        self.status = self.test_results[-1]["result_type"]
+
+        if self.test_results:
+            # If the log is truncated, this is the status of the last test
+            self.status = self.test_results[-1]["result_type"]
+        else:
+            self.status = "Unknown"
 
     def read_pr_info(self):
 
@@ -337,7 +330,10 @@ class ResultUploader:
             common_attributes[key] = self.test_attributes.get(value, None)
 
         if common_attributes["report_url"] is None:
-            common_attributes["report_url"] = self.report_url()
+            url = self.report_url()
+            if url is None:
+                fail("No report URL found in test attributes or in environment")
+            common_attributes["report_url"] = url
 
         for key in table_schema_attr_map["test_results"].keys():
             common_attributes[key] = None
@@ -467,18 +463,21 @@ class ResultUploader:
     def run_local(self, log_path=None):
         with By("reading log"):
             self.read_log(log_path=log_path)
+            if not self.test_results:
+                print("No results to upload")
+                return
 
         with And("fetching PR info"):
             self.read_pr_info()
 
         if self.debug:
-            with And("writing native csv"):
-                self.write_native_csv()
-
             with And("printing debug info"):
                 pprint(self.pr_info, indent=2)
                 pprint(self.test_attributes, indent=2)
                 pprint(self.test_results[-1], indent=2)
+
+            with And("writing native csv"):
+                self.write_native_csv()
 
         with And("writing table csv"):
             self.write_csv()
@@ -497,6 +496,9 @@ class ResultUploader:
     ):
         with By("reading log"):
             self.read_log(log_path=log_path)
+            if not self.test_results:
+                print("No results to upload")
+                return
 
         with And("fetching PR info"):
             self.read_pr_info()

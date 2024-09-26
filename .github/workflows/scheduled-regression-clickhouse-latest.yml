@@ -2,9 +2,9 @@ name: Scheduled ClickHouse latest
 run-name: Scheduled ClickHouse latest
 on:
   workflow_dispatch:
-  #Run at 12:00 AM (UTC), Monday through Thursday
+  #Run At 00:00 (UTC) on Sunday, Tuesday, and Thursday
   schedule:
-    - cron: "0 0 * * 1-5"
+    - cron: "0 0 * * 6,2,4"
 
 jobs:
   get_clickhouse_version:
@@ -58,14 +58,15 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-latest-x86-zookeeper:
+  clickhouse-latest-x86-with-analyzer-keeper:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-x86.yml
-    name: "x86-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
+    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      artifact_name: "clickhouse-latest-x86-zookeeper"
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: "clickhouse-latest-x86-with-analyzer-keeper"
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
@@ -75,14 +76,15 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-latest-arm-zookeeper:
+  clickhouse-latest-arm-with-analyzer-keeper:
     needs: get_clickhouse_version
     uses: ./.github/workflows/reusable-workflow-arm.yml
-    name: "arm-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
+    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
     with:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-      artifact_name: "clickhouse-latest-arm-zookeeper"
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: "clickhouse-latest-arm-with-analyzer-keeper"
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}

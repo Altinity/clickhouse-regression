@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <remote_servers>
+        <ShardedAndReplicated>
+            <shard>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+            <shard>
+                <replica>
+                    <host>clickhouse2</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+            <shard>
+                <replica>
+                    <host>clickhouse3</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse4</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </ShardedAndReplicated>
+    </remote_servers>
+</clickhouse>

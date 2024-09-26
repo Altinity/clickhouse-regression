@@ -2,9 +2,9 @@ name: Scheduled ClickHouse head
 run-name: Scheduled ClickHouse head
 on:
   workflow_dispatch:
-  #Run at 12:00 AM (UTC), Monday through Thursday
+  #Run At 00:00 (UTC) on Sunday, Tuesday, and Thursday
   schedule:
-    - cron: "0 0 * * 1-5"
+    - cron: "0 0 * * 6,2,4"
 
 jobs:
   clickhouse-head-x86-with-analyzer-zookeeper:
@@ -37,11 +37,12 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-head-x86-zookeeper:
+  clickhouse-head-x86-with-analyzer-keeper:
     uses: ./.github/workflows/reusable-workflow-x86.yml
     with:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
-      artifact_name: clickhouse-head-x86-zookeeper
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: clickhouse-head-x86-with-analyzer-keeper
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
@@ -51,11 +52,12 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  clickhouse-head-arm-zookeeper:
+  clickhouse-head-arm-with-analyzer-keeper:
     uses: ./.github/workflows/reusable-workflow-arm.yml
     with:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
-      artifact_name: clickhouse-head-arm-zookeeper
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: clickhouse-head-arm-with-analyzer-keeper
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
