@@ -53,6 +53,8 @@ def regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
+    Feature(run=load("data_lakes.tests.check_healthy", "feature"))
+
 
 if main():
     regression()
