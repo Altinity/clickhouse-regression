@@ -668,6 +668,12 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
+          distribution: 'temurin'  # You can also use 'zulu', 'adopt', etc.
+          check-latest: false
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: ${{ secrets.GITHUB_TOKEN }}
+          overwrite-settings: true
 
       - name: Setup
         run: .github/setup.sh
