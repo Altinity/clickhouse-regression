@@ -55,11 +55,15 @@ xfails = {
 xflags = {}
 
 ffails = {
-    "/lightweight delete/lack of disk space/lightweight delete memory consuption/*": (
+    "/lightweight delete/lack of disk space/lightweight delete memory consumption": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/63107",
         check_clickhouse_version(">=24.3"),
-    )
+    ),
+    "/lightweight delete/lack of disk space/lack of disk space tiered storage": (
+        Skip,
+        "freezes server",
+    ),
 }
 
 
