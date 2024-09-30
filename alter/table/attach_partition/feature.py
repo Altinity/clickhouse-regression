@@ -10,7 +10,17 @@ from alter.table.attach_partition.requirements.requirements import (
 @Name("attach partition")
 def feature(self):
     """Run features from the attach partition suite."""
-    with Pool(2) as pool:
+
+    self.context.node_1 = self.context.cluster.node("clickhouse1")
+    self.context.node_2 = self.context.cluster.node("clickhouse2")
+    self.context.node_3 = self.context.cluster.node("clickhouse3")
+    self.context.nodes = [
+        self.context.cluster.node("clickhouse1"),
+        self.context.cluster.node("clickhouse2"),
+        self.context.cluster.node("clickhouse3"),
+    ]
+
+    with Pool(7) as pool:
         Feature(
             run=load("alter.table.attach_partition.partition_types", "feature"),
             parallel=True,
@@ -95,6 +105,13 @@ def feature(self):
         )
         Feature(
             run=load("alter.table.attach_partition.part_names.part_names", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load(
+                "alter.table.attach_partition.simple_attach_partition_from", "feature"
+            ),
             parallel=True,
             executor=pool,
         )
