@@ -155,7 +155,7 @@ def different_combinations(self, number_of_actions=3):
     if not self.context.stress:
         combinations = random.sample(combinations, 1000)
 
-    with Pool(8) as executor:
+    with Pool(6) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
@@ -192,7 +192,7 @@ def different_combinations_starting_with_create(self):
     if not self.context.stress:
         combinations = random.sample(combinations, 1000)
 
-    with Pool(8) as executor:
+    with Pool(6) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
