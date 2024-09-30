@@ -230,7 +230,7 @@ def attach_partition_from_table(
             )
 
         with Then(
-            f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {self.context.source_engine}, destination table engine - {self.context.destination_engine}:"
+            f"I check that partitions were attached when source table partition key - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {self.context.source_engine}, destination table engine - {self.context.destination_engine}:"
         ):
             for attempt in retries(timeout=300, delay=10):
                 with attempt:
