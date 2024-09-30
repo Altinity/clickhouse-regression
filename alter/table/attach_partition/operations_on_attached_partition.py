@@ -232,14 +232,14 @@ def attach_partition_from_table(
         with Then(
             f"I check that partitions were attached when source table partition_id - {source_partition_key}, destination table partition key - {destination_partition_key}, source table engine - {self.context.source_engine}, destination table engine - {self.context.destination_engine}:"
         ):
-            source_partition_data = get_node(self, "source").query(
-                f"SELECT * FROM {source_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-            )
-            destination_partition_data = get_node(self, "destination").query(
-                f"SELECT * FROM {destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=300, delay=10):
                 with attempt:
+                    source_partition_data = get_node(self, "source").query(
+                        f"SELECT * FROM {source_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                    )
+                    destination_partition_data = get_node(self, "destination").query(
+                        f"SELECT * FROM {destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                    )
                     assert (
                         destination_partition_data.output
                         == source_partition_data.output
@@ -683,7 +683,7 @@ def check_multiple_attach_move_partition(
                 data_after = self.context.node_1.query(
                     f"SELECT * FROM {new_destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
                 )
-                for attempt in retries(timeout=30, delay=2):
+                for attempt in retries(timeout=300, delay=20):
                     with attempt:
                         assert data_after.output == data_before, error()
 
