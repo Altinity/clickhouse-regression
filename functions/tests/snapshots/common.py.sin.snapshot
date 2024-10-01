@@ -1,0 +1,971 @@
+_functions_math_functions_test_all_math_functions_erf_Decimal128_38_ = r"""
+{"erf(decimal128_38_)":0.8427007929497149}
+{"erf(decimal128_38_)":-0.8427007929497149}
+{"erf(decimal128_38_)":0}
+{"erf(decimal128_38_)":-0.524009824762965}
+{"erf(decimal128_38_)":0.3871628432912245}
+{"erf(decimal128_38_)":-0.3083907915135872}
+{"erf(decimal128_38_)":0.5958525490610094}
+{"erf(decimal128_38_)":0.672878400761584}
+{"erf(decimal128_38_)":-0.601785492650615}
+{"erf(decimal128_38_)":-0.49685308122680727}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_Float32 = r"""
+{"erf(float32)":1}
+{"erf(float32)":-1}
+{"erf(float32)":0}
+{"erf(float32)":-1}
+{"erf(float32)":-1}
+{"erf(float32)":-1}
+{"erf(float32)":1}
+{"erf(float32)":-1}
+{"erf(float32)":-1}
+{"erf(float32)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_Float64 = r"""
+{"erf(float64)":1}
+{"erf(float64)":-1}
+{"erf(float64)":0}
+{"erf(float64)":-1}
+{"erf(float64)":-1}
+{"erf(float64)":-1}
+{"erf(float64)":1}
+{"erf(float64)":1}
+{"erf(float64)":-1}
+{"erf(float64)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_Int16 = r"""
+{"erf(int16)":1}
+{"erf(int16)":-1}
+{"erf(int16)":0}
+{"erf(int16)":1}
+{"erf(int16)":1}
+{"erf(int16)":1}
+{"erf(int16)":-1}
+{"erf(int16)":1}
+{"erf(int16)":-1}
+{"erf(int16)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_Int32 = r"""
+{"erf(int32)":1}
+{"erf(int32)":-1}
+{"erf(int32)":0}
+{"erf(int32)":-1}
+{"erf(int32)":1}
+{"erf(int32)":-1}
+{"erf(int32)":1}
+{"erf(int32)":1}
+{"erf(int32)":-1}
+{"erf(int32)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_Int64 = r"""
+{"erf(int64)":1}
+{"erf(int64)":-1}
+{"erf(int64)":0}
+{"erf(int64)":1}
+{"erf(int64)":-1}
+{"erf(int64)":1}
+{"erf(int64)":-1}
+{"erf(int64)":1}
+{"erf(int64)":1}
+{"erf(int64)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_Int8 = r"""
+{"erf(int8)":1}
+{"erf(int8)":-1}
+{"erf(int8)":0}
+{"erf(int8)":1}
+{"erf(int8)":-1}
+{"erf(int8)":-1}
+{"erf(int8)":-1}
+{"erf(int8)":1}
+{"erf(int8)":-1}
+{"erf(int8)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_UInt16 = r"""
+{"erf(uint16)":1}
+{"erf(uint16)":0}
+{"erf(uint16)":0}
+{"erf(uint16)":1}
+{"erf(uint16)":1}
+{"erf(uint16)":1}
+{"erf(uint16)":1}
+{"erf(uint16)":1}
+{"erf(uint16)":1}
+{"erf(uint16)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_UInt32 = r"""
+{"erf(uint32)":1}
+{"erf(uint32)":0}
+{"erf(uint32)":0}
+{"erf(uint32)":1}
+{"erf(uint32)":1}
+{"erf(uint32)":1}
+{"erf(uint32)":1}
+{"erf(uint32)":1}
+{"erf(uint32)":1}
+{"erf(uint32)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_UInt64 = r"""
+{"erf(uint64)":1}
+{"erf(uint64)":0}
+{"erf(uint64)":0}
+{"erf(uint64)":1}
+{"erf(uint64)":1}
+{"erf(uint64)":1}
+{"erf(uint64)":1}
+{"erf(uint64)":1}
+{"erf(uint64)":1}
+{"erf(uint64)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_UInt8 = r"""
+{"erf(uint8)":1}
+{"erf(uint8)":0}
+{"erf(uint8)":0}
+{"erf(uint8)":1}
+{"erf(uint8)":1}
+{"erf(uint8)":1}
+{"erf(uint8)":1}
+{"erf(uint8)":1}
+{"erf(uint8)":1}
+{"erf(uint8)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf__inf = r"""
+{"erf(x)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_constant = r"""
+{"erf(1)":0.8427007929497149}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_first_non_NULL_value = r"""
+{"erf(x)":null}
+{"erf(x)":null}
+{"erf(x)":null}
+{"erf(x)":0.9999779095030014}
+{"erf(x)":0.9999999845827421}
+{"erf(x)":0.9999999999984626}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_inf = r"""
+{"erf(x)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_nan = r"""
+{"erf(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_only_nan = r"""
+{"erf(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_return_type = r"""
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+{"toTypeName(erf(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_some_negative_values = r"""
+{"erf(minus(number, 5))":-0.9999999845827421}
+{"erf(minus(number, 5))":-0.9999779095030014}
+{"erf(minus(number, 5))":-0.9953222650189527}
+{"erf(minus(number, 5))":-0.8427007929497149}
+{"erf(minus(number, 5))":0}
+{"erf(minus(number, 5))":0.8427007929497149}
+{"erf(minus(number, 5))":0.9953222650189527}
+{"erf(minus(number, 5))":0.9999779095030014}
+{"erf(minus(number, 5))":0.9999999845827421}
+{"erf(minus(number, 5))":0.9999999999984626}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_with_group_by = r"""
+{"even":0,"erf(number)":0}
+{"even":0,"erf(number)":0.9999999845827421}
+{"even":1,"erf(number)":0.9999779095030014}
+{"even":0,"erf(number)":0.9953222650189527}
+{"even":1,"erf(number)":0.9999999999984626}
+{"even":1,"erf(number)":0.8427007929497149}
+{"even":0,"erf(number)":1}
+{"even":1,"erf(number)":1}
+{"even":1,"erf(number)":1}
+{"even":0,"erf(number)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Float32 = r"""
+{"erfc(float32)":0}
+{"erfc(float32)":2}
+{"erfc(float32)":1}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+{"erfc(float32)":0}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Float64 = r"""
+{"erfc(float64)":0}
+{"erfc(float64)":2}
+{"erfc(float64)":1}
+{"erfc(float64)":2}
+{"erfc(float64)":2}
+{"erfc(float64)":2}
+{"erfc(float64)":0}
+{"erfc(float64)":0}
+{"erfc(float64)":2}
+{"erfc(float64)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int16 = r"""
+{"erfc(int16)":0}
+{"erfc(int16)":2}
+{"erfc(int16)":1}
+{"erfc(int16)":0}
+{"erfc(int16)":0}
+{"erfc(int16)":0}
+{"erfc(int16)":2}
+{"erfc(int16)":0}
+{"erfc(int16)":2}
+{"erfc(int16)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int32 = r"""
+{"erfc(int32)":0}
+{"erfc(int32)":2}
+{"erfc(int32)":1}
+{"erfc(int32)":2}
+{"erfc(int32)":0}
+{"erfc(int32)":2}
+{"erfc(int32)":0}
+{"erfc(int32)":0}
+{"erfc(int32)":2}
+{"erfc(int32)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int64 = r"""
+{"erfc(int64)":0}
+{"erfc(int64)":2}
+{"erfc(int64)":1}
+{"erfc(int64)":0}
+{"erfc(int64)":2}
+{"erfc(int64)":0}
+{"erfc(int64)":2}
+{"erfc(int64)":0}
+{"erfc(int64)":0}
+{"erfc(int64)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int8 = r"""
+{"erfc(int8)":0}
+{"erfc(int8)":2}
+{"erfc(int8)":1}
+{"erfc(int8)":0}
+{"erfc(int8)":2}
+{"erfc(int8)":2}
+{"erfc(int8)":2}
+{"erfc(int8)":0}
+{"erfc(int8)":2}
+{"erfc(int8)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt16 = r"""
+{"erfc(uint16)":0}
+{"erfc(uint16)":1}
+{"erfc(uint16)":1}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt32 = r"""
+{"erfc(uint32)":0}
+{"erfc(uint32)":1}
+{"erfc(uint32)":1}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt64 = r"""
+{"erfc(uint64)":0}
+{"erfc(uint64)":1}
+{"erfc(uint64)":1}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt8 = r"""
+{"erfc(uint8)":0}
+{"erfc(uint8)":1}
+{"erfc(uint8)":1}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":1.6489825831519335e-252}
+{"erfc(uint8)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc__inf = r"""
+{"erfc(x)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_constant = r"""
+{"erfc(1)":0.15729920705028513}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_first_non_NULL_value = r"""
+{"erfc(x)":null}
+{"erfc(x)":null}
+{"erfc(x)":null}
+{"erfc(x)":0.000022090496998585438}
+{"erfc(x)":1.541725790028002e-8}
+{"erfc(x)":1.5374597944280351e-12}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_inf = r"""
+{"erfc(x)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_nan = r"""
+{"erfc(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_only_nan = r"""
+{"erfc(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_return_type = r"""
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_some_negative_values = r"""
+{"erfc(minus(number, 5))":1.999999984582742}
+{"erfc(minus(number, 5))":1.9999779095030015}
+{"erfc(minus(number, 5))":1.9953222650189528}
+{"erfc(minus(number, 5))":1.842700792949715}
+{"erfc(minus(number, 5))":1}
+{"erfc(minus(number, 5))":0.15729920705028513}
+{"erfc(minus(number, 5))":0.004677734981047265}
+{"erfc(minus(number, 5))":0.000022090496998585438}
+{"erfc(minus(number, 5))":1.541725790028002e-8}
+{"erfc(minus(number, 5))":1.5374597944280351e-12}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_with_group_by = r"""
+{"even":0,"erfc(number)":1}
+{"even":0,"erfc(number)":1.541725790028002e-8}
+{"even":1,"erfc(number)":0.000022090496998585438}
+{"even":0,"erfc(number)":0.004677734981047265}
+{"even":1,"erfc(number)":1.5374597944280351e-12}
+{"even":1,"erfc(number)":0.15729920705028513}
+{"even":0,"erfc(number)":2.1519736712498916e-17}
+{"even":1,"erfc(number)":4.183825607779414e-23}
+{"even":1,"erfc(number)":4.13703174651381e-37}
+{"even":0,"erfc(number)":1.1224297172982928e-29}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Float32 = r"""
+{"lgamma(float32)":2.98505335264318e40}
+{"lgamma(float32)":-2.98505335264318e40}
+{"lgamma(float32)":null}
+{"lgamma(float32)":-2.555076537474886e40}
+{"lgamma(float32)":-1.9550869865236305e40}
+{"lgamma(float32)":-2.6506485892405727e40}
+{"lgamma(float32)":5.186667341331094e39}
+{"lgamma(float32)":-2.8548561619424363e40}
+{"lgamma(float32)":-1.739604057250869e40}
+{"lgamma(float32)":-7.468617406276586e39}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Float64 = r"""
+{"lgamma(float64)":null}
+{"lgamma(float64)":null}
+{"lgamma(float64)":null}
+{"lgamma(float64)":-1.7716927888445642e51}
+{"lgamma(float64)":null}
+{"lgamma(float64)":-1.093971897237461e274}
+{"lgamma(float64)":1.765844499682867e68}
+{"lgamma(float64)":2.665070540211809e86}
+{"lgamma(float64)":-2.2971769738126096e100}
+{"lgamma(float64)":-6.714529834084515e184}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int16 = r"""
+{"lgamma(int16)":307913.0253488561}
+{"lgamma(int16)":-307906.4335025646}
+{"lgamma(int16)":null}
+{"lgamma(int16)":9606.15768608554}
+{"lgamma(int16)":1964.5895837571163}
+{"lgamma(int16)":299190.26962724386}
+{"lgamma(int16)":-89191.36340412665}
+{"lgamma(int16)":78350.35821568954}
+{"lgamma(int16)":-254235.39700092273}
+{"lgamma(int16)":-59958.10370694496}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int32 = r"""
+{"lgamma(int32)":43996705633.89096}
+{"lgamma(int32)":-43996705660.57021}
+{"lgamma(int32)":null}
+{"lgamma(int32)":-9209901933.457275}
+{"lgamma(int32)":38133987304.59591}
+{"lgamma(int32)":-12757936557.806675}
+{"lgamma(int32)":8601626910.087114}
+{"lgamma(int32)":20666592263.97864}
+{"lgamma(int32)":-24959477863.693977}
+{"lgamma(int32)":-22985462040.840458}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int64 = r"""
+{"lgamma(int64)":393545350287028850000}
+{"lgamma(int64)":-393545350287028850000}
+{"lgamma(int64)":null}
+{"lgamma(int64)":182598862987879020000}
+{"lgamma(int64)":-178921886455550080000}
+{"lgamma(int64)":152002401604263700000}
+{"lgamma(int64)":-33342737306703127000}
+{"lgamma(int64)":112601975136869290000}
+{"lgamma(int64)":344353646083077950}
+{"lgamma(int64)":168268956131575630000}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int8 = r"""
+{"lgamma(int8)":486.70926113683936}
+{"lgamma(int8)":-463.47406985257885}
+{"lgamma(int8)":null}
+{"lgamma(int8)":429.21439186665157}
+{"lgamma(int8)":-92.6092587521278}
+{"lgamma(int8)":-328.73104937152766}
+{"lgamma(int8)":-232.05101443234278}
+{"lgamma(int8)":282.47429268763045}
+{"lgamma(int8)":-106.76168576058379}
+{"lgamma(int8)":472.22438392698064}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt16 = r"""
+{"lgamma(uint16)":661265.7814255555}
+{"lgamma(uint16)":null}
+{"lgamma(uint16)":null}
+{"lgamma(uint16)":352954.5018180346}
+{"lgamma(uint16)":240789.58778905065}
+{"lgamma(uint16)":162737.7393293738}
+{"lgamma(uint16)":542826.2511548819}
+{"lgamma(uint16)":147686.86255916304}
+{"lgamma(uint16)":248645.86283054945}
+{"lgamma(uint16)":60059.1659866393}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt32 = r"""
+{"lgamma(uint32)":90970455769.87419}
+{"lgamma(uint32)":null}
+{"lgamma(uint32)":null}
+{"lgamma(uint32)":17788525015.06459}
+{"lgamma(uint32)":57466868978.504715}
+{"lgamma(uint32)":67490763417.874565}
+{"lgamma(uint32)":86735565789.8851}
+{"lgamma(uint32)":64267638757.58482}
+{"lgamma(uint32)":53318675921.94108}
+{"lgamma(uint32)":47884227839.58697}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt64 = r"""
+{"lgamma(uint64)":799877009219260400000}
+{"lgamma(uint64)":null}
+{"lgamma(uint64)":null}
+{"lgamma(uint64)":168907630732177280000}
+{"lgamma(uint64)":382036846353995100000}
+{"lgamma(uint64)":690379680025686000000}
+{"lgamma(uint64)":216326167504483650000}
+{"lgamma(uint64)":127465376452130980000}
+{"lgamma(uint64)":722833155398955000000}
+{"lgamma(uint64)":744818798061123500000}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt8 = r"""
+{"lgamma(uint8)":1156.1708375732421}
+{"lgamma(uint8)":null}
+{"lgamma(uint8)":null}
+{"lgamma(uint8)":665.653857411106}
+{"lgamma(uint8)":863.2319871924054}
+{"lgamma(uint8)":727.1745671728158}
+{"lgamma(uint8)":1018.9585022496904}
+{"lgamma(uint8)":448.24577274538467}
+{"lgamma(uint8)":51.60667556776438}
+{"lgamma(uint8)":481.87297922988796}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma__inf = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_constant = r"""
+{"lgamma(1)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_first_non_NULL_value = r"""
+{"lgamma(x)":null}
+{"lgamma(x)":null}
+{"lgamma(x)":null}
+{"lgamma(x)":0.6931471805599453}
+{"lgamma(x)":1.791759469228055}
+{"lgamma(x)":3.1780538303479458}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_inf = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_nan = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_only_nan = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_return_type = r"""
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_some_negative_values = r"""
+{"lgamma(minus(number, 5))":33.219090707090544}
+{"lgamma(minus(number, 5))":34.89306714066221}
+{"lgamma(minus(number, 5))":36.397144537438486}
+{"lgamma(minus(number, 5))":37.78343889855838}
+{"lgamma(minus(number, 5))":null}
+{"lgamma(minus(number, 5))":0}
+{"lgamma(minus(number, 5))":0}
+{"lgamma(minus(number, 5))":0.6931471805599453}
+{"lgamma(minus(number, 5))":1.791759469228055}
+{"lgamma(minus(number, 5))":3.1780538303479458}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_with_group_by = r"""
+{"even":0,"lgamma(number)":null}
+{"even":0,"lgamma(number)":1.791759469228055}
+{"even":1,"lgamma(number)":0.6931471805599453}
+{"even":0,"lgamma(number)":0}
+{"even":1,"lgamma(number)":3.1780538303479458}
+{"even":1,"lgamma(number)":0}
+{"even":0,"lgamma(number)":4.787491742782046}
+{"even":1,"lgamma(number)":6.579251212010101}
+{"even":1,"lgamma(number)":10.60460290274525}
+{"even":0,"lgamma(number)":8.525161361065413}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Decimal128_38_ = r"""
+{"sin(decimal128_38_)":0.8414709848078965}
+{"sin(decimal128_38_)":-0.8414709848078965}
+{"sin(decimal128_38_)":0}
+{"sin(decimal128_38_)":-0.48293388115695596}
+{"sin(decimal128_38_)":0.35022908318054163}
+{"sin(decimal128_38_)":-0.27682614558402535}
+{"sin(decimal128_38_)":0.5562734656343846}
+{"sin(decimal128_38_)":0.6387817501204309}
+{"sin(decimal128_38_)":-0.5624731547373849}
+{"sin(decimal128_38_)":-0.45595137911574923}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Float32 = r"""
+{"sin(float32)":-0.5218765233336585}
+{"sin(float32)":0.5218765233336585}
+{"sin(float32)":0}
+{"sin(float32)":0.8036084069167714}
+{"sin(float32)":-0.12738172215320173}
+{"sin(float32)":0.22605265621084797}
+{"sin(float32)":0.7566151854290416}
+{"sin(float32)":0.9985192321220454}
+{"sin(float32)":-0.4125664217548676}
+{"sin(float32)":0.6853092884355629}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Float64 = r"""
+{"sin(float64)":0.8547272942406356}
+{"sin(float64)":-0.8547272942406356}
+{"sin(float64)":0}
+{"sin(float64)":0.682235915009401}
+{"sin(float64)":0.6818539135005591}
+{"sin(float64)":0.8254184358730955}
+{"sin(float64)":-0.7773518613877032}
+{"sin(float64)":0.8700270479976153}
+{"sin(float64)":-0.9907143611389523}
+{"sin(float64)":0.2428602461437084}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Int16 = r"""
+{"sin(int16)":0.18750655394138943}
+{"sin(int16)":-0.9278563334139247}
+{"sin(int16)":0}
+{"sin(int16)":-0.9992020254239156}
+{"sin(int16)":-0.745093055724214}
+{"sin(int16)":0.84477172010559}
+{"sin(int16)":0.3705643046554173}
+{"sin(int16)":-0.6575999802383368}
+{"sin(int16)":0.3277703638211798}
+{"sin(int16)":0.9270560290746311}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Int32 = r"""
+{"sin(int32)":-0.7249165551445564}
+{"sin(int32)":0.9713101757929392}
+{"sin(int32)":0}
+{"sin(int32)":0.09126637410123904}
+{"sin(int32)":0.9980827199708396}
+{"sin(int32)":-0.6151066758199158}
+{"sin(int32)":-0.36333475860473335}
+{"sin(int32)":0.3429082424390021}
+{"sin(int32)":0.5500906560490244}
+{"sin(int32)":0.17361099967572496}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Int64 = r"""
+{"sin(int64)":0.9999303766734422}
+{"sin(int64)":-0.9999303766734422}
+{"sin(int64)":0}
+{"sin(int64)":0.0016877270064870789}
+{"sin(int64)":-0.24681929543980743}
+{"sin(int64)":-0.7850082806337231}
+{"sin(int64)":0.12982745383982192}
+{"sin(int64)":-0.48549557768118523}
+{"sin(int64)":0.45187813983457903}
+{"sin(int64)":-0.4132698388691809}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Int8 = r"""
+{"sin(int8)":0.972630067242408}
+{"sin(int8)":-0.7210377105017316}
+{"sin(int8)":0}
+{"sin(int8)":0.9454353340247703}
+{"sin(int8)":-0.017701925105413577}
+{"sin(int8)":0.5063656411097588}
+{"sin(int8)":-0.5139784559875352}
+{"sin(int8)":0.9683644611001854}
+{"sin(int8)":0.7682546613236668}
+{"sin(int8)":-0.9956869868891794}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_UInt16 = r"""
+{"sin(uint16)":0.9813275592311402}
+{"sin(uint16)":0}
+{"sin(uint16)":0}
+{"sin(uint16)":0.8045426695405166}
+{"sin(uint16)":-0.7611134830694052}
+{"sin(uint16)":-0.9903918023227657}
+{"sin(uint16)":0.45616179380739585}
+{"sin(uint16)":-0.8682488018814765}
+{"sin(uint16)":-0.43025187652143076}
+{"sin(uint16)":0.690156178990985}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_UInt32 = r"""
+{"sin(uint32)":0.49667719175328817}
+{"sin(uint32)":0}
+{"sin(uint32)":0}
+{"sin(uint32)":0.997988821613731}
+{"sin(uint32)":0.8723562498820858}
+{"sin(uint32)":-0.6330025231110947}
+{"sin(uint32)":0.6806003048455491}
+{"sin(uint32)":-0.3166029142273598}
+{"sin(uint32)":-0.8071107816304097}
+{"sin(uint32)":0.4963988872238038}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_UInt64 = r"""
+{"sin(uint64)":0.023598509904439558}
+{"sin(uint64)":0}
+{"sin(uint64)":0}
+{"sin(uint64)":-0.9962970334515803}
+{"sin(uint64)":-0.873571258562072}
+{"sin(uint64)":0.9861183519435766}
+{"sin(uint64)":-0.971363065132788}
+{"sin(uint64)":-0.3870701272513378}
+{"sin(uint64)":-0.4339054068342615}
+{"sin(uint64)":-0.9998458891572756}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_UInt8 = r"""
+{"sin(uint8)":-0.5063916349244909}
+{"sin(uint8)":0}
+{"sin(uint8)":0}
+{"sin(uint8)":-0.35491017584493534}
+{"sin(uint8)":-0.06189025071872073}
+{"sin(uint8)":-0.8011345951780408}
+{"sin(uint8)":-0.6160642040533645}
+{"sin(uint8)":-0.3714041014380902}
+{"sin(uint8)":-0.9055783620066239}
+{"sin(uint8)":0.329990825673782}
+"""
+
+_functions_math_functions_test_all_math_functions_sin__inf = r"""
+{"sin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_constant = r"""
+{"sin(1)":0.8414709848078965}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_first_non_NULL_value = r"""
+{"sin(x)":null}
+{"sin(x)":null}
+{"sin(x)":null}
+{"sin(x)":0.1411200080598672}
+{"sin(x)":-0.7568024953079282}
+{"sin(x)":-0.9589242746631385}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_inf = r"""
+{"sin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_nan = r"""
+{"sin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_only_nan = r"""
+{"sin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_return_type = r"""
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_some_negative_values = r"""
+{"sin(minus(number, 5))":0.7568024953079282}
+{"sin(minus(number, 5))":-0.1411200080598672}
+{"sin(minus(number, 5))":-0.9092974268256817}
+{"sin(minus(number, 5))":-0.8414709848078965}
+{"sin(minus(number, 5))":0}
+{"sin(minus(number, 5))":0.8414709848078965}
+{"sin(minus(number, 5))":0.9092974268256817}
+{"sin(minus(number, 5))":0.1411200080598672}
+{"sin(minus(number, 5))":-0.7568024953079282}
+{"sin(minus(number, 5))":-0.9589242746631385}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_with_group_by = r"""
+{"even":0,"sin(number)":0}
+{"even":0,"sin(number)":-0.7568024953079282}
+{"even":1,"sin(number)":0.1411200080598672}
+{"even":0,"sin(number)":0.9092974268256817}
+{"even":1,"sin(number)":-0.9589242746631385}
+{"even":1,"sin(number)":0.8414709848078965}
+{"even":0,"sin(number)":-0.27941549819892586}
+{"even":1,"sin(number)":0.6569865987187891}
+{"even":1,"sin(number)":0.4121184852417566}
+{"even":0,"sin(number)":0.9893582466233818}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Int8 = r"""
+{"tgamma(int8)":2.3721732428800473e211}
+{"tgamma(int8)":null}
+{"tgamma(int8)":null}
+{"tgamma(int8)":2.543559733472187e186}
+{"tgamma(int8)":null}
+{"tgamma(int8)":null}
+{"tgamma(int8)":null}
+{"tgamma(int8)":4.753643337012842e122}
+{"tgamma(int8)":null}
+{"tgamma(int8)":1.214630436702533e205}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt16 = r"""
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt32 = r"""
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt64 = r"""
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt8 = r"""
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":1.2296942187394496e289}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":4.684525849754291e194}
+{"tgamma(uint8)":2.585201673888498e22}
+{"tgamma(uint8)":1.8826771768889257e209}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma__inf = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_constant = r"""
+{"tgamma(1)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_first_non_NULL_value = r"""
+{"tgamma(x)":null}
+{"tgamma(x)":null}
+{"tgamma(x)":null}
+{"tgamma(x)":2}
+{"tgamma(x)":6}
+{"tgamma(x)":24}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_inf = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_nan = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_only_nan = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_return_type = r"""
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_some_negative_values = r"""
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":1}
+{"tgamma(minus(number, 5))":1}
+{"tgamma(minus(number, 5))":2}
+{"tgamma(minus(number, 5))":6}
+{"tgamma(minus(number, 5))":24}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_with_group_by = r"""
+{"even":0,"tgamma(number)":null}
+{"even":0,"tgamma(number)":6}
+{"even":1,"tgamma(number)":2}
+{"even":0,"tgamma(number)":1}
+{"even":1,"tgamma(number)":24}
+{"even":1,"tgamma(number)":1}
+{"even":0,"tgamma(number)":120}
+{"even":1,"tgamma(number)":719.9999999999999}
+{"even":1,"tgamma(number)":40319.99999999999}
+{"even":0,"tgamma(number)":5039.999999999999}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_zero_rows = r"""
+
+"""
+

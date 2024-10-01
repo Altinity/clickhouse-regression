@@ -1,0 +1,1049 @@
+_functions_math_functions_test_all_math_functions_acos_Float32 = r"""
+{"acos(float32)":null}
+{"acos(float32)":null}
+{"acos(float32)":1.5707963267948966}
+{"acos(float32)":null}
+{"acos(float32)":null}
+{"acos(float32)":null}
+{"acos(float32)":null}
+{"acos(float32)":null}
+{"acos(float32)":null}
+{"acos(float32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_Float64 = r"""
+{"acos(float64)":null}
+{"acos(float64)":null}
+{"acos(float64)":1.5707963267948966}
+{"acos(float64)":null}
+{"acos(float64)":null}
+{"acos(float64)":null}
+{"acos(float64)":null}
+{"acos(float64)":null}
+{"acos(float64)":null}
+{"acos(float64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_Int16 = r"""
+{"acos(int16)":null}
+{"acos(int16)":null}
+{"acos(int16)":1.5707963267948966}
+{"acos(int16)":null}
+{"acos(int16)":null}
+{"acos(int16)":null}
+{"acos(int16)":null}
+{"acos(int16)":null}
+{"acos(int16)":null}
+{"acos(int16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_Int32 = r"""
+{"acos(int32)":null}
+{"acos(int32)":null}
+{"acos(int32)":1.5707963267948966}
+{"acos(int32)":null}
+{"acos(int32)":null}
+{"acos(int32)":null}
+{"acos(int32)":null}
+{"acos(int32)":null}
+{"acos(int32)":null}
+{"acos(int32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_Int64 = r"""
+{"acos(int64)":null}
+{"acos(int64)":null}
+{"acos(int64)":1.5707963267948966}
+{"acos(int64)":null}
+{"acos(int64)":null}
+{"acos(int64)":null}
+{"acos(int64)":null}
+{"acos(int64)":null}
+{"acos(int64)":null}
+{"acos(int64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_Int8 = r"""
+{"acos(int8)":null}
+{"acos(int8)":null}
+{"acos(int8)":1.5707963267948966}
+{"acos(int8)":null}
+{"acos(int8)":null}
+{"acos(int8)":null}
+{"acos(int8)":null}
+{"acos(int8)":null}
+{"acos(int8)":null}
+{"acos(int8)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_UInt16 = r"""
+{"acos(uint16)":null}
+{"acos(uint16)":1.5707963267948966}
+{"acos(uint16)":1.5707963267948966}
+{"acos(uint16)":null}
+{"acos(uint16)":null}
+{"acos(uint16)":null}
+{"acos(uint16)":null}
+{"acos(uint16)":null}
+{"acos(uint16)":null}
+{"acos(uint16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_UInt32 = r"""
+{"acos(uint32)":null}
+{"acos(uint32)":1.5707963267948966}
+{"acos(uint32)":1.5707963267948966}
+{"acos(uint32)":null}
+{"acos(uint32)":null}
+{"acos(uint32)":null}
+{"acos(uint32)":null}
+{"acos(uint32)":null}
+{"acos(uint32)":null}
+{"acos(uint32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_UInt64 = r"""
+{"acos(uint64)":null}
+{"acos(uint64)":1.5707963267948966}
+{"acos(uint64)":1.5707963267948966}
+{"acos(uint64)":null}
+{"acos(uint64)":null}
+{"acos(uint64)":null}
+{"acos(uint64)":null}
+{"acos(uint64)":null}
+{"acos(uint64)":null}
+{"acos(uint64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_UInt8 = r"""
+{"acos(uint8)":null}
+{"acos(uint8)":1.5707963267948966}
+{"acos(uint8)":1.5707963267948966}
+{"acos(uint8)":null}
+{"acos(uint8)":null}
+{"acos(uint8)":null}
+{"acos(uint8)":null}
+{"acos(uint8)":null}
+{"acos(uint8)":null}
+{"acos(uint8)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos__inf = r"""
+{"acos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_constant = r"""
+{"acos(1)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_first_non_NULL_value = r"""
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_inf = r"""
+{"acos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_nan = r"""
+{"acos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_only_nan = r"""
+{"acos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_return_type = r"""
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+{"toTypeName(acos(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_some_negative_values = r"""
+{"acos(minus(number, 5))":null}
+{"acos(minus(number, 5))":null}
+{"acos(minus(number, 5))":null}
+{"acos(minus(number, 5))":3.141592653589793}
+{"acos(minus(number, 5))":1.5707963267948966}
+{"acos(minus(number, 5))":0}
+{"acos(minus(number, 5))":null}
+{"acos(minus(number, 5))":null}
+{"acos(minus(number, 5))":null}
+{"acos(minus(number, 5))":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_with_group_by = r"""
+{"even":0,"acos(number)":1.5707963267948966}
+{"even":0,"acos(number)":null}
+{"even":1,"acos(number)":null}
+{"even":0,"acos(number)":null}
+{"even":1,"acos(number)":null}
+{"even":1,"acos(number)":0}
+{"even":0,"acos(number)":null}
+{"even":1,"acos(number)":null}
+{"even":1,"acos(number)":null}
+{"even":0,"acos(number)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acos_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_asin_Float32 = r"""
+{"asin(float32)":null}
+{"asin(float32)":null}
+{"asin(float32)":0}
+{"asin(float32)":null}
+{"asin(float32)":null}
+{"asin(float32)":null}
+{"asin(float32)":null}
+{"asin(float32)":null}
+{"asin(float32)":null}
+{"asin(float32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_Float64 = r"""
+{"asin(float64)":null}
+{"asin(float64)":null}
+{"asin(float64)":0}
+{"asin(float64)":null}
+{"asin(float64)":null}
+{"asin(float64)":null}
+{"asin(float64)":null}
+{"asin(float64)":null}
+{"asin(float64)":null}
+{"asin(float64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_Int16 = r"""
+{"asin(int16)":null}
+{"asin(int16)":null}
+{"asin(int16)":0}
+{"asin(int16)":null}
+{"asin(int16)":null}
+{"asin(int16)":null}
+{"asin(int16)":null}
+{"asin(int16)":null}
+{"asin(int16)":null}
+{"asin(int16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_Int32 = r"""
+{"asin(int32)":null}
+{"asin(int32)":null}
+{"asin(int32)":0}
+{"asin(int32)":null}
+{"asin(int32)":null}
+{"asin(int32)":null}
+{"asin(int32)":null}
+{"asin(int32)":null}
+{"asin(int32)":null}
+{"asin(int32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_Int64 = r"""
+{"asin(int64)":null}
+{"asin(int64)":null}
+{"asin(int64)":0}
+{"asin(int64)":null}
+{"asin(int64)":null}
+{"asin(int64)":null}
+{"asin(int64)":null}
+{"asin(int64)":null}
+{"asin(int64)":null}
+{"asin(int64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_Int8 = r"""
+{"asin(int8)":null}
+{"asin(int8)":null}
+{"asin(int8)":0}
+{"asin(int8)":null}
+{"asin(int8)":null}
+{"asin(int8)":null}
+{"asin(int8)":null}
+{"asin(int8)":null}
+{"asin(int8)":null}
+{"asin(int8)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_UInt16 = r"""
+{"asin(uint16)":null}
+{"asin(uint16)":0}
+{"asin(uint16)":0}
+{"asin(uint16)":null}
+{"asin(uint16)":null}
+{"asin(uint16)":null}
+{"asin(uint16)":null}
+{"asin(uint16)":null}
+{"asin(uint16)":null}
+{"asin(uint16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_UInt32 = r"""
+{"asin(uint32)":null}
+{"asin(uint32)":0}
+{"asin(uint32)":0}
+{"asin(uint32)":null}
+{"asin(uint32)":null}
+{"asin(uint32)":null}
+{"asin(uint32)":null}
+{"asin(uint32)":null}
+{"asin(uint32)":null}
+{"asin(uint32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_UInt64 = r"""
+{"asin(uint64)":null}
+{"asin(uint64)":0}
+{"asin(uint64)":0}
+{"asin(uint64)":null}
+{"asin(uint64)":null}
+{"asin(uint64)":null}
+{"asin(uint64)":null}
+{"asin(uint64)":null}
+{"asin(uint64)":null}
+{"asin(uint64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_UInt8 = r"""
+{"asin(uint8)":null}
+{"asin(uint8)":0}
+{"asin(uint8)":0}
+{"asin(uint8)":null}
+{"asin(uint8)":null}
+{"asin(uint8)":null}
+{"asin(uint8)":null}
+{"asin(uint8)":null}
+{"asin(uint8)":null}
+{"asin(uint8)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin__inf = r"""
+{"asin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_constant = r"""
+{"asin(1)":1.5707963267948966}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_first_non_NULL_value = r"""
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_inf = r"""
+{"asin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_nan = r"""
+{"asin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_only_nan = r"""
+{"asin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_return_type = r"""
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+{"toTypeName(asin(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_some_negative_values = r"""
+{"asin(minus(number, 5))":null}
+{"asin(minus(number, 5))":null}
+{"asin(minus(number, 5))":null}
+{"asin(minus(number, 5))":-1.5707963267948966}
+{"asin(minus(number, 5))":0}
+{"asin(minus(number, 5))":1.5707963267948966}
+{"asin(minus(number, 5))":null}
+{"asin(minus(number, 5))":null}
+{"asin(minus(number, 5))":null}
+{"asin(minus(number, 5))":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_with_group_by = r"""
+{"even":0,"asin(number)":0}
+{"even":0,"asin(number)":null}
+{"even":1,"asin(number)":null}
+{"even":0,"asin(number)":null}
+{"even":1,"asin(number)":null}
+{"even":1,"asin(number)":1.5707963267948966}
+{"even":0,"asin(number)":null}
+{"even":1,"asin(number)":null}
+{"even":1,"asin(number)":null}
+{"even":0,"asin(number)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_atan_Decimal128_38_ = r"""
+{"atan(decimal128_38_)":0.7853981633974483}
+{"atan(decimal128_38_)":-0.7853981633974483}
+{"atan(decimal128_38_)":0}
+{"atan(decimal128_38_)":-0.46684417748819473}
+{"atan(decimal128_38_)":0.34362051241513486}
+{"atan(decimal128_38_)":-0.27346264879301413}
+{"atan(decimal128_38_)":0.5329559465272653}
+{"atan(decimal128_38_)":0.6059542907790911}
+{"atan(decimal128_38_)":-0.538486342442459}
+{"atan(decimal128_38_)":-0.4421754671856599}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_Float32 = r"""
+{"atan(float32)":1.5707963267948966}
+{"atan(float32)":-1.5707963267948966}
+{"atan(float32)":0}
+{"atan(float32)":-1.5707963267948966}
+{"atan(float32)":-1.5707963267948966}
+{"atan(float32)":-1.5707963267948966}
+{"atan(float32)":1.5707963267948966}
+{"atan(float32)":-1.5707963267948966}
+{"atan(float32)":-1.5707963267948966}
+{"atan(float32)":-1.5707963267948966}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_Float64 = r"""
+{"atan(float64)":1.5707963267948966}
+{"atan(float64)":-1.5707963267948966}
+{"atan(float64)":0}
+{"atan(float64)":-1.5707963267948966}
+{"atan(float64)":-1.5707963267948966}
+{"atan(float64)":-1.5707963267948966}
+{"atan(float64)":1.5707963267948966}
+{"atan(float64)":1.5707963267948966}
+{"atan(float64)":-1.5707963267948966}
+{"atan(float64)":-1.5707963267948966}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_Int16 = r"""
+{"atan(int16)":1.57076580828543}
+{"atan(int16)":-1.570765809216781}
+{"atan(int16)":0}
+{"atan(int16)":1.5701379990427342}
+{"atan(int16)":1.5682646866338878}
+{"atan(int16)":1.5707650053428444}
+{"atan(int16)":-1.5707034676624678}
+{"atan(int16)":1.5706920732506537}
+{"atan(int16)":-1.5707600475901526}
+{"atan(int16)":-1.5706641041327027}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_Int32 = r"""
+{"atan(int32)":1.5707963263292353}
+{"atan(int32)":-1.5707963263292353}
+{"atan(int32)":0}
+{"atan(int32)":-1.5707963247319918}
+{"atan(int32)":1.5707963262612197}
+{"atan(int32)":-1.5707963252814188}
+{"atan(int32)":1.5707963245936567}
+{"atan(int32)":1.57079632583839}
+{"atan(int32)":-1.5707963259957045}
+{"atan(int32)":-1.570796325930482}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_Int64 = r"""
+{"atan(int64)":1.5707963267948966}
+{"atan(int64)":-1.5707963267948966}
+{"atan(int64)":0}
+{"atan(int64)":1.5707963267948966}
+{"atan(int64)":-1.5707963267948966}
+{"atan(int64)":1.5707963267948966}
+{"atan(int64)":-1.5707963267948966}
+{"atan(int64)":1.5707963267948966}
+{"atan(int64)":1.5707963267948966}
+{"atan(int64)":1.5707963267948966}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_Int8 = r"""
+{"atan(int8)":1.562922473770796}
+{"atan(int8)":-1.5629839857347956}
+{"atan(int8)":0}
+{"atan(int8)":1.562100893783118}
+{"atan(int8)":-1.5480729659532555}
+{"atan(int8)":-1.5607966601082315}
+{"atan(int8)":-1.557976516321996}
+{"atan(int8)":1.5587487169407106}
+{"atan(int8)":-1.5499660067586796}
+{"atan(int8)":1.5627319854881296}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_UInt16 = r"""
+{"atan(uint16)":1.5707810677730012}
+{"atan(uint16)":0}
+{"atan(uint16)":0}
+{"atan(uint16)":1.5707693529864712}
+{"atan(uint16)":1.570758222847346}
+{"atan(uint16)":1.5707421144996012}
+{"atan(uint16)":1.570778068957722}
+{"atan(uint16)":1.5707371796961307}
+{"atan(uint16)":1.5707593103225834}
+{"atan(uint16)":1.570664261291174}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_UInt32 = r"""
+{"atan(uint32)":1.570796326562066}
+{"atan(uint32)":0}
+{"atan(uint32)":0}
+{"atan(uint32)":1.5707963256916564}
+{"atan(uint32)":1.570796326433953}
+{"atan(uint32)":1.5707963264852882}
+{"atan(uint32)":1.5707963265512228}
+{"atan(uint32)":1.5707963264704874}
+{"atan(uint32)":1.570796326407212}
+{"atan(uint32)":1.5707963263653544}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_UInt64 = r"""
+{"atan(uint64)":1.5707963267948966}
+{"atan(uint64)":0}
+{"atan(uint64)":0}
+{"atan(uint64)":1.5707963267948966}
+{"atan(uint64)":1.5707963267948966}
+{"atan(uint64)":1.5707963267948966}
+{"atan(uint64)":1.5707963267948966}
+{"atan(uint64)":1.5707963267948966}
+{"atan(uint64)":1.5707963267948966}
+{"atan(uint64)":1.5707963267948966}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_UInt8 = r"""
+{"atan(uint8)":1.5668747782701367}
+{"atan(uint8)":0}
+{"atan(uint8)":0}
+{"atan(uint8)":1.5646614344370207}
+{"atan(uint8)":1.5658212434640426}
+{"atan(uint8)":1.5650821032756994}
+{"atan(uint8)":1.5664485281041391}
+{"atan(uint8)":1.5623931632472496}
+{"atan(uint8)":1.5291537476963082}
+{"atan(uint8)":1.5628599854874305}
+"""
+
+_functions_math_functions_test_all_math_functions_atan__inf = r"""
+{"atan(x)":-1.5707963267948966}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_constant = r"""
+{"atan(1)":0.7853981633974483}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_first_non_NULL_value = r"""
+{"atan(x)":null}
+{"atan(x)":null}
+{"atan(x)":null}
+{"atan(x)":1.2490457723982544}
+{"atan(x)":1.3258176636680326}
+{"atan(x)":1.373400766945016}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_inf = r"""
+{"atan(x)":1.5707963267948966}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_nan = r"""
+{"atan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_only_nan = r"""
+{"atan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_return_type = r"""
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+{"toTypeName(atan(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_some_negative_values = r"""
+{"atan(minus(number, 5))":-1.3258176636680326}
+{"atan(minus(number, 5))":-1.2490457723982544}
+{"atan(minus(number, 5))":-1.1071487177940904}
+{"atan(minus(number, 5))":-0.7853981633974483}
+{"atan(minus(number, 5))":0}
+{"atan(minus(number, 5))":0.7853981633974483}
+{"atan(minus(number, 5))":1.1071487177940904}
+{"atan(minus(number, 5))":1.2490457723982544}
+{"atan(minus(number, 5))":1.3258176636680326}
+{"atan(minus(number, 5))":1.373400766945016}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_with_group_by = r"""
+{"even":0,"atan(number)":0}
+{"even":0,"atan(number)":1.3258176636680326}
+{"even":1,"atan(number)":1.2490457723982544}
+{"even":0,"atan(number)":1.1071487177940904}
+{"even":1,"atan(number)":1.373400766945016}
+{"even":1,"atan(number)":0.7853981633974483}
+{"even":0,"atan(number)":1.4056476493802699}
+{"even":1,"atan(number)":1.4288992721907328}
+{"even":1,"atan(number)":1.460139105621001}
+{"even":0,"atan(number)":1.446441332248135}
+"""
+
+_functions_math_functions_test_all_math_functions_atan_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_cos_Decimal128_38_ = r"""
+{"cos(decimal128_38_)":0.5403023058681398}
+{"cos(decimal128_38_)":0.5403023058681398}
+{"cos(decimal128_38_)":1}
+{"cos(decimal128_38_)":0.8756568200103733}
+{"cos(decimal128_38_)":0.9366640749460381}
+{"cos(decimal128_38_)":0.9609200201479268}
+{"cos(decimal128_38_)":0.8309992968896611}
+{"cos(decimal128_38_)":0.7693879877624028}
+{"cos(decimal128_38_)":0.8268155478701243}
+{"cos(decimal128_38_)":0.8900046853148843}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_Float32 = r"""
+{"cos(float32)":0.8530210398303042}
+{"cos(float32)":0.8530210398303042}
+{"cos(float32)":1}
+{"cos(float32)":0.5951584060842028}
+{"cos(float32)":-0.9918537678817803}
+{"cos(float32)":0.9741150838684411}
+{"cos(float32)":0.6538604294329005}
+{"cos(float32)":-0.054399844507137904}
+{"cos(float32)":-0.9109275205198187}
+{"cos(float32)":-0.7282521398416502}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_Float64 = r"""
+{"cos(float64)":0.5190773087701696}
+{"cos(float64)":0.5190773087701696}
+{"cos(float64)":1}
+{"cos(float64)":-0.7311321058955662}
+{"cos(float64)":0.7314883735535186}
+{"cos(float64)":0.5645213952728564}
+{"cos(float64)":0.6290660407278977}
+{"cos(float64)":0.49300399161929226}
+{"cos(float64)":0.13595975372527597}
+{"cos(float64)":-0.9700612871581967}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_Int16 = r"""
+{"cos(int16)":0.9822633517692823}
+{"cos(int16)":0.37293782932771496}
+{"cos(int16)":1}
+{"cos(int16)":0.039941361878944766}
+{"cos(int16)":0.6669605223036468}
+{"cos(int16)":-0.5351268456261961}
+{"cos(int16)":0.9288068131292142}
+{"cos(int16)":-0.7533672849218627}
+{"cos(int16)":0.9447574231518541}
+{"cos(int16)":-0.3749228173322833}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_Int32 = r"""
+{"cos(int32)":-0.6888366918779438}
+{"cos(int32)":0.23781619457280337}
+{"cos(int32)":1}
+{"cos(int32)":-0.9958265154927401}
+{"cos(int32)":0.06189413619730486}
+{"cos(int32)":0.7884438961408561}
+{"cos(int32)":-0.9316586570142738}
+{"cos(int32)":0.9393689037153585}
+{"cos(int32)":0.8351049455772334}
+{"cos(int32)":0.9848143077715694}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_Int64 = r"""
+{"cos(int64)":0.011800076512800236}
+{"cos(int64)":0.011800076512800236}
+{"cos(int64)":1}
+{"cos(int64)":-0.9999985757877616}
+{"cos(int64)":0.9690615230203896}
+{"cos(int64)":0.619485269668687}
+{"cos(int64)":-0.9915366015581416}
+{"cos(int64)":0.8742391229246219}
+{"cos(int64)":-0.8920796751073531}
+{"cos(int64)":-0.910608609821498}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_Int8 = r"""
+{"cos(int8)":0.23235910202965793}
+{"cos(int8)":-0.6928958219201651}
+{"cos(int8)":1}
+{"cos(int8)":-0.3258098052199642}
+{"cos(int8)":0.9998433086476912}
+{"cos(int8)":0.8623188722876839}
+{"cos(int8)":-0.8578030932449878}
+{"cos(int8)":0.24954011797333814}
+{"cos(int8)":-0.6401443394691997}
+{"cos(int8)":-0.09277620459766088}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_UInt16 = r"""
+{"cos(uint16)":0.19234401860586398}
+{"cos(uint16)":1}
+{"cos(uint16)":1}
+{"cos(uint16)":-0.5938948500270221}
+{"cos(uint16)":0.6486187369248272}
+{"cos(uint16)":0.13828983293020392}
+{"cos(uint16)":0.8898968579955875}
+{"cos(uint16)":0.4961290336509048}
+{"cos(uint16)":-0.9027088803982087}
+{"cos(uint16)":0.723660451178979}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_UInt32 = r"""
+{"cos(uint32)":-0.8679353473572022}
+{"cos(uint32)":1}
+{"cos(uint32)":1}
+{"cos(uint32)":0.06339015644432938}
+{"cos(uint32)":0.4888707122457469}
+{"cos(uint32)":0.7741497308240751}
+{"cos(uint32)":-0.7326549153893295}
+{"cos(uint32)":0.9485581662200495}
+{"cos(uint32)":-0.590400022167978}
+{"cos(uint32)":-0.8680945482854787}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_UInt64 = r"""
+{"cos(uint64)":-0.9997215163885841}
+{"cos(uint64)":1}
+{"cos(uint64)":1}
+{"cos(uint64)":-0.08597802705099034}
+{"cos(uint64)":0.4866962668998784}
+{"cos(uint64)":0.1660439579150185}
+{"cos(uint64)":0.23760007511748624}
+{"cos(uint64)":0.9220502787753134}
+{"cos(uint64)":0.9009584329590317}
+{"cos(uint64)":-0.017555567074209796}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_UInt8 = r"""
+{"cos(uint8)":-0.8623036078310824}
+{"cos(uint8)":1}
+{"cos(uint8)":1}
+{"cos(uint8)":0.9349004048997503}
+{"cos(uint8)":0.9980829609135574}
+{"cos(uint8)":0.5984842190140996}
+{"cos(uint8)":-0.787695941645058}
+{"cos(uint8)":0.9284713207390763}
+{"cos(uint8)":0.424179007336997}
+{"cos(uint8)":0.9439841391523142}
+"""
+
+_functions_math_functions_test_all_math_functions_cos__inf = r"""
+{"cos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_constant = r"""
+{"cos(1)":0.5403023058681398}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_first_non_NULL_value = r"""
+{"cos(x)":null}
+{"cos(x)":null}
+{"cos(x)":null}
+{"cos(x)":-0.9899924966004454}
+{"cos(x)":-0.6536436208636119}
+{"cos(x)":0.28366218546322625}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_inf = r"""
+{"cos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_nan = r"""
+{"cos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_only_nan = r"""
+{"cos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_return_type = r"""
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+{"toTypeName(cos(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_some_negative_values = r"""
+{"cos(minus(number, 5))":-0.6536436208636119}
+{"cos(minus(number, 5))":-0.9899924966004454}
+{"cos(minus(number, 5))":-0.4161468365471424}
+{"cos(minus(number, 5))":0.5403023058681398}
+{"cos(minus(number, 5))":1}
+{"cos(minus(number, 5))":0.5403023058681398}
+{"cos(minus(number, 5))":-0.4161468365471424}
+{"cos(minus(number, 5))":-0.9899924966004454}
+{"cos(minus(number, 5))":-0.6536436208636119}
+{"cos(minus(number, 5))":0.28366218546322625}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_with_group_by = r"""
+{"even":0,"cos(number)":1}
+{"even":0,"cos(number)":-0.6536436208636119}
+{"even":1,"cos(number)":-0.9899924966004454}
+{"even":0,"cos(number)":-0.4161468365471424}
+{"even":1,"cos(number)":0.28366218546322625}
+{"even":1,"cos(number)":0.5403023058681398}
+{"even":0,"cos(number)":0.960170286650366}
+{"even":1,"cos(number)":0.7539022543433046}
+{"even":1,"cos(number)":-0.9111302618846769}
+{"even":0,"cos(number)":-0.14550003380861354}
+"""
+
+_functions_math_functions_test_all_math_functions_cos_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Decimal128_38_ = r"""
+{"tan(decimal128_38_)":1.5574077246549023}
+{"tan(decimal128_38_)":-1.5574077246549023}
+{"tan(decimal128_38_)":0}
+{"tan(decimal128_38_)":-0.5515104434991267}
+{"tan(decimal128_38_)":0.3739110878152539}
+{"tan(decimal128_38_)":-0.28808448130928727}
+{"tan(decimal128_38_)":0.6694030521042016}
+{"tan(decimal128_38_)":0.8302465859626798}
+{"tan(decimal128_38_)":-0.6802885555143647}
+{"tan(decimal128_38_)":-0.5123022233915918}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Float32 = r"""
+{"tan(float32)":-0.6117979498342481}
+{"tan(float32)":0.6117979498342481}
+{"tan(float32)":0}
+{"tan(float32)":1.3502428911389301}
+{"tan(float32)":0.12842792584761795}
+{"tan(float32)":0.23205949682366014}
+{"tan(float32)":1.1571509015850083}
+{"tan(float32)":-18.355185408499242}
+{"tan(float32)":0.45290806618669016}
+{"tan(float32)":-0.9410329897342634}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Float64 = r"""
+{"tan(float64)":1.6466281222458155}
+{"tan(float64)":-1.6466281222458155}
+{"tan(float64)":0}
+{"tan(float64)":-0.9331226320224687}
+{"tan(float64)":0.9321459344434433}
+{"tan(float64)":1.462156160572332}
+{"tan(float64)":-1.2357237731164483}
+{"tan(float64)":1.7647464580154313}
+{"tan(float64)":-7.286820798019516}
+{"tan(float64)":-0.25035556965186156}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int16 = r"""
+{"tan(int16)":0.19089234430221486}
+{"tan(int16)":-2.4879651793076247}
+{"tan(int16)":0}
+{"tan(int16)":-25.016723977823315}
+{"tan(int16)":-1.117147163599281}
+{"tan(int16)":-1.5786382742900011}
+{"tan(int16)":0.3989681163157714}
+{"tan(int16)":0.8728809883303352}
+{"tan(int16)":0.3469360026065613}
+{"tan(int16)":-2.472658334509975}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int32 = r"""
+{"tan(int32)":1.0523779637351338}
+{"tan(int32)":4.084289455298593}
+{"tan(int32)":0}
+{"tan(int32)":-0.091648869237108}
+{"tan(int32)":16.125642609974747}
+{"tan(int32)":-0.7801527525682392}
+{"tan(int32)":0.38998699348657134}
+{"tan(int32)":0.3650410835218662}
+{"tan(int32)":0.6587084161845024}
+{"tan(int32)":0.1762880558351865}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int64 = r"""
+{"tan(int64)":84.73931296875567}
+{"tan(int64)":-84.73931296875567}
+{"tan(int64)":0}
+{"tan(int64)":-0.00168772941017196}
+{"tan(int64)":-0.2546993039931214}
+{"tan(int64)":-1.2671944258715968}
+{"tan(int64)":-0.13093561411228358}
+{"tan(int64)":-0.5553349935393423}
+{"tan(int64)":-0.5065445973535939}
+{"tan(int64)":0.45383915154304555}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int8 = r"""
+{"tan(int8)":4.185891831851989}
+{"tan(int8)":1.0406148914328552}
+{"tan(int8)":0}
+{"tan(int8)":-2.9018013542793097}
+{"tan(int8)":-0.017704699278685777}
+{"tan(int8)":0.5872139151569291}
+{"tan(int8)":0.5991799983411151}
+{"tan(int8)":3.880596310384246}
+{"tan(int8)":-1.2001272431162864}
+{"tan(int8)":10.732137526072965}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt16 = r"""
+{"tan(uint16)":5.101939568196287}
+{"tan(uint16)":0}
+{"tan(uint16)":0}
+{"tan(uint16)":-1.3546887458342332}
+{"tan(uint16)":-1.1734373981823714}
+{"tan(uint16)":-7.161710888917083}
+{"tan(uint16)":0.5126007466020941}
+{"tan(uint16)":-1.7500463447829766}
+{"tan(uint16)":0.476623068482095}
+{"tan(uint16)":0.9537016674969466}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt32 = r"""
+{"tan(uint32)":-0.5722513701805472}
+{"tan(uint32)":0}
+{"tan(uint32)":0}
+{"tan(uint32)":15.74359297393731}
+{"tan(uint32)":1.7844314008395072}
+{"tan(uint32)":-0.8176745375048693}
+{"tan(uint32)":-0.9289507113780588}
+{"tan(uint32)":-0.3337727990777882}
+{"tan(uint32)":1.367057505632637}
+{"tan(uint32)":-0.5718258318799622}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt64 = r"""
+{"tan(uint64)":-0.0236050835333497}
+{"tan(uint64)":0}
+{"tan(uint64)":0}
+{"tan(uint64)":11.58780990474129}
+{"tan(uint64)":-1.7949002652649897}
+{"tan(uint64)":5.938899339223612}
+{"tan(uint64)":-4.088227096108777}
+{"tan(uint64)":-0.4197928639699047}
+{"tan(uint64)":-0.4816042460573672}
+{"tan(uint64)":56.953209482256504}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt8 = r"""
+{"tan(uint8)":0.5872544546093196}
+{"tan(uint8)":0}
+{"tan(uint8)":0}
+{"tan(uint8)":-0.37962351282005535}
+{"tan(uint8)":-0.06200912463436088}
+{"tan(uint8)":-1.3386060479552375}
+{"tan(uint8)":0.7821091508568009}
+{"tan(uint8)":-0.4000167728847535}
+{"tan(uint8)":-2.1348966977217008}
+{"tan(uint8)":0.3495724260474436}
+"""
+
+_functions_math_functions_test_all_math_functions_tan__inf = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_constant = r"""
+{"tan(1)":1.5574077246549023}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_first_non_NULL_value = r"""
+{"tan(x)":null}
+{"tan(x)":null}
+{"tan(x)":null}
+{"tan(x)":-0.1425465430742778}
+{"tan(x)":1.1578212823495775}
+{"tan(x)":-3.380515006246586}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_inf = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_nan = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_only_nan = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_return_type = r"""
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_some_negative_values = r"""
+{"tan(minus(number, 5))":-1.1578212823495775}
+{"tan(minus(number, 5))":0.1425465430742778}
+{"tan(minus(number, 5))":2.185039863261519}
+{"tan(minus(number, 5))":-1.5574077246549023}
+{"tan(minus(number, 5))":0}
+{"tan(minus(number, 5))":1.5574077246549023}
+{"tan(minus(number, 5))":-2.185039863261519}
+{"tan(minus(number, 5))":-0.1425465430742778}
+{"tan(minus(number, 5))":1.1578212823495775}
+{"tan(minus(number, 5))":-3.380515006246586}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_with_group_by = r"""
+{"even":0,"tan(number)":0}
+{"even":0,"tan(number)":1.1578212823495775}
+{"even":1,"tan(number)":-0.1425465430742778}
+{"even":0,"tan(number)":-2.185039863261519}
+{"even":1,"tan(number)":-3.380515006246586}
+{"even":1,"tan(number)":1.5574077246549023}
+{"even":0,"tan(number)":-0.29100619138474915}
+{"even":1,"tan(number)":0.8714479827243188}
+{"even":1,"tan(number)":-0.45231565944180985}
+{"even":0,"tan(number)":-6.799711455220379}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_zero_rows = r"""
+
+"""
+
