@@ -446,7 +446,6 @@ def login_with_other_user_password(
 @TestStep(Then)
 def login(self, user: CreateUser, node=None):
     """Check user trying to login with valid and invalid passwords."""
-
     successful_login(user=user, node=node)
 
 
