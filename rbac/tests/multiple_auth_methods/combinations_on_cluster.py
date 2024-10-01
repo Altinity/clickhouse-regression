@@ -164,7 +164,7 @@ def different_combinations_on_cluster(self, cluster=None):
     if not self.context.stress:
         combinations = random.sample(combinations, 1000)
 
-    with Pool(7) as executor:
+    with Pool(5) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}",
@@ -240,7 +240,7 @@ def different_combinations_on_random_nodes(self, cluster=None):
     if not self.context.stress:
         combinations = random.sample(combinations, 1000)
 
-    with Pool(7) as executor:
+    with Pool(5) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i} {combination[0].name} {combination[1].name} {combination[2].name}",
