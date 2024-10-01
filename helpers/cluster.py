@@ -1282,7 +1282,7 @@ class PackageDownloader:
                 if os.path.relpath(self.binary_path).startswith("../.."):
                     # Binary is outside of the build context, move it to where docker can find it
                     new_path = f"{current_dir()}/../binaries/{os.path.basename(self.binary_path)}"
-                    bash(f"cp {self.binary_path} {new_path}")
+                    bash(f"mkdir -p {new_path} && cp {self.binary_path} {new_path}")
                     self.binary_path = os.path.relpath(new_path)
 
                 bash(f"chmod +x {self.binary_path}")
