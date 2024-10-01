@@ -46,6 +46,7 @@ on:
           - benchmark_minio
           - clickhouse_keeper
           - clickhouse_keeper_failover
+          - data_lakes
           - data_types
           - datetime64_extended_range
           - disk_level_encryption
@@ -623,6 +624,40 @@ jobs:
       SUITE: clickhouse_keeper_failover
       STORAGE: /failover
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+  
+  data_lakes:
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: data_lakes
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'data_lakes' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -1299,7 +1334,7 @@ jobs:
     env:
       SUITE: parquet
       STORAGE: /aws_s3
-    if: ${{ contains('all parquet_s3 parquet_all all_aws', inputs.suite)}}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

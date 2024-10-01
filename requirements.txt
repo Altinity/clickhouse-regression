@@ -16,3 +16,5 @@ matplotlib
 requests==2.31.0
 bcrypt
 clickhouse-driver==0.2.8
+pyspark==3.5.3
+delta-spark==3.2.1

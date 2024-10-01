@@ -219,9 +219,6 @@ xfails = {
             check_clickhouse_version("<24.4"),
         ),
     ],
-    "/rbac/privileges/multiple authentication methods/syntax/invalid query ALTER USER ADD NOT IDENTIFIED/*": [
-        (Fail, "Under discussion", check_clickhouse_version(">24.7")),
-    ],
 }
 
 xflags = {
@@ -318,7 +315,7 @@ ffails = {
         issue_65134,
         check_clickhouse_version(">=24.3") and check_clickhouse_version("<24.5"),
     ),
-    "/rbac/privileges/multiple authentication methods": (
+    "/rbac/multiple authentication methods": (
         Skip,
         "multiple authentication methods were introduced in 24.9",
         check_clickhouse_version("<24.9"),

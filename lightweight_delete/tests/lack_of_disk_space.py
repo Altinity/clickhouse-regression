@@ -212,7 +212,7 @@ def lack_of_disk_space_tiered_storage(self, node=None):
 
 
 @TestScenario
-def lightweight_delete_memory_consuption(self, node=None):
+def lightweight_delete_memory_consumption(self, node=None):
 
     if node is None:
         node = self.context.node

@@ -12,7 +12,7 @@ def feature(self, node="clickhouse1"):
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
 
-    with Pool(5) as pool:
+    with Pool(4) as pool:
         try:
             Feature(
                 run=load("rbac.tests.multiple_auth_methods.create", "feature"),
