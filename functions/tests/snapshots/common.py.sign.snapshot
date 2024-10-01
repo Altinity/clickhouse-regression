@@ -1,0 +1,228 @@
+_functions_math_functions_test_all_math_functions_sign_Decimal128_38_ = r"""
+{"sign(decimal128_38_)":1}
+{"sign(decimal128_38_)":-1}
+{"sign(decimal128_38_)":0}
+{"sign(decimal128_38_)":-1}
+{"sign(decimal128_38_)":1}
+{"sign(decimal128_38_)":-1}
+{"sign(decimal128_38_)":1}
+{"sign(decimal128_38_)":1}
+{"sign(decimal128_38_)":-1}
+{"sign(decimal128_38_)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_Float32 = r"""
+{"sign(float32)":1}
+{"sign(float32)":-1}
+{"sign(float32)":0}
+{"sign(float32)":-1}
+{"sign(float32)":-1}
+{"sign(float32)":-1}
+{"sign(float32)":1}
+{"sign(float32)":-1}
+{"sign(float32)":-1}
+{"sign(float32)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_Float64 = r"""
+{"sign(float64)":1}
+{"sign(float64)":-1}
+{"sign(float64)":0}
+{"sign(float64)":-1}
+{"sign(float64)":-1}
+{"sign(float64)":-1}
+{"sign(float64)":1}
+{"sign(float64)":1}
+{"sign(float64)":-1}
+{"sign(float64)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_Int16 = r"""
+{"sign(int16)":1}
+{"sign(int16)":-1}
+{"sign(int16)":0}
+{"sign(int16)":1}
+{"sign(int16)":1}
+{"sign(int16)":1}
+{"sign(int16)":-1}
+{"sign(int16)":1}
+{"sign(int16)":-1}
+{"sign(int16)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_Int32 = r"""
+{"sign(int32)":1}
+{"sign(int32)":-1}
+{"sign(int32)":0}
+{"sign(int32)":-1}
+{"sign(int32)":1}
+{"sign(int32)":-1}
+{"sign(int32)":1}
+{"sign(int32)":1}
+{"sign(int32)":-1}
+{"sign(int32)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_Int64 = r"""
+{"sign(int64)":1}
+{"sign(int64)":-1}
+{"sign(int64)":0}
+{"sign(int64)":1}
+{"sign(int64)":-1}
+{"sign(int64)":1}
+{"sign(int64)":-1}
+{"sign(int64)":1}
+{"sign(int64)":1}
+{"sign(int64)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_Int8 = r"""
+{"sign(int8)":1}
+{"sign(int8)":-1}
+{"sign(int8)":0}
+{"sign(int8)":1}
+{"sign(int8)":-1}
+{"sign(int8)":-1}
+{"sign(int8)":-1}
+{"sign(int8)":1}
+{"sign(int8)":-1}
+{"sign(int8)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_UInt16 = r"""
+{"sign(uint16)":1}
+{"sign(uint16)":0}
+{"sign(uint16)":0}
+{"sign(uint16)":1}
+{"sign(uint16)":1}
+{"sign(uint16)":1}
+{"sign(uint16)":1}
+{"sign(uint16)":1}
+{"sign(uint16)":1}
+{"sign(uint16)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_UInt32 = r"""
+{"sign(uint32)":1}
+{"sign(uint32)":0}
+{"sign(uint32)":0}
+{"sign(uint32)":1}
+{"sign(uint32)":1}
+{"sign(uint32)":1}
+{"sign(uint32)":1}
+{"sign(uint32)":1}
+{"sign(uint32)":1}
+{"sign(uint32)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_UInt64 = r"""
+{"sign(uint64)":1}
+{"sign(uint64)":0}
+{"sign(uint64)":0}
+{"sign(uint64)":1}
+{"sign(uint64)":1}
+{"sign(uint64)":1}
+{"sign(uint64)":1}
+{"sign(uint64)":1}
+{"sign(uint64)":1}
+{"sign(uint64)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_UInt8 = r"""
+{"sign(uint8)":1}
+{"sign(uint8)":0}
+{"sign(uint8)":0}
+{"sign(uint8)":1}
+{"sign(uint8)":1}
+{"sign(uint8)":1}
+{"sign(uint8)":1}
+{"sign(uint8)":1}
+{"sign(uint8)":1}
+{"sign(uint8)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign__inf = r"""
+{"sign(x)":-1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_constant = r"""
+{"sign(1)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_first_non_NULL_value = r"""
+{"sign(x)":null}
+{"sign(x)":null}
+{"sign(x)":null}
+{"sign(x)":1}
+{"sign(x)":1}
+{"sign(x)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_inf = r"""
+{"sign(x)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_nan = r"""
+{"sign(x)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_only_nan = r"""
+{"sign(x)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_return_type = r"""
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+{"toTypeName(sign(number))":"Int8"}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_some_negative_values = r"""
+{"sign(minus(number, 5))":-1}
+{"sign(minus(number, 5))":-1}
+{"sign(minus(number, 5))":-1}
+{"sign(minus(number, 5))":-1}
+{"sign(minus(number, 5))":0}
+{"sign(minus(number, 5))":1}
+{"sign(minus(number, 5))":1}
+{"sign(minus(number, 5))":1}
+{"sign(minus(number, 5))":1}
+{"sign(minus(number, 5))":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_with_group_by = r"""
+{"even":0,"sign(number)":0}
+{"even":0,"sign(number)":1}
+{"even":1,"sign(number)":1}
+{"even":0,"sign(number)":1}
+{"even":1,"sign(number)":1}
+{"even":1,"sign(number)":1}
+{"even":0,"sign(number)":1}
+{"even":1,"sign(number)":1}
+{"even":1,"sign(number)":1}
+{"even":0,"sign(number)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_sign_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Decimal128_38_ = r"""
+{"sinh(decimal128_38_)":1.1752011936438014}
+{"sinh(decimal128_38_)":-1.1752011936438014}
+{"sinh(decimal128_38_)":0}
+{"sinh(decimal128_38_)":-0.5256123860234541}
+{"sinh(decimal128_38_)":0.3655000056846592}
+{"sinh(decimal128_38_)":-0.28418198470562767}
+{"sinh(decimal128_38_)":0.6247063238169474}
+{"sinh(decimal128_38_)":0.7497083217070477}
+{"sinh(decimal128_38_)":-0.6335426805242192}
+{"sinh(decimal128_38_)":-0.4913268304616162}
+"""
+

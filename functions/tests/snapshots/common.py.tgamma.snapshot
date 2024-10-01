@@ -1,0 +1,245 @@
+_functions_math_functions_test_all_math_functions_cbrt_Decimal128_38_ = r"""
+{"cbrt(decimal128_38_)":1}
+{"cbrt(decimal128_38_)":-1}
+{"cbrt(decimal128_38_)":0}
+{"cbrt(decimal128_38_)":-0.7958125578017351}
+{"cbrt(decimal128_38_)":0.7099369552784613}
+{"cbrt(decimal128_38_)":-0.6545943507852683}
+{"cbrt(decimal128_38_)":0.8386707208966007}
+{"cbrt(decimal128_38_)":0.8848977172655291}
+{"cbrt(decimal128_38_)":-0.8422003668297244}
+{"cbrt(decimal128_38_)":-0.7793907588995217}
+"""
+
+_functions_math_functions_test_all_math_functions_cbrt_only_nan = r"""
+{"cbrt(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_some_negative_values = r"""
+{"erf(minus(number, 5))":-0.9999999845827421}
+{"erf(minus(number, 5))":-0.9999779095030014}
+{"erf(minus(number, 5))":-0.9953222650189527}
+{"erf(minus(number, 5))":-0.8427007929497149}
+{"erf(minus(number, 5))":0}
+{"erf(minus(number, 5))":0.8427007929497149}
+{"erf(minus(number, 5))":0.9953222650189527}
+{"erf(minus(number, 5))":0.9999779095030014}
+{"erf(minus(number, 5))":0.9999999845827421}
+{"erf(minus(number, 5))":0.9999999999984626}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Decimal128_38_ = r"""
+{"tgamma(decimal128_38_)":1}
+{"tgamma(decimal128_38_)":null}
+{"tgamma(decimal128_38_)":null}
+{"tgamma(decimal128_38_)":-3.544643714819731}
+{"tgamma(decimal128_38_)":2.4883972238797947}
+{"tgamma(decimal128_38_)":-4.521366734473279}
+{"tgamma(decimal128_38_)":1.5128416624428505}
+{"tgamma(decimal128_38_)":1.3094197364719873}
+{"tgamma(decimal128_38_)":-3.6883841446716317}
+{"tgamma(decimal128_38_)":-3.5595493143452286}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Float32 = r"""
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+{"tgamma(float32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Float64 = r"""
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+{"tgamma(float64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Int16 = r"""
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+{"tgamma(int16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Int32 = r"""
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Int64 = r"""
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Int8 = r"""
+{"tgamma(int8)":2.3721732428800473e211}
+{"tgamma(int8)":null}
+{"tgamma(int8)":null}
+{"tgamma(int8)":2.543559733472187e186}
+{"tgamma(int8)":null}
+{"tgamma(int8)":null}
+{"tgamma(int8)":null}
+{"tgamma(int8)":4.753643337012842e122}
+{"tgamma(int8)":null}
+{"tgamma(int8)":1.214630436702533e205}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt16 = r"""
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+{"tgamma(uint16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt32 = r"""
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+{"tgamma(uint32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt64 = r"""
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+{"tgamma(uint64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_UInt8 = r"""
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":1.2296942187394496e289}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":null}
+{"tgamma(uint8)":4.684525849754291e194}
+{"tgamma(uint8)":2.585201673888498e22}
+{"tgamma(uint8)":1.8826771768889257e209}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma__inf = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_constant = r"""
+{"tgamma(1)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_first_non_NULL_value = r"""
+{"tgamma(x)":null}
+{"tgamma(x)":null}
+{"tgamma(x)":null}
+{"tgamma(x)":2}
+{"tgamma(x)":6}
+{"tgamma(x)":24}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_inf = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_nan = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_only_nan = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_return_type = r"""
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+{"toTypeName(tgamma(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_some_negative_values = r"""
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":1}
+{"tgamma(minus(number, 5))":1}
+{"tgamma(minus(number, 5))":2}
+{"tgamma(minus(number, 5))":6}
+{"tgamma(minus(number, 5))":24}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_with_group_by = r"""
+{"even":0,"tgamma(number)":null}
+{"even":0,"tgamma(number)":6}
+{"even":1,"tgamma(number)":2}
+{"even":0,"tgamma(number)":1}
+{"even":1,"tgamma(number)":24}
+{"even":1,"tgamma(number)":1}
+{"even":0,"tgamma(number)":120}
+{"even":1,"tgamma(number)":719.9999999999999}
+{"even":1,"tgamma(number)":40319.99999999999}
+{"even":0,"tgamma(number)":5039.999999999999}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_zero_rows = r"""
+
+"""
+

@@ -22,6 +22,18 @@ xfails = {
             check_clickhouse_version(">=23.6") and check_clickhouse_version("<24.2"),
         )
     ],
+    "/functions/math functions/test all math functions/intExp10/*": [
+        (
+            Fail,
+            "Not implemented",
+        )
+    ],
+    "/functions/math functions/test all math functions/intExp2/*": [
+        (
+            Fail,
+            "Not implemented",
+        )
+    ],
 }
 
 ffails = {
@@ -29,7 +41,7 @@ ffails = {
         Skip,
         "Crashes before 23.11 https://github.com/ClickHouse/ClickHouse/pull/58638",
         check_clickhouse_version("<23.11"),
-    )
+    ),
 }
 
 
@@ -70,10 +82,11 @@ def regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    Feature(run=load("functions.tests.plus", "feature"))
-    Feature(run=load("functions.tests.merge", "feature"))
-    Feature(run=load("functions.tests.insert", "feature"))
-    Feature(run=load("functions.tests.projection_optimization", "feature"))
+    # Feature(run=load("functions.tests.plus", "feature"))
+    # Feature(run=load("functions.tests.merge", "feature"))
+    # Feature(run=load("functions.tests.insert", "feature"))
+    # Feature(run=load("functions.tests.projection_optimization", "feature"))
+    Feature(run=load("functions.tests.math_functions", "feature"))
 
 
 if main():

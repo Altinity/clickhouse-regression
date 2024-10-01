@@ -1,0 +1,284 @@
+_functions_math_functions_test_all_math_functions_cbrt_first_non_NULL_value = r"""
+{"cbrt(x)":null}
+{"cbrt(x)":null}
+{"cbrt(x)":null}
+{"cbrt(x)":1.4422495703074083}
+{"cbrt(x)":1.5874010519681996}
+{"cbrt(x)":1.7099759466766968}
+"""
+
+_functions_math_functions_test_all_math_functions_cbrt_return_type = r"""
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+{"toTypeName(cbrt(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_constant = r"""
+{"erf(1)":0.8427007929497149}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Decimal128_38_ = r"""
+{"erfc(decimal128_38_)":0.15729920705028513}
+{"erfc(decimal128_38_)":1.842700792949715}
+{"erfc(decimal128_38_)":1}
+{"erfc(decimal128_38_)":1.524009824762965}
+{"erfc(decimal128_38_)":0.6128371567087755}
+{"erfc(decimal128_38_)":1.3083907915135873}
+{"erfc(decimal128_38_)":0.4041474509389906}
+{"erfc(decimal128_38_)":0.32712159923841605}
+{"erfc(decimal128_38_)":1.601785492650615}
+{"erfc(decimal128_38_)":1.4968530812268073}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Float32 = r"""
+{"erfc(float32)":0}
+{"erfc(float32)":2}
+{"erfc(float32)":1}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+{"erfc(float32)":0}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+{"erfc(float32)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Float64 = r"""
+{"erfc(float64)":0}
+{"erfc(float64)":2}
+{"erfc(float64)":1}
+{"erfc(float64)":2}
+{"erfc(float64)":2}
+{"erfc(float64)":2}
+{"erfc(float64)":0}
+{"erfc(float64)":0}
+{"erfc(float64)":2}
+{"erfc(float64)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int16 = r"""
+{"erfc(int16)":0}
+{"erfc(int16)":2}
+{"erfc(int16)":1}
+{"erfc(int16)":0}
+{"erfc(int16)":0}
+{"erfc(int16)":0}
+{"erfc(int16)":2}
+{"erfc(int16)":0}
+{"erfc(int16)":2}
+{"erfc(int16)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int32 = r"""
+{"erfc(int32)":0}
+{"erfc(int32)":2}
+{"erfc(int32)":1}
+{"erfc(int32)":2}
+{"erfc(int32)":0}
+{"erfc(int32)":2}
+{"erfc(int32)":0}
+{"erfc(int32)":0}
+{"erfc(int32)":2}
+{"erfc(int32)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int64 = r"""
+{"erfc(int64)":0}
+{"erfc(int64)":2}
+{"erfc(int64)":1}
+{"erfc(int64)":0}
+{"erfc(int64)":2}
+{"erfc(int64)":0}
+{"erfc(int64)":2}
+{"erfc(int64)":0}
+{"erfc(int64)":0}
+{"erfc(int64)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Int8 = r"""
+{"erfc(int8)":0}
+{"erfc(int8)":2}
+{"erfc(int8)":1}
+{"erfc(int8)":0}
+{"erfc(int8)":2}
+{"erfc(int8)":2}
+{"erfc(int8)":2}
+{"erfc(int8)":0}
+{"erfc(int8)":2}
+{"erfc(int8)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt16 = r"""
+{"erfc(uint16)":0}
+{"erfc(uint16)":1}
+{"erfc(uint16)":1}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+{"erfc(uint16)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt32 = r"""
+{"erfc(uint32)":0}
+{"erfc(uint32)":1}
+{"erfc(uint32)":1}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+{"erfc(uint32)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt64 = r"""
+{"erfc(uint64)":0}
+{"erfc(uint64)":1}
+{"erfc(uint64)":1}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+{"erfc(uint64)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_UInt8 = r"""
+{"erfc(uint8)":0}
+{"erfc(uint8)":1}
+{"erfc(uint8)":1}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":0}
+{"erfc(uint8)":1.6489825831519335e-252}
+{"erfc(uint8)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc__inf = r"""
+{"erfc(x)":2}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_constant = r"""
+{"erfc(1)":0.15729920705028513}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_first_non_NULL_value = r"""
+{"erfc(x)":null}
+{"erfc(x)":null}
+{"erfc(x)":null}
+{"erfc(x)":0.000022090496998585438}
+{"erfc(x)":1.541725790028002e-8}
+{"erfc(x)":1.5374597944280351e-12}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_inf = r"""
+{"erfc(x)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_nan = r"""
+{"erfc(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_only_nan = r"""
+{"erfc(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_return_type = r"""
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+{"toTypeName(erfc(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_some_negative_values = r"""
+{"erfc(minus(number, 5))":1.999999984582742}
+{"erfc(minus(number, 5))":1.9999779095030015}
+{"erfc(minus(number, 5))":1.9953222650189528}
+{"erfc(minus(number, 5))":1.842700792949715}
+{"erfc(minus(number, 5))":1}
+{"erfc(minus(number, 5))":0.15729920705028513}
+{"erfc(minus(number, 5))":0.004677734981047265}
+{"erfc(minus(number, 5))":0.000022090496998585438}
+{"erfc(minus(number, 5))":1.541725790028002e-8}
+{"erfc(minus(number, 5))":1.5374597944280351e-12}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_with_group_by = r"""
+{"even":0,"erfc(number)":1}
+{"even":0,"erfc(number)":1.541725790028002e-8}
+{"even":1,"erfc(number)":0.000022090496998585438}
+{"even":0,"erfc(number)":0.004677734981047265}
+{"even":1,"erfc(number)":1.5374597944280351e-12}
+{"even":1,"erfc(number)":0.15729920705028513}
+{"even":0,"erfc(number)":2.1519736712498916e-17}
+{"even":1,"erfc(number)":4.183825607779414e-23}
+{"even":1,"erfc(number)":4.13703174651381e-37}
+{"even":0,"erfc(number)":1.1224297172982928e-29}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_log10_Decimal128_38_ = r"""
+{"log10(decimal128_38_)":0}
+{"log10(decimal128_38_)":null}
+{"log10(decimal128_38_)":null}
+{"log10(decimal128_38_)":null}
+{"log10(decimal128_38_)":-0.4463406490132966}
+{"log10(decimal128_38_)":null}
+{"log10(decimal128_38_)":-0.22922555553687052}
+{"log10(decimal128_38_)":-0.15932077568385394}
+{"log10(decimal128_38_)":null}
+{"log10(decimal128_38_)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log10_first_non_NULL_value = r"""
+{"log10(x)":null}
+{"log10(x)":null}
+{"log10(x)":null}
+{"log10(x)":0.47712125471966244}
+{"log10(x)":0.6020599913279624}
+{"log10(x)":0.6989700043360189}
+"""
+
+_functions_math_functions_test_all_math_functions_log10_only_nan = r"""
+{"log10(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sqrt_Float64 = r"""
+{"sqrt(float64)":1.340779996867495e154}
+{"sqrt(float64)":null}
+{"sqrt(float64)":0}
+{"sqrt(float64)":null}
+{"sqrt(float64)":null}
+{"sqrt(float64)":null}
+{"sqrt(float64)":1.0809514897080488e33}
+{"sqrt(float64)":1.1758910228677507e42}
+{"sqrt(float64)":null}
+{"sqrt(float64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sqrt_only_nan = r"""
+{"sqrt(x)":null}
+"""
+
