@@ -1435,7 +1435,7 @@ class Cluster(object):
                     self.use_specific_version, program_name="clickhouse"
                 )
 
-                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = (
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = os.path.abspath(
                     alternate_clickhouse_package.binary_path
                 )
 
