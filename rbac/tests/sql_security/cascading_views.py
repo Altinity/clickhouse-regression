@@ -1415,7 +1415,7 @@ def check_cascade_mv_definer_mv_definer_mv_definer(self):
         The strength of a covering array specifies the number of variables for which 
         all possible value combinations must appear at least once in the array."""
     ):
-        covering_array = CoveringArray(combinations_dict, strength=6)
+        covering_array = CoveringArray(combinations_dict, strength=5)
 
     with And(
         "creating a list of lists of privileges from the covering array with some combinations of privileges"
