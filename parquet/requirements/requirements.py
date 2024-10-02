@@ -6287,10 +6287,18 @@ Parquet:
         MagicNumber: "PAR1 (4 bytes)"
         Metadata:
           - version
-          - schema
+          - schema:
+              - type
+              - type_length
+              - repetition_type
+              - name
+              - num_children
+              - converted_type
           - num_rows
           - row_groups
-          - key_value_metadata
+          - key_value_metadata:
+                - key
+                - value
         Datatypes:
           Physical:
             - BOOLEAN
@@ -6355,7 +6363,7 @@ Parquet:
             - AES_GCM_V1
             - AES_GCM_CTR_V1
         IfCorrupted:
-          - the file is lost
+          - The file is lost
       RowGroup:
         Metadata:
             - num_columns
@@ -6366,7 +6374,7 @@ Parquet:
         IfCorrupted:
             - Only that row group is lost
       ColumnChunk:
-        Metadata:
+        Metadata2:
             - name
             - path
             - total_compressed_size
@@ -6379,6 +6387,23 @@ Parquet:
                 - distinct_count
                 - min - the minimum value of the column chunk
                 - max - the maximum column of the column chunk
+        Metadata:
+          - file_path
+          - file_offset
+          - column_metadata:
+              - type
+              - encodings
+              - path_in_schema
+              - codec
+              - num_values
+              - total_uncompressed_size
+              - total_compressed_size
+              - key_value_metadata:
+                  - key
+                  - value
+              - data_page_offset
+              - index_page_offset
+              - dictionary_page_offset
         IfCorrupted:
           - Only that column chunk is lost (but column chunks for this column in other row groups are okay)
       PageHeader:
@@ -6398,6 +6423,17 @@ Parquet:
         IfCorrupted:
           - The remaining pages in that chunk are lost.
           - If the data within a page is corrupt, that page is lost
+    
+    ClickHouseRead:
+        functions:
+          - file()
+          - url() 
+          - s3()
+          - remote()
+    
+    ClickHouseWrite:
+      - SELECT * FROM sometable INTO OUTFILE 'export.parquet' FORMAT Parquet
+
 ```
 
 ## Feature Diagram
