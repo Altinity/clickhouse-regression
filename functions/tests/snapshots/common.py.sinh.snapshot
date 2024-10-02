@@ -1,0 +1,237 @@
+_functions_math_functions_test_all_math_functions_acos_first_non_NULL_value = r"""
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_acosh_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_atan_first_non_NULL_value = r"""
+{"atan(x)":null}
+{"atan(x)":null}
+{"atan(x)":null}
+{"atan(x)":1.2490457723982544}
+{"atan(x)":1.3258176636680326}
+{"atan(x)":1.373400766945016}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Decimal128_38_ = r"""
+{"sinh(decimal128_38_)":1.1752011936438014}
+{"sinh(decimal128_38_)":-1.1752011936438014}
+{"sinh(decimal128_38_)":0}
+{"sinh(decimal128_38_)":-0.5256123860234541}
+{"sinh(decimal128_38_)":0.3655000056846592}
+{"sinh(decimal128_38_)":-0.28418198470562767}
+{"sinh(decimal128_38_)":0.6247063238169474}
+{"sinh(decimal128_38_)":0.7497083217070477}
+{"sinh(decimal128_38_)":-0.6335426805242192}
+{"sinh(decimal128_38_)":-0.4913268304616162}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Float32 = r"""
+{"sinh(float32)":null}
+{"sinh(float32)":null}
+{"sinh(float32)":0}
+{"sinh(float32)":null}
+{"sinh(float32)":null}
+{"sinh(float32)":null}
+{"sinh(float32)":null}
+{"sinh(float32)":null}
+{"sinh(float32)":null}
+{"sinh(float32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Float64 = r"""
+{"sinh(float64)":null}
+{"sinh(float64)":null}
+{"sinh(float64)":0}
+{"sinh(float64)":null}
+{"sinh(float64)":null}
+{"sinh(float64)":null}
+{"sinh(float64)":null}
+{"sinh(float64)":null}
+{"sinh(float64)":null}
+{"sinh(float64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Int16 = r"""
+{"sinh(int16)":null}
+{"sinh(int16)":null}
+{"sinh(int16)":0}
+{"sinh(int16)":null}
+{"sinh(int16)":1.759099301348102e171}
+{"sinh(int16)":null}
+{"sinh(int16)":null}
+{"sinh(int16)":null}
+{"sinh(int16)":null}
+{"sinh(int16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Int32 = r"""
+{"sinh(int32)":null}
+{"sinh(int32)":null}
+{"sinh(int32)":0}
+{"sinh(int32)":null}
+{"sinh(int32)":null}
+{"sinh(int32)":null}
+{"sinh(int32)":null}
+{"sinh(int32)":null}
+{"sinh(int32)":null}
+{"sinh(int32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Int64 = r"""
+{"sinh(int64)":null}
+{"sinh(int64)":null}
+{"sinh(int64)":0}
+{"sinh(int64)":null}
+{"sinh(int64)":null}
+{"sinh(int64)":null}
+{"sinh(int64)":null}
+{"sinh(int64)":null}
+{"sinh(int64)":null}
+{"sinh(int64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_Int8 = r"""
+{"sinh(int8)":7.151039979174052e54}
+{"sinh(int8)":-1.9438542029972974e55}
+{"sinh(int8)":0}
+{"sinh(int8)":4.3937508179185116e49}
+{"sinh(int8)":-6425800057179654000}
+{"sinh(int8)":-1.3440585709080678e43}
+{"sinh(int8)":-3.7492084984950605e33}
+{"sinh(int8)":5.564318773958797e35}
+{"sinh(int8)":-350836795604881600000}
+{"sinh(int8)":3.560293163444669e53}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_UInt16 = r"""
+{"sinh(uint16)":null}
+{"sinh(uint16)":0}
+{"sinh(uint16)":0}
+{"sinh(uint16)":null}
+{"sinh(uint16)":null}
+{"sinh(uint16)":null}
+{"sinh(uint16)":null}
+{"sinh(uint16)":null}
+{"sinh(uint16)":null}
+{"sinh(uint16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_UInt32 = r"""
+{"sinh(uint32)":null}
+{"sinh(uint32)":0}
+{"sinh(uint32)":0}
+{"sinh(uint32)":null}
+{"sinh(uint32)":null}
+{"sinh(uint32)":null}
+{"sinh(uint32)":null}
+{"sinh(uint32)":null}
+{"sinh(uint32)":null}
+{"sinh(uint32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_UInt64 = r"""
+{"sinh(uint64)":null}
+{"sinh(uint64)":0}
+{"sinh(uint64)":0}
+{"sinh(uint64)":null}
+{"sinh(uint64)":null}
+{"sinh(uint64)":null}
+{"sinh(uint64)":null}
+{"sinh(uint64)":null}
+{"sinh(uint64)":null}
+{"sinh(uint64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_UInt8 = r"""
+{"sinh(uint8)":2.7801158238638378e110}
+{"sinh(uint8)":0}
+{"sinh(uint8)":0}
+{"sinh(uint8)":3.0829789152897165e70}
+{"sinh(uint8)":9.82111659340898e86}
+{"sinh(uint8)":5.017695903071647e75}
+{"sinh(uint8)":3.861009249991918e99}
+{"sinh(uint8)":2.398906663649651e51}
+{"sinh(uint8)":13244561064.921736}
+{"sinh(uint8)":2.630720591333193e54}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh__inf = r"""
+{"sinh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_constant = r"""
+{"sinh(1)":1.1752011936438014}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_first_non_NULL_value = r"""
+{"sinh(x)":null}
+{"sinh(x)":null}
+{"sinh(x)":null}
+{"sinh(x)":10.017874927409903}
+{"sinh(x)":27.28991719712775}
+{"sinh(x)":74.20321057778875}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_inf = r"""
+{"sinh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_nan = r"""
+{"sinh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_only_nan = r"""
+{"sinh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_return_type = r"""
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+{"toTypeName(sinh(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_some_negative_values = r"""
+{"sinh(minus(number, 5))":-27.28991719712775}
+{"sinh(minus(number, 5))":-10.017874927409903}
+{"sinh(minus(number, 5))":-3.626860407847019}
+{"sinh(minus(number, 5))":-1.1752011936438014}
+{"sinh(minus(number, 5))":0}
+{"sinh(minus(number, 5))":1.1752011936438014}
+{"sinh(minus(number, 5))":3.626860407847019}
+{"sinh(minus(number, 5))":10.017874927409903}
+{"sinh(minus(number, 5))":27.28991719712775}
+{"sinh(minus(number, 5))":74.20321057778875}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_with_group_by = r"""
+{"even":0,"sinh(number)":0}
+{"even":0,"sinh(number)":27.28991719712775}
+{"even":1,"sinh(number)":10.017874927409903}
+{"even":0,"sinh(number)":3.626860407847019}
+{"even":1,"sinh(number)":74.20321057778875}
+{"even":1,"sinh(number)":1.1752011936438014}
+{"even":0,"sinh(number)":201.71315737027922}
+{"even":1,"sinh(number)":548.3161232732465}
+{"even":1,"sinh(number)":4051.54190208279}
+{"even":0,"sinh(number)":1490.4788257895502}
+"""
+
+_functions_math_functions_test_all_math_functions_sinh_zero_rows = r"""
+
+"""
+

@@ -111,14 +111,11 @@ def combination_of_actions(self, combination, node=None):
     if node is None:
         node = self.context.node
 
-    with Given("I have client"):
-        self.context.client = actions.node_client()
-
     queries = []
 
     for i, action in enumerate(combination):
         with When(f"I perform action {i} {action.__name__}"):
-            query = action(usernames=usernames)
+            query = action(usernames=usernames, client=node)
             if not isinstance(query, DropUser):
                 queries.append(query)
 

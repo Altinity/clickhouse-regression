@@ -1,0 +1,233 @@
+_functions_math_functions_test_all_math_functions_acos_first_non_NULL_value = r"""
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+{"acos(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_asin_first_non_NULL_value = r"""
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+{"asin(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_Decimal128_38_ = r"""
+{"cosh(decimal128_38_)":1.5430806348152437}
+{"cosh(decimal128_38_)":1.5430806348152437}
+{"cosh(decimal128_38_)":1}
+{"cosh(decimal128_38_)":1.1297204877053741}
+{"cosh(decimal128_38_)":1.0647019555516397}
+{"cosh(decimal128_38_)":1.039595787039958}
+{"cosh(decimal128_38_)":1.179092019740989}
+{"cosh(decimal128_38_)":1.2498250148067922}
+{"cosh(decimal128_38_)":1.1837974184993871}
+{"cosh(decimal128_38_)":1.1141822356919255}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_Float32 = r"""
+{"cosh(float32)":null}
+{"cosh(float32)":null}
+{"cosh(float32)":1}
+{"cosh(float32)":null}
+{"cosh(float32)":null}
+{"cosh(float32)":null}
+{"cosh(float32)":null}
+{"cosh(float32)":null}
+{"cosh(float32)":null}
+{"cosh(float32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_Float64 = r"""
+{"cosh(float64)":null}
+{"cosh(float64)":null}
+{"cosh(float64)":1}
+{"cosh(float64)":null}
+{"cosh(float64)":null}
+{"cosh(float64)":null}
+{"cosh(float64)":null}
+{"cosh(float64)":null}
+{"cosh(float64)":null}
+{"cosh(float64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_Int16 = r"""
+{"cosh(int16)":null}
+{"cosh(int16)":null}
+{"cosh(int16)":1}
+{"cosh(int16)":null}
+{"cosh(int16)":1.759099301348102e171}
+{"cosh(int16)":null}
+{"cosh(int16)":null}
+{"cosh(int16)":null}
+{"cosh(int16)":null}
+{"cosh(int16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_Int32 = r"""
+{"cosh(int32)":null}
+{"cosh(int32)":null}
+{"cosh(int32)":1}
+{"cosh(int32)":null}
+{"cosh(int32)":null}
+{"cosh(int32)":null}
+{"cosh(int32)":null}
+{"cosh(int32)":null}
+{"cosh(int32)":null}
+{"cosh(int32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_Int64 = r"""
+{"cosh(int64)":null}
+{"cosh(int64)":null}
+{"cosh(int64)":1}
+{"cosh(int64)":null}
+{"cosh(int64)":null}
+{"cosh(int64)":null}
+{"cosh(int64)":null}
+{"cosh(int64)":null}
+{"cosh(int64)":null}
+{"cosh(int64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_Int8 = r"""
+{"cosh(int8)":7.151039979174052e54}
+{"cosh(int8)":1.9438542029972974e55}
+{"cosh(int8)":1}
+{"cosh(int8)":4.3937508179185116e49}
+{"cosh(int8)":6425800057179654000}
+{"cosh(int8)":1.3440585709080678e43}
+{"cosh(int8)":3.7492084984950605e33}
+{"cosh(int8)":5.564318773958797e35}
+{"cosh(int8)":350836795604881600000}
+{"cosh(int8)":3.560293163444669e53}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_UInt16 = r"""
+{"cosh(uint16)":null}
+{"cosh(uint16)":1}
+{"cosh(uint16)":1}
+{"cosh(uint16)":null}
+{"cosh(uint16)":null}
+{"cosh(uint16)":null}
+{"cosh(uint16)":null}
+{"cosh(uint16)":null}
+{"cosh(uint16)":null}
+{"cosh(uint16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_UInt32 = r"""
+{"cosh(uint32)":null}
+{"cosh(uint32)":1}
+{"cosh(uint32)":1}
+{"cosh(uint32)":null}
+{"cosh(uint32)":null}
+{"cosh(uint32)":null}
+{"cosh(uint32)":null}
+{"cosh(uint32)":null}
+{"cosh(uint32)":null}
+{"cosh(uint32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_UInt64 = r"""
+{"cosh(uint64)":null}
+{"cosh(uint64)":1}
+{"cosh(uint64)":1}
+{"cosh(uint64)":null}
+{"cosh(uint64)":null}
+{"cosh(uint64)":null}
+{"cosh(uint64)":null}
+{"cosh(uint64)":null}
+{"cosh(uint64)":null}
+{"cosh(uint64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_UInt8 = r"""
+{"cosh(uint8)":2.7801158238638378e110}
+{"cosh(uint8)":1}
+{"cosh(uint8)":1}
+{"cosh(uint8)":3.0829789152897165e70}
+{"cosh(uint8)":9.82111659340898e86}
+{"cosh(uint8)":5.017695903071647e75}
+{"cosh(uint8)":3.861009249991918e99}
+{"cosh(uint8)":2.398906663649651e51}
+{"cosh(uint8)":13244561064.921736}
+{"cosh(uint8)":2.630720591333193e54}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh__inf = r"""
+{"cosh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_constant = r"""
+{"cosh(1)":1.5430806348152437}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_first_non_NULL_value = r"""
+{"cosh(x)":null}
+{"cosh(x)":null}
+{"cosh(x)":null}
+{"cosh(x)":10.067661995777765}
+{"cosh(x)":27.308232836016487}
+{"cosh(x)":74.20994852478785}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_inf = r"""
+{"cosh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_nan = r"""
+{"cosh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_only_nan = r"""
+{"cosh(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_return_type = r"""
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+{"toTypeName(cosh(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_some_negative_values = r"""
+{"cosh(minus(number, 5))":27.308232836016487}
+{"cosh(minus(number, 5))":10.067661995777765}
+{"cosh(minus(number, 5))":3.7621956910836314}
+{"cosh(minus(number, 5))":1.5430806348152437}
+{"cosh(minus(number, 5))":1}
+{"cosh(minus(number, 5))":1.5430806348152437}
+{"cosh(minus(number, 5))":3.7621956910836314}
+{"cosh(minus(number, 5))":10.067661995777765}
+{"cosh(minus(number, 5))":27.308232836016487}
+{"cosh(minus(number, 5))":74.20994852478785}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_with_group_by = r"""
+{"even":0,"cosh(number)":1}
+{"even":0,"cosh(number)":27.308232836016487}
+{"even":1,"cosh(number)":10.067661995777765}
+{"even":0,"cosh(number)":3.7621956910836314}
+{"even":1,"cosh(number)":74.20994852478785}
+{"even":1,"cosh(number)":1.5430806348152437}
+{"even":0,"cosh(number)":201.7156361224559}
+{"even":1,"cosh(number)":548.317035155212}
+{"even":1,"cosh(number)":4051.5420254925943}
+{"even":0,"cosh(number)":1490.479161252178}
+"""
+
+_functions_math_functions_test_all_math_functions_cosh_zero_rows = r"""
+
+"""
+

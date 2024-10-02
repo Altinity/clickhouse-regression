@@ -1,0 +1,358 @@
+_functions_math_functions_test_all_math_functions_cos_constant = r"""
+{"cos(1)":0.5403023058681398}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_Decimal128_38_ = r"""
+{"erfc(decimal128_38_)":0.15729920705028513}
+{"erfc(decimal128_38_)":1.842700792949715}
+{"erfc(decimal128_38_)":1}
+{"erfc(decimal128_38_)":1.524009824762965}
+{"erfc(decimal128_38_)":0.6128371567087755}
+{"erfc(decimal128_38_)":1.3083907915135873}
+{"erfc(decimal128_38_)":0.4041474509389906}
+{"erfc(decimal128_38_)":0.32712159923841605}
+{"erfc(decimal128_38_)":1.601785492650615}
+{"erfc(decimal128_38_)":1.4968530812268073}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_first_non_NULL_value = r"""
+{"lgamma(x)":null}
+{"lgamma(x)":null}
+{"lgamma(x)":null}
+{"lgamma(x)":0.6931471805599453}
+{"lgamma(x)":1.791759469228055}
+{"lgamma(x)":3.1780538303479458}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_only_nan = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Float32 = r"""
+{"sin(float32)":-0.5218765233336585}
+{"sin(float32)":0.5218765233336585}
+{"sin(float32)":0}
+{"sin(float32)":0.8036084069167714}
+{"sin(float32)":-0.12738172215320173}
+{"sin(float32)":0.22605265621084797}
+{"sin(float32)":0.7566151854290416}
+{"sin(float32)":0.9985192321220454}
+{"sin(float32)":-0.4125664217548676}
+{"sin(float32)":0.6853092884355629}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_Int32 = r"""
+{"sin(int32)":-0.7249165551445564}
+{"sin(int32)":0.9713101757929392}
+{"sin(int32)":0}
+{"sin(int32)":0.09126637410123904}
+{"sin(int32)":0.9980827199708396}
+{"sin(int32)":-0.6151066758199158}
+{"sin(int32)":-0.36333475860473335}
+{"sin(int32)":0.3429082424390021}
+{"sin(int32)":0.5500906560490244}
+{"sin(int32)":0.17361099967572496}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_first_non_NULL_value = r"""
+{"sin(x)":null}
+{"sin(x)":null}
+{"sin(x)":null}
+{"sin(x)":0.1411200080598672}
+{"sin(x)":-0.7568024953079282}
+{"sin(x)":-0.9589242746631385}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_return_type = r"""
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+{"toTypeName(sin(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_sin_some_negative_values = r"""
+{"sin(minus(number, 5))":0.7568024953079282}
+{"sin(minus(number, 5))":-0.1411200080598672}
+{"sin(minus(number, 5))":-0.9092974268256817}
+{"sin(minus(number, 5))":-0.8414709848078965}
+{"sin(minus(number, 5))":0}
+{"sin(minus(number, 5))":0.8414709848078965}
+{"sin(minus(number, 5))":0.9092974268256817}
+{"sin(minus(number, 5))":0.1411200080598672}
+{"sin(minus(number, 5))":-0.7568024953079282}
+{"sin(minus(number, 5))":-0.9589242746631385}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Decimal128_38_ = r"""
+{"tan(decimal128_38_)":1.5574077246549023}
+{"tan(decimal128_38_)":-1.5574077246549023}
+{"tan(decimal128_38_)":0}
+{"tan(decimal128_38_)":-0.5515104434991267}
+{"tan(decimal128_38_)":0.3739110878152539}
+{"tan(decimal128_38_)":-0.28808448130928727}
+{"tan(decimal128_38_)":0.6694030521042016}
+{"tan(decimal128_38_)":0.8302465859626798}
+{"tan(decimal128_38_)":-0.6802885555143647}
+{"tan(decimal128_38_)":-0.5123022233915918}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Float32 = r"""
+{"tan(float32)":-0.6117979498342481}
+{"tan(float32)":0.6117979498342481}
+{"tan(float32)":0}
+{"tan(float32)":1.3502428911389301}
+{"tan(float32)":0.12842792584761795}
+{"tan(float32)":0.23205949682366014}
+{"tan(float32)":1.1571509015850083}
+{"tan(float32)":-18.355185408499242}
+{"tan(float32)":0.45290806618669016}
+{"tan(float32)":-0.9410329897342634}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Float64 = r"""
+{"tan(float64)":1.6466281222458155}
+{"tan(float64)":-1.6466281222458155}
+{"tan(float64)":0}
+{"tan(float64)":-0.9331226320224687}
+{"tan(float64)":0.9321459344434433}
+{"tan(float64)":1.462156160572332}
+{"tan(float64)":-1.2357237731164483}
+{"tan(float64)":1.7647464580154313}
+{"tan(float64)":-7.286820798019516}
+{"tan(float64)":-0.25035556965186156}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int16 = r"""
+{"tan(int16)":0.19089234430221486}
+{"tan(int16)":-2.4879651793076247}
+{"tan(int16)":0}
+{"tan(int16)":-25.016723977823315}
+{"tan(int16)":-1.117147163599281}
+{"tan(int16)":-1.5786382742900011}
+{"tan(int16)":0.3989681163157714}
+{"tan(int16)":0.8728809883303352}
+{"tan(int16)":0.3469360026065613}
+{"tan(int16)":-2.472658334509975}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int32 = r"""
+{"tan(int32)":1.0523779637351338}
+{"tan(int32)":4.084289455298593}
+{"tan(int32)":0}
+{"tan(int32)":-0.091648869237108}
+{"tan(int32)":16.125642609974747}
+{"tan(int32)":-0.7801527525682392}
+{"tan(int32)":0.38998699348657134}
+{"tan(int32)":0.3650410835218662}
+{"tan(int32)":0.6587084161845024}
+{"tan(int32)":0.1762880558351865}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int64 = r"""
+{"tan(int64)":84.73931296875567}
+{"tan(int64)":-84.73931296875567}
+{"tan(int64)":0}
+{"tan(int64)":-0.00168772941017196}
+{"tan(int64)":-0.2546993039931214}
+{"tan(int64)":-1.2671944258715968}
+{"tan(int64)":-0.13093561411228358}
+{"tan(int64)":-0.5553349935393423}
+{"tan(int64)":-0.5065445973535939}
+{"tan(int64)":0.45383915154304555}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_Int8 = r"""
+{"tan(int8)":4.185891831851989}
+{"tan(int8)":1.0406148914328552}
+{"tan(int8)":0}
+{"tan(int8)":-2.9018013542793097}
+{"tan(int8)":-0.017704699278685777}
+{"tan(int8)":0.5872139151569291}
+{"tan(int8)":0.5991799983411151}
+{"tan(int8)":3.880596310384246}
+{"tan(int8)":-1.2001272431162864}
+{"tan(int8)":10.732137526072965}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt16 = r"""
+{"tan(uint16)":5.101939568196287}
+{"tan(uint16)":0}
+{"tan(uint16)":0}
+{"tan(uint16)":-1.3546887458342332}
+{"tan(uint16)":-1.1734373981823714}
+{"tan(uint16)":-7.161710888917083}
+{"tan(uint16)":0.5126007466020941}
+{"tan(uint16)":-1.7500463447829766}
+{"tan(uint16)":0.476623068482095}
+{"tan(uint16)":0.9537016674969466}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt32 = r"""
+{"tan(uint32)":-0.5722513701805472}
+{"tan(uint32)":0}
+{"tan(uint32)":0}
+{"tan(uint32)":15.74359297393731}
+{"tan(uint32)":1.7844314008395072}
+{"tan(uint32)":-0.8176745375048693}
+{"tan(uint32)":-0.9289507113780588}
+{"tan(uint32)":-0.3337727990777882}
+{"tan(uint32)":1.367057505632637}
+{"tan(uint32)":-0.5718258318799622}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt64 = r"""
+{"tan(uint64)":-0.0236050835333497}
+{"tan(uint64)":0}
+{"tan(uint64)":0}
+{"tan(uint64)":11.58780990474129}
+{"tan(uint64)":-1.7949002652649897}
+{"tan(uint64)":5.938899339223612}
+{"tan(uint64)":-4.088227096108777}
+{"tan(uint64)":-0.4197928639699047}
+{"tan(uint64)":-0.4816042460573672}
+{"tan(uint64)":56.953209482256504}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_UInt8 = r"""
+{"tan(uint8)":0.5872544546093196}
+{"tan(uint8)":0}
+{"tan(uint8)":0}
+{"tan(uint8)":-0.37962351282005535}
+{"tan(uint8)":-0.06200912463436088}
+{"tan(uint8)":-1.3386060479552375}
+{"tan(uint8)":0.7821091508568009}
+{"tan(uint8)":-0.4000167728847535}
+{"tan(uint8)":-2.1348966977217008}
+{"tan(uint8)":0.3495724260474436}
+"""
+
+_functions_math_functions_test_all_math_functions_tan__inf = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_constant = r"""
+{"tan(1)":1.5574077246549023}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_first_non_NULL_value = r"""
+{"tan(x)":null}
+{"tan(x)":null}
+{"tan(x)":null}
+{"tan(x)":-0.1425465430742778}
+{"tan(x)":1.1578212823495775}
+{"tan(x)":-3.380515006246586}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_inf = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_nan = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_only_nan = r"""
+{"tan(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_return_type = r"""
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+{"toTypeName(tan(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_some_negative_values = r"""
+{"tan(minus(number, 5))":-1.1578212823495775}
+{"tan(minus(number, 5))":0.1425465430742778}
+{"tan(minus(number, 5))":2.185039863261519}
+{"tan(minus(number, 5))":-1.5574077246549023}
+{"tan(minus(number, 5))":0}
+{"tan(minus(number, 5))":1.5574077246549023}
+{"tan(minus(number, 5))":-2.185039863261519}
+{"tan(minus(number, 5))":-0.1425465430742778}
+{"tan(minus(number, 5))":1.1578212823495775}
+{"tan(minus(number, 5))":-3.380515006246586}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_with_group_by = r"""
+{"even":0,"tan(number)":0}
+{"even":0,"tan(number)":1.1578212823495775}
+{"even":1,"tan(number)":-0.1425465430742778}
+{"even":0,"tan(number)":-2.185039863261519}
+{"even":1,"tan(number)":-3.380515006246586}
+{"even":1,"tan(number)":1.5574077246549023}
+{"even":0,"tan(number)":-0.29100619138474915}
+{"even":1,"tan(number)":0.8714479827243188}
+{"even":1,"tan(number)":-0.45231565944180985}
+{"even":0,"tan(number)":-6.799711455220379}
+"""
+
+_functions_math_functions_test_all_math_functions_tan_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Int32 = r"""
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+{"tgamma(int32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_Int64 = r"""
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+{"tgamma(int64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_first_non_NULL_value = r"""
+{"tgamma(x)":null}
+{"tgamma(x)":null}
+{"tgamma(x)":null}
+{"tgamma(x)":2}
+{"tgamma(x)":6}
+{"tgamma(x)":24}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_only_nan = r"""
+{"tgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_tgamma_some_negative_values = r"""
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":null}
+{"tgamma(minus(number, 5))":1}
+{"tgamma(minus(number, 5))":1}
+{"tgamma(minus(number, 5))":2}
+{"tgamma(minus(number, 5))":6}
+{"tgamma(minus(number, 5))":24}
+"""
+

@@ -1,0 +1,266 @@
+_functions_math_functions_test_all_math_functions_erf_constant = r"""
+{"erf(1)":0.8427007929497149}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_with_group_by = r"""
+{"even":0,"erf(number)":0}
+{"even":0,"erf(number)":0.9999999845827421}
+{"even":1,"erf(number)":0.9999779095030014}
+{"even":0,"erf(number)":0.9953222650189527}
+{"even":1,"erf(number)":0.9999999999984626}
+{"even":1,"erf(number)":0.8427007929497149}
+{"even":0,"erf(number)":1}
+{"even":1,"erf(number)":1}
+{"even":1,"erf(number)":1}
+{"even":0,"erf(number)":1}
+"""
+
+_functions_math_functions_test_all_math_functions_erf_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_constant = r"""
+{"erfc(1)":0.15729920705028513}
+"""
+
+_functions_math_functions_test_all_math_functions_erfc_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Decimal128_38_ = r"""
+{"lgamma(decimal128_38_)":0}
+{"lgamma(decimal128_38_)":37.78343889855838}
+{"lgamma(decimal128_38_)":null}
+{"lgamma(decimal128_38_)":1.265437651356323}
+{"lgamma(decimal128_38_)":0.9116388180335251}
+{"lgamma(decimal128_38_)":1.5088143230215367}
+{"lgamma(decimal128_38_)":0.41398977793718345}
+{"lgamma(decimal128_38_)":0.26958408982403353}
+{"lgamma(decimal128_38_)":1.3051884609727182}
+{"lgamma(decimal128_38_)":1.2696339397558134}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Float32 = r"""
+{"lgamma(float32)":2.98505335264318e40}
+{"lgamma(float32)":-2.98505335264318e40}
+{"lgamma(float32)":null}
+{"lgamma(float32)":-2.555076537474886e40}
+{"lgamma(float32)":-1.9550869865236305e40}
+{"lgamma(float32)":-2.6506485892405727e40}
+{"lgamma(float32)":5.186667341331094e39}
+{"lgamma(float32)":-2.8548561619424363e40}
+{"lgamma(float32)":-1.739604057250869e40}
+{"lgamma(float32)":-7.468617406276586e39}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Float64 = r"""
+{"lgamma(float64)":null}
+{"lgamma(float64)":null}
+{"lgamma(float64)":null}
+{"lgamma(float64)":-1.7716927888445642e51}
+{"lgamma(float64)":null}
+{"lgamma(float64)":-1.093971897237461e274}
+{"lgamma(float64)":1.765844499682867e68}
+{"lgamma(float64)":2.665070540211809e86}
+{"lgamma(float64)":-2.2971769738126096e100}
+{"lgamma(float64)":-6.714529834084515e184}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int16 = r"""
+{"lgamma(int16)":307913.0253488561}
+{"lgamma(int16)":-307906.4335025646}
+{"lgamma(int16)":null}
+{"lgamma(int16)":9606.15768608554}
+{"lgamma(int16)":1964.5895837571163}
+{"lgamma(int16)":299190.26962724386}
+{"lgamma(int16)":-89191.36340412665}
+{"lgamma(int16)":78350.35821568954}
+{"lgamma(int16)":-254235.39700092273}
+{"lgamma(int16)":-59958.10370694496}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int32 = r"""
+{"lgamma(int32)":43996705633.89096}
+{"lgamma(int32)":-43996705660.57021}
+{"lgamma(int32)":null}
+{"lgamma(int32)":-9209901933.457275}
+{"lgamma(int32)":38133987304.59591}
+{"lgamma(int32)":-12757936557.806675}
+{"lgamma(int32)":8601626910.087114}
+{"lgamma(int32)":20666592263.97864}
+{"lgamma(int32)":-24959477863.693977}
+{"lgamma(int32)":-22985462040.840458}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int64 = r"""
+{"lgamma(int64)":393545350287028850000}
+{"lgamma(int64)":-393545350287028850000}
+{"lgamma(int64)":null}
+{"lgamma(int64)":182598862987879020000}
+{"lgamma(int64)":-178921886455550080000}
+{"lgamma(int64)":152002401604263700000}
+{"lgamma(int64)":-33342737306703127000}
+{"lgamma(int64)":112601975136869290000}
+{"lgamma(int64)":344353646083077950}
+{"lgamma(int64)":168268956131575630000}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_Int8 = r"""
+{"lgamma(int8)":486.70926113683936}
+{"lgamma(int8)":-463.47406985257885}
+{"lgamma(int8)":null}
+{"lgamma(int8)":429.21439186665157}
+{"lgamma(int8)":-92.6092587521278}
+{"lgamma(int8)":-328.73104937152766}
+{"lgamma(int8)":-232.05101443234278}
+{"lgamma(int8)":282.47429268763045}
+{"lgamma(int8)":-106.76168576058379}
+{"lgamma(int8)":472.22438392698064}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt16 = r"""
+{"lgamma(uint16)":661265.7814255555}
+{"lgamma(uint16)":null}
+{"lgamma(uint16)":null}
+{"lgamma(uint16)":352954.5018180346}
+{"lgamma(uint16)":240789.58778905065}
+{"lgamma(uint16)":162737.7393293738}
+{"lgamma(uint16)":542826.2511548819}
+{"lgamma(uint16)":147686.86255916304}
+{"lgamma(uint16)":248645.86283054945}
+{"lgamma(uint16)":60059.1659866393}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt32 = r"""
+{"lgamma(uint32)":90970455769.87419}
+{"lgamma(uint32)":null}
+{"lgamma(uint32)":null}
+{"lgamma(uint32)":17788525015.06459}
+{"lgamma(uint32)":57466868978.504715}
+{"lgamma(uint32)":67490763417.874565}
+{"lgamma(uint32)":86735565789.8851}
+{"lgamma(uint32)":64267638757.58482}
+{"lgamma(uint32)":53318675921.94108}
+{"lgamma(uint32)":47884227839.58697}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt64 = r"""
+{"lgamma(uint64)":799877009219260400000}
+{"lgamma(uint64)":null}
+{"lgamma(uint64)":null}
+{"lgamma(uint64)":168907630732177280000}
+{"lgamma(uint64)":382036846353995100000}
+{"lgamma(uint64)":690379680025686000000}
+{"lgamma(uint64)":216326167504483650000}
+{"lgamma(uint64)":127465376452130980000}
+{"lgamma(uint64)":722833155398955000000}
+{"lgamma(uint64)":744818798061123500000}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_UInt8 = r"""
+{"lgamma(uint8)":1156.1708375732421}
+{"lgamma(uint8)":null}
+{"lgamma(uint8)":null}
+{"lgamma(uint8)":665.653857411106}
+{"lgamma(uint8)":863.2319871924054}
+{"lgamma(uint8)":727.1745671728158}
+{"lgamma(uint8)":1018.9585022496904}
+{"lgamma(uint8)":448.24577274538467}
+{"lgamma(uint8)":51.60667556776438}
+{"lgamma(uint8)":481.87297922988796}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma__inf = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_constant = r"""
+{"lgamma(1)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_first_non_NULL_value = r"""
+{"lgamma(x)":null}
+{"lgamma(x)":null}
+{"lgamma(x)":null}
+{"lgamma(x)":0.6931471805599453}
+{"lgamma(x)":1.791759469228055}
+{"lgamma(x)":3.1780538303479458}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_inf = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_nan = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_only_nan = r"""
+{"lgamma(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_return_type = r"""
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+{"toTypeName(lgamma(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_some_negative_values = r"""
+{"lgamma(minus(number, 5))":33.219090707090544}
+{"lgamma(minus(number, 5))":34.89306714066221}
+{"lgamma(minus(number, 5))":36.397144537438486}
+{"lgamma(minus(number, 5))":37.78343889855838}
+{"lgamma(minus(number, 5))":null}
+{"lgamma(minus(number, 5))":0}
+{"lgamma(minus(number, 5))":0}
+{"lgamma(minus(number, 5))":0.6931471805599453}
+{"lgamma(minus(number, 5))":1.791759469228055}
+{"lgamma(minus(number, 5))":3.1780538303479458}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_with_group_by = r"""
+{"even":0,"lgamma(number)":null}
+{"even":0,"lgamma(number)":1.791759469228055}
+{"even":1,"lgamma(number)":0.6931471805599453}
+{"even":0,"lgamma(number)":0}
+{"even":1,"lgamma(number)":3.1780538303479458}
+{"even":1,"lgamma(number)":0}
+{"even":0,"lgamma(number)":4.787491742782046}
+{"even":1,"lgamma(number)":6.579251212010101}
+{"even":1,"lgamma(number)":10.60460290274525}
+{"even":0,"lgamma(number)":8.525161361065413}
+"""
+
+_functions_math_functions_test_all_math_functions_lgamma_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_sqrt_Decimal128_38_ = r"""
+{"sqrt(decimal128_38_)":1}
+{"sqrt(decimal128_38_)":null}
+{"sqrt(decimal128_38_)":0}
+{"sqrt(decimal128_38_)":null}
+{"sqrt(decimal128_38_)":0.5981769520245185}
+{"sqrt(decimal128_38_)":null}
+{"sqrt(decimal128_38_)":0.7680459832862263}
+{"sqrt(decimal128_38_)":0.832414453016512}
+{"sqrt(decimal128_38_)":null}
+{"sqrt(decimal128_38_)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_sqrt_first_non_NULL_value = r"""
+{"sqrt(x)":null}
+{"sqrt(x)":null}
+{"sqrt(x)":null}
+{"sqrt(x)":1.7320508075688772}
+{"sqrt(x)":2}
+{"sqrt(x)":2.23606797749979}
+"""
+

@@ -1,0 +1,78 @@
+_functions_math_functions_test_all_math_functions_degrees_first_non_NULL_value = r"""
+{"degrees(x)":null}
+{"degrees(x)":null}
+{"degrees(x)":null}
+{"degrees(x)":171.88733853924697}
+{"degrees(x)":229.1831180523293}
+{"degrees(x)":286.4788975654116}
+"""
+
+_functions_math_functions_test_all_math_functions_factorial_constant = r"""
+{"factorial(1)":"1"}
+"""
+
+_functions_math_functions_test_all_math_functions_factorial_first_non_NULL_value = r"""
+{"factorial(x)":null}
+{"factorial(x)":null}
+{"factorial(x)":null}
+{"factorial(x)":"6"}
+{"factorial(x)":"24"}
+{"factorial(x)":"120"}
+"""
+
+_functions_math_functions_test_all_math_functions_factorial_return_type = r"""
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+{"toTypeName(factorial(number))":"UInt64"}
+"""
+
+_functions_math_functions_test_all_math_functions_factorial_some_negative_values = r"""
+{"factorial(minus(number, 5))":"1"}
+{"factorial(minus(number, 5))":"1"}
+{"factorial(minus(number, 5))":"1"}
+{"factorial(minus(number, 5))":"1"}
+{"factorial(minus(number, 5))":"1"}
+{"factorial(minus(number, 5))":"1"}
+{"factorial(minus(number, 5))":"2"}
+{"factorial(minus(number, 5))":"6"}
+{"factorial(minus(number, 5))":"24"}
+{"factorial(minus(number, 5))":"120"}
+"""
+
+_functions_math_functions_test_all_math_functions_factorial_with_group_by = r"""
+{"even":0,"factorial(number)":"1"}
+{"even":0,"factorial(number)":"24"}
+{"even":1,"factorial(number)":"6"}
+{"even":0,"factorial(number)":"2"}
+{"even":1,"factorial(number)":"120"}
+{"even":1,"factorial(number)":"1"}
+{"even":0,"factorial(number)":"720"}
+{"even":1,"factorial(number)":"5040"}
+{"even":1,"factorial(number)":"362880"}
+{"even":0,"factorial(number)":"40320"}
+"""
+
+_functions_math_functions_test_all_math_functions_factorial_zero_rows = r"""
+
+"""
+
+_functions_math_functions_test_all_math_functions_radians_constant = r"""
+{"radians(1)":0.017453292519943295}
+"""
+
+_functions_math_functions_test_all_math_functions_sigmoid_first_non_NULL_value = r"""
+{"sigmoid(x)":null}
+{"sigmoid(x)":null}
+{"sigmoid(x)":null}
+{"sigmoid(x)":0.9525742685384149}
+{"sigmoid(x)":0.9820137537007386}
+{"sigmoid(x)":0.9933071499788061}
+"""
+
