@@ -2,7 +2,7 @@ version: "2.3"
 
 services:
   clickhouse:
-    image: regression-$CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME
+    image: clickhouse-regression/$CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME
     pull_policy: never
     build:
       context: ..
