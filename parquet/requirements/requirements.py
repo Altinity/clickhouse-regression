@@ -6291,7 +6291,7 @@ Parquet:
           - num_rows
           - row_groups
           - key_value_metadata
-        Types:
+        Datatypes:
           Physical:
             - BOOLEAN
             - INT32
