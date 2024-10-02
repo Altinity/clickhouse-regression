@@ -529,7 +529,15 @@ Parquet:
         IfCorrupted:
           - The remaining pages in that chunk are lost.
           - If the data within a page is corrupt, that page is lost
-    
+      FormatLevelFeatures:
+        - xxxHash-based bloom filters
+        - Bloom filter length
+        - Statistics min_value, max_value
+        - Page index
+        - Page CRC32 checksum
+        - Modular encryption
+        - Size statistics 
+
     ClickHouseRead:
         functions:
           - file()
