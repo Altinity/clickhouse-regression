@@ -436,7 +436,6 @@ Parquet:
             - INTERVAL
             - JSON
             - BSON
-            - INTERVAL
             - FLOAT16
             - UNKNOWN (always null)
         Compression:
