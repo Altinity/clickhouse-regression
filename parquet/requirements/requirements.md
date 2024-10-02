@@ -379,6 +379,131 @@ The documentation used:
 - https://clickhouse.com/docs/en/integrations/data-formats/parquet#importing-from-parquet
 - https://parquet.apache.org/docs/
 
+## Test Schema
+
+```yaml
+Parquet:
+    Services:
+      - Parquet File Format
+      - ClickHouse Reading Parquet
+      - ClickHouse Writing Parquet
+    ParquetFileFormat:
+      File:
+        MagicNumber: "PAR1 (4 bytes)"
+        Metadata:
+          - version
+          - schema
+          - num_rows
+          - row_groups
+          - key_value_metadata
+        Types:
+          Physical:
+            - BOOLEAN
+            - INT32
+            - INT64
+            - INT96
+            - FLOAT (IEEE 32-bit)
+            - DOUBLE (IEEE 64-bit)
+            - BYTE_ARRAY
+            - FIXED_LEN_BYTE_ARRAY
+          Logical:
+            - STRING
+            - ENUM
+            - UUID
+            - DOUBLE
+            - UINT_8
+            - UINT_16
+            - UINT_32
+            - UINT_64
+            - INT_8
+            - INT_16
+            - INT_32
+            - INT_64
+            - MAP
+            - LIST
+            - DECIMAL (INT32)
+            - DECIMAL (INT64)
+            - DECIMAL (FIXED_LEN_BYTE_ARRAY)
+            - DECIMAL (BYTE_ARRAY)
+            - DATE
+            - TIME
+            - TIME_MILLIS
+            - TIME_MICROS
+            - TIMESTAMP
+            - TIMESTAMP_MILLIS
+            - TIMESTAMP_MICROS
+            - INTERVAL
+            - JSON
+            - BSON
+            - INTERVAL
+            - FLOAT16
+            - UNKNOWN (always null)
+        Compression:
+            - UNCOMPRESSED
+            - BROTLI
+            - GZIP
+            - LZ4 (deprecated)	
+            - LZ4_RAW
+            - LZO
+            - SNAPPY
+            - ZSTD
+        Encodings:
+            - PLAIN
+            - PLAIN_DICTIONARY
+            - RLE_DICTIONARY
+            - RLE
+            - BIT_PACKED (deprecated)	
+            - DELTA_BINARY_PACKED
+            - DELTA_LENGTH_BYTE_ARRAY
+            - DELTA_BYTE_ARRAY
+            - BYTE_STREAM_SPLIT
+        Encryption:
+            - AES_GCM_V1
+            - AES_GCM_CTR_V1
+        IfCorrupted:
+          - the file is lost
+      RowGroup:
+        Metadata:
+            - num_columns
+            - num_rows
+            - total_uncompressed_size
+            - total_compressed_size
+            - columns (the list of column chunks metadata with the next structure)
+      ColumnChunk:
+        Metadata:
+            - name
+            - path
+            - total_compressed_size
+            - total_uncompressed_size
+            - have_statistics
+            - statistics
+            - statistics:
+                - num_values
+                - null_count
+                - distinct_count
+                - min - the minimum value of the column chunk
+                - max - the maximum column of the column chunk
+        IfCorrupted:
+          - Only that column chunk is lost (but column chunks for this column in other row groups are okay)
+      PageHeader:
+        Metadata:
+            - type
+            - uncompressed_page_size
+            - compressed_page_size
+            - crc
+            - data_page_header:
+                - num_values
+                - encoding
+                - definition_level_encoding
+                - repetition_level_encoding
+            - index_page_header
+            - dictionary_page_header:
+                - num_values
+        IfCorrupted:
+          - The remaining pages in that chunk are lost.
+          - If the data within a page is corrupt, that page is lost
+```
+
 ## Feature Diagram
 
 ```mermaid
