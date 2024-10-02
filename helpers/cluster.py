@@ -1459,7 +1459,7 @@ class Cluster(object):
             else:
                 assert base_os is not None, error("base_os must be specified")
                 self.base_os = base_os.split("docker://", 1)[-1]
-                base_os_name = self.base_os.replace(":", "-").replace("/", "-")
+                base_os_name = self.base_os.replace(":", "-")
 
                 if clickhouse_package.package_path:
                     package_name = os.path.basename(clickhouse_package.package_path)
@@ -1495,7 +1495,7 @@ class Cluster(object):
             else:
                 assert base_os is not None, error("base_os must be specified")
                 self.keeper_base_os = base_os.split("docker://", 1)[-1]
-                base_os_name = self.keeper_base_os.replace(":", "-").replace("/", "-")
+                base_os_name = self.keeper_base_os.replace(":", "-")
 
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
