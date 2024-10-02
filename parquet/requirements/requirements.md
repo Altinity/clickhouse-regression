@@ -480,19 +480,6 @@ Parquet:
         IfCorrupted:
             - Only that row group is lost
       ColumnChunk:
-        Metadata2:
-            - name
-            - path
-            - total_compressed_size
-            - total_uncompressed_size
-            - have_statistics
-            - statistics
-            - statistics:
-                - num_values
-                - null_count
-                - distinct_count
-                - min - the minimum value of the column chunk
-                - max - the maximum column of the column chunk
         Metadata:
           - file_path
           - file_offset
