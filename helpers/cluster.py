@@ -1463,19 +1463,15 @@ class Cluster(object):
 
                 if clickhouse_package.package_path:
                     package_name = os.path.basename(clickhouse_package.package_path)
-                    self.clickhouse_docker_image_name = (
-                        f"base-os/{base_os_name}:{package_name}"
-                    )
+                    self.clickhouse_docker_image_name = f"{base_os_name}:{package_name}"
                     self.clickhouse_binary_path = os.path.relpath(
                         clickhouse_package.package_path
                     )
                 else:
-                    self.clickhouse_docker_image_name = (
-                        f"base-os/{base_os_name}:local-binary"
-                    )
+                    self.clickhouse_docker_image_name = f"{base_os_name}:local-binary"
                     with Shell() as bash:
                         bash(  # Force rebuild
-                            f"docker rmi --force regression-{self.clickhouse_docker_image_name}"
+                            f"docker rmi --force clickhouse-regression/{self.clickhouse_docker_image_name}"
                         )
 
         if self.keeper_binary_path:
@@ -1503,19 +1499,15 @@ class Cluster(object):
 
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
-                    self.keeper_docker_image_name = (
-                        f"base-os/{base_os_name}:{package_name}"
-                    )
+                    self.keeper_docker_image_name = f"{base_os_name}:{package_name}"
                     self.keeper_binary_path = os.path.relpath(
                         keeper_package.package_path
                     )
                 else:
-                    self.keeper_docker_image_name = (
-                        f"base-os/{base_os_name}:local-binary"
-                    )
+                    self.keeper_docker_image_name = f"{base_os_name}:local-binary"
                     with Shell() as bash:
                         bash(  # Force rebuild
-                            f"docker rmi --force regression-{self.keeper_docker_image_name}"
+                            f"docker rmi --force clickhouse-regression/{self.keeper_docker_image_name}"
                         )
 
         else:
