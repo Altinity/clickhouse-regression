@@ -1,0 +1,215 @@
+_functions_math_functions_test_all_math_functions_log_Decimal128_38_ = r"""
+{"log(decimal128_38_)":0}
+{"log(decimal128_38_)":null}
+{"log(decimal128_38_)":null}
+{"log(decimal128_38_)":null}
+{"log(decimal128_38_)":-1.027737326236721}
+{"log(decimal128_38_)":null}
+{"log(decimal128_38_)":-0.5278113478266948}
+{"log(decimal128_38_)":-0.366849642444641}
+{"log(decimal128_38_)":null}
+{"log(decimal128_38_)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_Float32 = r"""
+{"log(float32)":88.72284}
+{"log(float32)":null}
+{"log(float32)":null}
+{"log(float32)":null}
+{"log(float32)":null}
+{"log(float32)":null}
+{"log(float32)":86.99265}
+{"log(float32)":null}
+{"log(float32)":null}
+{"log(float32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_Float64 = r"""
+{"log(float64)":709.7827117058267}
+{"log(float64)":null}
+{"log(float64)":null}
+{"log(float64)":null}
+{"log(float64)":null}
+{"log(float64)":null}
+{"log(float64)":152.12629946288217}
+{"log(float64)":193.7412001655839}
+{"log(float64)":null}
+{"log(float64)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_Int16 = r"""
+{"log(int16)":10.397177190355382}
+{"log(int16)":null}
+{"log(int16)":null}
+{"log(int16)":7.32580750268952}
+{"log(int16)":5.978885766097928}
+{"log(int16)":10.371207325846926}
+{"log(int16)":null}
+{"log(int16)":9.168684695979728}
+{"log(int16)":null}
+{"log(int16)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_Int32 = r"""
+{"log(int32)":21.487562596892644}
+{"log(int32)":null}
+{"log(int32)":null}
+{"log(int32)":null}
+{"log(int32)":21.35123040431645}
+{"log(int32)":null}
+{"log(int32)":19.93424501029003}
+{"log(int32)":20.767733353911698}
+{"log(int32)":null}
+{"log(int32)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_Int64 = r"""
+{"log(int64)":43.66827237527655}
+{"log(int64)":null}
+{"log(int64)":null}
+{"log(int64)":42.918105568122314}
+{"log(int64)":null}
+{"log(int64)":42.738992237747965}
+{"log(int64)":null}
+{"log(int64)":42.445999565260685}
+{"log(int64)":36.80242980275751}
+{"log(int64)":42.83828350832815}
+"""
+
+_functions_math_functions_test_all_math_functions_log_Int8 = r"""
+{"log(int8)":4.844187086466265}
+{"log(int8)":null}
+{"log(int8)":null}
+{"log(int8)":4.744932128434396}
+{"log(int8)":null}
+{"log(int8)":null}
+{"log(int8)":null}
+{"log(int8)":4.418840608432642}
+{"log(int8)":null}
+{"log(int8)":4.820281565719088}
+"""
+
+_functions_math_functions_test_all_math_functions_log_UInt16 = r"""
+{"log(uint16)":11.090339630053645}
+{"log(uint16)":null}
+{"log(uint16)":null}
+{"log(uint16)":10.520644220545007}
+{"log(uint16)":10.175192670627151}
+{"log(uint16)":9.822602823584749}
+{"log(uint16)":10.910916135011302}
+{"log(uint16)":9.735483016451953}
+{"log(uint16)":10.20414754565834}
+{"log(uint16)":8.932212512624824}
+"""
+
+_functions_math_functions_test_all_math_functions_log_UInt32 = r"""
+{"log(uint32)":22.18070977768542}
+{"log(uint32)":null}
+{"log(uint32)":null}
+{"log(uint32)":20.625014425276216}
+{"log(uint32)":21.74229936520597}
+{"log(uint32)":21.8957125895541}
+{"log(uint32)":22.135190410442924}
+{"log(uint32)":21.84901533387426}
+{"log(uint32)":21.670829018757477}
+{"log(uint32)":21.568300914862387}
+"""
+
+_functions_math_functions_test_all_math_functions_log_UInt64 = r"""
+{"log(uint64)":44.3614195558365}
+{"log(uint64)":null}
+{"log(uint64)":null}
+{"log(uint64)":42.84198345107246}
+{"log(uint64)":43.639273004277435}
+{"log(uint64)":44.2175272442993}
+{"log(uint64)":43.08365944859334}
+{"log(uint64)":42.56706821905042}
+{"log(uint64)":44.262425612982916}
+{"log(uint64)":44.291711443852535}
+"""
+
+_functions_math_functions_test_all_math_functions_log_UInt8 = r"""
+{"log(uint8)":5.541263545160263}
+{"log(uint8)":null}
+{"log(uint8)":null}
+{"log(uint8)":5.093750201910266}
+{"log(uint8)":5.30330490888679}
+{"log(uint8)":5.164785973037619}
+{"log(uint8)":5.438079308994341}
+{"log(uint8)":4.779123493413913}
+{"log(uint8)":3.1780538310608284}
+{"log(uint8)":4.8362819069823075}
+"""
+
+_functions_math_functions_test_all_math_functions_log__inf = r"""
+{"log(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_constant = r"""
+{"log(1)":0}
+"""
+
+_functions_math_functions_test_all_math_functions_log_first_non_NULL_value = r"""
+{"log(x)":null}
+{"log(x)":null}
+{"log(x)":null}
+{"log(x)":1.0986122893809924}
+{"log(x)":1.3862943611198906}
+{"log(x)":1.6094379132876024}
+"""
+
+_functions_math_functions_test_all_math_functions_log_inf = r"""
+{"log(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_nan = r"""
+{"log(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_only_nan = r"""
+{"log(x)":null}
+"""
+
+_functions_math_functions_test_all_math_functions_log_return_type = r"""
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+{"toTypeName(log(number))":"Float64"}
+"""
+
+_functions_math_functions_test_all_math_functions_log_some_negative_values = r"""
+{"log(minus(number, 5))":null}
+{"log(minus(number, 5))":null}
+{"log(minus(number, 5))":null}
+{"log(minus(number, 5))":null}
+{"log(minus(number, 5))":null}
+{"log(minus(number, 5))":0}
+{"log(minus(number, 5))":0.6931471805599453}
+{"log(minus(number, 5))":1.0986122893809924}
+{"log(minus(number, 5))":1.3862943611198906}
+{"log(minus(number, 5))":1.6094379132876024}
+"""
+
+_functions_math_functions_test_all_math_functions_log_with_group_by = r"""
+{"even":0,"log(number)":null}
+{"even":0,"log(number)":1.3862943611198906}
+{"even":1,"log(number)":1.0986122893809924}
+{"even":0,"log(number)":0.6931471805599453}
+{"even":1,"log(number)":1.6094379132876024}
+{"even":1,"log(number)":0}
+{"even":0,"log(number)":1.7917594699409376}
+{"even":1,"log(number)":1.945910148700207}
+{"even":1,"log(number)":2.1972245771389134}
+{"even":0,"log(number)":2.0794415416798357}
+"""
+
+_functions_math_functions_test_all_math_functions_log_zero_rows = r"""
+
+"""
+
