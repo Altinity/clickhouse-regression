@@ -1255,7 +1255,7 @@ class ClickHouseKeeperNode(Node):
 class PackageDownloader:
     """Download and unpack packages."""
 
-    package_formats = (".deb", ".rpm", ".tar.gz", ".tar", ".tgz")
+    package_formats = (".deb", ".rpm", ".tgz")
 
     def __init__(self, source, program_name="clickhouse"):
         self.source = source
@@ -1458,10 +1458,13 @@ class Cluster(object):
                 self.clickhouse_docker_image_name = clickhouse_package.docker_image
             else:
                 if base_os is None:
-                    assert not clickhouse_package.package_path.endswith(".rpm"), error("base_os must be specified for rpm packages")
-                    base_os = "altinityinfra/clickhouse-regression-multiarch:2.0"
-                   
-                self.base_os = base_os.split("docker://", 1)[-1]
+                    assert not clickhouse_package.package_path.endswith(".rpm"), error(
+                        "base_os must be specified for rpm packages"
+                    )
+                    self.base_os = "altinityinfra/clickhouse-regression-multiarch:2.0"
+                else:
+                    self.base_os = base_os.split("docker://", 1)[-1]
+
                 base_os_name = self.base_os.replace(":", "-")
 
                 if clickhouse_package.package_path:
@@ -1496,8 +1499,16 @@ class Cluster(object):
             if keeper_package.docker_image:
                 self.keeper_docker_image_name = keeper_package.docker_image
             else:
-                assert base_os is not None, error("base_os must be specified")
-                self.keeper_base_os = base_os.split("docker://", 1)[-1]
+                if base_os is None:
+                    assert not clickhouse_package.package_path.endswith(".rpm"), error(
+                        "base_os must be specified for rpm packages"
+                    )
+                    self.keeper_base_os = (
+                        "altinityinfra/clickhouse-regression-multiarch:2.0"
+                    )
+                else:
+                    self.keeper_base_os = base_os.split("docker://", 1)[-1]
+
                 base_os_name = self.keeper_base_os.replace(":", "-")
 
                 if keeper_package.package_path:
