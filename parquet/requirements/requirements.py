@@ -6363,6 +6363,8 @@ Parquet:
             - total_uncompressed_size
             - total_compressed_size
             - columns (the list of column chunks metadata with the next structure)
+        IfCorrupted:
+            - Only that row group is lost
       ColumnChunk:
         Metadata:
             - name
