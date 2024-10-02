@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt-get update
 RUN apt-get -y upgrade
@@ -24,7 +24,7 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     liblua5.1-dev \
     luajit \
     libssl-dev \
-    libgcc-7-dev \
+    libgcc-9-dev \
     apt-transport-https \
     dirmngr \
     gnupg \
