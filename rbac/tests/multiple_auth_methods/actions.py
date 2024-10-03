@@ -336,6 +336,20 @@ def create_user(
                 client_query(query=drop_query, client=client)
 
 
+def password_has_expired(auth_method):
+    """Check if authentication method has expired."""
+    if auth_method.valid_until == None:
+        return False
+
+    diff = current().context.node.query(
+        f"SELECT toDateTime('{auth_method.valid_until}')-now()"
+    )
+    if int(diff.output) > 0:
+        return False
+
+    return True
+
+
 @TestStep(Then)
 def successful_login(self, user: CreateUser, node=None):
     """Check user can login with valid passwords."""

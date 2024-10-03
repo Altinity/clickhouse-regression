@@ -122,7 +122,9 @@ class AlterUser(Query):
             self.query += " IDENTIFIED"
         return self
 
-    def _set_identification(self, method, value=None, extra=None, node=None):
+    def _set_identification(
+        self, method, value=None, extra=None, node=None, valid_until=None
+    ):
         if len(self._identification[node]) > 1:
             self.query += ","
         else:
@@ -131,8 +133,13 @@ class AlterUser(Query):
             self.query += f" {method} BY '{value}'"
         else:
             self.query += f" {method}"
+
         if extra:
             self.query += f" {extra}"
+
+        if valid_until:
+            self.query += f" VALID UNTIL '{valid_until}'"
+
         return self
 
     def set_not_identified(self):
@@ -140,65 +147,118 @@ class AlterUser(Query):
         self.query += " NOT IDENTIFIED"
         return self
 
-    def set_by_password(self, password, node=None, on_cluster=None):
+    def set_by_password(self, password, node=None, on_cluster=None, valid_until=None):
         if on_cluster:
             for node in current().context.nodes:
-                self._identification[node].append(Identification("password", password))
+                self._identification[node].append(
+                    Identification(
+                        method="password", password=password, valid_until=valid_until
+                    )
+                )
         else:
-            self._identification[node].append(Identification("password", password))
+            self._identification[node].append(
+                Identification(
+                    method="password", password=password, valid_until=valid_until
+                )
+            )
 
         if len(self._identification[node]) > 1:
             self.query += ","
         self.query += f" BY '{password}'"
+
+        if valid_until:
+            self.query += f" VALID UNTIL '{valid_until}'"
         return self
 
-    def set_with_no_password(self, node=None, on_cluster=None):
-        if on_cluster:
-            for node in current().context.nodes:
-                self._identification[node].append(Identification("no_password"))
-        else:
-            self._identification[node].append(Identification("no_password"))
-        return self._set_identification("no_password", node=node)
-
-    def set_with_plaintext_password(self, password, node=None, on_cluster=None):
+    def set_with_no_password(self, node=None, on_cluster=None, valid_until=None):
         if on_cluster:
             for node in current().context.nodes:
                 self._identification[node].append(
-                    Identification("plaintext_password", password)
+                    Identification(method="no_password", valid_until=valid_until)
                 )
         else:
             self._identification[node].append(
-                Identification("plaintext_password", password)
+                Identification(method="no_password", valid_until=valid_until)
             )
-        return self._set_identification("plaintext_password", password, node=node)
+        return self._set_identification(
+            "no_password", node=node, valid_until=valid_until
+        )
 
-    def set_with_sha256_password(self, password, node=None, on_cluster=None):
+    def set_with_plaintext_password(
+        self, password, node=None, on_cluster=None, valid_until=None
+    ):
         if on_cluster:
             for node in current().context.nodes:
                 self._identification[node].append(
-                    Identification("sha256_password", password)
+                    Identification(
+                        method="plaintext_password",
+                        password=password,
+                        valid_until=valid_until,
+                    )
                 )
         else:
             self._identification[node].append(
-                Identification("sha256_password", password)
+                Identification(
+                    method="plaintext_password",
+                    password=password,
+                    valid_until=valid_until,
+                )
             )
-        return self._set_identification("sha256_password", password, node=node)
+        return self._set_identification(
+            "plaintext_password", password, node=node, valid_until=valid_until
+        )
 
-    def set_with_sha256_hash(self, password, node=None, on_cluster=None):
+    def set_with_sha256_password(
+        self, password, node=None, on_cluster=None, valid_until=None
+    ):
+        if on_cluster:
+            for node in current().context.nodes:
+                self._identification[node].append(
+                    Identification(
+                        method="sha256_password",
+                        password=password,
+                        valid_until=valid_until,
+                    )
+                )
+        else:
+            self._identification[node].append(
+                Identification(
+                    method="sha256_password", password=password, valid_until=valid_until
+                )
+            )
+        return self._set_identification(
+            "sha256_password", password, node=node, valid_until=valid_until
+        )
+
+    def set_with_sha256_hash(
+        self, password, node=None, on_cluster=None, valid_until=None
+    ):
         hash_value = hashlib.sha256(password.encode("utf-8")).hexdigest()
         if on_cluster:
             for node in current().context.nodes:
                 self._identification[node].append(
-                    Identification("sha256_hash", password, hash_value)
+                    Identification(
+                        method="sha256_hash",
+                        password=password,
+                        hash_value=hash_value,
+                        valid_until=valid_until,
+                    )
                 )
         else:
             self._identification[node].append(
-                Identification("sha256_hash", password, hash_value)
+                Identification(
+                    method="sha256_hash",
+                    password=password,
+                    hash_value=hash_value,
+                    valid_until=valid_until,
+                )
             )
-        return self._set_identification("sha256_hash", hash_value, node=node)
+        return self._set_identification(
+            "sha256_hash", hash_value, node=node, valid_until=valid_until
+        )
 
     def set_with_sha256_hash_with_salt(
-        self, password, salt, node=None, on_cluster=None
+        self, password, salt, node=None, on_cluster=None, valid_until=None
     ):
         salted_password = password.encode("utf-8") + salt.encode("utf-8")
         hash_value = hashlib.sha256(salted_password).hexdigest()
@@ -206,63 +266,115 @@ class AlterUser(Query):
             for node in current().context.nodes:
                 self._identification[node].append(
                     Identification(
-                        "sha256_hash_with_salt", password, hash_value, salt=salt
+                        method="sha256_hash_with_salt",
+                        password=password,
+                        hash_value=hash_value,
+                        salt=salt,
+                        valid_until=valid_until,
                     )
                 )
         else:
             self._identification[node].append(
-                Identification("sha256_hash_with_salt", password, hash_value, salt=salt)
+                Identification(
+                    method="sha256_hash_with_salt",
+                    password=password,
+                    hash_value=hash_value,
+                    salt=salt,
+                    valid_until=valid_until,
+                )
             )
         return self._set_identification(
             "sha256_hash",
             hash_value,
             extra=f" SALT '{salt}'",
             node=node,
+            valid_until=valid_until,
         )
 
-    def set_with_double_sha1_password(self, password, node=None, on_cluster=None):
+    def set_with_double_sha1_password(
+        self, password, node=None, on_cluster=None, valid_until=None
+    ):
         if on_cluster:
             for node in current().context.nodes:
                 self._identification[node].append(
-                    Identification("double_sha1_password", password)
+                    Identification(
+                        method="double_sha1_password",
+                        password=password,
+                        valid_until=valid_until,
+                    )
                 )
         else:
             self._identification[node].append(
-                Identification("double_sha1_password", password)
+                Identification(
+                    method="double_sha1_password",
+                    password=password,
+                    valid_until=valid_until,
+                )
             )
 
-        return self._set_identification("double_sha1_password", password, node=node)
+        return self._set_identification(
+            "double_sha1_password",
+            password,
+            node=node,
+            valid_until=valid_until,
+        )
 
-    def set_with_double_sha1_hash(self, password, node=None, on_cluster=None):
+    def set_with_double_sha1_hash(
+        self, password, node=None, on_cluster=None, valid_until=None
+    ):
         hash_value = hashlib.sha1(
             hashlib.sha1(password.encode("utf-8")).digest()
         ).hexdigest()
         if on_cluster:
             for node in current().context.nodes:
                 self._identification[node].append(
-                    Identification("double_sha1_hash", password, hash_value)
+                    Identification(
+                        method="double_sha1_hash",
+                        password=password,
+                        hash_value=hash_value,
+                        valid_until=valid_until,
+                    )
                 )
         else:
             self._identification[node].append(
-                Identification("double_sha1_hash", password, hash_value)
+                Identification(
+                    method="double_sha1_hash",
+                    password=password,
+                    hash_value=hash_value,
+                    valid_until=valid_until,
+                )
             )
 
-        return self._set_identification("double_sha1_hash", hash_value, node=node)
+        return self._set_identification(
+            "double_sha1_hash", hash_value, node=node, valid_until=valid_until
+        )
 
-    def set_with_bcrypt_password(self, password, node=None, on_cluster=None):
+    def set_with_bcrypt_password(
+        self, password, node=None, on_cluster=None, valid_until=None
+    ):
         if on_cluster:
             for node in current().context.nodes:
                 self._identification[node].append(
-                    Identification("bcrypt_password", password)
+                    Identification(
+                        method="bcrypt_password",
+                        password=password,
+                        valid_until=valid_until,
+                    )
                 )
         else:
             self._identification[node].append(
-                Identification("bcrypt_password", password)
+                Identification(
+                    method="bcrypt_password", password=password, valid_until=valid_until
+                )
             )
 
-        return self._set_identification("bcrypt_password", password, node=node)
+        return self._set_identification(
+            "bcrypt_password", password, node=node, valid_until=valid_until
+        )
 
-    def set_with_bcrypt_hash(self, password, node=None, on_cluster=None):
+    def set_with_bcrypt_hash(
+        self, password, node=None, on_cluster=None, valid_until=None
+    ):
         password_bytes = password.encode("utf-8")
         salt = bcrypt.gensalt()
         hash_value = (
@@ -271,13 +383,25 @@ class AlterUser(Query):
         if on_cluster:
             for node in current().context.nodes:
                 self._identification[node].append(
-                    Identification("bcrypt_hash", password, hash_value)
+                    Identification(
+                        method="bcrypt_hash",
+                        password=password,
+                        hash_value=hash_value,
+                        valid_until=valid_until,
+                    )
                 )
         else:
             self._identification[node].append(
-                Identification("bcrypt_hash", password, hash_value)
+                Identification(
+                    method="bcrypt_hash",
+                    password=password,
+                    hash_value=hash_value,
+                    valid_until=valid_until,
+                )
             )
-        return self._set_identification("bcrypt_hash", hash_value, node=node)
+        return self._set_identification(
+            "bcrypt_hash", hash_value, node=node, valid_until=valid_until
+        )
 
     def set_with_ldap_server(self, server_name):
         self._identification.append(

@@ -176,6 +176,67 @@ class Model:
 
         return actions.expect_password_or_user_is_incorrect_error
 
+    def expect_expired_password_error(self, behavior, node):
+        current_ = behavior[-1]
+
+        if not isinstance(current_, States.Query):
+            return
+
+        if not current_.connection_options:
+            return
+
+        auth_methods = None
+
+        for state in behavior[:-1]:
+            if isinstance(state, States.CreateUser) and not state.errored:
+                for username in state.usernames:
+                    if username.name == current_.connection_options.get(
+                        "user", "default"
+                    ):
+                        auth_methods = list(state.identification[node])
+
+            elif isinstance(state, States.DropUser) and not state.errored:
+                for username in state.usernames:
+                    if username.name == current_.connection_options.get(
+                        "user", "default"
+                    ):
+                        auth_methods = None
+
+            elif isinstance(state, States.AlterUser) and not state.errored:
+                for username in state.usernames:
+                    if username.name == current_.connection_options.get(
+                        "user", "default"
+                    ):
+                        if state.reset_auth_methods_to_new[node]:
+                            auth_methods = list([auth_methods[-1]])
+                        elif state.identification[node]:
+                            auth_methods = list(state.identification[node])
+                        elif state.add_identification[node]:
+                            _auth_methods = []
+                            for auth_method in auth_methods:
+                                if auth_method.method != "no_password":
+                                    _auth_methods.append(auth_method)
+                            auth_methods = _auth_methods
+                            auth_methods += list(state.add_identification[node])
+                        else:
+                            pass
+
+        if auth_methods:
+            for auth_method in auth_methods:
+                if auth_method.method == "no_password":
+                    return
+                if auth_method.password == current_.connection_options.get(
+                    "password", ""
+                ):
+                    if auth_method.valid_until:
+                        diff = current().context.node.query(
+                            f"SELECT toDateTime('{auth_method.valid_until}')-now()"
+                        )
+                        if int(diff.output) < 0:
+                            return actions.expect_password_or_user_is_incorrect_error
+
+        return
+
     def expect_there_no_user_error(self, behavior):
         """Expect there is no user error."""
         current_ = behavior[-1]
@@ -224,6 +285,7 @@ class Model:
             or self.expect_no_password_auth_cannot_coexist_with_others_error(behavior)
             or self.expect_password_or_user_is_incorrect_error(behavior, node)
             or self.expect_user_already_exists_error(behavior)
+            or self.expect_expired_password_error(behavior, node)
             or self.expect_ok(behavior)
         )
 
