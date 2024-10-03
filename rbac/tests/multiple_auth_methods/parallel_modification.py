@@ -21,6 +21,8 @@ from rbac.tests.multiple_auth_methods.combinations import (
     ways_to_drop,
 )
 
+random.seed(42)
+
 
 @TestStep(Then)
 def check_server_is_running(self, node=None):
