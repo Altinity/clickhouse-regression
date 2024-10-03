@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt-get update
 RUN apt-get -y upgrade
@@ -24,7 +24,7 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     liblua5.1-dev \
     luajit \
     libssl-dev \
-    libgcc-7-dev \
+    libgcc-9-dev \
     apt-transport-https \
     dirmngr \
     gnupg \
@@ -43,13 +43,15 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+RUN pip install "cython<3.0.0" wheel
+RUN pip install "pyyaml==5.4.1" --no-build-isolation
 RUN pip install pytz
 RUN pip install pytest docker-compose docker dicttoxml kazoo PyMySQL pymongo tzlocal protobuf redis pandas parquet-tools flask
 RUN pip install pytest-timeout boto3 minio pyarrow
 RUN pip install clickhouse-driver
 
-ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 20.10.9
+ENV DOCKER_CHANNEL=stable
+ENV DOCKER_VERSION=20.10.9
 
 RUN set -eux; ARCH=$(uname -i); \
 	if ! wget -O docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${ARCH}/docker-${DOCKER_VERSION}.tgz"; then \
