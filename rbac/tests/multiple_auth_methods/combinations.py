@@ -13,6 +13,8 @@ from rbac.requirements import *
 import rbac.tests.multiple_auth_methods.actions as actions
 import rbac.tests.multiple_auth_methods.model as models
 
+random.seed(42)
+
 
 @TestStep(Given)
 def create_user_auth_methods_combinations(self):
