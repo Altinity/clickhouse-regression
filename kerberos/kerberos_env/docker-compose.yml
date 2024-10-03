@@ -7,6 +7,8 @@ services:
       file: kerberos-service.yml
       service: kerberos
     hostname: kerberos
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   clickhouse1:
     extends:
@@ -18,6 +20,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/users.d:/etc/clickhouse-server/users.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   clickhouse2:
     extends:
@@ -29,6 +32,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/users.d:/etc/clickhouse-server/users.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   clickhouse3:
     extends:
@@ -40,6 +44,33 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/users.d:/etc/clickhouse-server/users.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
+
+  bash-tools:
+    extends:
+      file: ../../docker-compose/bash-tools.yml
+      service: bash-tools
+    hostname: bash-tools
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/kerberos/etc/krb5.conf:/etc/krb5.conf"
+    environment:
+      KRB5_CLIENT_KTNAME: /etc/krb5.keytab
+      KRB5_KTNAME: /etc/krb5.keytab
+      KRB5CCNAME: /tmp/krb5cc_0
+  
+  bash-tools-2:
+    extends:
+      file: ../../docker-compose/bash-tools.yml
+      service: bash-tools
+    hostname: bash-tools
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/kerberos/etc/krb5.conf:/etc/krb5.conf"
+    environment:
+      KRB5_CLIENT_KTNAME: /etc/krb5.keytab
+      KRB5_KTNAME: /etc/krb5.keytab
+      KRB5CCNAME: /tmp/krb5cc_0
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy

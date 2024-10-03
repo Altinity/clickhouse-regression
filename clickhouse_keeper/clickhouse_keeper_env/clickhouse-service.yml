@@ -21,8 +21,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/altinity_blog_ca.crt:/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-client/:/etc/clickhouse-client"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/break-hash:/var/lib/break-hash"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/https_app_file.py:/https_app_file.py"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/http_app_file.py:/http_app_file.py"
 
     deploy:
       resources:

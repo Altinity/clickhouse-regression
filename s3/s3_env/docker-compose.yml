@@ -179,6 +179,8 @@ services:
     extends:
       file: ../../docker-compose/keeper-service.yml
       service: keeper1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper/"
 
   clickhouse1:
     extends:
@@ -195,6 +197,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -241,6 +244,8 @@ services:
     extends:
       file: ../../docker-compose/aws-client.yml
       service: aws
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy

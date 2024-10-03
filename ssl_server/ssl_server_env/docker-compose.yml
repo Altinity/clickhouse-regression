@@ -25,7 +25,6 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/etc/:/etc/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper:
@@ -39,7 +38,6 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/etc/:/etc/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper:
@@ -53,7 +51,6 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/etc/:/etc/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper:
@@ -67,10 +64,17 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/logs/:/var/log/clickhouse-server/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/etc/:/etc/clickhouse-server/"
     depends_on:
       zookeeper:
         condition: service_healthy
+
+  bash-tools:
+    extends:
+      file: ../../docker-compose/bash-tools.yml
+      service: bash-tools
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/https_app_file.py:/https_app_file.py"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/http_app_file.py:/http_app_file.py"
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy

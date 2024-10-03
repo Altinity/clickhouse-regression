@@ -46,7 +46,7 @@ def main(port: int, protocol: str, ciphers: str):
     https_protocol = getattr(ssl, f"PROTOCOL_{protocol}")
     ssl_context = create_context(https_protocol, ciphers)
 
-    app.run(port=port, debug=False, ssl_context=ssl_context)
+    app.run(host="0.0.0.0", port=port, debug=False, ssl_context=ssl_context)
 
 
 if __name__ == "__main__":

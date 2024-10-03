@@ -6,7 +6,6 @@ services:
       file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/../helpers/corrupt_file:/usr/bin/corrupt_file"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
@@ -16,5 +15,3 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
-      - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
-      - "${CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH:-/usr/bin/clickhouse-odbc-bridge}:/usr/bin/clickhouse-odbc-bridge"

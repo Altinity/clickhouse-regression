@@ -18,12 +18,9 @@ def save_binary_to_another_directory(self):
     """Copy the existing binary file to the separate directory in order to save it."""
     node_with_different_version = self.context.node_with_different_version
 
-    node_with_different_version.command("mkdir /usr/bin/clickhouse_different_version")
+    node_with_different_version.command("mkdir /usr/bin/clickhouse_main_version")
     node_with_different_version.command(
-        "cp /usr/bin/clickhouse /usr/bin/clickhouse_different_version"
-    )
-    node_with_different_version.command(
-        "cp /usr/bin/clickhouse-odbc-bridge /usr/bin/clickhouse_different_version"
+        "cp /usr/bin/clickhouse /usr/bin/clickhouse_main_version"
     )
 
 
@@ -46,6 +43,12 @@ def change_clickhouse_version(self):
 
         node_with_different_version.start_clickhouse(check_version=False)
 
+    with And("checking the current version"):
+        version = node_with_different_version.query("SELECT version()").output
+        assert (
+            version != self.context.clickhouse_version
+        ), f"{version} == {self.context.clickhouse_version}"
+
 
 @TestStep(When)
 def revert_clickhouse_version(self):
@@ -67,6 +70,12 @@ def revert_clickhouse_version(self):
             )
 
         node_with_different_version.start_clickhouse(check_version=False)
+
+    with And("checking the current version"):
+        version = node_with_different_version.query("SELECT version()").output
+        assert check_clickhouse_version(version)(
+            self
+        ), f"{version} != {self.context.clickhouse_version}"
 
 
 @TestCheck
