@@ -463,7 +463,7 @@ class ZooKeeperNode(Node):
 
         with And("checking pid does not exist"):
             retry(self.command, timeout=timeout, delay=3)(
-                f"ps {pid}", steps=False, exitcode=1
+                f"ps {pid} | grep -v grep | grep ' {pid} '", steps=False, exitcode=1
             )
 
     def stop_zookeeper(self, timeout=300):
@@ -633,7 +633,11 @@ class ClickHouseNode(Node):
                     if i > 0 and i % 20 == 0:
                         self.command(f"kill -KILL {pid}", no_checks=True, steps=False)
                     if (
-                        self.command(f"ps {pid}", steps=False, no_checks=True).exitcode
+                        self.command(
+                            f"ps {pid} | grep -v grep | grep ' clickhouse.server '",
+                            steps=False,
+                            no_checks=True,
+                        ).exitcode
                         != 1
                     ):
                         fail("pid still alive")
@@ -1248,6 +1252,80 @@ class ClickHouseKeeperNode(Node):
             self.start_keeper(timeout=timeout, user=user)
 
 
+class PackageDownloader:
+    """Download and unpack packages."""
+
+    package_formats = (".deb", ".rpm", ".tgz")
+
+    def __init__(self, source, program_name="clickhouse"):
+        self.source = source
+        self.binary_path = None
+        self.docker_image = None
+        self.program_name = program_name
+        self.package_path = None
+        self.package_version = None
+
+        if source.startswith("docker://"):
+            self.get_binary_from_docker(source)
+
+        elif source.startswith(("http://", "https://")):
+            self.get_binary_from_url(source)
+
+        elif source.endswith(self.package_formats):
+            self.get_binary_from_package(source)
+
+        else:
+            self.binary_path = source
+
+        if self.binary_path:
+            with Shell() as bash:
+                if os.path.relpath(self.binary_path).startswith("../.."):
+                    # Binary is outside of the build context, move it to where docker can find it
+                    new_path = f"{current_dir()}/../binaries/{os.path.basename(self.binary_path)}"
+                    bash(
+                        f"mkdir -p {current_dir()}/../binaries/ && cp {self.binary_path} {new_path}"
+                    )
+                    self.binary_path = os.path.relpath(new_path)
+
+                bash(f"chmod +x {self.binary_path}")
+
+                if not self.package_version:
+                    self.package_version = bash(
+                        f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                    ).output.strip(".")
+
+    def get_binary_from_docker(self, source):
+        self.docker_image = source.split("docker://", 1)[1]
+
+        self.package_version = parse_version_from_docker_path(self.docker_image)
+        self.binary_path = get_binary_from_docker_container(
+            docker_image=source,
+            container_binary_path=f"/usr/bin/{self.program_name}",
+        )
+
+    def get_binary_from_url(self, source):
+        path = download_http_binary(binary_source=source)
+        if path.endswith(self.package_formats):
+            self.get_binary_from_package(path)
+        else:
+            self.binary_path = path
+
+    def get_binary_from_package(self, source):
+        self.package_path = source
+        if source.endswith(".deb"):
+            self.get_binary_from_deb(source)
+        elif source.endswith(".rpm"):
+            pass
+        elif source.endswith((".tar.gz", ".tar", ".tgz")):
+            pass
+
+    def get_binary_from_deb(self, source):
+        self.binary_path = unpack_deb(
+            deb_binary_path=source,
+            program_name=self.program_name,
+        )
+
+
 class Cluster(object):
     """Simple object around docker-compose cluster."""
 
@@ -1255,6 +1333,7 @@ class Cluster(object):
         self,
         local=False,
         clickhouse_binary_path=None,
+        base_os=None,
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
         nodes=None,
@@ -1277,6 +1356,9 @@ class Cluster(object):
         self._control_shell = None
         self.environ = {} if (environ is None) else environ
         self.clickhouse_binary_path = clickhouse_binary_path
+        # Don't set base_os until we know if we have images or packages
+        self.base_os = None
+        self.keeper_base_os = None
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.keeper_binary_path = keeper_binary_path
         self.zookeeper_version = zookeeper_version
@@ -1294,6 +1376,8 @@ class Cluster(object):
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
+        self.clickhouse_docker_image_name = None
+        self.keeper_docker_image_name = None
 
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
         with Shell() as bash:
@@ -1349,135 +1433,101 @@ class Cluster(object):
 
         if self.clickhouse_binary_path:
             if self.use_specific_version:
-                docker_image = self.use_specific_version
-                assert docker_image.startswith("docker://"), error(
-                    "use_specific_version must be a docker image path"
+                alternate_clickhouse_package = PackageDownloader(
+                    self.use_specific_version, program_name="clickhouse"
                 )
-                self.specific_clickhouse_binary_path = get_binary_from_docker_container(
-                    docker_image=docker_image,
-                    container_binary_path="/usr/bin/clickhouse",
+
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = os.path.abspath(
+                    alternate_clickhouse_package.binary_path
                 )
-                try:
-                    self.clickhouse_specific_odbc_binary = (
-                        get_binary_from_docker_container(
-                            docker_image=docker_image,
-                            container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                            host_binary_path_suffix="_odbc_bridge",
-                        )
+
+            clickhouse_package = PackageDownloader(
+                self.clickhouse_binary_path, program_name="clickhouse"
+            )
+            if (
+                getsattr(current().context, "clickhouse_version", None) is None
+                and clickhouse_package.package_version
+            ):
+                current().context.clickhouse_version = (
+                    clickhouse_package.package_version
+                )
+
+            self.clickhouse_binary_path = clickhouse_package.binary_path
+
+            if clickhouse_package.docker_image:
+                self.clickhouse_docker_image_name = clickhouse_package.docker_image
+            else:
+                if base_os is None:
+                    assert not clickhouse_package.package_path.endswith(".rpm"), error(
+                        "base_os must be specified for rpm packages"
                     )
-                except:
-                    self.clickhouse_specific_odbc_binary = None
+                    self.base_os = "altinityinfra/clickhouse-regression-multiarch:2.0"
+                else:
+                    self.base_os = base_os.split("docker://", 1)[-1]
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_BINARY"
-                ] = self.specific_clickhouse_binary_path
+                base_os_name = self.base_os.replace(":", "-")
 
-                self.environ[
-                    "CLICKHOUSE_SPECIFIC_ODBC_BINARY"
-                ] = self.clickhouse_specific_odbc_binary
-
-            if self.clickhouse_binary_path.startswith(("http://", "https://")):
-                binary_source = self.clickhouse_binary_path
-                with Given(
-                    "I download ClickHouse server binary", description=binary_source
-                ):
-                    self.clickhouse_binary_path = download_http_binary(
-                        binary_source=binary_source
+                if clickhouse_package.package_path:
+                    package_name = os.path.basename(clickhouse_package.package_path)
+                    self.clickhouse_docker_image_name = f"{base_os_name}:{package_name}"
+                    self.clickhouse_binary_path = os.path.relpath(
+                        clickhouse_package.package_path
                     )
-
-            elif self.clickhouse_binary_path.startswith("docker://"):
-                if current().context.clickhouse_version is None:
-                    with Given("version from docker path"):
-                        parsed_version = parse_version_from_docker_path(
-                            self.clickhouse_binary_path
+                else:
+                    self.clickhouse_docker_image_name = f"{base_os_name}:local-binary"
+                    with Shell() as bash:
+                        bash(  # Force rebuild
+                            f"docker rmi --force clickhouse-regression/{self.clickhouse_docker_image_name}"
                         )
-                        if parsed_version:
-                            if not (  # What case are we trying to catch here?
-                                parsed_version.startswith(".")
-                                or parsed_version.endswith(".")
-                            ):
-                                current().context.clickhouse_version = parsed_version
-
-                docker_path = self.clickhouse_binary_path
-
-                with Given("server binary from docker image", description=docker_path):
-                    self.clickhouse_binary_path = get_binary_from_docker_container(
-                        docker_image=docker_path,
-                        container_binary_path="/usr/bin/clickhouse",
-                    )
-                    try:
-                        self.clickhouse_odbc_bridge_binary_path = (
-                            get_binary_from_docker_container(
-                                docker_image=docker_path,
-                                container_binary_path="/usr/bin/clickhouse-odbc-bridge",
-                                host_binary_path_suffix="_odbc_bridge",
-                            )
-                        )
-                    except:
-                        pass
-
-            if self.clickhouse_binary_path.endswith(".deb"):
-                deb_path = self.clickhouse_binary_path
-                with Given("unpack deb package", description=deb_path):
-                    self.clickhouse_binary_path = unpack_deb(
-                        deb_binary_path=deb_path,
-                        program_name="clickhouse",
-                    )
-                    try:
-                        self.clickhouse_odbc_bridge_binary_path = unpack_deb(
-                            deb_binary_path=deb_path,
-                            program_name="clickhouse-odbc-bridge",
-                        )
-                    except:
-                        pass
-
-            self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
-
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"chmod +x {self.clickhouse_binary_path}")
 
         if self.keeper_binary_path:
-            if self.keeper_binary_path.startswith(("http://", "https://")):
-                with Given(
-                    "I download ClickHouse Keeper server binary",
-                    description=f"{self.keeper_binary_path}",
-                ):
-                    self.keeper_binary_path = download_http_binary(
-                        binary_source=self.keeper_binary_path
+            keeper_package = PackageDownloader(
+                self.keeper_binary_path,
+                program_name=(
+                    "clickhouse-keeper"
+                    if "keeper" in self.keeper_binary_path
+                    else "clickhouse"
+                ),
+            )
+            if (
+                getsattr(current().context, "keeper_version", None) is None
+                and keeper_package.package_version
+            ):
+                current().context.keeper_version = keeper_package.package_version
+            self.keeper_binary_path = keeper_package.binary_path
+
+            if keeper_package.docker_image:
+                self.keeper_docker_image_name = keeper_package.docker_image
+            else:
+                if base_os is None:
+                    assert not clickhouse_package.package_path.endswith(".rpm"), error(
+                        "base_os must be specified for rpm packages"
                     )
-
-            elif self.keeper_binary_path.startswith("docker://"):
-                if getsattr(current().context, "keeper_version", None) is None:
-                    parsed_version = parse_version_from_docker_path(
-                        self.keeper_binary_path
+                    self.keeper_base_os = (
+                        "altinityinfra/clickhouse-regression-multiarch:2.0"
                     )
-                    if parsed_version:
-                        if not (
-                            parsed_version.startswith(".")
-                            or parsed_version.endswith(".")
-                        ):
-                            current().context.keeper_version = parsed_version
+                else:
+                    self.keeper_base_os = base_os.split("docker://", 1)[-1]
 
-                self.keeper_binary_path = get_binary_from_docker_container(
-                    docker_image=self.keeper_binary_path,
-                    container_binary_path="/usr/bin/clickhouse-keeper",
-                )
+                base_os_name = self.keeper_base_os.replace(":", "-")
 
-            if self.keeper_binary_path.endswith(".deb"):
-                with Given(
-                    "unpack deb package", description=f"{self.keeper_binary_path}"
-                ):
-                    self.keeper_binary_path = unpack_deb(
-                        deb_binary_path=self.keeper_binary_path,
-                        program_name="clickhouse-keeper",
+                if keeper_package.package_path:
+                    package_name = os.path.basename(keeper_package.package_path)
+                    self.keeper_docker_image_name = f"{base_os_name}:{package_name}"
+                    self.keeper_binary_path = os.path.relpath(
+                        keeper_package.package_path
                     )
+                else:
+                    self.keeper_docker_image_name = f"{base_os_name}:local-binary"
+                    with Shell() as bash:
+                        bash(  # Force rebuild
+                            f"docker rmi --force clickhouse-regression/{self.keeper_docker_image_name}"
+                        )
 
-            self.keeper_binary_path = os.path.abspath(self.keeper_binary_path)
-
-            with Shell() as bash:
-                bash.timeout = 300
-                bash(f"chmod +x {self.keeper_binary_path}")
+        else:
+            self.keeper_base_os = self.base_os
+            self.keeper_docker_image_name = self.clickhouse_docker_image_name
+            self.keeper_binary_path = self.clickhouse_binary_path
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1806,20 +1856,23 @@ class Cluster(object):
                         self.clickhouse_binary_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
-                    assert os.path.exists(
-                        self.clickhouse_binary_path
-                    ), self.clickhouse_binary_path
+                    if self.base_os:  # check that we are not in docker mode
+                        assert os.path.exists(
+                            self.clickhouse_binary_path
+                        ), self.clickhouse_binary_path
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
+                assert self.clickhouse_binary_path
+                self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
+                    self.clickhouse_binary_path
+                )
+                self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
+                    self.clickhouse_odbc_bridge_binary_path
+                    or os.path.join(
+                        os.path.dirname(self.clickhouse_binary_path),
+                        "clickhouse-odbc-bridge",
+                    )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     self.keeper_binary_path or ""
@@ -1831,6 +1884,24 @@ class Cluster(object):
                     "keeper" if self.use_keeper else "zookeeper"
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
+                self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"] = (
+                    self.clickhouse_docker_image_name
+                )
+                self.environ["CLICKHOUSE_TESTS_BASE_OS"] = self.base_os
+                self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] = (
+                    "clickhouse"
+                    if not self.base_os
+                    else self.base_os.split(":")[0].split("/")[-1]
+                )
+                self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
+                    self.keeper_docker_image_name
+                )
+                self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS"] = self.keeper_base_os
+                self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] = (
+                    "keeper"
+                    if not self.keeper_base_os
+                    else self.keeper_base_os.split(":")[0].split("/")[-1]
+                )
 
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
@@ -1927,8 +1998,8 @@ class Cluster(object):
 
             return False
 
-        with Given("docker-compose"):
-            max_attempts = 5
+        with Given("start the cluster"):
+            max_attempts = 1
             all_running = False
             try:
                 for attempt in range(max_attempts):
@@ -2050,6 +2121,7 @@ def create_cluster(
     self,
     local=False,
     clickhouse_binary_path=None,
+    base_os=None,
     clickhouse_odbc_bridge_binary_path=None,
     collect_service_logs=False,
     configs_dir=None,
@@ -2070,6 +2142,7 @@ def create_cluster(
     with Cluster(
         local=local,
         clickhouse_binary_path=clickhouse_binary_path,
+        base_os=base_os,
         clickhouse_odbc_bridge_binary_path=clickhouse_odbc_bridge_binary_path,
         collect_service_logs=collect_service_logs,
         configs_dir=configs_dir,

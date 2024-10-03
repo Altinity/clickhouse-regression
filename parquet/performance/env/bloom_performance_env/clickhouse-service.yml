@@ -1,8 +1,10 @@
-version: '2.3'
+version: "2.3"
 
 services:
   clickhouse:
-    image: altinityinfra/clickhouse-regression-multiarch:1.0
+    extends:
+      file: ../../../../docker-compose/clickhouse-service.yml
+      service: clickhouse
     init: true
     expose:
       - "9000"
@@ -15,7 +17,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
-      - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/tests/bloom/test_files:/var/lib/clickhouse/user_files/bloom_test_files"
     entrypoint: bash -c "tail -f /dev/null"
     healthcheck:

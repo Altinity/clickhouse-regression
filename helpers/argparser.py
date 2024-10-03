@@ -29,6 +29,14 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--base-os",
+        type=str,
+        dest="base_os",
+        help="base OS image for ClickHouse server and keeper",
+        default=None,
+    )
+
+    parser.add_argument(
         "--keeper-binary-path",
         type=str,
         dest="keeper_binary_path",
@@ -124,6 +132,7 @@ def CaptureClusterArgs(func):
         self,
         local,
         clickhouse_binary_path,
+        base_os,
         keeper_binary_path,
         zookeeper_version,
         use_keeper,
@@ -135,6 +144,7 @@ def CaptureClusterArgs(func):
         cluster_args = {
             "local": local,
             "clickhouse_binary_path": clickhouse_binary_path,
+            "base_os": base_os,
             "keeper_binary_path": keeper_binary_path,
             "zookeeper_version": zookeeper_version,
             "use_keeper": use_keeper,

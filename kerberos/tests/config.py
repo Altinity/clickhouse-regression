@@ -24,7 +24,7 @@ def kerberos_not_enabled(self):
 
     check_wrong_config(
         node=ch_nodes[0],
-        client=ch_nodes[2],
+        client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
         output="Kerberos is not enabled",
@@ -47,7 +47,7 @@ def multiple_kerberos(self):
 
     check_wrong_config(
         node=ch_nodes[0],
-        client=ch_nodes[2],
+        client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
         log_error="Multiple kerberos sections are not allowed",
@@ -74,7 +74,7 @@ def wrong_user_realm(self):
 
     check_wrong_config(
         node=ch_nodes[0],
-        client=ch_nodes[2],
+        client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
         output="Authentication failed",
@@ -99,7 +99,7 @@ def multiple_auth_methods(self):
 
     check_wrong_config(
         node=ch_nodes[0],
-        client=ch_nodes[2],
+        client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
         log_error="More than one field of",
@@ -123,7 +123,7 @@ def principal_and_realm_specified(self):
 
     check_wrong_config(
         node=ch_nodes[0],
-        client=ch_nodes[2],
+        client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
         log_error="Realm and principal name cannot be specified simultaneously",
@@ -147,7 +147,7 @@ def multiple_realm(self):
 
     check_wrong_config(
         node=ch_nodes[0],
-        client=ch_nodes[2],
+        client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
         log_error="Multiple realm sections are not allowed",
@@ -172,7 +172,7 @@ def multiple_principal(self):
 
     check_wrong_config(
         node=ch_nodes[0],
-        client=ch_nodes[2],
+        client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
         log_error="Multiple principal sections are not allowed",
@@ -188,9 +188,7 @@ def config(self):
         self.context.cluster.node(f"clickhouse{i}") for i in range(1, 4)
     ]
     self.context.krb_server = self.context.cluster.node("kerberos")
-    self.context.clients = [
-        self.context.cluster.node(f"krb-client{i}") for i in range(1, 6)
-    ]
+    self.context.bash_tools = self.context.cluster.node("bash-tools")
 
     for scenario in loads(current_module(), Scenario, Suite):
         Scenario(run=scenario, flags=TE)

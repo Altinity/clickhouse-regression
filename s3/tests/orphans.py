@@ -317,7 +317,7 @@ def remove_orphans(self):
     with When("I list remote files"):
         node.query(
             list_remote_files_query.format(
-                **format_args, outfile="/tmp/remote_files.tsv"
+                **format_args, outfile="/share/remote_files.tsv"
             )
         )
 
@@ -329,13 +329,14 @@ def remove_orphans(self):
 
         node.query(
             generate_orphan_rm_commands.format(
-                **format_args, outfile="/tmp/rm_commands.tsv", aws=aws, bucket=bucket
+                **format_args, outfile="/share/rm_commands.tsv", aws=aws, bucket=bucket
             )
         )
 
     with Then("I execute the rm commands"):
-        node.command(
-            f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} bash -x /tmp/rm_commands.tsv"
+        self.context.cluster.command(
+            "aws",
+            f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} bash -x /share/rm_commands.tsv",
         )
 
     with Then("I check for orphans"):
