@@ -1,4 +1,4 @@
-version: '2.3'
+version: "2.3"
 
 services:
   clickhouse:
@@ -13,3 +13,4 @@ services:
     environment:
       KRB5_CLIENT_KTNAME: /etc/krb5.keytab
       KRB5_KTNAME: /etc/krb5.keytab
+      KRB5CCNAME: /tmp/krb5cc_0

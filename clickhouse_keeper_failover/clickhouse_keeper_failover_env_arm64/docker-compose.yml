@@ -3,9 +3,9 @@ version: "3.7"
 services:
 
   keeper-1:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper
     container_name: keeper-1
     hostname: keeper-1
     init: true
@@ -19,12 +19,12 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-1/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-1/data/:/var/lib/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
+    entrypoint: ["tail", "-f", "/dev/null"] 
   
   keeper-2:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper
     container_name: keeper-2
     hostname: keeper-2
     init: true
@@ -38,12 +38,12 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-2/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-2/data/:/var/lib/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
+    entrypoint: ["tail", "-f", "/dev/null"] 
 
   keeper-3:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper
     container_name: keeper-3
     hostname: keeper-3
     init: true
@@ -57,12 +57,12 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-3/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-3/data/:/var/lib/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
+    entrypoint: ["tail", "-f", "/dev/null"] 
 
   keeper-4:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper
     container_name: keeper-4
     hostname: keeper-4
     init: true
@@ -76,12 +76,12 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-4/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-4/data/:/var/lib/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
+    entrypoint: ["tail", "-f", "/dev/null"] 
   
   keeper-5:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper
     container_name: keeper-5
     hostname: keeper-5
     init: true
@@ -95,12 +95,12 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-5/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-5/data/:/var/lib/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
+    entrypoint: ["tail", "-f", "/dev/null"] 
 
   keeper-6:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper
     container_name: keeper-6
     hostname: keeper-6
     init: true
@@ -114,4 +114,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/logs/:/var/log/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper-6/data/:/var/lib/clickhouse-keeper"
       - "${CLICKHOUSE_TESTS_DIR}/configs/keeper/config:/etc/clickhouse-keeper-configs/"
-      - "${CLICKHOUSE_TESTS_KEEPER_BIN_PATH:-${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}}:/usr/bin/clickhouse-keeper"
+    entrypoint: ["tail", "-f", "/dev/null"] 

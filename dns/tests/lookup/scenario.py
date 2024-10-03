@@ -39,10 +39,20 @@ def scenario(self):
         )
         CLIENT_IP = cluster.command(None, query).output
 
-    with And("I am listening in the background to port 8123 and 53"):
-        cluster.node("clickhouse1").command(
-            "tcpdump -i any -w http_and_dns.pcap port 8123 or port 53 &"
-        )
+    with And("I try to install tcpdump"):
+        tcpdump_available = False
+        r = cluster.node("clickhouse1").command("apt-get update", no_checks=True)
+        if r.exitcode == 0:
+            cluster.node("clickhouse1").command(
+                "apt-get install -y bind9-dnsutils tcpdump curl psmisc less"
+            )
+            tcpdump_available = True
+
+    if tcpdump_available:
+        with And("I am listening in the background to port 8123 and 53"):
+            cluster.node("clickhouse1").command(
+                "tcpdump -i any -w http_and_dns.pcap port 8123 or port 53 &"
+            )
 
     with When("I write the CLIENT IP into example.com"):
         cluster.command(
@@ -68,16 +78,17 @@ def scenario(self):
         server_version = cluster.node("clickhouse1").query(f"SELECT version()").output
         assert client_version == server_version, error()
 
-    with When("I kill the background port listening"):
-        cluster.node("clickhouse1").command("killall tcpdump")
+    if tcpdump_available:
+        with When("I kill the background port listening"):
+            cluster.node("clickhouse1").command("killall tcpdump")
 
-    with And("I copy the http_and_dns.pcap file off of the docker container"):
-        x = cluster.command(
-            None, "docker ps | grep clickhouse1 | head -n 1 | cut -d ' ' -f 1"
-        ).output
-        cluster.command(
-            None, f"docker cp {x}:/http_and_dns.pcap regression/dns/tests/lookup/"
-        )
+        with And("I copy the http_and_dns.pcap file off of the docker container"):
+            x = cluster.command(
+                None, "docker ps | grep clickhouse1 | head -n 1 | cut -d ' ' -f 1"
+            ).output
+            cluster.command(
+                None, f"docker cp {x}:/http_and_dns.pcap regression/dns/tests/lookup/"
+            )
 
     with And("I update example.com with more urls."):
         cluster.command(

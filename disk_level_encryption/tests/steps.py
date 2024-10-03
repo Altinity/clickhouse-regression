@@ -218,7 +218,7 @@ def create_directory(self, path, node=None):
     if node is None:
         node = self.context.node
     try:
-        node.command(f"mkdir '{path}'", exitcode=0)
+        node.command(f"mkdir -p '{path}'", exitcode=0)
         yield path
     finally:
         with Finally("delete directory", description=f"{path}"):
@@ -238,7 +238,7 @@ def check_if_all_files_are_encrypted(
 
     with By("finding all files inside the encrypted disk"):
         r = node.command(
-            f"for file in `find {disk_path} -type f`\ndo\nhead -1 $file | cut -c 1,2,3\ndone"
+            f"for file in `find {disk_path} -type f`\ndo\nhead -1 $file | cut -c 1,2,3 | head -1\ndone"
         )
 
     with Then("checking that they all have encrypted header"):

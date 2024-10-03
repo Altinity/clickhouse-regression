@@ -94,7 +94,9 @@ def daemon(self, node=None):
                     node.command(f"kill -TERM {pid}", exitcode=0)
             with And("checking pid does not exist"):
                 retry(node.command, timeout=100, delay=2)(
-                    f"ps {pid}", exitcode=1, steps=False
+                    f"ps {pid}  | grep -v grep | grep ' {pid} '",
+                    exitcode=1,
+                    steps=False,
                 )
 
 

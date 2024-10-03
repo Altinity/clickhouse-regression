@@ -1,13 +1,13 @@
-version: '2.3'
+version: "2.3"
 
 services:
   aws:
-    image: altinityinfra/clickhouse-regression-multiarch:1.0
+    image: altinityinfra/clickhouse-regression-multiarch:2.0
     environment:
       - S3_AMAZON_KEY_ID=${S3_AMAZON_KEY_ID:-}
       - S3_AMAZON_ACCESS_KEY=${S3_AMAZON_ACCESS_KEY:-}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-}
-      - AWS_REGION=${AWS_REGION:-}
+      - AWS_REGION=${AWS_DEFAULT_REGION:-}
     tty: true

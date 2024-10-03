@@ -8,6 +8,7 @@ append_path(sys.path, "../..")
 
 from parquet.performance.argparsers import argparser
 from helpers.cluster import short_hash, Shell, Cluster
+from helpers.argparser import CaptureClusterArgs
 from parquet.performance.tests.duckdb.reports import (
     write_to_csv,
     convert_to_markdown,
@@ -19,7 +20,7 @@ from parquet.performance.tests.duckdb.reports import (
 def performance_cluster(
     self,
     duckdb_binary_path,
-    clickhouse_binary_path,
+    cluster_args,
     stress,
     clickhouse_version,
     docker_compose_project_dir=os.path.join(
@@ -64,10 +65,8 @@ def performance_cluster(
         self.context.stress = stress
 
     with Cluster(
-        local=True,
-        collect_service_logs=False,
+        **cluster_args,
         nodes=nodes,
-        clickhouse_binary_path=clickhouse_binary_path,
         environ={"DUCKDB_TESTS_BIN_PATH": duckdb_binary_path},
         docker_compose_project_dir=docker_compose_project_dir,
     ) as cluster:
@@ -77,9 +76,10 @@ def performance_cluster(
 @TestModule
 @Name("performance")
 @ArgumentParser(argparser)
+@CaptureClusterArgs
 def module(
     self,
-    local,
+    cluster_args,
     clickhouse_version,
     duckdb_binary_path,
     stress,
@@ -92,7 +92,6 @@ def module(
     data,
     max_memory_usage,
     compression,
-    collect_service_logs,
     rerun_queries,
     test_machine,
     clickhouse_binary_path=None,
@@ -102,7 +101,7 @@ def module(
     with Given("I bring up the performance cluster environment"):
         self.context.cluster = performance_cluster(
             duckdb_binary_path=duckdb_binary_path,
-            clickhouse_binary_path=clickhouse_binary_path,
+            cluster_args=cluster_args,
             clickhouse_version=clickhouse_version,
             stress=stress,
         )

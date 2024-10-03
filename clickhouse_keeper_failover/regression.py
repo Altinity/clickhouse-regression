@@ -43,7 +43,11 @@ def run_feature(
         if check_clickhouse_version("<24")(self):
             xfail("Unstable ClickHouse<24")
 
-        with Given("I set the keeper config file"):
+        with Given("I make sure the keeper directory exists"):
+            for node in self.context.keeper_nodes:
+                node.command("mkdir -p /etc/clickhouse-keeper")
+
+        with And("I set the keeper config file"):
             set_keeper_config(
                 nodes=self.context.keeper_nodes,
                 config_file_name="keeper_config_6node.xml",
