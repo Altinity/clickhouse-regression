@@ -43,6 +43,8 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+RUN pip install "cython<3.0.0" wheel
+RUN pip install "pyyaml==5.4.1" --no-build-isolation
 RUN pip install pytz
 RUN pip install pytest docker-compose docker dicttoxml kazoo PyMySQL pymongo tzlocal protobuf redis pandas parquet-tools flask
 RUN pip install pytest-timeout boto3 minio pyarrow
