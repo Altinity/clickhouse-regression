@@ -57,7 +57,7 @@ def regression(
 ):
     """ClickHouse atomic inserts regression."""
     nodes = {
-        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3"),
+        "zookeeper": ("zookeeper1",),
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse4"),
     }
 

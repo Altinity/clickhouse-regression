@@ -129,8 +129,8 @@ def changing_rights_one_large_insert(self, node=None):
     with Given("I create local disk folder on the server"):
         create_directory(path=disk_local)
 
-    add_group_on_node(groupname="clickhouse")
-    add_user_on_node(groupname="clickhouse", username="clickhouse")
+    add_group_on_node(groupname="clickhouse_group")
+    add_user_on_node(groupname="clickhouse_group", username="clickhouse_user")
 
     try:
         with Given("I stop clickhouse to start it from clickhouse user"):
@@ -142,7 +142,7 @@ def changing_rights_one_large_insert(self, node=None):
             node.command(f"chmod -R 777 {disk_local}")
 
         with Given("I start clickhouse server"):
-            node.start_clickhouse(user="clickhouse")
+            node.start_clickhouse(user="clickhouse_user")
 
         with And("I set up  parameters"):
             entries_in_this_test = copy.deepcopy(entries)
@@ -152,7 +152,7 @@ def changing_rights_one_large_insert(self, node=None):
 
         with And("I add storage configuration that uses encrypted disk"):
             add_encrypted_disk_configuration(
-                entries=entries_in_this_test, restart=True, user="clickhouse"
+                entries=entries_in_this_test, restart=True, user="clickhouse_user"
             )
 
         policy = self.context.policy = "local_encrypted"
@@ -188,8 +188,8 @@ def changing_rights_many_small_inserts(self, node=None):
     with Given("I create local disk folder on the server"):
         create_directory(path=disk_local)
 
-    add_group_on_node(groupname="clickhouse")
-    add_user_on_node(groupname="clickhouse", username="clickhouse")
+    add_group_on_node(groupname="clickhouse_group")
+    add_user_on_node(groupname="clickhouse_group", username="clickhouse_user")
 
     try:
         with Given("I stop clickhouse to start it from clickhouse user"):
@@ -201,7 +201,7 @@ def changing_rights_many_small_inserts(self, node=None):
             node.command(f"chmod -R 777 {disk_local}")
 
         with Given("I start clickhouse server"):
-            node.start_clickhouse(user="clickhouse")
+            node.start_clickhouse(user="clickhouse_user")
 
         with And("I set up  parameters"):
             entries_in_this_test = copy.deepcopy(entries)
@@ -211,7 +211,7 @@ def changing_rights_many_small_inserts(self, node=None):
 
         with And("I add storage configuration that uses encrypted disk"):
             add_encrypted_disk_configuration(
-                entries=entries_in_this_test, restart=True, user="clickhouse"
+                entries=entries_in_this_test, restart=True, user="clickhouse_user"
             )
 
         policy = self.context.policy = "local_encrypted"

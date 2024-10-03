@@ -45,7 +45,7 @@ def restart(node=None, safe=False, timeout=300):
             with And("getting current log size"):
                 logsize = (
                     node.command(
-                        "stat --format=%s /var/log/clickhouse-server/clickhouse-server.log"
+                        "stat -c %s /var/log/clickhouse-server/clickhouse-server.log"
                     )
                     .output.split(" ")[0]
                     .strip()

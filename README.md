@@ -250,6 +250,10 @@ You can run tests locally by passing `--local` and `--clickhouse-binary-path` to
 * `--clickhouse-binary-path` specifies the path to the ClickHouse binary on the host machine that will be used during the regression
   run. You can also use a docker image that should have `docker://` prefix.
   For example, `--clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine`
+* `--base-os` specifies a docker image to install ClickHouse into when `--clickhouse-binary-path` is not a docker image.
+  Supported distributions are `altinityinfra/clickhouse-regression-multiarch:2.0` (default), `ubuntu`, and `alpine`.
+  There is experimental support for `fedora` and `redhat/ubi9`.
+
 > [!NOTE]
 > You can pass the `-h` or `--help` argument to the `regression.py` to see a help message.
 >

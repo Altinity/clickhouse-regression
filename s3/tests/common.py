@@ -70,7 +70,7 @@ def add_config(
             with And("I get the current log size"):
                 cmd = node.cluster.command(
                     None,
-                    f"stat --format=%s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
                 )
                 logsize = cmd.output.split(" ")[0].strip()
 
@@ -249,7 +249,7 @@ def invalid_s3_storage_config(
 
         with Then("Get the current log size"):
             cmd = node.command(
-                f"stat --format=%s /var/log/clickhouse-server/clickhouse-server.err.log"
+                f"stat -c %s /var/log/clickhouse-server/clickhouse-server.err.log"
             )
             start_logsize = cmd.output.split(" ")[0].strip()
 
@@ -272,7 +272,7 @@ def invalid_s3_storage_config(
 
         with And("Get the current log size at the end of the test"):
             cmd = node.command(
-                f"stat --format=%s /var/log/clickhouse-server/clickhouse-server.err.log"
+                f"stat -c %s /var/log/clickhouse-server/clickhouse-server.err.log"
             )
             end_logsize = cmd.output.split(" ")[0].strip()
 
@@ -795,7 +795,7 @@ def get_bucket_size(
             f"{aws} s3 ls s3://{name}/{prefix} --recursive --summarize | "
             "grep -Po --color=never '(?<=Total Size: )(.+)'"
         )
-        result = self.context.node.command(cmd, steps=False, no_checks=True)
+        result = self.context.cluster.command("aws", cmd, steps=False, no_checks=True)
         return int(result.output)
 
 
@@ -1068,30 +1068,31 @@ def cleanup(self, storage="minio", disk="external", s3_path=None):
             minio_client.remove_object(cluster.minio_bucket, obj.object_name)
 
     if storage == "aws_s3" and s3_path is not None:
-        node = current().context.node
-
-        node.command(
-            f"aws s3 rm s3://{self.context.bucket_name}/data/{s3_path} --recursive"
+        current().context.cluster.command(
+            "aws",
+            f"aws s3 rm s3://{self.context.bucket_name}/data/{s3_path} --recursive",
         )
 
 
 @TestStep(Given)
 def aws_s3_setup_second_bucket(self, region, bucket):
     """Create a second bucket."""
-    node = self.context.cluster.node("clickhouse1")
+    cluster = self.context.cluster
 
     try:
         with When("I create a new bucket"):
-            node.command(
-                f"aws s3api create-bucket --bucket {bucket}2 --region {region}"
+            cluster.command(
+                "aws", f"aws s3api create-bucket --bucket {bucket}2 --region {region}"
             )
 
     finally:
         with Finally("I remove everything from the bucket", flags=TE):
-            node.command(f"aws s3 rm s3://{bucket} --recursive")
+            cluster.command("aws", f"aws s3 rm s3://{bucket} --recursive")
 
         with And("I remove the second bucket", flags=TE):
-            node.command(f"aws s3api delete-bucket --bucket {bucket} --region {region}")
+            cluster.command(
+                "aws", f"aws s3api delete-bucket --bucket {bucket} --region {region}"
+            )
 
 
 @TestStep(Given)
@@ -1143,20 +1144,22 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
                         minio_client.remove_object(bucket_name, obj.object_name)
 
             elif self.context.storage == "aws_s3":
-                node = current().context.node
+                cluster = current().context.cluster
 
-                node.command(
-                    f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                cluster.command(
+                    "aws",
+                    f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive",
                 )
 
             elif self.context.storage == "gcs":
-                node = current().context.node
-                node.command(
+                cluster = current().context.cluster
+                cluster.command(
+                    "aws",
                     (
                         f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key}"
                         f" aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
                         " --endpoint=https://storage.googleapis.com/"
-                    )
+                    ),
                 )
 
 

@@ -7,6 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
+from helpers.argparser import CaptureClusterArgs
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.performance_files.argparsers import argparser
@@ -28,10 +29,10 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("performance")
+@CaptureClusterArgs
 def regression(
     self,
-    local,
-    clickhouse_binary_path,
+    cluster_args,
     clickhouse_binary_list,
     repeats,
     inserts,
@@ -39,9 +40,6 @@ def regression(
     one_node,
     three_node,
     clickhouse_version,
-    collect_service_logs,
-    keeper_binary_path=None,
-    zookeeper_version=None,
     ssl=None,
     stress=None,
     with_analyzer=False,
@@ -71,6 +69,12 @@ def regression(
         clickhouse_binary_list.append(
             os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse")
         )
+
+    # if clickhouse_binary_path is not the default value, tell user to use --clickhouse-binary-list
+    assert (
+        cluster_args["clickhouse_binary_path"] == "/usr/bin/clickhouse"
+    ), "specify version with --clickhouse-binary-list"
+    del cluster_args["clickhouse_binary_path"]
 
     self.context.configurations_insert_time_values = {}
 
@@ -110,10 +114,9 @@ def regression(
 
             for test_feature in test_features:
                 with Cluster(
-                    local,
                     clickhouse_binary_path=clickhouse_binary_path,
-                    collect_service_logs=collect_service_logs,
                     nodes=nodes,
+                    **cluster_args,
                 ) as cluster:
                     self.context.cluster = cluster
 

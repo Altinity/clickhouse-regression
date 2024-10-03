@@ -462,7 +462,9 @@ def start_keepers(self, standalone_keeper_nodes=None, manual_cleanup=False):
                                 node.command(f"kill -TERM {pid}", exitcode=0)
                         with And("checking pid does not exist"):
                             retry(node.command, timeout=100, delay=1)(
-                                f"ps {pid}", exitcode=1, steps=False
+                                f"ps {pid} | grep -v grep | grep ' {pid} '",
+                                exitcode=1,
+                                steps=False,
                             )
 
 
@@ -486,7 +488,7 @@ def stop_keepers(self, cluster_nodes=None):
                     node.command(f"kill -TERM {pid}", exitcode=0)
             with And("checking pid does not exist"):
                 retry(node.command, timeout=100, delay=10)(
-                    f"ps {pid}", exitcode=1, steps=False
+                    f"ps {pid} | grep -v grep | grep ' {pid} '", exitcode=1, steps=False
                 )
 
 

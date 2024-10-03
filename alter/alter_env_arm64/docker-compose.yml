@@ -2,7 +2,6 @@ version: '2.3'
 
 volumes:
   data1-1:
-  bash-tools:
 
 services:
   zookeeper1:
@@ -24,8 +23,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - bash-tools:/usr/bin/bash-tools
-
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -41,7 +39,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-different-versions/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-different-versions/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-different-versions/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - bash-tools:/usr/bin/bash-tools
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -55,7 +53,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - bash-tools:/usr/bin/bash-tools
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -69,7 +67,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - bash-tools:/usr/bin/bash-tools
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -93,7 +91,6 @@ services:
     ports:
       - "8080"
     tty: true
-    init: true
     depends_on:
       - proxy1
       - proxy2
@@ -137,7 +134,7 @@ services:
       file: ../../docker-compose/bash-tools.yml
       service: bash-tools
     volumes:
-      - bash-tools:/usr/bin
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
