@@ -48,8 +48,8 @@ RUN pip install pytest docker-compose docker dicttoxml kazoo PyMySQL pymongo tzl
 RUN pip install pytest-timeout boto3 minio pyarrow
 RUN pip install clickhouse-driver
 
-ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 20.10.9
+ENV DOCKER_CHANNEL=stable
+ENV DOCKER_VERSION=20.10.9
 
 RUN set -eux; ARCH=$(uname -i); \
 	if ! wget -O docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${ARCH}/docker-${DOCKER_VERSION}.tgz"; then \
