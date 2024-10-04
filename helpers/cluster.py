@@ -1458,9 +1458,10 @@ class Cluster(object):
                 self.clickhouse_docker_image_name = clickhouse_package.docker_image
             else:
                 if base_os is None:
-                    assert not clickhouse_package.package_path.endswith(".rpm"), error(
-                        "base_os must be specified for rpm packages"
-                    )
+                    if clickhouse_package.package_path:
+                        assert not clickhouse_package.package_path.endswith(
+                            ".rpm"
+                        ), error("base_os must be specified for rpm packages")
                     self.base_os = "altinityinfra/clickhouse-regression-multiarch:2.0"
                 else:
                     self.base_os = base_os.split("docker://", 1)[-1]
@@ -1500,9 +1501,10 @@ class Cluster(object):
                 self.keeper_docker_image_name = keeper_package.docker_image
             else:
                 if base_os is None:
-                    assert not clickhouse_package.package_path.endswith(".rpm"), error(
-                        "base_os must be specified for rpm packages"
-                    )
+                    if keeper_package.package_path:
+                        assert not keeper_package.package_path.endswith(".rpm"), error(
+                            "base_os must be specified for rpm packages"
+                        )
                     self.keeper_base_os = (
                         "altinityinfra/clickhouse-regression-multiarch:2.0"
                     )
