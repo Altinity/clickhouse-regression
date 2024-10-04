@@ -1,33 +1,4 @@
-_functions_math_functions_test_all_math_functions_exp10_constant = r"""
-{"exp10(1)":10}
-"""
-
-_functions_math_functions_test_all_math_functions_exp2_Decimal128_38_ = r"""
-{"exp2(decimal128_38_)":2}
-{"exp2(decimal128_38_)":0.5}
-{"exp2(decimal128_38_)":1}
-{"exp2(decimal128_38_)":0.7051479436713219}
-{"exp2(decimal128_38_)":1.2814841776477037}
-{"exp2(decimal128_38_)":0.823311568371274}
-{"exp2(decimal128_38_)":1.505136815389675}
-{"exp2(decimal128_38_)":1.6165451714982129}
-{"exp2(decimal128_38_)":0.660955959907127}
-{"exp2(decimal128_38_)":0.7202447370570075}
-"""
-
-_functions_math_functions_test_all_math_functions_intExp10_constant = r"""
-{"intExp10(1)":"10"}
-"""
-
-_functions_math_functions_test_all_math_functions_log10_constant = r"""
-{"log10(1)":0}
-"""
-
-_functions_math_functions_test_all_math_functions_log2_only_nan = r"""
-{"log2(x)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_sqrt_Decimal128_38_ = r"""
+_functions_math_functions_sqrt_Decimal128_38_ = r"""
 {"sqrt(decimal128_38_)":1}
 {"sqrt(decimal128_38_)":null}
 {"sqrt(decimal128_38_)":0}
@@ -40,7 +11,7 @@ _functions_math_functions_test_all_math_functions_sqrt_Decimal128_38_ = r"""
 {"sqrt(decimal128_38_)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_Float32 = r"""
+_functions_math_functions_sqrt_Float32 = r"""
 {"sqrt(float32)":18446743523953730000}
 {"sqrt(float32)":null}
 {"sqrt(float32)":0}
@@ -53,7 +24,7 @@ _functions_math_functions_test_all_math_functions_sqrt_Float32 = r"""
 {"sqrt(float32)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_Float64 = r"""
+_functions_math_functions_sqrt_Float64 = r"""
 {"sqrt(float64)":1.340779996867495e154}
 {"sqrt(float64)":null}
 {"sqrt(float64)":0}
@@ -66,7 +37,7 @@ _functions_math_functions_test_all_math_functions_sqrt_Float64 = r"""
 {"sqrt(float64)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_Int16 = r"""
+_functions_math_functions_sqrt_Int16 = r"""
 {"sqrt(int16)":181.01657382681842}
 {"sqrt(int16)":null}
 {"sqrt(int16)":0}
@@ -79,7 +50,7 @@ _functions_math_functions_test_all_math_functions_sqrt_Int16 = r"""
 {"sqrt(int16)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_Int32 = r"""
+_functions_math_functions_sqrt_Int32 = r"""
 {"sqrt(int32)":46340.950001051984}
 {"sqrt(int32)":null}
 {"sqrt(int32)":0}
@@ -92,7 +63,7 @@ _functions_math_functions_test_all_math_functions_sqrt_Int32 = r"""
 {"sqrt(int32)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_Int64 = r"""
+_functions_math_functions_sqrt_Int64 = r"""
 {"sqrt(int64)":3037000499.97605}
 {"sqrt(int64)":null}
 {"sqrt(int64)":0}
@@ -105,7 +76,7 @@ _functions_math_functions_test_all_math_functions_sqrt_Int64 = r"""
 {"sqrt(int64)":2005464926.5094862}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_Int8 = r"""
+_functions_math_functions_sqrt_Int8 = r"""
 {"sqrt(int8)":11.269427669584644}
 {"sqrt(int8)":null}
 {"sqrt(int8)":0}
@@ -118,7 +89,7 @@ _functions_math_functions_test_all_math_functions_sqrt_Int8 = r"""
 {"sqrt(int8)":11.135528725660043}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_UInt16 = r"""
+_functions_math_functions_sqrt_UInt16 = r"""
 {"sqrt(uint16)":255.99804686754936}
 {"sqrt(uint16)":0}
 {"sqrt(uint16)":0}
@@ -131,7 +102,7 @@ _functions_math_functions_test_all_math_functions_sqrt_UInt16 = r"""
 {"sqrt(uint16)":87.01723967122837}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_UInt32 = r"""
+_functions_math_functions_sqrt_UInt32 = r"""
 {"sqrt(uint32)":65535.999992370605}
 {"sqrt(uint32)":0}
 {"sqrt(uint32)":0}
@@ -144,7 +115,7 @@ _functions_math_functions_test_all_math_functions_sqrt_UInt32 = r"""
 {"sqrt(uint32)":48249.96866320226}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_UInt64 = r"""
+_functions_math_functions_sqrt_UInt64 = r"""
 {"sqrt(uint64)":4294967296}
 {"sqrt(uint64)":0}
 {"sqrt(uint64)":0}
@@ -157,7 +128,7 @@ _functions_math_functions_test_all_math_functions_sqrt_UInt64 = r"""
 {"sqrt(uint64)":4147848992.5775476}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_UInt8 = r"""
+_functions_math_functions_sqrt_UInt8 = r"""
 {"sqrt(uint8)":15.968719422671311}
 {"sqrt(uint8)":0}
 {"sqrt(uint8)":0}
@@ -170,15 +141,15 @@ _functions_math_functions_test_all_math_functions_sqrt_UInt8 = r"""
 {"sqrt(uint8)":11.224972160321824}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt__inf = r"""
+_functions_math_functions_sqrt__inf = r"""
 {"sqrt(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_constant = r"""
+_functions_math_functions_sqrt_constant = r"""
 {"sqrt(1)":1}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_first_non_NULL_value = r"""
+_functions_math_functions_sqrt_first_non_NULL_value = r"""
 {"sqrt(x)":null}
 {"sqrt(x)":null}
 {"sqrt(x)":null}
@@ -187,19 +158,19 @@ _functions_math_functions_test_all_math_functions_sqrt_first_non_NULL_value = r"
 {"sqrt(x)":2.23606797749979}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_inf = r"""
+_functions_math_functions_sqrt_inf = r"""
 {"sqrt(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_nan = r"""
+_functions_math_functions_sqrt_nan = r"""
 {"sqrt(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_only_nan = r"""
+_functions_math_functions_sqrt_only_nan = r"""
 {"sqrt(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_return_type = r"""
+_functions_math_functions_sqrt_return_type = r"""
 {"toTypeName(sqrt(number))":"Float64"}
 {"toTypeName(sqrt(number))":"Float64"}
 {"toTypeName(sqrt(number))":"Float64"}
@@ -212,7 +183,7 @@ _functions_math_functions_test_all_math_functions_sqrt_return_type = r"""
 {"toTypeName(sqrt(number))":"Float64"}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_some_negative_values = r"""
+_functions_math_functions_sqrt_some_negative_values = r"""
 {"sqrt(minus(number, 5))":null}
 {"sqrt(minus(number, 5))":null}
 {"sqrt(minus(number, 5))":null}
@@ -225,7 +196,7 @@ _functions_math_functions_test_all_math_functions_sqrt_some_negative_values = r"
 {"sqrt(minus(number, 5))":2.23606797749979}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_with_group_by = r"""
+_functions_math_functions_sqrt_with_group_by = r"""
 {"even":0,"sqrt(number)":0}
 {"even":0,"sqrt(number)":2}
 {"even":1,"sqrt(number)":1.7320508075688772}
@@ -238,7 +209,7 @@ _functions_math_functions_test_all_math_functions_sqrt_with_group_by = r"""
 {"even":0,"sqrt(number)":2.8284271247461903}
 """
 
-_functions_math_functions_test_all_math_functions_sqrt_zero_rows = r"""
+_functions_math_functions_sqrt_zero_rows = r"""
 
 """
 

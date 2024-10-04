@@ -1,4 +1,4 @@
-_functions_math_functions_test_all_math_functions_log_Decimal128_38_ = r"""
+_functions_math_functions_log_Decimal128_38_ = r"""
 {"log(decimal128_38_)":0}
 {"log(decimal128_38_)":null}
 {"log(decimal128_38_)":null}
@@ -11,7 +11,7 @@ _functions_math_functions_test_all_math_functions_log_Decimal128_38_ = r"""
 {"log(decimal128_38_)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_Float32 = r"""
+_functions_math_functions_log_Float32 = r"""
 {"log(float32)":88.72284}
 {"log(float32)":null}
 {"log(float32)":null}
@@ -24,7 +24,7 @@ _functions_math_functions_test_all_math_functions_log_Float32 = r"""
 {"log(float32)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_Float64 = r"""
+_functions_math_functions_log_Float64 = r"""
 {"log(float64)":709.7827117058267}
 {"log(float64)":null}
 {"log(float64)":null}
@@ -37,7 +37,7 @@ _functions_math_functions_test_all_math_functions_log_Float64 = r"""
 {"log(float64)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_Int16 = r"""
+_functions_math_functions_log_Int16 = r"""
 {"log(int16)":10.397177190355382}
 {"log(int16)":null}
 {"log(int16)":null}
@@ -50,7 +50,7 @@ _functions_math_functions_test_all_math_functions_log_Int16 = r"""
 {"log(int16)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_Int32 = r"""
+_functions_math_functions_log_Int32 = r"""
 {"log(int32)":21.487562596892644}
 {"log(int32)":null}
 {"log(int32)":null}
@@ -63,7 +63,7 @@ _functions_math_functions_test_all_math_functions_log_Int32 = r"""
 {"log(int32)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_Int64 = r"""
+_functions_math_functions_log_Int64 = r"""
 {"log(int64)":43.66827237527655}
 {"log(int64)":null}
 {"log(int64)":null}
@@ -76,7 +76,7 @@ _functions_math_functions_test_all_math_functions_log_Int64 = r"""
 {"log(int64)":42.83828350832815}
 """
 
-_functions_math_functions_test_all_math_functions_log_Int8 = r"""
+_functions_math_functions_log_Int8 = r"""
 {"log(int8)":4.844187086466265}
 {"log(int8)":null}
 {"log(int8)":null}
@@ -89,7 +89,7 @@ _functions_math_functions_test_all_math_functions_log_Int8 = r"""
 {"log(int8)":4.820281565719088}
 """
 
-_functions_math_functions_test_all_math_functions_log_UInt16 = r"""
+_functions_math_functions_log_UInt16 = r"""
 {"log(uint16)":11.090339630053645}
 {"log(uint16)":null}
 {"log(uint16)":null}
@@ -102,7 +102,7 @@ _functions_math_functions_test_all_math_functions_log_UInt16 = r"""
 {"log(uint16)":8.932212512624824}
 """
 
-_functions_math_functions_test_all_math_functions_log_UInt32 = r"""
+_functions_math_functions_log_UInt32 = r"""
 {"log(uint32)":22.18070977768542}
 {"log(uint32)":null}
 {"log(uint32)":null}
@@ -115,7 +115,7 @@ _functions_math_functions_test_all_math_functions_log_UInt32 = r"""
 {"log(uint32)":21.568300914862387}
 """
 
-_functions_math_functions_test_all_math_functions_log_UInt64 = r"""
+_functions_math_functions_log_UInt64 = r"""
 {"log(uint64)":44.3614195558365}
 {"log(uint64)":null}
 {"log(uint64)":null}
@@ -128,7 +128,7 @@ _functions_math_functions_test_all_math_functions_log_UInt64 = r"""
 {"log(uint64)":44.291711443852535}
 """
 
-_functions_math_functions_test_all_math_functions_log_UInt8 = r"""
+_functions_math_functions_log_UInt8 = r"""
 {"log(uint8)":5.541263545160263}
 {"log(uint8)":null}
 {"log(uint8)":null}
@@ -141,15 +141,15 @@ _functions_math_functions_test_all_math_functions_log_UInt8 = r"""
 {"log(uint8)":4.8362819069823075}
 """
 
-_functions_math_functions_test_all_math_functions_log__inf = r"""
+_functions_math_functions_log__inf = r"""
 {"log(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_constant = r"""
+_functions_math_functions_log_constant = r"""
 {"log(1)":0}
 """
 
-_functions_math_functions_test_all_math_functions_log_first_non_NULL_value = r"""
+_functions_math_functions_log_first_non_NULL_value = r"""
 {"log(x)":null}
 {"log(x)":null}
 {"log(x)":null}
@@ -158,19 +158,19 @@ _functions_math_functions_test_all_math_functions_log_first_non_NULL_value = r""
 {"log(x)":1.6094379132876024}
 """
 
-_functions_math_functions_test_all_math_functions_log_inf = r"""
+_functions_math_functions_log_inf = r"""
 {"log(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_nan = r"""
+_functions_math_functions_log_nan = r"""
 {"log(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_only_nan = r"""
+_functions_math_functions_log_only_nan = r"""
 {"log(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_log_return_type = r"""
+_functions_math_functions_log_return_type = r"""
 {"toTypeName(log(number))":"Float64"}
 {"toTypeName(log(number))":"Float64"}
 {"toTypeName(log(number))":"Float64"}
@@ -183,7 +183,7 @@ _functions_math_functions_test_all_math_functions_log_return_type = r"""
 {"toTypeName(log(number))":"Float64"}
 """
 
-_functions_math_functions_test_all_math_functions_log_some_negative_values = r"""
+_functions_math_functions_log_some_negative_values = r"""
 {"log(minus(number, 5))":null}
 {"log(minus(number, 5))":null}
 {"log(minus(number, 5))":null}
@@ -196,7 +196,7 @@ _functions_math_functions_test_all_math_functions_log_some_negative_values = r""
 {"log(minus(number, 5))":1.6094379132876024}
 """
 
-_functions_math_functions_test_all_math_functions_log_with_group_by = r"""
+_functions_math_functions_log_with_group_by = r"""
 {"even":0,"log(number)":null}
 {"even":0,"log(number)":1.3862943611198906}
 {"even":1,"log(number)":1.0986122893809924}
@@ -209,7 +209,7 @@ _functions_math_functions_test_all_math_functions_log_with_group_by = r"""
 {"even":0,"log(number)":2.0794415416798357}
 """
 
-_functions_math_functions_test_all_math_functions_log_zero_rows = r"""
+_functions_math_functions_log_zero_rows = r"""
 
 """
 

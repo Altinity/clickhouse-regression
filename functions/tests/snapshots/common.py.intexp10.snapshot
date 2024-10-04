@@ -1,200 +1,11 @@
-_functions_math_functions_test_all_math_functions_exp10_Int16 = r"""
-{"exp10(int16)":null}
-{"exp10(int16)":0}
-{"exp10(int16)":1}
-{"exp10(int16)":null}
-{"exp10(int16)":null}
-{"exp10(int16)":null}
-{"exp10(int16)":0}
-{"exp10(int16)":null}
-{"exp10(int16)":0}
-{"exp10(int16)":0}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_Int32 = r"""
-{"exp10(int32)":null}
-{"exp10(int32)":0}
-{"exp10(int32)":1}
-{"exp10(int32)":0}
-{"exp10(int32)":null}
-{"exp10(int32)":0}
-{"exp10(int32)":null}
-{"exp10(int32)":null}
-{"exp10(int32)":0}
-{"exp10(int32)":0}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_Int64 = r"""
-{"exp10(int64)":null}
-{"exp10(int64)":0}
-{"exp10(int64)":1}
-{"exp10(int64)":null}
-{"exp10(int64)":0}
-{"exp10(int64)":null}
-{"exp10(int64)":0}
-{"exp10(int64)":null}
-{"exp10(int64)":null}
-{"exp10(int64)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_Int8 = r"""
-{"exp10(int8)":1e127}
-{"exp10(int8)":1e-128}
-{"exp10(int8)":1}
-{"exp10(int8)":1e115}
-{"exp10(int8)":1e-44}
-{"exp10(int8)":1e-100}
-{"exp10(int8)":1e-78}
-{"exp10(int8)":1e83}
-{"exp10(int8)":1e-48}
-{"exp10(int8)":1e124}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_UInt128 = r"""
-{"exp10(uint128)":null}
-{"exp10(uint128)":1}
-{"exp10(uint128)":1}
-{"exp10(uint128)":null}
-{"exp10(uint128)":null}
-{"exp10(uint128)":null}
-{"exp10(uint128)":null}
-{"exp10(uint128)":null}
-{"exp10(uint128)":null}
-{"exp10(uint128)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_UInt16 = r"""
-{"exp10(uint16)":null}
-{"exp10(uint16)":1}
-{"exp10(uint16)":1}
-{"exp10(uint16)":null}
-{"exp10(uint16)":null}
-{"exp10(uint16)":null}
-{"exp10(uint16)":null}
-{"exp10(uint16)":null}
-{"exp10(uint16)":null}
-{"exp10(uint16)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_UInt32 = r"""
-{"exp10(uint32)":null}
-{"exp10(uint32)":1}
-{"exp10(uint32)":1}
-{"exp10(uint32)":null}
-{"exp10(uint32)":null}
-{"exp10(uint32)":null}
-{"exp10(uint32)":null}
-{"exp10(uint32)":null}
-{"exp10(uint32)":null}
-{"exp10(uint32)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_UInt64 = r"""
-{"exp10(uint64)":null}
-{"exp10(uint64)":1}
-{"exp10(uint64)":1}
-{"exp10(uint64)":null}
-{"exp10(uint64)":null}
-{"exp10(uint64)":null}
-{"exp10(uint64)":null}
-{"exp10(uint64)":null}
-{"exp10(uint64)":null}
-{"exp10(uint64)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_UInt8 = r"""
-{"exp10(uint8)":1e255}
-{"exp10(uint8)":1}
-{"exp10(uint8)":1}
-{"exp10(uint8)":1e163}
-{"exp10(uint8)":1e201}
-{"exp10(uint8)":1e175}
-{"exp10(uint8)":1e230}
-{"exp10(uint8)":1e119}
-{"exp10(uint8)":1e24}
-{"exp10(uint8)":1e126}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10__inf = r"""
-{"exp10(x)":0}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_constant = r"""
-{"exp10(1)":10}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_first_non_NULL_value = r"""
-{"exp10(x)":null}
-{"exp10(x)":null}
-{"exp10(x)":null}
-{"exp10(x)":1000}
-{"exp10(x)":10000}
-{"exp10(x)":100000}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_inf = r"""
-{"exp10(x)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_nan = r"""
-{"exp10(x)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_only_nan = r"""
-{"exp10(x)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_return_type = r"""
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-{"toTypeName(exp10(number))":"Float64"}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_some_negative_values = r"""
-{"exp10(minus(number, 5))":0.0001}
-{"exp10(minus(number, 5))":0.001}
-{"exp10(minus(number, 5))":0.01}
-{"exp10(minus(number, 5))":0.1}
-{"exp10(minus(number, 5))":1}
-{"exp10(minus(number, 5))":10}
-{"exp10(minus(number, 5))":100}
-{"exp10(minus(number, 5))":1000}
-{"exp10(minus(number, 5))":10000}
-{"exp10(minus(number, 5))":100000}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_with_group_by = r"""
-{"even":0,"exp10(number)":1}
-{"even":0,"exp10(number)":10000}
-{"even":1,"exp10(number)":1000}
-{"even":0,"exp10(number)":100}
-{"even":1,"exp10(number)":100000}
-{"even":1,"exp10(number)":10}
-{"even":0,"exp10(number)":1000000}
-{"even":1,"exp10(number)":10000000}
-{"even":1,"exp10(number)":1000000000}
-{"even":0,"exp10(number)":100000000}
-"""
-
-_functions_math_functions_test_all_math_functions_exp10_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_intExp10_Decimal128_38_ = r"""
+_functions_math_functions_intExp10_Decimal128_38_ = r"""
 Received exception from server (version 24.8.4):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Illegal type Decimal(38, 38) of argument of function intExp10: In scope SELECT intExp10(decimal128_38_) FROM table_942b87e4_7f40_11ef_ac76_8d28974de790. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT intExp10(decimal128_38_) FROM table_942b87e4_7f40_11ef_ac76_8d28974de790 FORMAT JSONEachRow
+Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Illegal type Decimal(38, 38) of argument of function intExp10: In scope SELECT intExp10(decimal128_38_) FROM table_8e918f10_8240_11ef_8b53_8d2da2a0f3c1. (ILLEGAL_TYPE_OF_ARGUMENT)
+(query: SELECT intExp10(decimal128_38_) FROM table_8e918f10_8240_11ef_8b53_8d2da2a0f3c1 FORMAT JSONEachRow
 )
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_Float32 = r"""
+_functions_math_functions_intExp10_Float32 = r"""
 {"intExp10(float32)":"0"}
 {"intExp10(float32)":"0"}
 {"intExp10(float32)":"1"}
@@ -207,7 +18,7 @@ _functions_math_functions_test_all_math_functions_intExp10_Float32 = r"""
 {"intExp10(float32)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_Float64 = r"""
+_functions_math_functions_intExp10_Float64 = r"""
 {"intExp10(float64)":"0"}
 {"intExp10(float64)":"0"}
 {"intExp10(float64)":"1"}
@@ -220,7 +31,7 @@ _functions_math_functions_test_all_math_functions_intExp10_Float64 = r"""
 {"intExp10(float64)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_Int16 = r"""
+_functions_math_functions_intExp10_Int16 = r"""
 {"intExp10(int16)":"18446744073709551615"}
 {"intExp10(int16)":"0"}
 {"intExp10(int16)":"1"}
@@ -233,7 +44,7 @@ _functions_math_functions_test_all_math_functions_intExp10_Int16 = r"""
 {"intExp10(int16)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_Int32 = r"""
+_functions_math_functions_intExp10_Int32 = r"""
 {"intExp10(int32)":"18446744073709551615"}
 {"intExp10(int32)":"0"}
 {"intExp10(int32)":"1"}
@@ -246,7 +57,7 @@ _functions_math_functions_test_all_math_functions_intExp10_Int32 = r"""
 {"intExp10(int32)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_Int64 = r"""
+_functions_math_functions_intExp10_Int64 = r"""
 {"intExp10(int64)":"0"}
 {"intExp10(int64)":"1"}
 {"intExp10(int64)":"1"}
@@ -259,7 +70,7 @@ _functions_math_functions_test_all_math_functions_intExp10_Int64 = r"""
 {"intExp10(int64)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_Int8 = r"""
+_functions_math_functions_intExp10_Int8 = r"""
 {"intExp10(int8)":"18446744073709551615"}
 {"intExp10(int8)":"0"}
 {"intExp10(int8)":"1"}
@@ -272,7 +83,7 @@ _functions_math_functions_test_all_math_functions_intExp10_Int8 = r"""
 {"intExp10(int8)":"18446744073709551615"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_UInt16 = r"""
+_functions_math_functions_intExp10_UInt16 = r"""
 {"intExp10(uint16)":"18446744073709551615"}
 {"intExp10(uint16)":"1"}
 {"intExp10(uint16)":"1"}
@@ -285,7 +96,7 @@ _functions_math_functions_test_all_math_functions_intExp10_UInt16 = r"""
 {"intExp10(uint16)":"18446744073709551615"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_UInt32 = r"""
+_functions_math_functions_intExp10_UInt32 = r"""
 {"intExp10(uint32)":"0"}
 {"intExp10(uint32)":"1"}
 {"intExp10(uint32)":"1"}
@@ -298,7 +109,7 @@ _functions_math_functions_test_all_math_functions_intExp10_UInt32 = r"""
 {"intExp10(uint32)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_UInt64 = r"""
+_functions_math_functions_intExp10_UInt64 = r"""
 {"intExp10(uint64)":"0"}
 {"intExp10(uint64)":"1"}
 {"intExp10(uint64)":"1"}
@@ -311,7 +122,7 @@ _functions_math_functions_test_all_math_functions_intExp10_UInt64 = r"""
 {"intExp10(uint64)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_UInt8 = r"""
+_functions_math_functions_intExp10_UInt8 = r"""
 {"intExp10(uint8)":"18446744073709551615"}
 {"intExp10(uint8)":"1"}
 {"intExp10(uint8)":"1"}
@@ -324,15 +135,15 @@ _functions_math_functions_test_all_math_functions_intExp10_UInt8 = r"""
 {"intExp10(uint8)":"18446744073709551615"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10__inf = r"""
+_functions_math_functions_intExp10__inf = r"""
 {"intExp10(x)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_constant = r"""
+_functions_math_functions_intExp10_constant = r"""
 {"intExp10(1)":"10"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_first_non_NULL_value = r"""
+_functions_math_functions_intExp10_first_non_NULL_value = r"""
 {"intExp10(x)":null}
 {"intExp10(x)":null}
 {"intExp10(x)":null}
@@ -341,19 +152,19 @@ _functions_math_functions_test_all_math_functions_intExp10_first_non_NULL_value 
 {"intExp10(x)":"100000"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_inf = r"""
+_functions_math_functions_intExp10_inf = r"""
 {"intExp10(x)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_nan = r"""
+_functions_math_functions_intExp10_nan = r"""
 {"intExp10(x)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_only_nan = r"""
+_functions_math_functions_intExp10_only_nan = r"""
 {"intExp10(x)":"0"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_return_type = r"""
+_functions_math_functions_intExp10_return_type = r"""
 {"toTypeName(intExp10(number))":"UInt64"}
 {"toTypeName(intExp10(number))":"UInt64"}
 {"toTypeName(intExp10(number))":"UInt64"}
@@ -366,7 +177,7 @@ _functions_math_functions_test_all_math_functions_intExp10_return_type = r"""
 {"toTypeName(intExp10(number))":"UInt64"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_some_negative_values = r"""
+_functions_math_functions_intExp10_some_negative_values = r"""
 {"intExp10(minus(number, 5))":"0"}
 {"intExp10(minus(number, 5))":"0"}
 {"intExp10(minus(number, 5))":"0"}
@@ -379,7 +190,7 @@ _functions_math_functions_test_all_math_functions_intExp10_some_negative_values 
 {"intExp10(minus(number, 5))":"100000"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_with_group_by = r"""
+_functions_math_functions_intExp10_with_group_by = r"""
 {"even":0,"intExp10(number)":"1"}
 {"even":0,"intExp10(number)":"10000"}
 {"even":1,"intExp10(number)":"1000"}
@@ -392,37 +203,7 @@ _functions_math_functions_test_all_math_functions_intExp10_with_group_by = r"""
 {"even":0,"intExp10(number)":"100000000"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp10_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_intExp2_first_non_NULL_value = r"""
-{"intExp2(x)":null}
-{"intExp2(x)":null}
-{"intExp2(x)":null}
-{"intExp2(x)":"8"}
-{"intExp2(x)":"16"}
-{"intExp2(x)":"32"}
-"""
-
-_functions_math_functions_test_all_math_functions_intExp2_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_log2_Decimal128_38_ = r"""
-{"log2(decimal128_38_)":0}
-{"log2(decimal128_38_)":null}
-{"log2(decimal128_38_)":null}
-{"log2(decimal128_38_)":null}
-{"log2(decimal128_38_)":-1.4827115418475294}
-{"log2(decimal128_38_)":null}
-{"log2(decimal128_38_)":-0.7614708130040936}
-{"log2(decimal128_38_)":-0.5292521608434417}
-{"log2(decimal128_38_)":null}
-{"log2(decimal128_38_)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_log2_zero_rows = r"""
+_functions_math_functions_intExp10_zero_rows = r"""
 
 """
 

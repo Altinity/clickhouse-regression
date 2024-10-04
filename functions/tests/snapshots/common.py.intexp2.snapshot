@@ -1,11 +1,11 @@
-_functions_math_functions_test_all_math_functions_intExp2_Decimal128_38_ = r"""
+_functions_math_functions_intExp2_Decimal128_38_ = r"""
 Received exception from server (version 24.8.4):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Illegal type Decimal(38, 38) of argument of function intExp2: In scope SELECT intExp2(decimal128_38_) FROM table_942b87e4_7f40_11ef_ac76_8d28974de790. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT intExp2(decimal128_38_) FROM table_942b87e4_7f40_11ef_ac76_8d28974de790 FORMAT JSONEachRow
+Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Illegal type Decimal(38, 38) of argument of function intExp2: In scope SELECT intExp2(decimal128_38_) FROM table_8e918f10_8240_11ef_8b53_8d2da2a0f3c1. (ILLEGAL_TYPE_OF_ARGUMENT)
+(query: SELECT intExp2(decimal128_38_) FROM table_8e918f10_8240_11ef_8b53_8d2da2a0f3c1 FORMAT JSONEachRow
 )
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_Float32 = r"""
+_functions_math_functions_intExp2_Float32 = r"""
 {"intExp2(float32)":"1"}
 {"intExp2(float32)":"1"}
 {"intExp2(float32)":"1"}
@@ -18,7 +18,7 @@ _functions_math_functions_test_all_math_functions_intExp2_Float32 = r"""
 {"intExp2(float32)":"1"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_Float64 = r"""
+_functions_math_functions_intExp2_Float64 = r"""
 {"intExp2(float64)":"1"}
 {"intExp2(float64)":"1"}
 {"intExp2(float64)":"1"}
@@ -31,7 +31,7 @@ _functions_math_functions_test_all_math_functions_intExp2_Float64 = r"""
 {"intExp2(float64)":"1"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_Int16 = r"""
+_functions_math_functions_intExp2_Int16 = r"""
 {"intExp2(int16)":"9223372036854775808"}
 {"intExp2(int16)":"1"}
 {"intExp2(int16)":"1"}
@@ -44,7 +44,7 @@ _functions_math_functions_test_all_math_functions_intExp2_Int16 = r"""
 {"intExp2(int16)":"9007199254740992"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_Int32 = r"""
+_functions_math_functions_intExp2_Int32 = r"""
 {"intExp2(int32)":"9223372036854775808"}
 {"intExp2(int32)":"1"}
 {"intExp2(int32)":"1"}
@@ -57,7 +57,7 @@ _functions_math_functions_test_all_math_functions_intExp2_Int32 = r"""
 {"intExp2(int32)":"4503599627370496"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_Int64 = r"""
+_functions_math_functions_intExp2_Int64 = r"""
 {"intExp2(int64)":"9223372036854775808"}
 {"intExp2(int64)":"1"}
 {"intExp2(int64)":"1"}
@@ -70,7 +70,7 @@ _functions_math_functions_test_all_math_functions_intExp2_Int64 = r"""
 {"intExp2(int64)":"2147483648"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_Int8 = r"""
+_functions_math_functions_intExp2_Int8 = r"""
 {"intExp2(int8)":"9223372036854775808"}
 {"intExp2(int8)":"1"}
 {"intExp2(int8)":"1"}
@@ -83,7 +83,7 @@ _functions_math_functions_test_all_math_functions_intExp2_Int8 = r"""
 {"intExp2(int8)":"1152921504606846976"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_UInt16 = r"""
+_functions_math_functions_intExp2_UInt16 = r"""
 {"intExp2(uint16)":"9223372036854775808"}
 {"intExp2(uint16)":"1"}
 {"intExp2(uint16)":"1"}
@@ -96,7 +96,7 @@ _functions_math_functions_test_all_math_functions_intExp2_UInt16 = r"""
 {"intExp2(uint16)":"1048576"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_UInt32 = r"""
+_functions_math_functions_intExp2_UInt32 = r"""
 {"intExp2(uint32)":"9223372036854775808"}
 {"intExp2(uint32)":"1"}
 {"intExp2(uint32)":"1"}
@@ -109,7 +109,7 @@ _functions_math_functions_test_all_math_functions_intExp2_UInt32 = r"""
 {"intExp2(uint32)":"1048576"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_UInt64 = r"""
+_functions_math_functions_intExp2_UInt64 = r"""
 {"intExp2(uint64)":"9223372036854775808"}
 {"intExp2(uint64)":"1"}
 {"intExp2(uint64)":"1"}
@@ -122,7 +122,7 @@ _functions_math_functions_test_all_math_functions_intExp2_UInt64 = r"""
 {"intExp2(uint64)":"70368744177664"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_UInt8 = r"""
+_functions_math_functions_intExp2_UInt8 = r"""
 {"intExp2(uint8)":"9223372036854775808"}
 {"intExp2(uint8)":"1"}
 {"intExp2(uint8)":"1"}
@@ -135,15 +135,15 @@ _functions_math_functions_test_all_math_functions_intExp2_UInt8 = r"""
 {"intExp2(uint8)":"4611686018427387904"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2__inf = r"""
+_functions_math_functions_intExp2__inf = r"""
 {"intExp2(x)":"1"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_constant = r"""
+_functions_math_functions_intExp2_constant = r"""
 {"intExp2(1)":"2"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_first_non_NULL_value = r"""
+_functions_math_functions_intExp2_first_non_NULL_value = r"""
 {"intExp2(x)":null}
 {"intExp2(x)":null}
 {"intExp2(x)":null}
@@ -152,19 +152,19 @@ _functions_math_functions_test_all_math_functions_intExp2_first_non_NULL_value =
 {"intExp2(x)":"32"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_inf = r"""
+_functions_math_functions_intExp2_inf = r"""
 {"intExp2(x)":"1"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_nan = r"""
+_functions_math_functions_intExp2_nan = r"""
 {"intExp2(x)":"1"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_only_nan = r"""
+_functions_math_functions_intExp2_only_nan = r"""
 {"intExp2(x)":"1"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_return_type = r"""
+_functions_math_functions_intExp2_return_type = r"""
 {"toTypeName(intExp2(number))":"UInt64"}
 {"toTypeName(intExp2(number))":"UInt64"}
 {"toTypeName(intExp2(number))":"UInt64"}
@@ -177,7 +177,7 @@ _functions_math_functions_test_all_math_functions_intExp2_return_type = r"""
 {"toTypeName(intExp2(number))":"UInt64"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_some_negative_values = r"""
+_functions_math_functions_intExp2_some_negative_values = r"""
 {"intExp2(minus(number, 5))":"1152921504606846976"}
 {"intExp2(minus(number, 5))":"2305843009213693952"}
 {"intExp2(minus(number, 5))":"4611686018427387904"}
@@ -190,7 +190,7 @@ _functions_math_functions_test_all_math_functions_intExp2_some_negative_values =
 {"intExp2(minus(number, 5))":"32"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_with_group_by = r"""
+_functions_math_functions_intExp2_with_group_by = r"""
 {"even":0,"intExp2(number)":"1"}
 {"even":0,"intExp2(number)":"16"}
 {"even":1,"intExp2(number)":"8"}
@@ -203,7 +203,7 @@ _functions_math_functions_test_all_math_functions_intExp2_with_group_by = r"""
 {"even":0,"intExp2(number)":"256"}
 """
 
-_functions_math_functions_test_all_math_functions_intExp2_zero_rows = r"""
+_functions_math_functions_intExp2_zero_rows = r"""
 
 """
 

@@ -1,4 +1,4 @@
-_functions_math_functions_test_all_math_functions_asin_Decimal128_38_ = r"""
+_functions_math_functions_asin_Decimal128_38_ = r"""
 {"asin(decimal128_38_)":1.5707963267948966}
 {"asin(decimal128_38_)":-1.5707963267948966}
 {"asin(decimal128_38_)":0}
@@ -11,7 +11,7 @@ _functions_math_functions_test_all_math_functions_asin_Decimal128_38_ = r"""
 {"asin(decimal128_38_)":-0.49319312299436746}
 """
 
-_functions_math_functions_test_all_math_functions_asin_Float32 = r"""
+_functions_math_functions_asin_Float32 = r"""
 {"asin(float32)":null}
 {"asin(float32)":null}
 {"asin(float32)":0}
@@ -24,7 +24,7 @@ _functions_math_functions_test_all_math_functions_asin_Float32 = r"""
 {"asin(float32)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_Float64 = r"""
+_functions_math_functions_asin_Float64 = r"""
 {"asin(float64)":null}
 {"asin(float64)":null}
 {"asin(float64)":0}
@@ -37,7 +37,7 @@ _functions_math_functions_test_all_math_functions_asin_Float64 = r"""
 {"asin(float64)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_Int16 = r"""
+_functions_math_functions_asin_Int16 = r"""
 {"asin(int16)":null}
 {"asin(int16)":null}
 {"asin(int16)":0}
@@ -50,7 +50,7 @@ _functions_math_functions_test_all_math_functions_asin_Int16 = r"""
 {"asin(int16)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_Int32 = r"""
+_functions_math_functions_asin_Int32 = r"""
 {"asin(int32)":null}
 {"asin(int32)":null}
 {"asin(int32)":0}
@@ -63,7 +63,7 @@ _functions_math_functions_test_all_math_functions_asin_Int32 = r"""
 {"asin(int32)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_Int64 = r"""
+_functions_math_functions_asin_Int64 = r"""
 {"asin(int64)":null}
 {"asin(int64)":null}
 {"asin(int64)":0}
@@ -76,7 +76,7 @@ _functions_math_functions_test_all_math_functions_asin_Int64 = r"""
 {"asin(int64)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_Int8 = r"""
+_functions_math_functions_asin_Int8 = r"""
 {"asin(int8)":null}
 {"asin(int8)":null}
 {"asin(int8)":0}
@@ -89,7 +89,7 @@ _functions_math_functions_test_all_math_functions_asin_Int8 = r"""
 {"asin(int8)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_UInt16 = r"""
+_functions_math_functions_asin_UInt16 = r"""
 {"asin(uint16)":null}
 {"asin(uint16)":0}
 {"asin(uint16)":0}
@@ -102,7 +102,7 @@ _functions_math_functions_test_all_math_functions_asin_UInt16 = r"""
 {"asin(uint16)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_UInt32 = r"""
+_functions_math_functions_asin_UInt32 = r"""
 {"asin(uint32)":null}
 {"asin(uint32)":0}
 {"asin(uint32)":0}
@@ -115,7 +115,7 @@ _functions_math_functions_test_all_math_functions_asin_UInt32 = r"""
 {"asin(uint32)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_UInt64 = r"""
+_functions_math_functions_asin_UInt64 = r"""
 {"asin(uint64)":null}
 {"asin(uint64)":0}
 {"asin(uint64)":0}
@@ -128,7 +128,7 @@ _functions_math_functions_test_all_math_functions_asin_UInt64 = r"""
 {"asin(uint64)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_UInt8 = r"""
+_functions_math_functions_asin_UInt8 = r"""
 {"asin(uint8)":null}
 {"asin(uint8)":0}
 {"asin(uint8)":0}
@@ -141,15 +141,15 @@ _functions_math_functions_test_all_math_functions_asin_UInt8 = r"""
 {"asin(uint8)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin__inf = r"""
+_functions_math_functions_asin__inf = r"""
 {"asin(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_constant = r"""
+_functions_math_functions_asin_constant = r"""
 {"asin(1)":1.5707963267948966}
 """
 
-_functions_math_functions_test_all_math_functions_asin_first_non_NULL_value = r"""
+_functions_math_functions_asin_first_non_NULL_value = r"""
 {"asin(x)":null}
 {"asin(x)":null}
 {"asin(x)":null}
@@ -158,19 +158,19 @@ _functions_math_functions_test_all_math_functions_asin_first_non_NULL_value = r"
 {"asin(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_inf = r"""
+_functions_math_functions_asin_inf = r"""
 {"asin(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_nan = r"""
+_functions_math_functions_asin_nan = r"""
 {"asin(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_only_nan = r"""
+_functions_math_functions_asin_only_nan = r"""
 {"asin(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_return_type = r"""
+_functions_math_functions_asin_return_type = r"""
 {"toTypeName(asin(number))":"Float64"}
 {"toTypeName(asin(number))":"Float64"}
 {"toTypeName(asin(number))":"Float64"}
@@ -183,7 +183,7 @@ _functions_math_functions_test_all_math_functions_asin_return_type = r"""
 {"toTypeName(asin(number))":"Float64"}
 """
 
-_functions_math_functions_test_all_math_functions_asin_some_negative_values = r"""
+_functions_math_functions_asin_some_negative_values = r"""
 {"asin(minus(number, 5))":null}
 {"asin(minus(number, 5))":null}
 {"asin(minus(number, 5))":null}
@@ -196,7 +196,7 @@ _functions_math_functions_test_all_math_functions_asin_some_negative_values = r"
 {"asin(minus(number, 5))":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_with_group_by = r"""
+_functions_math_functions_asin_with_group_by = r"""
 {"even":0,"asin(number)":0}
 {"even":0,"asin(number)":null}
 {"even":1,"asin(number)":null}
@@ -209,102 +209,7 @@ _functions_math_functions_test_all_math_functions_asin_with_group_by = r"""
 {"even":0,"asin(number)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asin_zero_rows = r"""
+_functions_math_functions_asin_zero_rows = r"""
 
-"""
-
-_functions_math_functions_test_all_math_functions_cos_constant = r"""
-{"cos(1)":0.5403023058681398}
-"""
-
-_functions_math_functions_test_all_math_functions_cos_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_sin_Decimal128_38_ = r"""
-{"sin(decimal128_38_)":0.8414709848078965}
-{"sin(decimal128_38_)":-0.8414709848078965}
-{"sin(decimal128_38_)":0}
-{"sin(decimal128_38_)":-0.48293388115695596}
-{"sin(decimal128_38_)":0.35022908318054163}
-{"sin(decimal128_38_)":-0.27682614558402535}
-{"sin(decimal128_38_)":0.5562734656343846}
-{"sin(decimal128_38_)":0.6387817501204309}
-{"sin(decimal128_38_)":-0.5624731547373849}
-{"sin(decimal128_38_)":-0.45595137911574923}
-"""
-
-_functions_math_functions_test_all_math_functions_sin_Float64 = r"""
-{"sin(float64)":0.8547272942406356}
-{"sin(float64)":-0.8547272942406356}
-{"sin(float64)":0}
-{"sin(float64)":0.682235915009401}
-{"sin(float64)":0.6818539135005591}
-{"sin(float64)":0.8254184358730955}
-{"sin(float64)":-0.7773518613877032}
-{"sin(float64)":0.8700270479976153}
-{"sin(float64)":-0.9907143611389523}
-{"sin(float64)":0.2428602461437084}
-"""
-
-_functions_math_functions_test_all_math_functions_sin_first_non_NULL_value = r"""
-{"sin(x)":null}
-{"sin(x)":null}
-{"sin(x)":null}
-{"sin(x)":0.1411200080598672}
-{"sin(x)":-0.7568024953079282}
-{"sin(x)":-0.9589242746631385}
-"""
-
-_functions_math_functions_test_all_math_functions_tan_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_tgamma_Decimal128_38_ = r"""
-{"tgamma(decimal128_38_)":1}
-{"tgamma(decimal128_38_)":null}
-{"tgamma(decimal128_38_)":null}
-{"tgamma(decimal128_38_)":-3.544643714819731}
-{"tgamma(decimal128_38_)":2.4883972238797947}
-{"tgamma(decimal128_38_)":-4.521366734473279}
-{"tgamma(decimal128_38_)":1.5128416624428505}
-{"tgamma(decimal128_38_)":1.3094197364719873}
-{"tgamma(decimal128_38_)":-3.6883841446716317}
-{"tgamma(decimal128_38_)":-3.5595493143452286}
-"""
-
-_functions_math_functions_test_all_math_functions_tgamma_Float32 = r"""
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-{"tgamma(float32)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_tgamma_Float64 = r"""
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-{"tgamma(float64)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_tgamma_first_non_NULL_value = r"""
-{"tgamma(x)":null}
-{"tgamma(x)":null}
-{"tgamma(x)":null}
-{"tgamma(x)":2}
-{"tgamma(x)":6}
-{"tgamma(x)":24}
 """
 
