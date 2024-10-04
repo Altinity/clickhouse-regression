@@ -329,7 +329,7 @@ def different_combinations(self, number_of_actions=3):
 
 
 @TestFeature
-@Name("valid until clause")
+@Name("valid until clause combinatorics")
 @Requirements()
 def feature(self):
     """Check `VALID UNTIL` clause in `CREATE USER` and `ALTER USER` statements."""
