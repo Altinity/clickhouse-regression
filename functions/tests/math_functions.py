@@ -17,7 +17,7 @@ def datatype(self, func, table, col_name):
 
 @TestScenario
 def check(self, func, table, snapshot_id=None):
-
+    """Run checks for math functions."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     with Check("constant"):
@@ -57,7 +57,7 @@ def check(self, func, table, snapshot_id=None):
     for v in ["inf", "-inf", "nan"]:
         with Check(f"{v}"):
             execute_query(
-                f"SELECT {func.format(params='x')}   FROM values('x Float64', ({v}))"
+                f"SELECT {func.format(params='x')} FROM values('x Float64', ({v}))"
             )
 
     with Pool(5) as executor:
@@ -74,9 +74,9 @@ def check(self, func, table, snapshot_id=None):
 @TestFeature
 @Name("math functions")
 def feature(self):
-    """Test all math functions."""
+    """Test math functions."""
 
-    with Given("tables with all data types"):
+    with Given("tables with all numeric types"):
         self.context.table = create_table(
             engine="MergeTree",
             columns=generate_all_basic_numeric_column_types(),
@@ -87,10 +87,9 @@ def feature(self):
     with And("populate table with test data"):
         self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
 
-    with Then("test all math functions"):
-        with Pool(5) as executor:
-            for func in one_parameter_functions:
-                Scenario(f"{func}", test=check, parallel=True, executor=executor)(
-                    func=f"{func}({{params}})", table=self.context.table
-                )
-            join()
+    with Pool(5) as executor:
+        for func in one_parameter_functions:
+            Scenario(f"{func}", test=check, parallel=True, executor=executor)(
+                func=f"{func}({{params}})", table=self.context.table
+            )
+        join()

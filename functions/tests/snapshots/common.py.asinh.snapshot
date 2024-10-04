@@ -1,25 +1,4 @@
-_functions_math_functions_test_all_math_functions_acosh_constant = r"""
-{"acosh(1)":0}
-"""
-
-_functions_math_functions_test_all_math_functions_acosh_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_asin_Decimal128_38_ = r"""
-{"asin(decimal128_38_)":1.5707963267948966}
-{"asin(decimal128_38_)":-1.5707963267948966}
-{"asin(decimal128_38_)":0}
-{"asin(decimal128_38_)":-0.5282262245891796}
-{"asin(decimal128_38_)":0.3659276342119623}
-{"asin(decimal128_38_)":-0.2843041443684569}
-{"asin(decimal128_38_)":0.6309283452229604}
-{"asin(decimal128_38_)":0.7655224934762314}
-{"asin(decimal128_38_)":-0.640222568758347}
-{"asin(decimal128_38_)":-0.49319312299436746}
-"""
-
-_functions_math_functions_test_all_math_functions_asinh_Decimal128_38_ = r"""
+_functions_math_functions_asinh_Decimal128_38_ = r"""
 {"asinh(decimal128_38_)":0.881373587019543}
 {"asinh(decimal128_38_)":-0.881373587019543}
 {"asinh(decimal128_38_)":0}
@@ -32,7 +11,7 @@ _functions_math_functions_test_all_math_functions_asinh_Decimal128_38_ = r"""
 {"asinh(decimal128_38_)":-0.45733137343635166}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_Float32 = r"""
+_functions_math_functions_asinh_Float32 = r"""
 {"asinh(float32)":89.4159862326283}
 {"asinh(float32)":-89.4159862326283}
 {"asinh(float32)":0}
@@ -45,7 +24,7 @@ _functions_math_functions_test_all_math_functions_asinh_Float32 = r"""
 {"asinh(float32)":-88.04623118405905}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_Float64 = r"""
+_functions_math_functions_asinh_Float64 = r"""
 {"asinh(float64)":710.4758588863866}
 {"asinh(float64)":-710.4758588863866}
 {"asinh(float64)":0}
@@ -58,7 +37,7 @@ _functions_math_functions_test_all_math_functions_asinh_Float64 = r"""
 {"asinh(float64)":-420.23629810856227}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_Int16 = r"""
+_functions_math_functions_asinh_Int16 = r"""
 {"asinh(int16)":11.090324371148174}
 {"asinh(int16)":-11.090354889191955}
 {"asinh(int16)":0}
@@ -71,7 +50,7 @@ _functions_math_functions_test_all_math_functions_asinh_Int16 = r"""
 {"asinh(int16)":-9.624170400786683}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_Int32 = r"""
+_functions_math_functions_asinh_Int32 = r"""
 {"asinh(int32)":22.180709777452588}
 {"asinh(int32)":-22.18070977791825}
 {"asinh(int32)":0}
@@ -84,7 +63,7 @@ _functions_math_functions_test_all_math_functions_asinh_Int32 = r"""
 {"asinh(int32)":-21.56211579983343}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_Int64 = r"""
+_functions_math_functions_asinh_Int64 = r"""
 {"asinh(int64)":44.3614195558365}
 {"asinh(int64)":-44.3614195558365}
 {"asinh(int64)":0}
@@ -97,7 +76,7 @@ _functions_math_functions_test_all_math_functions_asinh_Int64 = r"""
 {"asinh(int64)":43.531430689299924}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_Int8 = r"""
+_functions_math_functions_asinh_Int8 = r"""
 {"asinh(int8)":5.5373497666891724}
 {"asinh(int8)":-5.545192702919391}
 {"asinh(int8)":0}
@@ -110,7 +89,7 @@ _functions_math_functions_test_all_math_functions_asinh_Int8 = r"""
 {"asinh(int8)":5.5134450048735575}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_UInt16 = r"""
+_functions_math_functions_asinh_UInt16 = r"""
 {"asinh(uint16)":11.7834868106718}
 {"asinh(uint16)":0}
 {"asinh(uint16)":0}
@@ -123,7 +102,7 @@ _functions_math_functions_test_all_math_functions_asinh_UInt16 = r"""
 {"asinh(uint16)":9.625359697249483}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_UInt32 = r"""
+_functions_math_functions_asinh_UInt32 = r"""
 {"asinh(uint32)":22.873856958245362}
 {"asinh(uint32)":0}
 {"asinh(uint32)":0}
@@ -136,7 +115,7 @@ _functions_math_functions_test_all_math_functions_asinh_UInt32 = r"""
 {"asinh(uint32)":22.261448095159164}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_UInt64 = r"""
+_functions_math_functions_asinh_UInt64 = r"""
 {"asinh(uint64)":45.054566736396445}
 {"asinh(uint64)":0}
 {"asinh(uint64)":0}
@@ -149,7 +128,7 @@ _functions_math_functions_test_all_math_functions_asinh_UInt64 = r"""
 {"asinh(uint64)":44.984858624111524}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_UInt8 = r"""
+_functions_math_functions_asinh_UInt8 = r"""
 {"asinh(uint8)":6.2344145703713245}
 {"asinh(uint8)":0}
 {"asinh(uint8)":0}
@@ -162,15 +141,15 @@ _functions_math_functions_test_all_math_functions_asinh_UInt8 = r"""
 {"asinh(uint8)":5.5294448341790385}
 """
 
-_functions_math_functions_test_all_math_functions_asinh__inf = r"""
+_functions_math_functions_asinh__inf = r"""
 {"asinh(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_constant = r"""
+_functions_math_functions_asinh_constant = r"""
 {"asinh(1)":0.881373587019543}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_first_non_NULL_value = r"""
+_functions_math_functions_asinh_first_non_NULL_value = r"""
 {"asinh(x)":null}
 {"asinh(x)":null}
 {"asinh(x)":null}
@@ -179,19 +158,19 @@ _functions_math_functions_test_all_math_functions_asinh_first_non_NULL_value = r
 {"asinh(x)":2.3124383412727525}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_inf = r"""
+_functions_math_functions_asinh_inf = r"""
 {"asinh(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_nan = r"""
+_functions_math_functions_asinh_nan = r"""
 {"asinh(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_only_nan = r"""
+_functions_math_functions_asinh_only_nan = r"""
 {"asinh(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_return_type = r"""
+_functions_math_functions_asinh_return_type = r"""
 {"toTypeName(asinh(number))":"Float64"}
 {"toTypeName(asinh(number))":"Float64"}
 {"toTypeName(asinh(number))":"Float64"}
@@ -204,7 +183,7 @@ _functions_math_functions_test_all_math_functions_asinh_return_type = r"""
 {"toTypeName(asinh(number))":"Float64"}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_some_negative_values = r"""
+_functions_math_functions_asinh_some_negative_values = r"""
 {"asinh(minus(number, 5))":-2.0947125472611012}
 {"asinh(minus(number, 5))":-1.8184464592320668}
 {"asinh(minus(number, 5))":-1.4436354751788103}
@@ -217,7 +196,7 @@ _functions_math_functions_test_all_math_functions_asinh_some_negative_values = r
 {"asinh(minus(number, 5))":2.3124383412727525}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_with_group_by = r"""
+_functions_math_functions_asinh_with_group_by = r"""
 {"even":0,"asinh(number)":0}
 {"even":0,"asinh(number)":2.0947125472611012}
 {"even":1,"asinh(number)":1.8184464592320668}
@@ -230,45 +209,7 @@ _functions_math_functions_test_all_math_functions_asinh_with_group_by = r"""
 {"even":0,"asinh(number)":2.7764722807237177}
 """
 
-_functions_math_functions_test_all_math_functions_asinh_zero_rows = r"""
+_functions_math_functions_asinh_zero_rows = r"""
 
-"""
-
-_functions_math_functions_test_all_math_functions_atan_only_nan = r"""
-{"atan(x)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_atan_return_type = r"""
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-{"toTypeName(atan(number))":"Float64"}
-"""
-
-_functions_math_functions_test_all_math_functions_cosh_constant = r"""
-{"cosh(1)":1.5430806348152437}
-"""
-
-_functions_math_functions_test_all_math_functions_cosh_with_group_by = r"""
-{"even":0,"cosh(number)":1}
-{"even":0,"cosh(number)":27.308232836016487}
-{"even":1,"cosh(number)":10.067661995777765}
-{"even":0,"cosh(number)":3.7621956910836314}
-{"even":1,"cosh(number)":74.20994852478785}
-{"even":1,"cosh(number)":1.5430806348152437}
-{"even":0,"cosh(number)":201.7156361224559}
-{"even":1,"cosh(number)":548.317035155212}
-{"even":1,"cosh(number)":4051.5420254925943}
-{"even":0,"cosh(number)":1490.479161252178}
-"""
-
-_functions_math_functions_test_all_math_functions_sinh_constant = r"""
-{"sinh(1)":1.1752011936438014}
 """
 

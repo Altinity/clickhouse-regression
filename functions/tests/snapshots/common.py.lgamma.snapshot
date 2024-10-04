@@ -1,33 +1,4 @@
-_functions_math_functions_test_all_math_functions_erf_constant = r"""
-{"erf(1)":0.8427007929497149}
-"""
-
-_functions_math_functions_test_all_math_functions_erf_with_group_by = r"""
-{"even":0,"erf(number)":0}
-{"even":0,"erf(number)":0.9999999845827421}
-{"even":1,"erf(number)":0.9999779095030014}
-{"even":0,"erf(number)":0.9953222650189527}
-{"even":1,"erf(number)":0.9999999999984626}
-{"even":1,"erf(number)":0.8427007929497149}
-{"even":0,"erf(number)":1}
-{"even":1,"erf(number)":1}
-{"even":1,"erf(number)":1}
-{"even":0,"erf(number)":1}
-"""
-
-_functions_math_functions_test_all_math_functions_erf_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_erfc_constant = r"""
-{"erfc(1)":0.15729920705028513}
-"""
-
-_functions_math_functions_test_all_math_functions_erfc_zero_rows = r"""
-
-"""
-
-_functions_math_functions_test_all_math_functions_lgamma_Decimal128_38_ = r"""
+_functions_math_functions_lgamma_Decimal128_38_ = r"""
 {"lgamma(decimal128_38_)":0}
 {"lgamma(decimal128_38_)":37.78343889855838}
 {"lgamma(decimal128_38_)":null}
@@ -40,7 +11,7 @@ _functions_math_functions_test_all_math_functions_lgamma_Decimal128_38_ = r"""
 {"lgamma(decimal128_38_)":1.2696339397558134}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_Float32 = r"""
+_functions_math_functions_lgamma_Float32 = r"""
 {"lgamma(float32)":2.98505335264318e40}
 {"lgamma(float32)":-2.98505335264318e40}
 {"lgamma(float32)":null}
@@ -53,7 +24,7 @@ _functions_math_functions_test_all_math_functions_lgamma_Float32 = r"""
 {"lgamma(float32)":-7.468617406276586e39}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_Float64 = r"""
+_functions_math_functions_lgamma_Float64 = r"""
 {"lgamma(float64)":null}
 {"lgamma(float64)":null}
 {"lgamma(float64)":null}
@@ -66,7 +37,7 @@ _functions_math_functions_test_all_math_functions_lgamma_Float64 = r"""
 {"lgamma(float64)":-6.714529834084515e184}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_Int16 = r"""
+_functions_math_functions_lgamma_Int16 = r"""
 {"lgamma(int16)":307913.0253488561}
 {"lgamma(int16)":-307906.4335025646}
 {"lgamma(int16)":null}
@@ -79,7 +50,7 @@ _functions_math_functions_test_all_math_functions_lgamma_Int16 = r"""
 {"lgamma(int16)":-59958.10370694496}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_Int32 = r"""
+_functions_math_functions_lgamma_Int32 = r"""
 {"lgamma(int32)":43996705633.89096}
 {"lgamma(int32)":-43996705660.57021}
 {"lgamma(int32)":null}
@@ -92,7 +63,7 @@ _functions_math_functions_test_all_math_functions_lgamma_Int32 = r"""
 {"lgamma(int32)":-22985462040.840458}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_Int64 = r"""
+_functions_math_functions_lgamma_Int64 = r"""
 {"lgamma(int64)":393545350287028850000}
 {"lgamma(int64)":-393545350287028850000}
 {"lgamma(int64)":null}
@@ -105,7 +76,7 @@ _functions_math_functions_test_all_math_functions_lgamma_Int64 = r"""
 {"lgamma(int64)":168268956131575630000}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_Int8 = r"""
+_functions_math_functions_lgamma_Int8 = r"""
 {"lgamma(int8)":486.70926113683936}
 {"lgamma(int8)":-463.47406985257885}
 {"lgamma(int8)":null}
@@ -118,7 +89,7 @@ _functions_math_functions_test_all_math_functions_lgamma_Int8 = r"""
 {"lgamma(int8)":472.22438392698064}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_UInt16 = r"""
+_functions_math_functions_lgamma_UInt16 = r"""
 {"lgamma(uint16)":661265.7814255555}
 {"lgamma(uint16)":null}
 {"lgamma(uint16)":null}
@@ -131,7 +102,7 @@ _functions_math_functions_test_all_math_functions_lgamma_UInt16 = r"""
 {"lgamma(uint16)":60059.1659866393}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_UInt32 = r"""
+_functions_math_functions_lgamma_UInt32 = r"""
 {"lgamma(uint32)":90970455769.87419}
 {"lgamma(uint32)":null}
 {"lgamma(uint32)":null}
@@ -144,7 +115,7 @@ _functions_math_functions_test_all_math_functions_lgamma_UInt32 = r"""
 {"lgamma(uint32)":47884227839.58697}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_UInt64 = r"""
+_functions_math_functions_lgamma_UInt64 = r"""
 {"lgamma(uint64)":799877009219260400000}
 {"lgamma(uint64)":null}
 {"lgamma(uint64)":null}
@@ -157,7 +128,7 @@ _functions_math_functions_test_all_math_functions_lgamma_UInt64 = r"""
 {"lgamma(uint64)":744818798061123500000}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_UInt8 = r"""
+_functions_math_functions_lgamma_UInt8 = r"""
 {"lgamma(uint8)":1156.1708375732421}
 {"lgamma(uint8)":null}
 {"lgamma(uint8)":null}
@@ -170,15 +141,15 @@ _functions_math_functions_test_all_math_functions_lgamma_UInt8 = r"""
 {"lgamma(uint8)":481.87297922988796}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma__inf = r"""
+_functions_math_functions_lgamma__inf = r"""
 {"lgamma(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_constant = r"""
+_functions_math_functions_lgamma_constant = r"""
 {"lgamma(1)":0}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_first_non_NULL_value = r"""
+_functions_math_functions_lgamma_first_non_NULL_value = r"""
 {"lgamma(x)":null}
 {"lgamma(x)":null}
 {"lgamma(x)":null}
@@ -187,19 +158,19 @@ _functions_math_functions_test_all_math_functions_lgamma_first_non_NULL_value = 
 {"lgamma(x)":3.1780538303479458}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_inf = r"""
+_functions_math_functions_lgamma_inf = r"""
 {"lgamma(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_nan = r"""
+_functions_math_functions_lgamma_nan = r"""
 {"lgamma(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_only_nan = r"""
+_functions_math_functions_lgamma_only_nan = r"""
 {"lgamma(x)":null}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_return_type = r"""
+_functions_math_functions_lgamma_return_type = r"""
 {"toTypeName(lgamma(number))":"Float64"}
 {"toTypeName(lgamma(number))":"Float64"}
 {"toTypeName(lgamma(number))":"Float64"}
@@ -212,7 +183,7 @@ _functions_math_functions_test_all_math_functions_lgamma_return_type = r"""
 {"toTypeName(lgamma(number))":"Float64"}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_some_negative_values = r"""
+_functions_math_functions_lgamma_some_negative_values = r"""
 {"lgamma(minus(number, 5))":33.219090707090544}
 {"lgamma(minus(number, 5))":34.89306714066221}
 {"lgamma(minus(number, 5))":36.397144537438486}
@@ -225,7 +196,7 @@ _functions_math_functions_test_all_math_functions_lgamma_some_negative_values = 
 {"lgamma(minus(number, 5))":3.1780538303479458}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_with_group_by = r"""
+_functions_math_functions_lgamma_with_group_by = r"""
 {"even":0,"lgamma(number)":null}
 {"even":0,"lgamma(number)":1.791759469228055}
 {"even":1,"lgamma(number)":0.6931471805599453}
@@ -238,29 +209,7 @@ _functions_math_functions_test_all_math_functions_lgamma_with_group_by = r"""
 {"even":0,"lgamma(number)":8.525161361065413}
 """
 
-_functions_math_functions_test_all_math_functions_lgamma_zero_rows = r"""
+_functions_math_functions_lgamma_zero_rows = r"""
 
-"""
-
-_functions_math_functions_test_all_math_functions_sqrt_Decimal128_38_ = r"""
-{"sqrt(decimal128_38_)":1}
-{"sqrt(decimal128_38_)":null}
-{"sqrt(decimal128_38_)":0}
-{"sqrt(decimal128_38_)":null}
-{"sqrt(decimal128_38_)":0.5981769520245185}
-{"sqrt(decimal128_38_)":null}
-{"sqrt(decimal128_38_)":0.7680459832862263}
-{"sqrt(decimal128_38_)":0.832414453016512}
-{"sqrt(decimal128_38_)":null}
-{"sqrt(decimal128_38_)":null}
-"""
-
-_functions_math_functions_test_all_math_functions_sqrt_first_non_NULL_value = r"""
-{"sqrt(x)":null}
-{"sqrt(x)":null}
-{"sqrt(x)":null}
-{"sqrt(x)":1.7320508075688772}
-{"sqrt(x)":2}
-{"sqrt(x)":2.23606797749979}
 """
 

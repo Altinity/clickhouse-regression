@@ -22,13 +22,13 @@ xfails = {
             check_clickhouse_version(">=23.6") and check_clickhouse_version("<24.2"),
         )
     ],
-    "/functions/math functions/test all math functions/intExp10/*": [
+    "/functions/math functions/intExp10/Decimal128（38）/*": [
         (
             Fail,
             "Not implemented",
         )
     ],
-    "/functions/math functions/test all math functions/intExp2/*": [
+    "/functions/math functions/intExp2/Decimal128（38）/*": [
         (
             Fail,
             "Not implemented",
