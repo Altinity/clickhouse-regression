@@ -87,16 +87,17 @@ def check_adding_auth_methods_v2(self, auth_methods, node=None):
     user_name = f"user_{getuid()}"
     self.context.behavior = []
 
-    with Given("I have client"):
-        self.context.client = actions.node_client()
+    with Given("create user with two plain text passwords"):
+        user = common.create_user_with_two_plaintext_passwords(
+            user_name=user_name, client=node
+        )
 
-    with And("I create user with two plain text passwords"):
-        user = common.create_user_with_two_plaintext_passwords(user_name=user_name)
+    with When("alter user to add authentication methods"):
+        altered_user = actions.alter_user_add(
+            user=user, auth_methods=auth_methods, client=node
+        )
 
-    with When("I alter user to add authentication methods"):
-        altered_user = actions.alter_user_add(user=user, auth_methods=auth_methods)
-
-    with Then("I try to login"):
+    with Then("try to login"):
         common.check_login(user=user, altered_user=altered_user)
 
 

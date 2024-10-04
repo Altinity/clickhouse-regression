@@ -29,7 +29,7 @@ Identification = namedtuple(
         "scheme",
         "valid_until",
     ],
-    defaults=[None, None, None, None, None, None, None, None, None, None],
+    defaults=[None, None, None, None, None, None, None, None, None, None, None],
 )
 Grantees = namedtuple(
     "Grantees",
