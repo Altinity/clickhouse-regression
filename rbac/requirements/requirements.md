@@ -1302,6 +1302,7 @@ CREATE USER user1 IDENTIFIED WITH no_password, plaintext_password BY '1', sha256
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.CreateUser.MultipleUserNames
 version: 1.0  
+
 [ClickHouse] SHALL support creating multiple user accounts with multiple authentication methods in the `CREATE USER` statement.
 ```sql
 CREATE USER user1, user2 IDENTIFIED WITH plaintext_password BY '1', sha256_password BY '2';
@@ -1321,6 +1322,7 @@ In the example above `user1` can authenticate only with 1, 2 or 3.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.AlterUser.NoPassword
 version: 1.0  
+
 [ClickHouse] SHALL not allow to use `no_password` authentication method with other authentication methods when altering user account using `IDENTIFIED WITH` clause in the `ALTER USER` statement.
 
 The below query should throw an error:
@@ -1375,6 +1377,7 @@ SELECT auth_type, auth_params FROM system.users WHERE name = 'user1';
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.WithoutAuthType
 version: 1.0  
+
 [ClickHouse] SHALL allow to omit `WITH` clause and not specify authentication type when creating or altering user account. In this case the default authentication method will be used.
 
 **Example:**  
@@ -1384,43 +1387,165 @@ CREATE USER user1 IDENTIFIED by '1', by '3'
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.MixedWithAndWithoutWith
 version: 1.0   
+
 [ClickHouse] SHALL allow specifying multiple authentication methods in a single query, with or without the WITH clause.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.PlaintextPassword
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the plaintext_password authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Sha256Password
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the sha256_password and sha256_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.DoubleSha1Password
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the double_sha1_password and double_sha1_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.BcryptPassword
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the bcrypt_password and bcrypt_hash authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ldap
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the ldap server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Kerberos
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the kerberos authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssl_certificate
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the ssl_certificate authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.Ssh_key
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the ssh_key authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
 
 ##### RQ.SRS-006.RBAC.User.MultipleAuthenticationMethods.HttpServer
 version: 1.0  
+
 [Clickhouse] SHALL support specifying the http server authentication method when creating or altering users, in conjunction with one or more additional authentication methods.
+
+#### Valid Until clause
+
+##### RQ.SRS-006.RBAC.User.Create.ValidUntil
+version: 1.0  
+
+[ClickHouse] SHALL support specifying expiration time per authentication method when creating user account.
+
+Example:
+
+```sql
+CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1' VALID UNTIL '2023-01-01 00:00:00', sha256_password BY '2' VALID UNTIL '2024-01-01 00:00:00';
+```
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.Expired
+version: 1.0  
+
+[ClickHouse] SHALL not allow the user to connect to the server with the expired authentication method.
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.FallbackToOtherMethods
+version: 1.0  
+
+[ClickHouse] SHALL allow fallback to other authentication methods when a specific method has expired and other valid methods are available for the same user.
+
+Example:
+```sql
+CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1' VALID UNTIL '2022-01-01 00:00:00', sha256_password BY '2' VALID UNTIL '2026-01-01 00:00:00';
+```
+If plaintext_password expires, the user will be authenticated using sha256_password if it's still valid.
+
+##### RQ.SRS-006.RBAC.User.Alter.ValidUntil
+version: 1.0  
+
+[ClickHouse] SHALL support changing the expiration date for the user's authentication methods.
+
+Example:
+
+```sql
+ALTER USER user1 IDENTIFIED WITH plaintext_password BY '1' VALID UNTIL '2025-01-01 00:00:00', sha256_password BY '2' VALID UNTIL '2026-09-11 00:00:00';
+```
+
+##### RQ.SRS-006.RBAC.User.Create.ValidUntil.DefaultValue
+version: 1.0  
+
+[ClickHouse] SHALL automatically set the expiration time for the authentication method to the `infinity` if the `VALID UNTIL` clause was not specified for this authentication method.
+
+Example:
+
+```sql
+CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1' VALID UNTIL '2025-11-01 00:00:00', sha256_password BY '2';
+```
+
+In the example above password '1' will expire on '2025-01-01 00:00:00' and password '2' will never expire.
+
+##### RQ.SRS-006.RBAC.User.Alter.ValidUntil.DefaultValue
+version: 1.0  
+
+[ClickHouse] SHALL automatically set the expiration time for the authentication method to the `infinity` if the `VALID UNTIL` clause was not specified for this authentication method when changing user's authentication methods.
+
+Example:
+
+```sql
+ALTER USER user1 IDENTIFIED WITH plaintext_password BY '1' VALID UNTIL '2025-01-01 00:00:00', sha256_password BY '2';
+```
+In the example above password '1' will expire on '2025-01-01 00:00:00' and password '2' will never expire.
+
+##### RQ.SRS-006.RBAC.User.Create.ValidUntil.StandaloneValidUntil
+version: 1.0  
+
+[ClickHouse] SHALL accept standalone `VALID UNTIL` clause if no specific authentication methods were specified. Otherwise, it should throw an error.
+
+Example:
+
+```sql
+CREATE USER user1 VALID UNTIL '2025-01-01 00:00:00';
+```
+The above query will set the expiration date for `NO_PASSWORD` authentication method to '2025-01-01 00:00:00'.
+
+```sql
+CREATE USER user1 IDENTIFIED WITH plaintext_password BY '1' VALID UNTIL '2025-01-01 00:00:00', sha256_password BY '2' VALID UNTIL '2026-09-11 00:00:00' VALID UNTIL '2025-01-01 00:00:00';
+```
+The above query should throw an error.
+
+##### RQ.SRS-006.RBAC.User.Alter.ValidUntil.NoAuthMethod
+version: 1.0  
+
+[ClickHouse] SHALL apply the expiration date from `VALID UNTIL` clause to all existing authentication methods if no specific authentication methods were specified when changing user account.
+
+Example:
+```sql
+ALTER USER user1 VALID UNTIL '2035-01-01 00:00:00';
+```
+In the example above all authentication methods will expire on '2035-01-01 00:00:00' if no other changes were made.
+
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.TimezoneEffect
+version: 1.0  
+
+[ClickHouse] SHALL correctly handle expiration time in different timezones.
+
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.InvalidValues
+version: 1.0  
+
+[ClickHouse] SHALL throw an error if an invalid date-time value is used with the `VALID UNTIL` clause.
+
+Example:
+```sql
+CREATE USER user1 IDENTIFIED WITH sha256_password BY '2' VALID UNTIL 'invalid-date';
+```
+The above query should throw an error.
+
 
 ### Role
 
