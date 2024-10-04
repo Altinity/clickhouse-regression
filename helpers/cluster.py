@@ -1904,7 +1904,7 @@ class Cluster(object):
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS"] = self.keeper_base_os
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] = (
-                    "keeper"
+                    "clickhouse"
                     if not self.keeper_base_os
                     else self.keeper_base_os.split(":")[0].split("/")[-1]
                 )
