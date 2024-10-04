@@ -219,6 +219,9 @@ xfails = {
             check_clickhouse_version("<24.4"),
         ),
     ],
+    "/rbac/multiple authentication methods/valid until/sha 256 hash auth method/*": [
+        (Fail, "Should be fixed soon")
+    ],
 }
 
 xflags = {

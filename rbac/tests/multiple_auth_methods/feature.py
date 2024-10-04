@@ -88,14 +88,14 @@ def feature(self, node="clickhouse1"):
                 parallel=True,
                 executor=pool,
             )
-            # Feature(
-            #     run=load(
-            #         "rbac.tests.multiple_auth_methods.valid_until",
-            #         "feature",
-            #     ),
-            #     parallel=True,
-            #     executor=pool,
-            # )
+            Feature(
+                run=load(
+                    "rbac.tests.multiple_auth_methods.valid_until",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
             Feature(
                 run=load(
                     "rbac.tests.multiple_auth_methods.valid_until_combinations",
