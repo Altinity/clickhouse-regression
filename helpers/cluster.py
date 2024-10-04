@@ -1278,6 +1278,7 @@ class PackageDownloader:
             self.binary_path = source
 
         if self.binary_path:
+            self.binary_path = os.path.abspath(self.binary_path)
             with Shell() as bash:
                 if os.path.relpath(self.binary_path).startswith("../.."):
                     # Binary is outside of the build context, move it to where docker can find it
@@ -1867,7 +1868,8 @@ class Cluster(object):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
                 assert self.clickhouse_binary_path
                 self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
-                    self.clickhouse_binary_path
+                    # To work with the dockerfiles, the path must be relative to the docker-compose directory
+                    os.path.relpath(self.clickhouse_binary_path, current_dir())
                 )
                 self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
                     self.clickhouse_odbc_bridge_binary_path
@@ -1877,7 +1879,9 @@ class Cluster(object):
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
-                    self.keeper_binary_path or ""
+                    ""
+                    if not self.keeper_binary_path
+                    else os.path.relpath(self.keeper_binary_path, current_dir())
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     self.zookeeper_version or ""
