@@ -1333,7 +1333,7 @@ class Cluster(object):
     def __init__(
         self,
         local=False,
-        clickhouse_binary_path=None,
+        clickhouse_path=None,
         base_os=None,
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
@@ -1342,7 +1342,7 @@ class Cluster(object):
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
-        keeper_binary_path=None,
+        keeper_path=None,
         zookeeper_version=None,
         use_keeper=False,
         thread_fuzzer=False,
@@ -1356,12 +1356,12 @@ class Cluster(object):
         self._bash = {}
         self._control_shell = None
         self.environ = {} if (environ is None) else environ
-        self.clickhouse_binary_path = clickhouse_binary_path
+        self.clickhouse_path = clickhouse_path
         # Don't set base_os until we know if we have images or packages
         self.base_os = None
         self.keeper_base_os = None
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
-        self.keeper_binary_path = keeper_binary_path
+        self.keeper_path = keeper_path
         self.zookeeper_version = zookeeper_version
         self.use_keeper = use_keeper
         self.configs_dir = configs_dir
@@ -1432,7 +1432,7 @@ class Cluster(object):
                 ignore_errors=True,
             )
 
-        if self.clickhouse_binary_path:
+        if self.clickhouse_path:
             if self.use_specific_version:
                 alternate_clickhouse_package = PackageDownloader(
                     self.use_specific_version, program_name="clickhouse"
@@ -1443,7 +1443,7 @@ class Cluster(object):
                 )
 
             clickhouse_package = PackageDownloader(
-                self.clickhouse_binary_path, program_name="clickhouse"
+                self.clickhouse_path, program_name="clickhouse"
             )
             if (
                 getsattr(current().context, "clickhouse_version", None) is None
@@ -1453,7 +1453,7 @@ class Cluster(object):
                     clickhouse_package.package_version
                 )
 
-            self.clickhouse_binary_path = clickhouse_package.binary_path
+            self.clickhouse_path = clickhouse_package.binary_path
 
             if clickhouse_package.docker_image:
                 self.clickhouse_docker_image_name = clickhouse_package.docker_image
@@ -1472,7 +1472,7 @@ class Cluster(object):
                 if clickhouse_package.package_path:
                     package_name = os.path.basename(clickhouse_package.package_path)
                     self.clickhouse_docker_image_name = f"{base_os_name}:{package_name}"
-                    self.clickhouse_binary_path = os.path.relpath(
+                    self.clickhouse_path = os.path.relpath(
                         clickhouse_package.package_path
                     )
                 else:
@@ -1482,12 +1482,12 @@ class Cluster(object):
                             f"docker rmi --force clickhouse-regression/{self.clickhouse_docker_image_name}"
                         )
 
-        if self.keeper_binary_path:
+        if self.keeper_path:
             keeper_package = PackageDownloader(
-                self.keeper_binary_path,
+                self.keeper_path,
                 program_name=(
                     "clickhouse-keeper"
-                    if "keeper" in self.keeper_binary_path
+                    if "keeper" in self.keeper_path
                     else "clickhouse"
                 ),
             )
@@ -1496,7 +1496,7 @@ class Cluster(object):
                 and keeper_package.package_version
             ):
                 current().context.keeper_version = keeper_package.package_version
-            self.keeper_binary_path = keeper_package.binary_path
+            self.keeper_path = keeper_package.binary_path
 
             if keeper_package.docker_image:
                 self.keeper_docker_image_name = keeper_package.docker_image
@@ -1517,7 +1517,7 @@ class Cluster(object):
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
                     self.keeper_docker_image_name = f"{base_os_name}:{package_name}"
-                    self.keeper_binary_path = os.path.relpath(
+                    self.keeper_path = os.path.relpath(
                         keeper_package.package_path
                     )
                 else:
@@ -1530,7 +1530,7 @@ class Cluster(object):
         else:
             self.keeper_base_os = self.base_os
             self.keeper_docker_image_name = self.clickhouse_docker_image_name
-            self.keeper_binary_path = self.clickhouse_binary_path
+            self.keeper_path = self.clickhouse_path
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1853,35 +1853,35 @@ class Cluster(object):
             with Given("I am running in local mode"):
                 with Then(
                     "check --clickhouse-binary-path is specified",
-                    description=self.clickhouse_binary_path,
+                    description=self.clickhouse_path,
                 ):
                     assert (
-                        self.clickhouse_binary_path
+                        self.clickhouse_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
                     if self.base_os:  # check that we are not in docker mode
                         assert os.path.exists(
-                            self.clickhouse_binary_path
-                        ), self.clickhouse_binary_path
+                            self.clickhouse_path
+                        ), self.clickhouse_path
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                assert self.clickhouse_binary_path
+                assert self.clickhouse_path
                 self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
                     # To work with the dockerfiles, the path must be relative to the docker-compose directory
-                    os.path.relpath(self.clickhouse_binary_path, current_dir())
+                    os.path.relpath(self.clickhouse_path, current_dir())
                 )
                 self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
                     self.clickhouse_odbc_bridge_binary_path
                     or os.path.join(
-                        os.path.dirname(self.clickhouse_binary_path),
+                        os.path.dirname(self.clickhouse_path),
                         "clickhouse-odbc-bridge",
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     ""
-                    if not self.keeper_binary_path
-                    else os.path.relpath(self.keeper_binary_path, current_dir())
+                    if not self.keeper_path
+                    else os.path.relpath(self.keeper_path, current_dir())
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     self.zookeeper_version or ""
@@ -2126,7 +2126,7 @@ class Cluster(object):
 def create_cluster(
     self,
     local=False,
-    clickhouse_binary_path=None,
+    clickhouse_path=None,
     base_os=None,
     clickhouse_odbc_bridge_binary_path=None,
     collect_service_logs=False,
@@ -2136,7 +2136,7 @@ def create_cluster(
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,
-    keeper_binary_path=None,
+    keeper_path=None,
     zookeeper_version=None,
     use_keeper=False,
     thread_fuzzer=False,
@@ -2147,7 +2147,7 @@ def create_cluster(
     """Create docker compose cluster."""
     with Cluster(
         local=local,
-        clickhouse_binary_path=clickhouse_binary_path,
+        clickhouse_path=clickhouse_path,
         base_os=base_os,
         clickhouse_odbc_bridge_binary_path=clickhouse_odbc_bridge_binary_path,
         collect_service_logs=collect_service_logs,
@@ -2157,7 +2157,7 @@ def create_cluster(
         docker_compose_project_dir=docker_compose_project_dir,
         docker_compose_file=docker_compose_file,
         environ=environ,
-        keeper_binary_path=keeper_binary_path,
+        keeper_path=keeper_path,
         zookeeper_version=zookeeper_version,
         use_keeper=use_keeper,
         thread_fuzzer=thread_fuzzer,

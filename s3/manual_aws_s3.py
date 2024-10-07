@@ -60,7 +60,7 @@ xfails = {}
 def regression(
     self,
     local,
-    clickhouse_binary_path,
+    clickhouse_path,
     clickhouse_version,
     stress,
     aws_s3_bucket,
@@ -98,7 +98,7 @@ def regression(
 
     with Cluster(
         local,
-        clickhouse_binary_path,
+        clickhouse_path,
         nodes=nodes,
     ) as cluster:
         self.context.cluster = cluster

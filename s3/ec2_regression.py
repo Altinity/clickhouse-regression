@@ -66,7 +66,7 @@ xfails = {}
 @Requirements(RQ_SRS_015_S3("1.0"))
 @XFails(xfails)
 def regression(
-    self, local, clickhouse_binary_path, uri, access_key, key_id, session_token, region
+    self, local, clickhouse_path, uri, access_key, key_id, session_token, region
 ):
     """S3 Storage regression."""
     if aws_s3_access_key == None:
@@ -76,7 +76,7 @@ def regression(
 
     with Cluster(
         local,
-        clickhouse_binary_path,
+        clickhouse_path,
         nodes=nodes,
         environ={
             "S3_AMAZON_ACCESS_KEY": access_key,

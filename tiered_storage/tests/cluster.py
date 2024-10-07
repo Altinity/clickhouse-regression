@@ -166,7 +166,7 @@ class Cluster(object):
     def __init__(
         self,
         local=False,
-        clickhouse_binary_path=None,
+        clickhouse_path=None,
         base_config_path=None,
         nodes=None,
         with_minio=False,
@@ -174,7 +174,7 @@ class Cluster(object):
         with_s3gcs=False,
     ):
         self._bash = {}
-        self.clickhouse_binary_path = clickhouse_binary_path
+        self.clickhouse_path = clickhouse_path
         self.base_config_path = base_config_path
         self.local = local
         self.nodes = nodes or {}
@@ -296,14 +296,14 @@ class Cluster(object):
             with Given("I am running in local mode"):
                 with Then("check --clickhouse-binary-path is specified"):
                     assert (
-                        self.clickhouse_binary_path
+                        self.clickhouse_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
-                    assert os.path.exists(self.clickhouse_binary_path)
+                    assert os.path.exists(self.clickhouse_path)
 
-            os.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = self.clickhouse_binary_path
+            os.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = self.clickhouse_path
             os.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = os.path.join(
-                os.path.dirname(self.clickhouse_binary_path), "clickhouse-odbc-bridge"
+                os.path.dirname(self.clickhouse_path), "clickhouse-odbc-bridge"
             )
             os.environ["CLICKHOUSE_TESTS_BASE_CONFIG_DIR"] = self.base_config_path
 
