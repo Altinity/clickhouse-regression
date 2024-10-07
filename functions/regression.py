@@ -34,6 +34,12 @@ xfails = {
             "Not implemented",
         )
     ],
+    "/functions/math functions/*": [
+        (
+            Fail,
+            "Under development",
+        )
+    ],
 }
 
 ffails = {
@@ -82,10 +88,10 @@ def regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    # Feature(run=load("functions.tests.plus", "feature"))
-    # Feature(run=load("functions.tests.merge", "feature"))
-    # Feature(run=load("functions.tests.insert", "feature"))
-    # Feature(run=load("functions.tests.projection_optimization", "feature"))
+    Feature(run=load("functions.tests.plus", "feature"))
+    Feature(run=load("functions.tests.merge", "feature"))
+    Feature(run=load("functions.tests.insert", "feature"))
+    Feature(run=load("functions.tests.projection_optimization", "feature"))
     Feature(run=load("functions.tests.math_functions", "feature"))
 
 
