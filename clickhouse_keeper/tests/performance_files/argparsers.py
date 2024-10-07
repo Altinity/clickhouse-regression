@@ -15,10 +15,10 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--clickhouse-binary-list",
-        action="append",
-        dest="clickhouse_binary_list",
-        help="path to ClickHouse binary, default: /usr/bin/clickhouse",
+        "--clickhouse-package-list",
+        action="extend",
+        dest="clickhouse_package_list",
+        help="path to ClickHouse package or binary, default: /usr/bin/clickhouse",
         metavar="path",
         default=[],
     )

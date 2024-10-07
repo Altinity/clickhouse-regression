@@ -94,7 +94,7 @@ def module(
     compression,
     rerun_queries,
     test_machine,
-    clickhouse_binary_path=None,
+    clickhouse_path=None,
     with_analyzer=False,
 ):
     """Running performance tests for ClickHouse"""

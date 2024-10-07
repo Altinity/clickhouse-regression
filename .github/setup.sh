@@ -42,10 +42,10 @@ mkdir $SUITE/_instances
 echo "Login to docker..."
 ./retry.sh 60 2 "docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD"
 
-if [[ $clickhouse_binary_path == "docker"* ]]; then
-  echo "clickhouse_binary_path=$clickhouse_binary_path" >>$GITHUB_ENV
-  echo "Get specific ClickHouse package $clickhouse_binary_path..."
-  docker_image=$(echo $clickhouse_binary_path | cut -c10-)
+if [[ $clickhouse_path == "docker"* ]]; then
+  echo "clickhouse_path=$clickhouse_path" >>$GITHUB_ENV
+  echo "Get specific ClickHouse package $clickhouse_path..."
+  docker_image=$(echo $clickhouse_path | cut -c10-)
   docker pull $docker_image
   if [[ $version == 'latest' || $version == '' ]]; then
     pid=$(docker run -d $docker_image)

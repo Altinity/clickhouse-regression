@@ -34,7 +34,7 @@ def argparser(parser):
     parser.add_argument(
         "--clickhouse-binary-path",
         type=str,
-        dest="clickhouse_binary_path",
+        dest="clickhouse_path",
         help="path to ClickHouse binary, default: /usr/bin/clickhouse",
         metavar="path",
         default=os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"),

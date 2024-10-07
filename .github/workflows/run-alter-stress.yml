@@ -110,7 +110,7 @@ env:
   CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
   CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
   PYTHONIOENCODING: utf-8
-  clickhouse_binary_path: ${{ inputs.package }}
+  clickhouse_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
   keeper_or_zookeeper: zookeeper
   artifacts: ${{ inputs.artifacts }}
@@ -159,7 +159,7 @@ jobs:
               --aws-s3-region ${{ secrets.AWS_REGION }}
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
@@ -196,7 +196,7 @@ jobs:
               --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
@@ -230,7 +230,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
@@ -264,7 +264,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage local
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
@@ -302,7 +302,7 @@ jobs:
               --aws-s3-region ${{ secrets.AWS_REGION }}
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
@@ -339,7 +339,7 @@ jobs:
               --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
@@ -373,7 +373,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
@@ -407,7 +407,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage local
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
