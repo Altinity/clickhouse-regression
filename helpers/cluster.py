@@ -1255,6 +1255,36 @@ class PackageDownloader:
 
     package_formats = (".deb", ".rpm", ".tgz")
 
+    def extended_prefix_handler(self, path: str):
+        """
+        Interprets an extended set of package prefixes in order to simulate
+        the older mode of operation where binaries were copied from packages
+        instead of installing the package.
+
+        Remove if nobody is using this in 2 months.
+        """
+        use_ripped_binary_by_default = False
+
+        if "://" not in path:
+            # No extended prefix, treat as a file path
+            return path, use_ripped_binary_by_default
+
+        if path.startswith("binary-"):
+            use_ripped_binary_by_default = True
+            path = path.split("-", 1)[1]
+
+        elif path.startswith("package-"):
+            use_ripped_binary_by_default = False
+            path = path.split("-", 1)[1]
+
+        if path.startswith("url://"):
+            path.replace("url://", "https://", 1)
+
+        if path.startswith("file://"):
+            path = path.replace("file://", "", 1)
+
+        return path, use_ripped_binary_by_default
+
     def __init__(self, source, program_name="clickhouse"):
         self.source = source
         self.binary_path = None
@@ -1262,6 +1292,8 @@ class PackageDownloader:
         self.program_name = program_name
         self.package_path = None
         self.package_version = None
+
+        source, use_binary_instead = self.extended_prefix_handler(source)
 
         if source.startswith("docker://"):
             self.get_binary_from_docker(source)
@@ -1292,6 +1324,15 @@ class PackageDownloader:
                     self.package_version = bash(
                         f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
                     ).output.strip(".")
+
+        if use_binary_instead:
+            # Hide the package path / image to force using binary
+            # remove this block when removing extended_prefix_handler
+            assert (
+                self.binary_path
+            ), "binary was not extracted, only docker, deb and tgz formats are supported in this mode"
+            self.package_path = None
+            self.docker_image = None
 
     def get_binary_from_docker(self, source):
         self.docker_image = source.split("docker://", 1)[1]
@@ -1515,9 +1556,7 @@ class Cluster(object):
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
                     self.keeper_docker_image_name = f"{base_os_name}:{package_name}"
-                    self.keeper_path = os.path.relpath(
-                        keeper_package.package_path
-                    )
+                    self.keeper_path = os.path.relpath(keeper_package.package_path)
                 else:
                     self.keeper_docker_image_name = f"{base_os_name}:local-binary"
                     with Shell() as bash:
