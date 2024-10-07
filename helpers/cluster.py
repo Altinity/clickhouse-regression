@@ -117,7 +117,6 @@ def get_binary_from_docker_container(
     docker_image,
     container_binary_path="/usr/bin/clickhouse",
     host_binary_path=None,
-    host_binary_path_suffix=None,
 ):
     """
     Get clickhouse-keeper binary from some Docker container.
@@ -126,19 +125,17 @@ def get_binary_from_docker_container(
         docker_image: docker image name
         container_binary_path: path to the binary in the container
         host_binary_path: path to store the binary on the host
-        host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
     """
     assert docker_image.startswith("docker://"), error("not a docker image path")
     docker_image = docker_image.split("docker://", 1)[-1]
     docker_container_name = str(uuid.uuid1())
+    binary_name = container_binary_path.rsplit("/", 1)[-1]
 
     if host_binary_path is None:
         host_binary_path = os.path.join(
-            tempfile.gettempdir(),
-            f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
+            f"{current_dir()}/../binaries",
+            f"docker-{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
         )
-        if host_binary_path_suffix:
-            host_binary_path += host_binary_path_suffix
 
     with By(
         "I return host_binary_path if it already exists and version patch is specified",
@@ -153,11 +150,12 @@ def get_binary_from_docker_container(
     with And("copying binary from docker container", description=docker_image):
         with Shell() as bash:
             bash.timeout = 300
+            bash(f"mkdir -p {host_binary_path}")
             bash(
                 f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
             )
             bash(
-                f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
+                f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}/{binary_name}"'
             )
             bash(f'docker stop "{docker_container_name}"')
 
@@ -166,7 +164,7 @@ def get_binary_from_docker_container(
             bash.timeout = 300
             bash(f"ls -la {host_binary_path}")
 
-    return host_binary_path
+    return f"{host_binary_path}/{binary_name}"
 
 
 class Shell(ShellBase):
