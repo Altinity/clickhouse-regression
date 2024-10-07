@@ -1405,7 +1405,7 @@ class Cluster(object):
         self.use_keeper = use_keeper
         self.configs_dir = configs_dir
         self.local = local
-        self.nodes = nodes or {}
+        self.nodes: dict[str, list[str]] = nodes or {}
         self.docker_compose = docker_compose
         self.thread_fuzzer = thread_fuzzer
         self.running = False
@@ -2180,7 +2180,7 @@ def create_cluster(
     use_zookeeper_nodes=False,
     use_specific_version=False,
     reuse_env=False,
-):
+) -> Cluster:  # type: ignore
     """Create docker compose cluster."""
     with Cluster(
         local=local,
