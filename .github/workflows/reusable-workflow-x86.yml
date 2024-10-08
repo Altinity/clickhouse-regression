@@ -69,6 +69,8 @@ env:
   args: --test-to-end
     --no-colors
     --local
+    --clickhouse ${{ inputs.package }}
+    --clickhouse-version ${{ inputs.version }}
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
@@ -103,8 +105,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: EXITCODE=0;
               python3 -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -137,8 +137,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -171,8 +169,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -206,8 +202,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               --only "/alter/replace partition/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -242,8 +236,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               --only "/alter/attach partition/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -278,8 +270,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               --only "/alter/move partition/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -313,8 +303,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               --only "/attach/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -349,8 +337,6 @@ jobs:
         run: EXITCODE=0
             python3 
             -u ${{ env.SUITE }}/regression.py 
-            --clickhouse-binary-path ${{ env.clickhouse_path }} 
-            --clickhouse-version ${{ env.version }} 
             ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -385,8 +371,6 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage minio
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -420,8 +404,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -455,8 +437,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               --ssl
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
@@ -491,8 +471,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -525,8 +503,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -559,8 +535,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -593,8 +567,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -627,8 +599,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -661,8 +631,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -695,8 +663,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -729,8 +695,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -763,8 +727,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -793,8 +755,6 @@ jobs:
   #     - name: Run ${{ env.SUITE }} suite
   #       run: python3
   #             -u ${{ env.SUITE }}/functional.py
-  #             --clickhouse-binary-path ${{ env.clickhouse_path }}
-  #             --clickhouse-version ${{ env.version }}
   #             ${{ env.args }}
 
   #     - name: Create and upload logs
@@ -825,8 +785,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -859,8 +817,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -892,8 +848,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -925,8 +879,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -959,8 +911,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -993,8 +943,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1027,8 +975,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1061,8 +1007,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1096,8 +1040,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1131,8 +1073,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               --storage minio
               --only "/parquet/minio/*"
               ${{ env.args }} || EXITCODE=$?; 
@@ -1167,8 +1107,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1201,8 +1139,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1237,8 +1173,6 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1271,8 +1205,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1305,8 +1237,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1339,8 +1269,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1373,8 +1301,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1409,8 +1335,6 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-minio
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1443,8 +1367,6 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
