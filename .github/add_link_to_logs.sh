@@ -1,6 +1,4 @@
 #!/bin/bash
-sudo chown -R $(whoami):$(whoami) $SUITE/
-
 echo ""
 echo "Artifacts will be uploaded to $SUITE_REPORT_INDEX_URL"
 echo "Review report at $SUITE_LOG_FILE_PREFIX_URL/report.html"
