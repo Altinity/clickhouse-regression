@@ -35,9 +35,9 @@ on:
         description: "Artifact name. Default: artifacts"
         type: string
     secrets:
-      AWS_ACCESS_KEY_ID:
+      AWS_REPORT_KEY_ID:
         required: true
-      AWS_SECRET_ACCESS_KEY:
+      AWS_REPORT_SECRET_ACCESS_KEY:
         required: true
       AWS_REPORT_REGION:
         required: true
@@ -53,8 +53,8 @@ on:
         required: true
 
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
