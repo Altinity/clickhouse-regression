@@ -98,19 +98,19 @@ def unpack_deb(deb_binary_path, program_name):
     return f"{deb_binary_dir}/{program_name}"
 
 
-def unpack_tar_gz(tar_path):
-    """Unpack tar.gz file and return path to the result."""
-    assert tar_path.endswith(".tar.gz"), error("not a .tar.gz file")
-    tar_dest_dir = tar_path.rsplit(".tar.gz", 1)[0]
+def unpack_tgz(tar_path):
+    """Unpack tgz file and return path to the result."""
+    assert tar_path.endswith(".tgz"), error("not a .tgz file")
+    tar_dest_dir = tar_path.rsplit(".tgz", 1)[0]
     os.makedirs(tar_dest_dir, exist_ok=True)
     with Shell() as bash:
         bash.timeout = 300
         cmd = bash(f'tar -xzf "{tar_path}" -C "{tar_dest_dir}" --strip-components=1')
         assert cmd.exitcode == 0, error()
-        cmd = bash(f'chmod +x "{tar_dest_dir}/bin/*"')
+        cmd = bash(f"chmod +x {tar_dest_dir}/usr/bin/*")
         assert cmd.exitcode == 0, error()
 
-    return f"{tar_dest_dir}"
+    return tar_dest_dir
 
 
 def get_binary_from_docker_container(
@@ -1303,7 +1303,6 @@ class PackageDownloader:
 
         elif source.endswith(self.package_formats):
             self.get_binary_from_package(source)
-
         else:
             self.binary_path = source
 
@@ -1356,8 +1355,10 @@ class PackageDownloader:
             self.get_binary_from_deb(source)
         elif source.endswith(".rpm"):
             pass
-        elif source.endswith((".tar.gz", ".tar", ".tgz")):
-            pass
+        elif source.endswith(".tgz"):
+            self.binary_path = os.path.join(
+                unpack_tgz(source), "usr/bin", self.program_name
+            )
 
     def get_binary_from_deb(self, source):
         self.binary_path = unpack_deb(
