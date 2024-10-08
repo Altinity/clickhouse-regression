@@ -2,23 +2,23 @@
 
 Results for **the latest** scheduled workflow runs.
 
-| ClickHouse Version | Status |
-| ------------ | - |
-| **`head`** | [![Scheduled ClickHouse head](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml) |
-| **`latest`** | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
-| **`24.3`** | [![Scheduled ClickHouse 24.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml) |
-| **`23.8`** | [![Scheduled ClickHouse 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml) |
-| **`23.3`** | [![Scheduled ClickHouse 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml) |
-| **`24.3.5.47.altinitystable`** | [![Scheduled Altinity 24.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml) |
-| **`23.8.11.29.altinitystable`** | [![Scheduled Altinity 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml) |
-| **`23.3.19.33.altinitystable`** | [![Scheduled Altinity 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml) |
-| **`22.8.15.25.altinitystable`** | [![Scheduled Altinity 22.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml) |
-| **`22.3.15.34.altinitystable`** | [![Scheduled Altinity 22.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml) |
+| ClickHouse Version              | Status                                                                                                                                                                                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`head`**                      | [![Scheduled ClickHouse head](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml)                  |
+| **`latest`**                    | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
+| **`24.3`**                      | [![Scheduled ClickHouse 24.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml)       |
+| **`23.8`**                      | [![Scheduled ClickHouse 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml)                  |
+| **`23.3`**                      | [![Scheduled ClickHouse 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml)                  |
+| **`24.3.5.47.altinitystable`**  | [![Scheduled Altinity 24.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml)                        |
+| **`23.8.11.29.altinitystable`** | [![Scheduled Altinity 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml)                        |
+| **`23.3.19.33.altinitystable`** | [![Scheduled Altinity 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml)                        |
+| **`22.8.15.25.altinitystable`** | [![Scheduled Altinity 22.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml)                        |
+| **`22.3.15.34.altinitystable`** | [![Scheduled Altinity 22.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml)                        |
 
 ### Timetable of Scheduled Regression Runs
 
 | Day           | latest & head | Every Other Version |
-|---------------|---------------|---------------------|
+| ------------- | ------------- | ------------------- |
 | **Sunday**    | ❌ No          | ❌ No                |
 | **Monday**    | ❌ No          | ❌ No                |
 | **Tuesday**   | **✅ Yes**     | ❌ No                |
@@ -117,80 +117,80 @@ pip3 install -r requirements.txt
 Specify `suite` variable to select running only specific suites
 
 | Variable | Name                            | Description                                             |
-| --- |---------------------------------|---------------------------------------------------------|
-| `suite` | `aes_encryption`                | AES Encryption suite                                    |
-| `suite` | `aggregate_functions`           | Aggregate Functions suite                               |
-| `suite` | `atomic_insert`                 | Atomic Insert suite                                     |
-| `suite` | `alter_all`                     | Full Alter suite                                        |
-| `suite` | `alter_replace_partition`       | Alter Replace Partition suite                           |
-| `suite` | `alter_attach_partition`        | Alter Replace Attach suite                              |
-| `suite` | `alter_move_partition`          | Alter Move Attach suite                                 |
-| `suite` | `base_58`                       | Base58 suite                                            |
-| `suite` | `benchmark_all`                 | All Ontime Benchmark (MinIO, AWS, GCS) suite            |
-| `suite` | `benchmark_aws`                 | Ontime Benchmark AWS suite                              |
-| `suite` | `benchmark_gcs`                 | Ontime Benchmark GCS suite                              |
-| `suite` | `benchmark_minio`               | Ontime Benchmark MinIO suite                            |
-| `suite` | `clickhouse_keeper`             | ClickHouse Keeper (No SSL and SSL FIPS) suite           
-| `suite` | `data_types`                    | Data Types suite                                        |
-| `suite` | `datetime64_extended_range`     | Extended DateTime64 suite                               |
-| `suite` | `disk_level_encryption`         | Disk Level Encryption                                   |
-| `suite` | `dns`                           | DNS suite                                               |
-| `suite` | `engines`                       | Engines suite                                           |
-| `suite` | `example`                       | Example suite                                           |
-| `suite` | `extended_precision_data_types` | Extended Precision Data Types suite                     |
-| `suite` | `kafka`                         | Kafka suite                                             |
-| `suite` | `kerberos`                      | Kerberos suite                                          |
-| `suite` | `ldap`                          | LDAP suite                                              |
-| `suite` | `lightweight_delete`            | Lightweight Delete suite                                ||
-| `suite` | `parquet_all`                   | Full Parquet Suite                                      |
-| `suite` | `parquet`                       | Parquet Data Type suite                                 |
-| `suite` | `parquet_minio`                 | Parquet MinIO suite                                     |
-| `suite` | `parquet_s3`                    | Parquet AWS S3 suite                                    |
-| `suite` | `part_moves_between_shards`     | Part Moves Between Shards suite                         |
-| `suite` | `rbac`                          | RBAC suite                                              |
-| `suite` | `s3_all`                        | All S3 (MinIO, AWS, GCS) suites                         |
-| `suite` | `s3_aws`                        | S3 AWS suite                                            |
-| `suite` | `s3_gcs`                        | S3 GCS suite                                            |
-| `suite` | `s3_minio`                      | S3 MinIO suite                                          |
-| `suite` | `selects`                       | Selects suite                                           |
-| `suite` | `session_timezone`              | Session Timezone suite                                  |
-| `suite` | `ssl_server`                    | SSL Server suite                                        |
-| `suite` | `tiered_storage_all`            | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
-| `suite` | `tiered_storage_aws`            | Tiered Storage AWS suite                                |
-| `suite` | `tiered_storage_gcs`            | Tiered Storage GCS suite                                |
-| `suite` | `tiered_storage_local`          | Tiered Storage Local suite                              |
-| `suite` | `tiered_storage_minio`          | Tiered Storage MinIO suite                              |
-| `suite` | `vfs_all`                       | Full VFS (MinIO, AWS, GCS) suite                        |
-| `suite` | `vfs_aws`                       | VFS AWS suite                                           |
-| `suite` | `vfs_gcs`                       | VFS GCS suite                                           |
-| `suite` | `vfs_minio`                     | VFS MinIO suite                                         |
-| `suite` | `window_functions`              | Window Functions suite                                  |
+| -------- | ------------------------------- | ------------------------------------------------------- |
+| `suite`  | `aes_encryption`                | AES Encryption suite                                    |
+| `suite`  | `aggregate_functions`           | Aggregate Functions suite                               |
+| `suite`  | `atomic_insert`                 | Atomic Insert suite                                     |
+| `suite`  | `alter_all`                     | Full Alter suite                                        |
+| `suite`  | `alter_replace_partition`       | Alter Replace Partition suite                           |
+| `suite`  | `alter_attach_partition`        | Alter Replace Attach suite                              |
+| `suite`  | `alter_move_partition`          | Alter Move Attach suite                                 |
+| `suite`  | `base_58`                       | Base58 suite                                            |
+| `suite`  | `benchmark_all`                 | All Ontime Benchmark (MinIO, AWS, GCS) suite            |
+| `suite`  | `benchmark_aws`                 | Ontime Benchmark AWS suite                              |
+| `suite`  | `benchmark_gcs`                 | Ontime Benchmark GCS suite                              |
+| `suite`  | `benchmark_minio`               | Ontime Benchmark MinIO suite                            |
+| `suite`  | `clickhouse_keeper`             | ClickHouse Keeper (No SSL and SSL FIPS) suite           |
+| `suite`  | `data_types`                    | Data Types suite                                        |
+| `suite`  | `datetime64_extended_range`     | Extended DateTime64 suite                               |
+| `suite`  | `disk_level_encryption`         | Disk Level Encryption                                   |
+| `suite`  | `dns`                           | DNS suite                                               |
+| `suite`  | `engines`                       | Engines suite                                           |
+| `suite`  | `example`                       | Example suite                                           |
+| `suite`  | `extended_precision_data_types` | Extended Precision Data Types suite                     |
+| `suite`  | `kafka`                         | Kafka suite                                             |
+| `suite`  | `kerberos`                      | Kerberos suite                                          |
+| `suite`  | `ldap`                          | LDAP suite                                              |
+| `suite`  | `lightweight_delete`            | Lightweight Delete suite                                |  |
+| `suite`  | `parquet_all`                   | Full Parquet Suite                                      |
+| `suite`  | `parquet`                       | Parquet Data Type suite                                 |
+| `suite`  | `parquet_minio`                 | Parquet MinIO suite                                     |
+| `suite`  | `parquet_s3`                    | Parquet AWS S3 suite                                    |
+| `suite`  | `part_moves_between_shards`     | Part Moves Between Shards suite                         |
+| `suite`  | `rbac`                          | RBAC suite                                              |
+| `suite`  | `s3_all`                        | All S3 (MinIO, AWS, GCS) suites                         |
+| `suite`  | `s3_aws`                        | S3 AWS suite                                            |
+| `suite`  | `s3_gcs`                        | S3 GCS suite                                            |
+| `suite`  | `s3_minio`                      | S3 MinIO suite                                          |
+| `suite`  | `selects`                       | Selects suite                                           |
+| `suite`  | `session_timezone`              | Session Timezone suite                                  |
+| `suite`  | `ssl_server`                    | SSL Server suite                                        |
+| `suite`  | `tiered_storage_all`            | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
+| `suite`  | `tiered_storage_aws`            | Tiered Storage AWS suite                                |
+| `suite`  | `tiered_storage_gcs`            | Tiered Storage GCS suite                                |
+| `suite`  | `tiered_storage_local`          | Tiered Storage Local suite                              |
+| `suite`  | `tiered_storage_minio`          | Tiered Storage MinIO suite                              |
+| `suite`  | `vfs_all`                       | Full VFS (MinIO, AWS, GCS) suite                        |
+| `suite`  | `vfs_aws`                       | VFS AWS suite                                           |
+| `suite`  | `vfs_gcs`                       | VFS GCS suite                                           |
+| `suite`  | `vfs_minio`                     | VFS MinIO suite                                         |
+| `suite`  | `window_functions`              | Window Functions suite                                  |
 
 ### [Running From Docker Image](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:  
 Example values using `altinity/clickhouse-server:21.8.15.15.altinitystable`
-| Variables | | |
-| --- | --- | ---  |
+| Variables  |           |                                       |
+| ---------- | --------- | ------------------------------------- |
 | `Variable` | `package` | `docker://altinity/clickhouse-server` |
-| `Variable` | `version` | `21.8.15.15.altinitystable` |
+| `Variable` | `version` | `21.8.15.15.altinitystable`           |
 
 ### [Running From Altinity Repo](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:
 
-| Variables | | |
-| --- | --- | ---  |
-| `Variable` | `package` | `deb://builds.altinity.cloud/apt-repo/pool/main` |
+| Variables  |           |                                                                      |
+| ---------- | --------- | -------------------------------------------------------------------- |
+| `Variable` | `package` | `deb://builds.altinity.cloud/apt-repo/pool/main`                     |
 | `Variable` | `version` | The version to use for tests. For example, `21.8.8.1.altinitystable` |
 
 ### [Running From ClickHouse PR](#table-of-contents)
 Get the link to the deb package: PR -> ClickHouse build check (actions) -> Details -> copy link to a deb package.  
 Break down the link into CI/CD variables:  
 Example values using https://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release/clickhouse-client_22.7.1.1738_amd64.deb
-| Variables | | |
-| --- | --- | ---  |
-| `Variable` | `package` | `deb://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release` NOTE: 'deb' instead of 'https' and no '/' on the end. |
-| `Variable` | `version` | `22.7.1.1738` |
-| `Variable` | `package_version_postfix` | By default `all` (supports older versions), specify `amd64` for newer PRs where all packages have `amd64` postfix. |
+| Variables  |                           |                                                                                                                                                                 |
+| ---------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Variable` | `package`                 | `deb://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release` NOTE: 'deb' instead of 'https' and no '/' on the end. |
+| `Variable` | `version`                 | `22.7.1.1738`                                                                                                                                                   |
+| `Variable` | `package_version_postfix` | By default `all` (supports older versions), specify `amd64` for newer PRs where all packages have `amd64` postfix.                                              |
 
 ## [Running CI/CD With CI/CD Trigger](#table-of-contents)
 To run the CI/CD pipline you can use cicd-trigger.py
@@ -218,43 +218,43 @@ with following options
 ### [Variables](#variables)
 
 The CI/CD has the following variables:
-| Variable | Purpose | Default |
-| --- | --- | ---  |
-| `PARALLEL` | Specify whether to run tests within each suite in parallel. | 1 | 
-| `UPLOAD_LOGS` | Specify whether to upload logs. | 1 |
+| Variable      | Purpose                                                     | Default |
+| ------------- | ----------------------------------------------------------- | ------- |
+| `PARALLEL`    | Specify whether to run tests within each suite in parallel. | 1       |
+| `UPLOAD_LOGS` | Specify whether to upload logs.                             | 1       |
 
 ### [Secrets](#secrets)
 
 The CI/CD has the following secrets:
-| Secret | Purpose | Notes |
-| --- | --- | --- |
-| `AWS_ACCESS_KEY` | AWS Secret Access Key for the bucket used during testing. |   |
-| `AWS_KEY_ID` | AWS Access Key ID for the bucket used during testing. | |
-| `AWS_BUCKET` | AWS Bucket used during testing. | |
-| `AWS_REGION` | AWS Region of the bucket used during testing. | |
-| `GCS_KEY_ID` | GCS Key ID for the bucket used during testing. | |
-| `GCS_KEY_SECRET` | GCS Key Secret for the bucket used during testing. | |
-| `GCS_URI` | GCS URI of the bucket used for testing. | |
-| `AWS_REPORT_KEY_ID` | AWS Access Key ID for the report bucket. | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
-| `AWS_REPORT_SECRET_ACCESS_KEY` | AWS Secret Access Key for the report bucket. | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
-| `AWS_REPORT_REGION` | AWS Region of the report bucket. | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
-| `DOCKER_USERNAME` | Docker username for login to prevent pull limit. | Not necessary if running small amount of tests. |
-| `DOCKER_PASSWORD` | Docker password for login to prevent pull limit. | Not necessary if running small amount of tests. |
+| Secret                         | Purpose                                                   | Notes                                                            |
+| ------------------------------ | --------------------------------------------------------- | ---------------------------------------------------------------- |
+| `AWS_ACCESS_KEY`               | AWS Secret Access Key for the bucket used during testing. |                                                                  |
+| `AWS_KEY_ID`                   | AWS Access Key ID for the bucket used during testing.     |                                                                  |
+| `AWS_BUCKET`                   | AWS Bucket used during testing.                           |                                                                  |
+| `AWS_REGION`                   | AWS Region of the bucket used during testing.             |                                                                  |
+| `GCS_KEY_ID`                   | GCS Key ID for the bucket used during testing.            |                                                                  |
+| `GCS_KEY_SECRET`               | GCS Key Secret for the bucket used during testing.        |                                                                  |
+| `GCS_URI`                      | GCS URI of the bucket used for testing.                   |                                                                  |
+| `AWS_REPORT_KEY_ID`            | AWS Access Key ID for the report bucket.                  | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
+| `AWS_REPORT_SECRET_ACCESS_KEY` | AWS Secret Access Key for the report bucket.              | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
+| `AWS_REPORT_REGION`            | AWS Region of the report bucket.                          | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
+| `DOCKER_USERNAME`              | Docker username for login to prevent pull limit.          | Not necessary if running small amount of tests.                  |
+| `DOCKER_PASSWORD`              | Docker password for login to prevent pull limit.          | Not necessary if running small amount of tests.                  |
 
 ## [Running Tests Locally](#table-of-contents)
 
-You can run tests locally by passing `--local` and `--clickhouse-binary-path` to the top level `regression.py` or
+You can run tests locally by passing `--local` and `--clickhouse` to the top level `regression.py` or
 `cd` into any sub-folders to run suite-specific `regression.py`.
 
 * `--local` specifies that regression will be run locally
-* `--clickhouse-binary-path` specifies the path to the ClickHouse binary on the host machine that will be used during the regression
-  run. You can also use a docker image that should have `docker://` prefix.
-  For example, `--clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine`
-* `--base-os` specifies a docker image to install ClickHouse into when `--clickhouse-binary-path` is not a docker image.
+* `--clickhouse` specifies a path to a ClickHouse package or binary that will be used during the regression
+  run. You can also use a docker image using the `docker://` prefix.
+  For example, `--clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine`
+* `--base-os` specifies a docker image to install ClickHouse into when `--clickhouse` is not a docker image.
   Supported distributions are `altinityinfra/clickhouse-regression-multiarch:2.0` (default), `ubuntu`, and `alpine`.
   There is experimental support for `fedora` and `redhat/ubi9`.
 
-> [!NOTE]
+> [!TIP]
 > You can pass the `-h` or `--help` argument to the `regression.py` to see a help message.
 >
 > ```bash
@@ -271,11 +271,20 @@ You can run tests locally by passing `--local` and `--clickhouse-binary-path` to
 > sudo chown clickhouse:clickhouse /usr/bin/clickhouse
 > ```
 
+> [!NOTE]
+> If you need to restore the old behavior of copying binaries out of packages,
+> instead of installing them, prefix the prefix with `binary-`.
+> Examples: `binary-docker://...`, `binary-https://...deb`, `binary-file://~/...tgz`
+>
+> It is also possible to force the new behavior with `package-`, but this is redundant.
+>
+> This is a preemptive and temporary workaround which will likely be removed in the future.
+
 Using the default ClickHouse installation and its server binary at `/usr/bin/clickhouse`, you can run 
 regressions locally using the following command.
 
 ```bash
-python3 regression.py --local --clickhouse-binary-path "/usr/bin/clickhouse"
+python3 regression.py --local --clickhouse "/usr/bin/clickhouse"
 ```
 ### [Output Verbosity](#table-of-contents)
 
@@ -289,7 +298,7 @@ You can run only the selected tests by passing the `--only` option to the `regre
 For example,
 
 ```bash
-./regression.py --local --clickhouse-binary-path /usr/bin/clickhouse --only "/clickhouse/rbac/syntax/grant privilege/*"
+./regression.py --local --clickhouse /usr/bin/clickhouse --only "/clickhouse/rbac/syntax/grant privilege/*"
 ```
 
 will execute all `rbac/syntax/grant privilege` tests.
@@ -297,7 +306,7 @@ will execute all `rbac/syntax/grant privilege` tests.
 If you want to run only a single test such as the `/clickhouse/rbac/syntax/grant privilege/grant privileges/privilege='KILL QUERY', on=('*.*',), allow_introspection=False` you can do it as follows
 
 ```bash
-./regression.py --local --clickhouse-binary-path /usr/bin/clickhouse --only "/clickhouse/rbac/syntax/grant privilege/grant privileges/privilege='KILL QUERY', on=('[*].[*]',), allow_introspection=False/*"
+./regression.py --local --clickhouse /usr/bin/clickhouse --only "/clickhouse/rbac/syntax/grant privilege/grant privileges/privilege='KILL QUERY', on=('[*].[*]',), allow_introspection=False/*"
 ```
 > [!NOTE]
 > * You need to surround special characters such as `*` with square brackets, for example `[*]`.
@@ -403,12 +412,12 @@ Examples:
 
 Explicit storage declaration:
 ```bash
-s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage minio
+s3/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage minio
 ```
 
 Utilizing default values:
 ```bash
-s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine
+s3/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine
 ```
 
 You can also specify the minio uri (`--minio-uri`), root user (`--minio-root-user`), and root password (`--minio-root-password`). However, this is not necessary.
@@ -430,11 +439,11 @@ Examples:
 
 Inline:
 ```bash
-s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws_s3_key_id [masked] --aws_s3_access_key [masked] --aws-s3-bucket [masked] --aws-s3-region [masked] --storage aws_s3
+s3/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws_s3_key_id [masked] --aws_s3_access_key [masked] --aws-s3-bucket [masked] --aws-s3-region [masked] --storage aws_s3
 ```
 Env:
 ```bash
-s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage aws_s3
+s3/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage aws_s3
 ```
 
 #### [GCS (Google Cloud Storage)](#table-of-contents)
@@ -453,11 +462,11 @@ Examples:
 
 Inline:
 ```bash
-s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --storage gcs
+s3/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --storage gcs
 ```
 Env:
 ```bash
-s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage gcs
+s3/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage gcs
 ```
 
 ### [Running Tiered Storage Suites](#table-of-contents)
@@ -468,7 +477,7 @@ Normal tiered storage suite does not require any variables to be provided.
 
 From the regression directory, it can be run with the following command:
 ```bash
-tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine
+tiered_storage/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine
 ```
 
 #### [Running on Minio](#table-of-contents)
@@ -477,7 +486,7 @@ Minio tiered storage suite only requires that `--with-minio` is specified.
 
 It can be run with the following command:
 ```bash
-tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-minio
+tiered_storage/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-minio
 ```
 
 #### [Running on AWS S3 Storage](#table-of-contents)
@@ -496,11 +505,11 @@ Examples:
 
 Inline:
 ```bash
-tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws-s3-key-id [masked] --aws-s3-access-key [masked] --aws-s3-uri [masked] --with-s3amazon
+tiered_storage/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws-s3-key-id [masked] --aws-s3-access-key [masked] --aws-s3-uri [masked] --with-s3amazon
 ```
 Env:
 ```bash
-tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3amazon
+tiered_storage/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3amazon
 ```
 
 #### [Running on GCS Storage](#table-of-contents)
@@ -519,11 +528,11 @@ Examples:
 
 Inline:
 ```bash
-tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --with-s3gcs
+tiered_storage/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --with-s3gcs
 ```
 Env:
 ```bash
-tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3gcs
+tiered_storage/regression.py --local --clickhouse docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3gcs
 ```
 
 #### [Pausing in Tests](#table-of-contents)
