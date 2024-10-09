@@ -1,5 +1,5 @@
-name: Run CI/CD on ARM
-run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite)}}
+name: 🔬 Run Tests CI/CD on ARM
+run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite)}}
   ${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
   ${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}

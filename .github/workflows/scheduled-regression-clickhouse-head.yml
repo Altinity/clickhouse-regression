@@ -1,5 +1,5 @@
-name: Scheduled ClickHouse head
-run-name: Scheduled ClickHouse head
+name: 🗓 Scheduled ClickHouse head
+run-name: 🗓 Scheduled ClickHouse head
 on:
   workflow_dispatch:
   #Run At 00:00 (UTC) on Sunday, Tuesday, and Thursday
