@@ -22,7 +22,7 @@ on:
         required: true
         default: 24.3.5.48.altinitytest
       keeper_or_zookeeper:
-        description: "Keeper or ZooKeeper"
+        description: "⚙️ Keeper or ZooKeeper"
         type: choice
         options:
           - keeper
