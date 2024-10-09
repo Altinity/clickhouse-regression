@@ -58,3 +58,22 @@ def create_user_query_is_not_allowed_to_have_add():
         "DB::Exception: Create user query is not allowed to have ADD IDENTIFIED, remove the ADD keyword.",
     )
     return exitcode, message
+
+
+def unexpected_date(date=""):
+    def return_exitcode_and_message():
+        exitcode, message = (
+            41,
+            f"DB::Exception: Cannot read DateTime: unexpected date: {date}",
+        )
+        return exitcode, message
+
+    return return_exitcode_and_message
+
+
+def unexpected_symbol():
+    def return_exitcode_and_message():
+        exitcode, message = (41, "DB::Exception: Cannot read DateTime:")
+        return exitcode, message
+
+    return return_exitcode_and_message
