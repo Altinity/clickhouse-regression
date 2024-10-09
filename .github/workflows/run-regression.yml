@@ -164,22 +164,22 @@ jobs:
       SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: EXITCODE=0;
           python3 -u ${{ env.SUITE }}/regression.py
           ${{ env.args }} || EXITCODE=$?;
           .github/add_link_to_logs.sh;
           exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -196,22 +196,22 @@ jobs:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -228,22 +228,22 @@ jobs:
       SUITE: atomic_insert
     if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -261,15 +261,15 @@ jobs:
       STORAGE: /replace_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/alter/replace partition/*"
@@ -277,7 +277,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -295,15 +295,15 @@ jobs:
       STORAGE: /attach_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/alter/attach partition/*"
@@ -311,7 +311,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -329,15 +329,15 @@ jobs:
       STORAGE: /move_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/alter/move partition/*"
@@ -345,7 +345,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -362,15 +362,15 @@ jobs:
       SUITE: attach
     if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/attach/*"
@@ -378,7 +378,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -395,15 +395,15 @@ jobs:
       SUITE: base_58
     if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: EXITCODE=0
             python3 
             -u ${{ env.SUITE }}/regression.py 
@@ -411,7 +411,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -429,15 +429,15 @@ jobs:
       STORAGE: /aws
     if: ${{ contains('all benchmark_all benchmark_aws all_aws', inputs.suite)}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage aws_s3
@@ -449,7 +449,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -467,15 +467,15 @@ jobs:
       STORAGE: /gcs
     if: ${{ contains('all benchmark_all benchmark_gcs all_gcs', inputs.suite)}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage gcs
@@ -486,7 +486,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -504,15 +504,15 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage minio
@@ -520,7 +520,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -538,22 +538,22 @@ jobs:
       STORAGE: /no_ssl
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -571,15 +571,15 @@ jobs:
       STORAGE: /ssl
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --ssl
@@ -587,7 +587,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -605,22 +605,22 @@ jobs:
       STORAGE: /failover
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -637,7 +637,7 @@ jobs:
       SUITE: data_lakes
     if: ${{ inputs.suite == 'all' || inputs.suite == 'data_lakes' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
@@ -653,17 +653,17 @@ jobs:
           server-password: ${{ secrets.GITHUB_TOKEN }}
           overwrite-settings: true
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -680,22 +680,22 @@ jobs:
       SUITE: data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -712,22 +712,22 @@ jobs:
       SUITE: datetime64_extended_range
     if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -744,22 +744,22 @@ jobs:
       SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -776,22 +776,22 @@ jobs:
       SUITE: dns
     if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -808,22 +808,22 @@ jobs:
       SUITE: engines
     if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -840,22 +840,22 @@ jobs:
       SUITE: example
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -872,22 +872,22 @@ jobs:
       SUITE: extended_precision_data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -904,22 +904,22 @@ jobs:
       SUITE: functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'functions' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -937,15 +937,15 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v4
 
-  #     - name: Setup
+  #     - name: 🛠️ Setup
   #       run: .github/setup.sh
 
-  #     - name: Run ${{ env.SUITE }} suite
+  #     - name: 🚀 Run ${{ env.SUITE }} suite
   #       run: python3
   #             -u ${{ env.SUITE }}/functional.py
   #             ${{ env.args }} 
 
-  #     - name: Create and upload logs
+  #     - name: 📝 Create and upload logs
   #       if: always()
   #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -962,22 +962,22 @@ jobs:
       SUITE: kafka
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -994,22 +994,22 @@ jobs:
       SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
       - uses: actions/upload-artifact@v4
@@ -1025,22 +1025,22 @@ jobs:
       SUITE: key_value
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
       - uses: actions/upload-artifact@v4
@@ -1056,22 +1056,22 @@ jobs:
       SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1088,22 +1088,22 @@ jobs:
       SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1120,22 +1120,22 @@ jobs:
       SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1152,22 +1152,22 @@ jobs:
       SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1184,22 +1184,22 @@ jobs:
       SUITE: memory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'memory' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1217,22 +1217,22 @@ jobs:
       STORAGE: /no_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' || inputs.suite == 'parquet_all'}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1250,15 +1250,15 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
@@ -1267,7 +1267,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1285,15 +1285,15 @@ jobs:
       STORAGE: /aws_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
@@ -1306,7 +1306,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1323,22 +1323,22 @@ jobs:
       SUITE: part_moves_between_shards
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1355,22 +1355,22 @@ jobs:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1388,15 +1388,15 @@ jobs:
       STORAGE: /aws
     if: ${{ contains('all s3_all s3_aws all_aws', inputs.suite)}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
@@ -1408,7 +1408,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1426,15 +1426,15 @@ jobs:
       STORAGE: /gcs
     if: ${{ contains('all s3_all s3_gcs all_gcs', inputs.suite)}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage gcs
@@ -1445,7 +1445,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1463,15 +1463,15 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
@@ -1479,7 +1479,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1496,22 +1496,22 @@ jobs:
       SUITE: selects
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1528,22 +1528,22 @@ jobs:
       SUITE: session_timezone
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1560,22 +1560,22 @@ jobs:
       SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1593,15 +1593,15 @@ jobs:
       STORAGE: /aws
     if: ${{ contains('all tiered_storage_all tiered_storage_aws all_aws', inputs.suite)}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-s3amazon
@@ -1612,7 +1612,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1630,15 +1630,15 @@ jobs:
       STORAGE: /gcs
     if: ${{ contains('all tiered_storage_all tiered_storage_gcs all_gcs', inputs.suite)}}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-s3gcs
@@ -1649,7 +1649,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1666,22 +1666,22 @@ jobs:
       SUITE: tiered_storage
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1699,15 +1699,15 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-minio
@@ -1715,7 +1715,7 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -1732,22 +1732,22 @@ jobs:
       SUITE: window_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
