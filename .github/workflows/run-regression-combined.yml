@@ -1,10 +1,16 @@
-name: Run CI/CD on x86 and ARM
-run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression', inputs.version)) || format('{0} | {1}', inputs.version, inputs.suite) }}${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
+name: 🔬 Run Tests on x86 and ARM
+run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression', inputs.version)) || format('{0} | {1}', inputs.version, inputs.suite) }}
+  ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64')  && ' | x86' || '' }}
+  ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') && ' | ARM' || '' }}
+  ${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
+  ${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
+  ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
+
 on:
   workflow_dispatch:
     inputs:
       package:
-        description: "Package either 'docker://' or 'https://'. Example: 'https://s3.amazonaws.com/clickhouse-builds/23.3/.../package_release/clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
+        description: "📦 Package either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
         required: true
         type: string
         default: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
@@ -13,7 +19,7 @@ on:
         type: boolean
         default: false
       version:
-        description: "Expected version. Example: 23.3.1.64"
+        description: "🚩 Expected version. Example: 23.3.1.64"
         type: string
         required: true
         default: 23.8.5.17.altinitytest
@@ -24,7 +30,7 @@ on:
           - keeper
           - zookeeper
       suite:
-        description: "Test suite to run (default: all)"
+        description: "🧪 Test suite to run (default: all)"
         type: choice
         options:
           - all
@@ -86,7 +92,7 @@ on:
           - public
           - internal
       output_format:
-        description: "Testflows output style."
+        description: "📜 Testflows output style."
         type: choice
         options:
           - nice-new-fails
@@ -110,16 +116,16 @@ on:
         type: string
         default: ""
       extra_args:
-        description: "Extra test program arguments. Default: none (empty string)."
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
         type: string
         default: ""
       custom_run_name:
-        description: 'Custom run name (optional)'
+        description: '📝 Custom run name (optional)'
         required: false
 
 jobs:
   x86:
-    if: ${{ !contains(inputs.package, 'arm64') || !contains(inputs.package, 'aarch64') }}
+    if: ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64') }}
     uses: ./.github/workflows/reusable-workflow-x86.yml
     secrets: inherit
     with:
