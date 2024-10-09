@@ -462,6 +462,11 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
+            Feature(
+                run=load("rbac.tests.privileges.valid_until", "feature"),
+                parallel=True,
+                executor=pool,
+            )
 
         finally:
             join()

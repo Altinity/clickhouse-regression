@@ -222,6 +222,13 @@ xfails = {
     "/rbac/multiple authentication methods/valid until/sha 256 hash auth method/*": [
         (Fail, "Should be fixed soon")
     ],
+    "/rbac/privileges/valid until/check old behavior/no_password/*": [
+        (
+            Fail,
+            "Does not include no_password in SHOW CREATE USER before 24.9",
+            check_clickhouse_version("<24.9"),
+        )
+    ],
 }
 
 xflags = {
