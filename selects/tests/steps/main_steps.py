@@ -119,7 +119,11 @@ def create_and_populate_table(
         node = current().context.node
     try:
         with By(f"creating table {name}"):
-            retry(node.query, timeout=100, delay=5,)(
+            retry(
+                node.query,
+                timeout=100,
+                delay=5,
+            )(
                 f"CREATE TABLE {name} "
                 f"{' ON CLUSTER {cluster_name}'.format(cluster_name=cluster_name) if cluster_name is not None else ''}"
                 f"(id Int64, x Int64, {extra_table_col})"
@@ -1361,9 +1365,4 @@ def clean_name(name):
     for part in name_parts:
         if part.isalpha():
             clean_name += part + "_"
-
-    # note(name)
-    # note(clean_name)
-    # if "distr_ReplicatedMergeTree_table" in clean_name:
-    #     pause()
     return clean_name[:-1]
