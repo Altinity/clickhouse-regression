@@ -15,16 +15,18 @@ def argparser(parser):
         type=str,
         dest="clickhouse_version",
         help="clickhouse server version",
-        metavar="version",
+        metavar="VERSION",
         default=os.getenv("CLICKHOUSE_TESTS_SERVER_VERSION", None),
     )
 
     parser.add_argument(
+        "--clickhouse",
+        "--clickhouse-package-path",
         "--clickhouse-binary-path",
         type=str,
-        dest="clickhouse_binary_path",
-        help="path to ClickHouse binary, default: /usr/bin/clickhouse",
-        metavar="path",
+        dest="clickhouse_path",
+        help="Path to ClickHouse package or binary, default: /usr/bin/clickhouse",
+        metavar="PATH",
         default=os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"),
     )
 
@@ -37,10 +39,13 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--keeper",
+        "--keeper-package-path",
         "--keeper-binary-path",
         type=str,
-        dest="keeper_binary_path",
-        help="path to ClickHouse Keeper binary",
+        dest="keeper_path",
+        help="Path to ClickHouse Keeper package or binary",
+        metavar="PATH",
         default=None,
     )
 
@@ -49,6 +54,7 @@ def argparser(parser):
         type=str,
         dest="zookeeper_version",
         help="Zookeeper version",
+        metavar="VERSION",
         default=None,
     )
     parser.add_argument(
@@ -131,9 +137,9 @@ def CaptureClusterArgs(func):
     def capture_cluster_args(
         self,
         local,
-        clickhouse_binary_path,
+        clickhouse_path,
         base_os,
-        keeper_binary_path,
+        keeper_path,
         zookeeper_version,
         use_keeper,
         collect_service_logs,
@@ -143,9 +149,9 @@ def CaptureClusterArgs(func):
     ):
         cluster_args = {
             "local": local,
-            "clickhouse_binary_path": clickhouse_binary_path,
+            "clickhouse_path": clickhouse_path,
             "base_os": base_os,
-            "keeper_binary_path": keeper_binary_path,
+            "keeper_path": keeper_path,
             "zookeeper_version": zookeeper_version,
             "use_keeper": use_keeper,
             "collect_service_logs": collect_service_logs,

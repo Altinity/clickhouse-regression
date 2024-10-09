@@ -567,7 +567,7 @@ def break_hash(self):
         with Given("I apply break-hash to the clickhouse binary"):
             self.context.cluster.command(
                 None,
-                f"./test_files/break-hash '{self.context.cluster.clickhouse_binary_path}' 'clickhouse-broken-binary'",
+                f"./test_files/break-hash '{self.context.cluster.clickhouse_path}' 'clickhouse-broken-binary'",
             )
 
         with When(f"I try to start the broken clickhouse binary"):

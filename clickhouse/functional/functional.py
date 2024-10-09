@@ -25,7 +25,7 @@ ffails = {}
 def regression(
     self,
     local,
-    clickhouse_binary_path,
+    clickhouse_path,
     clickhouse_version,
     collect_service_logs,
     stress=None,
@@ -40,7 +40,7 @@ def regression(
 
     with Cluster(
         local,
-        clickhouse_binary_path,
+        clickhouse_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
     ) as cluster:

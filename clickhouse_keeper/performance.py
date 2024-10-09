@@ -33,7 +33,7 @@ ffails = {}
 def regression(
     self,
     cluster_args,
-    clickhouse_binary_list,
+    clickhouse_package_list,
     repeats,
     inserts,
     results_file_name,
@@ -65,16 +65,16 @@ def regression(
         ),
     }
 
-    if len(clickhouse_binary_list) == 0:
-        clickhouse_binary_list.append(
+    if len(clickhouse_package_list) == 0:
+        clickhouse_package_list.append(
             os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse")
         )
 
-    # if clickhouse_binary_path is not the default value, tell user to use --clickhouse-binary-list
+    # if clickhouse_path is not the default value, tell user to use --clickhouse-package-list
     assert (
-        cluster_args["clickhouse_binary_path"] == "/usr/bin/clickhouse"
-    ), "specify version with --clickhouse-binary-list"
-    del cluster_args["clickhouse_binary_path"]
+        cluster_args["clickhouse_path"] == "/usr/bin/clickhouse"
+    ), "specify version with --clickhouse-package-list"
+    del cluster_args["clickhouse_path"]
 
     self.context.configurations_insert_time_values = {}
 
@@ -84,7 +84,7 @@ def regression(
     self.context.one_node = one_node
     self.context.three_node = three_node
 
-    for clickhouse_binary_path in clickhouse_binary_list:
+    for clickhouse_path in clickhouse_package_list:
         self.context.clickhouse_version = clickhouse_version
 
         if stress is not None:
@@ -114,7 +114,7 @@ def regression(
 
             for test_feature in test_features:
                 with Cluster(
-                    clickhouse_binary_path=clickhouse_binary_path,
+                    clickhouse_path=clickhouse_path,
                     nodes=nodes,
                     **cluster_args,
                 ) as cluster:
