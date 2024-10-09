@@ -143,15 +143,15 @@ jobs:
       STORAGE: /aws_x86
     if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
@@ -163,7 +163,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -181,15 +181,15 @@ jobs:
       STORAGE: /gcs_x86
     if: ${{ contains('all gcs', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage gcs
@@ -200,7 +200,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -218,15 +218,15 @@ jobs:
       STORAGE: /minio_x86
     if: ${{ contains('all minio', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
@@ -234,7 +234,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -252,15 +252,15 @@ jobs:
       STORAGE: /local_x86
     if: ${{ contains('all local', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage local
@@ -268,7 +268,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -286,15 +286,15 @@ jobs:
       STORAGE: /aws_arm
     if: ${{ contains('all aws_s3', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
@@ -306,7 +306,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -324,15 +324,15 @@ jobs:
       STORAGE: /gcs_arm
     if: ${{ contains('all gcs', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage gcs
@@ -343,7 +343,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -361,15 +361,15 @@ jobs:
       STORAGE: /minio_arm
     if: ${{ contains('all minio', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
@@ -377,7 +377,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
@@ -395,15 +395,15 @@ jobs:
       STORAGE: /local_arm
     if: ${{ contains('all local', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🚀 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage local
@@ -411,7 +411,7 @@ jobs:
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
