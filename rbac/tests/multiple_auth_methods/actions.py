@@ -369,7 +369,10 @@ def successful_login(self, user: CreateUser, node=None):
                 if auth_method.password:
                     node_query(
                         query=Select().set_query("SELECT current_user()"),
-                        settings=[("user", username.name), ("password", auth_method.password)],
+                        settings=[
+                            ("user", username.name),
+                            ("password", auth_method.password),
+                        ],
                         node=node,
                     )
                 else:
