@@ -1,5 +1,5 @@
-name: Scheduled Altinity 23.3
-run-name: Scheduled Altinity 23.3
+name: 🗓 Scheduled Altinity 23.3
+run-name: 🗓 Scheduled Altinity 23.3
 on:
   workflow_dispatch:
   #Run at 00:00 AM (UTC) on Sunday
