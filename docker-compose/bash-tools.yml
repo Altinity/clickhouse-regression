@@ -2,7 +2,7 @@ version: "2.3"
 
 services:
   bash-tools:
-    image: altinityinfra/clickhouse-regression-multiarch:2.0
+    image: altinityinfra/clickhouse-regression-multiarch:3.0
     hostname: bash-tools
     init: true
     restart: "no"
