@@ -13,10 +13,10 @@ from helpers.argparser import argparser
 def regression(
     self,
     local,
-    clickhouse_binary_path,
+    clickhouse_path,
     clickhouse_version,
     collect_service_logs,
-    keeper_binary_path=None,
+    keeper_path=None,
     zookeeper_version=None,
     use_keeper=False,
     stress=None,
@@ -25,8 +25,8 @@ def regression(
     """ClickHouse LDAP integration regression module."""
     args = {
         "local": local,
-        "clickhouse_binary_path": clickhouse_binary_path,
-        "keeper_binary_path": keeper_binary_path,
+        "clickhouse_path": clickhouse_path,
+        "keeper_path": keeper_path,
         "use_keeper": use_keeper,
         "zookeeper_version": zookeeper_version,
         "clickhouse_version": clickhouse_version,

@@ -98,26 +98,25 @@ def unpack_deb(deb_binary_path, program_name):
     return f"{deb_binary_dir}/{program_name}"
 
 
-def unpack_tar_gz(tar_path):
-    """Unpack tar.gz file and return path to the result."""
-    assert tar_path.endswith(".tar.gz"), error("not a .tar.gz file")
-    tar_dest_dir = tar_path.rsplit(".tar.gz", 1)[0]
+def unpack_tgz(tar_path):
+    """Unpack tgz file and return path to the result."""
+    assert tar_path.endswith(".tgz"), error("not a .tgz file")
+    tar_dest_dir = tar_path.rsplit(".tgz", 1)[0]
     os.makedirs(tar_dest_dir, exist_ok=True)
     with Shell() as bash:
         bash.timeout = 300
         cmd = bash(f'tar -xzf "{tar_path}" -C "{tar_dest_dir}" --strip-components=1')
         assert cmd.exitcode == 0, error()
-        cmd = bash(f'chmod +x "{tar_dest_dir}/bin/*"')
+        cmd = bash(f"chmod +x {tar_dest_dir}/usr/bin/*")
         assert cmd.exitcode == 0, error()
 
-    return f"{tar_dest_dir}"
+    return tar_dest_dir
 
 
 def get_binary_from_docker_container(
     docker_image,
     container_binary_path="/usr/bin/clickhouse",
     host_binary_path=None,
-    host_binary_path_suffix=None,
 ):
     """
     Get clickhouse-keeper binary from some Docker container.
@@ -126,19 +125,17 @@ def get_binary_from_docker_container(
         docker_image: docker image name
         container_binary_path: path to the binary in the container
         host_binary_path: path to store the binary on the host
-        host_binary_path_suffix: suffix for the binary path on the host if host_binary_path is unspecified
     """
     assert docker_image.startswith("docker://"), error("not a docker image path")
     docker_image = docker_image.split("docker://", 1)[-1]
     docker_container_name = str(uuid.uuid1())
+    binary_name = container_binary_path.rsplit("/", 1)[-1]
 
     if host_binary_path is None:
         host_binary_path = os.path.join(
-            tempfile.gettempdir(),
-            f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
+            f"{current_dir()}/../binaries",
+            f"docker-{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
         )
-        if host_binary_path_suffix:
-            host_binary_path += host_binary_path_suffix
 
     with By(
         "I return host_binary_path if it already exists and version patch is specified",
@@ -153,11 +150,12 @@ def get_binary_from_docker_container(
     with And("copying binary from docker container", description=docker_image):
         with Shell() as bash:
             bash.timeout = 300
+            bash(f"mkdir -p {host_binary_path}")
             bash(
                 f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
             )
             bash(
-                f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}"'
+                f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}/{binary_name}"'
             )
             bash(f'docker stop "{docker_container_name}"')
 
@@ -166,7 +164,7 @@ def get_binary_from_docker_container(
             bash.timeout = 300
             bash(f"ls -la {host_binary_path}")
 
-    return host_binary_path
+    return f"{host_binary_path}/{binary_name}"
 
 
 class Shell(ShellBase):
@@ -1257,6 +1255,36 @@ class PackageDownloader:
 
     package_formats = (".deb", ".rpm", ".tgz")
 
+    def extended_prefix_handler(self, path: str):
+        """
+        Interprets an extended set of package prefixes in order to simulate
+        the older mode of operation where binaries were copied from packages
+        instead of installing the package.
+
+        Remove if nobody is using this in 2 months.
+        """
+        use_ripped_binary_by_default = False
+
+        if "://" not in path:
+            # No extended prefix, treat as a file path
+            return path, use_ripped_binary_by_default
+
+        if path.startswith("binary-"):
+            use_ripped_binary_by_default = True
+            path = path.split("-", 1)[1]
+
+        elif path.startswith("package-"):
+            use_ripped_binary_by_default = False
+            path = path.split("-", 1)[1]
+
+        if path.startswith("url://"):
+            path.replace("url://", "https://", 1)
+
+        if path.startswith("file://"):
+            path = path.replace("file://", "", 1)
+
+        return path, use_ripped_binary_by_default
+
     def __init__(self, source, program_name="clickhouse"):
         self.source = source
         self.binary_path = None
@@ -1264,6 +1292,8 @@ class PackageDownloader:
         self.program_name = program_name
         self.package_path = None
         self.package_version = None
+
+        source, use_binary_instead = self.extended_prefix_handler(source)
 
         if source.startswith("docker://"):
             self.get_binary_from_docker(source)
@@ -1273,7 +1303,6 @@ class PackageDownloader:
 
         elif source.endswith(self.package_formats):
             self.get_binary_from_package(source)
-
         else:
             self.binary_path = source
 
@@ -1294,6 +1323,15 @@ class PackageDownloader:
                     self.package_version = bash(
                         f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
                     ).output.strip(".")
+
+        if use_binary_instead:
+            # Hide the package path / image to force using binary
+            # remove this block when removing extended_prefix_handler
+            assert (
+                self.binary_path
+            ), "binary was not extracted, only docker, deb and tgz formats are supported in this mode"
+            self.package_path = None
+            self.docker_image = None
 
     def get_binary_from_docker(self, source):
         self.docker_image = source.split("docker://", 1)[1]
@@ -1317,8 +1355,10 @@ class PackageDownloader:
             self.get_binary_from_deb(source)
         elif source.endswith(".rpm"):
             pass
-        elif source.endswith((".tar.gz", ".tar", ".tgz")):
-            pass
+        elif source.endswith(".tgz"):
+            self.binary_path = os.path.join(
+                unpack_tgz(source), "usr/bin", self.program_name
+            )
 
     def get_binary_from_deb(self, source):
         self.binary_path = unpack_deb(
@@ -1333,7 +1373,7 @@ class Cluster(object):
     def __init__(
         self,
         local=False,
-        clickhouse_binary_path=None,
+        clickhouse_path=None,
         base_os=None,
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
@@ -1342,7 +1382,7 @@ class Cluster(object):
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
-        keeper_binary_path=None,
+        keeper_path=None,
         zookeeper_version=None,
         use_keeper=False,
         thread_fuzzer=False,
@@ -1356,17 +1396,17 @@ class Cluster(object):
         self._bash = {}
         self._control_shell = None
         self.environ = {} if (environ is None) else environ
-        self.clickhouse_binary_path = clickhouse_binary_path
+        self.clickhouse_path = clickhouse_path
         # Don't set base_os until we know if we have images or packages
         self.base_os = None
         self.keeper_base_os = None
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
-        self.keeper_binary_path = keeper_binary_path
+        self.keeper_path = keeper_path
         self.zookeeper_version = zookeeper_version
         self.use_keeper = use_keeper
         self.configs_dir = configs_dir
         self.local = local
-        self.nodes = nodes or {}
+        self.nodes: dict[str, list[str]] = nodes or {}
         self.docker_compose = docker_compose
         self.thread_fuzzer = thread_fuzzer
         self.running = False
@@ -1432,7 +1472,7 @@ class Cluster(object):
                 ignore_errors=True,
             )
 
-        if self.clickhouse_binary_path:
+        if self.clickhouse_path:
             if self.use_specific_version:
                 alternate_clickhouse_package = PackageDownloader(
                     self.use_specific_version, program_name="clickhouse"
@@ -1443,7 +1483,7 @@ class Cluster(object):
                 )
 
             clickhouse_package = PackageDownloader(
-                self.clickhouse_binary_path, program_name="clickhouse"
+                self.clickhouse_path, program_name="clickhouse"
             )
             if (
                 getsattr(current().context, "clickhouse_version", None) is None
@@ -1453,7 +1493,7 @@ class Cluster(object):
                     clickhouse_package.package_version
                 )
 
-            self.clickhouse_binary_path = clickhouse_package.binary_path
+            self.clickhouse_path = clickhouse_package.binary_path
 
             if clickhouse_package.docker_image:
                 self.clickhouse_docker_image_name = clickhouse_package.docker_image
@@ -1472,7 +1512,7 @@ class Cluster(object):
                 if clickhouse_package.package_path:
                     package_name = os.path.basename(clickhouse_package.package_path)
                     self.clickhouse_docker_image_name = f"{base_os_name}:{package_name}"
-                    self.clickhouse_binary_path = os.path.relpath(
+                    self.clickhouse_path = os.path.relpath(
                         clickhouse_package.package_path
                     )
                 else:
@@ -1482,12 +1522,12 @@ class Cluster(object):
                             f"docker rmi --force clickhouse-regression/{self.clickhouse_docker_image_name}"
                         )
 
-        if self.keeper_binary_path:
+        if self.keeper_path:
             keeper_package = PackageDownloader(
-                self.keeper_binary_path,
+                self.keeper_path,
                 program_name=(
                     "clickhouse-keeper"
-                    if "keeper" in self.keeper_binary_path
+                    if "keeper" in self.keeper_path
                     else "clickhouse"
                 ),
             )
@@ -1496,7 +1536,7 @@ class Cluster(object):
                 and keeper_package.package_version
             ):
                 current().context.keeper_version = keeper_package.package_version
-            self.keeper_binary_path = keeper_package.binary_path
+            self.keeper_path = keeper_package.binary_path
 
             if keeper_package.docker_image:
                 self.keeper_docker_image_name = keeper_package.docker_image
@@ -1517,9 +1557,7 @@ class Cluster(object):
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
                     self.keeper_docker_image_name = f"{base_os_name}:{package_name}"
-                    self.keeper_binary_path = os.path.relpath(
-                        keeper_package.package_path
-                    )
+                    self.keeper_path = os.path.relpath(keeper_package.package_path)
                 else:
                     self.keeper_docker_image_name = f"{base_os_name}:local-binary"
                     with Shell() as bash:
@@ -1530,7 +1568,7 @@ class Cluster(object):
         else:
             self.keeper_base_os = self.base_os
             self.keeper_docker_image_name = self.clickhouse_docker_image_name
-            self.keeper_binary_path = self.clickhouse_binary_path
+            self.keeper_path = self.clickhouse_path
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
@@ -1853,35 +1891,35 @@ class Cluster(object):
             with Given("I am running in local mode"):
                 with Then(
                     "check --clickhouse-binary-path is specified",
-                    description=self.clickhouse_binary_path,
+                    description=self.clickhouse_path,
                 ):
                     assert (
-                        self.clickhouse_binary_path
+                        self.clickhouse_path
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
                     if self.base_os:  # check that we are not in docker mode
                         assert os.path.exists(
-                            self.clickhouse_binary_path
-                        ), self.clickhouse_binary_path
+                            self.clickhouse_path
+                        ), self.clickhouse_path
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                assert self.clickhouse_binary_path
+                assert self.clickhouse_path
                 self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"] = (
                     # To work with the dockerfiles, the path must be relative to the docker-compose directory
-                    os.path.relpath(self.clickhouse_binary_path, current_dir())
+                    os.path.relpath(self.clickhouse_path, current_dir())
                 )
                 self.environ["CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"] = (
                     self.clickhouse_odbc_bridge_binary_path
                     or os.path.join(
-                        os.path.dirname(self.clickhouse_binary_path),
+                        os.path.dirname(self.clickhouse_path),
                         "clickhouse-odbc-bridge",
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
                     ""
-                    if not self.keeper_binary_path
-                    else os.path.relpath(self.keeper_binary_path, current_dir())
+                    if not self.keeper_path
+                    else os.path.relpath(self.keeper_path, current_dir())
                 )
                 self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
                     self.zookeeper_version or ""
@@ -2126,7 +2164,7 @@ class Cluster(object):
 def create_cluster(
     self,
     local=False,
-    clickhouse_binary_path=None,
+    clickhouse_path=None,
     base_os=None,
     clickhouse_odbc_bridge_binary_path=None,
     collect_service_logs=False,
@@ -2136,18 +2174,18 @@ def create_cluster(
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,
-    keeper_binary_path=None,
+    keeper_path=None,
     zookeeper_version=None,
     use_keeper=False,
     thread_fuzzer=False,
     use_zookeeper_nodes=False,
     use_specific_version=False,
     reuse_env=False,
-):
+) -> Cluster:  # type: ignore
     """Create docker compose cluster."""
     with Cluster(
         local=local,
-        clickhouse_binary_path=clickhouse_binary_path,
+        clickhouse_path=clickhouse_path,
         base_os=base_os,
         clickhouse_odbc_bridge_binary_path=clickhouse_odbc_bridge_binary_path,
         collect_service_logs=collect_service_logs,
@@ -2157,7 +2195,7 @@ def create_cluster(
         docker_compose_project_dir=docker_compose_project_dir,
         docker_compose_file=docker_compose_file,
         environ=environ,
-        keeper_binary_path=keeper_binary_path,
+        keeper_path=keeper_path,
         zookeeper_version=zookeeper_version,
         use_keeper=use_keeper,
         thread_fuzzer=thread_fuzzer,

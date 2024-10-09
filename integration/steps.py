@@ -217,7 +217,7 @@ def get_clickhouse_binary_from_deb(self, path):
         if not os.path.exists(f"{deb_binary_dir}/clickhouse") or not os.path.exists(
             f"{deb_binary_dir}/clickhouse-odbc-bridge"
         ):
-            bash(f'ar x "{clickhouse_binary_path}" --output "{deb_binary_dir}"')
+            bash(f'ar x "{clickhouse_path}" --output "{deb_binary_dir}"')
             bash(
                 f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse -O > "{deb_binary_dir}/clickhouse"'
             )
@@ -241,10 +241,10 @@ def get_clickhouse_binary_from_deb(self, path):
 @TestStep(Given)
 def clickhouse_binaries(self, path, odbc_bridge_path=None, library_bridge_path=None):
     """Extract clickhouse, clickhouse-odbc-bridge, clickhouse-library-bridge
-    binaries from --clickhouse_binary_path."""
+    binaries from --clickhouse_path."""
 
     if path.startswith(("http://", "https://")):
-        path = download_clickhouse_binary(clickhouse_binary_path=path)
+        path = download_clickhouse_binary(clickhouse_path=path)
 
     elif path.startswith("docker://"):
         (

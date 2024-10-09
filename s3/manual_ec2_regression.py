@@ -19,12 +19,12 @@ xfails = {}
 @Name("s3")
 @Requirements(RQ_SRS_015_S3("1.0"))
 @XFails(xfails)
-def regression(self, local, clickhouse_binary_path, aws_s3_access_key, aws_s3_key_id):
+def regression(self, local, clickhouse_path, aws_s3_access_key, aws_s3_key_id):
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     with Cluster(
         local,
-        clickhouse_binary_path,
+        clickhouse_path,
         nodes=nodes,
         environ={
             "S3_AMAZON_ACCESS_KEY": aws_s3_access_key,
