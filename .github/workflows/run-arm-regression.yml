@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: "Package either 'docker://' or 'https://'. Example: 'https://s3.amazonaws.com/clickhouse-builds/23.3/.../package_release/clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.5.17.altinitytest'"
+        description: "📦 Package either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.5.17.altinitytest'"
         required: true
         type: string
         default: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
@@ -17,7 +17,7 @@ on:
         type: boolean
         default: false
       version:
-        description: "Expected version. Example: 23.3.13.7.altinitytest"
+        description: "🚩 Expected version. Example: 23.3.13.7.altinitytest"
         type: string
         required: true
         default: 23.8.5.17.altinitytest
@@ -28,7 +28,7 @@ on:
           - keeper
           - zookeeper
       suite:
-        description: "Test suite to run (default: all)"
+        description: "🧪 Test suite to run (default: all)"
         type: choice
         options:
           - all
@@ -90,7 +90,7 @@ on:
           - public
           - internal
       output_format:
-        description: "Testflows output style."
+        description: "📜 Testflows output style."
         type: choice
         options:
           - nice-new-fails
@@ -114,11 +114,11 @@ on:
         type: string
         default: ""
       extra_args:
-        description: "Extra test program arguments. Default: none (empty string)."
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
         type: string
         default: ""
       custom_run_name:
-        description: 'Custom run name (optional)'
+        description: '📝 Custom run name (optional)'
         required: false
 
 env:
@@ -172,7 +172,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -204,7 +204,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -236,7 +236,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -269,7 +269,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/alter/replace partition/*"
@@ -303,7 +303,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/alter/attach partition/*"
@@ -337,7 +337,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/alter/move partition/*"
@@ -370,7 +370,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --only "/attach/*"
@@ -403,7 +403,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -436,7 +436,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage aws_s3
@@ -474,7 +474,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage gcs
@@ -511,7 +511,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage minio
@@ -545,7 +545,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -578,7 +578,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --ssl
@@ -612,7 +612,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -644,7 +644,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -676,7 +676,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -708,7 +708,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -740,7 +740,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -772,7 +772,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -804,7 +804,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -836,7 +836,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -868,7 +868,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -900,7 +900,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -928,7 +928,7 @@ jobs:
   #     - name: 🛠️ Setup
   #       run: .github/setup.sh
 
-  #     - name: 🚀 Run ${{ env.SUITE }} suite
+  #     - name: 🧪 Run ${{ env.SUITE }} suite
   #       run: python3
   #             -u ${{ env.SUITE }}/functional.py
   #             ${{ env.args }} 
@@ -958,7 +958,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -990,7 +990,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1021,7 +1021,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1052,7 +1052,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1084,7 +1084,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1116,7 +1116,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1148,7 +1148,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1180,7 +1180,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1213,7 +1213,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1246,7 +1246,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
@@ -1281,7 +1281,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
@@ -1319,7 +1319,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1351,7 +1351,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1384,7 +1384,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
@@ -1422,7 +1422,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage gcs
@@ -1459,7 +1459,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
@@ -1492,7 +1492,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1524,7 +1524,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1556,7 +1556,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1589,7 +1589,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-s3amazon
@@ -1626,7 +1626,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-s3gcs
@@ -1662,7 +1662,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
@@ -1695,7 +1695,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-minio
@@ -1728,7 +1728,7 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🚀 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               ${{ env.args }} || EXITCODE=$?; 
