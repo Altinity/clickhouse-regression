@@ -1,5 +1,5 @@
-name: Scheduled ClickHouse 23.8
-run-name: Scheduled ClickHouse 23.8
+name: 🗓 Scheduled ClickHouse 23.8
+run-name: 🗓 Scheduled ClickHouse 23.8
 on:
   workflow_dispatch:
   #Run at 00:00 AM (UTC) on Sunday
