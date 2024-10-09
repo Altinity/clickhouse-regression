@@ -1,5 +1,7 @@
 name: Run CI/CD on x86 and ARM
 run-name: ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression', inputs.version)) || format('{0} | {1}', inputs.version, inputs.suite) }}
+  ' |'${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64')  && ' x86'}}
+  ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') && ' ARM'}}
   ${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
   ${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
@@ -123,7 +125,7 @@ on:
 
 jobs:
   x86:
-    if: ${{ !contains(inputs.package, 'arm64') || !contains(inputs.package, 'aarch64') }}
+    if: ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64') }}
     uses: ./.github/workflows/reusable-workflow-x86.yml
     secrets: inherit
     with:
