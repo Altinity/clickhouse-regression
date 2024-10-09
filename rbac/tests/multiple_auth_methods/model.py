@@ -223,10 +223,10 @@ class Model:
 
         if auth_methods:
             for auth_method in auth_methods:
-                if auth_method.method == "no_password":
-                    return
-                if auth_method.password == current_.connection_options.get(
-                    "password", ""
+                if (
+                    auth_method.password
+                    == current_.connection_options.get("password", None)
+                    or auth_method.method == "no_password"
                 ):
                     if auth_method.valid_until:
                         diff = current().context.node.query(
