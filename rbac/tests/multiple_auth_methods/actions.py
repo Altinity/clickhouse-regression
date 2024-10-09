@@ -362,15 +362,22 @@ def successful_login(self, user: CreateUser, node=None):
         + getattr(user, "add_identification", {}).get(node, [])
     ):
         for username in list(user.usernames):
-            password = auth_method.password or ""
+            password = auth_method.password or "with no password"
             with By(
                 f"trying to login with {username.name} and {password} for {auth_method.method}"
             ):
-                node_query(
-                    query=Select().set_query("SELECT current_user()"),
-                    settings=[("user", username.name), ("password", password)],
-                    node=node,
-                )
+                if auth_method.password:
+                    node_query(
+                        query=Select().set_query("SELECT current_user()"),
+                        settings=[("user", username.name), ("password", auth_method.password)],
+                        node=node,
+                    )
+                else:
+                    node_query(
+                        query=Select().set_query("SELECT current_user()"),
+                        settings=[("user", username.name)],
+                        node=node,
+                    )
 
 
 @TestStep(Then)
