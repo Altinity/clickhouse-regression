@@ -1546,6 +1546,11 @@ CREATE USER user1 IDENTIFIED WITH sha256_password BY '2' VALID UNTIL 'invalid-da
 ```
 The above query should throw an error.
 
+##### RQ.SRS-006.RBAC.User.ValidUntil.ShowCreateUser
+version: 1.0  
+
+[ClickHouse] SHALL reflect the expiration date in the `SHOW CREATE USER` statement.
+
 
 ### Role
 
