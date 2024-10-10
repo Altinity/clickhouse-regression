@@ -11,7 +11,7 @@ on:
         description: "📦 Package either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
         required: true
         type: string
-        default: docker://altinity/clickhouse-server:23.8.5.17.altinitytest
+        default: docker://altinity/clickhouse-server:24.3.5.48.altinitytest
       enable_thread_fuzzer:
         description: "Enable thread fuzzer"
         type: boolean
@@ -20,9 +20,9 @@ on:
         description: "🚩 Expected version. Example: 23.3.1.64"
         type: string
         required: true
-        default: 23.8.5.17.altinitytest
+        default: 24.3.5.48.altinitytest
       keeper_or_zookeeper:
-        description: "Keeper or ZooKeeper"
+        description: "⚙️ Keeper or ZooKeeper"
         type: choice
         options:
           - keeper
