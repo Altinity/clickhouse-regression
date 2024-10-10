@@ -15,6 +15,7 @@ import rbac.tests.multiple_auth_methods.model as models
 
 random.seed(42)
 
+
 @TestStep(Given)
 def create_user_auth_methods_combinations(self):
     """Combinations of CREATE USER with different authentication methods and different expiration dates."""
@@ -27,90 +28,126 @@ def create_user_auth_methods_combinations(self):
         )
 
     create_auth_methods = [
+        actions.partial(CreateUser.set_with_no_password, valid_until=future_date),
         actions.partial(
             CreateUser.set_by_password, password="foo1", valid_until=future_date
         ),
         actions.partial(
             CreateUser.set_by_password, password="foo2", valid_until=expired_date
         ),
-        actions.partial(
-            CreateUser.set_with_plaintext_password,
-            password="foo3",
-            valid_until=future_date,
-        ),
+        actions.partial(CreateUser.set_by_password, password="foo3"),
         actions.partial(
             CreateUser.set_with_plaintext_password,
             password="foo4",
-            valid_until=expired_date,
+            valid_until=future_date,
         ),
         actions.partial(
-            CreateUser.set_with_sha256_password,
+            CreateUser.set_with_plaintext_password,
             password="foo5",
+            valid_until=expired_date,
+        ),
+        actions.partial(
+            CreateUser.set_with_plaintext_password,
+            password="foo6",
+        ),
+        actions.partial(
+            CreateUser.set_with_sha256_password,
+            password="foo7",
             valid_until=future_date,
         ),
         actions.partial(
             CreateUser.set_with_sha256_password,
-            password="foo6",
-            valid_until=expired_date,
-        ),
-        # actions.partial(
-        #     CreateUser.set_with_sha256_hash, password="foo7", valid_until=future_date
-        # ),
-        # actions.partial(
-        #     CreateUser.set_with_sha256_hash, password="foo8", valid_until=expired_date
-        # ),
-        # actions.partial(
-        #     CreateUser.set_with_sha256_hash_with_salt,
-        #     password="foo9",
-        #     salt="salt1",
-        #     valid_until=future_date,
-        # ),
-        # actions.partial(
-        #     CreateUser.set_with_sha256_hash_with_salt,
-        #     password="foo10",
-        #     salt="salt1",
-        #     valid_until=expired_date,
-        # ),
-        actions.partial(
-            CreateUser.set_with_double_sha1_password,
-            password="foo11",
-            valid_until=future_date,
-        ),
-        actions.partial(
-            CreateUser.set_with_double_sha1_password,
-            password="foo12",
+            password="foo8",
             valid_until=expired_date,
         ),
         actions.partial(
-            CreateUser.set_with_double_sha1_hash,
+            CreateUser.set_with_sha256_password,
+            password="foo9",
+        ),
+        actions.partial(
+            CreateUser.set_with_sha256_hash, password="foo10", valid_until=future_date
+        ),
+        actions.partial(
+            CreateUser.set_with_sha256_hash, password="foo11", valid_until=expired_date
+        ),
+        actions.partial(CreateUser.set_with_sha256_hash, password="foo12"),
+        actions.partial(
+            CreateUser.set_with_sha256_hash_with_salt,
             password="foo13",
+            salt="salt1",
+            valid_until=future_date,
+        ),
+        actions.partial(
+            CreateUser.set_with_sha256_hash_with_salt,
+            password="foo14",
+            salt="salt1",
+            valid_until=expired_date,
+        ),
+        actions.partial(
+            CreateUser.set_with_sha256_hash_with_salt,
+            password="foo15",
+            salt="salt1",
+        ),
+        actions.partial(
+            CreateUser.set_with_double_sha1_password,
+            password="foo16",
+            valid_until=future_date,
+        ),
+        actions.partial(
+            CreateUser.set_with_double_sha1_password,
+            password="foo17",
+            valid_until=expired_date,
+        ),
+        actions.partial(
+            CreateUser.set_with_double_sha1_password,
+            password="foo18",
+        ),
+        actions.partial(
+            CreateUser.set_with_double_sha1_hash,
+            password="foo19",
             valid_until=future_date,
         ),
         actions.partial(
             CreateUser.set_with_double_sha1_hash,
-            password="foo14",
+            password="foo20",
             valid_until=expired_date,
         ),
+        actions.partial(
+            CreateUser.set_with_double_sha1_hash,
+            password="foo21",
+        ),
+        actions.partial(
+            CreateUser.set_with_bcrypt_password,
+            password="foo22",
+            valid_until=future_date,
+        ),
+        actions.partial(
+            CreateUser.set_with_bcrypt_password,
+            password="foo23",
+            valid_until=expired_date,
+        ),
+        actions.partial(
+            CreateUser.set_with_bcrypt_password,
+            password="foo24",
+        ),
         # actions.partial(
-        #     CreateUser.set_with_bcrypt_password,
-        #     password="foo15",
-        #     valid_until=future_date,
+        #     CreateUser.set_with_bcrypt_hash, password="foo25", valid_until=future_date
         # ),
         # actions.partial(
-        #     CreateUser.set_with_bcrypt_password,
-        #     password="foo16",
-        #     valid_until=expired_date,
+        #     CreateUser.set_with_bcrypt_hash, password="foo26", valid_until=expired_date
         # ),
-        # actions.partial(
-        #     CreateUser.set_with_bcrypt_hash, password="foo17", valid_until=future_date
-        # ),
-        # actions.partial(
-        #     CreateUser.set_with_bcrypt_hash, password="foo18", valid_until=expired_date
-        # ),
+        # actions.partial(CreateUser.set_with_bcrypt_hash, password="foo27"),
     ]
 
     auth_methods_combinations = actions.create_user_auth_combinations(
         max_length=2, auth_methods=create_auth_methods
+    )
+
+    auth_methods_combinations.append(
+        [actions.partial(CreateUser.set_with_no_password, valid_until=future_date)]
+    )
+    auth_methods_combinations.append(
+        [actions.partial(CreateUser.set_with_no_password, valid_until=expired_date)]
     )
     auth_methods_combinations.append([CreateUser.set_with_no_password])
 
@@ -129,86 +166,128 @@ def alter_user_auth_methods_combinations(self):
         )
 
     alter_auth_methods = [
+        actions.partial(AlterUser.set_with_no_password, valid_until=future_date),
         actions.partial(
-            AlterUser.set_by_password, password="foo21", valid_until=future_date
+            AlterUser.set_by_password, password="foo101", valid_until=future_date
         ),
         actions.partial(
-            AlterUser.set_by_password, password="foo22", valid_until=expired_date
+            AlterUser.set_by_password, password="foo102", valid_until=expired_date
         ),
+        actions.partial(AlterUser.set_by_password, password="foo103"),
         actions.partial(
             AlterUser.set_with_plaintext_password,
-            password="foo23",
+            password="foo104",
             valid_until=future_date,
         ),
         actions.partial(
             AlterUser.set_with_plaintext_password,
-            password="foo24",
+            password="foo105",
+            valid_until=expired_date,
+        ),
+        actions.partial(
+            AlterUser.set_with_plaintext_password,
+            password="foo106",
+        ),
+        actions.partial(
+            AlterUser.set_with_sha256_password,
+            password="foo107",
+            valid_until=future_date,
+        ),
+        actions.partial(
+            AlterUser.set_with_sha256_password,
+            password="foo108",
             valid_until=expired_date,
         ),
         actions.partial(
             AlterUser.set_with_sha256_password,
-            password="foo25",
+            password="foo109",
+        ),
+        actions.partial(
+            AlterUser.set_with_sha256_hash, password="foo110", valid_until=future_date
+        ),
+        actions.partial(
+            AlterUser.set_with_sha256_hash, password="foo111", valid_until=expired_date
+        ),
+        actions.partial(AlterUser.set_with_sha256_hash, password="foo112"),
+        actions.partial(
+            AlterUser.set_with_sha256_hash_with_salt,
+            password="foo113",
+            salt="salt1",
             valid_until=future_date,
         ),
         actions.partial(
-            AlterUser.set_with_sha256_password,
-            password="foo26",
+            AlterUser.set_with_sha256_hash_with_salt,
+            password="foo114",
+            salt="salt1",
             valid_until=expired_date,
         ),
-        # actions.partial(
-        #     AlterUser.set_with_sha256_hash, password="foo27", valid_until=future_date
-        # ),
-        # actions.partial(
-        #     AlterUser.set_with_sha256_hash, password="foo28", valid_until=expired_date
-        # ),
-        # actions.partial(
-        #     AlterUser.set_with_sha256_hash_with_salt,
-        #     password="foo29",
-        #     salt="salt1",
-        #     valid_until=future_date,
-        # ),
-        # actions.partial(
-        #     AlterUser.set_with_sha256_hash_with_salt,
-        #     password="foo210",
-        #     salt="salt1",
-        #     valid_until=expired_date,
-        # ),
+        actions.partial(
+            AlterUser.set_with_sha256_hash_with_salt,
+            password="foo115",
+            salt="salt1",
+        ),
         actions.partial(
             AlterUser.set_with_double_sha1_password,
-            password="foo211",
+            password="foo116",
             valid_until=future_date,
         ),
         actions.partial(
             AlterUser.set_with_double_sha1_password,
-            password="foo212",
+            password="foo117",
+            valid_until=expired_date,
+        ),
+        actions.partial(
+            AlterUser.set_with_double_sha1_password,
+            password="foo118",
+        ),
+        actions.partial(
+            AlterUser.set_with_double_sha1_hash,
+            password="foo129",
+            valid_until=future_date,
+        ),
+        actions.partial(
+            AlterUser.set_with_double_sha1_hash,
+            password="foo120",
             valid_until=expired_date,
         ),
         actions.partial(
             AlterUser.set_with_double_sha1_hash,
-            password="foo213",
+            password="foo121",
+        ),
+        actions.partial(
+            AlterUser.set_with_bcrypt_password,
+            password="foo122",
             valid_until=future_date,
         ),
         actions.partial(
-            AlterUser.set_with_double_sha1_hash,
-            password="foo214",
+            AlterUser.set_with_bcrypt_password,
+            password="foo123",
             valid_until=expired_date,
         ),
+        actions.partial(
+            AlterUser.set_with_bcrypt_password,
+            password="foo124",
+        ),
         # actions.partial(
-        #     AlterUser.set_with_bcrypt_password,
-        #     password="foo215",
-        #     valid_until=future_date,
+        #     AlterUser.set_with_bcrypt_hash, password="foo125", valid_until=future_date
         # ),
         # actions.partial(
-        #     AlterUser.set_with_bcrypt_password,
-        #     password="foo216",
-        #     valid_until=expired_date,
+        #     AlterUser.set_with_bcrypt_hash, password="foo126", valid_until=expired_date
         # ),
-        # actions.partial(AlterUser.set_with_bcrypt_hash, password="foo217", valid_until=future_date),
-        # actions.partial(AlterUser.set_with_bcrypt_hash, password="foo218", valid_until=expired_date),
+        # actions.partial(
+        #     AlterUser.set_with_bcrypt_hash, password="foo127"
+        # ),
     ]
 
     auth_methods_combinations = actions.alter_user_auth_combinations(
         max_length=2, auth_methods=alter_auth_methods
+    )
+
+    auth_methods_combinations.append(
+        [actions.partial(AlterUser.set_with_no_password, valid_until=future_date)]
+    )
+    auth_methods_combinations.append(
+        [actions.partial(AlterUser.set_with_no_password, valid_until=expired_date)]
     )
     auth_methods_combinations.append([AlterUser.set_with_no_password])
 
@@ -316,11 +395,12 @@ def different_combinations(self, number_of_actions=3):
     with And("a way to drop user"):
         ways += ways_to_drop()
 
+    ways = random.sample(ways, 200)  # 200 out of 986
     combinations = list(product(ways, repeat=number_of_actions))
     if not self.context.stress:
-        combinations = random.sample(combinations, 10000)
+        combinations = random.sample(combinations, 5000)
 
-    with Pool(10) as executor:
+    with Pool(5) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor
