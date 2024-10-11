@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: "📦 Package either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:24.3.5.48.altinitytest'"
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:24.3.5.48.altinitytest'"
         required: true
         type: string
         default: docker://altinity/clickhouse-server:24.3.5.48.altinitytest
