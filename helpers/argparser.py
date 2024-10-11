@@ -33,7 +33,7 @@ def argparser(parser):
     parser.add_argument(
         "--as-binary",
         action="store_true",
-        help="run as binary",
+        help="Enable old behavior of copying binaries out of packages, instead of installing them",
     )
 
     parser.add_argument(
