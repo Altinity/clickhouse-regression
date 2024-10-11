@@ -202,6 +202,16 @@ xfails = {
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
     ":/combinatoric table/:": [(Fail, "Unstable test")],
+    ":/invalid table function/invalid region": [
+        (Error, "https://github.com/ClickHouse/ClickHouse/issues/59084")
+    ],
+    ":/invalid table function/invalid path": [
+        (
+            Error,
+            "https://github.com/ClickHouse/ClickHouse/issues/59084",
+            check_clickhouse_version(">=24.9"),
+        )
+    ],
 }
 
 ffails = {

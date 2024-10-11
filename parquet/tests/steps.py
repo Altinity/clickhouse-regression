@@ -1,5 +1,7 @@
 from testflows.core import *
 
+from alter.table.attach_partition.conditions import order_by
+
 
 @TestStep(Given)
 def select_from_parquet(
@@ -11,6 +13,7 @@ def select_from_parquet(
     condition=False,
     settings=None,
     format=None,
+    order_by=False,
 ):
     """Select from a parquet file."""
     if node is None:
@@ -24,6 +27,9 @@ def select_from_parquet(
 
         if condition:
             r += f" {condition}"
+
+        if order_by:
+            r += f" ORDER BY {order_by}"
 
         if format is None:
             format = "TabSeparated"
@@ -50,3 +56,4 @@ def count_rows_in_parquet(self, file_name, node=None):
         )
 
     return int(output.output.strip())
+

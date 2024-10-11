@@ -69,13 +69,26 @@ def check_parquet_with_bloom(
         "I read from the parquet file",
         description=f"Bloom Filter: {bloom_filter}, Filter Pushdown: {filter_pushdown}",
     ):
-        data = select_from_parquet(
-            file_name=file_name,
-            statement=statement,
-            condition=condition,
-            format="Json",
-            settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-        )
+        with By("selecting and saving the data from a parquet file without bloom filter enabled"):
+            data_without_bloom = select_from_parquet(
+                file_name=file_name,
+                statement=statement,
+                condition=condition,
+                format="Json",
+                settings=f"input_format_parquet_use_native_reader={native_reader}",
+                order_by="tuple(*)",
+            )
+
+        with And(f"selecting and saving the data from a parquet file with bloom filter {bloom_filter} and filter pushdown {filter_pushdown}"):
+            data = select_from_parquet(
+                file_name=file_name,
+                statement=statement,
+                condition=condition,
+                format="Json",
+                settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
+                order_by="tuple(*)",
+
+            )
 
     with Then("I check that the number of rows read is correct"):
         read_rows = rows_read(data.output.strip())
@@ -89,6 +102,9 @@ def check_parquet_with_bloom(
                 "Checking that the number of rows read is equal to the total number of rows of a file"
             ):
                 assert read_rows == initial_rows, error()
+
+    with And("I check that the data is the same when reading with bloom filter and without"):
+        assert data.output.strip() == data_without_bloom.output.strip(), error()
 
 
 @TestSketch(Scenario)
