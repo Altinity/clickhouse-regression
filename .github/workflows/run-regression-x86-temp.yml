@@ -11,7 +11,7 @@ on:
         description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
         type: string
       binary:
-        description: "ClickHouse binary path. Example: '/usr/bin/clickhouse'"
+        description: "Same as Package, and exclusive with, Package. Except the binary will be extracted from the package instead of the package being installed."
         type: string
       enable_thread_fuzzer:
         description: "Enable thread fuzzer"
