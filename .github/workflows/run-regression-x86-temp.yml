@@ -1,4 +1,4 @@
-name: 🔬 Run Tests CI/CD on x86
+name: 🔬 Run Tests CI/CD on x86 (test)
 run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | x86', inputs.version)) || format('{0} | {1} | x86', inputs.version, inputs.suite) }}
   ${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
   ${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
@@ -9,9 +9,10 @@ on:
     inputs:
       package:
         description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
-        required: true
         type: string
-        default: docker://altinity/clickhouse-server:24.3.5.48.altinitytest
+      binary:
+        description: "Same as Package, and exclusive with, Package. Except the binary will be extracted from the package instead of the package being installed."
+        type: string
       enable_thread_fuzzer:
         description: "Enable thread fuzzer"
         type: boolean
@@ -139,12 +140,13 @@ env:
   args: --test-to-end
     --no-colors
     --local
-    --clickhouse ${{ inputs.package }}
+    ${{ inputs.package && format('--clickhouse-package-path package-{}', inputs.package) || '' }}
+    ${{ inputs.binary && format('--clickhouse-binary-path binary-{}', inputs.binary) || '' }}
     --clickhouse-version ${{ inputs.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
+    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package || inputs.binary }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log ${{ inputs.extra_args }}
   artifact_paths: |
     ./report.html

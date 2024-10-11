@@ -16,6 +16,7 @@ def insert_to_s3_function_invalid(
     secret_access_key=None,
     message=None,
     exitcode=None,
+    timeout=60,
 ):
     """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
 
@@ -30,7 +31,7 @@ def insert_to_s3_function_invalid(
 
     query += f") SELECT * FROM {table_name}"
 
-    node.query(query, message=message, exitcode=exitcode)
+    node.query(query, message=message, exitcode=exitcode, timeout=timeout)
 
 
 @TestScenario
@@ -66,25 +67,75 @@ def invalid_path(self):
     """Check that ClickHouse returns an error when the table function path
     parameter is invalid.
     """
-    name = "table_" + getuid()
-    node = current().context.node
     invalid_path = "https://invalid/path"
 
-    with Given("I create a table"):
-        simple_table(node=node, name=name, policy="default")
+    with Then(
+        """When I export the data to S3 using the table function with
+                invalid path parameter it should fail"""
+    ):
+        if check_clickhouse_version("<24.9")(self):
+            message = "DB::Exception: Host is empty in S3 URI"
+            exitcode = 36
+        else:
+            message = "DB::NetException: Not found address of host"
+            exitcode = 243
 
-    with And(f"I store simple data in the table"):
-        node.query(f"INSERT INTO {name} VALUES (427)")
+        insert_to_s3_function_invalid(
+            table_name="numbers(10)",
+            path=invalid_path,
+            message=message,
+            exitcode=exitcode,
+            timeout=30,
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_015_S3_TableFunction_Path("1.0"))
+def invalid_bucket(self):
+    """Check that ClickHouse returns an error when the table function path
+    parameter has invalid bucket.
+    """
+    invalid_path = self.context.uri.replace(self.context.bucket_name, "invalid-bucket")
+
+    with Then(
+        """When I export the data to S3 using the table function with
+                invalid path parameter it should fail"""
+    ):
+        if self.context.storage == "aws_s3":
+            message = "DB::Exception: Message: Access Denied"
+        else:
+            message = "DB::Exception: Message: The specified bucket does not exist"
+
+        insert_to_s3_function_invalid(
+            table_name="numbers(10)",
+            path=invalid_path,
+            message=message,
+            exitcode=243,
+            timeout=30,
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_015_S3_TableFunction_Path("1.0"))
+def invalid_region(self):
+    """Check that ClickHouse returns an error when the table function path
+    parameter has invalid region.
+    """
+    if not hasattr(self.context, "region"):
+        skip("Region is not set")
+
+    invalid_path = self.context.uri.replace(self.context.region, "invalid-region")
 
     with Then(
         """When I export the data to S3 using the table function with
                 invalid path parameter it should fail"""
     ):
         insert_to_s3_function_invalid(
-            table_name=name,
+            table_name="numbers(10)",
             path=invalid_path,
-            message="DB::Exception: Bucket or key name are invalid in S3 URI",
-            exitcode=36,
+            message="DB::NetException: Not found address of host",
+            exitcode=243,
+            timeout=30,
         )
 
 

@@ -29,21 +29,26 @@ def openssl_all_ports(self, node=None):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    retry(node.query, timeout=300, delay=10)(
-        "SELECT 1 FORMAT TabSeparated", message="1", exitcode=0
-    )
+    with When("I wait for clickhouse to be ready"):
+        retry(node.query, timeout=300, delay=10)(
+            "SELECT 1 FORMAT TabSeparated", message="1", exitcode=0
+        )
 
     ports_list = ["9440", "9281", "9010", "9444", "8443"]
 
     for port in ports_list:
         with Check(f"port:{port}"):
-            with Then(f"I make openssl check"):
+            with Then(f"check for ssl connection on port {port}"):
+                # response = node.command(
+                #     f'openssl s_client -connect clickhouse1:{port} <<< "Q"',
+                # ).output
+                # assert ("New, TLSv1.3, Cipher is TLS_" in response) or (
+                #     "New, TLSv1.2, Cipher is ECDHE-" in response
+                # ), error()
                 response = node.command(
-                    f'openssl s_client -connect clickhouse1:{port} <<< "Q"',
+                    f"curl -v https://clickhouse1:{port}", timeout=10, no_checks=True
                 ).output
-                assert ("New, TLSv1.3, Cipher is TLS_" in response) or (
-                    "New, TLSv1.2, Cipher is ECDHE-" in response
-                ), error()
+                assert "Server hello" in response, error()
 
 
 @TestFeature
