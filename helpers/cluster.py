@@ -1285,7 +1285,7 @@ class PackageDownloader:
 
         return path, use_ripped_binary_by_default
 
-    def __init__(self, source, program_name="clickhouse"):
+    def __init__(self, source, program_name="clickhouse", binary_only=False):
         self.source = source
         self.binary_path = None
         self.docker_image = None
@@ -1294,6 +1294,8 @@ class PackageDownloader:
         self.package_version = None
 
         source, use_binary_instead = self.extended_prefix_handler(source)
+        if use_binary_instead:
+            binary_only = True
 
         if source.startswith("docker://"):
             self.get_binary_from_docker(source)
@@ -1324,7 +1326,7 @@ class PackageDownloader:
                         f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
                     ).output.strip(".")
 
-        if use_binary_instead:
+        if binary_only:
             # Hide the package path / image to force using binary
             # remove this block when removing extended_prefix_handler
             assert (
@@ -1374,6 +1376,7 @@ class Cluster(object):
         self,
         local=False,
         clickhouse_path=None,
+        as_binary=False,
         base_os=None,
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
@@ -1475,7 +1478,9 @@ class Cluster(object):
         if self.clickhouse_path:
             if self.use_specific_version:
                 alternate_clickhouse_package = PackageDownloader(
-                    self.use_specific_version, program_name="clickhouse"
+                    self.use_specific_version,
+                    program_name="clickhouse",
+                    binary_only=True,
                 )
 
                 self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = os.path.abspath(
@@ -1483,7 +1488,9 @@ class Cluster(object):
                 )
 
             clickhouse_package = PackageDownloader(
-                self.clickhouse_path, program_name="clickhouse"
+                self.clickhouse_path,
+                program_name="clickhouse",
+                binary_only=as_binary,
             )
             if (
                 getsattr(current().context, "clickhouse_version", None) is None
@@ -1530,6 +1537,7 @@ class Cluster(object):
                     if "keeper" in self.keeper_path
                     else "clickhouse"
                 ),
+                binary_only=as_binary,
             )
             if (
                 getsattr(current().context, "keeper_version", None) is None
@@ -2165,6 +2173,7 @@ def create_cluster(
     self,
     local=False,
     clickhouse_path=None,
+    as_binary=False,
     base_os=None,
     clickhouse_odbc_bridge_binary_path=None,
     collect_service_logs=False,
@@ -2186,6 +2195,7 @@ def create_cluster(
     with Cluster(
         local=local,
         clickhouse_path=clickhouse_path,
+        as_binary=as_binary,
         base_os=base_os,
         clickhouse_odbc_bridge_binary_path=clickhouse_odbc_bridge_binary_path,
         collect_service_logs=collect_service_logs,
