@@ -327,8 +327,8 @@ ffails = {
     ),
     "/rbac/privileges/valid until": (
         Skip,
-        "valid until was introduced in 24.10",
-        check_clickhouse_version("<24.11"),
+        "valid until was introduced in 23.9",
+        check_clickhouse_version("<23.9"),
     ),
     "/rbac/multiple authentication methods": (
         Skip,
@@ -343,7 +343,7 @@ ffails = {
     "/rbac/multiple authentication methods/valid until": (
         Skip,
         "multiple authentication methods were introduced in 24.10",
-        check_clickhouse_version("<24.11"),
+        check_clickhouse_version("<24.10"),
     ),
 }
 
