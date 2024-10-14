@@ -31,6 +31,12 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--as-binary",
+        action="store_true",
+        help="Enable old behavior of copying binaries out of packages, instead of installing them",
+    )
+
+    parser.add_argument(
         "--base-os",
         type=str,
         dest="base_os",
@@ -138,6 +144,7 @@ def CaptureClusterArgs(func):
         self,
         local,
         clickhouse_path,
+        as_binary,
         base_os,
         keeper_path,
         zookeeper_version,
@@ -150,6 +157,7 @@ def CaptureClusterArgs(func):
         cluster_args = {
             "local": local,
             "clickhouse_path": clickhouse_path,
+            "as_binary": as_binary,
             "base_os": base_os,
             "keeper_path": keeper_path,
             "zookeeper_version": zookeeper_version,

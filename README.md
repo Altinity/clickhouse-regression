@@ -273,12 +273,7 @@ You can run tests locally by passing `--local` and `--clickhouse` to the top lev
 
 > [!NOTE]
 > If you need to restore the old behavior of copying binaries out of packages,
-> instead of installing them, prefix the prefix with `binary-`.
-> Examples: `binary-docker://...`, `binary-https://...deb`, `binary-file://~/...tgz`
->
-> It is also possible to force the new behavior with `package-`, but this is redundant.
->
-> This is a preemptive and temporary workaround which will likely be removed in the future.
+> instead of installing them, use the `--as-binary` flag.
 
 Using the default ClickHouse installation and its server binary at `/usr/bin/clickhouse`, you can run 
 regressions locally using the following command.
