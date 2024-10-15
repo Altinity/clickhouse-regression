@@ -130,5 +130,5 @@ def feature(self):
     """Check that different combinations of sequences of creating, altering and
     dropping users with multiple authentication methods are working correctly
     when executed in parallel."""
-    self.context.model = models.Model2()
+    self.context.model = models.DummyModel()
     Scenario(run=action_one_in_parallel)
