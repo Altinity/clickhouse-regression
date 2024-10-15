@@ -296,7 +296,7 @@ def dummy_expect_ok(self, r):
     assert True
 
 
-class Model2:
+class DummyModel:
     """Multiple user authentication methods model."""
 
     def expect_ok(self, behavior):
