@@ -103,6 +103,10 @@ def invalid_bucket(self):
     ):
         if self.context.storage == "aws_s3":
             message = "DB::Exception: Message: Access Denied"
+        elif self.context.storage == "minio" and check_clickhouse_version("<22.9")(
+            self
+        ):
+            message = "DB::Exception: The specified bucket does not exist"
         else:
             message = "DB::Exception: Message: The specified bucket does not exist"
 
