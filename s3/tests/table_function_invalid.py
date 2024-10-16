@@ -74,7 +74,7 @@ def invalid_path(self):
                 invalid path parameter it should fail"""
     ):
         if check_clickhouse_version("<24.9")(self):
-            message = "DB::Exception: Host is empty in S3 URI"
+            message = "DB::Exception: Bucket or key name are invalid in S3 URI"
             exitcode = 36
         else:
             message = "DB::NetException: Not found address of host"
