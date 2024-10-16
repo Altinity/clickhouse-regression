@@ -183,7 +183,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                 start_year = 1987
                 end_year = 2015
             else:
-                start_year = 2003
+                start_year = 2005
                 end_year = 2012
 
             for retry in retries(timeout=60, delay=0.1):
