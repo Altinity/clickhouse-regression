@@ -31,38 +31,37 @@ jobs:
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
       artifact_name: "clickhouse-latest-x86-with-analyzer-zookeeper"
-      suite: "example"
     secrets: inherit
-#
-#  clickhouse-latest-arm-with-analyzer-zookeeper:
-#    needs: get_clickhouse_version
-#    uses: ./.github/workflows/reusable-workflow-arm.yml
-#    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
-#    with:
-#      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-#      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-#      extra_args: '--with-analyzer'
-#      artifact_name: "clickhouse-latest-arm-with-analyzer-zookeeper"
-#    secrets: inherit
-#
-#  clickhouse-latest-x86-with-analyzer-keeper:
-#    needs: get_clickhouse_version
-#    uses: ./.github/workflows/reusable-workflow-x86.yml
-#    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
-#    with:
-#      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-#      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-#      extra_args: '--with-analyzer --use-keeper'
-#      artifact_name: "clickhouse-latest-x86-with-analyzer-keeper"
-#    secrets: inherit
-#
-#  clickhouse-latest-arm-with-analyzer-keeper:
-#    needs: get_clickhouse_version
-#    uses: ./.github/workflows/reusable-workflow-arm.yml
-#    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
-#    with:
-#      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-#      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-#      extra_args: '--with-analyzer --use-keeper'
-#      artifact_name: "clickhouse-latest-arm-with-analyzer-keeper"
-#    secrets: inherit
+
+  clickhouse-latest-arm-with-analyzer-zookeeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-arm.yml
+    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer'
+      artifact_name: "clickhouse-latest-arm-with-analyzer-zookeeper"
+    secrets: inherit
+
+  clickhouse-latest-x86-with-analyzer-keeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-x86.yml
+    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: "clickhouse-latest-x86-with-analyzer-keeper"
+    secrets: inherit
+
+  clickhouse-latest-arm-with-analyzer-keeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-arm.yml
+    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer --use-keeper'
+      artifact_name: "clickhouse-latest-arm-with-analyzer-keeper"
+    secrets: inherit
