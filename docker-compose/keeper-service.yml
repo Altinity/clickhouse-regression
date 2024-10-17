@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: keeper.Dockerfile
+    privileged: true 
     expose:
       - "2181"
     init: true
