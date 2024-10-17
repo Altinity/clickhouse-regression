@@ -70,7 +70,7 @@ env:
     --no-colors
     --local
     --clickhouse ${{ inputs.package }}
-    ${{ inputs.version && '--clickhouse-version ' + inputs.version || '' }}
+    ${{ inputs.version != '' && format('--clickhouse-version {0}', inputs.version) || '' }}
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
