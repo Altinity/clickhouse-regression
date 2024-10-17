@@ -6,6 +6,7 @@ services:
       file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
     init: true
+    privileged: true 
     expose:
       - "9000"
       - "9009"
