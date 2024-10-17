@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     init: true
+    privileged: true 
     expose:
       - "9000"
       - "9009"
