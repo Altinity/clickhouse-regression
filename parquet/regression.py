@@ -368,7 +368,7 @@ def regression(
     with_analyzer=False,
 ):
     """Parquet regression."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"), "parquetify": ("parquetify",)}
 
     self.context.clickhouse_version = clickhouse_version
 

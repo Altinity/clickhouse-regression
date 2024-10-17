@@ -1,9 +1,6 @@
-FROM altinityinfra/clickhouse-regression-multiarch:1.0
-
-RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+FROM ubuntu:24.04
 
 RUN apt-get update
-RUN apt-get -y install postgresql
-
-RUN pip install pyarrow
+RUN apt install -y wget
+RUN wget https://github.com/Altinity/parquet-regression/releases/download/0.0.2/parquetify_0.0.2_amd64.deb
+RUN apt install -y ./parquetify_*_amd64.deb
