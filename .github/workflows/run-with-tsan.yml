@@ -1,0 +1,62 @@
+name: Scheduled Altinity 24.3
+run-name: Scheduled Altinity 24.3
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Specify ClickHouse package URL or binary path (e.g., 'docker://' or 'https://')."
+        required: true
+        type: string
+        default: "docker://altinity/clickhouse-server:24.3.5.47.altinitystable"
+      version:
+        description: "ClickHouse version. Example: '24.3.5.47'"
+        type: string
+        required: true
+        default: "24.3.5.47"
+      extra_args:
+        description: "Extra test program arguments."
+        type: string
+        default: "--with-analyzer"
+      custom_run_name:
+        description: "Custom run name (optional)"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  altinitystable-24-3-x86-with-analyzer-zookeeper:
+    if: github.ref == 'refs/heads/ubuntu-22.04'  
+    uses: ./.github/workflows/reusable-workflow-x86.yml
+    with:
+      package: ${{ github.event.inputs.package }}
+      version: ${{ github.event.inputs.version }}
+      extra_args: ${{ github.event.inputs.extra_args }}
+      artifact_name: "altinitystable-24-3-x86-with-analyzer-zookeeper"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
+
+  altinitystable-24-3-arm-with-analyzer-zookeeper:
+    if: github.ref == 'refs/heads/ubuntu-22.04' 
+    uses: ./.github/workflows/reusable-workflow-arm.yml
+    with:
+      package: ${{ github.event.inputs.package }}
+      version: ${{ github.event.inputs.version }}
+      extra_args: ${{ github.event.inputs.extra_args }}
+      artifact_name: "altinitystable-24-3-arm-with-analyzer-zookeeper"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+      AWS_REPORT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
