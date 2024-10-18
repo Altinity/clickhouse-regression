@@ -24,6 +24,10 @@ on:
         type: string
         default: ""
 
+defaults:
+  run:
+    working-directory: ubuntu-22.04
+    
 jobs:
   tsan-x86-with-analyzer-zookeeper:
     if: github.ref == 'refs/heads/ubuntu-22.04'  
