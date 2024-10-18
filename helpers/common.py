@@ -51,6 +51,23 @@ def check_analyzer():
     return check
 
 
+def check_with_tsan(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    test.context.tsan = getsattr(test.context, "tsan", {})
+
+    if test.context.tsan.get(test.name, 1):
+        test.context.tsan[test.name] = 0
+        query = (
+            "SELECT * FROM system.build_options "
+            "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
+        )
+        output = test.context.node.query(query).output
+
+        return "fsanitize=thread" in output
+
+    return False
+
+
 def check_clickhouse_version(version):
     """Compare ClickHouse version."""
 
@@ -860,7 +877,7 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None):
 def get_settings_value(
     setting_name, node=None, table="system.settings", column="value"
 ):
-    """Return value of the setting from some table."""
+    """Return value of the setting from some (system)table."""
     if node is None:
         node = current().context.node
 
@@ -874,6 +891,22 @@ def is_with_analyzer(node):
     return (
         get_settings_value(node=node, setting_name="allow_experimental_analyzer") == "1"
     )
+
+
+def is_with_tsan(node=None):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+
+    query = (
+        "SELECT * FROM system.build_options "
+        "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
+    )
+
+    if node is None:
+        node = current().context.node
+
+    output = node.query(query).output
+
+    return "fsanitize=thread" in output
 
 
 @TestStep(Given)
