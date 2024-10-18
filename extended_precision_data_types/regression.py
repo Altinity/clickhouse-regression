@@ -8,11 +8,26 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import experimental_analyzer
+from helpers.common import (
+    experimental_analyzer,
+    check_with_tsan,
+)
 
 from extended_precision_data_types.requirements import *
 
-xfails = {}
+issue_70518 = "https://github.com/ClickHouse/ClickHouse/issues/70518"
+
+xfails = {
+    "/extended precision data types/tests/mathematical/math int inline/lgamma（） - Int128/*": [
+        (Fail, issue_70518, check_with_tsan)
+    ],
+    "/extended precision data types/tests/mathematical/math int inline/lgamma（） - Int256/*": [
+        (Fail, issue_70518, check_with_tsan)
+    ],
+    "/extended precision data types/tests/mathematical/math dec inline/lgamma（） - Decimal256/*": [
+        (Fail, issue_70518, check_with_tsan)
+    ],
+}
 
 xflags = {}
 
