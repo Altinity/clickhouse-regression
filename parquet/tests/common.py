@@ -30,6 +30,7 @@ class ParquetJsonGenerator:
         }
 
     def set_file_name(self, file_name):
+        """Set name that will be used for generated Parquet file."""
         self.parquet_data["fileName"] = file_name
 
     def set_options(
@@ -41,6 +42,7 @@ class ParquetJsonGenerator:
         encodings=None,
         bloom_filter="none",
     ):
+        """Set options for the Parquet file."""
         options = {
             "writerVersion": writer_version,
             "compression": compression,
@@ -65,6 +67,7 @@ class ParquetJsonGenerator:
         value_type=None,
         data=None,
     ):
+        """Add a column to the Parquet file with the defined schema."""
         column = {
             "name": name,
             "schemaType": schema_type,
@@ -93,6 +96,7 @@ class ParquetJsonGenerator:
         self.parquet_data["schema"].append(column)
 
     def generate_json(self, output_file_path):
+        """Generate a JSON file with the defined schema, options and file name."""
         with open(output_file_path, "w") as json_file:
             json.dump(self.parquet_data, json_file, indent=2)
 
