@@ -68,6 +68,37 @@ def check_with_tsan(test):
     return False
 
 
+def check_tsan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "tsan" in binary_path
+
+
+def check_asan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "asan" in binary_path
+
+
+def check_ubsan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "ubsan" in binary_path
+
+
+def check_msan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "msan" in binary_path
+
+
+def check_any_sanitizer_in_binary_link(test):
+    """Check if the build is with any sanitizer (tsan, asan, ubsan, msan)."""
+    sanitizers = ["tsan", "asan", "ubsan", "msan"]
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return any(sanitizer in binary_path for sanitizer in sanitizers)
+
+
 def check_clickhouse_version(version):
     """Compare ClickHouse version."""
 
