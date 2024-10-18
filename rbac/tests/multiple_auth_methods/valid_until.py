@@ -3,7 +3,7 @@ from testflows.asserts import error
 
 from rbac.requirements import *
 
-from helpers.common import getuid
+from helpers.common import getuid, get_settings_value
 
 import rbac.tests.multiple_auth_methods.common as common
 import rbac.tests.multiple_auth_methods.errors as errors
@@ -225,6 +225,46 @@ def on_cluster(self):
     finally:
         with Finally("drop user"):
             common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
+@TestScenario
+@Name("check independency of expiration and auth methods limit")
+def check_independency_of_expiration_and_auth_methods_limit(self):
+    """Verify that the expiration date of passwords and the `max_authentication_methods_per_user`
+    setting are independent. A user cannot have more than `max_authentication_methods_per_user`
+    authentication methods, regardless of whether the passwords are expired."""
+
+    with Given("check initial value of max_authentication_methods_per_user"):
+        initial_value = get_settings_value(
+            "max_authentication_methods_per_user", table="system.server_settings"
+        )
+        assert initial_value == "100", error()
+
+    with And("create user with one auth method and expired password"):
+        user_name = f"user_{getuid()}"
+        password = "some_password"
+        query = f"CREATE USER {user_name} IDENTIFIED BY '{password}' VALID UNTIL '2000-01-01'"
+        self.context.node.query(query)
+
+    with Then(
+        """
+        add new auth methods and check that user can not have more that 100 
+        even expired auth methods
+        """
+    ):
+        for password_number in range(1, 101):
+            exitcode, message = None, None
+            if password_number >= 100:
+                exitcode, message = 36, (
+                    "DB::Exception: User can not be created/updated because "
+                    "it exceeds the allowed quantity of authentication methods per "
+                    "user. Check the `max_authentication_methods_per_user` setting."
+                )
+            query = (
+                f"ALTER USER {user_name} ADD IDENTIFIED BY 'some_password_{password_number}' "
+                "VALID UNTIL '2000-01-01'"
+            )
+            self.context.node.query(query, exitcode=exitcode, message=message)
 
 
 @TestFeature
