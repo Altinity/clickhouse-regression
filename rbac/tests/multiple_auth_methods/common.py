@@ -165,7 +165,9 @@ def create_user_with_two_plaintext_passwords(self, user_name, client=None):
         actions.partial(CreateUser.set_with_plaintext_password, password="456"),
     ]
 
-    return actions.create_user(user_name=user_name, auth_methods=user_auth_methods, client=client)
+    return actions.create_user(
+        user_name=user_name, auth_methods=user_auth_methods, client=client
+    )
 
 
 @TestStep(Then)

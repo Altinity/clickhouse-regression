@@ -44,7 +44,7 @@ def check_alter_user_with_zero_auth_methods_allowed(self):
     run_check_alter_user_with_multiple_auth_methods(max_auth_methods_per_user=0)
 
 
-@TestScenario   
+@TestScenario
 def check_alter_user_with_one_auth_method_allowed(self):
     """Check different scenarios for creating a user when `max_authentication_methods_per_user` is set to 1."""
     run_check_alter_user_with_multiple_auth_methods(max_auth_methods_per_user=1)

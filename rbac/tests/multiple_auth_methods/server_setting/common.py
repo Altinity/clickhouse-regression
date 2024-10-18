@@ -69,9 +69,11 @@ def create_user_identified_with_ssh_keys_and_plaintext_password(
     common.create_user(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user == 1
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user == 1
+            else None
+        ),
     )
 
 
@@ -84,9 +86,11 @@ def create_user_identified_with_two_methods(
     common.create_user(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user < 2 and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user < 2 and max_auth_methods_per_user > 0
+            else None
+        ),
     )
     return ["2", "3"]
 
@@ -102,9 +106,11 @@ def create_user_identified_with_three_methods(
     common.create_user(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user < 3 and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user < 3 and max_auth_methods_per_user > 0
+            else None
+        ),
     )
     return ["4", "5", "6"]
 
@@ -123,9 +129,11 @@ def create_user_identified_with_ten_methods(
     common.create_user(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user < 10 and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user < 10 and max_auth_methods_per_user > 0
+            else None
+        ),
     )
 
 
@@ -184,9 +192,11 @@ def alter_user_identified_with_ssh_keys_and_plaintext_password(
     common.alter_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user == 1
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user == 1
+            else None
+        ),
     )
 
 
@@ -199,9 +209,11 @@ def alter_user_identified_with_two_methods(
     common.alter_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user == 1
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user == 1
+            else None
+        ),
     )
     return ["18", "19"]
 
@@ -217,9 +229,11 @@ def alter_user_identified_with_three_methods(
     common.alter_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user < 3 and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user < 3 and max_auth_methods_per_user > 0
+            else None
+        ),
     )
     return ["20", "21", "22"]
 
@@ -238,9 +252,11 @@ def alter_user_identified_with_ten_methods(
     common.alter_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user < 10 and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user < 10 and max_auth_methods_per_user > 0
+            else None
+        ),
     )
 
 
@@ -256,10 +272,12 @@ def alter_user_add_one_auth_method(
     common.add_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user - current_number_of_auth_methods < 1
-        and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user - current_number_of_auth_methods < 1
+            and max_auth_methods_per_user > 0
+            else None
+        ),
     )
     return "33"
 
@@ -273,10 +291,12 @@ def alter_user_add_identified_by_one_password(
     common.add_identified(
         user_name=user_name,
         identified_by=identified_by,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user - current_number_of_auth_methods < 1
-        and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user - current_number_of_auth_methods < 1
+            and max_auth_methods_per_user > 0
+            else None
+        ),
     )
     return "33"
 
@@ -290,10 +310,12 @@ def alter_user_add_two_auth_methods(
     common.add_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user - current_number_of_auth_methods < 2
-        and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user - current_number_of_auth_methods < 2
+            and max_auth_methods_per_user > 0
+            else None
+        ),
     )
     return ["34", "35"]
 
@@ -309,10 +331,12 @@ def alter_user_add_three_auth_methods(
     common.add_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user - current_number_of_auth_methods < 3
-        and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user - current_number_of_auth_methods < 3
+            and max_auth_methods_per_user > 0
+            else None
+        ),
     )
     return ["36", "37", "38"]
 
@@ -331,8 +355,10 @@ def alter_user_add_ten_auth_methods(
     common.add_identified(
         user_name=user_name,
         identified=identified,
-        expected=errors.user_can_not_be_created_updated()
-        if max_auth_methods_per_user - current_number_of_auth_methods < 10
-        and max_auth_methods_per_user > 0
-        else None,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if max_auth_methods_per_user - current_number_of_auth_methods < 10
+            and max_auth_methods_per_user > 0
+            else None
+        ),
     )
