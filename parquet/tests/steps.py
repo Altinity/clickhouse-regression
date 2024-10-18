@@ -4,6 +4,14 @@ from alter.table.attach_partition.conditions import order_by
 
 
 @TestStep(Given)
+def parquetify(self, json_file, output_path, node=None):
+    """Execute a Parquetify program for generating a Parquet file based on a json file."""
+    if node is None:
+        node = self.context.cluster.node("parquetify")
+
+    node.command(f"parquetify --json {json_file} --output {output_path}")
+
+@TestStep(Given)
 def select_from_parquet(
     self,
     file_name,
@@ -56,4 +64,3 @@ def count_rows_in_parquet(self, file_name, node=None):
         )
 
     return int(output.output.strip())
-

@@ -13,7 +13,7 @@ from s3.regression import argparser, CaptureClusterArgs
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
-from helpers.common import experimental_analyzer
+from helpers.common import experimental_analyzer, check_current_cpu
 from parquet.tests.common import start_minio, parquet_test_columns
 
 
@@ -557,12 +557,13 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        Feature(
-            run=load("parquet.tests.bloom_filter", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
+        if check_current_cpu("x86_64"):
+            Feature(
+                run=load("parquet.tests.bloom_filter", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
         Feature(
             run=load("parquet.tests.read_and_write", "feature"),
             parallel=True,
