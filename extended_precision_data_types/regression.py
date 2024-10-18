@@ -10,7 +10,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import (
     experimental_analyzer,
-    check_with_tsan,
+    check_tsan_in_binary_link,
 )
 
 from extended_precision_data_types.requirements import *
@@ -19,13 +19,13 @@ issue_70518 = "https://github.com/ClickHouse/ClickHouse/issues/70518"
 
 xfails = {
     "/extended precision data types/tests/mathematical/math int inline/lgamma（） - Int128/*": [
-        (Fail, issue_70518, check_with_tsan)
+        (Fail, issue_70518, check_tsan_in_binary_link)
     ],
     "/extended precision data types/tests/mathematical/math int inline/lgamma（） - Int256/*": [
-        (Fail, issue_70518, check_with_tsan)
+        (Fail, issue_70518, check_tsan_in_binary_link)
     ],
     "/extended precision data types/tests/mathematical/math dec inline/lgamma（） - Decimal256/*": [
-        (Fail, issue_70518, check_with_tsan)
+        (Fail, issue_70518, check_tsan_in_binary_link)
     ],
 }
 
