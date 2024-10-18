@@ -11,6 +11,7 @@ def parquetify(self, json_file, output_path, node=None):
 
     node.command(f"parquetify --json {json_file} --output {output_path}")
 
+
 @TestStep(Given)
 def select_from_parquet(
     self,

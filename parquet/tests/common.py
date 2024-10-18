@@ -1,14 +1,100 @@
+import json
 import uuid
 import pyarrow.parquet as pq
 
 from testflows._core.testtype import TestSubType
+from testflows.asserts import values, error, snapshot
 from testflows.core.name import basename, parentname
 from testflows.core import current
 from helpers.common import *
 from helpers.datatypes import *
 from helpers.tables import *
 from s3.tests.common import *
-from testflows.asserts import values, error, snapshot
+
+
+class ParquetJsonGenerator:
+    """Class for generating a JSON file that is required to generate a Parquet file with the parquetify tool."""
+
+    def __init__(self):
+        self.parquet_data = {
+            "fileName": "",
+            "options": {
+                "writerVersion": "1.0",
+                "compression": "SNAPPY",
+                "rowGroupSize": 134217728,
+                "pageSize": 1048576,
+                "encodings": ["PLAIN"],
+                "bloomFilter": "none",
+            },
+            "schema": [],
+        }
+
+    def set_file_name(self, file_name):
+        self.parquet_data["fileName"] = file_name
+
+    def set_options(
+        self,
+        writer_version="1.0",
+        compression="SNAPPY",
+        row_group_size=134217728,
+        page_size=1048576,
+        encodings=None,
+        bloom_filter="none",
+    ):
+        options = {
+            "writerVersion": writer_version,
+            "compression": compression,
+            "rowGroupSize": row_group_size,
+            "pageSize": page_size,
+            "encodings": encodings if encodings is not None else ["PLAIN"],
+            "bloomFilter": bloom_filter,
+        }
+        self.parquet_data["options"] = options
+
+    def add_column(
+        self,
+        name,
+        schema_type,
+        physical_type=None,
+        logical_type=None,
+        precision=None,
+        scale=None,
+        length=None,
+        fields=None,
+        key_type=None,
+        value_type=None,
+        data=None,
+    ):
+        column = {
+            "name": name,
+            "schemaType": schema_type,
+            "physicalType": physical_type,
+        }
+
+        if physical_type:
+            column["physicalType"] = physical_type
+        if logical_type:
+            column["logicalType"] = logical_type
+        if precision:
+            column["precision"] = precision
+        if scale:
+            column["scale"] = scale
+        if length:
+            column["length"] = length
+        if fields:
+            column["fields"] = fields
+        if key_type:
+            column["keyType"] = key_type
+        if value_type:
+            column["valueType"] = value_type
+        if data:
+            column["data"] = data
+
+        self.parquet_data["schema"].append(column)
+
+    def generate_json(self, output_file_path):
+        with open(output_file_path, "w") as json_file:
+            json.dump(self.parquet_data, json_file, indent=2)
 
 
 @TestStep(Given)
