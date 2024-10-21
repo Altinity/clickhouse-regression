@@ -40,9 +40,9 @@ def clean_up_files(private_key_files):
         )
 
 
-@TestScenario
+@TestCheck
 @Name("multiple ssh keys")
-def multiple_ssh_keys(self):
+def multiple_ssh_keys(self, number_of_keys=5):
     """Check that user can have multiple SSH keys and the user can authenticate
     using any of the SSH keys."""
 
@@ -51,15 +51,79 @@ def multiple_ssh_keys(self):
 
     try:
         with Given("generate SSH keys"):
-            number_of_keys = 5
             public_keys, private_key_files = generate_ssh_keys(number_of_keys)
 
         with And("create user with multiple SSH keys"):
             query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
             for public_key in public_keys[1:]:
                 query += f", ssh_key BY KEY '{public_key}' TYPE 'ssh-rsa'"
+                node.query(query)
 
-            node.query(query)
+        with Then("check that user can login using any of the SSH keys"):
+            for private_key_file in private_key_files:
+                common.login_ssh(user_name=user_name, ssh_key_file=private_key_file)
+
+    finally:
+        with Finally("drop user"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+        with And("clean up generated files"):
+            clean_up_files(private_key_files)
+
+
+@TestCheck
+@Name("multiple ssh keys without BY clause")
+def multiple_ssh_keys_without_BY_clause(self, number_of_keys=5):
+    """Check that user can have multiple SSH keys and the user can authenticate
+    using any of the SSH keys. The SSH keys after first one are specified without
+    the `BY` clause."""
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+
+    try:
+        with Given("generate SSH keys"):
+            public_keys, private_key_files = generate_ssh_keys(number_of_keys)
+
+        with And("create user with multiple SSH keys"):
+            query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
+            for public_key in public_keys[1:]:
+                query += f", KEY '{public_key}' TYPE 'ssh-rsa'"
+                node.query(query)
+
+        with Then("check that user can login using any of the SSH keys"):
+            for private_key_file in private_key_files:
+                common.login_ssh(user_name=user_name, ssh_key_file=private_key_file)
+
+    finally:
+        with Finally("drop user"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+        with And("clean up generated files"):
+            clean_up_files(private_key_files)
+
+
+@TestCheck
+@Name("too many ssh keys without BY clause")
+def too_many_ssh_keys(self, number_of_keys=101):
+    """Check that user can not have more that `max_authentication_methods_per_user`
+    ssh keys when they are specified without the `BY` clause."""
+
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+
+    try:
+        with Given("generate SSH keys"):
+            public_keys, private_key_files = generate_ssh_keys(number_of_keys)
+
+        with And("create user with multiple SSH keys"):
+            query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
+            for public_key in public_keys[1:]:
+                query += f", KEY '{public_key}' TYPE 'ssh-dsa'"
+                exitcode, message = 36, (
+                    "DB::Exception: User can not be created/updated because "
+                    "it exceeds the allowed quantity of authentication methods per user."
+                )
+                node.query(query, exitcode=exitcode, message=message)
 
         with Then("check that user can login using any of the SSH keys"):
             for private_key_file in private_key_files:
@@ -108,6 +172,78 @@ def different_form_of_multiple_ssh_keys(self):
             clean_up_files(private_key_files)
 
 
+@TestScenario
+@Name("different form of multiple ssh keys with other auth methods")
+def different_form_of_multiple_ssh_keys_with_other_auth_methods(self):
+    """Check that user can have multiple authentication methods, including an SSH key,
+    and the user can authenticate using the SSH key and other authentication methods.
+    SSH keys are specified in different forms: with specified `ssh_key BY` clause and
+    without it."""
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+    password1 = "foo1"
+    password2 = "foo2"
+
+    try:
+        with Given("generate SSH keys"):
+            number_of_keys = 5
+            public_keys, private_key_files = generate_ssh_keys(number_of_keys)
+
+        with And("create user with multiple SSH keys"):
+            query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
+            query += f", ssh_key BY KEY '{public_keys[1]}' TYPE 'ssh-rsa'"
+            query += f", KEY '{public_keys[2]}' TYPE 'ssh-rsa'"
+            query += f", BY '{password1}'"
+            query += f", ssh_key by KEY '{public_keys[4]}' TYPE 'ssh-rsa'"
+            query += f", KEY '{public_keys[3]}' TYPE 'ssh-rsa'"
+            query += f", plaintext_password BY '{password2}'"
+
+            node.query(query)
+
+        with Then("check that user can login using any of the SSH keys"):
+            for private_key_file in private_key_files:
+                common.login_ssh(user_name=user_name, ssh_key_file=private_key_file)
+
+    finally:
+        with Finally("drop user"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+        with And("clean up generated files"):
+            clean_up_files(private_key_files)
+
+
+@TestScenario
+@Name("specifying key without `BY` clause after some other auth method")
+def key_without_BY_clause_after_other_auth_method(self):
+    """Check that ssh key without `BY` clause can not be specified after some other
+    authentication method rather than ssh key."""
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+    password1 = "foo1"
+
+    try:
+        with Given("generate SSH keys"):
+            number_of_keys = 2
+            public_keys, private_key_files = generate_ssh_keys(number_of_keys)
+
+        with And("create user with multiple SSH keys"):
+            query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
+            query += f", BY '{password1}'"
+            query += f", KEY '{public_keys[1]}' TYPE 'ssh-rsa'"
+            exitcode, message = (
+                62,
+                "DB::Exception: Syntax error: failed at position 660 ('KEY')",
+            )
+            node.query(query, exitcode=exitcode, message=message)
+
+    finally:
+        with Finally("drop user"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+        with And("clean up generated files"):
+            clean_up_files(private_key_files)
+
+
 @TestCheck
 @Name("identified with SSH key")
 def ssh_key_with_other_auth_methods(self, type="rsa"):
@@ -136,7 +272,7 @@ def ssh_key_with_other_auth_methods(self, type="rsa"):
 
     finally:
         with Finally("drop user"):
-            common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+            node.query(query=f"DROP USER IF EXISTS {user_name}")
 
         with And("clean up generated files"):
             clean_up_files([private_key_file])
@@ -184,7 +320,7 @@ def run_with_different_types(self):
 @Name("ssh key")
 def feature(self):
     """Run ssh_key authentication tests."""
-    with Pool(1) as executor:
+    with Pool(3) as executor:
         for scenario in loads(current_module(), Scenario):
             Scenario(run=scenario, flags=TE, parallel=True, executor=executor)
         join()
