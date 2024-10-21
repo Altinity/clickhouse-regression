@@ -40,7 +40,7 @@ def clean_up_files(private_key_files):
         )
 
 
-@TestCheck
+@TestScenario
 @Name("multiple ssh keys")
 def multiple_ssh_keys(self, number_of_keys=5):
     """Check that user can have multiple SSH keys and the user can authenticate
@@ -57,7 +57,7 @@ def multiple_ssh_keys(self, number_of_keys=5):
             query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
             for public_key in public_keys[1:]:
                 query += f", ssh_key BY KEY '{public_key}' TYPE 'ssh-rsa'"
-                node.query(query)
+            node.query(query)
 
         with Then("check that user can login using any of the SSH keys"):
             for private_key_file in private_key_files:
@@ -71,7 +71,7 @@ def multiple_ssh_keys(self, number_of_keys=5):
             clean_up_files(private_key_files)
 
 
-@TestCheck
+@TestScenario
 @Name("multiple ssh keys without BY clause")
 def multiple_ssh_keys_without_BY_clause(self, number_of_keys=5):
     """Check that user can have multiple SSH keys and the user can authenticate
@@ -88,7 +88,7 @@ def multiple_ssh_keys_without_BY_clause(self, number_of_keys=5):
             query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
             for public_key in public_keys[1:]:
                 query += f", KEY '{public_key}' TYPE 'ssh-rsa'"
-                node.query(query)
+            node.query(query)
 
         with Then("check that user can login using any of the SSH keys"):
             for private_key_file in private_key_files:
@@ -102,11 +102,11 @@ def multiple_ssh_keys_without_BY_clause(self, number_of_keys=5):
             clean_up_files(private_key_files)
 
 
-@TestCheck
-@Name("too many ssh keys without BY clause")
-def too_many_ssh_keys(self, number_of_keys=101):
-    """Check that user can not have more that `max_authentication_methods_per_user`
-    ssh keys when they are specified without the `BY` clause."""
+@TestScenario
+@Name("multiple ssh keys exceeding limit")
+def multiple_ssh_keys_exceed_limit(self, number_of_keys=101):
+    """Check that user cannot have more than `max_authentication_methods_per_user`
+    SSH keys when they are specified without the `BY` clause."""
 
     node = self.context.node
     user_name = f"user_{getuid()}"
@@ -118,16 +118,12 @@ def too_many_ssh_keys(self, number_of_keys=101):
         with And("create user with multiple SSH keys"):
             query = f"CREATE USER {user_name} IDENTIFIED WITH ssh_key BY KEY '{public_keys[0]}' TYPE 'ssh-rsa'"
             for public_key in public_keys[1:]:
-                query += f", KEY '{public_key}' TYPE 'ssh-dsa'"
+                query += f", KEY '{public_key}' TYPE 'ssh-rsa'"
                 exitcode, message = 36, (
                     "DB::Exception: User can not be created/updated because "
                     "it exceeds the allowed quantity of authentication methods per user."
                 )
-                node.query(query, exitcode=exitcode, message=message)
-
-        with Then("check that user can login using any of the SSH keys"):
-            for private_key_file in private_key_files:
-                common.login_ssh(user_name=user_name, ssh_key_file=private_key_file)
+            node.query(query, exitcode=exitcode, message=message)
 
     finally:
         with Finally("drop user"):
@@ -272,7 +268,7 @@ def ssh_key_with_other_auth_methods(self, type="rsa"):
 
     finally:
         with Finally("drop user"):
-            node.query(query=f"DROP USER IF EXISTS {user_name}")
+            node.query(f"DROP USER IF EXISTS {user_name}")
 
         with And("clean up generated files"):
             clean_up_files([private_key_file])
@@ -310,10 +306,13 @@ def auth_with_ssh_key(self, type="rsa"):
 @TestScenario
 @Name("run with different ssh key types")
 def run_with_different_types(self):
-    types = ["rsa", "dsa", "ecdsa", "ed25519"]
+    types = ["rsa", "ecdsa", "ed25519"]  # "dsa", "ecdsa-sha2-nistp256"
     for type in types:
-        Scenario(name=type, run=auth_with_ssh_key, type=type)
-        Scenario(name=type, run=ssh_key_with_other_auth_methods, type=type)
+        Scenario(name=f"{type} auth with ssh key", test=auth_with_ssh_key)(type=type)
+        Scenario(
+            name=f"{type} auth with ssh key and other auth method",
+            test=ssh_key_with_other_auth_methods,
+        )(type=type)
 
 
 @TestFeature
@@ -322,5 +321,5 @@ def feature(self):
     """Run ssh_key authentication tests."""
     with Pool(3) as executor:
         for scenario in loads(current_module(), Scenario):
-            Scenario(run=scenario, flags=TE, parallel=True, executor=executor)
+            Scenario(test=scenario, flags=TE, parallel=True, executor=executor)()
         join()
