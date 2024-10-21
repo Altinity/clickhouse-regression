@@ -137,7 +137,7 @@ def multiple_users(self):
 
 # executed from multi auth methods feature separately because of server setting
 # change and restart
-@TestCheck
+@TestFeature
 def keep_adding_new_auth_methods_with_expiration_date(self):
     """Check that user can have many authentication methods with expiration date.
     The server should not crash during the process."""
