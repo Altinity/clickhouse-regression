@@ -122,6 +122,42 @@ def login(
         )
 
 
+@TestStep(Then)
+def login_ssh(
+    self,
+    user_name,
+    ssh_key_file="",
+    ssh_key_passphrase="",
+    node=None,
+    exitcode=None,
+    message=None,
+    expected=None,
+    nodes=None,
+):
+    if node is None:
+        node = self.context.node
+
+    if exitcode is None:
+        message = user_name
+
+    if expected is not None:
+        exitcode, message = expected()
+
+    nodes = nodes or [node]
+
+    for node in nodes:
+        node.query(
+            f"SELECT currentUser()",
+            settings=[
+                ("user", user_name),
+                ("ssh-key-file", f"{ssh_key_file}"),
+                ("ssh-key-passphrase", f"{ssh_key_passphrase}"),
+            ],
+            exitcode=exitcode,
+            message=message,
+        )
+
+
 @TestStep(Given)
 def change_server_settings(
     self,

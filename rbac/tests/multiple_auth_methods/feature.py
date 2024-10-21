@@ -98,6 +98,14 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
+                    "rbac.tests.multiple_auth_methods.identified_with_ssh_key",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
                     "rbac.tests.multiple_auth_methods.valid_until_combinations",
                     "feature",
                 ),
@@ -124,5 +132,11 @@ def feature(self, node="clickhouse1"):
         run=load(
             "rbac.tests.multiple_auth_methods.parallel_modification",
             "feature",
+        ),
+    )
+    Feature(
+        run=load(
+            "rbac.tests.multiple_auth_methods.valid_until",
+            "keep_adding_new_auth_methods_with_expiration_date",
         ),
     )
