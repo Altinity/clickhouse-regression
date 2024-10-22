@@ -231,7 +231,7 @@ def check_parquet_bloom_filter_on_parquet(
 ):
     """Check if the bloom filter is being used by ClickHouse."""
     json_file_name = getuid() + ".json"
-    parquet_file = compression + writer_version
+    parquet_file = compression + physical_type + logical_type
     column_name = logical_type.lower()
 
     with Given("I build a schema in order to create a parquet JSON definition"):
@@ -260,8 +260,8 @@ def check_parquet_bloom_filter_on_parquet(
             output_path=self.context.parquet_output_path,
         )
 
-    with Given("I get the total number of rows in the parquet file"):
-        initial_rows = total_number_of_rows(file_name=generate_parquet_json_definition)
+    with And("I get the total number of rows in the parquet file"):
+        initial_rows = total_number_of_rows(file_name=parquet_file_path)
 
     for conversion in conversions:
         condition = f"WHERE {column_name} = {conversion}({schema['data'][0]})"
@@ -318,6 +318,7 @@ def check_parquet_bloom_filter_on_parquet(
 @TestSketch(Scenario)
 @Flags(TE)
 def read_parquet_with_bloom_filter(self):
+    """Read parquet files with different structure with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
 
     conversions = [
         "toBool",
