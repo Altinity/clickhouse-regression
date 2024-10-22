@@ -51,6 +51,92 @@ def check_analyzer():
     return check
 
 
+def check_with_ubsan(test):
+    """Check if the build is with undefined behavior sanitizer (ubsan)."""
+    if hasattr(test.context, "build_options"):
+        if "ubsan" in test.context.build_options.values():
+            return True
+
+    return False
+
+
+def check_with_tsan(test):
+    """Check if the build is with thread sanitizer (tsan)."""
+    if hasattr(test.context, "build_options"):
+        if "tsan" in test.context.build_options.values():
+            return True
+
+    return False
+
+
+def check_with_asan(test):
+    """Check if the build is with address sanitizer (asan)."""
+    if hasattr(test.context, "build_options"):
+        if "asan" in test.context.build_options.values():
+            return True
+
+    return False
+
+
+def check_with_msan(test):
+    """Check if the build is with memory sanitizer (msan)."""
+    if hasattr(test.context, "build_options"):
+        if "msan" in test.context.build_options.values():
+            return True
+
+    return False
+
+
+def check_tsan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "tsan" in binary_path
+
+
+def check_asan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "asan" in binary_path
+
+
+def check_ubsan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "ubsan" in binary_path
+
+
+def check_msan_in_binary_link(test):
+    """Check if the build is with ThreadSanitizer (tsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    return "msan" in binary_path
+
+
+def check_any_sanitizer_in_binary_link(test):
+    """Check if the build is with any sanitizer (tsan, asan, ubsan, msan)."""
+    sanitizers = ["tsan", "asan", "ubsan", "msan"]
+    if hasattr(test.context, "build_options"):
+        return any(
+            sanitizer in test.context.build_options.values() for sanitizer in sanitizers
+        )
+    return False
+
+
+def check_several_sanitizers_in_binary_link(
+    sanitizers=["tsan", "asan", "ubsan", "msan"]
+):
+    """Check if the build is with specified list of sanitizers."""
+
+    def check(test):
+        if hasattr(test.context, "build_options"):
+            return any(
+                sanitizer in test.context.build_options.values()
+                for sanitizer in sanitizers
+            )
+        return False
+
+    return check
+
+
 def check_clickhouse_version(version):
     """Compare ClickHouse version."""
 

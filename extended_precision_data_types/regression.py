@@ -8,11 +8,38 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import experimental_analyzer
+from helpers.common import (
+    experimental_analyzer,
+    check_several_sanitizers_in_binary_link,
+)
 
 from extended_precision_data_types.requirements import *
 
-xfails = {}
+issue_70518 = "https://github.com/ClickHouse/ClickHouse/issues/70518"
+
+xfails = {
+    "/extended precision data types/tests/mathematical/math int inline/lgamma（） - Int128/*": [
+        (
+            Fail,
+            "fails with tsan",
+            check_several_sanitizers_in_binary_link(["tsan", "asan", "msan"]),
+        )
+    ],
+    "/extended precision data types/tests/mathematical/math int inline/lgamma（） - Int256/*": [
+        (
+            Fail,
+            issue_70518,
+            check_several_sanitizers_in_binary_link(["tsan", "asan", "msan"]),
+        )
+    ],
+    "/extended precision data types/tests/mathematical/math dec inline/lgamma（） - Decimal256/*": [
+        (
+            Fail,
+            issue_70518,
+            check_several_sanitizers_in_binary_link(["tsan", "asan", "msan"]),
+        )
+    ],
+}
 
 xflags = {}
 
