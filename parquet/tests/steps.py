@@ -1,8 +1,10 @@
 import json
+import random
 
 from testflows.core import *
 from alter.table.attach_partition.conditions import order_by
 from helpers.common import getuid
+from parquet.tests.common import generate_values
 
 
 @TestStep(Given)
@@ -12,6 +14,7 @@ def build_parquet_schema(
     physical_type=None,
     logical_type=None,
     data=None,
+    random_data=False,
     fields=None,
 ):
     """Build a Parquet schema."""
@@ -40,7 +43,13 @@ def build_parquet_schema(
         entry["logicalType"] = logical_type
 
     if data in groups:
-        entry["data"] = data
+        if random_data:
+            if physical_type is None:
+                entry["data"] = generate_values(logical_type, random.randint(1, 100))
+            else:
+                entry["data"] = generate_values(physical_type, random.randint(1, 100))
+        else:
+            entry["data"] = data
 
     if schema_type in groups and fields is not None:
         entry["fields"] = fields
@@ -53,7 +62,7 @@ def generate_parquet_json_definition(
     self,
     file_name,
     parquet_file_name,
-    schema=None,
+    schema,
     writer_version=None,
     compression=None,
     row_group_size=None,
@@ -76,8 +85,10 @@ def generate_parquet_json_definition(
     if bloom_filter is None:
         bloom_filter = "none"
 
+    parquet_file_name = parquet_file_name + getuid() + ".parquet"
+
     file_definition = {
-        "fileName": parquet_file_name + getuid() + ".parquet",
+        "fileName": parquet_file_name,
         "options": {
             "writerVersion": writer_version,
             "compression": compression,
@@ -92,7 +103,7 @@ def generate_parquet_json_definition(
     with open(file_name, "w") as json_file:
         json.dump(file_definition, json_file, indent=2)
 
-    return file_name
+    return parquet_file_name
 
 
 @TestStep(Given)
