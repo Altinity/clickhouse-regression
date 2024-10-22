@@ -5,6 +5,7 @@ services:
     extends:
       file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
+    privileged: true 
     expose:
       - "9000"
       - "9009"
