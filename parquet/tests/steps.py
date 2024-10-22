@@ -98,7 +98,7 @@ def generate_parquet_json_definition(
             "encodings": encodings,
             "bloomFilter": bloom_filter,
         },
-        "schema": schema,
+        "schema": [schema],
     }
 
     with open(file_name, "w") as json_file:
