@@ -9,6 +9,7 @@ from parquet.tests.common import generate_values
 
 @TestStep(Given)
 def build_parquet_schema(
+    self,
     name,
     schema_type,
     physical_type=None,
@@ -42,7 +43,7 @@ def build_parquet_schema(
     if logical_type:
         entry["logicalType"] = logical_type
 
-    if data in groups:
+    if data is not None and schema_type not in groups:
         if random_data:
             if physical_type is None:
                 entry["data"] = generate_values(logical_type, random.randint(1, 100))
@@ -121,10 +122,10 @@ def parquetify(
 
 
 @TestStep(Given)
-def create_parquet_files(
+def create_parquet_file(
     self,
     output_path,
-    file_name,
+    json_file_name,
     parquet_file_name,
     schema,
     writer_version=None,
@@ -136,8 +137,8 @@ def create_parquet_files(
 ):
     """Create Parquet files with different types and bloom filters."""
     with By("creating JSON file for the parquetify"):
-        json_file = generate_parquet_json_definition(
-            file_name=file_name,
+        generate_parquet_json_definition(
+            file_name=json_file_name,
             parquet_file_name=parquet_file_name,
             schema=schema,
             writer_version=writer_version,
@@ -149,7 +150,7 @@ def create_parquet_files(
         )
 
     with And("generating parquet file"):
-        parquetify(json_file=json_file, output_path=output_path)
+        parquetify(json_file=123, output_path=output_path)
 
 
 @TestStep(Given)
