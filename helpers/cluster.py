@@ -1548,7 +1548,7 @@ class Cluster(object):
                         assert not clickhouse_package.package_path.endswith(
                             ".rpm"
                         ), error("base_os must be specified for rpm packages")
-                    self.base_os = "altinityinfra/clickhouse-regression-multiarch:2.0"
+                    self.base_os = "altinityinfra/clickhouse-regression-multiarch:3.0"
                 else:
                     self.base_os = base_os.split("docker://", 1)[-1]
 
