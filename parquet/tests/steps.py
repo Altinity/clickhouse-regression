@@ -45,10 +45,10 @@ def build_parquet_schema(
 
     if data is not None and schema_type not in groups:
         if random_data:
-            if physical_type is None:
-                entry["data"] = generate_values(logical_type, random.randint(1, 100))
-            else:
+            if logical_type is None:
                 entry["data"] = generate_values(physical_type, random.randint(1, 100))
+            else:
+                entry["data"] = generate_values(logical_type, random.randint(1, 100))
         else:
             entry["data"] = data
 

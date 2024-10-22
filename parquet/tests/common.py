@@ -36,11 +36,13 @@ def generate_random_value(data_type):
     elif data_type == "DECIMAL":
         return round(random.uniform(-1e6, 1e6), 2)
     elif data_type == "DATE":
-        return datetime.date.today() - datetime.timedelta(days=random.randint(0, 3650))
+        return str(
+            datetime.date.today() - datetime.timedelta(days=random.randint(0, 3650))
+        )
     elif data_type == "TIME_MILLIS" or data_type == "TIME_MICROS":
-        return datetime.datetime.now().time()
+        return str(datetime.datetime.now().time())
     elif data_type == "TIMESTAMP_MILLIS" or data_type == "TIMESTAMP_MICROS":
-        return datetime.datetime.now()
+        return str(datetime.datetime.now())
     elif data_type == "ENUM":
         return random.choice(["A", "B", "C", "D"])
     elif data_type == "NONE":
@@ -55,7 +57,7 @@ def generate_random_value(data_type):
     elif data_type == "MAP_KEY_VALUE":
         return {generate_random_value("UTF8"): generate_random_value("INT32")}
     elif data_type == "TIME":
-        return datetime.datetime.now().time()
+        return str(datetime.datetime.now().time())
     elif data_type == "INTEGER":
         return random.randint(-1000, 1000)
     elif data_type == "JSON":
