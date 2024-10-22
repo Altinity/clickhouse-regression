@@ -458,7 +458,28 @@ def read_parquet_with_bloom_filter(self):
         "parseDateTimeBestEffort",
         "parseDateTime32BestEffort",
         "parseDateTimeBestEffortUS",
+        "parseDateTime32BestEffortOrNull",
+        "parseDateTimeBestEffortOrZero",
+        "parseDateTime32BestEffortOrZero",
+        "parseDateTimeBestEffortUSOrNull",
+        "parseDateTimeBestEffortUSOrZero",
+        "parseDateTime64BestEffort",
+        "parseDateTime64BestEffortUS",
+        "parseDateTime64BestEffortOrNull",
+        "parseDateTime64BestEffortOrZero",
+        "parseDateTime64BestEffortUSOrNull",
+        "parseDateTime64BestEffortUSOrZero",
+        "toLowCardinality",
+        "toUnixTimestamp64Milli",
+        "toUnixTimestamp64Micro",
+        "toUnixTimestamp64Nano",
+        "fromUnixTimestamp64Milli",
+        "fromUnixTimestamp64Micro",
+        "fromUnixTimestamp64Nano",
+        "formatRow",
+        "formatRowNoNewline",
     ]
+
     writer_version = ["1.0", "2.0"]
     compression = ["UNCOMPRESSED", "SNAPPY", "ZSTD"]
     encodings = ["DICTIONARY", "BYTE_STREAM_SPLIT", "PLAIN"]
