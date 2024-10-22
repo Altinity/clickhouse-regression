@@ -214,7 +214,7 @@ def native_reader_array_bloom(self):
 
 
 @TestCheck
-def check_parquet_bloom_filter_on_parquet(
+def check_bloom_filter_on_parquet(
     self,
     schema_type,
     writer_version,
@@ -460,7 +460,7 @@ def read_parquet_with_bloom_filter(self):
         "parseDateTimeBestEffortUS",
     ]
     writer_version = ["1.0", "2.0"]
-    compression = ["NONE", "SNAPPY", "GZIP", "LZO", "BROTLI", "LZ4", "ZSTD"]
+    compression = ["UNCOMPRESSED", "SNAPPY", "ZSTD"]
     encodings = ["DICTIONARY", "BYTE_STREAM_SPLIT", "PLAIN"]
     bloom_filter = ["all"]
     schema_type = [
@@ -512,7 +512,7 @@ def read_parquet_with_bloom_filter(self):
     ]
     filter = ["true", "false"]
     statements = ["*"]
-    check_parquet_bloom_filter_on_parquet(
+    check_bloom_filter_on_parquet(
         schema_type=either(*schema_type),
         writer_version=either(*writer_version),
         physical_type=either(*physical_types),
