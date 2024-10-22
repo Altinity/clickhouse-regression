@@ -256,7 +256,7 @@ def check_bloom_filter_on_parquet(
 
     with And("Generate parquet file"):
         parquetify(
-            json_file=self.context.json_files + json_file_name,
+            json_file=self.context.json_files + "/" + json_file_name,
             output_path=self.context.parquet_output_path,
         )
 
@@ -489,7 +489,6 @@ def read_parquet_with_bloom_filter(self):
         "TIMESTAMP_MILLIS",
         "TIMESTAMP_MICROS",
         "ENUM",
-        "NONE",
         "MAP",
         "LIST",
         "STRING",
