@@ -231,7 +231,7 @@ def check_bloom_filter_on_parquet(
 ):
     """Check if the bloom filter is being used by ClickHouse."""
     json_file_name = getuid() + ".json"
-    parquet_file = compression + physical_type + logical_type
+    parquet_file = f"{compression}_{physical_type}_{logical_type}"
     column_name = logical_type.lower()
 
     with Given("I build a schema in order to create a parquet JSON definition"):
