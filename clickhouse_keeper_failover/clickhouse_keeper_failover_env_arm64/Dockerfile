@@ -1,4 +1,4 @@
-FROM altinityinfra/clickhouse-regression-multiarch:1.0
+FROM altinityinfra/clickhouse-regression-multiarch:3.0
 
 RUN ln -s /usr/bin/clickhouse-keeper /usr/bin/clickhouse-keeper-client
 RUN ln -s /usr/bin/clickhouse-keeper /usr/bin/clickhouse-keeper-converter
