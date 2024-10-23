@@ -100,7 +100,7 @@ xfails = {
 }
 
 ffails = {
-    "/aes encryption/performance/encryption decryption": (
+    "/aes encryption/performance": (
         Skip,
         "Builds with sanitizers are slow.",
         check_any_sanitizer_in_binary_link,
