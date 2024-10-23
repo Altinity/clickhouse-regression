@@ -1,5 +1,6 @@
 import json
 import uuid
+import datetime
 import pyarrow.parquet as pq
 
 from testflows._core.testtype import TestSubType
@@ -12,7 +13,83 @@ from helpers.tables import *
 from s3.tests.common import *
 
 
-class ParquetJsonGenerator:
+def generate_random_value(data_type):
+    if data_type == "INT32":
+        return random.randint(-2147483648, 2147483647)
+    elif data_type == "INT64":
+        return random.randint(-9223372036854775808, 9223372036854775807)
+    elif data_type == "BOOLEAN":
+        return random.choice([True, False])
+    elif data_type == "FLOAT":
+        return random.uniform(-1e38, 1e38)
+    elif data_type == "DOUBLE":
+        return random.uniform(-1e308, 1e308)
+    elif data_type == "BINARY":
+        return bytes(random.getrandbits(8) for _ in range(random.randint(1, 16)))
+    elif data_type == "FIXED_LEN_BYTE_ARRAY":
+        length = random.randint(1, 16)
+        return bytes(random.getrandbits(8) for _ in range(length))
+    elif data_type == "UTF8" or data_type == "STRING":
+        return "".join(
+            random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 10))
+        )
+    elif data_type == "DECIMAL":
+        return round(random.uniform(-1e6, 1e6), 2)
+    elif data_type == "DATE":
+        return str(
+            datetime.date.today() - datetime.timedelta(days=random.randint(0, 3650))
+        )
+    elif data_type == "TIME_MILLIS" or data_type == "TIME_MICROS":
+        return str(datetime.datetime.now().time())
+    elif data_type == "TIMESTAMP_MILLIS" or data_type == "TIMESTAMP_MICROS":
+        return str(datetime.datetime.now())
+    elif data_type == "ENUM":
+        return random.choice(["A", "B", "C", "D"])
+    elif data_type == "NONE":
+        return None
+    elif data_type == "MAP":
+        return {
+            generate_random_value("UTF8"): generate_random_value("UTF8")
+            for _ in range(3)
+        }
+    elif data_type == "LIST":
+        return [generate_random_value("INT32") for _ in range(5)]
+    elif data_type == "MAP_KEY_VALUE":
+        return {generate_random_value("UTF8"): generate_random_value("INT32")}
+    elif data_type == "TIME":
+        return str(datetime.datetime.now().time())
+    elif data_type == "INTEGER":
+        return random.randint(-1000, 1000)
+    elif data_type == "JSON":
+        return json.dumps({"key": generate_random_value("UTF8")})
+    elif data_type == "BSON":
+        return json.dumps({"key": generate_random_value("UTF8")})  # BSON simulation
+    elif data_type == "UUID":
+        return str(uuid.uuid4())
+    elif data_type == "INTERVAL":
+        return random.randint(1, 1000)  # Placeholder for interval representation
+    elif data_type == "FLOAT16":
+        return round(random.uniform(-1e4, 1e4), 4)
+    elif data_type == "UINT8":
+        return random.randint(0, 255)
+    elif data_type == "UINT16":
+        return random.randint(0, 65535)
+    elif data_type == "UINT32":
+        return random.randint(0, 4294967295)
+    elif data_type == "UINT64":
+        return random.randint(0, 18446744073709551615)
+    elif data_type == "INT8":
+        return random.randint(-128, 127)
+    elif data_type == "INT16":
+        return random.randint(-32768, 32767)
+    return None
+
+
+def generate_values(data_type, count):
+    return [generate_random_value(data_type) for _ in range(count)]
+
+
+class CreateParquetStructure:
     """Class for generating a JSON file that is required to generate a Parquet file with the parquetify tool."""
 
     def __init__(self):
