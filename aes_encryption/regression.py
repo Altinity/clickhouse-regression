@@ -7,7 +7,7 @@ from testflows.core.name import clean
 
 append_path(sys.path, "..")
 
-from helpers.common import experimental_analyzer
+from helpers.common import experimental_analyzer, check_any_sanitizer_in_binary_link
 from helpers.cluster import create_cluster, check_clickhouse_version
 from helpers.argparser import argparser, CaptureClusterArgs
 from aes_encryption.requirements import *
@@ -99,6 +99,14 @@ xfails = {
     "performance/:/:": [(Fail, issue_65116, check_clickhouse_version(">=24.4"))],
 }
 
+ffails = {
+    "/aes encryption/performance/encryption decryption": (
+        Skip,
+        "Builds with sanitizers are slow.",
+        check_any_sanitizer_in_binary_link,
+    ),
+}
+
 
 @TestFeature
 @Name("aes encryption")
@@ -108,6 +116,7 @@ xfails = {
     RQ_SRS008_AES_Functions("1.0"), RQ_SRS008_AES_Functions_DifferentModes("1.0")
 )
 @XFails(xfails)
+@FFails(ffails)
 @CaptureClusterArgs
 def regression(
     self,
