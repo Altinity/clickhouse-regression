@@ -39,6 +39,7 @@ issue_37580 = "https://github.com/ClickHouse/ClickHouse/issues/37580"
 issue_38716 = "https://github.com/ClickHouse/ClickHouse/issues/38716"
 pull_47002 = "https://github.com/ClickHouse/ClickHouse/pull/47002"
 issue_65134 = "https://github.com/ClickHouse/ClickHouse/issues/65134"
+issue_70898 = "https://github.com/ClickHouse/ClickHouse/issues/70898"
 
 xfails = {
     "syntax/show create quota/I show create quota current": [
@@ -228,6 +229,9 @@ xfails = {
             "Does not include no_password in SHOW CREATE USER before 24.9",
             check_clickhouse_version("<24.9"),
         )
+    ],
+    "/rbac/multiple authentication methods/ssh key/multiple ssh keys exceeding limit/*": [
+        (Fail, issue_70898, check_clickhouse_version("<24.12")),
     ],
 }
 

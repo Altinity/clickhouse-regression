@@ -306,7 +306,7 @@ def auth_with_ssh_key(self, type="rsa"):
 @TestScenario
 @Name("run with different ssh key types")
 def run_with_different_types(self):
-    types = ["rsa", "ecdsa", "ed25519"]  # "dsa", "ecdsa-sha2-nistp256"
+    types = ["rsa", "ecdsa", "ed25519"]  # "ecdsa-sha2-nistp256"
     for type in types:
         Scenario(name=f"{type} auth with ssh key", test=auth_with_ssh_key)(type=type)
         Scenario(
