@@ -12,7 +12,30 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 
-xfails = {"alias input/alias instead of table and column": [(Fail, "not implemented")]}
+xfails = {
+    "alias input/alias instead of table and column": [(Fail, "not implemented")],
+    "/base58/unsupported types constant/Nullable（FixedString（3））/*": [
+        (
+            Fail,
+            "base58 encode/decode is supported for FixedString(3) since 24.10",
+            check_clickhouse_version(">=24.10"),
+        )
+    ],
+    "/base58/unsupported types constant/FixedString（3）/*": [
+        (
+            Fail,
+            "base58 encode/decode is supported for FixedString(3) since 24.10",
+            check_clickhouse_version(">=24.10"),
+        )
+    ],
+    "/base58/unsupported types column/FixedString（3）/unsupported types/*": [
+        (
+            Fail,
+            "base58 encode/decode is supported for FixedString(3) since 24.10",
+            check_clickhouse_version(">=24.10"),
+        )
+    ],
+}
 
 xflags = {}
 
