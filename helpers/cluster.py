@@ -595,7 +595,7 @@ class ClickHouseNode(Node):
                     assert check_clickhouse_version(f"={node_version}")(
                         current()
                     ), error()
-                    
+
             query = (
                 "SELECT * FROM system.build_options "
                 "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
@@ -1556,6 +1556,7 @@ class Cluster(object):
 
                 if clickhouse_package.package_path:
                     package_name = os.path.basename(clickhouse_package.package_path)
+                    package_name = package_name.replace("+", "_").replace("%", "_")
                     self.clickhouse_docker_image_name = f"{base_os_name}:{package_name}"
                     self.clickhouse_path = os.path.relpath(
                         clickhouse_package.package_path
@@ -1602,6 +1603,7 @@ class Cluster(object):
 
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
+                    package_name = package_name.replace("+", "_").replace("%", "_")
                     self.keeper_docker_image_name = f"{base_os_name}:{package_name}"
                     self.keeper_path = os.path.relpath(keeper_package.package_path)
                 else:
