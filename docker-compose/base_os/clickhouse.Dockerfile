@@ -15,3 +15,5 @@ RUN if [ -f /etc/alpine-release ]; then \
     apt-get update && \
     apt-get install -y curl; \
     fi
+
+RUN apt-get update && apt-get install -y openssh-client
