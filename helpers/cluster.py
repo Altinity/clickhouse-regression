@@ -595,6 +595,44 @@ class ClickHouseNode(Node):
                     assert check_clickhouse_version(f"={node_version}")(
                         current()
                     ), error()
+                    
+            query = (
+                "SELECT * FROM system.build_options "
+                "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
+            )
+            output = self.query(query, no_checks=1, steps=False).output
+            sanitizers = {
+                "fsanitize=thread": "tsan",
+                "fsanitize=memory": "msan",
+                "fsanitize=address": "asan",
+                "fsanitize=undefined": "ubsan",
+            }
+            build_option = next(
+                (name for flag, name in sanitizers.items() if flag in output), None
+            )
+            current().context.build_options = getattr(
+                current().context, "build_options", {}
+            )
+            current().context.build_options[self.name] = build_option
+
+            query = (
+                "SELECT * FROM system.build_options "
+                "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
+            )
+            output = self.query(query, no_checks=1, steps=False).output
+            sanitizers = {
+                "fsanitize=thread": "tsan",
+                "fsanitize=memory": "msan",
+                "fsanitize=address": "asan",
+                "fsanitize=undefined": "ubsan",
+            }
+            build_option = next(
+                (name for flag, name in sanitizers.items() if flag in output), None
+            )
+            current().context.build_options = getattr(
+                current().context, "build_options", {}
+            )
+            current().context.build_options[self.name] = build_option
 
     def clickhouse_pid(self):
         """
@@ -1510,7 +1548,7 @@ class Cluster(object):
                         assert not clickhouse_package.package_path.endswith(
                             ".rpm"
                         ), error("base_os must be specified for rpm packages")
-                    self.base_os = "altinityinfra/clickhouse-regression-multiarch:2.0"
+                    self.base_os = "altinityinfra/clickhouse-regression-multiarch:3.0"
                 else:
                     self.base_os = base_os.split("docker://", 1)[-1]
 
