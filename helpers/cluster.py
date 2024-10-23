@@ -9,6 +9,7 @@ import re
 import json
 import shutil
 from contextlib import contextmanager
+from urllib.parse import unquote
 
 from testflows._core.cli.arg.common import description
 
@@ -165,6 +166,11 @@ def get_binary_from_docker_container(
             bash(f"ls -la {host_binary_path}")
 
     return f"{host_binary_path}/{binary_name}"
+
+
+def sanitize_docker_tag(tag):
+    """Replace all characters that are invalid in a docker tag with underscores."""
+    return re.sub(r"[^a-zA-Z0-9_.-]", "_", unquote(tag))
 
 
 class Shell(ShellBase):
@@ -1556,8 +1562,9 @@ class Cluster(object):
 
                 if clickhouse_package.package_path:
                     package_name = os.path.basename(clickhouse_package.package_path)
-                    package_name = package_name.replace("+", "_").replace("%", "_")
-                    self.clickhouse_docker_image_name = f"{base_os_name}:{package_name}"
+                    self.clickhouse_docker_image_name = (
+                        f"{base_os_name}:{sanitize_docker_tag(package_name)}"
+                    )
                     self.clickhouse_path = os.path.relpath(
                         clickhouse_package.package_path
                     )
@@ -1603,8 +1610,9 @@ class Cluster(object):
 
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
-                    package_name = package_name.replace("+", "_").replace("%", "_")
-                    self.keeper_docker_image_name = f"{base_os_name}:{package_name}"
+                    self.keeper_docker_image_name = (
+                        f"{base_os_name}:{sanitize_docker_tag(package_name)}"
+                    )
                     self.keeper_path = os.path.relpath(keeper_package.package_path)
                 else:
                     self.keeper_docker_image_name = f"{base_os_name}:local-binary"
