@@ -6,6 +6,7 @@ RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     ca-certificates \
     bash \
     btrfs-progs \
+    openssh-client \
     e2fsprogs \
     iptables \
     xfsprogs \
