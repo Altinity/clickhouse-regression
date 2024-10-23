@@ -1,4 +1,4 @@
-FROM altinityinfra/clickhouse-regression-multiarch:1.0
+FROM altinityinfra/clickhouse-regression-multiarch:3.0
 
 ARG odbc_driver_url="https://github.com/ClickHouse/clickhouse-odbc/releases/download/v1.1.4.20200302/clickhouse-odbc-1.1.4-Linux.tar.gz"
 
