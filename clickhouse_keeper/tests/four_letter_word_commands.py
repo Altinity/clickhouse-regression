@@ -5,13 +5,17 @@ from helpers.common import *
 
 @TestOutline
 def four_letter_word_commands(
-    self, four_letter_word_command="ruok", output="imok", node_name="clickhouse1"
+    self,
+    four_letter_word_command="ruok",
+    output="imok",
+    node_name="clickhouse1",
+    timeout=100,
 ):
     """Check 4lw command outline."""
     cluster = self.context.cluster
     try:
         with Given(f"I check that {four_letter_word_command} returns {output}"):
-            retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
+            retry(cluster.node("bash-tools").command, timeout=timeout, delay=10)(
                 f"echo {four_letter_word_command} | nc {node_name} 2181",
                 exitcode=0,
                 message=f"{output}",
@@ -98,13 +102,12 @@ def isro_command(self, four_letter_word_command="isro", output="rw"):
 
 
 @TestScenario
-@Retry(timeout=120, delay=10)
 def wchs_command(
     self, four_letter_word_command="wchs", output="connections watching 1 paths"
 ):
     """Check 'isro' has in output "rw:"."""
     four_letter_word_commands(
-        four_letter_word_command=four_letter_word_command, output=output
+        four_letter_word_command=four_letter_word_command, output=output, timeout=200
     )
 
 
