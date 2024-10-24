@@ -185,6 +185,18 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/63539",
         )
     ],
+    "/window functions/tests/distributed/over clause/invalid window name/*": [
+        (Fail, "was fixed in 24.5", check_clickhouse_version("<24.5"))
+    ],
+    "/window functions/tests/distributed/errors/error using non window function/*": [
+        (Fail, "was fixed in 24.5", check_clickhouse_version("<24.5")),
+    ],
+    "/window functions/tests/non distributed/over clause/invalid window name/*": [
+        (Fail, "was fixed in 24.5", check_clickhouse_version("<24.5")),
+    ],
+    "/window functions/tests/non distributed/errors/error using non window function/*": [
+        (Fail, "was fixed in 24.5", check_clickhouse_version("<24.5")),
+    ],
 }
 
 xflags = {}
