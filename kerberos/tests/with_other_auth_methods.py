@@ -4,7 +4,7 @@ from kerberos.requirements.requirements import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_016_Kerberos_ValidUser_RBACConfiguredUser("1.0"))
+@Name("multiple auth methods with kerberos")
 def multiple_auth_methods(self):
     """ClickHouse SHALL support multiple authentication methods when one of them is Kerberos."""
     node = self.context.node
@@ -239,7 +239,7 @@ def revoke_kerberos_auth(self):
 
 
 @TestFeature
-@Name("Multiple authentication methods with Kerberos")
+@Name("multiple authentication methods with kerberos")
 def feature(self):
     """Test multiple authentication methods when one of them is Kerberos."""
     self.context.node = self.context.cluster.node("clickhouse1")
