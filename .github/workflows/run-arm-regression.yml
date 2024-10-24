@@ -1,7 +1,6 @@
 name: 🔬 Run Tests CI/CD on ARM
 run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | ARM', inputs.version)) || format('{0} | {1} | ARM', inputs.version, inputs.suite)}}
-  ${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
-  ${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
+  ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
 
 on:
@@ -12,21 +11,31 @@ on:
         required: true
         type: string
         default: docker://altinity/clickhouse-server:24.3.5.48.altinitytest
-      enable_thread_fuzzer:
-        description: "Enable thread fuzzer"
-        type: boolean
-        default: false
       version:
-        description: "🚩 Expected version. Example: 23.3.13.7.altinitytest"
+        description: "🎯 Expected version. Example: 23.3.13.7.altinitytest"
         type: string
         required: true
         default: 24.3.5.48.altinitytest
-      keeper_or_zookeeper:
-        description: "⚙️ Keeper or ZooKeeper"
+      flags:
+        description: "🚩 Flags"
         type: choice
-        options:
-          - keeper
-          - zookeeper
+        options: 
+          - "--use-keeper" 
+          - "none"
+          - "--as-binary"
+          - "--as-binary --use-keeper"
+          - "--thread-fuzzer"
+          - "--thread-fuzzer --use-keeper"
+          - "--thread-fuzzer --as-binary"
+          - "--thread-fuzzer --as-binary --use-keeper"
+          - "--with-analyzer"
+          - "--with-analyzer --use-keeper"
+          - "--with-analyzer --as-binary"
+          - "--with-analyzer --as-binary --use-keeper"
+          - "--thread-fuzzer --with-analyzer"
+          - "--thread-fuzzer --with-analyzer --use-keeper"
+          - "--thread-fuzzer --with-analyzer --as-binary"
+          - "--thread-fuzzer --with-analyzer --as-binary --use-keeper"
       suite:
         description: "🧪 Test suite to run (default: all)"
         type: choice
@@ -133,19 +142,19 @@ env:
   PYTHONIOENCODING: utf-8
   clickhouse_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
-  keeper_or_zookeeper: ${{ inputs.keeper_or_zookeeper }}
-  enable_thread_fuzzer: ${{ inputs.enable_thread_fuzzer }}
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --no-colors
     --local
     --clickhouse ${{ inputs.package }}
-    --clickhouse-version ${{ inputs.version }}${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
+    --clickhouse-version ${{ inputs.version }}
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
-    --log raw.log ${{ inputs.extra_args }}
+    --log raw.log
+    ${{ inputs.flags != 'none' && inputs.flags || ''}}
+    ${{ inputs.extra_args }}
   artifact_paths: |
     ./report.html
     ./*.log.txt

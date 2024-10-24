@@ -2,8 +2,7 @@ name: 🔬 Run Tests on x86 and ARM
 run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression', inputs.version)) || format('{0} | {1}', inputs.version, inputs.suite) }}
   ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64')  && ' | x86' || '' }}
   ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') && ' | ARM' || '' }}
-  ${{ inputs.enable_thread_fuzzer && ' | Thread Fuzzer' || '' }}
-  ${{ inputs.keeper_or_zookeeper == 'keeper' && ' | Keeper' || ' | ZooKeeper' }}
+  ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
 
 on:
@@ -14,21 +13,31 @@ on:
         required: true
         type: string
         default: docker://altinity/clickhouse-server:24.3.5.48.altinitytest
-      enable_thread_fuzzer:
-        description: "Enable thread fuzzer"
-        type: boolean
-        default: false
       version:
-        description: "🚩 Expected version. Example: 23.3.1.64"
+        description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
         required: true
         default: 24.3.5.48.altinitytest
-      keeper_or_zookeeper:
-        description: "⚙️ Keeper or ZooKeeper"
+      flags:
+        description: "🚩 Flags"
         type: choice
-        options:
-          - keeper
-          - zookeeper
+        options: 
+          - "--use-keeper" 
+          - "none"
+          - "--as-binary"
+          - "--as-binary --use-keeper"
+          - "--thread-fuzzer"
+          - "--thread-fuzzer --use-keeper"
+          - "--thread-fuzzer --as-binary"
+          - "--thread-fuzzer --as-binary --use-keeper"
+          - "--with-analyzer"
+          - "--with-analyzer --use-keeper"
+          - "--with-analyzer --as-binary"
+          - "--with-analyzer --as-binary --use-keeper"
+          - "--thread-fuzzer --with-analyzer"
+          - "--thread-fuzzer --with-analyzer --use-keeper"
+          - "--thread-fuzzer --with-analyzer --as-binary"
+          - "--thread-fuzzer --with-analyzer --as-binary --use-keeper"
       suite:
         description: "🧪 Test suite to run (default: all)"
         type: choice
@@ -135,9 +144,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
-      extra_args: ${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}
-        ${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
-        ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.flags }} ${{ inputs.extra_args }}
       artifact_name: x86
     
   arm:
@@ -151,7 +158,5 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
-      extra_args: ${{ inputs.enable_thread_fuzzer && ' --thread-fuzzer' || '' }}
-        ${{ inputs.keeper_or_zookeeper == 'keeper' && ' --use-keeper' || '' }}
-        ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.flags }} ${{ inputs.extra_args }}
       artifact_name: arm
