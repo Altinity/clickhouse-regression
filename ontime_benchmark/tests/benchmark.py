@@ -15,7 +15,9 @@ def insert_ontime_data(self, from_year, to_year, table_name, node=None):
         node = self.context.node
 
     node.query(
-        f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 20, receive_timeout=600, max_memory_usage=0;",
+        f"INSERT INTO {table_name} "
+        f"SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', CSVWithNames) "
+        "SETTINGS max_insert_threads = 20, receive_timeout=600, max_memory_usage=29500000000, max_insert_block_size=1048576;",
         timeout=1200,
     )
 
@@ -186,7 +188,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                 start_year = 2007
                 end_year = 2012
 
-            for retry in retries(timeout=60, delay=0.1):
+            for retry in retries(timeout=10, delay=1):
                 with retry:
                     Step(
                         name=f"insert data from {start_year} to {end_year} into ontime table",
