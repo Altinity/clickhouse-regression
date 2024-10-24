@@ -435,7 +435,7 @@ jobs:
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
-    if: ${{ contains('all benchmark_all benchmark_aws all_aws', inputs.suite)}}
+    if: ${{ inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' }}
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
@@ -473,7 +473,7 @@ jobs:
     env:
       SUITE: ontime_benchmark
       STORAGE: /gcs
-    if: ${{ contains('all benchmark_all benchmark_gcs all_gcs', inputs.suite)}}
+    if: ${{ inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' }}
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
@@ -1383,7 +1383,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /aws
-    if: ${{ contains('all s3_all s3_aws all_aws', inputs.suite)}}
+    if: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
@@ -1421,7 +1421,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /gcs
-    if: ${{ contains('all s3_all s3_gcs all_gcs', inputs.suite)}}
+    if: ${{ inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' }}
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
@@ -1588,7 +1588,7 @@ jobs:
     env:
       SUITE: tiered_storage
       STORAGE: /aws
-    if: ${{ contains('all tiered_storage_all tiered_storage_aws all_aws', inputs.suite)}}
+    if: ${{ inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' }}
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
@@ -1625,7 +1625,7 @@ jobs:
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
-    if: ${{ contains('all tiered_storage_all tiered_storage_gcs all_gcs', inputs.suite)}}
+    if: ${{ inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' }}
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
