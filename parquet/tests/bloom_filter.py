@@ -7,6 +7,7 @@ from parquet.tests.outline import import_export
 from parquet.tests.steps import *
 from parquet.tests.common import generate_values
 from helpers.common import *
+from parquet.tests.bloom_filter_steps import *
 
 
 @TestStep(When)
@@ -485,12 +486,12 @@ def read_parquet_with_bloom_filter(self):
     encodings = ["DICTIONARY", "BYTE_STREAM_SPLIT", "PLAIN"]
     bloom_filter = ["all"]
     schema_type = [
-        "optional",
-        "required",
-        "repeated",
-        "optionalGroup",
-        "requiredGroup",
-        "repeatedGroup",
+        optional,
+        required,
+        repeated,
+        optional_group,
+        required_group,
+        repeated_group,
     ]
     physical_types = [
         "INT32",
@@ -502,33 +503,33 @@ def read_parquet_with_bloom_filter(self):
         "FIXED_LEN_BYTE_ARRAY",
     ]
     logical_types = [
-        "UTF8",
-        "DECIMAL",
-        "DATE",
-        "TIME_MILLIS",
-        "TIME_MICROS",
-        "TIMESTAMP_MILLIS",
-        "TIMESTAMP_MICROS",
-        "ENUM",
-        "MAP",
-        "LIST",
-        "STRING",
-        "MAP_KEY_VALUE",
-        "TIME",
-        "INTEGER",
-        "JSON",
-        "BSON",
-        "UUID",
-        "INTERVAL",
-        "FLOAT16",
-        "UINT8",
-        "UINT16",
-        "UINT32",
-        "UINT64",
-        "INT8",
-        "INT16",
-        "INT32",
-        "INT64",
+        utf8,
+        decimal,
+        date,
+        time_millis,
+        time_micros,
+        timestamp_millis,
+        timestamp_micros,
+        enum,
+        map,
+        list,
+        string,
+        map_key_value,
+        time,
+        integer,
+        json,
+        bson,
+        uuid,
+        interval,
+        float16,
+        uint8,
+        uint16,
+        uint32,
+        uint64,
+        int8,
+        int16,
+        int32,
+        int64,
     ]
     filter = ["true", "false"]
     statements = ["*"]
