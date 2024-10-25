@@ -12,7 +12,50 @@ schema_type = [
 
 @TestStep
 def file_name(self, file_name):
+    """Define the name of the created Parquet file."""
     return {"fileName": file_name}
+
+
+@TestStep
+def schema(self, schema):
+    """Define the schema of the Parquet file."""
+    return {"schema": schema}
+
+
+@TestStep
+def options(self, options):
+    """Define the options of the Parquet file."""
+    return {"options": options}
+
+
+@TestStep
+def writer_version(self, version):
+    """Define the writer version of the Parquet file."""
+    return {"writerVersion": version}
+
+
+@TestStep
+def compression(self, compression):
+    """Define the compression of the Parquet file."""
+    return {"compression": compression}
+
+
+@TestStep
+def row_group_size(self, row_group_size):
+    """Define the row group size of the Parquet file."""
+    return {"rowGroupSize": row_group_size}
+
+
+@TestStep
+def page_size(self, page_size):
+    """Define the page size of the Parquet file."""
+    return {"pageSize": page_size}
+
+
+@TestStep
+def bloom_filter(self, bloom_filter):
+    """Define the bloom filter of the Parquet file."""
+    return {"bloomFilter": bloom_filter}
 
 
 @TestStep
