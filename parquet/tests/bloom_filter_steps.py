@@ -11,9 +11,9 @@ schema_type = [
 
 
 @TestStep
-def file_name(self, file_name):
+def parquet_file_name(self, filename):
     """Define the name of the created Parquet file."""
-    return {"fileName": file_name}
+    return {"fileName": filename}
 
 
 @TestStep
@@ -29,92 +29,135 @@ def options(self, options):
 
 
 @TestStep
-def writer_version(self, version):
+def writer_version_1_0(self):
     """Define the writer version of the Parquet file."""
-    return {"writerVersion": version}
+    return {"writerVersion": "1.0"}
 
 
 @TestStep
-def compression(self, compression):
-    """Define the compression of the Parquet file."""
-    return {"compression": compression}
+def writer_version_2_0(self):
+    """Define the writer version of the Parquet file."""
+    return {"writerVersion": "2.0"}
 
 
 @TestStep
-def row_group_size(self, row_group_size):
+def snappy_compression(self):
+    """Define the compression of the Parquet file as SNAPPY."""
+    return {"compression": "SNAPPY"}
+
+
+@TestStep
+def gzip_compression(self):
+    """Define the compression of the Parquet file as GZIP."""
+    return {"compression": "GZIP"}
+
+
+@TestStep
+def lzo_compression(self):
+    """Define the compression of the Parquet file as LZO."""
+    return {"compression": "LZO"}
+
+
+@TestStep
+def uncompressed(self):
+    """Define the compression of the Parquet file as UNCOMPRESSED."""
+    return {"compression": "UNCOMPRESSED"}
+
+
+@TestStep
+def row_group_size(self, row_group_size=134217728):
     """Define the row group size of the Parquet file."""
     return {"rowGroupSize": row_group_size}
 
 
 @TestStep
-def page_size(self, page_size):
+def page_size(self, page_size=1048576):
     """Define the page size of the Parquet file."""
     return {"pageSize": page_size}
 
 
 @TestStep
-def bloom_filter(self, bloom_filter):
-    """Define the bloom filter of the Parquet file."""
-    return {"bloomFilter": bloom_filter}
+def encodings(self, encodings=None):
+    """Define the encodings of the Parquet file."""
+    if encodings is None:
+        encodings = ["PLAIN"]
+    return {"encodings": encodings}
 
 
 @TestStep
-def optional(self, name, physical_type, data, logical_type=None):
+def bloom_filter(self, filter="all"):
+    """Define the bloom filter of the Parquet file."""
+    return {"bloomFilter": filter}
+
+
+@TestStep
+def optional(self, name, data, physical_type=None, logical_type=None):
     """Entry for optional schema type."""
     optional_type = {
         "name": name,
         "schemaType": "optional",
-        "physicalType": physical_type,
-        "logicalType": logical_type,
         "data": data,
     }
 
     if logical_type is not None:
         optional_type.update(logical_type)
 
+    if physical_type is not None:
+        optional_type.update(physical_type)
+
     return optional_type
 
 
 @TestStep
-def required(self, name, physical_type, data, logical_type=None):
+def required(self, name, data, physical_type=None, logical_type=None):
     """Entry for required schema type."""
     required_type = {
         "name": name,
         "schemaType": "required",
-        "physicalType": physical_type,
         "data": data,
     }
 
     if logical_type is not None:
         required_type.update(logical_type)
 
+    if physical_type is not None:
+        required_type.update(physical_type)
+
     return required_type
 
 
 @TestStep
-def repeated(self, name, data, physical_type, logical_type=None):
+def repeated(self, name, data, physical_type=None, logical_type=None):
     """Entry for repeated schema type."""
     repeated_type = {
         "name": name,
         "schemaType": "repeated",
-        "physicalType": physical_type,
         "data": data,
     }
 
     if logical_type is not None:
         repeated_type.update(logical_type)
 
+    if physical_type is not None:
+        repeated_type.update(physical_type)
+
     return repeated_type
 
 
 @TestStep
-def optional_group(self, name, physical_type, data, logical_type=None):
+def optional_group(self, name, data, physical_type=None, logical_type=None):
     """Entry for optional group schema type."""
     schema = {
         "name": name,
         "schemaType": "repeated",
-        "physicalType": physical_type,
     }
+
+    if logical_type is not None:
+        schema.update(logical_type)
+
+    if physical_type is not None:
+        schema.update(physical_type)
+
     optional_group_type = {
         "name": name,
         "schemaType": "optionalGroup",
@@ -122,20 +165,23 @@ def optional_group(self, name, physical_type, data, logical_type=None):
         "data": data,
     }
 
-    if logical_type is not None:
-        schema.update(logical_type)
-
     return optional_group_type
 
 
 @TestStep
-def required_group(self, name, physical_type, data, logical_type=None):
+def required_group(self, name, data, physical_type=None, logical_type=None):
     """Entry for required group schema type."""
     schema = {
         "name": name,
         "schemaType": "repeated",
-        "physicalType": physical_type,
     }
+
+    if logical_type is not None:
+        schema.update(logical_type)
+
+    if physical_type is not None:
+        schema.update(physical_type)
+
     required_group_type = {
         "name": name,
         "schemaType": "requiredGroup",
@@ -143,29 +189,29 @@ def required_group(self, name, physical_type, data, logical_type=None):
         "data": data,
     }
 
-    if logical_type is not None:
-        schema.update(logical_type)
-
     return required_group_type
 
 
 @TestStep
-def repeated_group(self, name, physical_type, data, logical_type=None):
+def repeated_group(self, name, data, physical_type=None, logical_type=None):
     """Entry for repeated group schema type."""
     schema = {
         "name": name,
         "schemaType": "repeated",
-        "physicalType": physical_type,
     }
+
+    if logical_type is not None:
+        schema.update(logical_type)
+
+    if physical_type is not None:
+        schema.update(physical_type)
+
     repeated_group_type = {
         "name": name,
         "schemaType": "repeatedGroup",
         "fields": [schema],
         "data": data,
     }
-
-    if logical_type is not None:
-        schema.update(logical_type)
 
     return repeated_group_type
 
@@ -330,3 +376,51 @@ def int32(self):
 def int64(self):
     """Entry for INT64 logical type."""
     return {"logicalType": "INT64"}
+
+
+@TestStep
+def int32_physical(self):
+    """Entry for INT32 physical type."""
+    return {"physicalType": "INT32"}
+
+
+@TestStep
+def int64_physical(self):
+    """Entry for INT64 physical type."""
+    return {"physicalType": "INT64"}
+
+
+@TestStep
+def int96_physical(self):
+    """Entry for INT96 physical type."""
+    return {"physicalType": "INT96"}
+
+
+@TestStep
+def boolean_physical(self):
+    """Entry for BOOLEAN physical type."""
+    return {"physicalType": "BOOLEAN"}
+
+
+@TestStep
+def float_physical(self):
+    """Entry for FLOAT physical type."""
+    return {"physicalType": "FLOAT"}
+
+
+@TestStep
+def double_physical(self):
+    """Entry for DOUBLE physical type."""
+    return {"physicalType": "DOUBLE"}
+
+
+@TestStep
+def binary_physical(self):
+    """Entry for BINARY physical type."""
+    return {"physicalType": "BINARY"}
+
+
+@TestStep
+def fixed_len_byte_array_physical(self, length=2):
+    """Entry for FIXED_LEN_BYTE_ARRAY physical type."""
+    return {"physicalType": "FIXED_LEN_BYTE_ARRAY", "length": length}
