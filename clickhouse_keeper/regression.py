@@ -67,6 +67,14 @@ xfails = {
     "ports ssl fips/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
+    "ports ssl fips/openssl all ports/port﹕9444": [
+        (
+            Fail,
+            "Doesn't work as expected on 24.3 altinitystable and 24.9 upstream",
+            check_clickhouse_version(">=24.3"),
+            r".+Connection reset by peer in connection.+",
+        )
+    ],
     "ports ssl fips/:/:/just disabling "
     + clean("TLSv1_1 suite connection should work"): [(Fail, "needs to be reviewed")],
     "/clickhouse keeper/cli converter/output dir invalid": [
