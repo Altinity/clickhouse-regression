@@ -1,15 +1,5 @@
 from testflows.core import *
 
-schema_type = [
-    "optional",
-    "required",
-    "repeated",
-    "optionalGroup",
-    "requiredGroup",
-    "repeatedGroup",
-]
-
-
 @TestStep
 def parquet_file_name(self, filename):
     """Define the name of the created Parquet file."""
