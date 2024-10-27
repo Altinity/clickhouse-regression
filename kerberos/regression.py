@@ -15,34 +15,34 @@ xfails = {
     "config/principal and realm specified/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/26197")
     ],
-    "/kerberos/multiple authentication methods with kerberos/kerberos with valid until and other authentication methods/*": [
-        (
-            Fail,
-            "valid until for multiple auth methods is not supported before 24.11",
-            check_clickhouse_version("<24.11"),
-        )
-    ],
-    "/kerberos/multiple authentication methods with kerberos/multiple auth methods with kerberos/*": [
-        (
-            Fail,
-            "multiple auth methods are not supported before 24.9",
-            check_clickhouse_version("<24.9"),
-        )
-    ],
-    "/kerberos/multiple authentication methods with kerberos/add kerberos auth to existing user/*": [
-        (
-            Fail,
-            "multiple auth methods are not supported before 24.9",
-            check_clickhouse_version("<24.9"),
-        )
-    ],
-    "/kerberos/multiple authentication methods with kerberos/revoke kerberos auth from existing user/*": [
-        (
-            Fail,
-            "multiple auth methods are not supported before 24.9",
-            check_clickhouse_version("<24.9"),
-        )
-    ],
+}
+
+ffails = {
+    "/kerberos/multiple authentication methods with kerberos/kerberos with valid until and other authentication methods": (
+        Skip,
+        "valid until for multiple auth methods is not supported before 24.11",
+        check_clickhouse_version("<24.11"),
+    ),
+    "/kerberos/multiple authentication methods with kerberos/multiple auth methods with kerberos": (
+        Skip,
+        "multiple auth methods are not supported before 24.9",
+        check_clickhouse_version("<24.9"),
+    ),
+    "/kerberos/multiple authentication methods with kerberos/add kerberos auth to existing user": (
+        Skip,
+        "multiple auth methods are not supported before 24.9",
+        check_clickhouse_version("<24.9"),
+    ),
+    "/kerberos/multiple authentication methods with kerberos/revoke kerberos auth from existing user": (
+        Skip,
+        "multiple auth methods are not supported before 24.9",
+        check_clickhouse_version("<24.9"),
+    ),
+    "/kerberos/multiple authentication methods with kerberos/kerberos with valid until": (
+        Skip,
+        "valid until was introduced in 23.9",
+        check_clickhouse_version("<23.9"),
+    ),
 }
 
 
@@ -51,6 +51,7 @@ xfails = {
 @ArgumentParser(argparser)
 @Requirements(RQ_SRS_016_Kerberos("1.0"))
 @XFails(xfails)
+@FFails(ffails)
 @CaptureClusterArgs
 def regression(
     self,
