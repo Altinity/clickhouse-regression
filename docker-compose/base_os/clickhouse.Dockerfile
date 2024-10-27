@@ -13,5 +13,5 @@ RUN if [ -f /etc/alpine-release ]; then \
     apk add --no-cache curl openssl shadow; \
     else \
     apt-get update && \
-    apt-get install -y curl; \
+    apt-get install -y curl openssh-client; \
     fi
