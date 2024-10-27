@@ -341,13 +341,13 @@ ffails = {
     ),
     "/rbac/multiple authentication methods/valid until clause combinatorics": (
         Skip,
-        "multiple authentication methods were introduced in 24.11",
-        check_clickhouse_version("<24.11"),
+        "multiple authentication methods were introduced in 24.12",
+        check_clickhouse_version("<24.12"),
     ),
     "/rbac/multiple authentication methods/valid until": (
         Skip,
-        "multiple authentication methods were introduced in 24.11",
-        check_clickhouse_version("<24.11"),
+        "multiple authentication methods were introduced in 24.12",
+        check_clickhouse_version("<24.12"),
     ),
 }
 

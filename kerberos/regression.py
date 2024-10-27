@@ -20,8 +20,8 @@ xfails = {
 ffails = {
     "/kerberos/multiple authentication methods with kerberos/kerberos with valid until and other authentication methods": (
         Skip,
-        "valid until for multiple auth methods is not supported before 24.11",
-        check_clickhouse_version("<24.11"),
+        "valid until for multiple auth methods is not supported before 24.12",
+        check_clickhouse_version("<24.12"),
     ),
     "/kerberos/multiple authentication methods with kerberos/multiple auth methods with kerberos": (
         Skip,
