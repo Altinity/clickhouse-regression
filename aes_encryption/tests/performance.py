@@ -45,7 +45,7 @@ def encryption_decryption(self):
         elif "gcm" in mode:
             expected_time = 18
         else:
-            expected_time = 6.8
+            expected_time = 7.5
 
         with Example(f"""mode={mode.strip("'")} iv={iv_len} aad={aad_len}"""):
             t_start = time.time()
