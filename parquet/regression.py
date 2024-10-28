@@ -327,10 +327,6 @@ ffails = {
         "Multi directory globs are not introduced for these versions",
         check_clickhouse_version("<23.8"),
     ),
-    "/parquet/bloom": (
-        Skip,
-        "Not implemented yet",
-    ),
     "/parquet/*/s3/compression type/*/outline/engine/*": (
         Skip,
         "Unsupported compression type",
@@ -557,13 +553,12 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        if check_current_cpu("x86_64"):
-            Feature(
-                run=load("parquet.tests.bloom_filter", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
+        Feature(
+            run=load("parquet.tests.bloom_filter", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
         Feature(
             run=load("parquet.tests.read_and_write", "feature"),
             parallel=True,

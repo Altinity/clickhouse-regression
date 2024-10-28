@@ -1,5 +1,6 @@
 from testflows.core import *
 
+
 @TestStep(Given)
 def parquet_file_name(self, filename):
     """Define the name of the created Parquet file."""
@@ -213,7 +214,7 @@ def utf8(self):
 
 
 @TestStep(Given)
-def decimal(self, precision, scale):
+def decimal(self, precision=5, scale=2):
     """Entry for DECIMAL logical type."""
     return {"logicalType": "DECIMAL", "PRECISION": precision, "SCALE": scale}
 
@@ -291,7 +292,7 @@ def integer(self):
 
 
 @TestStep(Given)
-def json(self):
+def json_type(self):
     """Entry for JSON logical type."""
     return {"logicalType": "JSON"}
 
