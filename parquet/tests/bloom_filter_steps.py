@@ -1,72 +1,72 @@
 from testflows.core import *
 
-@TestStep
+@TestStep(Given)
 def parquet_file_name(self, filename):
     """Define the name of the created Parquet file."""
     return {"fileName": filename}
 
 
-@TestStep
+@TestStep(Given)
 def schema(self, schema):
     """Define the schema of the Parquet file."""
-    return {"schema": schema}
+    return {"schema": [schema]}
 
 
-@TestStep
+@TestStep(Given)
 def options(self, options):
     """Define the options of the Parquet file."""
     return {"options": options}
 
 
-@TestStep
+@TestStep(Given)
 def writer_version_1_0(self):
     """Define the writer version of the Parquet file."""
     return {"writerVersion": "1.0"}
 
 
-@TestStep
+@TestStep(Given)
 def writer_version_2_0(self):
     """Define the writer version of the Parquet file."""
     return {"writerVersion": "2.0"}
 
 
-@TestStep
+@TestStep(Given)
 def snappy_compression(self):
     """Define the compression of the Parquet file as SNAPPY."""
     return {"compression": "SNAPPY"}
 
 
-@TestStep
+@TestStep(Given)
 def gzip_compression(self):
     """Define the compression of the Parquet file as GZIP."""
     return {"compression": "GZIP"}
 
 
-@TestStep
+@TestStep(Given)
 def lzo_compression(self):
     """Define the compression of the Parquet file as LZO."""
     return {"compression": "LZO"}
 
 
-@TestStep
+@TestStep(Given)
 def uncompressed(self):
     """Define the compression of the Parquet file as UNCOMPRESSED."""
     return {"compression": "UNCOMPRESSED"}
 
 
-@TestStep
+@TestStep(Given)
 def row_group_size(self, row_group_size=134217728):
     """Define the row group size of the Parquet file."""
     return {"rowGroupSize": row_group_size}
 
 
-@TestStep
+@TestStep(Given)
 def page_size(self, page_size=1048576):
     """Define the page size of the Parquet file."""
     return {"pageSize": page_size}
 
 
-@TestStep
+@TestStep(Given)
 def encodings(self, encodings=None):
     """Define the encodings of the Parquet file."""
     if encodings is None:
@@ -74,13 +74,13 @@ def encodings(self, encodings=None):
     return {"encodings": encodings}
 
 
-@TestStep
+@TestStep(Given)
 def bloom_filter(self, filter="all"):
     """Define the bloom filter of the Parquet file."""
     return {"bloomFilter": filter}
 
 
-@TestStep
+@TestStep(Given)
 def optional(self, name, data, physical_type=None, logical_type=None):
     """Entry for optional schema type."""
     optional_type = {
@@ -98,7 +98,7 @@ def optional(self, name, data, physical_type=None, logical_type=None):
     return optional_type
 
 
-@TestStep
+@TestStep(Given)
 def required(self, name, data, physical_type=None, logical_type=None):
     """Entry for required schema type."""
     required_type = {
@@ -116,7 +116,7 @@ def required(self, name, data, physical_type=None, logical_type=None):
     return required_type
 
 
-@TestStep
+@TestStep(Given)
 def repeated(self, name, data, physical_type=None, logical_type=None):
     """Entry for repeated schema type."""
     repeated_type = {
@@ -134,7 +134,7 @@ def repeated(self, name, data, physical_type=None, logical_type=None):
     return repeated_type
 
 
-@TestStep
+@TestStep(Given)
 def optional_group(self, name, data, physical_type=None, logical_type=None):
     """Entry for optional group schema type."""
     schema = {
@@ -158,7 +158,7 @@ def optional_group(self, name, data, physical_type=None, logical_type=None):
     return optional_group_type
 
 
-@TestStep
+@TestStep(Given)
 def required_group(self, name, data, physical_type=None, logical_type=None):
     """Entry for required group schema type."""
     schema = {
@@ -182,7 +182,7 @@ def required_group(self, name, data, physical_type=None, logical_type=None):
     return required_group_type
 
 
-@TestStep
+@TestStep(Given)
 def repeated_group(self, name, data, physical_type=None, logical_type=None):
     """Entry for repeated group schema type."""
     schema = {
@@ -206,211 +206,217 @@ def repeated_group(self, name, data, physical_type=None, logical_type=None):
     return repeated_group_type
 
 
-@TestStep
+@TestStep(Given)
 def utf8(self):
     """Entry for UTF8 logical type."""
     return {"logicalType": "UTF8"}
 
 
-@TestStep
+@TestStep(Given)
 def decimal(self, precision, scale):
     """Entry for DECIMAL logical type."""
     return {"logicalType": "DECIMAL", "PRECISION": precision, "SCALE": scale}
 
 
-@TestStep
+@TestStep(Given)
 def date(self):
     """Entry for DATE logical type."""
     return {"logicalType": "DATE"}
 
 
-@TestStep
+@TestStep(Given)
 def time_millis(self):
     """Entry for TIME_MILLIS logical type."""
     return {"logicalType": "TIME_MILLIS"}
 
 
-@TestStep
+@TestStep(Given)
 def time_micros(self):
     """Entry for TIME_MICROS logical type."""
     return {"logicalType": "TIME_MICROS"}
 
 
-@TestStep
+@TestStep(Given)
 def timestamp_millis(self):
     """Entry for TIMESTAMP_MILLIS logical type."""
     return {"logicalType": "TIMESTAMP_MILLIS"}
 
 
-@TestStep
+@TestStep(Given)
 def timestamp_micros(self):
     """Entry for TIMESTAMP_MICROS logical type."""
     return {"logicalType": "TIMESTAMP_MICROS"}
 
 
-@TestStep
+@TestStep(Given)
 def enum(self):
     """Entry for ENUM logical type."""
     return {"logicalType": "ENUM"}
 
 
-@TestStep
+@TestStep(Given)
 def map(self):
     """Entry for MAP logical type."""
     return {"logicalType": "MAP"}
 
 
-@TestStep
+@TestStep(Given)
 def list(self):
     """Entry for LIST logical type."""
     return {"logicalType": "LIST"}
 
 
-@TestStep
+@TestStep(Given)
 def string(self):
     """Entry for STRING logical type."""
     return {"logicalType": "STRING"}
 
 
-@TestStep
+@TestStep(Given)
 def map_key_value(self):
     """Entry for MAP_KEY_VALUE logical type."""
     return {"logicalType": "MAP_KEY_VALUE"}
 
 
-@TestStep
+@TestStep(Given)
 def time(self):
     """Entry for TIME logical type."""
     return {"logicalType": "TIME"}
 
 
-@TestStep
+@TestStep(Given)
 def integer(self):
     """Entry for INTEGER logical type."""
     return {"logicalType": "INTEGER"}
 
 
-@TestStep
+@TestStep(Given)
 def json(self):
     """Entry for JSON logical type."""
     return {"logicalType": "JSON"}
 
 
-@TestStep
+@TestStep(Given)
 def bson(self):
     """Entry for BSON logical type."""
     return {"logicalType": "BSON"}
 
 
-@TestStep
+@TestStep(Given)
 def uuid(self):
     """Entry for UUID logical type."""
     return {"logicalType": "UUID"}
 
 
-@TestStep
+@TestStep(Given)
 def interval(self):
     """Entry for INTERVAL logical type."""
     return {"logicalType": "INTERVAL"}
 
 
-@TestStep
+@TestStep(Given)
 def float16(self):
     """Entry for FLOAT16 logical type."""
     return {"logicalType": "FLOAT16"}
 
 
-@TestStep
+@TestStep(Given)
 def uint8(self):
     """Entry for UINT8 logical type."""
     return {"logicalType": "UINT8"}
 
 
-@TestStep
+@TestStep(Given)
 def uint16(self):
     """Entry for UINT16 logical type."""
     return {"logicalType": "UINT16"}
 
 
-@TestStep
+@TestStep(Given)
 def uint32(self):
     """Entry for UINT32 logical type."""
     return {"logicalType": "UINT32"}
 
 
-@TestStep
+@TestStep(Given)
 def uint64(self):
     """Entry for UINT64 logical type."""
     return {"logicalType": "UINT64"}
 
 
-@TestStep
+@TestStep(Given)
 def int8(self):
     """Entry for INT8 logical type."""
     return {"logicalType": "INT8"}
 
 
-@TestStep
+@TestStep(Given)
 def int16(self):
     """Entry for INT16 logical type."""
     return {"logicalType": "INT16"}
 
 
-@TestStep
+@TestStep(Given)
 def int32(self):
     """Entry for INT32 logical type."""
     return {"logicalType": "INT32"}
 
 
-@TestStep
+@TestStep(Given)
 def int64(self):
     """Entry for INT64 logical type."""
     return {"logicalType": "INT64"}
 
 
-@TestStep
+@TestStep(Given)
 def int32_physical(self):
     """Entry for INT32 physical type."""
     return {"physicalType": "INT32"}
 
 
-@TestStep
+@TestStep(Given)
 def int64_physical(self):
     """Entry for INT64 physical type."""
     return {"physicalType": "INT64"}
 
 
-@TestStep
+@TestStep(Given)
 def int96_physical(self):
     """Entry for INT96 physical type."""
     return {"physicalType": "INT96"}
 
 
-@TestStep
+@TestStep(Given)
 def boolean_physical(self):
     """Entry for BOOLEAN physical type."""
     return {"physicalType": "BOOLEAN"}
 
 
-@TestStep
+@TestStep(Given)
 def float_physical(self):
     """Entry for FLOAT physical type."""
     return {"physicalType": "FLOAT"}
 
 
-@TestStep
+@TestStep(Given)
 def double_physical(self):
     """Entry for DOUBLE physical type."""
     return {"physicalType": "DOUBLE"}
 
 
-@TestStep
+@TestStep(Given)
 def binary_physical(self):
     """Entry for BINARY physical type."""
     return {"physicalType": "BINARY"}
 
 
-@TestStep
+@TestStep(Given)
 def fixed_len_byte_array_physical(self, length=2):
     """Entry for FIXED_LEN_BYTE_ARRAY physical type."""
     return {"physicalType": "FIXED_LEN_BYTE_ARRAY", "length": length}
+
+
+@TestStep(Given)
+def no_logical_type(self):
+    """Entry for no logical type."""
+    return None
