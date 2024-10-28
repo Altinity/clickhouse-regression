@@ -6,8 +6,8 @@ from parquet.requirements import *
 from parquet.tests.outline import import_export
 from parquet.tests.common import generate_values
 from helpers.common import *
-from parquet.tests.bloom_filter_steps import *
-from parquet.tests.steps import select_from_parquet, parquetify
+from parquet.tests.steps.bloom_filter import *
+from parquet.tests.steps.general import select_from_parquet, parquetify
 
 
 @TestStep(When)
