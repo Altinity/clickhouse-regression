@@ -282,9 +282,9 @@ def check_bloom_filter_on_parquet(
         file_schema = schema(schema=schema_values)
 
         file_definition.update(file_schema)
-
-    with open(path, "w") as json_file:
-        json.dump(file_definition, json_file, indent=2)
+    with And(f"I save the JSON definition to a file {json_file_name}"):
+        with open(path, "w") as json_file:
+            json.dump(file_definition, json_file, indent=2)
 
     with And(f"generate a parquet file {parquet_file}"):
         parquetify(
@@ -292,7 +292,7 @@ def check_bloom_filter_on_parquet(
             output_path=self.context.parquet_output_path,
         )
 
-    with And("I get the total number of rows in the parquet file"):
+    with When("I get the total number of rows in the parquet file"):
         initial_rows = total_number_of_rows(file_name=parquet_file)
 
     with Check("I check that the bloom filter is being used by ClickHouse"):
@@ -352,229 +352,20 @@ def check_bloom_filter_on_parquet(
                 ), error()
 
 
-@TestSketch(Scenario)
+@TestSketch(Outline)
 @Flags(TE)
-def read_parquet_with_bloom_filter(self):
+def read_parquet_with_utf8_bloom_filter(self, logical_type, statements=None):
     """Read parquet files with different structure with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
 
-    conversions = [
-        "toBool",
-        "toInt8",
-        "toInt8OrZero",
-        "toInt8OrNull",
-        "toInt8OrDefault",
-        "toInt16",
-        "toInt16OrZero",
-        "toInt16OrNull",
-        "toInt16OrDefault",
-        "toInt32",
-        "toInt32OrZero",
-        "toInt32OrNull",
-        "toInt32OrDefault",
-        "toInt64",
-        "toInt64OrZero",
-        "toInt64OrNull",
-        "toInt64OrDefault",
-        "toInt128",
-        "toInt128OrZero",
-        "toInt128OrNull",
-        "toInt128OrDefault",
-        "toInt256",
-        "toInt256OrZero",
-        "toInt256OrNull",
-        "toInt256OrDefault",
-        "toUInt8",
-        "toUInt8OrZero",
-        "toUInt8OrNull",
-        "toUInt8OrDefault",
-        "toUInt16",
-        "toUInt16OrZero",
-        "toUInt16OrNull",
-        "toUInt16OrDefault",
-        "toUInt32",
-        "toUInt32OrZero",
-        "toUInt32OrNull",
-        "toUInt32OrDefault",
-        "toUInt64",
-        "toUInt64OrZero",
-        "toUInt64OrNull",
-        "toUInt64OrDefault",
-        "toUInt128",
-        "toUInt128OrZero",
-        "toUInt128OrNull",
-        "toUInt128OrDefault",
-        "toUInt256",
-        "toUInt256OrZero",
-        "toUInt256OrNull",
-        "toUInt256OrDefault",
-        "toFloat32",
-        "toFloat32OrZero",
-        "toFloat32OrNull",
-        "toFloat32OrDefault",
-        "toFloat64",
-        "toFloat64OrZero",
-        "toFloat64OrNull",
-        "toFloat64OrDefault",
-        "toDate",
-        "toDateOrZero",
-        "toDateOrNull",
-        "toDateOrDefault",
-        "toDateTime",
-        "toDateTimeOrZero",
-        "toDateTimeOrNull",
-        "toDateTimeOrDefault",
-        "toDate32",
-        "toDate32OrZero",
-        "toDate32OrNull",
-        "toDate32OrDefault",
-        "toDateTime64",
-        "toDateTime64OrZero",
-        "toDateTime64OrNull",
-        "toDateTime64OrDefault",
-        "toDecimal32",
-        "toDecimal32OrZero",
-        "toDecimal32OrNull",
-        "toDecimal32OrDefault",
-        "toDecimal64",
-        "toDecimal64OrZero",
-        "toDecimal64OrNull",
-        "toDecimal64OrDefault",
-        "toDecimal128",
-        "toDecimal128OrZero",
-        "toDecimal128OrNull",
-        "toDecimal128OrDefault",
-        "toDecimal256",
-        "toDecimal256OrZero",
-        "toDecimal256OrNull",
-        "toDecimal256OrDefault",
-        "toString",
-        "toFixedString",
-        "toStringCutToZero",
-        "toDecimalString",
-        "reinterpretAsUInt8",
-        "reinterpretAsUInt16",
-        "reinterpretAsUInt32",
-        "reinterpretAsUInt64",
-        "reinterpretAsUInt128",
-        "reinterpretAsUInt256",
-        "reinterpretAsInt8",
-        "reinterpretAsInt16",
-        "reinterpretAsInt32",
-        "reinterpretAsInt64",
-        "reinterpretAsInt128",
-        "reinterpretAsInt256",
-        "reinterpretAsFloat32",
-        "reinterpretAsFloat64",
-        "reinterpretAsDate",
-        "reinterpretAsDateTime",
-        "reinterpretAsString",
-        "reinterpretAsFixedString",
-        "reinterpretAsUUID",
-        "reinterpret",
-        "CAST",
-        "accurateCast(x, T)",
-        "accurateCastOrNull(x, T)",
-        "accurateCastOrDefault(x, T, default_value)",
-        "toIntervalYear",
-        "toIntervalQuarter",
-        "toIntervalMonth",
-        "toIntervalWeek",
-        "toIntervalDay",
-        "toIntervalHour",
-        "toIntervalMinute",
-        "toIntervalSecond",
-        "toIntervalMillisecond",
-        "toIntervalMicrosecond",
-        "toIntervalNanosecond",
-        "parseDateTime",
-        "parseDateTimeOrZero",
-        "parseDateTimeOrNull",
-        "parseDateTimeInJodaSyntax",
-        "parseDateTimeInJodaSyntaxOrZero",
-        "parseDateTimeInJodaSyntaxOrNull",
-        "parseDateTimeBestEffort",
-        "parseDateTime32BestEffort",
-        "parseDateTimeBestEffortUS",
-        "parseDateTime32BestEffortOrNull",
-        "parseDateTimeBestEffortOrZero",
-        "parseDateTime32BestEffortOrZero",
-        "parseDateTimeBestEffortUSOrNull",
-        "parseDateTimeBestEffortUSOrZero",
-        "parseDateTime64BestEffort",
-        "parseDateTime64BestEffortUS",
-        "parseDateTime64BestEffortOrNull",
-        "parseDateTime64BestEffortOrZero",
-        "parseDateTime64BestEffortUSOrNull",
-        "parseDateTime64BestEffortUSOrZero",
-        "toLowCardinality",
-        "toUnixTimestamp64Milli",
-        "toUnixTimestamp64Micro",
-        "toUnixTimestamp64Nano",
-        "fromUnixTimestamp64Milli",
-        "fromUnixTimestamp64Micro",
-        "fromUnixTimestamp64Nano",
-        "formatRow",
-        "formatRowNoNewline",
-    ]
+    if statements is None:
+        statements = ["*"]
 
-    writer_version = [writer_version_1_0, writer_version_2_0]
-    compression = [snappy_compression, gzip_compression, lzo_compression, uncompressed]
-    encodings = ["DICTIONARY", "BYTE_STREAM_SPLIT", "PLAIN"]
-    schema_type = [
-        optional,
-        required,
-        repeated,
-        optional_group,
-        required_group,
-        repeated_group,
-    ]
-    physical_types = [
-        int32_physical,
-        int64_physical,
-        int96_physical,
-        boolean_physical,
-        float_physical,
-        double_physical,
-        binary_physical,
-        fixed_len_byte_array_physical,
-    ]
-    logical_types = [
-        utf8,
-        decimal,
-        date,
-        time_millis,
-        time_micros,
-        timestamp_millis,
-        timestamp_micros,
-        enum,
-        map,
-        list,
-        string,
-        map_key_value,
-        time,
-        integer,
-        json_type,
-        bson,
-        uuid,
-        interval,
-        float16,
-        uint8,
-        uint16,
-        uint32,
-        uint64,
-        int8,
-        int16,
-        int32,
-        int64,
-        no_logical_type,
-    ]
     filter = ["true", "false"]
-    statements = ["*"]
     check_bloom_filter_on_parquet(
         schema_type=either(*schema_type),
         writer_version=either(*writer_version),
         physical_type=either(*physical_types),
-        logical_type=either(*logical_types),
+        logical_type=logical_type,
         compression_value=either(*compression),
         statement=either(*statements),
         native_reader="false",
@@ -582,6 +373,202 @@ def read_parquet_with_bloom_filter(self):
         bloom_filter_on_clickhouse=either(*filter),
         conversions=conversions,
     )
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def utf8_with_bloom_filter(self):
+    """Read parquet files with utf-8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=utf8)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def decimal_with_bloom_filter(self):
+    """Read parquet files with decimal logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=decimal)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def date_with_bloom_filter(self):
+    """Read parquet files with date logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=date)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def time_millis_with_bloom_filter(self):
+    """Read parquet files with time-millis logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=time_millis)
+
+
+@TestSketch
+@Flags(TE)
+def time_micros_with_bloom_filter(self):
+    """Read parquet files with time-micros logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=time_micros)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def timestamp_millis_with_bloom_filter(self):
+    """Read parquet files with timestamp-millis logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=timestamp_millis)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def timestamp_micros_with_bloom_filter(self):
+    """Read parquet files with timestamp-micros logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=timestamp_micros)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def enum_with_bloom_filter(self):
+    """Read parquet files with enum logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=enum)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def map_with_bloom_filter(self):
+    """Read parquet files with map logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=map)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def list_with_bloom_filter(self):
+    """Read parquet files with list logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=list)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def string_with_bloom_filter(self):
+    """Read parquet files with string logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=string)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def map_key_value_with_bloom_filter(self):
+    """Read parquet files with map key value logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=map_key_value)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def time_with_bloom_filter(self):
+    """Read parquet files with time logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=time)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def integer_with_bloom_filter(self):
+    """Read parquet files with integer logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=integer)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def json_with_bloom_filter(self):
+    """Read parquet files with json logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=json_type)
+
+
+@TestSketch(Scenario)
+@Flags
+def bson_with_bloom_filter(self):
+    """Read parquet files with bson logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=bson)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uuid_with_bloom_filter(self):
+    """Read parquet files with uuid logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=uuid)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def interval_with_bloom_filter(self):
+    """Read parquet files with interval logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=interval)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def float16_with_bloom_filter(self):
+    """Read parquet files with float16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=float16)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint8_with_bloom_filter(self):
+    """Read parquet files with uint8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=uint8)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint16_with_bloom_filter(self):
+    """Read parquet files with uint16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=uint16)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint32_with_bloom_filter(self):
+    """Read parquet files with uint32 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=uint32)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint64_with_bloom_filter(self):
+    """Read parquet files with uint64 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=uint64)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int8_with_bloom_filter(self):
+    """Read parquet files with int8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=int8)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int16_with_bloom_filter(self):
+    """Read parquet files with int16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=int16)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int32_with_bloom_filter(self):
+    """Read parquet files with int32 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=int32)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int64_with_bloom_filter(self):
+    """Read parquet files with int64 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=int64)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def no_logical_type_with_bloom_filter(self):
+    """Read parquet files with no logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and integrity is kept."""
+    read_parquet_with_utf8_bloom_filter(logical_type=no_logical_type)
 
 
 @TestFeature
@@ -626,7 +613,5 @@ def feature(self, node="clickhouse1"):
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
 
-    Scenario(run=read_bloom_filter_parquet_files)
-    Scenario(run=read_bloom_filter_parquet_files_native_reader)
-    Scenario(run=native_reader_array_bloom)
-    Scenario(run=read_parquet_with_bloom_filter)
+    for scenario in loads(current_module(), Scenario):
+        scenario()
