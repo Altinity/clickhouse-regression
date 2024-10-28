@@ -1,7 +1,6 @@
 import os
 import json
 
-from lightweight_delete.tests.encrypted_disk import entries
 from parquet.requirements import *
 from parquet.tests.outline import import_export
 from parquet.tests.steps import *
@@ -222,7 +221,6 @@ def check_bloom_filter_on_parquet(
     physical_type,
     logical_type,
     compression_value,
-    bloom_filter,
     statement,
     native_reader,
     filter_pushdown,
@@ -231,46 +229,58 @@ def check_bloom_filter_on_parquet(
 ):
     """Check if the bloom filter is being used by ClickHouse."""
     json_file_name = getuid() + ".json"
-    parquet_file = (
-        f"{compression_value['compression']}_{physical_type}_{logical_type}"
-        + getuid()
-        + ".parquet"
-    )
-    column_name = logical_type.lower()
+    path = self.context.json_files_local + "/" + json_file_name
+    file_definition = {}
+    option_list = {}
+    schema_values = {}
 
-    if logical_type is None:
-        data = generate_values(physical_type, random.randint(1, 100))
-    else:
-        data = generate_values(logical_type, random.randint(1, 100))
+    with Given("I prepare data required for the parquet file"):
+        if logical_type is None:
+            data = generate_values(
+                physical_type()["physicalType"], random.randint(1, 100)
+            )
+        else:
+            data = generate_values(
+                logical_type()["logicalType"], random.randint(1, 100)
+            )
 
-    with Given("I create a parquet JSON definition"):
-        file_definition = {}
+
+        column_name = logical_type()["logicalType"].lower()
+        parquet_file = (
+            f"{compression_value()['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType']}_"
+            + getuid()
+            + ".parquet"
+        )
+    with And("I create a parquet JSON definition"):
 
         file_definition.update(parquet_file_name(filename=f"{parquet_file}"))
+        option_list.update(writer_version())
+        option_list.update(compression_value())
+        option_list.update(row_group_size())
+        option_list.update(page_size())
+        option_list.update(encodings())
+        option_list.update(bloom_filter())
 
-        file_options = options()
-        file_options.update(writer_version())
-        file_options.update(compression_value())
-        file_options.update(row_group_size())
-        file_options.update(page_size())
-        file_options.update(encodings())
-        file_options.update(bloom_filter())
+        file_options = options(options=option_list)
 
         file_definition.update(file_options)
 
-        file_schema = schema()
-        file_schema.update(
+        schema_values.update(
             schema_type(
                 name=column_name,
-                physical_type=physical_type,
-                logical_type=logical_type,
+                physical_type=physical_type(),
+                logical_type=logical_type(),
                 data=data,
             )
         )
 
-    with And(f"I save the JSON definition to a file {json_file_name}"):
-        with open(json_file_name, "w") as json_file:
-            json.dump(file_definition, json_file, indent=2)
+        file_schema = schema(schema=schema_values)
+
+        file_definition.update(file_schema)
+
+
+    with open("test_output.json", "w") as json_file:
+        json.dump(file_definition, json_file, indent=2)
 
     with And(f"Generate a parquet file {parquet_file}"):
         parquetify(
@@ -282,7 +292,7 @@ def check_bloom_filter_on_parquet(
         initial_rows = total_number_of_rows(file_name=parquet_file)
 
     for conversion in conversions:
-        condition = f"WHERE {column_name} = {conversion}({schema['data'][0]})"
+        condition = f"WHERE {column_name} = {conversion}({file_definition['data'][0]})"
         with And(
             "I read from the parquet file",
             description=f"""
@@ -547,6 +557,7 @@ def read_parquet_with_bloom_filter(self):
         int16,
         int32,
         int64,
+        no_logical_type,
     ]
     filter = ["true", "false"]
     statements = ["*"]
@@ -555,9 +566,7 @@ def read_parquet_with_bloom_filter(self):
         writer_version=either(*writer_version),
         physical_type=either(*physical_types),
         logical_type=either(*logical_types),
-        compression=either(*compression),
-        encodings=either(*encodings),
-        bloom_filter=bloom_filter,
+        compression_value=either(*compression),
         statement=either(*statements),
         native_reader="false",
         filter_pushdown=either(*filter),
