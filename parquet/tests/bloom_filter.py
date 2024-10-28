@@ -1,12 +1,13 @@
 import os
 import json
+import random
 
 from parquet.requirements import *
 from parquet.tests.outline import import_export
-from parquet.tests.steps import *
 from parquet.tests.common import generate_values
 from helpers.common import *
 from parquet.tests.bloom_filter_steps import *
+from parquet.tests.steps import select_from_parquet, parquetify
 
 
 @TestStep(When)
@@ -228,13 +229,18 @@ def check_bloom_filter_on_parquet(
     conversions,
 ):
     """Check if the bloom filter is being used by ClickHouse."""
-    json_file_name = getuid() + ".json"
-    path = self.context.json_files_local + "/" + json_file_name
     file_definition = {}
     option_list = {}
     schema_values = {}
 
     with Given("I prepare data required for the parquet file"):
+        json_file_name = (
+            f"{compression_value()['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType'] if logical_type is not None else 'None'}_"
+            + getuid()
+            + ".json"
+        )
+        path = self.context.json_files_local + "/" + json_file_name
+
         if logical_type is None:
             data = generate_values(
                 physical_type()["physicalType"], random.randint(1, 100)
@@ -244,10 +250,9 @@ def check_bloom_filter_on_parquet(
                 logical_type()["logicalType"], random.randint(1, 100)
             )
 
-
         column_name = logical_type()["logicalType"].lower()
         parquet_file = (
-            f"{compression_value()['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType']}_"
+            f"{compression_value()['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType'] if logical_type is not None else 'None'}_"
             + getuid()
             + ".parquet"
         )
@@ -278,11 +283,10 @@ def check_bloom_filter_on_parquet(
 
         file_definition.update(file_schema)
 
-
-    with open("test_output.json", "w") as json_file:
+    with open(path, "w") as json_file:
         json.dump(file_definition, json_file, indent=2)
 
-    with And(f"Generate a parquet file {parquet_file}"):
+    with And(f"generate a parquet file {parquet_file}"):
         parquetify(
             json_file=self.context.json_files + "/" + json_file_name,
             output_path=self.context.parquet_output_path,
@@ -291,15 +295,9 @@ def check_bloom_filter_on_parquet(
     with And("I get the total number of rows in the parquet file"):
         initial_rows = total_number_of_rows(file_name=parquet_file)
 
-    for conversion in conversions:
-        condition = f"WHERE {column_name} = {conversion}({file_definition['data'][0]})"
-        with And(
-            "I read from the parquet file",
-            description=f"""
-            Conversion: {condition} 
-            Bloom Filter: {bloom_filter_on_clickhouse}, 
-            Filter Pushdown: {filter_pushdown}""",
-        ):
+    with Check("I check that the bloom filter is being used by ClickHouse"):
+        for conversion in conversions:
+            condition = f"WHERE {column_name} = {conversion}({data[0]})"
             with By(
                 "selecting and saving the data from a parquet file without bloom filter enabled"
             ):
@@ -307,15 +305,24 @@ def check_bloom_filter_on_parquet(
                     file_name=parquet_file,
                     statement=statement,
                     condition=condition,
-                    format="Json",
+                    format="TabSeparated",
                     settings=f"input_format_parquet_use_native_reader={native_reader}",
+                    order_by="tuple(*)",
+                )
+
+                data_with_bloom = select_from_parquet(
+                    file_name=parquet_file,
+                    statement=statement,
+                    condition=condition,
+                    format="TabSeparated",
+                    settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
                     order_by="tuple(*)",
                 )
 
             with And(
                 f"selecting and saving the data from a parquet file with bloom filter {bloom_filter_on_clickhouse} and filter pushdown {filter_pushdown}"
             ):
-                data = select_from_parquet(
+                read_with_bloom = select_from_parquet(
                     file_name=parquet_file,
                     statement=statement,
                     condition=condition,
@@ -324,23 +331,25 @@ def check_bloom_filter_on_parquet(
                     order_by="tuple(*)",
                 )
 
-        with Then("I check that the number of rows read is correct"):
-            read_rows = rows_read(data.output.strip())
-            if bloom_filter_on_clickhouse == "true":
-                with By(
-                    "Checking that the number of rows read is lower then the total number of rows of a file"
-                ):
-                    assert read_rows < initial_rows, error()
-            else:
-                with By(
-                    "Checking that the number of rows read is equal to the total number of rows of a file"
-                ):
-                    assert read_rows == initial_rows, error()
+            with Then("I check that the number of rows read is correct"):
+                read_rows = rows_read(read_with_bloom.output.strip())
+                if bloom_filter_on_clickhouse == "true":
+                    with By(
+                        "Checking that the number of rows read is lower then the total number of rows of a file"
+                    ):
+                        assert read_rows < initial_rows, error()
+                else:
+                    with By(
+                        "Checking that the number of rows read is equal to the total number of rows of a file"
+                    ):
+                        assert read_rows == initial_rows, error()
 
-        with And(
-            "I check that the data is the same when reading with bloom filter and without"
-        ):
-            assert data.output.strip() == data_without_bloom.output.strip(), error()
+            with And(
+                "I check that the data is the same when reading with bloom filter and without"
+            ):
+                assert (
+                    data_with_bloom.output.strip() == data_without_bloom.output.strip()
+                ), error()
 
 
 @TestSketch(Scenario)
@@ -544,7 +553,7 @@ def read_parquet_with_bloom_filter(self):
         map_key_value,
         time,
         integer,
-        json,
+        json_type,
         bson,
         uuid,
         interval,
@@ -617,7 +626,6 @@ def feature(self, node="clickhouse1"):
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
 
-    # Scenario(run=read_and_write_file_with_bloom)
     Scenario(run=read_bloom_filter_parquet_files)
     Scenario(run=read_bloom_filter_parquet_files_native_reader)
     Scenario(run=native_reader_array_bloom)
