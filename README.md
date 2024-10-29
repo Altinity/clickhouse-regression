@@ -1,4 +1,13 @@
-## Scheduled Regression Runs
+<img align=right style="width: 5em;" src="https://github.com/user-attachments/assets/1e97270f-7925-4cc2-8791-8d0cc77fe512">
+
+<br>
+
+# 🔬 Regression Tests for ClickHouse®
+
+This directory contains integration tests written using 👽 [TestFlows] 🛸
+that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
+
+##  🗓 Scheduled Regression Runs
 
 Results for **the latest** scheduled workflow runs.
 
@@ -15,7 +24,7 @@ Results for **the latest** scheduled workflow runs.
 | **`22.8.15.25.altinitystable`** | [![Scheduled Altinity 22.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml)                        |
 | **`22.3.15.34.altinitystable`** | [![Scheduled Altinity 22.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-3.yml)                        |
 
-### Timetable of Scheduled Regression Runs
+## 📅 Timetable of Scheduled Regression Runs
 
 | Day           | latest & head | Every Other Version |
 | ------------- | ------------- | ------------------- |
@@ -27,14 +36,7 @@ Results for **the latest** scheduled workflow runs.
 | **Friday**    | ❌ No          | ❌ No                |
 | **Saturday**  | **✅ Yes**     | **✅ Yes**           |
 
-
-
-## Regression Tests in [TestFlows] for ClickHouse®
-
-This directory contains integration tests written using [TestFlows] 
-that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
-
-## Table of Contents
+## 🔍 Table of Contents
 
 * 1 [Supported Environment](#supported-environment)
 * 2 [Prerequisites](#prerequisites)
