@@ -354,7 +354,7 @@ def check_bloom_filter_on_parquet(
 
 @TestSketch(Outline)
 @Flags(TE)
-def read_parquet_with_utf8_bloom_filter(self, logical_type, statements=None):
+def read_parquet_with_bloom_filter(self, logical_type, statements=None):
     """Read parquet files with different structure with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
 
     if statements is None:
@@ -379,196 +379,196 @@ def read_parquet_with_utf8_bloom_filter(self, logical_type, statements=None):
 @Flags(TE)
 def utf8_with_bloom_filter(self):
     """Read parquet files with utf-8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=utf8)
+    read_parquet_with_bloom_filter(logical_type=utf8)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def decimal_with_bloom_filter(self):
     """Read parquet files with decimal logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=decimal)
+    read_parquet_with_bloom_filter(logical_type=decimal)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def date_with_bloom_filter(self):
     """Read parquet files with date logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=date)
+    read_parquet_with_bloom_filter(logical_type=date)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def time_millis_with_bloom_filter(self):
     """Read parquet files with time-millis logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=time_millis)
+    read_parquet_with_bloom_filter(logical_type=time_millis)
 
 
 @TestSketch
 @Flags(TE)
 def time_micros_with_bloom_filter(self):
     """Read parquet files with time-micros logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=time_micros)
+    read_parquet_with_bloom_filter(logical_type=time_micros)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def timestamp_millis_with_bloom_filter(self):
     """Read parquet files with timestamp-millis logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=timestamp_millis)
+    read_parquet_with_bloom_filter(logical_type=timestamp_millis)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def timestamp_micros_with_bloom_filter(self):
     """Read parquet files with timestamp-micros logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=timestamp_micros)
+    read_parquet_with_bloom_filter(logical_type=timestamp_micros)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def enum_with_bloom_filter(self):
     """Read parquet files with enum logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=enum)
+    read_parquet_with_bloom_filter(logical_type=enum)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def map_with_bloom_filter(self):
     """Read parquet files with map logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=map)
+    read_parquet_with_bloom_filter(logical_type=map)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def list_with_bloom_filter(self):
     """Read parquet files with list logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=list)
+    read_parquet_with_bloom_filter(logical_type=list)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def string_with_bloom_filter(self):
     """Read parquet files with string logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=string)
+    read_parquet_with_bloom_filter(logical_type=string)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def map_key_value_with_bloom_filter(self):
     """Read parquet files with map key value logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=map_key_value)
+    read_parquet_with_bloom_filter(logical_type=map_key_value)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def time_with_bloom_filter(self):
     """Read parquet files with time logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=time)
+    read_parquet_with_bloom_filter(logical_type=time)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def integer_with_bloom_filter(self):
     """Read parquet files with integer logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=integer)
+    read_parquet_with_bloom_filter(logical_type=integer)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def json_with_bloom_filter(self):
     """Read parquet files with json logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=json_type)
+    read_parquet_with_bloom_filter(logical_type=json_type)
 
 
 @TestSketch(Scenario)
 @Flags
 def bson_with_bloom_filter(self):
     """Read parquet files with bson logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=bson)
+    read_parquet_with_bloom_filter(logical_type=bson)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def uuid_with_bloom_filter(self):
     """Read parquet files with uuid logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=uuid)
+    read_parquet_with_bloom_filter(logical_type=uuid)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def interval_with_bloom_filter(self):
     """Read parquet files with interval logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=interval)
+    read_parquet_with_bloom_filter(logical_type=interval)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def float16_with_bloom_filter(self):
     """Read parquet files with float16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=float16)
+    read_parquet_with_bloom_filter(logical_type=float16)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def uint8_with_bloom_filter(self):
     """Read parquet files with uint8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=uint8)
+    read_parquet_with_bloom_filter(logical_type=uint8)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def uint16_with_bloom_filter(self):
     """Read parquet files with uint16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=uint16)
+    read_parquet_with_bloom_filter(logical_type=uint16)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def uint32_with_bloom_filter(self):
     """Read parquet files with uint32 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=uint32)
+    read_parquet_with_bloom_filter(logical_type=uint32)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def uint64_with_bloom_filter(self):
     """Read parquet files with uint64 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=uint64)
+    read_parquet_with_bloom_filter(logical_type=uint64)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def int8_with_bloom_filter(self):
     """Read parquet files with int8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=int8)
+    read_parquet_with_bloom_filter(logical_type=int8)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def int16_with_bloom_filter(self):
     """Read parquet files with int16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=int16)
+    read_parquet_with_bloom_filter(logical_type=int16)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def int32_with_bloom_filter(self):
     """Read parquet files with int32 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=int32)
+    read_parquet_with_bloom_filter(logical_type=int32)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def int64_with_bloom_filter(self):
     """Read parquet files with int64 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=int64)
+    read_parquet_with_bloom_filter(logical_type=int64)
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def no_logical_type_with_bloom_filter(self):
     """Read parquet files with no logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
-    read_parquet_with_utf8_bloom_filter(logical_type=no_logical_type)
+    read_parquet_with_bloom_filter(logical_type=no_logical_type)
 
 
 @TestFeature
