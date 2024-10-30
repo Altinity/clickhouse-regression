@@ -5,6 +5,10 @@ services:
     extends:
       file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
+    environment:
+      - S3_AMAZON_URI=$S3_AMAZON_URI
+      - S3_AMAZON_KEY_ID=$S3_AMAZON_KEY_ID
+      - S3_AMAZON_ACCESS_KEY=$S3_AMAZON_ACCESS_KEY
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
