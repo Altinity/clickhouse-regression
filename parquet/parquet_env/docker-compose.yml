@@ -25,7 +25,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
-      - parquet-files:/var/lib/clickhouse/user_files
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -39,7 +38,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - parquet-files:/var/lib/clickhouse/user_files
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -53,7 +51,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
-      - parquet-files:/var/lib/clickhouse/user_files
     depends_on:
       zookeeper1:
         condition: service_healthy
