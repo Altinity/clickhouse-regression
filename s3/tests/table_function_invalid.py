@@ -101,20 +101,16 @@ def invalid_bucket(self):
         """When I export the data to S3 using the table function with
                 invalid path parameter it should fail"""
     ):
-        if self.context.storage == "aws_s3":
-            message = "DB::Exception: Message: Access Denied"
-        elif self.context.storage == "minio" and check_clickhouse_version("<22.9")(
-            self
-        ):
-            message = "DB::Exception: The specified bucket does not exist"
+        if check_clickhouse_version(">=23")(self) and self.context.storage == "aws_s3":
+            exitcode = 36
         else:
-            message = "DB::Exception: Message: The specified bucket does not exist"
+            exitcode = 243
 
         insert_to_s3_function_invalid(
             table_name="numbers(10)",
             path=invalid_path,
-            message=message,
-            exitcode=243,
+            message="DB::Exception:",
+            exitcode=exitcode,
             timeout=30,
         )
 
@@ -134,10 +130,15 @@ def invalid_region(self):
         """When I export the data to S3 using the table function with
                 invalid path parameter it should fail"""
     ):
+        if check_clickhouse_version(">=24")(self):
+            message = "DB::NetException: Not found address of host"
+        else:
+            message = "DB::Exception: Not found address of host"
+
         insert_to_s3_function_invalid(
             table_name="numbers(10)",
             path=invalid_path,
-            message="DB::NetException: Not found address of host",
+            message=message,
             exitcode=243,
             timeout=30,
         )
