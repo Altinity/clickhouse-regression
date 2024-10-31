@@ -3,7 +3,7 @@ import argparse
 import sys
 import json
 import datetime
-
+import base64
 from clickhouse_driver import Client
 from clickhouse_driver.errors import Error
 
@@ -12,16 +12,26 @@ class JSONEncoder(json.JSONEncoder):
     """
     Custom JSON encoder:
         - Supports DateTime serialization.
+        - Supports Date serialization.
+        - Supports bytes serialization.
     """
 
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
+        if isinstance(obj, datetime.date):
+            return obj.isoformat()
+        if isinstance(obj, bytes):
+            try:
+                return obj.decode('utf-8')
+            except UnicodeDecodeError:
+                return base64.b64encode(obj).decode('ascii')
         return super().default(obj)
 
 
-def clickhouse_client_tty(args):
+def clickhouse_client_tty(args, statistics=False):
     args_dict = {k: v for k, v in vars(args).items() if v is not None}
+    args_dict.pop('statistics', None)
     client = Client(**args_dict)
 
     while True:
@@ -37,6 +47,9 @@ def clickhouse_client_tty(args):
 
             for row in result:
                 json.dump(row, sys.stdout, cls=JSONEncoder, sort_keys=True)
+                print("")
+            if statistics:
+                print(client.last_query.progress.rows)
                 print("")
 
         except Error as e:
@@ -72,7 +85,8 @@ if __name__ == "__main__":
                         help='False means unknown settings will be ignored, True means that the query will fail with UNKNOWN_SETTING error.')
     parser.add_argument('--tcp_keepalive', default=False, help='Enables TCP keepalive on established connection.')
     parser.add_argument('--client_revision', default=None, help='Can be used for client version downgrading.')
+    parser.add_argument('--statistics', default=False, action='store_true', help='Print statistics after query execution.')
 
     args = parser.parse_args()
 
-    clickhouse_client_tty(args)
+    clickhouse_client_tty(args, statistics=args.statistics)
