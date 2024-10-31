@@ -34,7 +34,7 @@ def generate_random_value(data_type):
             random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 10))
         )
     elif data_type == "DECIMAL":
-        return round(random.uniform(-1e5, 1e5), 2)
+        return random.randint(0, 42912)
     elif data_type == "DATE":
         return str(
             datetime.date.today() - datetime.timedelta(days=random.randint(0, 3650))
