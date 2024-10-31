@@ -15,7 +15,7 @@ Config = namedtuple("Config", "content path name uid preprocessed_name")
 
 def add_config(
     config,
-    timeout=300,
+    timeout=60,
     restart=False,
     modify=False,
     nodes=None,

@@ -579,17 +579,30 @@ class ClickHouseNode(Node):
                 "export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_TIME_US=10000"
             )
 
-    def wait_clickhouse_healthy(self, timeout=120, check_version=True):
+    def wait_clickhouse_healthy(self, timeout=60, check_version=True, initial_delay=0):
         with By(f"waiting until ClickHouse server on {self.name} is healthy"):
-            for attempt in retries(timeout=timeout, delay=3):
+            for attempt in retries(
+                timeout=timeout, delay=3, initial_delay=initial_delay
+            ):
                 with attempt:
-                    if (
-                        self.query(
+                    with By("checking ClickHouse server is accessible"):
+                        r = self.query(
                             "SELECT version() FORMAT CSV", no_checks=1, steps=False
-                        ).exitcode
-                        != 0
-                    ):
-                        fail("ClickHouse server is not healthy")
+                        )
+                    if r.exitcode == 0:
+                        break
+
+                    with By("checking logs for errors"):
+                        log_messages = self.command(
+                            "cat /var/log/clickhouse-server/clickhouse-server.err.log "
+                            "| grep '^20.*Exception:' | tail -n 5 | cut -b -512",
+                            no_checks=True,
+                            steps=False,
+                        ).output
+
+                        fail(
+                            f"ClickHouse server is not healthy\nServer Exceptions:\n{log_messages}"
+                        )
 
             if check_version:
                 node_version = self.query(
@@ -689,7 +702,7 @@ class ClickHouseNode(Node):
 
     def start_clickhouse(
         self,
-        timeout=120,
+        timeout=60,
         wait_healthy=True,
         user=None,
         thread_fuzzer=False,
@@ -747,7 +760,7 @@ class ClickHouseNode(Node):
 
                 if wait_healthy:
                     self.wait_clickhouse_healthy(
-                        timeout=timeout, check_version=check_version
+                        timeout=timeout, check_version=check_version, initial_delay=2
                     )
 
     def restart_clickhouse(
@@ -2109,7 +2122,7 @@ class Cluster(object):
             try:
                 for attempt in range(max_attempts):
                     with When(f"attempt {attempt}/{max_attempts}"):
-                        all_running = start_cluster(max_up_attempts=3)
+                        all_running = start_cluster(max_up_attempts=1)
                     if all_running:
                         break
             except:
