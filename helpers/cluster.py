@@ -2117,14 +2117,11 @@ class Cluster(object):
             return False
 
         with Given("start the cluster"):
-            max_attempts = 1
             all_running = False
             try:
-                for attempt in range(max_attempts):
-                    with When(f"attempt {attempt}/{max_attempts}"):
-                        all_running = start_cluster(max_up_attempts=1)
-                    if all_running:
-                        break
+                with When(f"starting the cluster"):
+                    all_running = start_cluster(max_up_attempts=1)
+
             except:
                 with When("making sure any running containers are stopped"):
                     self.command(
