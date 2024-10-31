@@ -225,7 +225,7 @@ def utf8(self):
 @TestStep(Given)
 def decimal(self, precision=3, scale=2):
     """Entry for DECIMAL logical type."""
-    return {"logicalType": "DECIMAL", "PRECISION": precision, "SCALE": scale}
+    return {"logicalType": "DECIMAL", "precision": precision, "scale": scale}
 
 
 @TestStep(Given)

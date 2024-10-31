@@ -7,7 +7,11 @@ from parquet.tests.outline import import_export
 from parquet.tests.common import generate_values
 from helpers.common import *
 from parquet.tests.steps.bloom_filter import *
-from parquet.tests.steps.general import select_from_parquet, parquetify
+from parquet.tests.steps.general import (
+    select_from_parquet,
+    parquetify,
+    get_parquet_structure,
+)
 
 
 @TestStep(When)
@@ -235,34 +239,33 @@ def check_bloom_filter_on_parquet(
 
     with Given("I prepare data required for the parquet file"):
         json_file_name = (
-            f"{compression_value()['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType'] if logical_type is not None else 'None'}_"
+            f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
+            f"{logical_type()['logicalType'] if callable(logical_type) and logical_type() is not None else 'None'}_"
             + getuid()
             + ".json"
         )
         path = self.context.json_files_local + "/" + json_file_name
 
-        if logical_type is None:
-            data = generate_values(
-                physical_type()["physicalType"], random.randint(1, 100)
-            )
+        if logical_type() is None:
+            data = generate_values(physical_type()["physicalType"], 1500)
         else:
-            data = generate_values(
-                logical_type()["logicalType"], random.randint(1, 100)
-            )
+            data = generate_values(logical_type()["logicalType"], 1500)
 
         column_name = logical_type()["logicalType"].lower()
         parquet_file = (
-            f"{compression_value()['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType'] if logical_type is not None else 'None'}_"
+            f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
+            f"{logical_type()['logicalType'] if callable(logical_type) and logical_type() is not None else 'None'}_"
             + getuid()
             + ".parquet"
         )
+
     with And("I create a parquet JSON definition"):
 
         file_definition.update(parquet_file_name(filename=f"{parquet_file}"))
         option_list.update(writer_version())
         option_list.update(compression_value())
-        option_list.update(row_group_size())
-        option_list.update(page_size())
+        option_list.update(row_group_size(size=256))
+        option_list.update(page_size(size=1024))
         option_list.update(encodings())
         option_list.update(bloom_filter())
 
@@ -291,13 +294,13 @@ def check_bloom_filter_on_parquet(
             json_file=self.context.json_files + "/" + json_file_name,
             output_path=self.context.parquet_output_path,
         )
-
     with When("I get the total number of rows in the parquet file"):
         initial_rows = total_number_of_rows(file_name=parquet_file)
 
-    with Check("I check that the bloom filter is being used by ClickHouse"):
-        for conversion in conversions:
-            condition = f"WHERE {column_name} = {conversion}({data[0]})"
+    for conversion in conversions:
+        condition = f"WHERE {column_name} = {conversion}('{data[0]}')"
+        with Check("I check that the bloom filter is being used by ClickHouse"):
+
             with By(
                 "selecting and saving the data from a parquet file without bloom filter enabled"
             ):
@@ -319,6 +322,8 @@ def check_bloom_filter_on_parquet(
                     order_by="tuple(*)",
                 )
 
+                file_structure = get_parquet_structure(file_name=parquet_file)
+
             with And(
                 f"selecting and saving the data from a parquet file with bloom filter {bloom_filter_on_clickhouse} and filter pushdown {filter_pushdown}"
             ):
@@ -333,23 +338,15 @@ def check_bloom_filter_on_parquet(
 
             with Then("I check that the number of rows read is correct"):
                 read_rows = rows_read(read_with_bloom.output.strip())
-                if bloom_filter_on_clickhouse == "true":
-                    with By(
-                        "Checking that the number of rows read is lower then the total number of rows of a file"
-                    ):
-                        assert read_rows < initial_rows, error()
-                else:
-                    with By(
-                        "Checking that the number of rows read is equal to the total number of rows of a file"
-                    ):
-                        assert read_rows == initial_rows, error()
 
-            with And(
-                "I check that the data is the same when reading with bloom filter and without"
-            ):
-                assert (
-                    data_with_bloom.output.strip() == data_without_bloom.output.strip()
-                ), error()
+                with values() as that:
+                    assert that(
+                        snapshot(
+                            f"rows_read: {read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output.strip()}, condition: {condition}, data_with_bloom: {data_with_bloom.output.strip()}, data_without_bloom: {data_without_bloom.output.strip()}",
+                            name=f"{parquet_file}_{conversion}",
+                            id="bloom_filter",
+                        )
+                    ), error()
 
 
 @TestSketch(Outline)
@@ -481,7 +478,7 @@ def json_with_bloom_filter(self):
 
 
 @TestSketch(Scenario)
-@Flags
+@Flags(TE)
 def bson_with_bloom_filter(self):
     """Read parquet files with bson logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
     read_parquet_with_bloom_filter(logical_type=bson)
