@@ -419,7 +419,10 @@ class Node(object):
             client_args = {}
 
         for arg, value in client_args.items():
-            client += f" --{arg} {value}"
+            if value == "null":
+                client += f" --{arg}"
+            else:
+                client += f" --{arg} {value}"
 
         with self.cluster.shell(self.name) as bash:
             command_context = self.command(
