@@ -579,9 +579,9 @@ class ClickHouseNode(Node):
                 "export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_TIME_US=10000"
             )
 
-    def wait_clickhouse_healthy(self, timeout=300, check_version=True):
+    def wait_clickhouse_healthy(self, timeout=120, check_version=True):
         with By(f"waiting until ClickHouse server on {self.name} is healthy"):
-            for attempt in retries(timeout=timeout, delay=1):
+            for attempt in retries(timeout=timeout, delay=3):
                 with attempt:
                     if (
                         self.query(
@@ -689,9 +689,8 @@ class ClickHouseNode(Node):
 
     def start_clickhouse(
         self,
-        timeout=300,
+        timeout=120,
         wait_healthy=True,
-        retry_count=5,
         user=None,
         thread_fuzzer=False,
         check_version=True,
@@ -709,41 +708,47 @@ class ClickHouseNode(Node):
         if thread_fuzzer:
             self.enable_thread_fuzzer()
 
-        if user is None:
-            with By("starting ClickHouse server process"):
-                self.command(
-                    "clickhouse server --config-file=/etc/clickhouse-server/config.xml"
-                    f" --log-file={log_dir}/clickhouse-server.log"
-                    f" --errorlog-file={log_dir}/clickhouse-server.err.log"
-                    " --pidfile=/tmp/clickhouse-server.pid --daemon",
-                    exitcode=0,
-                    steps=False,
-                )
-        else:
-            with By(f"starting ClickHouse server process from {user}"):
-                self.command(
-                    f"su {user} -c"
-                    '"clickhouse server --config-file=/etc/clickhouse-server/config.xml'
-                    f" --log-file={log_dir}/clickhouse-server.log"
-                    f" --errorlog-file={log_dir}/clickhouse-server.err.log"
-                    ' --pidfile=/tmp/clickhouse-server.pid --daemon"',
-                    exitcode=0,
-                    steps=False,
-                )
-
-        with And("checking that ClickHouse server pid file was created"):
-            for attempt in retries(timeout=timeout, delay=1):
-                with attempt:
-                    if (
+        for attempt in retries(timeout=timeout, delay=30):
+            with attempt:
+                if user is None:
+                    with By("starting ClickHouse server process"):
                         self.command(
-                            "ls /tmp/clickhouse-server.pid", steps=False, no_checks=True
-                        ).exitcode
-                        != 0
-                    ):
-                        fail("no pid file yet")
+                            "clickhouse server --config-file=/etc/clickhouse-server/config.xml"
+                            f" --log-file={log_dir}/clickhouse-server.log"
+                            f" --errorlog-file={log_dir}/clickhouse-server.err.log"
+                            " --pidfile=/tmp/clickhouse-server.pid --daemon",
+                            exitcode=0,
+                            steps=False,
+                        )
+                else:
+                    with By(f"starting ClickHouse server process from {user}"):
+                        self.command(
+                            f"su {user} -c"
+                            '"clickhouse server --config-file=/etc/clickhouse-server/config.xml'
+                            f" --log-file={log_dir}/clickhouse-server.log"
+                            f" --errorlog-file={log_dir}/clickhouse-server.err.log"
+                            ' --pidfile=/tmp/clickhouse-server.pid --daemon"',
+                            exitcode=0,
+                            steps=False,
+                        )
 
-        if wait_healthy:
-            self.wait_clickhouse_healthy(timeout=timeout, check_version=check_version)
+                with And("checking that ClickHouse server pid file was created"):
+                    for attempt in retries(timeout=timeout, delay=3):
+                        with attempt:
+                            if (
+                                self.command(
+                                    "ls /tmp/clickhouse-server.pid",
+                                    steps=False,
+                                    no_checks=True,
+                                ).exitcode
+                                != 0
+                            ):
+                                fail("no pid file yet")
+
+                if wait_healthy:
+                    self.wait_clickhouse_healthy(
+                        timeout=timeout, check_version=check_version
+                    )
 
     def restart_clickhouse(
         self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None
