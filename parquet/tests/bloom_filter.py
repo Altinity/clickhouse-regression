@@ -71,7 +71,7 @@ def total_number_of_rows(self, file_name, node=None):
         r = f"SELECT COUNT(*) FROM file('{file_name}', Parquet)"
         data = node.query(r)
 
-    return int(data.output.strip())
+    return int(data.output[0].strip())
 
 
 # @TestScenario
