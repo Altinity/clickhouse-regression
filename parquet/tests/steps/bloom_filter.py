@@ -56,15 +56,15 @@ def uncompressed(self):
 
 
 @TestStep(Given)
-def row_group_size(self, row_group_size=134217728):
+def row_group_size(self, size=134217728):
     """Define the row group size of the Parquet file."""
-    return {"rowGroupSize": row_group_size}
+    return {"rowGroupSize": size}
 
 
 @TestStep(Given)
-def page_size(self, page_size=1048576):
+def page_size(self, size=1048576):
     """Define the page size of the Parquet file."""
-    return {"pageSize": page_size}
+    return {"pageSize": size}
 
 
 @TestStep(Given)
@@ -149,6 +149,9 @@ def optional_group(self, name, data, physical_type=None, logical_type=None):
     if physical_type is not None:
         schema.update(physical_type)
 
+    if logical_type["logicalType"] not in ["MAP", "LIST"]:
+        data = [{name: i} for i in data]
+
     optional_group_type = {
         "name": name,
         "schemaType": "optionalGroup",
@@ -172,6 +175,9 @@ def required_group(self, name, data, physical_type=None, logical_type=None):
 
     if physical_type is not None:
         schema.update(physical_type)
+
+    if logical_type["logicalType"] not in ["MAP", "LIST"]:
+        data = [{name: i} for i in data]
 
     required_group_type = {
         "name": name,
@@ -197,6 +203,9 @@ def repeated_group(self, name, data, physical_type=None, logical_type=None):
     if physical_type is not None:
         schema.update(physical_type)
 
+    if logical_type["logicalType"] not in ["MAP", "LIST"]:
+        data = [{name: i} for i in data]
+
     repeated_group_type = {
         "name": name,
         "schemaType": "repeatedGroup",
@@ -214,7 +223,7 @@ def utf8(self):
 
 
 @TestStep(Given)
-def decimal(self, precision=5, scale=2):
+def decimal(self, precision=3, scale=2):
     """Entry for DECIMAL logical type."""
     return {"logicalType": "DECIMAL", "PRECISION": precision, "SCALE": scale}
 
@@ -412,7 +421,7 @@ def binary_physical(self):
 
 
 @TestStep(Given)
-def fixed_len_byte_array_physical(self, length=2):
+def fixed_len_byte_array_physical(self, length=3):
     """Entry for FIXED_LEN_BYTE_ARRAY physical type."""
     return {"physicalType": "FIXED_LEN_BYTE_ARRAY", "length": length}
 
