@@ -1413,7 +1413,7 @@ def feature(self):
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
 
-    with Pool(5) as executor:
+    with Pool(7) as executor:
         Scenario(test=check_create_mv, parallel=True, executor=executor)()
         Scenario(test=create_mv_on_cluster, parallel=True, executor=executor)()
         Scenario(test=check_default_values, parallel=True, executor=executor)()
