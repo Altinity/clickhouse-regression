@@ -26,9 +26,6 @@ def generate_random_value(data_type):
         return random.uniform(-1e308, 1e308)
     elif data_type == "BINARY":
         return bytes(random.getrandbits(8) for _ in range(random.randint(1, 16)))
-    elif data_type == "FIXED_LEN_BYTE_ARRAY":
-        length = random.randint(1, 16)
-        return bytes(random.getrandbits(8) for _ in range(length))
     elif data_type == "UTF8" or data_type == "STRING":
         return "".join(
             random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 10))
