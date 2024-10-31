@@ -48,14 +48,11 @@ def generate_random_value(data_type):
     elif data_type == "NONE":
         return None
     elif data_type == "MAP":
-        return {
-            generate_random_value("UTF8"): generate_random_value("UTF8")
-            for _ in range(3)
-        }
+        return {"key_value": [{"key": generate_random_value("UTF8"), "value": generate_random_value("UTF8")}] for _ in range(3)}
     elif data_type == "LIST":
         return [generate_random_value("INT32") for _ in range(5)]
     elif data_type == "MAP_KEY_VALUE":
-        return {generate_random_value("UTF8"): generate_random_value("INT32")}
+        return {"key_value": [{"key": generate_random_value("UTF8"), "value": generate_random_value("UTF8")}] for _ in range(3)}
     elif data_type == "TIME":
         return str(datetime.datetime.now().time())
     elif data_type == "INTEGER":
