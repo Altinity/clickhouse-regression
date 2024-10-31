@@ -194,6 +194,19 @@ def select_from_parquet(
     return output
 
 
+@TestStep(When)
+def get_parquet_structure(self, file_name, node=None):
+    """Get the structure of a parquet file."""
+    if node is None:
+        node = self.context.node
+
+    output = node.query(
+        f"DESCRIBE TABLE file('{file_name}', Parquet) FORMAT TabSeparated"
+    )
+
+    return output
+
+
 @TestStep(Given)
 def count_rows_in_parquet(self, file_name, node=None):
     """Count rows in a parquet file."""
