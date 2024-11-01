@@ -429,7 +429,7 @@ def fixed_len_byte_array_physical(self, length=3):
 @TestStep(Given)
 def no_logical_type(self):
     """Entry for no logical type."""
-    return None
+    return {"logicalType": "NONE"}
 
 
 conversions = [

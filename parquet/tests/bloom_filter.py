@@ -268,27 +268,29 @@ def check_bloom_filter_on_parquet(
 
     node = self.context.node
     bash_tools = self.context.cluster.node("bash-tools")
+    number_of_inserts = self.context.number_of_inserts
+
 
     with Given("I prepare data required for the parquet file"):
         json_file_name = (
             f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
-            f"{logical_type()['logicalType'] if callable(logical_type) and logical_type() is not None else 'None'}_"
+            f"{logical_type()['logicalType']}_"
             + getuid()
             + ".json"
         )
         path = self.context.json_files_local + "/" + json_file_name
 
-        if logical_type() is None:
-            data = generate_values(physical_type()["physicalType"], 1500)
+        if logical_type()["logicalType"] == "NONE":
+            data = generate_values(physical_type()["physicalType"], number_of_inserts)
             column_name = physical_type()["physicalType"].lower()
 
         else:
-            data = generate_values(logical_type()["logicalType"], 1500)
+            data = generate_values(logical_type()["logicalType"], number_of_inserts)
             column_name = logical_type()["logicalType"].lower()
 
         parquet_file = (
             f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
-            f"{logical_type()['logicalType'] if callable(logical_type) and logical_type() is not None else 'None'}_"
+            f"{logical_type()['logicalType']}_"
             + getuid()
             + ".parquet"
         )
@@ -610,7 +612,7 @@ def no_logical_type_with_bloom_filter(self):
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter("1.0"))
 @Name("bloom")
-def feature(self, node="clickhouse1"):
+def feature(self, node="clickhouse1", number_of_inserts=1500):
     """Check if we can read from ap parquet file with bloom filter and validate that the bloom filter is being used
     by ClickHouse.
 
@@ -648,6 +650,6 @@ def feature(self, node="clickhouse1"):
     )
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
-
+    self.context.number_of_inserts = number_of_inserts
     for scenario in loads(current_module(), Scenario):
         scenario()
