@@ -56,8 +56,7 @@ def create_ontime_table(self, table_name, table_settings, node=None):
     if node is None:
         node = self.context.node
 
-    minimal_table_create = f"""
-        CREATE TABLE {table_name}
+    minimal_table_create = f"""CREATE TABLE {table_name}
         (
             `Year`                            UInt16,
             `Quarter`                         UInt8,
@@ -74,11 +73,10 @@ def create_ontime_table(self, table_name, table_settings, node=None):
             `DepDelay`                        Int32,
             `DepDel15`                        Int32,
             `ArrDelayMinutes`                 Int32,
-        ) {table_settings};
+        ) {table_settings}
     """
 
-    full_table_create = f"""
-        CREATE TABLE {table_name}
+    full_table_create = f"""CREATE TABLE {table_name}
         (
             `Year`                            UInt16,
             `Quarter`                         UInt8,
@@ -189,15 +187,15 @@ def create_ontime_table(self, table_name, table_settings, node=None):
             `Div5LongestGTime`                Int16,
             `Div5WheelsOff`                   Int16,
             `Div5TailNum`                     LowCardinality(String)
-        ) {table_settings};
+        ) {table_settings}
         """
 
     try:
         with When(f"I create {table_name} table with ontime data structure"):
             if self.context.stress or self.context.storage == "minio":
-                node.query(textwrap.dedent(full_table_create))
+                node.query(textwrap.dedent(full_table_create), use_file=True)
             else:
-                node.query(textwrap.dedent(minimal_table_create))
+                node.query(textwrap.dedent(minimal_table_create), use_file=True)
 
         yield
 
