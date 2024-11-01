@@ -41,7 +41,7 @@ def create_user_identified_by_one_password(self, user_name, **kwargs):
     """Create a user with IDENTIFIED BY clause and return the password."""
     common.create_user(
         user_name=user_name,
-        identified_by="'1'",
+        identified_by="1",
     )
     return "1"
 
