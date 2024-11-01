@@ -153,3 +153,7 @@ Version: 1.0
 - `private_key_password`: Optional, password for the private key. 
 
 These parameters enable flexible configuration for JWT signature validation, allowing support for symmetric and asymmetric encryption algorithms based on the chosen method.
+
+
+## References
+[ClickHouse]: https://clickhouse.com
