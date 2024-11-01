@@ -7,7 +7,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
 RUN dnf update -y
-RUN dnf install -y ca-certificates
+RUN dnf install -y ca-certificates procps
 
 ARG CLICKHOUSE_PACKAGE
 
