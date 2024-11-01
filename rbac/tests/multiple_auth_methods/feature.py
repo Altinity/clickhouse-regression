@@ -145,6 +145,4 @@ def feature(self, node="clickhouse1"):
             "rbac.tests.multiple_auth_methods.valid_until_timezones",
             "feature",
         ),
-        parallel=True,
-        executor=pool,
     )
