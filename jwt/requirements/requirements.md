@@ -123,3 +123,33 @@ Version: 1.0
 Version: 1.0  
 
 [ClickHouse] SHALL prevent the use of any additional authentication method (e.g., password) when JWT authentication is enabled for a user. If password or any other section is present alongside jwt, ClickHouse will terminate.
+
+### RQ.SRS-042.JWT.ValidatorParameters
+Version: 1.0  
+
+[ClickHouse] SHALL support the following parameters in each JWT validator configuration in `config.xml` to ensure proper signature validation:
+
+- `algo`: Algorithm used to validate the JWT signature. Supported values include:
+  
+  | HMAC  | RSA   | ECDSA  | PSS   | EdDSA   |
+  | ----- | ----- | ------ | ----- | ------- |
+  | HS256 | RS256 | ES256  | PS256 | Ed25519 |
+  | HS384 | RS384 | ES384  | PS384 | Ed448   |
+  | HS512 | RS512 | ES512  | PS512 |         |
+  |       |       | ES256K |       |         |
+
+  Support for `None` is also available.
+
+- `static_key`: The secret key for symmetric algorithms, required for algorithms in the `HS*` family.
+
+- `static_key_in_base64`: Optional, specifies whether the `static_key` is base64-encoded. Default: `False`.
+
+- `public_key`: The public key for asymmetric algorithms, mandatory for all algorithms except the `HS*` family and `None`.
+
+- `private_key`: Optional, private key for asymmetric algorithms.
+
+- `public_key_password`: Optional, password for the public key.
+
+- `private_key_password`: Optional, password for the private key. 
+
+These parameters enable flexible configuration for JWT signature validation, allowing support for symmetric and asymmetric encryption algorithms based on the chosen method.
