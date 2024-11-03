@@ -663,7 +663,7 @@ def add_user_on_node(self, node=None, groupname=None, username="clickhouse"):
             node.command(f"useradd -g {groupname} -s /bin/bash {username}", exitcode=0)
         yield
     finally:
-        node.command(f"deluser {username}", exitcode=0)
+        node.command(f"userdel {username}", exitcode=0)
 
 
 @TestStep(Given)
@@ -675,7 +675,7 @@ def add_group_on_node(self, node=None, groupname="clickhouse"):
         node.command(f"groupadd {groupname}", exitcode=0)
         yield
     finally:
-        node.command(f"delgroup {groupname}", no_checks=True)
+        node.command(f"groupdel {groupname}", no_checks=True)
 
 
 @TestStep(Given)
