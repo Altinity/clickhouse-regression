@@ -2,7 +2,7 @@
 
 # Software Requirements Specification
 
-## Table of Contents
+## Table of 
 
 * 1 [Introduction](#introduction)
     * 1.1 [Structure of a JSON Web Token](#structure-of-a-json-web-token)
@@ -14,12 +14,14 @@
     * 5.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
 * 6 [How to Set Additional Validation for JWT](#how-to-set-additional-validation-for-jwt)
     * 6.1 [RQ.SRS-042.JWT.AdditionalValidation](#rqsrs-042jwtadditionalvalidation)
-    * 6.2 [RQ.SRS-042.JWT.NoOtherAuthenticationMethods](#rqsrs-042jwtnootherauthenticationmethods)
-* 7 [How to Handle Token Expiration and Revocation](#how-to-handle-token-expiration-and-revocation)
-    * 7.1 [RQ.SRS-042.JWT.Expiration](#rqsrs-042jwtexpiration)
-    * 7.2 [RQ.SRS-042.JWT.Revocation](#rqsrs-042jwtrevocation)
-    * 7.3 [RQ.SRS-042.JWT.TokenBlacklisting](#rqsrs-042jwttokenblacklisting)
-    * 7.4 [How to Use Static Public Keys for JWT Signature Validation](#how-to-use-static-public-keys-for-jwt-signature-validation)
+* 7 [JWT with Other Authentication Methods](#jwt-with-other-authentication-methods)
+    * 7.1 [RQ.SRS-042.JWT.NoOtherAuthenticationMethods](#rqsrs-042jwtnootherauthenticationmethods)
+* 8 [How to Handle Token Expiration and Revocation](#how-to-handle-token-expiration-and-revocation)
+    * 8.1 [RQ.SRS-042.JWT.Expiration](#rqsrs-042jwtexpiration)
+    * 8.2 [RQ.SRS-042.JWT.Revocation](#rqsrs-042jwtrevocation)
+    * 8.3 [RQ.SRS-042.JWT.TokenBlacklisting](#rqsrs-042jwttokenblacklisting)
+    * 8.4 [How to Use Static Public Keys for JWT Signature Validation](#how-to-use-static-public-keys-for-jwt-signature-validation)
+
 
 ## Introduction
 
@@ -215,6 +217,8 @@ Payload example for user with name `my_user`:
 ...
 }
 ```
+
+## JWT with Other Authentication Methods
 
 ### RQ.SRS-042.JWT.NoOtherAuthenticationMethods
 Version: 1.0
