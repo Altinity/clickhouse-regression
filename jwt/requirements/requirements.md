@@ -21,16 +21,16 @@
     * 4.11 [Static Public Key](#static-public-key)
         * 4.11.1 [RQ.SRS-042.JWT.StaticKey.SignatureValidation](#rqsrs-042jwtstatickeysignaturevalidation)
         * 4.11.2 [RQ.SRS-042.JWT.StaticKey.ValidatorInConfig](#rqsrs-042jwtstatickeyvalidatorinconfig)
-    * 4.12 [RQ.SRS-042.JWT.StaticKey.Parameters](#rqsrs-042jwtstatickeyparameters)
-    * 4.13 [RQ.SRS-042.JWT.StaticKey.ValidatorParameters](#rqsrs-042jwtstatickeyvalidatorparameters)
-    * 4.14 [Static JWKS (JSON Web Key Set)](#static-jwks-json-web-key-set)
-        * 4.14.1 [RQ.SRS-042.JWT.StaticJWKS.SignatureValidation](#rqsrs-042jwtstaticjwkssignaturevalidation)
-        * 4.14.2 [RQ.SRS-042.JWT.StaticJWKS.ValidatorInConfig](#rqsrs-042jwtstaticjwksvalidatorinconfig)
-    * 4.15 [RQ.SRS-042.JWT.StaticJWKS.ValidatorParameters](#rqsrs-042jwtstaticjwksvalidatorparameters)
-    * 4.16 [Dynamic JWKS retrieved from a remote server](#dynamic-jwks-retrieved-from-a-remote-server)
-        * 4.16.1 [RQ.SRS-042.JWT.DynamicJWKS.SignatureValidation](#rqsrs-042jwtdynamicjwkssignaturevalidation)
-        * 4.16.2 [RQ.SRS-042.JWT.DynamicJWKS.ValidatorInConfig](#rqsrs-042jwtdynamicjwksvalidatorinconfig)
-    * 4.17 [RQ.SRS-042.JWT.DynamicJWKS.ValidatorParameters](#rqsrs-042jwtdynamicjwksvalidatorparameters)
+        * 4.11.3 [RQ.SRS-042.JWT.StaticKey.Parameters](#rqsrs-042jwtstatickeyparameters)
+        * 4.11.4 [RQ.SRS-042.JWT.StaticKey.ValidatorParameters](#rqsrs-042jwtstatickeyvalidatorparameters)
+    * 4.12 [Static JWKS (JSON Web Key Set)](#static-jwks-json-web-key-set)
+        * 4.12.1 [RQ.SRS-042.JWT.StaticJWKS.SignatureValidation](#rqsrs-042jwtstaticjwkssignaturevalidation)
+        * 4.12.2 [RQ.SRS-042.JWT.StaticJWKS.ValidatorInConfig](#rqsrs-042jwtstaticjwksvalidatorinconfig)
+        * 4.12.3 [RQ.SRS-042.JWT.StaticJWKS.ValidatorParameters](#rqsrs-042jwtstaticjwksvalidatorparameters)
+    * 4.13 [Dynamic JWKS retrieved from a remote server](#dynamic-jwks-retrieved-from-a-remote-server)
+        * 4.13.1 [RQ.SRS-042.JWT.DynamicJWKS.SignatureValidation](#rqsrs-042jwtdynamicjwkssignaturevalidation)
+        * 4.13.2 [RQ.SRS-042.JWT.DynamicJWKS.ValidatorInConfig](#rqsrs-042jwtdynamicjwksvalidatorinconfig)
+        * 4.13.3 [RQ.SRS-042.JWT.DynamicJWKS.ValidatorParameters](#rqsrs-042jwtdynamicjwksvalidatorparameters)
 * 5 [References](#references)
 
 
@@ -214,12 +214,12 @@ Version: 1.0
 </clickhouse>
 ```
 
-### RQ.SRS-042.JWT.StaticKey.Parameters
+#### RQ.SRS-042.JWT.StaticKey.Parameters
 version: 1.0
 
 [ClickHouse] SHALL support the following parameters for static key JWT validation:
 
-### RQ.SRS-042.JWT.StaticKey.ValidatorParameters
+#### RQ.SRS-042.JWT.StaticKey.ValidatorParameters
 Version: 1.0  
 
 [ClickHouse] SHALL support the following parameters in each JWT validator configuration in `config.xml` to ensure proper signature validation:
@@ -263,7 +263,7 @@ Version: 1.0
     </jwt_validators>
 </clickhouse>
 ```
-### RQ.SRS-042.JWT.StaticJWKS.ValidatorParameters
+#### RQ.SRS-042.JWT.StaticJWKS.ValidatorParameters
 Version: 1.0  
 
 [ClickHouse] SHALL support the following parameters in each JWT validator configuration in `config.xml` to ensure proper signature validation:
@@ -315,7 +315,7 @@ Version: 1.0
 </clickhouse>
 ```
 
-### RQ.SRS-042.JWT.DynamicJWKS.ValidatorParameters
+#### RQ.SRS-042.JWT.DynamicJWKS.ValidatorParameters
 Version: 1.0  
 
 [ClickHouse] SHALL support the following parameters in each JWT validator configuration in `config.xml` to ensure proper signature validation:
