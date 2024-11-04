@@ -34,12 +34,7 @@ def argparser(parser):
 @Name("local")
 def local_storage(
     self,
-    local,
-    clickhouse_path,
-    keeper_path,
-    zookeeper_version,
-    use_keeper,
-    collect_service_logs,
+    cluster_args,
     with_analyzer,
 ):
     """Setup and run minio tests."""
@@ -50,12 +45,7 @@ def local_storage(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_path=clickhouse_path,
-            keeper_path=keeper_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
-            collect_service_logs=collect_service_logs,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -82,12 +72,7 @@ def minio(
     uri,
     root_user,
     root_password,
-    local,
-    clickhouse_path,
-    collect_service_logs,
-    keeper_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run minio tests."""
@@ -96,14 +81,13 @@ def minio(
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
     }
 
+    root_user = root_user.value
+    root_password = root_password.value
+    uri = uri.value
+
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_path=clickhouse_path,
-            collect_service_logs=collect_service_logs,
-            keeper_path=keeper_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -144,12 +128,7 @@ def aws_s3(
     access_key,
     bucket,
     region,
-    local,
-    clickhouse_path,
-    collect_service_logs,
-    keeper_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
@@ -184,12 +163,7 @@ def aws_s3(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_path=clickhouse_path,
-            collect_service_logs=collect_service_logs,
-            keeper_path=keeper_path,
-            use_keeper=use_keeper,
-            zookeeper_version=zookeeper_version,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -220,12 +194,7 @@ def gcs(
     uri,
     key_id,
     access_key,
-    local,
-    clickhouse_path,
-    collect_service_logs,
-    keeper_path=None,
-    zookeeper_version=None,
-    use_keeper=False,
+    cluster_args,
     with_analyzer=False,
 ):
     """Setup and run gcs tests."""
@@ -253,12 +222,7 @@ def gcs(
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
-            local=local,
-            clickhouse_path=clickhouse_path,
-            collect_service_logs=collect_service_logs,
-            keeper_path=keeper_path,
-            zookeeper_version=zookeeper_version,
-            use_keeper=use_keeper,
+            **cluster_args,
             nodes=nodes,
             use_zookeeper_nodes=True,
             configs_dir=current_dir(),
@@ -312,7 +276,7 @@ def regression(
         storages = ["minio"]
 
     module_args = dict(
-        **cluster_args,
+        cluster_args=cluster_args,
         with_analyzer=with_analyzer,
     )
 
