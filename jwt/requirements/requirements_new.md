@@ -2,7 +2,7 @@
 
 # Software Requirements Specification
 
-## Table of 
+## Table of Contents
 
 * 1 [Introduction](#introduction)
     * 1.1 [Structure of a JSON Web Token](#structure-of-a-json-web-token)
@@ -10,17 +10,22 @@
 * 3 [Types of JWT Validators in ClickHouse](#types-of-jwt-validators-in-clickhouse)
 * 4 [How to Configure JWT Authentication in ClickHouse](#how-to-configure-jwt-authentication-in-clickhouse)
     * 4.1 [RQ.SRS-042.JWT.ValidatorsConfiguration](#rqsrs-042jwtvalidatorsconfiguration)
-* 5 [How to Authenticate Users with JWT in ClickHouse](#how-to-authenticate-users-with-jwt-in-clickhouse)
-    * 5.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
-* 6 [How to Set Additional Validation for JWT](#how-to-set-additional-validation-for-jwt)
-    * 6.1 [RQ.SRS-042.JWT.AdditionalValidation](#rqsrs-042jwtadditionalvalidation)
-* 7 [JWT with Other Authentication Methods](#jwt-with-other-authentication-methods)
-    * 7.1 [RQ.SRS-042.JWT.NoOtherAuthenticationMethods](#rqsrs-042jwtnootherauthenticationmethods)
-* 8 [How to Handle Token Expiration and Revocation](#how-to-handle-token-expiration-and-revocation)
-    * 8.1 [RQ.SRS-042.JWT.Expiration](#rqsrs-042jwtexpiration)
-    * 8.2 [RQ.SRS-042.JWT.Revocation](#rqsrs-042jwtrevocation)
-    * 8.3 [RQ.SRS-042.JWT.TokenBlacklisting](#rqsrs-042jwttokenblacklisting)
-    * 8.4 [How to Use Static Public Keys for JWT Signature Validation](#how-to-use-static-public-keys-for-jwt-signature-validation)
+* 5 [How to Create a User with JWT Authentication in ClickHouse](#how-to-create-a-user-with-jwt-authentication-in-clickhouse)
+    * 5.1 [RQ.SRS-042.JWT.UserCreation](#rqsrs-042jwtusercreation)
+    * 5.2 [RQ.SRS-042.JWT.UserCreationSQL](#rqsrs-042jwtusercreationsql)
+* 6 [How to Authenticate Users with JWT in ClickHouse](#how-to-authenticate-users-with-jwt-in-clickhouse)
+    * 6.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
+    * 6.2 [RQ.SRS-042.JWT.UserAuthentication.ConsoleClient](#rqsrs-042jwtuserauthenticationconsoleclient)
+    * 6.3 [RQ.SRS-042.JWT.UserAuthentication.HTTPRequests](#rqsrs-042jwtuserauthenticationhttprequests)
+* 7 [How to Set Additional Validation for JWT](#how-to-set-additional-validation-for-jwt)
+    * 7.1 [RQ.SRS-042.JWT.AdditionalValidation](#rqsrs-042jwtadditionalvalidation)
+* 8 [JWT with Other Authentication Methods](#jwt-with-other-authentication-methods)
+    * 8.1 [RQ.SRS-042.JWT.NoOtherAuthenticationMethods](#rqsrs-042jwtnootherauthenticationmethods)
+* 9 [How to Handle Token Expiration and Revocation](#how-to-handle-token-expiration-and-revocation)
+    * 9.1 [RQ.SRS-042.JWT.Expiration](#rqsrs-042jwtexpiration)
+    * 9.2 [RQ.SRS-042.JWT.Revocation](#rqsrs-042jwtrevocation)
+    * 9.3 [RQ.SRS-042.JWT.TokenBlacklisting](#rqsrs-042jwttokenblacklisting)
+    * 9.4 [How to Use Static Public Keys for JWT Signature Validation](#how-to-use-static-public-keys-for-jwt-signature-validation)
 
 
 ## Introduction
@@ -50,7 +55,7 @@ A JWT consists of three parts separated by periods (.), which are base64url-enco
 3. Signature: To create the signature part, you need to take the encoded header, encoded payload, a secret, and the algorithm specified in the header, then sign that with the secret. The signature is used to verify that the sender of the JWT is who it says it is and to ensure that the message wasn’t changed along the way.
 
 ## How JWT Authentication Works in ClickHouse in General
-In ClickHouse, a JWT Validator checks if a JWT (JSON Web Token) is valid and safe to use before giving access. The validator confirms two main things:
+To use JWT authentication in ClickHouse, one should first determine and configure a JWT Validator. A JWT Validator in ClickHouse is a mechanism to validate JWTs against specific requirements before granting access to resources. Validators check for:
 
 - The Token’s Authenticity: The validator verifies the JWT’s signature to ensure it was created by a trusted source and hasn’t been altered.
 - Required Information (Claims): The validator checks that the token contains specific information (called "claims") needed for access, such as the user’s name, roles, and permissions.
@@ -63,7 +68,7 @@ ClickHouse supports three main types of JWT validators:
 1. Static Key Validator:
 
 Uses a symmetric static secret key to verify JWT signatures.
-Supported algorithms: HMAC (HS256, HS384, HS512).
+Supported algorithms: HMAC (HS256, HS384, HS512).  
 Example:
 ```xml
 <clickhouse>
@@ -79,7 +84,7 @@ Example:
 2. Static JWKS Validator:
 
 Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms.
-Supported algorithms: RSA, ECDSA, EdDSA.
+Supported algorithms: RSA, ECDSA, EdDSA.  
 Example:
 ```xml
 TODO
@@ -89,7 +94,7 @@ TODO
 
 Retrieves public keys dynamically from a remote JWKS endpoint.
 Ideal for integration with identity providers where key rotation is managed externally.
-Supported algorithms: RSA, ECDSA, EdDSA.
+Supported algorithms: RSA, ECDSA, EdDSA.  
 Example:
 ```xml
 TODO
@@ -98,8 +103,8 @@ TODO
 ## How to Configure JWT Authentication in ClickHouse
 
 To enable JWT authentication in ClickHouse:
-- Add jwt_validators section to `config.xml`
-- Add validator(s) with a unique identifier and specify the validation method (e.g., static key, static JWKS, or JWKS server)
+- Add `jwt_validators` section to `config.xml`
+- Add validator(s) with a unique identifier and specify the validation method (e.g., static key, static JWKS, or JWKS server) and other required parameters for each validator.
 
 Example:
 ```xml
@@ -138,9 +143,10 @@ Version: 1.0
 </clickhouse>
 ```
 
-## How to Authenticate Users with JWT in ClickHouse
+## How to Create a User with JWT Authentication in ClickHouse
 
-Create a user in ClickHouse with JWT authentication enabled by specifying `jwt` section in the user definition in `users.xml`.
+To create a user in ClickHouse with JWT authentication enabled, add the `jwt` section to the user definition in `users.xml`.  
+Example:  
 ```xml
 <clickhouse>
     <!- ... -->
@@ -149,12 +155,45 @@ Create a user in ClickHouse with JWT authentication enabled by specifying `jwt` 
         <jwt>
         </jwt>
     </my_user>
-</clickhouse>
+```
+Users identified by JWT authentication can also be created using SQL statements.
+```sql
+CREATE USER my_user IDENTIFIED WITH jwt
+```
+Or with additional JWT payload checks:
+```sql
+CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"resource_access":{"account": {"roles": ["view-profile"]}}}'
 ```
 
-After that user can authenticate using JWT by providing a token:
+### RQ.SRS-042.JWT.UserCreation
+version: 1.0  
+
+[ClickHouse] SHALL support creating users with JWT authentication enabled by adding the `jwt` section to the user definition in `users.xml`.
+
+### RQ.SRS-042.JWT.UserCreationSQL
+version: 1.0  
+
+[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.
+
+
+## How to Authenticate Users with JWT in ClickHouse
+
+User can authenticate using JWT if the `"sub"` claim in the JWT payload matches the name of the ClickHouse user. Users can provide the JWT token via the console client or HTTP requests.
+
+Examples:  
+Console client
+
 ```
 clickhouse-client -jwt <token>
+```
+
+- HTTP requests
+
+```
+curl 'http://localhost:8080/?' \
+ -H 'Authorization: Bearer <TOKEN>' \
+ -H 'Content type: text/plain;charset=UTF-8' \
+ --data-raw 'SELECT current_user()'
 ```
 
 ### RQ.SRS-042.JWT.SubClaimValidation
@@ -174,6 +213,18 @@ Payload example for user with name `my_user`:
   }
 }
 ```
+
+### RQ.SRS-042.JWT.UserAuthentication.ConsoleClient
+version: 1.0  
+
+[ClickHouse] SHALL allow users to authenticate using JWT by providing a token via the console client.
+
+
+### RQ.SRS-042.JWT.UserAuthentication.HTTPRequests
+version: 1.0  
+[ClickHouse] SHALL allow users to authenticate using JWT by providing a token via HTTP requests.
+
+
 
 ## How to Set Additional Validation for JWT
 
