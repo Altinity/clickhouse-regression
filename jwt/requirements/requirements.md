@@ -108,7 +108,7 @@ Here, the JWT payload must contain `["view-profile"]` on path `resource_access.a
 
 Payload example for user with name `my_user`:
 
-```json
+```
 {
 ...
   "sub": "my_user",
