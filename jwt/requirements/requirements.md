@@ -4,6 +4,36 @@
 
 ## Table of Contents
 
+* 1 [Revision History](#revision-history)
+* 2 [Introduction](#introduction)
+* 3 [Structure of a JSON Web Token](#structure-of-a-json-web-token)
+* 4 [Requirements](#requirements)
+    * 4.1 [RQ.SRS-042.JWT.Authentication](#rqsrs-042jwtauthentication)
+    * 4.2 [RQ.SRS-042.JWT.Config.EnableValidators](#rqsrs-042jwtconfigenablevalidators)
+    * 4.3 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
+    * 4.4 [RQ.SRS-042.JWT.AdditionalVerification](#rqsrs-042jwtadditionalverification)
+    * 4.5 [RQ.SRS-042.JWT.NoOtherAuthenticationMethods](#rqsrs-042jwtnootherauthenticationmethods)
+    * 4.6 [RQ.SRS-042.JWT.TokenSources](#rqsrs-042jwttokensources)
+    * 4.7 [RQ.SRS-042.JWT.SessionSettings](#rqsrs-042jwtsessionsettings)
+    * 4.8 [RQ.SRS-042.JWT.Expiration](#rqsrs-042jwtexpiration)
+    * 4.9 [RQ.SRS-042.JWT.Revocation](#rqsrs-042jwtrevocation)
+    * 4.10 [RQ.SRS-042.JWT.TokenBlacklisting](#rqsrs-042jwttokenblacklisting)
+    * 4.11 [Static Public Key](#static-public-key)
+        * 4.11.1 [RQ.SRS-042.JWT.StaticKey.SignatureValidation](#rqsrs-042jwtstatickeysignaturevalidation)
+        * 4.11.2 [RQ.SRS-042.JWT.StaticKey.ValidatorInConfig](#rqsrs-042jwtstatickeyvalidatorinconfig)
+    * 4.12 [RQ.SRS-042.JWT.StaticKey.Parameters](#rqsrs-042jwtstatickeyparameters)
+    * 4.13 [RQ.SRS-042.JWT.StaticKey.ValidatorParameters](#rqsrs-042jwtstatickeyvalidatorparameters)
+    * 4.14 [Static JWKS (JSON Web Key Set)](#static-jwks-json-web-key-set)
+        * 4.14.1 [RQ.SRS-042.JWT.StaticJWKS.SignatureValidation](#rqsrs-042jwtstaticjwkssignaturevalidation)
+        * 4.14.2 [RQ.SRS-042.JWT.StaticJWKS.ValidatorInConfig](#rqsrs-042jwtstaticjwksvalidatorinconfig)
+    * 4.15 [RQ.SRS-042.JWT.StaticJWKS.ValidatorParameters](#rqsrs-042jwtstaticjwksvalidatorparameters)
+    * 4.16 [Dynamic JWKS retrieved from a remote server](#dynamic-jwks-retrieved-from-a-remote-server)
+        * 4.16.1 [RQ.SRS-042.JWT.DynamicJWKS.SignatureValidation](#rqsrs-042jwtdynamicjwkssignaturevalidation)
+        * 4.16.2 [RQ.SRS-042.JWT.DynamicJWKS.ValidatorInConfig](#rqsrs-042jwtdynamicjwksvalidatorinconfig)
+    * 4.17 [RQ.SRS-042.JWT.DynamicJWKS.ValidatorParameters](#rqsrs-042jwtdynamicjwksvalidatorparameters)
+* 5 [References](#references)
+
+
 ## Revision History
 
 This document is stored in an electronic form using [Git] source control management software
@@ -139,6 +169,24 @@ Version: 1.0
 Version: 1.0  
 
 [ClickHouse] SHALL allow specific JWT claims to be used as session settings for authenticated users. If settings_key is defined in the `jwt_validators` configuration and the JWT payload contains matching key-value pairs, ClickHouse SHALL parse and apply these as session settings. If parsing fails, the session settings from the JWT payload will be ignored.
+
+### RQ.SRS-042.JWT.Expiration
+Version: 1.0  
+
+[ClickHouse] SHALL support token expiration settings to ensure that JWTs are invalidated promptly after they are no longer needed or if they become compromised.
+
+
+### RQ.SRS-042.JWT.Revocation
+Version: 1.0  
+
+[ClickHouse] SHALL support token revocation to invalidate JWTs that are no longer needed or have been compromised.
+
+
+### RQ.SRS-042.JWT.TokenBlacklisting
+Version: 1.0  
+
+[ClickHouse] SHALL support a token blacklist to ensure that tokens are rendered unusable if a user logs out or if a token becomes compromised before expiration.
+
 
 ### Static Public Key
 
