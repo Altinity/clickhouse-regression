@@ -65,7 +65,7 @@ To enable JWT authentication, [ClickHouse] SHALL support configuring one or more
 ### RQ.SRS-042.JWT.SubClaimValidation
 version: 1.0  
 
-[ClickHouse] accept JWT token if and ronly if the name of the ClickHouse user is indicated under `"sub"` claim, otherwise token will be rejected.
+[ClickHouse] accept JWT token if and only if the name of the ClickHouse user is indicated under `"sub"` claim, otherwise token will be rejected.
 
 Payload example for user with name `my_user`:
 
