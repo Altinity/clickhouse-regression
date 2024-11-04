@@ -25,7 +25,9 @@
     * 9.1 [RQ.SRS-042.JWT.Expiration](#rqsrs-042jwtexpiration)
     * 9.2 [RQ.SRS-042.JWT.Revocation](#rqsrs-042jwtrevocation)
     * 9.3 [RQ.SRS-042.JWT.TokenBlacklisting](#rqsrs-042jwttokenblacklisting)
-    * 9.4 [How to Use Static Public Keys for JWT Signature Validation](#how-to-use-static-public-keys-for-jwt-signature-validation)
+* 10 [How to Use Static Public Keys for JWT Signature Validation](#how-to-use-static-public-keys-for-jwt-signature-validation)
+* 11 [How to Use Static JWKS for JWT Signature Validation](#how-to-use-static-jwks-for-jwt-signature-validation)
+* 12 [How to Use Dynamic Public Keys Received from JWKS Servers for JWT Signature Validation](#how-to-use-dynamic-public-keys-received-from-jwks-servers-for-jwt-signature-validation)
 
 
 ## Introduction
@@ -92,7 +94,7 @@ TODO
 
 3. **Dynamic JWKS Validator**:
 
-Retrieves public keys dynamically from a remote JWKS endpoint.
+Retrieves public keys dynamically from the JWKS servers.
 Ideal for integration with identity providers where key rotation is managed externally.
 Supported algorithms: RSA, ECDSA, EdDSA.  
 Example:
@@ -299,7 +301,15 @@ Version: 1.0
 [ClickHouse] SHALL support a token blacklist to ensure that tokens are rendered unusable if a user logs out or if a token becomes compromised before expiration.
 
 
-### How to Use Static Public Keys for JWT Signature Validation
+## How to Use Static Public Keys for JWT Signature Validation
+
+ToDo
+
+## How to Use Static JWKS for JWT Signature Validation
+
+ToDo
+
+## How to Use Dynamic Public Keys Received from JWKS Servers for JWT Signature Validation
 
 ToDo
 
