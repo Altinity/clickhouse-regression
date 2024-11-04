@@ -49,7 +49,7 @@ def clickhouse_client_tty(args, statistics=False):
                 json.dump(row, sys.stdout, cls=JSONEncoder, sort_keys=True)
                 print("")
             if statistics:
-                rows_read = f"rows_read: {client.last_query.progress.rows}"
+                rows_read = f"{{rows_read: {client.last_query.progress.rows}}}"
                 json.dump(rows_read, sys.stdout, cls=JSONEncoder, sort_keys=True)
                 print("")
 

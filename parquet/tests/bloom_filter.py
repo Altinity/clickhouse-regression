@@ -49,16 +49,11 @@ def get_all_columns(self, table_name, database, node=None):
     )
 
 
-def rows_read(output):
-    """Get the number of rows read from the new JSON-like output format."""
+def rows_read(json_data):
+    """Get the number of rows read from the json data."""
+    data = json_data[-1]
+    return data
 
-    # Use regex to find "rows_read" in the output
-    match = re.search(r'"rows_read":\s*(\d+)', output)
-    if match:
-        return int(match.group(1))
-
-    # If rows_read was not found
-    raise ValueError("rows_read not found in output")
 
 @TestStep(Given)
 def total_number_of_rows(self, file_name, node=None):
@@ -71,7 +66,7 @@ def total_number_of_rows(self, file_name, node=None):
         r = f"SELECT COUNT(*) FROM file('{file_name}', Parquet)"
         data = node.query(r)
 
-    return int(data.output[0].strip())
+    return int(data.output[0][0])
 
 
 # @TestScenario
@@ -270,13 +265,10 @@ def check_bloom_filter_on_parquet(
     bash_tools = self.context.cluster.node("bash-tools")
     number_of_inserts = self.context.number_of_inserts
 
-
     with Given("I prepare data required for the parquet file"):
         json_file_name = (
             f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
-            f"{logical_type()['logicalType']}_"
-            + getuid()
-            + ".json"
+            f"{logical_type()['logicalType']}_" + getuid() + ".json"
         )
         path = self.context.json_files_local + "/" + json_file_name
 
@@ -290,9 +282,7 @@ def check_bloom_filter_on_parquet(
 
         parquet_file = (
             f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
-            f"{logical_type()['logicalType']}_"
-            + getuid()
-            + ".parquet"
+            f"{logical_type()['logicalType']}_" + getuid() + ".parquet"
         )
 
     with And("I create a parquet JSON definition"):
@@ -330,7 +320,9 @@ def check_bloom_filter_on_parquet(
             json_file=self.context.json_files + "/" + json_file_name,
             output_path=self.context.parquet_output_path,
         )
-    with bash_tools.client(client_args={"host": node.name, "statistics": "null"}) as client:
+    with bash_tools.client(
+        client_args={"host": node.name, "statistics": "null"}
+    ) as client:
         with When("I get the total number of rows in the parquet file"):
             initial_rows = total_number_of_rows(file_name=parquet_file, node=client)
 
@@ -348,7 +340,7 @@ def check_bloom_filter_on_parquet(
                         format="TabSeparated",
                         settings=f"input_format_parquet_use_native_reader={native_reader}",
                         order_by="tuple(*)",
-                        node=client
+                        node=client,
                     )
 
                     data_with_bloom = select_from_parquet(
@@ -358,7 +350,7 @@ def check_bloom_filter_on_parquet(
                         format="TabSeparated",
                         settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
                         order_by="tuple(*)",
-                        node=client
+                        node=client,
                     )
 
                     file_structure = get_parquet_structure(file_name=parquet_file)
@@ -373,7 +365,7 @@ def check_bloom_filter_on_parquet(
                         format="Json",
                         settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter_on_clickhouse},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
                         order_by="tuple(*)",
-                        node=client
+                        node=client,
                     )
 
                 with Then("I check that the number of rows read is correct"):
@@ -382,12 +374,17 @@ def check_bloom_filter_on_parquet(
                     with values() as that:
                         assert that(
                             snapshot(
-                                f"rows_read: {read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}, data_with_bloom: {data_with_bloom.output}, data_without_bloom: {data_without_bloom.output}",
+                                f"rows_read: {read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
                                 name=f"{parquet_file}_{conversion}",
                                 id="bloom_filter",
-                                mode=snapshot.REWRITE
+                                mode=snapshot.UPDATE,
                             )
                         ), error()
+
+                with And(
+                    "I check that the data is the same when reading with bloom filter and without"
+                ):
+                    assert data_with_bloom.output == data_without_bloom.output, error()
 
 
 @TestSketch(Outline)
