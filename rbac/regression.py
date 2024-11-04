@@ -334,6 +334,11 @@ ffails = {
         "valid until was introduced in 23.9",
         check_clickhouse_version("<23.9"),
     ),
+    "/rbac/privileges/valid until timezones": (
+        Skip,
+        "valid until was introduced in 23.9",
+        check_clickhouse_version("<23.9"),
+    ),
     "/rbac/multiple authentication methods": (
         Skip,
         "multiple authentication methods were introduced in 24.9",
