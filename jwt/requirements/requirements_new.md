@@ -42,8 +42,6 @@ JWT tokens carry user identity and access information in a compact, URL-safe for
 
 This setup allows for flexible verification of user credentials through **static keys**, **static JWKS (JSON Web Key Sets)**, or **dynamic key sets** retrieved from **JWKS servers**.
 
-This document provides the configuration requirements for enabling JWT authentication in Clickhouse.
-
 ### Structure of a JSON Web Token
 
 <img title="a title" alt="Alt text" src="structure.webp">
