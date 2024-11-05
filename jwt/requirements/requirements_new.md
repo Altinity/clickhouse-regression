@@ -118,7 +118,14 @@ Supported algorithms: RSA, ECDSA, EdDSA.
 Example:
 
 ```xml
-TODO
+<clickhouse>
+    <!- ... -->
+    <jwt_validators>
+        <my_static_jwks_validator>
+          <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
+        </my_static_jwks_validator>
+    </jwt_validators>
+</clickhouse>
 ```
 
 3. **Dynamic JWKS Validator**:
@@ -129,7 +136,21 @@ Supported algorithms: RSA, ECDSA, EdDSA.
 Example:
 
 ```xml
-TODO
+<clickhouse>
+    <!- ... -->
+    <jwt_validators>
+        <basic_auth_server>
+          <uri>http://localhost:8000/.well-known/jwks.json</uri>
+          <connection_timeout_ms>1000</connection_timeout_ms>
+          <receive_timeout_ms>1000</receive_timeout_ms>
+          <send_timeout_ms>1000</send_timeout_ms>
+          <max_tries>3</max_tries>
+          <retry_initial_backoff_ms>50</retry_initial_backoff_ms>
+          <retry_max_backoff_ms>1000</retry_max_backoff_ms>
+          <refresh_ms>300000</refresh_ms>
+        </basic_auth_server>
+    </jwt_validators>
+</clickhouse>
 ```
 
 ## Configuration of JWT Validators in ClickHouse
