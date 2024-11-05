@@ -39,10 +39,10 @@
     * 11.1 [RQ.SRS-042.JWT.DynamicJWKS](#rqsrs-042jwtdynamicjwks)
 * 12 [JWT Authentication Security Threats and Mitigations](#jwt-authentication-security-threats-and-mitigations)
     * 12.1 [How to Handle Token Expiration and Revocation](#how-to-handle-token-expiration-and-revocation)
-        * 12.1.1 [RQ.SRS-042.JWT.Expiration](#rqsrs-042jwtexpiration)
-        * 12.1.2 [RQ.SRS-042.JWT.Revocation](#rqsrs-042jwtrevocation)
+        * 12.1.1 [RQ.SRS-042.JWT.Security.Expiration](#rqsrs-042jwtsecurityexpiration)
+        * 12.1.2 [RQ.SRS-042.JWT.Security.Revocation](#rqsrs-042jwtsecurityrevocation)
     * 12.2 [Token Blacklisting](#token-blacklisting)
-        * 12.2.1 [RQ.SRS-042.JWT.TokenBlacklisting](#rqsrs-042jwttokenblacklisting)
+        * 12.2.1 [RQ.SRS-042.JWT.Security.TokenBlacklisting](#rqsrs-042jwtsecuritytokenblacklisting)
     * 12.3 [Transport Layer Security (TLS)](#transport-layer-security-tls)
         * 12.3.1 [RQ.SRS-042.JWT.Security.TLS](#rqsrs-042jwtsecuritytls)
     * 12.4 [Local Storage Vulnerabilities](#local-storage-vulnerabilities)
@@ -487,19 +487,19 @@ version: 1.0
 
 To ensure the security of JWT authentication, ClickHouse should support token expiration settings, token revocation, and token blacklisting for invalidating tokens that are no longer needed or have been compromised.
 
-#### RQ.SRS-042.JWT.Expiration
+#### RQ.SRS-042.JWT.Security.Expiration
 version: 1.0
 
 [ClickHouse] SHALL support token expiration settings to ensure that JWTs are invalidated promptly after they are no longer needed or if they become compromised.
 
-#### RQ.SRS-042.JWT.Revocation
+#### RQ.SRS-042.JWT.Security.Revocation
 version: 1.0
 
 [ClickHouse] SHALL support token revocation to invalidate JWTs that are no longer needed or have been compromised.
 
 ### Token Blacklisting
 
-#### RQ.SRS-042.JWT.TokenBlacklisting
+#### RQ.SRS-042.JWT.Security.TokenBlacklisting
 version: 1.0
 
 [ClickHouse] SHALL support a token blacklist to ensure that tokens are rendered unusable if a user logs out or if a token becomes compromised before expiration.
