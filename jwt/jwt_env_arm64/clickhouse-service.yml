@@ -5,7 +5,7 @@ services:
     extends:
       file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
-    privileged: true
+    # privileged: true
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/:/etc/clickhouse-server/users.d"
