@@ -108,17 +108,14 @@ def generate_parquet_json_definition(
 
 
 @TestStep(Given)
-def parquetify(
-    self,
-    json_file,
-    output_path,
-    node=None,
-):
+def parquetify(self, json_file, output_path, node=None, check=False):
     """Execute a Parquetify program for generating a Parquet file based on a json file."""
     if node is None:
         node = self.context.cluster.node("parquetify")
 
-    node.command(f"parquetify --json {json_file} --output {output_path}")
+    return node.command(
+        f"parquetify --json {json_file} --output {output_path}", no_checks=check
+    )
 
 
 @TestStep(Given)
