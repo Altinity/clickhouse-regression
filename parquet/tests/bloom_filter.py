@@ -332,64 +332,64 @@ def check_bloom_filter_on_parquet(
 
             initial_rows = total_number_of_rows(file_name=parquet_file, node=client)
 
-        for conversion in conversions:
-            condition = f"WHERE {column_name} = {conversion}('{data[0]}')"
-            with Check("I check that the bloom filter is being used by ClickHouse"):
+            for conversion in conversions:
+                condition = f"WHERE {column_name} = {conversion}('{data[0]}')"
+                with Check("I check that the bloom filter is being used by ClickHouse"):
 
-                with By(
-                    "selecting and saving the data from a parquet file without bloom filter enabled"
-                ):
-                    data_without_bloom = select_from_parquet(
-                        file_name=parquet_file,
-                        statement=statement,
-                        condition=condition,
-                        format="TabSeparated",
-                        settings=f"input_format_parquet_use_native_reader={native_reader}",
-                        order_by="tuple(*)",
-                        node=client,
-                    )
+                    with By(
+                        "selecting and saving the data from a parquet file without bloom filter enabled"
+                    ):
+                        data_without_bloom = select_from_parquet(
+                            file_name=parquet_file,
+                            statement=statement,
+                            condition=condition,
+                            format="TabSeparated",
+                            settings=f"input_format_parquet_use_native_reader={native_reader}",
+                            order_by="tuple(*)",
+                            node=client,
+                        )
 
-                    data_with_bloom = select_from_parquet(
-                        file_name=parquet_file,
-                        statement=statement,
-                        condition=condition,
-                        format="TabSeparated",
-                        settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-                        order_by="tuple(*)",
-                        node=client,
-                    )
+                        data_with_bloom = select_from_parquet(
+                            file_name=parquet_file,
+                            statement=statement,
+                            condition=condition,
+                            format="TabSeparated",
+                            settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
+                            order_by="tuple(*)",
+                            node=client,
+                        )
 
-                    file_structure = get_parquet_structure(file_name=parquet_file)
+                        file_structure = get_parquet_structure(file_name=parquet_file)
 
-                with And(
-                    f"selecting and saving the data from a parquet file with bloom filter {bloom_filter_on_clickhouse} and filter pushdown {filter_pushdown}"
-                ):
-                    read_with_bloom = select_from_parquet(
-                        file_name=parquet_file,
-                        statement=statement,
-                        condition=condition,
-                        format="Json",
-                        settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter_on_clickhouse},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-                        order_by="tuple(*)",
-                        node=client,
-                    )
+                    with And(
+                        f"selecting and saving the data from a parquet file with bloom filter {bloom_filter_on_clickhouse} and filter pushdown {filter_pushdown}"
+                    ):
+                        read_with_bloom = select_from_parquet(
+                            file_name=parquet_file,
+                            statement=statement,
+                            condition=condition,
+                            format="Json",
+                            settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter_on_clickhouse},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
+                            order_by="tuple(*)",
+                            node=client,
+                        )
 
-                with Then("I check that the number of rows read is correct"):
-                    read_rows = rows_read(read_with_bloom.output)
+                    with Then("I check that the number of rows read is correct"):
+                        read_rows = rows_read(read_with_bloom.output)
 
-                    with values() as that:
-                        assert that(
-                            snapshot(
-                                f"rows_read: {read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
-                                name=f"{snapshot_name}_{conversion}",
-                                id="bloom_filter",
-                            )
-                        ), error()
+                        with values() as that:
+                            assert that(
+                                snapshot(
+                                    f"rows_read: {read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
+                                    name=f"{snapshot_name}_{conversion}",
+                                    id="bloom_filter",
+                                )
+                            ), error()
 
-                with And(
-                    "I check that the data is the same when reading with bloom filter and without"
-                ):
-                    assert data_with_bloom.output == data_without_bloom.output, error()
+                    with And(
+                        "I check that the data is the same when reading with bloom filter and without"
+                    ):
+                        assert data_with_bloom.output == data_without_bloom.output, error()
 
 
 @TestSketch(Outline)
