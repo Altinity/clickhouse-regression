@@ -317,14 +317,14 @@ curl 'https://localhost:8080/?' \
 ### RQ.SRS-042.JWT.AdditionalValidation
 version: 1.0
 
-[ClickHouse] SHALL allow for JWT to be additionally verified by checking the JWT payload.
-In this case, the occurrence of specified claims from the user settings in the JWT payload is checked.
+[ClickHouse] SHALL support additional verification by checking the JWT payload.
+In this case, the occurrence of specified claims from the user settings in the JWT payload SHALL be checked.
 
 Parameters:
 
 - `claims` - An optional string containing a json object that should be contained in the token payload.
 
-Example (goes into `users.xml`):
+Example `users.xml`:
 
 ```xml
 <clickhouse>
@@ -340,7 +340,7 @@ Example (goes into `users.xml`):
 
 Here, the JWT payload must contain `["view-profile"]` on path `resource_access.account.roles`, otherwise authentication will not succeed even with a valid JWT.
 
-Payload example for user with name `my_user`:
+The following payload will match the claim above:
 
 ```
 {
@@ -357,19 +357,24 @@ Payload example for user with name `my_user`:
 
 ## JWT with Other Authentication Methods
 
-### RQ.SRS-042.JWT.NoOtherAuthenticationMethods
+### Supported and Non-supported Versions
+
+#### RQ.SRS-042.JWT.OtherAuthenticationMethods.SupportedVersions
 version: 1.0
 
-[ClickHouse] SHALL prevent the use of any additional authentication method (e.g., password) when JWT authentication is enabled for a user. If password or any other section is present alongside jwt, ClickHouse will terminate. This is correct for ClickHouse versions < 24.9.
-From ClickHouse version 24.9, [ClickHouse] SHALL allow to use multiple authentication methods for a user including JWT authentication.
+[ClickHouse] SHALL prevent the use of any additional authentication method (e.g., password) when JWT authentication is enabled for a user. If password or any other section is present alongside jwt, ClickHouse will terminate.
+This is correct for ClickHouse versions < 24.9.
 
+From ClickHouse version 24.9, [ClickHouse] SHALL allow to use multiple authentication methods for a user including JWT authentication.
 
 ## Using Static Public Keys for Signature Validation
 
-### RQ.SRS-042.JWT.StaticKey
+### Configuring Static Key Validation
+
+#### RQ.SRS-042.JWT.StaticKey
 version: 1.0
 
-[ClickHouse] SHALL support validating JWT signatures for authentication using **static public key**. [ClickHouse] SHALL allow configuring static key validator in `jwt_validators` section in `config.xml`.
+[ClickHouse] SHALL support validating JWT signatures for authentication using **static public key** which SHALL be configured in the `jwt_validators` section of the `config.xml`.
 
 **Example**
 
@@ -385,7 +390,9 @@ version: 1.0
 </clickhouse>
 ```
 
-### RQ.SRS-042.JWT.StaticKey.SupportedAlgorithms
+### Supported Algorithms for Static Key Validation
+
+#### RQ.SRS-042.JWT.StaticKey.SupportedAlgorithms
 version: 1.0
 
 [ClickHouse] SHALL support the following algorithms for static key validation:
@@ -399,30 +406,16 @@ version: 1.0
 
 [ClickHouse] SHALL allow specifying any of the supported algorithms in the `algo` field of the static key validator configuration.
 
-### RQ.SRS-042.JWT.StaticKey.NoneAlgorithm
+### Support for None Algorithm
+
+#### RQ.SRS-042.JWT.StaticKey.NoneAlgorithm
 version: 1.0 
  
 [ClickHouse] SHALL allow to specify `None` algorithm in the `algo` field of the static key validator configuration.
 
-### RQ.SRS-042.JWT.StaticKey.Parameters.StaticKey
-version: 1.0  
+### Specicying Static Key Using Base64 Encoding
 
-[Clickhouse] SHALL allow to specify `static_key` parameter for symmetric algorithms (mandatory for `HS*` family algorithms).  
-Example:
-
-```xml
-<clickhouse>
-    <!-- ... -->
-    <jwt_validators>
-        <my_static_key_validator>
-          <algo>HS256</algo>
-          <static_key>my_static_secret</static_key>
-        </my_static_key_validator>
-    </jwt_validators>
-</clickhouse>
-```
-
-### RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64
+#### RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64
 version: 1.0
 
 [ClickHouse] SHALL support the `static_key_in_base64` option to indicate if the static_key is base64-encoded. This option is optional and SHALL default to False.
@@ -441,25 +434,21 @@ Example:
 </clickhouse>
 ```
 
-### RQ.SRS-042.JWT.StaticKey.Parameters.PublicKey
+### Using Public Key for Static Key Validation
+
+#### RQ.SRS-042.JWT.StaticKey.Parameters.PublicKey
 version: 1.0
 
-[ClickHouse] SHALL require `public_key` for asymmetric algorithms.
+[ClickHouse] SHALL require `public_key` for asymmetric algorithms and support
+optional `public_key_password` parameter for asymmetric algorithms.
 
-### RQ.SRS-042.JWT.StaticKey.Parameters.PrivateKey
+### Using PrivateKey for Static Key Validation
+
+#### RQ.SRS-042.JWT.StaticKey.Parameters.PrivateKey
 version: 1.0
 
-[ClickHouse] SHALL support optional `private_key` parameter for asymmetric algorithms.
-
-### RQ.SRS-042.JWT.StaticKey.Parameters.PublicKeyPassword
-version: 1.0
-
-[ClickHouse] SHALL support optional `public_key_password` parameter for asymmetric algorithms.
-
-### RQ.SRS-042.JWT.StaticKey.Parameters.PrivateKeyPassword
-version: 1.0
-
-[ClickHouse] SHALL support optional `private_key_password` parameter for asymmetric algorithms.
+[ClickHouse] SHALL support optional `private_key` parameter for asymmetric algorithms and
+support optional `private_key_password` parameter for asymmetric algorithms.
 
 ## Using Static JWKS for Signature Validation
 
@@ -467,6 +456,12 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support validating JWT signatures for authentication using **static JWKS (JSON Web Key Set)** which is configured `jwt_validators` section in `config.xml`.
+
+### Specifying Static JWKS Inline
+
+#### RQ.SRS-042.JWT.StaticJWKS.Inline
+
+The `static_jwks` field SHALL specify the JWKS content in the static JWKS validator configuration.
 
 **Example**
 
@@ -480,8 +475,23 @@ version: 1.0
     </jwt_validators>
 </clickhouse>
 ```
+### Specifying JWKS Using File Path
 
-### RQ.SRS-042.JWT.StaticJWKS.SupportedAlgorithms
+#### RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile
+version: 1.0  
+
+[ClickHouse] SHALL support the `static_jwks_file` option to specify the path to a file containing the JWKS content in the static JWKS validator configuration.
+
+### Specifying Either JWKS Inline or Using File Path (Mutually Exclusive)
+
+#### RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource
+version: 1.0
+
+[ClickHouse] SHALL allow to specify only one of the `static_jwks` or `static_jwks_file` in the static JWKS validator configuration.
+
+### Supported Algorithms for Static JWKS Validation
+
+#### RQ.SRS-042.JWT.StaticJWKS.SupportedAlgorithms
 version: 1.0
 
 [ClickHouse] SHALL support the following algorithms for static key validation:
@@ -494,40 +504,21 @@ version: 1.0
 
 [ClickHouse] SHALL allow specifying any of the supported algorithms in the `algo` field of the static key validator configuration.
 
-### RQ.SRS-042.JWT.StaticJWKS.Parameters.PublicKey
+### Using Public Key for Static JWKS Validation
+
+#### RQ.SRS-042.JWT.StaticJWKS.Parameters.PublicKey
 version: 1.0
 
-[ClickHouse] SHALL require `public_key` for all supported algorithms.
+[ClickHouse] SHALL require `public_key` for all supported algorithms and
+support optional `public_key_password` parameter for all supported algorithms.
 
-### RQ.SRS-042.JWT.StaticJWKS.Parameters.PrivateKey
+### Using Private Key for Static JWKS Validation
+
+#### RQ.SRS-042.JWT.StaticJWKS.Parameters.PrivateKey
 version: 1.0
 
-[ClickHouse] SHALL support optional `private_key` parameter for all supported algorithms.
-
-### RQ.SRS-042.JWT.StaticJWKS.Parameters.PublicKeyPassword
-version: 1.0
-
-[ClickHouse] SHALL support optional `public_key_password` parameter for all supported algorithms.
-
-### RQ.SRS-042.JWT.StaticJWKS.Parameters.PrivateKeyPassword
-version: 1.0
-
-[ClickHouse] SHALL support optional `private_key_password` parameter for all supported algorithms.
-
-### RQ.SRS-042.JWT.StaticJWKS.Parameters.Content
-version: 1.0
-
-[ClickHouse] SHALL support the `static_jwks` option to specify the JWKS content in the static JWKS validator configuration.
-
-### RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile
-version: 1.0  
-
-[ClickHouse] SHALL support the `static_jwks_file` option to specify the path to a file containing the JWKS content in the static JWKS validator configuration.
-
-### RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource
-version: 1.0  
-
-[ClickHouse] SHALL allow to specify only one of the `static_jwks` or `static_jwks_file` in the static JWKS validator configuration.
+[ClickHouse] SHALL support optional `private_key` parameter for all supported algorithms and
+support optional `private_key_password` parameter for all supported algorithms.
 
 ## Using Dynamic Public Keys Received from JWKS Servers for Signature Validation
 
@@ -556,65 +547,80 @@ version: 1.0
 </clickhouse>
 ```
 
-### RQ.SRS-042.JWT.DynamicJWKS.Parameters.URI
+### Specifying Dynamic JWKS URI
+
+#### RQ.SRS-042.JWT.DynamicJWKS.URI
 version: 1.0  
 
 [ClickHouse] SHALL require `uri` parameter to specify the JWKS endpoint in the dynamic JWKS validator configuration.
 
-### RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh
+### Specifying Dynamic JWKS Refresh Rate
+
+#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh
 version: 1.0  
 
 [ClickHouse] SHALL support the `refresh_ms` parameter to specify the period for refreshing the JWKS in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 300000.
 
-### Optional Timeout Parameters
+### Optional Dynamic JWKS Timeouts
 
 Timeouts in milliseconds on the socket used for communicating with the server:
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.ConnectionTimeout
+#### Specifying Optional Connection Timeout
+
+##### RQ.SRS-042.JWT.DynamicJWKS.ConnectionTimeout
 version: 1.0  
 
 [ClickHouse] SHALL support the `connection_timeout_ms` parameter to specify the connection timeout in milliseconds in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 1000.
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.ReceiveTimeout
+#### Specifying Optional Receive Timeout
+
+##### RQ.SRS-042.JWT.DynamicJWKS.ReceiveTimeout
 version: 1.0  
 
 [ClickHouse] SHALL support the `receive_timeout_ms` parameter to specify the receive timeout in milliseconds in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 1000.
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.SendTimeout
+#### Specifying Optional Send Timeout
+
+##### RQ.SRS-042.JWT.DynamicJWKS.SendTimeout
 version: 1.0  
 
 [ClickHouse] SHALL support the `send_timeout_ms` parameter to specify the send timeout in milliseconds in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 1000.
 
-### Optional Retry Parameters
+### Optional Dynamic JWKS Retry Parameters
 
-Retry parameters:
+#### Specifying Optional Max Tries
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.MaxTries
+##### RQ.SRS-042.JWT.DynamicJWKS.MaxTries
 version: 1.0  
 
 [ClickHouse] SHALL support the `max_tries` parameter to specify the maximum number of attempts to make an authentication request in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 3.
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.RetryInitialBackoff
+#### Specifying Optional Retry Initial Backoff
+
+##### RQ.SRS-042.JWT.DynamicJWKS.RetryInitialBackoff
 version: 1.0  
 
 [ClickHouse] SHALL support the `retry_initial_backoff_ms` parameter to specify the backoff initial interval on retry in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 50.
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.RetryMaxBackoff
+#### Specifying Optional Retry Max Backoff
+
+##### RQ.SRS-042.JWT.DynamicJWKS.RetryMaxBackoff
 version: 1.0  
 
 [ClickHouse] SHALL support the `retry_max_backoff_ms` parameter to specify the maximum backoff interval in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 1000.
 
-
 ## JWT Authentication Security Threats and Mitigations
 
-### How to Handle Token Expiration and Revocation
-
 To ensure the security of JWT authentication, ClickHouse should support token expiration settings, token revocation, and token blacklisting for invalidating tokens that are no longer needed or have been compromised.
+
+### Token Expiration
 
 #### RQ.SRS-042.JWT.Security.Expiration
 version: 1.0
 
 [ClickHouse] SHALL support token expiration settings to ensure that JWTs are invalidated promptly after they are no longer needed or if they become compromised.
+
+### Token Revocation
 
 #### RQ.SRS-042.JWT.Security.Revocation
 version: 1.0
@@ -628,10 +634,9 @@ version: 1.0
 
 [ClickHouse] SHALL support a token blacklist to ensure that tokens are rendered unusable if a user logs out or if a token becomes compromised before expiration.
 
-### Session Fixation
-If tokens are reused inappropriately or users aren’t issued new tokens upon re-authentication, attackers can abuse existing tokens to take over sessions.
+### Token Refresh On Re-Authentication
 
-#### RQ.SRS-042.JWT.Security.SessionFixation
+#### RQ.SRS-042.JWT.Security.TokenRefreshOnReauthentication
 version: 1.0  
 
 [ClickHouse] SHALL ensure that users receive new tokens upon re-authentication, preventing session fixation attacks.
