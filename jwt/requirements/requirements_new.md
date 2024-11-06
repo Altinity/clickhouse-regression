@@ -254,14 +254,10 @@ clickhouse-client -jwt <token>
 
 - HTTP requests
 
-```
-curl 'http://localhost:8080/?' \
- -H 'Authorization: Bearer <TOKEN>' \
- -H 'Content type: text/plain;charset=UTF-8' \
- --data-raw 'SELECT current_user()'
-```
 
-### RQ.SRS-042.JWT.SubClaimValidation
+### Sub-Claim Validation
+
+#### RQ.SRS-042.JWT.SubClaimValidation
 version: 1.0
 
 [ClickHouse] SHALL accept JWT token only if the name of the ClickHouse user is indicated under `"sub"` claim, otherwise token will be rejected.
@@ -279,15 +275,39 @@ Payload example for user with name `my_user`:
 }
 ```
 
-### RQ.SRS-042.JWT.UserAuthentication.ConsoleClient
+### clickhouse-client
+
+#### RQ.SRS-042.JWT.UserAuthentication.ClickhouseClient
 version: 1.0
 
 [ClickHouse] SHALL allow users to authenticate using JWT by providing a token via the console client.
 
-### RQ.SRS-042.JWT.UserAuthentication.HTTPRequests
+### HTTP(S) Client
+
+#### RQ.SRS-042.JWT.UserAuthentication.HTTPClient
 version: 1.0  
 
-[ClickHouse] SHALL allow users to authenticate using JWT by providing a token via HTTP requests.
+[ClickHouse] SHALL allow users to authenticate using JWT by providing a token via HTTP and HTTPS requests.
+
+For example,
+
+HTTP authentication:
+
+```
+curl 'http://localhost:8080/?' \
+ -H 'Authorization: Bearer <TOKEN>' \
+ -H 'Content type: text/plain;charset=UTF-8' \
+ --data-raw 'SELECT current_user()'
+```
+
+HTTPS authentication:
+
+```
+curl 'https://localhost:8080/?' \
+ -H 'Authorization: Bearer <TOKEN>' \
+ -H 'Content type: text/plain;charset=UTF-8' \
+ --data-raw 'SELECT current_user()'
+```
 
 ## Additional Validation for JWT Authentication
 
