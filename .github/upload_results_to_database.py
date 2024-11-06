@@ -49,6 +49,7 @@ table_schema_attr_map = {
         "job_url": "job.url",
         "report_url": "report.url",
         "start_time": "start_datetime",
+        "scheduled": "job.is_scheduled",
     },
     "test_results": {
         "test_duration_ms": "message_rtime_ms",
