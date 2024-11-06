@@ -87,7 +87,7 @@ A JWT consists of three parts separated by periods (.), which are base64url-enco
 
 3. Signature: To create the signature part, you need to take the encoded header, encoded payload, a secret, and the algorithm specified in the header, then sign that with the secret. The signature is used to verify that the sender of the JWT is who it says it is and to ensure that the message wasn’t changed along the way.
 
-## How JWT Authentication Works in ClickHouse in General
+## Functionality Overview
 
 To use JWT authentication in ClickHouse, one should first determine and configure JWT Validators. A JWT Validator in ClickHouse is a mechanism to validate JWTs against specific requirements before granting access to resources. Validators check for:
 
@@ -97,14 +97,11 @@ To use JWT authentication in ClickHouse, one should first determine and configur
 
 These validators are set up in the `jwt_validators` section of the `config.xml` file. This setup allows ClickHouse to securely confirm user identity and access rights based on the contents of the JWT.
 
-## Types of JWT Validators in ClickHouse
+## Types of JWT Validators
 
 ClickHouse supports three main types of JWT validators:
 
 1. **Static Key Validator**:
-
-Uses a symmetric static secret key to verify JWT signatures.
-Supported algorithms: HMAC (HS256, HS384, HS512).  
 Example:
 
 ```xml
@@ -119,11 +116,7 @@ Example:
 ```
 
 2. **Static JWKS Validator**:
-
-Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms.
-Supported algorithms: RSA, ECDSA, EdDSA.  
 Example:
-
 ```xml
 <clickhouse>
     <!-- ... -->
@@ -136,12 +129,9 @@ Example:
 ```
 
 3. **Dynamic JWKS Validator**:
-
 Retrieves public keys dynamically from the JWKS servers.
 Ideal for integration with identity providers where key rotation is managed externally.
-Supported algorithms: RSA, ECDSA, EdDSA.  
 Example:
-
 ```xml
 <clickhouse>
     <!-- ... -->
@@ -207,9 +197,14 @@ version: 1.0
 
 ## Creation of a User with JWT Authentication in ClickHouse
 
-To create a user in ClickHouse with JWT authentication enabled, add the `jwt` section to the user definition in `users.xml`.  
-Example:
+To create a user in ClickHouse with JWT authentication enabled, add the `jwt` section to the user definition in `users.xml` or use SQL statements.
 
+### RQ.SRS-042.JWT.UserCreation
+version: 1.0  
+
+[ClickHouse] SHALL support creating users with JWT authentication enabled by adding the `jwt` section to the user definition in `users.xml`.
+
+Example:
 ```xml
 <clickhouse>
     <!-- ... -->
@@ -218,10 +213,15 @@ Example:
         <jwt>
         </jwt>
     </my_user>
+</clickhouse>
 ```
 
-Users identified by JWT authentication can also be created using SQL statements.
+### RQ.SRS-042.JWT.UserCreationSQL
+version: 1.0  
 
+[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.
+
+Example:
 ```sql
 CREATE USER my_user IDENTIFIED WITH jwt
 ```
@@ -232,22 +232,12 @@ Or with additional JWT payload checks:
 CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"resource_access":{"account": {"roles": ["view-profile"]}}}'
 ```
 
-### RQ.SRS-042.JWT.UserCreation
-version: 1.0  
-
-[ClickHouse] SHALL support creating users with JWT authentication enabled by adding the `jwt` section to the user definition in `users.xml`.
-
-### RQ.SRS-042.JWT.UserCreationSQL
-version: 1.0  
-
-[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.
-
 ## Authentication of Users with JWT in ClickHouse
 
 To authenticate users with JWT in ClickHouse, the user must provide a valid JWT token. The token is validated against the configured JWT validators, and the user is granted access if the token is valid. Users can provide the JWT token via the console client or HTTP requests.
 
 Examples:  
-Console client
+- Console client
 
 ```
 clickhouse-client -jwt <token>
@@ -379,7 +369,7 @@ version: 1.0
 
 ### RQ.SRS-042.JWT.StaticKey.NoneAlgorithm
 version: 1.0 
- 
+
 [ClickHouse] SHALL allow to specify `None` algorithm in the `algo` field of the static key validator configuration.
 
 ### RQ.SRS-042.JWT.StaticKey.Parameters.StaticKey
