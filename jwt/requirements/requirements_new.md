@@ -1,19 +1,18 @@
 # SRS-042 JWT Authentication in ClickHouse
-
 # Software Requirements Specification
 
 ## Table of Contents
 
 * 1 [Introduction](#introduction)
     * 1.1 [Structure of a JSON Web Token](#structure-of-a-json-web-token)
-* 2 [How JWT Authentication Works in ClickHouse in General](#how-jwt-authentication-works-in-clickhouse-in-general)
-* 3 [Types of JWT Validators in ClickHouse](#types-of-jwt-validators-in-clickhouse)
-* 4 [Configuration of JWT Validators in ClickHouse](#configuration-of-jwt-validators-in-clickhouse)
+* 2 [Overview of the Functionality](#overview-of-the-functionality)
+* 3 [Types of JWT Validators](#types-of-jwt-validators)
+* 4 [Configuration of JWT Validators](#configuration-of-jwt-validators)
     * 4.1 [RQ.SRS-042.JWT.ValidatorsConfiguration](#rqsrs-042jwtvalidatorsconfiguration)
-* 5 [Creation of a User with JWT Authentication in ClickHouse](#creation-of-a-user-with-jwt-authentication-in-clickhouse)
+* 5 [Creation of a User with JWT Authentication](#creation-of-a-user-with-jwt-authentication)
     * 5.1 [RQ.SRS-042.JWT.UserCreation](#rqsrs-042jwtusercreation)
     * 5.2 [RQ.SRS-042.JWT.UserCreationSQL](#rqsrs-042jwtusercreationsql)
-* 6 [Authentication of Users with JWT in ClickHouse](#authentication-of-users-with-jwt-in-clickhouse)
+* 6 [Authentication of Users with JWT](#authentication-of-users-with-jwt)
     * 6.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
     * 6.2 [RQ.SRS-042.JWT.UserAuthentication.ConsoleClient](#rqsrs-042jwtuserauthenticationconsoleclient)
     * 6.3 [RQ.SRS-042.JWT.UserAuthentication.HTTPRequests](#rqsrs-042jwtuserauthenticationhttprequests)
@@ -87,7 +86,7 @@ A JWT consists of three parts separated by periods (.), which are base64url-enco
 
 3. Signature: To create the signature part, you need to take the encoded header, encoded payload, a secret, and the algorithm specified in the header, then sign that with the secret. The signature is used to verify that the sender of the JWT is who it says it is and to ensure that the message wasn’t changed along the way.
 
-## How JWT Authentication Works in ClickHouse in General
+## Overview of the Functionality
 
 To use JWT authentication in ClickHouse, one should first determine and configure JWT Validators. A JWT Validator in ClickHouse is a mechanism to validate JWTs against specific requirements before granting access to resources. Validators check for:
 
@@ -97,7 +96,7 @@ To use JWT authentication in ClickHouse, one should first determine and configur
 
 These validators are set up in the `jwt_validators` section of the `config.xml` file. This setup allows ClickHouse to securely confirm user identity and access rights based on the contents of the JWT.
 
-## Types of JWT Validators in ClickHouse
+## Types of JWT Validators
 
 ClickHouse supports three main types of JWT validators:
 
@@ -160,7 +159,7 @@ Example:
 </clickhouse>
 ```
 
-## Configuration of JWT Validators in ClickHouse
+## Configuration of JWT Validators
 
 To enable JWT authentication in ClickHouse:
 
@@ -205,7 +204,7 @@ version: 1.0
 </clickhouse>
 ```
 
-## Creation of a User with JWT Authentication in ClickHouse
+## Creation of a User with JWT Authentication
 
 To create a user in ClickHouse with JWT authentication enabled, add the `jwt` section to the user definition in `users.xml`.  
 Example:
