@@ -10,8 +10,8 @@
 * 4 [Configuration of JWT Validators](#configuration-of-jwt-validators)
     * 4.1 [RQ.SRS-042.JWT.ValidatorsConfiguration](#rqsrs-042jwtvalidatorsconfiguration)
 * 5 [Creation of a User with JWT Authentication](#creation-of-a-user-with-jwt-authentication)
-    * 5.1 [RQ.SRS-042.JWT.UserCreation](#rqsrs-042jwtusercreation)
-    * 5.2 [RQ.SRS-042.JWT.UserCreationSQL](#rqsrs-042jwtusercreationsql)
+    * 5.1 [RQ.SRS-042.JWT.UserCreation.Config](#rqsrs-042jwtusercreationconfig)
+    * 5.2 [RQ.SRS-042.JWT.UserCreation.RBAC](#rqsrs-042jwtusercreationrbac)
 * 6 [Authentication of Users with JWT in ClickHouse](#authentication-of-users-with-jwt-in-clickhouse)
     * 6.1 [Sub-Claim Validation](#sub-claim-validation)
         * 6.1.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
@@ -31,7 +31,7 @@
         * 9.2.1 [RQ.SRS-042.JWT.StaticKey.SupportedAlgorithms](#rqsrs-042jwtstatickeysupportedalgorithms)
     * 9.3 [Support for None Algorithm](#support-for-none-algorithm)
         * 9.3.1 [RQ.SRS-042.JWT.StaticKey.NoneAlgorithm](#rqsrs-042jwtstatickeynonealgorithm)
-    * 9.4 [Specicying Static Key Using Base64 Encoding](#specicying-static-key-using-base64-encoding)
+    * 9.4 [Specifying Static Key Using Base64 Encoding](#specifying-static-key-using-base64-encoding)
         * 9.4.1 [RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64](#rqsrs-042jwtstatickeyparametersstatickeyinbase64)
     * 9.5 [Using Public Key for Static Key Validation](#using-public-key-for-static-key-validation)
         * 9.5.1 [RQ.SRS-042.JWT.StaticKey.Parameters.PublicKey](#rqsrs-042jwtstatickeyparameterspublickey)
@@ -79,7 +79,7 @@
     * 12.3 [Token Blacklisting](#token-blacklisting)
         * 12.3.1 [RQ.SRS-042.JWT.Security.TokenBlacklisting](#rqsrs-042jwtsecuritytokenblacklisting)
     * 12.4 [Token Refresh On Re-Authentication](#token-refresh-on-re-authentication)
-        * 12.4.1 [RQ.SRS-042.JWT.Security.TokenRefreshOnReauthentication](#rqsrs-042jwtsecuritytokenrefreshonreauthentication)
+        * 12.4.1 [RQ.SRS-042.JWT.Security.TokenRefreshOnReAuthentication](#rqsrs-042jwtsecuritytokenrefreshonreauthentication)
 
 
 ## Introduction
@@ -226,9 +226,15 @@ version: 1.0
 
 ## Creation of a User with JWT Authentication
 
-To create a user in ClickHouse with JWT authentication enabled, add the `jwt` section to the user definition in `users.xml`.  
-Example:
+To create a user in ClickHouse with JWT authentication enabled, add the `jwt` section to the user definition in `users.xml` or use SQL statements to create the user with JWT authentication.
 
+
+### RQ.SRS-042.JWT.UserCreation.Config
+version: 1.0  
+
+[ClickHouse] SHALL support creating users with JWT authentication enabled by adding the `jwt` section to the user definition in `users.xml`.
+
+Example:
 ```xml
 <clickhouse>
     <!-- ... -->
@@ -237,10 +243,15 @@ Example:
         <jwt>
         </jwt>
     </my_user>
+</clickhouse>
 ```
 
-Users identified by JWT authentication can also be created using SQL statements.
+### RQ.SRS-042.JWT.UserCreation.RBAC
+version: 1.0  
 
+[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.
+
+Example:
 ```sql
 CREATE USER my_user IDENTIFIED WITH jwt
 ```
@@ -251,29 +262,9 @@ Or with additional JWT payload checks:
 CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"resource_access":{"account": {"roles": ["view-profile"]}}}'
 ```
 
-### RQ.SRS-042.JWT.UserCreation
-version: 1.0  
-
-[ClickHouse] SHALL support creating users with JWT authentication enabled by adding the `jwt` section to the user definition in `users.xml`.
-
-### RQ.SRS-042.JWT.UserCreationSQL
-version: 1.0  
-
-[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.
-
 ## Authentication of Users with JWT in ClickHouse
 
 To authenticate users with JWT in ClickHouse, the user must provide a valid JWT token. The token is validated against the configured JWT validators, and the user is granted access if the token is valid. Users can provide the JWT token via the console client or HTTP requests.
-
-Examples:  
-Console client
-
-```
-clickhouse-client -jwt <token>
-```
-
-- HTTP requests
-
 
 ### Sub-Claim Validation
 
@@ -302,6 +293,10 @@ version: 1.0
 
 [ClickHouse] SHALL allow users to authenticate using JWT by providing a token via the console client.
 
+```
+clickhouse-client -jwt <token>
+```
+
 ### HTTP(S) Client
 
 #### RQ.SRS-042.JWT.UserAuthentication.HTTPClient
@@ -311,7 +306,7 @@ version: 1.0
 
 For example,
 
-HTTP authentication:
+- HTTP authentication:
 
 ```
 curl 'http://localhost:8080/?' \
@@ -320,7 +315,7 @@ curl 'http://localhost:8080/?' \
  --data-raw 'SELECT current_user()'
 ```
 
-HTTPS authentication:
+- HTTPS authentication:
 
 ```
 curl 'https://localhost:8080/?' \
@@ -430,7 +425,20 @@ version: 1.0
  
 [ClickHouse] SHALL allow to specify `None` algorithm in the `algo` field of the static key validator configuration.
 
-### Specicying Static Key Using Base64 Encoding
+Example:
+```xml
+<clickhouse>
+    <!-- ... -->
+    <jwt_validators>
+        <my_static_key_validator>
+          <algo>None</algo>
+          <static_key>my_static_secret</static_key>
+        </my_static_key_validator>
+    </jwt_validators>
+</clickhouse>
+```
+
+### Specifying Static Key Using Base64 Encoding
 
 #### RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64
 version: 1.0
@@ -445,7 +453,7 @@ Example:
         <single_key_validator>
             <algo>HS256</algo>
             <static_key>my_secret</static_key>
-            <static_key_in_base64>false</static_key_in_base64>
+            <static_key_in_base64>true</static_key_in_base64>
         </single_key_validator>
     </jwt_validators>
 </clickhouse>
@@ -653,10 +661,10 @@ version: 1.0
 
 ### Token Refresh On Re-Authentication
 
-#### RQ.SRS-042.JWT.Security.TokenRefreshOnReauthentication
+#### RQ.SRS-042.JWT.Security.TokenRefreshOnReAuthentication
 version: 1.0  
 
 [ClickHouse] SHALL ensure that users receive new tokens upon re-authentication, preventing session fixation attacks.
 
 
-[ClickHouse]: https://clickhouse.com/
+[ClickHouse]: https://clickhouse.com
