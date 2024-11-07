@@ -554,7 +554,9 @@ def feature(self):
 
     if not self.context.unsafe:
         # https://github.com/ClickHouse/ClickHouse/issues/62459
-        self.context.workarounds["disallow_move_partition_to_self"] = True
+        self.context.workarounds["disallow_move_partition_to_self"] = (
+            check_clickhouse_version("<24.3")(self)
+        )
 
         # https://github.com/ClickHouse/ClickHouse/issues/63545#issuecomment-2105013462
         self.context.workarounds["wide_parts_only"] = True
