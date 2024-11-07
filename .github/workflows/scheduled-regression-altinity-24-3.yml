@@ -10,8 +10,8 @@ jobs:
   altinitystable-24-3-x86-with-analyzer-zookeeper:
     uses: ./.github/workflows/reusable-workflow-x86.yml
     with:
-      package: docker://altinity/clickhouse-server:24.3.5.47.altinitystable
-      version: '24.3.5.47'
+      package: docker://altinity/clickhouse-server:24.3.12.76.altinitystable
+      version: '24.3.12.76'
       extra_args: '--with-analyzer'
       artifact_name: altinitystable-24-3-x86-with-analyzer-zookeeper
     secrets: inherit
@@ -19,8 +19,8 @@ jobs:
   altinitystable-24-3-arm-with-analyzer-zookeeper:
     uses: ./.github/workflows/reusable-workflow-arm.yml
     with:
-      package: docker://altinity/clickhouse-server:24.3.5.47.altinitystable
-      version: '24.3.5.47'
+      package: docker://altinity/clickhouse-server:24.3.12.76.altinitystable
+      version: '24.3.12.76'
       extra_args: '--with-analyzer'
       artifact_name: altinitystable-24-3-arm-with-analyzer-zookeeper
     secrets: inherit
