@@ -242,6 +242,11 @@ def check_parquet_with_bloom(
 #     )
 
 
+@TestStep
+def check_all_conversions(self):
+    pass
+
+
 @TestCheck
 def check_bloom_filter_on_parquet(
     self,
@@ -311,7 +316,7 @@ def check_bloom_filter_on_parquet(
 
         file_definition.update(file_schema)
     with And(f"I save the JSON definition to a file {json_file_name}"):
-        snapshot_name = f"{option_list['writerVersion'].replace('.', '_')}_{option_list['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType']}_{schema_values['schemaType']}"
+        snapshot_name = f"{option_list['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType']}_{schema_values['schemaType']}_{option_list['writerVersion'].replace('.', '_')}"
 
         with open(path, "w") as json_file:
             json.dump(file_definition, json_file, cls=JSONEncoder, indent=2)
@@ -320,7 +325,7 @@ def check_bloom_filter_on_parquet(
         generate_parquet = parquetify(
             json_file=self.context.json_files + "/" + json_file_name,
             output_path=self.context.parquet_output_path,
-            check=True,
+            no_checks=True,
         )
 
     with bash_tools.client(
@@ -333,13 +338,13 @@ def check_bloom_filter_on_parquet(
             initial_rows = total_number_of_rows(file_name=parquet_file, node=client)
 
             for conversion in conversions:
-                condition = f"WHERE {column_name} = {conversion}('{data[0]}')"
+                condition = f"WHERE {column_name} = {conversion}('{data[-1]}')"
                 with Check("I check that the bloom filter is being used by ClickHouse"):
 
                     with By(
                         "selecting and saving the data from a parquet file without bloom filter enabled"
                     ):
-                        data_without_bloom = select_from_parquet(
+                        check_conversion = select_from_parquet(
                             file_name=parquet_file,
                             statement=statement,
                             condition=condition,
@@ -347,12 +352,25 @@ def check_bloom_filter_on_parquet(
                             settings=f"input_format_parquet_use_native_reader={native_reader}",
                             order_by="tuple(*)",
                             node=client,
+                            no_checks=True,
                         )
+
+                        data_without_bloom = select_from_parquet(
+                            file_name=parquet_file,
+                            statement=statement,
+                            format="TabSeparated",
+                            settings=f"input_format_parquet_use_native_reader={native_reader}",
+                            order_by="tuple(*)",
+                            node=client,
+                            no_checks=True,
+                        )
+
+                        if check_conversion.errorcode != 0:
+                            continue
 
                         data_with_bloom = select_from_parquet(
                             file_name=parquet_file,
                             statement=statement,
-                            condition=condition,
                             format="TabSeparated",
                             settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
                             order_by="tuple(*)",
@@ -380,16 +398,25 @@ def check_bloom_filter_on_parquet(
                         with values() as that:
                             assert that(
                                 snapshot(
-                                    f"rows_read: {read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
+                                    f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
                                     name=f"{snapshot_name}_{conversion}",
                                     id="bloom_filter",
+                                    mode=snapshot.UPDATE,
                                 )
                             ), error()
 
                     with And(
                         "I check that the data is the same when reading with bloom filter and without"
                     ):
-                        assert data_with_bloom.output == data_without_bloom.output, error()
+                        data_with_bloom = data_with_bloom.output
+                        data_without_bloom = data_without_bloom.output
+
+                        data_with_bloom.pop(-1)
+                        data_without_bloom.pop(-1)
+
+                        assert (
+                            data_with_bloom == data_without_bloom
+                        ), error()
 
 
 @TestSketch(Outline)

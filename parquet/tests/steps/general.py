@@ -108,13 +108,13 @@ def generate_parquet_json_definition(
 
 
 @TestStep(Given)
-def parquetify(self, json_file, output_path, node=None, check=False):
+def parquetify(self, json_file, output_path, node=None, no_checks=False):
     """Execute a Parquetify program for generating a Parquet file based on a json file."""
     if node is None:
         node = self.context.cluster.node("parquetify")
 
     return node.command(
-        f"parquetify --json {json_file} --output {output_path}", no_checks=check
+        f"parquetify --json {json_file} --output {output_path}", no_checks=no_checks
     )
 
 
@@ -161,6 +161,7 @@ def select_from_parquet(
     settings=None,
     format=None,
     order_by=False,
+    no_checks=False,
 ):
     """Select from a parquet file."""
     if node is None:
@@ -186,7 +187,7 @@ def select_from_parquet(
         if settings is not None:
             r += rf" SETTINGS {settings}"
 
-        output = node.query(r)
+        output = node.query(r, no_checks=no_checks)
 
     return output
 
