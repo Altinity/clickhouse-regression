@@ -4,9 +4,10 @@ import sys
 import json
 import datetime
 import base64
+from decimal import Decimal
+
 from clickhouse_driver import Client
 from clickhouse_driver.errors import Error
-
 
 class JSONEncoder(json.JSONEncoder):
     """
@@ -14,6 +15,7 @@ class JSONEncoder(json.JSONEncoder):
         - Supports DateTime serialization.
         - Supports Date serialization.
         - Supports bytes serialization.
+        - Supports Decimal serialization.
     """
 
     def default(self, obj):
@@ -23,11 +25,12 @@ class JSONEncoder(json.JSONEncoder):
             return obj.isoformat()
         if isinstance(obj, bytes):
             try:
-                return obj.decode('utf-8')
+                return obj.decode("utf-8")
             except UnicodeDecodeError:
-                return base64.b64encode(obj).decode('ascii')
+                return base64.b64encode(obj).decode("ascii")
+        if isinstance(obj, Decimal):
+            return str(obj)  # Convert Decimal to string to avoid precision loss
         return super().default(obj)
-
 
 def clickhouse_client_tty(args, statistics=False):
     args_dict = {k: v for k, v in vars(args).items() if v is not None}

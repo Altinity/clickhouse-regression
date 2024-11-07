@@ -1,8 +1,7 @@
-import os
 import json
-import random
 import datetime
 import base64
+from decimal import Decimal
 import re
 
 from parquet.requirements import *
@@ -23,6 +22,7 @@ class JSONEncoder(json.JSONEncoder):
         - Supports DateTime serialization.
         - Supports Date serialization.
         - Supports bytes serialization.
+        - Supports Decimal serialization.
     """
 
     def default(self, obj):
@@ -35,7 +35,10 @@ class JSONEncoder(json.JSONEncoder):
                 return obj.decode("utf-8")
             except UnicodeDecodeError:
                 return base64.b64encode(obj).decode("ascii")
+        if isinstance(obj, Decimal):
+            return str(obj)  # Convert Decimal to string to avoid precision loss
         return super().default(obj)
+
 
 
 @TestStep(When)
