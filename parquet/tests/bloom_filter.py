@@ -355,6 +355,9 @@ def check_bloom_filter_on_parquet(
                             no_checks=True,
                         )
 
+                        if check_conversion.errorcode != 0:
+                            continue
+
                         data_without_bloom = select_from_parquet(
                             file_name=parquet_file,
                             statement=statement,
@@ -362,11 +365,8 @@ def check_bloom_filter_on_parquet(
                             settings=f"input_format_parquet_use_native_reader={native_reader}",
                             order_by="tuple(*)",
                             node=client,
-                            no_checks=True,
+                            limit=10
                         )
-
-                        if check_conversion.errorcode != 0:
-                            continue
 
                         data_with_bloom = select_from_parquet(
                             file_name=parquet_file,
@@ -375,6 +375,7 @@ def check_bloom_filter_on_parquet(
                             settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
                             order_by="tuple(*)",
                             node=client,
+                            limit=10
                         )
 
                         file_structure = get_parquet_structure(file_name=parquet_file)
