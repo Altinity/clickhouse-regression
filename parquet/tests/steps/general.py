@@ -162,6 +162,7 @@ def select_from_parquet(
     format=None,
     order_by=False,
     no_checks=False,
+    limit=False
 ):
     """Select from a parquet file."""
     if node is None:
@@ -181,6 +182,9 @@ def select_from_parquet(
 
         if format is None:
             format = "TabSeparated"
+
+        if limit:
+            r += f" LIMIT {limit}"
 
         r += rf" FORMAT {format}"
 
