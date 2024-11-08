@@ -18,3 +18,5 @@ bcrypt
 clickhouse-driver==0.2.8
 pyspark==3.5.3
 delta-spark==3.2.1
+pyiceberg==0.7.1
+jwt==1.3.1
