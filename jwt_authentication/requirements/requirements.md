@@ -286,7 +286,7 @@ Payload example for user with name `my_user`:
 }
 ```
 
-### clickhouse-client
+### Clickhouse Client
 
 #### RQ.SRS-042.JWT.UserAuthentication.ClickhouseClient
 version: 1.0
