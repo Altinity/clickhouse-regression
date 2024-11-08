@@ -2,20 +2,20 @@
 import sys
 import os
 
-
 from testflows.core import *
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# append_path(sys.path, "..")
+append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import experimental_analyzer
 
-ffails = {}
+ffails = {
+    "/jwt/jwt authentication/check static key": (Skip, "Not yet implemented"),
+}
+
 
 @TestFeature
-@Name("jwt")
+@Name("jwt authentication")
 @FFails(ffails)
 @ArgumentParser(argparser)
 @CaptureClusterArgs

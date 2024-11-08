@@ -740,6 +740,38 @@ jobs:
         with:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
+    
+    jwt_authentication:
+    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: jwt_authentication
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'jwt_authentication' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths}}
 
   # functional:
   #   runs-on: self-hosted
