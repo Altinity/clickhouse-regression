@@ -135,7 +135,7 @@ Example:
 ```
 
 2. **Static JWKS Validator**:  
-Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms. 
+Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms.   
 Example:
 
 ```xml
@@ -151,7 +151,7 @@ Example:
 
 3. **Dynamic JWKS Validator**:  
 Retrieves public keys dynamically from the JWKS servers.
-Ideal for integration with identity providers where key rotation is managed externally.
+Ideal for integration with identity providers where key rotation is managed externally.  
 Example:
 
 ```xml
