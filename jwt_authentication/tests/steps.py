@@ -93,6 +93,30 @@ def add_jwt_user_to_users_xml(self, user_name: str, claim: dict = {}):
     change_clickhouse_settings(entries=entries)
 
 
+@TestStep(Given)
+def create_user_with_jwt_auth(
+    self,
+    user_name: str,
+    node: Node = None,
+    claims: dict = {},
+):
+    """Create a user with JWT authentication."""
+    if node is None:
+        node = self.context.node
+
+    query = f"CREATE USER {user_name} WITH JWT"
+
+    if claims:
+        query += f" CLAIMS '{claims}'"
+
+    try:
+        node.query(query)
+
+    finally:
+        with Finally("drop user"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+
 @TestStep(Then)
 def check_jwt_login(self, user_name: str, token: str, node: Node = None):
     """Check JWT authentication for the specified user."""
