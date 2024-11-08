@@ -794,12 +794,21 @@ def add_trusted_ca_certificate(
     certificate,
     name=None,
     path=None,
-    directory="/usr/local/share/ca-certificates/",
+    directory=None,
     eof="EOF",
     certificate_node=None,
 ):
     """Add CA certificate as trusted by the system."""
     bash = self.context.cluster.bash(node=certificate_node)
+
+    if node.command("command -v update-ca-trust", no_checks=True).exitcode == 0:
+        rhel_mode = True
+
+    if directory is None:
+        if rhel_mode:
+            directory = "/etc/pki/ca-trust/source/anchors/"
+        else:
+            directory = "/usr/local/share/ca-certificates/"
 
     if path is None:
         if name is None:
@@ -816,14 +825,17 @@ def add_trusted_ca_certificate(
             )
 
         with And("updating system certificates"):
-            cmd = node.command("update-ca-certificates")
+            if rhel_mode:
+                cmd = node.command(f"update-ca-trust extract")
+            else:
+                cmd = node.command("update-ca-certificates")
 
         with Then("checking certificate was added"):
             assert (
                 "Adding " in cmd.output
                 or "Replacing " in cmd.output
                 or "Updating " in cmd.output
-                or cmd.output == ""  # no output on alpine
+                or cmd.output == ""  # no output on alpine or rhel
             ), error()
 
         with And("exitcode is 0"):
@@ -833,7 +845,10 @@ def add_trusted_ca_certificate(
     finally:
         with Finally("I remove CA certificate from being trusted by the system"):
             node.command(f"rm -rf {path}")
-            node.command("update-ca-certificates -f", exitcode=0)
+            if rhel_mode:
+                node.command("update-ca-trust extract")
+            else:
+                node.command("update-ca-certificates -f", exitcode=0)
 
 
 @TestStep(Then)
