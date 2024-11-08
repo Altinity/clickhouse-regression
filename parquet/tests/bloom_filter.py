@@ -242,9 +242,107 @@ def check_parquet_with_bloom(
 #     )
 
 
-@TestStep
-def check_all_conversions(self):
-    pass
+@TestStep(Then)
+def check_all_conversions(
+    self,
+    generate_parquet,
+    parquet_file,
+    client,
+    column_name,
+    data,
+    statement,
+    native_reader,
+    filter_pushdown,
+    bloom_filter_on_clickhouse,
+    conversions,
+    snapshot_name,
+):
+    """Check all conversions for the parquet file via checking if the conversion returns an error and loop through all possible ClickHouse data conversions."""
+    with When("I get the total number of rows in the parquet file"):
+        if generate_parquet.exitcode != 0:
+            skip("Incorrect JSON file structure")
+
+        initial_rows = total_number_of_rows(file_name=parquet_file, node=client)
+
+        for conversion in conversions:
+            condition = f"WHERE {column_name} = {conversion}('{data[-1]}')"
+            with Check("I check that the bloom filter is being used by ClickHouse"):
+
+                with By(
+                    "selecting and saving the data from a parquet file without bloom filter enabled"
+                ):
+                    check_conversion = select_from_parquet(
+                        file_name=parquet_file,
+                        statement=statement,
+                        condition=condition,
+                        format="TabSeparated",
+                        settings=f"input_format_parquet_use_native_reader={native_reader}",
+                        order_by="tuple(*)",
+                        node=client,
+                        no_checks=True,
+                    )
+
+                    if check_conversion.errorcode != 0:
+                        continue
+
+                    data_without_bloom = select_from_parquet(
+                        file_name=parquet_file,
+                        statement=statement,
+                        format="TabSeparated",
+                        settings=f"input_format_parquet_use_native_reader={native_reader}",
+                        order_by="tuple(*)",
+                        node=client,
+                        limit=10,
+                    )
+
+                    data_with_bloom = select_from_parquet(
+                        file_name=parquet_file,
+                        statement=statement,
+                        format="TabSeparated",
+                        settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
+                        order_by="tuple(*)",
+                        node=client,
+                        limit=10,
+                    )
+
+                    file_structure = get_parquet_structure(file_name=parquet_file)
+
+                with And(
+                    f"selecting and saving the data from a parquet file with bloom filter {bloom_filter_on_clickhouse} and filter pushdown {filter_pushdown}"
+                ):
+                    read_with_bloom = select_from_parquet(
+                        file_name=parquet_file,
+                        statement=statement,
+                        condition=condition,
+                        format="Json",
+                        settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter_on_clickhouse},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
+                        order_by="tuple(*)",
+                        node=client,
+                    )
+
+                with Then("I check that the number of rows read is correct"):
+                    read_rows = rows_read(read_with_bloom.output)
+
+                    with values() as that:
+                        assert that(
+                            snapshot(
+                                f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
+                                name=f"{snapshot_name}_{conversion}",
+                                id="bloom_filter",
+                                mode=snapshot.UPDATE,
+                            )
+                        ), error()
+
+                with And(
+                    "I check that the data is the same when reading with bloom filter and without"
+                ):
+                    data_with_bloom = data_with_bloom.output
+                    data_without_bloom = data_without_bloom.output
+
+                    data_with_bloom.pop(-1)
+                    data_without_bloom.pop(-1)
+
+                    assert data_with_bloom == data_without_bloom, error()
 
 
 @TestCheck
@@ -331,94 +429,23 @@ def check_bloom_filter_on_parquet(
             no_checks=True,
         )
 
-    with bash_tools.client(
-        client_args={"host": node.name, "statistics": "null"}
-    ) as client:
-        with When("I get the total number of rows in the parquet file"):
-            if generate_parquet.exitcode != 0:
-                skip("Incorrect JSON file structure")
-
-            initial_rows = total_number_of_rows(file_name=parquet_file, node=client)
-
-            for conversion in conversions:
-                condition = f"WHERE {column_name} = {conversion}('{data[-1]}')"
-                with Check("I check that the bloom filter is being used by ClickHouse"):
-
-                    with By(
-                        "selecting and saving the data from a parquet file without bloom filter enabled"
-                    ):
-                        check_conversion = select_from_parquet(
-                            file_name=parquet_file,
-                            statement=statement,
-                            condition=condition,
-                            format="TabSeparated",
-                            settings=f"input_format_parquet_use_native_reader={native_reader}",
-                            order_by="tuple(*)",
-                            node=client,
-                            no_checks=True,
-                        )
-
-                        if check_conversion.errorcode != 0:
-                            continue
-
-                        data_without_bloom = select_from_parquet(
-                            file_name=parquet_file,
-                            statement=statement,
-                            format="TabSeparated",
-                            settings=f"input_format_parquet_use_native_reader={native_reader}",
-                            order_by="tuple(*)",
-                            node=client,
-                            limit=10,
-                        )
-
-                        data_with_bloom = select_from_parquet(
-                            file_name=parquet_file,
-                            statement=statement,
-                            format="TabSeparated",
-                            settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-                            order_by="tuple(*)",
-                            node=client,
-                            limit=10,
-                        )
-
-                        file_structure = get_parquet_structure(file_name=parquet_file)
-
-                    with And(
-                        f"selecting and saving the data from a parquet file with bloom filter {bloom_filter_on_clickhouse} and filter pushdown {filter_pushdown}"
-                    ):
-                        read_with_bloom = select_from_parquet(
-                            file_name=parquet_file,
-                            statement=statement,
-                            condition=condition,
-                            format="Json",
-                            settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter_on_clickhouse},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-                            order_by="tuple(*)",
-                            node=client,
-                        )
-
-                    with Then("I check that the number of rows read is correct"):
-                        read_rows = rows_read(read_with_bloom.output)
-
-                        with values() as that:
-                            assert that(
-                                snapshot(
-                                    f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
-                                    name=f"{snapshot_name}_{conversion}",
-                                    id="bloom_filter",
-                                    mode=snapshot.UPDATE,
-                                )
-                            ), error()
-
-                    with And(
-                        "I check that the data is the same when reading with bloom filter and without"
-                    ):
-                        data_with_bloom = data_with_bloom.output
-                        data_without_bloom = data_without_bloom.output
-
-                        data_with_bloom.pop(-1)
-                        data_without_bloom.pop(-1)
-
-                        assert data_with_bloom == data_without_bloom, error()
+    with And("I open a single ClickHouse client instance"):
+        with bash_tools.client(
+            client_args={"host": node.name, "statistics": "null"}
+        ) as client:
+            check_all_conversions(
+                generate_parquet=generate_parquet,
+                parquet_file=parquet_file,
+                client=client,
+                column_name=column_name,
+                data=data,
+                statement=statement,
+                native_reader=native_reader,
+                filter_pushdown=filter_pushdown,
+                bloom_filter_on_clickhouse=bloom_filter_on_clickhouse,
+                conversions=conversions,
+                snapshot_name=snapshot_name,
+            )
 
 
 @TestSketch(Outline)
