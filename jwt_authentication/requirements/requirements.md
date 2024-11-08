@@ -12,7 +12,7 @@
 * 5 [Creation of a User with JWT Authentication](#creation-of-a-user-with-jwt-authentication)
     * 5.1 [RQ.SRS-042.JWT.UserCreation.Config](#rqsrs-042jwtusercreationconfig)
     * 5.2 [RQ.SRS-042.JWT.UserCreation.RBAC](#rqsrs-042jwtusercreationrbac)
-* 6 [Authentication of Users with JWT in ClickHouse](#authentication-of-users-with-jwt-in-clickhouse)
+* 6 [Authentication with JWT ](#authentication-with-jwt-)
     * 6.1 [Sub-Claim Validation](#sub-claim-validation)
         * 6.1.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
     * 6.2 [Clickhouse Client](#clickhouse-client)
@@ -32,7 +32,7 @@
     * 9.3 [Support for None Algorithm](#support-for-none-algorithm)
         * 9.3.1 [RQ.SRS-042.JWT.StaticKey.NoneAlgorithm](#rqsrs-042jwtstatickeynonealgorithm)
     * 9.4 [Specifying Static Key Using Base64 Encoding](#specifying-static-key-using-base64-encoding)
-        * 9.4.1 [RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64](#rqsrs-042jwtstatickeyparametersstatickeyinbase64)
+        * 9.4.1 [RQ.SRS-042.JWT.StaticKey.StaticKeyInBase64](#rqsrs-042jwtstatickeystatickeyinbase64)
     * 9.5 [Using Public Key for Static Key Validation](#using-public-key-for-static-key-validation)
         * 9.5.1 [RQ.SRS-042.JWT.StaticKey.Parameters.PublicKey](#rqsrs-042jwtstatickeyparameterspublickey)
     * 9.6 [Using PrivateKey for Static Key Validation](#using-privatekey-for-static-key-validation)
@@ -42,9 +42,9 @@
     * 10.2 [Specifying Static JWKS Inline](#specifying-static-jwks-inline)
         * 10.2.1 [RQ.SRS-042.JWT.StaticJWKS.Inline](#rqsrs-042jwtstaticjwksinline)
     * 10.3 [Specifying JWKS Using File Path](#specifying-jwks-using-file-path)
-        * 10.3.1 [RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile](#rqsrs-042jwtstaticjwksparameterspathtojwksfile)
+        * 10.3.1 [RQ.SRS-042.JWT.StaticJWKS.PathToJWKSFile](#rqsrs-042jwtstaticjwkspathtojwksfile)
     * 10.4 [Specifying Either JWKS Inline or Using File Path (Mutually Exclusive)](#specifying-either-jwks-inline-or-using-file-path-mutually-exclusive)
-        * 10.4.1 [RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource](#rqsrs-042jwtstaticjwksparametersonecontentsource)
+        * 10.4.1 [RQ.SRS-042.JWT.StaticJWKS.OneSourceOfJWKS](#rqsrs-042jwtstaticjwksonesourceofjwks)
     * 10.5 [Supported Algorithms for Static JWKS Validation](#supported-algorithms-for-static-jwks-validation)
         * 10.5.1 [RQ.SRS-042.JWT.StaticJWKS.SupportedAlgorithms](#rqsrs-042jwtstaticjwkssupportedalgorithms)
     * 10.6 [Using Public Key for Static JWKS Validation](#using-public-key-for-static-jwks-validation)
@@ -56,8 +56,8 @@
     * 11.2 [Specifying Dynamic JWKS URI](#specifying-dynamic-jwks-uri)
         * 11.2.1 [RQ.SRS-042.JWT.DynamicJWKS.URI](#rqsrs-042jwtdynamicjwksuri)
     * 11.3 [Specifying Dynamic JWKS Refresh Rate](#specifying-dynamic-jwks-refresh-rate)
-        * 11.3.1 [RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh](#rqsrs-042jwtdynamicjwksparametersrefresh)
-    * 11.4 [Optional Dynamic JWKS Timeouts](#optional-dynamic-jwks-timeouts)
+        * 11.3.1 [RQ.SRS-042.JWT.DynamicJWKS.Refresh](#rqsrs-042jwtdynamicjwksrefresh)
+    * 11.4 [Optional Dynamic JWKS Timeout Parameters](#optional-dynamic-jwks-timeout-parameters)
         * 11.4.1 [Specifying Optional Connection Timeout](#specifying-optional-connection-timeout)
             * 11.4.1.1 [RQ.SRS-042.JWT.DynamicJWKS.ConnectionTimeout](#rqsrs-042jwtdynamicjwksconnectiontimeout)
         * 11.4.2 [Specifying Optional Receive Timeout](#specifying-optional-receive-timeout)
@@ -262,7 +262,7 @@ Or with additional JWT payload checks:
 CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"resource_access":{"account": {"roles": ["view-profile"]}}}'
 ```
 
-## Authentication of Users with JWT in ClickHouse
+## Authentication with JWT 
 
 To authenticate users with JWT in ClickHouse, the user must provide a valid JWT token. The token is validated against the configured JWT validators, and the user is granted access if the token is valid. Users can provide the JWT token via the console client or HTTP requests.
 
@@ -440,7 +440,7 @@ Example:
 
 ### Specifying Static Key Using Base64 Encoding
 
-#### RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64
+#### RQ.SRS-042.JWT.StaticKey.StaticKeyInBase64
 version: 1.0
 
 [ClickHouse] SHALL support the `static_key_in_base64` option to indicate if the static_key is base64-encoded. This option is optional and SHALL default to False.
@@ -502,14 +502,14 @@ The `static_jwks` field SHALL specify the JWKS content in the static JWKS valida
 ```
 ### Specifying JWKS Using File Path
 
-#### RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile
+#### RQ.SRS-042.JWT.StaticJWKS.PathToJWKSFile
 version: 1.0  
 
 [ClickHouse] SHALL support the `static_jwks_file` option to specify the path to a file containing the JWKS content in the static JWKS validator configuration.
 
 ### Specifying Either JWKS Inline or Using File Path (Mutually Exclusive)
 
-#### RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource
+#### RQ.SRS-042.JWT.StaticJWKS.OneSourceOfJWKS
 version: 1.0
 
 [ClickHouse] SHALL allow to specify only one of the `static_jwks` or `static_jwks_file` in the static JWKS validator configuration.
@@ -581,12 +581,12 @@ version: 1.0
 
 ### Specifying Dynamic JWKS Refresh Rate
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh
+#### RQ.SRS-042.JWT.DynamicJWKS.Refresh
 version: 1.0  
 
 [ClickHouse] SHALL support the `refresh_ms` parameter to specify the period for refreshing the JWKS in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 300000.
 
-### Optional Dynamic JWKS Timeouts
+### Optional Dynamic JWKS Timeout Parameters
 
 Timeouts in milliseconds on the socket used for communicating with the server:
 
@@ -667,4 +667,4 @@ version: 1.0
 [ClickHouse] SHALL ensure that users receive new tokens upon re-authentication, preventing session fixation attacks.
 
 
-[ClickHouse]: https://clickhouse.com
+[ClickHouse](https://clickhouse.com)
