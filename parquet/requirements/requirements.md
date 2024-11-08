@@ -311,8 +311,10 @@
         * 17.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Page](#rqsrs-032clickhouseparquetindexespage)
     * 17.3 [Bloom Filter](#bloom-filter)
         * 17.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
-        * 17.3.2 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
-            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
+        * 17.3.2 [Parquet Column Types Support](#parquet-column-types-support)
+            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypes)
+        * 17.3.3 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
+            * 17.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
     * 17.4 [Dictionary](#dictionary)
         * 17.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 18 [Metadata](#metadata)
@@ -2586,6 +2588,27 @@ SELECT * FROM file('test.Parquet, Parquet) WHERE f32=toFloat32(-64.12787) AND fi
 > queries with either “definitely no” or “probably yes”, where the probability of false positives is configured when the filter is initialized. Bloom filters do not have false negatives.
 > 
 > Because Bloom filters are small compared to dictionaries, they can be used for predicate pushdown even in columns with high cardinality and when space is at a premium.
+
+#### Parquet Column Types Support
+
+##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes
+version: 1.0
+
+| Supported            | Unsupported |
+|----------------------|-------------|
+| FLOAT                | BOOLEAN     |
+| DOUBLE               | UUID        |
+| STRING               | BSON        |``
+| INT and UINT         | JSON        |
+| FIXED_LEN_BYTE_ARRAY | ARRAY       |
+|                      | MAP         |
+|                      | TUPLE       |
+|                      | ARRAY       |
+|                      | ENUM        |
+|                      | INTERVAL    |
+|                      | DECIMAL     |
+|                      | TIMESTAMP   |
+
 
 #### Columns With Complex Datatypes That Have Bloom Filter Applied on Them
 
