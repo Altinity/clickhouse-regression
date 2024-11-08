@@ -741,7 +741,7 @@ jobs:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
     
-    jwt_authentication:
+  jwt_authentication:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
     timeout-minutes: 180
     env:
