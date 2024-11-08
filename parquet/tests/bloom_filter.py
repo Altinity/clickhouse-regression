@@ -4,6 +4,8 @@ import base64
 from decimal import Decimal
 import re
 
+from pandas import describe_option
+
 from parquet.requirements import *
 from parquet.tests.outline import import_export
 from parquet.tests.common import generate_values
@@ -38,7 +40,6 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(obj, Decimal):
             return str(obj)  # Convert Decimal to string to avoid precision loss
         return super().default(obj)
-
 
 
 @TestStep(When)
@@ -273,7 +274,10 @@ def check_bloom_filter_on_parquet(
     bash_tools = self.context.cluster.node("bash-tools")
     number_of_inserts = self.context.number_of_inserts
 
-    with Given("I prepare data required for the parquet file"):
+    with Given(
+        "I prepare data required for the parquet file",
+        description=f"""{schema_type()}, {writer_version()}, {physical_type()}, {logical_type()}, {compression_value()}""",
+    ):
         json_file_name = (
             f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
             f"{logical_type()['logicalType']}_" + getuid() + ".json"
@@ -368,7 +372,7 @@ def check_bloom_filter_on_parquet(
                             settings=f"input_format_parquet_use_native_reader={native_reader}",
                             order_by="tuple(*)",
                             node=client,
-                            limit=10
+                            limit=10,
                         )
 
                         data_with_bloom = select_from_parquet(
@@ -378,7 +382,7 @@ def check_bloom_filter_on_parquet(
                             settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
                             order_by="tuple(*)",
                             node=client,
-                            limit=10
+                            limit=10,
                         )
 
                         file_structure = get_parquet_structure(file_name=parquet_file)
@@ -418,9 +422,7 @@ def check_bloom_filter_on_parquet(
                         data_with_bloom.pop(-1)
                         data_without_bloom.pop(-1)
 
-                        assert (
-                            data_with_bloom == data_without_bloom
-                        ), error()
+                        assert data_with_bloom == data_without_bloom, error()
 
 
 @TestSketch(Outline)
