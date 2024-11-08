@@ -10,7 +10,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
 
 ffails = {
-    "/jwt/jwt authentication/check static key": (Skip, "Not yet implemented"),
+    "/jwt authentication": (Skip, "Not yet implemented"),
 }
 
 
