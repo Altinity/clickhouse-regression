@@ -242,7 +242,7 @@ Example:
 ### RQ.SRS-042.JWT.UserCreation.RBAC
 version: 1.0  
 
-[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.
+[ClickHouse] SHALL support creating users with JWT authentication enabled through SQL statements.
 
 Example:
 ```sql
@@ -270,12 +270,7 @@ Payload example for user with name `my_user`:
 
 ```json
 {
-  "sub": "my_user",
-  "resource_access": {
-    "account": {
-      "roles": ["view-profile"]
-    }
-  }
+  "sub": "my_user"
 }
 ```
 
