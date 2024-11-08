@@ -7,8 +7,12 @@ import datetime
 from helpers.common import create_xml_config_content, add_config
 
 
-def create_jwt(
-    payload: dict, secret: str, algorithm: str, expiration_minutes: int = None
+def create_static_jwt(
+    user_name: str,
+    secret: str = "my_secret",
+    algorithm: str = "HS256",
+    payload: dict = None,
+    expiration_minutes: int = None,
 ) -> str:
     """
     Create a JWT using a static secret and a specified encryption algorithm.
@@ -27,6 +31,9 @@ def create_jwt(
     :param expiration_minutes: The time until the token expires (default is 60 minutes).
     :return: The encoded JWT as a string.
     """
+    if payload is None:
+        payload = {"sub": f"{user_name}"}
+
     if expiration_minutes:
         expiration = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=expiration_minutes
@@ -34,28 +41,6 @@ def create_jwt(
         payload["exp"] = expiration
 
     return jwt.encode(payload, secret, algorithm=algorithm)
-
-
-@TestStep(Given)
-def create_jwt_token(
-    self,
-    user_name: str,
-    secret: str = "my_secret",
-    algorithm: str = "HS256",
-    payload: dict = None,
-):
-    """
-    Create a JWT token for the specified user.
-    :param user_name: The user name to include in the JWT.
-    :param secret: The secret key used to sign the JWT.
-    :param algorithm: The encryption algorithm to use (default is 'HS256').
-    :param payload: The payload to include in the JWT (as a dictionary).
-    If not provided, the payload will only contain the user name.
-    """
-    if payload is None:
-        payload = {"sub": f"{user_name}"}
-
-    return create_jwt(payload, secret, algorithm)
 
 
 @TestStep(Given)
@@ -118,18 +103,42 @@ def create_user_with_jwt_auth(
 
 
 @TestStep(Then)
-def check_jwt_login(self, user_name: str, token: str, node: Node = None):
-    """Check JWT authentication for the specified user."""
-    res = self.context.node.query("SELECT currentUser()", settings=[("jwt", token)])
-    assert res.output == user_name, error()
+def check_clickhouse_client_jwt_login(
+    self, user_name: str, token: str, node: Node = None
+):
+    """Check JWT authentication for the specified user with clickhouse-client."""
+    if node is None:
+        node = self.context.node
+
+    with By("check jwt authentication with clickhouse-client"):
+        res = node.query("SELECT currentUser()", settings=[("jwt", token)])
+        assert res.output == user_name, error()
 
 
 @TestStep(Then)
-def check_curl_jwt_login(
-    self, user_name: str, token: str, ip: str = "localhost", https: bool = False
+def check_http_https_jwt_login(
+    self,
+    user_name: str,
+    token: str,
+    ip: str = "localhost",
+    https: bool = False,
+    node: Node = None,
 ):
-    """Check JWT authentication for the specified user using curl."""
+    """Check JWT authentication for the specified user with http/https."""
+    if node is None:
+        node = self.context.node
+
     http_prefix = "https" if https else "http"
-    curl = f'curl -H "X-ClickHouse-JWT-Token: Bearer {token}" "{http_prefix}://{ip}:8123/?query=SELECT%20currentUser()"'
-    res = self.context.node.command(curl).output
-    assert res == user_name, error()
+
+    with By(f"check jwt authentication with {http_prefix}"):
+        curl = f'curl -H "X-ClickHouse-JWT-Token: Bearer {token}" "{http_prefix}://{ip}:8123/?query=SELECT%20currentUser()"'
+        res = node.command(curl).output
+        assert res == user_name, error()
+
+
+@TestStep(Then)
+def check_jwt_login(self, user_name: str, token: str, node: Node = None):
+    """Check JWT authentication for the specified user with clickhouse-client and http/https."""
+    check_clickhouse_client_jwt_login(user_name=user_name, token=token, node=node)
+    check_http_https_jwt_login(user_name=user_name, token=token, node=node)
+    # check_http_https_jwt_login(user_name=user_name, token=token, https=True, node=node)

@@ -19,11 +19,10 @@ def check_static_key(self):
         steps.add_jwt_user_to_users_xml(user_name=user_name)
 
     with When("create jwt token"):
-        token = steps.create_jwt_token(user_name=user_name)
+        token = steps.create_static_jwt(user_name=user_name)
 
     with Then("check jwt authentication"):
         steps.check_jwt_login(user_name=user_name, token=token)
-        steps.check_curl_jwt_login(user_name=user_name, token=token)
 
 
 @TestScenario
