@@ -121,9 +121,6 @@ These validators are set up in the `jwt_validators` section of the `config.xml` 
 ClickHouse supports three main types of JWT validators:
 
 1. **Static Key Validator**:
-
-Uses a symmetric static secret key to verify JWT signatures.
-Supported algorithms: HMAC (HS256, HS384, HS512).  
 Example:
 
 ```xml
@@ -138,9 +135,7 @@ Example:
 ```
 
 2. **Static JWKS Validator**:
-
-Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms.
-Supported algorithms: RSA, ECDSA, EdDSA.  
+Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms. 
 Example:
 
 ```xml
@@ -158,7 +153,6 @@ Example:
 
 Retrieves public keys dynamically from the JWKS servers.
 Ideal for integration with identity providers where key rotation is managed externally.
-Supported algorithms: RSA, ECDSA, EdDSA.  
 Example:
 
 ```xml
