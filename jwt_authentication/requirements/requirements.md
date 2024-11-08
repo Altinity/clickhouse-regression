@@ -120,7 +120,7 @@ These validators are set up in the `jwt_validators` section of the `config.xml` 
 
 ClickHouse supports three main types of JWT validators:
 
-1. **Static Key Validator**:
+1. **Static Key Validator**:  
 Example:
 
 ```xml
@@ -134,7 +134,7 @@ Example:
 </clickhouse>
 ```
 
-2. **Static JWKS Validator**:
+2. **Static JWKS Validator**:  
 Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms. 
 Example:
 
@@ -149,8 +149,7 @@ Example:
 </clickhouse>
 ```
 
-3. **Dynamic JWKS Validator**:
-
+3. **Dynamic JWKS Validator**:  
 Retrieves public keys dynamically from the JWKS servers.
 Ideal for integration with identity providers where key rotation is managed externally.
 Example:
