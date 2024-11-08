@@ -807,6 +807,8 @@ def add_trusted_ca_certificate(
 
     if node.command("command -v update-ca-trust", no_checks=True).exitcode == 0:
         rhel_mode = True
+    else:
+        rhel_mode = False
 
     if directory is None:
         if rhel_mode:
