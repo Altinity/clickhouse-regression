@@ -15,7 +15,7 @@
 * 6 [Authentication of Users with JWT in ClickHouse](#authentication-of-users-with-jwt-in-clickhouse)
     * 6.1 [Sub-Claim Validation](#sub-claim-validation)
         * 6.1.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
-    * 6.2 [clickhouse-client](#clickhouse-client)
+    * 6.2 [Clickhouse Client](#clickhouse-client)
         * 6.2.1 [RQ.SRS-042.JWT.UserAuthentication.ClickhouseClient](#rqsrs-042jwtuserauthenticationclickhouseclient)
     * 6.3 [HTTP(S) Client](#https-client)
         * 6.3.1 [RQ.SRS-042.JWT.UserAuthentication.HTTPClient](#rqsrs-042jwtuserauthenticationhttpclient)
