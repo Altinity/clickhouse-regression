@@ -700,6 +700,8 @@ def feature(self, node="clickhouse1", number_of_inserts=1500):
             - has()
             - hasAny()
             - hasAll()
+        - Check that the bloom filter is being used by ClickHouse when doing conversions like SELECT * FROM file('file.parquet', Parquet) WHERE column = toInt32('value')
+            - Check all possible conversions
     """
     self.context.node = self.context.cluster.node(node)
     self.context.snapshot_id = "bloom"
@@ -709,5 +711,6 @@ def feature(self, node="clickhouse1", number_of_inserts=1500):
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
     self.context.number_of_inserts = number_of_inserts
+
     for scenario in loads(current_module(), Scenario):
         scenario()
