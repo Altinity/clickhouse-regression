@@ -3552,6 +3552,36 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter = Requirement(
     num="17.3.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "| Supported            | Unsupported |\n"
+        "|----------------------|-------------|\n"
+        "| FLOAT                | BOOLEAN     |\n"
+        "| DOUBLE               | UUID        |\n"
+        "| STRING               | BSON        |``\n"
+        "| INT and UINT         | JSON        |\n"
+        "| FIXED_LEN_BYTE_ARRAY | ARRAY       |\n"
+        "|                      | MAP         |\n"
+        "|                      | TUPLE       |\n"
+        "|                      | ARRAY       |\n"
+        "|                      | ENUM        |\n"
+        "|                      | INTERVAL    |\n"
+        "|                      | DECIMAL     |\n"
+        "|                      | TIMESTAMP   |\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="17.3.2.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex",
     version="1.0",
@@ -3565,7 +3595,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex = Requiremen
     ),
     link=None,
     level=4,
-    num="17.3.2.1",
+    num="17.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary = Requirement(
@@ -5427,15 +5457,21 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="17.3.1",
         ),
+        Heading(name="Parquet Column Types Support", level=3, num="17.3.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes",
+            level=4,
+            num="17.3.2.1",
+        ),
         Heading(
             name="Columns With Complex Datatypes That Have Bloom Filter Applied on Them",
             level=3,
-            num="17.3.2",
+            num="17.3.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex",
             level=4,
-            num="17.3.2.1",
+            num="17.3.3.1",
         ),
         Heading(name="Dictionary", level=2, num="17.4"),
         Heading(
@@ -5848,6 +5884,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Indexes,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_Page,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter,
+        RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat,
@@ -6205,8 +6242,10 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 17.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Page](#rqsrs-032clickhouseparquetindexespage)
     * 17.3 [Bloom Filter](#bloom-filter)
         * 17.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
-        * 17.3.2 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
-            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
+        * 17.3.2 [Parquet Column Types Support](#parquet-column-types-support)
+            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypes)
+        * 17.3.3 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
+            * 17.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
     * 17.4 [Dictionary](#dictionary)
         * 17.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 18 [Metadata](#metadata)
@@ -8480,6 +8519,27 @@ SELECT * FROM file('test.Parquet, Parquet) WHERE f32=toFloat32(-64.12787) AND fi
 > queries with either “definitely no” or “probably yes”, where the probability of false positives is configured when the filter is initialized. Bloom filters do not have false negatives.
 > 
 > Because Bloom filters are small compared to dictionaries, they can be used for predicate pushdown even in columns with high cardinality and when space is at a premium.
+
+#### Parquet Column Types Support
+
+##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes
+version: 1.0
+
+| Supported            | Unsupported |
+|----------------------|-------------|
+| FLOAT                | BOOLEAN     |
+| DOUBLE               | UUID        |
+| STRING               | BSON        |``
+| INT and UINT         | JSON        |
+| FIXED_LEN_BYTE_ARRAY | ARRAY       |
+|                      | MAP         |
+|                      | TUPLE       |
+|                      | ARRAY       |
+|                      | ENUM        |
+|                      | INTERVAL    |
+|                      | DECIMAL     |
+|                      | TIMESTAMP   |
+
 
 #### Columns With Complex Datatypes That Have Bloom Filter Applied on Them
 
