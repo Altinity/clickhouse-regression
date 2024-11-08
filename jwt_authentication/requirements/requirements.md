@@ -660,4 +660,4 @@ version: 1.0
 [ClickHouse] SHALL ensure that users receive new tokens upon re-authentication, preventing session fixation attacks.
 
 
-[ClickHouse](https://clickhouse.com)
+[ClickHouse]: https://clickhouse.com
