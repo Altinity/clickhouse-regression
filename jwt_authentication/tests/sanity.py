@@ -27,7 +27,7 @@ def check_static_key(self):
 
 
 @TestScenario
-@Name("jwt authentication")
+@Name("static key")
 def scenario(self, node="clickhouse1"):
     """Check jwt authentication."""
     self.context.node = self.context.cluster.node(node)

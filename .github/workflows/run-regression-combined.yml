@@ -69,6 +69,7 @@ on:
           - example
           - extended_precision_data_types
           - functions
+          - jwt_authentication
           - kafka
           - kerberos
           - key_value
