@@ -144,7 +144,7 @@ def feature(self, node="clickhouse1"):
     with Given("I generate private key and certificate for https server"):
         bash_tools = self.context.cluster.node("bash-tools")
         ca_cert = add_trusted_ca_certificate(
-q            node=bash_tools, certificate=self.context.my_own_ca_crt
+            node=bash_tools, certificate=self.context.my_own_ca_crt
         )
         create_crt_and_key(
             name="https_server",
