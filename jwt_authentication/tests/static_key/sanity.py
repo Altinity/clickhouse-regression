@@ -1,14 +1,12 @@
 from testflows.core import *
-from testflows.asserts import error
-
-from jwt_authentication.requirements import *
 
 from helpers.common import getuid
-
+from jwt_authentication.requirements import *
 import jwt_authentication.tests.steps as steps
 
 
 @TestScenario
+@Name("check simple jwt authentication with static key")
 @Requirements(RQ_SRS_042_JWT_StaticKey)
 def check_static_key(self):
     """Check jwt authentication with static key."""
@@ -25,10 +23,10 @@ def check_static_key(self):
         steps.check_jwt_login(user_name=user_name, token=token)
 
 
-@TestScenario
-@Name("static key")
-def scenario(self, node="clickhouse1"):
-    """Check jwt authentication."""
-    self.context.node = self.context.cluster.node(node)
+@TestFeature
+@Name("static key sanity")
+def feature(self):
+    """Sanity check jwt authentication with static key validator."""
 
-    Scenario(run=check_static_key)
+    for scenario in loads(current_module(), Scenario):
+        Scenario(run=scenario, flags=TE)
