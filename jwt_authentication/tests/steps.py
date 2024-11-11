@@ -4,7 +4,11 @@ from testflows.asserts import error
 import jwt
 import datetime
 
-from helpers.common import create_xml_config_content, add_config
+from helpers.common import (
+    create_xml_config_content,
+    add_config,
+    remove_config,
+)
 
 
 def create_static_jwt(
@@ -72,6 +76,36 @@ def change_clickhouse_settings(
 
 
 @TestStep(Given)
+def remove_jwt_user_from_users_xml(
+    self,
+    entries: dict,
+    modify: bool = False,
+    restart: bool = True,
+    format: str = None,
+    user: str = None,
+    config_d_dir: str = "/etc/clickhouse-server/users.d",
+    preprocessed_name: str = "users.xml",
+    node: Node = None,
+):
+    """Remove a user with JWT authentication from the users.xml configuration file."""
+    with By("converting config file content to xml"):
+        config = create_xml_config_content(
+            entries,
+            "change_settings.xml",
+            config_d_dir=config_d_dir,
+            preprocessed_name=preprocessed_name,
+        )
+        if format is not None:
+            for key, value in format.items():
+                config.content = config.content.replace(key, value)
+
+    with And("adding xml config file to the server"):
+        return remove_config(
+            config, restart=restart, modify=modify, user=user, node=node
+        )
+
+
+@TestStep(Given)
 def add_jwt_user_to_users_xml(self, user_name: str, claim: dict = {}):
     """Add a user with JWT authentication to the users.xml configuration file."""
     entries = {"users": {f"{user_name}": {"jwt": claim}}}
@@ -89,13 +123,14 @@ def create_user_with_jwt_auth(
     if node is None:
         node = self.context.node
 
-    query = f"CREATE USER {user_name} WITH JWT"
+    query = f"CREATE USER {user_name} IDENTIFIED WITH JWT"
 
     if claims:
         query += f" CLAIMS '{claims}'"
 
     try:
         node.query(query)
+        yield
 
     finally:
         with Finally("drop user"):
@@ -104,15 +139,27 @@ def create_user_with_jwt_auth(
 
 @TestStep(Then)
 def check_clickhouse_client_jwt_login(
-    self, user_name: str, token: str, node: Node = None
+    self,
+    user_name: str,
+    token: str,
+    node: Node = None,
+    exitcode: int = 0,
+    message: str = None,
 ):
     """Check JWT authentication for the specified user with clickhouse-client."""
     if node is None:
         node = self.context.node
 
     with By("check jwt authentication with clickhouse-client"):
-        res = node.query("SELECT currentUser()", settings=[("jwt", token)])
-        assert res.output == user_name, error()
+        res = node.query(
+            "SELECT currentUser()",
+            settings=[("jwt", token)],
+            exitcode=exitcode,
+            message=message,
+        )
+
+        if exitcode == 0:
+            assert res.output == user_name, error()
 
 
 @TestStep(Then)
@@ -123,6 +170,7 @@ def check_http_https_jwt_login(
     ip: str = "localhost",
     https: bool = False,
     node: Node = None,
+    message: str = None,
 ):
     """Check JWT authentication for the specified user with http/https."""
     if node is None:
@@ -132,13 +180,26 @@ def check_http_https_jwt_login(
 
     with By(f"check jwt authentication with {http_prefix}"):
         curl = f'curl -H "X-ClickHouse-JWT-Token: Bearer {token}" "{http_prefix}://{ip}:8123/?query=SELECT%20currentUser()"'
-        res = node.command(curl).output
-        assert res == user_name, error()
+        res = node.command(curl, message=message).output
+
+        if message is None:
+            assert res == user_name, error()
 
 
 @TestStep(Then)
-def check_jwt_login(self, user_name: str, token: str, node: Node = None):
+def check_jwt_login(
+    self,
+    user_name: str,
+    token: str,
+    node: Node = None,
+    exitcode: int = 0,
+    message: str = None,
+):
     """Check JWT authentication for the specified user with clickhouse-client and http/https."""
-    check_clickhouse_client_jwt_login(user_name=user_name, token=token, node=node)
-    check_http_https_jwt_login(user_name=user_name, token=token, node=node)
-    # check_http_https_jwt_login(user_name=user_name, token=token, https=True, node=node)
+    check_clickhouse_client_jwt_login(
+        user_name=user_name, token=token, node=node, exitcode=exitcode, message=message
+    )
+    check_http_https_jwt_login(
+        user_name=user_name, token=token, node=node, message=message
+    )
+    # check_http_https_jwt_login(user_name=user_name, token=token, https=True, node=node, exitcode=exitcode, message=message)

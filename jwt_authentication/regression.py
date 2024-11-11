@@ -44,7 +44,7 @@ def regression(
         )
         self.context.cluster = cluster
 
-    Scenario(run=load("jwt_authentication.tests.sanity", "scenario"))
+    Scenario(run=load("jwt_authentication.tests.static_key.feature", "feature"))
 
 
 if main():
