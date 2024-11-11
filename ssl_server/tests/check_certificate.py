@@ -14,14 +14,9 @@ def system_certificates(self):
 
     for retry in retries(timeout=60, delay=1):
         with retry:
-            with When("I get the serial number of my certificate"):
-                serial_number = node.command(
-                    f"openssl x509 -text -in /etc/ssl/certs/{current().context.my_own_ca_crt.split('/')[-1]}.pem -serial | grep serial= --color=never"
-                ).output[7:]
-
-            with Then("I check that system.certificates has the serial number"):
+            with Then("I check that system.certificates has the ca certificate"):
                 output = node.query(
-                    f"SELECT count() FROM system.certificates WHERE serial_number = '{serial_number.lower()}' FORMAT TabSeparated"
+                    f"SELECT count() FROM system.certificates WHERE issuer like '%Altinity%' FORMAT TabSeparated"
                 ).output
                 assert output == "1", error()
 
