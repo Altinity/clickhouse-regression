@@ -33,7 +33,7 @@ def get_privileges_as_list_of_strings(privileges):
 def check_if_partition_values_on_destination_changed(
     self, source_table, destination_table, user_name, changed=True
 ):
-    """Assert two possabilities:
+    """Assert two possibilities:
     - When we expect that `attach partition from` was successful due to valid privileges.
     - When we expect that `attach partition from` was not successful due to invalid privileges.
     """
