@@ -17,6 +17,17 @@ from helpers.common import experimental_analyzer, check_current_cpu
 from parquet.tests.common import start_minio, parquet_test_columns
 
 
+def parquet_argparser(parser):
+    argparser(parser)
+
+    parser.add_argument(
+        "--native-parquet-reader",
+        action="store_true",
+        default=False,
+        help="Use native paruqet reader.",
+    )
+
+
 xfails = {
     "/parquet/bloom/native reader array bloom": [
         (Fail, "Array not supported by native reader yet")
@@ -336,7 +347,7 @@ ffails = {
 
 
 @TestModule
-@ArgumentParser(argparser)
+@ArgumentParser(parquet_argparser)
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
@@ -362,6 +373,7 @@ def regression(
     gcs_key_id,
     node="clickhouse1",
     with_analyzer=False,
+    native_parquet_reader=False,
 ):
     """Parquet regression."""
     nodes = {
@@ -392,6 +404,13 @@ def regression(
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
+    with And("I enable or disable the native parquet reader"):
+        if native_parquet_reader:
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            default_query_settings.append(("input_format_parquet_use_native_reader", 1))
 
     with And("I have a Parquet table definition"):
         columns = (

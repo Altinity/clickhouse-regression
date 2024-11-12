@@ -216,6 +216,7 @@ def create_user(
     cluster=None,
     expected=None,
     not_identified=False,
+    valid_until=None,
 ):
     """Create user with given name. If name is not provided, it will be generated."""
     if node is None:
@@ -236,10 +237,13 @@ def create_user(
         query += f" IDENTIFIED WITH {identified}"
 
     if identified_by:
-        query += f" IDENTIFIED BY {identified_by}"
+        query += f" IDENTIFIED BY '{identified_by}'"
 
     if not_identified:
         query += " NOT IDENTIFIED"
+    
+    if valid_until:
+        query += f" VALID UNTIL '{valid_until}'"
 
     try:
         node.query(query, exitcode=exitcode, message=message)

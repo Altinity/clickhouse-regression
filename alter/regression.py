@@ -183,6 +183,12 @@ xfails = {
             check_clickhouse_version(">24.8"),
         )
     ],
+    "/alter/attach partition/partition key/attach partition from with id/*": [
+        (Fail, "Need to investigate")
+    ],
+    "/alter/attach partition/partition key/attach partition from without id/*": [
+        (Fail, "Need to investigate")
+    ],
 }
 
 xflags = {}

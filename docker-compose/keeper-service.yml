@@ -12,7 +12,7 @@ services:
         CLICKHOUSE_PACKAGE: $CLICKHOUSE_TESTS_KEEPER_BIN_PATH
         BASE_OS: $CLICKHOUSE_TESTS_KEEPER_BASE_OS
     init: true
-    privileged: true 
+    # privileged: true 
     expose:
       - "2181"
     environment:

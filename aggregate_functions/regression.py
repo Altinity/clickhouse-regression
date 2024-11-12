@@ -674,6 +674,16 @@ ffails = {
         "groupConcat was introduced in 24.7",
         check_clickhouse_version("<24.7"),
     ),
+    "/aggregate functions/function_list/untested function quantilesExactWeightedInterpolated": (
+        Skip,
+        "quantilesExactWeightedInterpolated test is not implemented",
+        check_clickhouse_version(">=24.10"),
+    ),
+    "/aggregate functions/function_list/untested function quantileExactWeightedInterpolated": (
+        Skip,
+        "quantileExactWeightedInterpolated test is not implemented",
+        check_clickhouse_version(">=24.10"),
+    ),
 }
 
 
@@ -811,9 +821,11 @@ def regression(
         #     executor=executor,
         # )()
         join()
-    
-    Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(table=self.context.table_extra_data)
-    
+
+    Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(
+        table=self.context.table_extra_data
+    )
+
 
 if main():
     regression()

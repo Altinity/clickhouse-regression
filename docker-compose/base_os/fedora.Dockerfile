@@ -7,7 +7,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
 RUN dnf update -y
-RUN dnf install -y ca-certificates
+RUN dnf install -y ca-certificates procps
+
+# Remove RHEL aliases that force cp/mv/rm to be interactive
+RUN sed -i 's/^alias.*//' /root/.bashrc
 
 ARG CLICKHOUSE_PACKAGE
 

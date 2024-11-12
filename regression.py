@@ -10,7 +10,7 @@ from s3.regression import argparser
 ffails = {
     "tiered_storage": (
         Skip,
-        "Required inputs are not specified, must be launch seperately.",
+        "Required inputs are not specified, must be launch separately.",
     ),
 }
 

@@ -599,6 +599,160 @@ def add_config(
                             wait_for_config_to_be_loaded()
 
 
+def remove_config(
+    config,
+    timeout=300,
+    restart=False,
+    modify=False,
+    node=None,
+    user=None,
+    wait_healthy=True,
+    check_preprocessed=True,
+):
+    """Remove configuration file from ClickHouse.
+
+    :param config: configuration file description
+    :param timeout: timeout, default: 300 sec
+    :param restart: restart server, default: False
+    :param modify: only modify configuration file, default: False
+    """
+    if node is None:
+        node = current().context.node
+    cluster = current().context.cluster
+
+    def check_preprocessed_config_is_updated(after_removal=False):
+        """Check that preprocessed config is updated."""
+        started = time.time()
+        command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
+
+        while time.time() - started < timeout:
+            exitcode = node.command(command, steps=False, no_checks=True).exitcode
+            if after_removal:
+                if exitcode == 1:
+                    break
+            else:
+                if exitcode == 0:
+                    break
+            time.sleep(1)
+
+        if settings.debug:
+            node.command(
+                f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name}"
+            )
+
+        if after_removal:
+            assert exitcode == 1, error()
+        else:
+            assert exitcode == 0, error()
+
+    def wait_for_config_to_be_loaded(user=None):
+        """Wait for config to be loaded."""
+        if restart:
+            with When("I close terminal to the node to be restarted"):
+                bash.close()
+
+            with And("I stop ClickHouse to apply the config changes"):
+                node.stop_clickhouse(safe=False)
+
+            with And("I get the current log size"):
+                cmd = node.cluster.command(
+                    None,
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                )
+                logsize = cmd.output.split(" ")[0].strip()
+
+            with And("I start ClickHouse back up"):
+                node.start_clickhouse(user=user, wait_healthy=wait_healthy)
+
+            with Then("I tail the log file from using previous log size as the offset"):
+                bash.prompt = bash.__class__.prompt
+                bash.open()
+                bash.send(
+                    f"tail -c +{logsize} -f /var/log/clickhouse-server/clickhouse-server.log"
+                )
+
+        with Then("I wait for config reload message in the log file"):
+            if restart:
+                choice = bash.expect(
+                    (
+                        f"(ConfigReloader: Loaded config '/etc/clickhouse-server/config.xml', performed update on configuration)|"
+                        f"(ConfigReloader: Error updating configuration from '/etc/clickhouse-server/config.xml')"
+                    ),
+                    timeout=timeout,
+                )
+            else:
+                choice = bash.expect(
+                    (
+                        f"(ConfigReloader: Loaded config '/etc/clickhouse-server/{config.preprocessed_name}', performed update on configuration)|"
+                        f"(ConfigReloader: Error updating configuration from '/etc/clickhouse-server/{config.preprocessed_name}')"
+                    ),
+                    timeout=timeout,
+                )
+            if choice.group(2):
+                bash.expect(".+\n", timeout=5, expect_timeout=True)
+                fail("ConfigReloader: Error updating configuration")
+
+    try:
+        with Given(f"{config.name}"):
+            if settings.debug:
+                with When("I output the content of the config"):
+                    debug(config.content)
+
+            with node.cluster.shell(node.name) as bash:
+                if check_preprocessed:
+                    bash.expect(bash.prompt)
+                    bash.send(
+                        "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
+                    )
+                    # make sure tail process is launched and started to follow the file
+                    bash.expect("<==")
+                    bash.expect("\n")
+
+                with By("removing the config file", description=config.path):
+                    node.command(f"rm -rf {config.path}", exitcode=0)
+
+                if check_preprocessed:
+                    with Then(
+                        f"{config.preprocessed_name} should be updated",
+                        description=f"timeout {timeout}",
+                    ):
+                        check_preprocessed_config_is_updated(after_removal=True)
+
+                    with And("I wait for config to be reloaded"):
+                        wait_for_config_to_be_loaded()
+
+        yield
+
+    finally:
+        if not modify:
+            with Finally(f"Restore {config.name} on {node.name}"):
+                with node.cluster.shell(node.name) as bash:
+                    if check_preprocessed:
+                        bash.expect(bash.prompt)
+                        bash.send(
+                            "tail -v -n 0 -f /var/log/clickhouse-server/clickhouse-server.log"
+                        )
+                        # make sure tail process is launched and started to follow the file
+                        bash.expect("<==")
+                        bash.expect("\n")
+
+                    with When("I add the config", description=config.path):
+                        command = (
+                            f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
+                        )
+                        node.command(command, steps=False, exitcode=0)
+
+                    if check_preprocessed:
+                        with Then(
+                            f"{config.preprocessed_name} should be updated",
+                            description=f"timeout {timeout}",
+                        ):
+                            check_preprocessed_config_is_updated()
+
+                        with And("I wait for config to be reloaded"):
+                            wait_for_config_to_be_loaded(user=user)
+
+
 @TestStep(Given)
 def copy(
     self,
@@ -663,7 +817,7 @@ def add_user_on_node(self, node=None, groupname=None, username="clickhouse"):
             node.command(f"useradd -g {groupname} -s /bin/bash {username}", exitcode=0)
         yield
     finally:
-        node.command(f"deluser {username}", exitcode=0)
+        node.command(f"userdel {username}", exitcode=0)
 
 
 @TestStep(Given)
@@ -675,7 +829,7 @@ def add_group_on_node(self, node=None, groupname="clickhouse"):
         node.command(f"groupadd {groupname}", exitcode=0)
         yield
     finally:
-        node.command(f"delgroup {groupname}", no_checks=True)
+        node.command(f"groupdel {groupname}", no_checks=True)
 
 
 @TestStep(Given)

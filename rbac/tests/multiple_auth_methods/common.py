@@ -101,7 +101,10 @@ def login(
     message=None,
     expected=None,
     nodes=None,
+    session_timezone=None,
 ):
+    settings = [("user", user_name), ("password", password)]
+
     if node is None:
         node = self.context.node
 
@@ -111,12 +114,15 @@ def login(
     if expected is not None:
         exitcode, message = expected()
 
+    if session_timezone is not None:
+        settings.append(("session_timezone", session_timezone))
+
     nodes = nodes or [node]
 
     for node in nodes:
         node.query(
             f"SELECT currentUser()",
-            settings=[("user", user_name), ("password", password)],
+            settings=settings,
             exitcode=exitcode,
             message=message,
         )
@@ -156,6 +162,18 @@ def login_ssh(
             exitcode=exitcode,
             message=message,
         )
+
+
+@TestStep(Given)
+def check_timezone(self, timezone="GMT", node=None):
+    """Check that the server timezone is set to specified value."""
+    if node is None:
+        node = self.context.node
+
+    current_timezone = node.query(
+        f"SELECT timezone() FORMAT TabSeparated"
+    ).output.strip()
+    assert current_timezone == timezone, error()
 
 
 @TestStep(Given)

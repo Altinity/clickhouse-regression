@@ -10,8 +10,8 @@ RUN mkdir -p /var/lib/clickhouse/coordination
 # install curl, base image could be alpine
 RUN if [ -f /etc/alpine-release ]; then \
     apk update && \
-    apk add --no-cache curl openssl shadow; \
+    apk add --no-cache curl openssl shadow openssh-client; \
     else \
     apt-get update && \
-    apt-get install -y curl; \
+    apt-get install -y curl openssh-client; \
     fi
