@@ -49,6 +49,7 @@ table_schema_attr_map = {
         "job_url": "job.url",
         "report_url": "report.url",
         "start_time": "start_datetime",
+        "scheduled": "job.is_scheduled",
     },
     "test_results": {
         "test_duration_ms": "message_rtime_ms",
@@ -406,6 +407,7 @@ class ResultUploader:
                 port=db_port,
                 secure="y" if secure else None,
                 verify=verify,
+                settings={"insert_block_size": 1048576 // 2},
             )
 
         with When("inserting test results"):

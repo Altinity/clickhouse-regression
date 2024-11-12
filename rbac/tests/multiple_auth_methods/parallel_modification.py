@@ -56,7 +56,7 @@ def combination_of_actions(self, combination, node=None):
         node = self.context.node
 
     with Given("run statements of first action in parallel"):
-        with Pool() as executor:
+        with Pool(5) as executor:
             for action in combination[0]:
                 Step(test=run_action_in_parallel, parallel=True, executor=executor)(
                     action=action, usernames=usernames
@@ -114,7 +114,7 @@ def action_one_in_parallel(self, number_of_parallel_actions=2):
         if not self.context.stress:
             combinations = random.sample(combinations, 1000)
 
-    with Pool(10) as executor:
+    with Pool(5) as executor:
         for i, combination in enumerate(combinations):
             Scenario(
                 f"#{i}", test=combination_of_actions, parallel=True, executor=executor

@@ -12,7 +12,7 @@ def feature(self, node="clickhouse1"):
     self.context.node_3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node_2, self.context.node_3]
 
-    with Pool(4) as pool:
+    with Pool(8) as pool:
         try:
             Feature(
                 run=load("rbac.tests.multiple_auth_methods.create", "feature"),
@@ -98,7 +98,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.multiple_auth_methods.identified_with_ssh_key",
+                    "rbac.tests.multiple_auth_methods.valid_until_combinations",
                     "feature",
                 ),
                 parallel=True,
@@ -106,7 +106,7 @@ def feature(self, node="clickhouse1"):
             )
             Feature(
                 run=load(
-                    "rbac.tests.multiple_auth_methods.valid_until_combinations",
+                    "rbac.tests.multiple_auth_methods.identified_with_ssh_key",
                     "feature",
                 ),
                 parallel=True,
@@ -138,5 +138,11 @@ def feature(self, node="clickhouse1"):
         run=load(
             "rbac.tests.multiple_auth_methods.valid_until",
             "keep_adding_new_auth_methods_with_expiration_date",
+        ),
+    )
+    Feature(
+        run=load(
+            "rbac.tests.multiple_auth_methods.valid_until_timezones",
+            "feature",
         ),
     )

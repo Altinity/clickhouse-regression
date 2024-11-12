@@ -88,6 +88,20 @@ def enable_ssl(
         self.context.node_server_key = node_server_key
 
     with And("I validate server certificate"):
+        # Modulus needs to match. A partially refreshed stash can cause a mismatch.
+        mod_crt = node.command(
+            f"openssl x509 -noout -modulus -in {node_server_crt}"
+        ).output
+        mod_key = node.command(
+            f"openssl rsa -noout -modulus -in {node_server_key}"
+            + (
+                f" -passin pass:{server_key_passphrase}"
+                if server_key_passphrase
+                else ""
+            )
+        ).output
+        assert mod_crt == mod_key, error()
+
         validate_certificate(
             certificate=node_server_crt, ca_certificate=node_ca_crt, node=node
         )

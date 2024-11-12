@@ -2,6 +2,7 @@ from pyspark.sql import SparkSession
 from delta import configure_spark_with_delta_pip
 
 from testflows.core import *
+from helpers.common import getuid
 
 
 @TestFeature
@@ -20,5 +21,5 @@ def feature(self):
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
     df = spark.createDataFrame([(1, "foo"), (2, "bar")], ["id", "value"])
-    df.write.format("delta").save("/tmp/delta-table")
+    df.write.format("delta").save("/tmp/delta-table" + getuid())
     df.show()

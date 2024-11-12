@@ -10,12 +10,12 @@ on:
         description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
         required: true
         type: string
-        default: docker://altinity/clickhouse-server:24.3.5.48.altinitytest
+        default: docker://altinity/clickhouse-server:24.3.12.76.altinitystable
       version:
         description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
         required: true
-        default: 24.3.5.48.altinitytest
+        default: 24.3.12.76.altinitytest
       flags:
         description: "🚩 Flags"
         type: choice
@@ -67,6 +67,7 @@ on:
           - example
           - extended_precision_data_types
           - functions
+          - jwt_authentication
           - kafka
           - kerberos
           - key_value
@@ -938,6 +939,38 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
+  jwt_authentication:
+    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: jwt_authentication
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'jwt_authentication' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
   # functional:
   #   runs-on: self-hosted
   #   env:
@@ -1359,7 +1392,7 @@ jobs:
 
   rbac:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 420
+    timeout-minutes: 540
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}

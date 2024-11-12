@@ -51,6 +51,14 @@ xfails = {
     ],
 }
 
+ffails = {
+    "/authentication/multiple authentications methods": (
+        Skip,
+        "multiple authentication methods were introduced in 24.9",
+        check_clickhouse_version("<24.9"),
+    ),
+}
+
 
 @TestFeature
 @Name("authentication")
@@ -58,6 +66,7 @@ xfails = {
 @Specifications(SRS_007_ClickHouse_Authentication_of_Users_via_LDAP)
 @Requirements(RQ_SRS_007_LDAP_Authentication("1.0"))
 @XFails(xfails)
+@FFails(ffails)
 @CaptureClusterArgs
 def regression(
     self,
@@ -94,6 +103,7 @@ def regression(
     Feature(run=load("ldap.authentication.tests.server_config", "feature"))
     Feature(run=load("ldap.authentication.tests.user_config", "feature"))
     Feature(run=load("ldap.authentication.tests.authentications", "feature"))
+    Feature(run=load("ldap.authentication.tests.with_other_auth_methods", "feature"))
 
 
 if main():
