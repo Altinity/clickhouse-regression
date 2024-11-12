@@ -304,7 +304,7 @@ def create_xml_config_content(
     entries,
     config_file,
     config_d_dir="/etc/clickhouse-server/config.d",
-    root="yandex",
+    root="clickhouse",
     preprocessed_name="config.xml",
 ):
     """Create XML configuration file from a dictionary.
