@@ -769,13 +769,14 @@ def server_as_client(self):
 
     with Given("I generate private key and certificate for https server"):
         bash_tools = self.context.cluster.node("bash-tools")
-        add_trusted_ca_certificate(
+        ca_cert = add_trusted_ca_certificate(
             node=bash_tools, certificate=self.context.my_own_ca_crt
         )
         create_crt_and_key(
             name="https_server",
             common_name="bash-tools",
             node=bash_tools,
+            node_ca_crt=ca_cert,
         )
 
     Feature(run=url_table_function)
