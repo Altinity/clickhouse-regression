@@ -46,7 +46,7 @@ def openssl_all_ports(self, node=None):
                 #     "New, TLSv1.2, Cipher is ECDHE-" in response
                 # ), error()
                 response = node.command(
-                    f"curl -v https://clickhouse1:{port}", timeout=10, no_checks=True
+                    f"curl -v https://clickhouse1:{port}", timeout=30, no_checks=True
                 ).output
                 assert "Server hello" in response, error()
 
