@@ -48,7 +48,7 @@ def create_static_jwt(
 
 
 @TestStep(Given)
-def change_clickhouse_settings(
+def change_clickhouse_config(
     self,
     entries: dict,
     modify: bool = False,
@@ -76,7 +76,7 @@ def change_clickhouse_settings(
 
 
 @TestStep(Given)
-def remove_jwt_user_from_users_xml(
+def remove_from_clickhouse_config(
     self,
     entries: dict,
     modify: bool = False,
@@ -109,7 +109,40 @@ def remove_jwt_user_from_users_xml(
 def add_jwt_user_to_users_xml(self, user_name: str, claim: dict = {}):
     """Add a user with JWT authentication to the users.xml configuration file."""
     entries = {"users": {f"{user_name}": {"jwt": claim}}}
-    change_clickhouse_settings(entries=entries)
+    change_clickhouse_config(entries=entries)
+
+
+@TestStep(Given)
+def remove_jwt_user_from_users_xml(self, user_name: str, claim: dict = {}):
+    """Remove a user with JWT authentication from the users.xml configuration file."""
+    entries = {"users": {f"{user_name}": {"jwt": claim}}}
+    remove_from_clickhouse_config(entries=entries)
+
+
+@TestStep(Given)
+def add_static_key_validator_to_config_xml(
+    self,
+    validator_id: str,
+    algorithm: str = "hs256",
+    secret: str = "my_secret",
+    static_key_in_base64: str = "false",
+):
+    """Add static key validator to the config.xml."""
+
+    entries = {
+        "jwt_validators": {
+            f"{validator_id}": {
+                "algo": algorithm.lower(),
+                "static_key": secret,
+                "static_key_in_base64": static_key_in_base64,
+            }
+        }
+    }
+    change_clickhouse_config(
+        entries=entries,
+        config_d_dir="/etc/clickhouse-server/config.d",
+        preprocessed_name="config.xml",
+    )
 
 
 @TestStep(Given)
