@@ -22,8 +22,7 @@ def check_recreate_user_config(self):
         steps.check_jwt_login(user_name=user_name, token=token)
 
     with And("drop user"):
-        entries = {"users": {f"{user_name}": {"jwt": {}}}}
-        steps.remove_jwt_user_from_users_xml(entries=entries)
+        steps.remove_jwt_user_from_users_xml(user_name=user_name)
 
     with And("check that authentication is failing"):
         steps.check_jwt_login(
