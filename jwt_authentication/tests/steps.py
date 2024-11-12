@@ -4,24 +4,29 @@ from testflows.asserts import error
 import jwt
 import datetime
 
+import subprocess
+import os
+
 from helpers.common import (
     create_xml_config_content,
     add_config,
     remove_config,
+    getuid,
 )
 
 
 def create_static_jwt(
     user_name: str,
-    secret: str = "my_secret",
+    secret: str = None,
     algorithm: str = "HS256",
     payload: dict = None,
     expiration_minutes: int = None,
+    private_key_path: str = None,
 ) -> str:
     """
     Create a JWT using a static secret and a specified encryption algorithm.
     Supported algorithms:
-    | HMSC  | RSA   | ECDSA  | PSS   | EdDSA   |
+    | HMAC  | RSA   | ECDSA  | PSS   | EdDSA   |
     | ----- | ----- | ------ | ----- | ------- |
     | HS256 | RS256 | ES256  | PS256 | Ed25519 |
     | HS384 | RS384 | ES384  | PS384 | Ed448   |
@@ -44,7 +49,26 @@ def create_static_jwt(
         )
         payload["exp"] = expiration
 
-    return jwt.encode(payload, secret, algorithm=algorithm)
+    if secret is not None:
+        return jwt.encode(payload, secret, algorithm=algorithm)
+
+    if (
+        algorithm.startswith("RS")
+        or algorithm.startswith("ES")
+        or algorithm.startswith("Ed")
+    ):
+        if private_key_path is None:
+            raise ValueError("RSA private key path must be provided for RSA algorithms")
+        with open(
+            private_key_path,
+            "r",
+        ) as key_file:
+            private_key = key_file.read()
+
+        if algorithm.startswith("Ed"):
+            algorithm = "EdDSA"
+
+        return jwt.encode(payload, private_key, algorithm=algorithm)
 
 
 @TestStep(Given)
@@ -124,20 +148,25 @@ def add_static_key_validator_to_config_xml(
     self,
     validator_id: str,
     algorithm: str = "hs256",
-    secret: str = "my_secret",
+    secret: str = None,
     static_key_in_base64: str = "false",
+    public_key: str = None,
 ):
     """Add static key validator to the config.xml."""
 
-    entries = {
-        "jwt_validators": {
-            f"{validator_id}": {
-                "algo": algorithm.lower(),
-                "static_key": secret,
-                "static_key_in_base64": static_key_in_base64,
-            }
-        }
-    }
+    entries = {"jwt_validators": {}}
+    entries["jwt_validators"][f"{validator_id}"] = {}
+    entries["jwt_validators"][f"{validator_id}"]["algo"] = algorithm.lower()
+
+    if secret is not None:
+        entries["jwt_validators"][f"{validator_id}"]["static_key"] = secret
+        entries["jwt_validators"][f"{validator_id}"][
+            "static_key_in_base64"
+        ] = static_key_in_base64
+
+    if public_key is not None:
+        entries["jwt_validators"][f"{validator_id}"]["public_key"] = public_key
+
     change_clickhouse_config(
         entries=entries,
         config_d_dir="/etc/clickhouse-server/config.d",
@@ -236,3 +265,147 @@ def check_jwt_login(
         user_name=user_name, token=token, node=node, message=message
     )
     # check_http_https_jwt_login(user_name=user_name, token=token, https=True, node=node, exitcode=exitcode, message=message)
+
+
+@TestStep(Given)
+def generate_ssh_keys(self, key_type: str = None, algorithm: str = "RS256"):
+    """Generate SSH keys and return the public key and private key file path."""
+    private_key_file = f"private_key_{getuid()}"
+    public_key_file = f"{private_key_file}.pub"
+
+    if algorithm.startswith("RS") or algorithm.startswith("PS"):
+        key_type = "rsa"
+
+    try:
+        subprocess.run(
+            [
+                "ssh-keygen",
+                "-t",
+                key_type,
+                "-N",
+                "",
+                "-m",
+                "PEM",
+                "-f",
+                private_key_file,
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "openssl",
+                key_type.lower(),
+                "-in",
+                private_key_file,
+                "-pubout",
+                "-outform",
+                "PEM",
+                "-out",
+                public_key_file,
+            ]
+        )
+        with open(public_key_file, "r") as pub_key_file:
+            public_key = pub_key_file.read()
+
+        yield public_key, private_key_file
+
+    finally:
+        with Finally("clean up files"):
+            if os.path.exists(private_key_file):
+                os.remove(private_key_file)
+            if os.path.exists(public_key_file):
+                os.remove(public_key_file)
+
+
+@TestStep(Given)
+def generate_ecdsa_ssh_keys(self, algorithm: str = "ES256"):
+    """Generate ECDSA SSH keys and return the public key and private key file path."""
+
+    private_key_file = f"private_key_{getuid()}"
+    public_key_file = f"{private_key_file}.pub"
+
+    curves = {
+        "ES256": "prime256v1",
+        "ES384": "secp384r1",
+        "ES512": "secp521r1",
+        "ES256K": "secp256k1",
+    }
+
+    try:
+        subprocess.run(
+            [
+                "openssl",
+                "ecparam",
+                "-name",
+                curves[algorithm],
+                "-genkey",
+                "-noout",
+                "-out",
+                private_key_file,
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "openssl",
+                "ec",
+                "-in",
+                private_key_file,
+                "-pubout",
+                "-out",
+                public_key_file,
+            ],
+        )
+        with open(public_key_file, "r") as pub_key_file:
+            public_key = pub_key_file.read()
+
+        yield public_key, private_key_file
+
+    finally:
+        with Finally("clean up files"):
+            if os.path.exists(private_key_file):
+                os.remove(private_key_file)
+            if os.path.exists(public_key_file):
+                os.remove(public_key_file)
+
+
+@TestStep(Given)
+def generate_eddsa_ssh_keys(self, algorithm: str = None):
+    """Generate EdDSA SSH keys and return the public key and private key file path."""
+    private_key_file = f"private_key_{getuid()}"
+    public_key_file = f"{private_key_file}.pub"
+
+    try:
+        subprocess.run(
+            [
+                "openssl",
+                "genpkey",
+                "-algorithm",
+                algorithm,
+                "-out",
+                private_key_file,
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "openssl",
+                "pkey",
+                "-in",
+                private_key_file,
+                "-pubout",
+                "-out",
+                public_key_file,
+            ],
+        )
+        with open(public_key_file, "r") as pub_key_file:
+            public_key = pub_key_file.read()
+
+        yield public_key, private_key_file
+
+    finally:
+        with Finally("clean up files"):
+            if os.path.exists(private_key_file):
+                os.remove(private_key_file)
+            if os.path.exists(public_key_file):
+                os.remove(public_key_file)

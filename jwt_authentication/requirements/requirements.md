@@ -397,7 +397,7 @@ version: 1.0
 
 [ClickHouse] SHALL support the following algorithms for static key validation:
 
-| HMSC  | RSA   | ECDSA  | PSS   | EdDSA   |
+| HMAC  | RSA   | ECDSA  | PSS   | EdDSA   |
 | ----- | ----- | ------ | ----- | ------- |
 | HS256 | RS256 | ES256  | PS256 | Ed25519 |
 | HS384 | RS384 | ES384  | PS384 | Ed448   |
