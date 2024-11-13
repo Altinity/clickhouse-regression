@@ -3,9 +3,12 @@ import datetime
 import json
 
 from decimal import Decimal
+from inspect import stack
+
 from helpers.common import *
 from parquet.requirements import *
 from parquet.tests.common import generate_values
+from parquet.tests.outline import import_export
 from parquet.tests.steps.bloom_filter import *
 from parquet.tests.steps.general import (
     select_from_parquet,
@@ -56,7 +59,7 @@ def rows_read(json_data):
 
 
 @TestStep(Given)
-def total_number_of_rows(self, file_name, node=None):
+def total_number_of_rows(self, file_name, node=None, stack_trace=None):
     """Get the total number of rows in the parquet file."""
 
     if node is None:
@@ -64,36 +67,39 @@ def total_number_of_rows(self, file_name, node=None):
 
     with By(f"getting the total number of rows in the parquet file {file_name}"):
         r = f"SELECT COUNT(*) FROM file('{file_name}', Parquet)"
-        data = node.query(r)
+        if stack_trace is not None:
+            data = node.query(r, stack_trace=stack_trace)
+        else:
+            data = node.query(r)
 
     return int(data.output[0][0])
 
 
-# @TestScenario
-# def read_and_write_file_with_bloom(self):
-#     """Read all files from a bloom directory that contains parquet files with bloom filters."""
-#     files = [
-#         "binary_bloom.gz.parquet",
-#         "timestamp_bloom.gz.parquet",
-#         "double_bloom.gz.parquet",
-#         "integer_bloom.gz.parquet",
-#         "decimal_bloom.gz.parquet",
-#         "struct_bloom.gz.parquet",
-#         "long_bloom.gz.parquet",
-#         "date_bloom.gz.parquet",
-#         "boolean_bloom.gz.parquet",
-#         "map_bloom.gz.parquet",
-#         "multi_column_bloom.gz.parquet",
-#         "array_bloom.gz.parquet",
-#         "float_bloom.gz.parquet",
-#     ]
-#
-#     for file in files:
-#         with Given(f"I import and export the parquet file {file}"):
-#             import_export(
-#                 snapshot_name=f"{file}_structure",
-#                 import_file=os.path.join("bloom", file),
-#             )
+@TestScenario
+def read_and_write_file_with_bloom(self):
+    """Read all files from a bloom directory that contains parquet files with bloom filters."""
+    files = [
+        "binary_bloom.gz.parquet",
+        "timestamp_bloom.gz.parquet",
+        "double_bloom.gz.parquet",
+        "integer_bloom.gz.parquet",
+        "decimal_bloom.gz.parquet",
+        "struct_bloom.gz.parquet",
+        "long_bloom.gz.parquet",
+        "date_bloom.gz.parquet",
+        "boolean_bloom.gz.parquet",
+        "map_bloom.gz.parquet",
+        "multi_column_bloom.gz.parquet",
+        "array_bloom.gz.parquet",
+        "float_bloom.gz.parquet",
+    ]
+
+    for file in files:
+        with Given(f"I import and export the parquet file {file}"):
+            import_export(
+                snapshot_name=f"{file}_structure",
+                import_file=os.path.join("bloom", file),
+            )
 
 
 @TestCheck
@@ -154,98 +160,118 @@ def check_parquet_with_bloom(
         assert data.output.strip() == data_without_bloom.output.strip(), error()
 
 
-# @TestSketch(Scenario)
-# def read_bloom_filter_parquet_files(self):
-#     """Read all files from a bloom directory that contains parquet files with bloom filters."""
-#
-#     file_name = "bloom/multi_column_bloom.gz.parquet"
-#     statements = [
-#         "*",
-#         "f32",
-#         "f64",
-#         "int",
-#         "str",
-#         "fixed_str",
-#         "array",
-#         "f32,f64,int,str,fixed_str,array",
-#     ]
-#     filter = ["true", "false"]
-#     native_reader = "false"
-#     conditions = [
-#         "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC'",
-#         "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
-#         "WHERE f32=toFloat32(-15.910733) AND fixed_str IN ('BYYC', 'DCXV') ORDER BY f32 ASC",
-#         "WHERE f64 IN (toFloat64(22.89182051713945), toFloat64(68.62704389505595)) ORDER BY f32",
-#         "WHERE has(array, 69778) ORDER BY f32 ASC",
-#         "WHERE hasAll(array, [69778,58440,2913,64975,92300]) ORDER BY f32 ASC",
-#         "WHERE has(array, toInt32(toString(69778)))",
-#         "WHERE hasAny(array, [69778,58440,2913,64975,92300]) ORDER BY f32 asc",
-#         "WHERE '48' NOT IN 'int' AND fixed_str='BYYC'",
-#     ]
-#
-#     check_parquet_with_bloom(
-#         file_name=file_name,
-#         bloom_filter=either(*filter),
-#         filter_pushdown=either(*filter),
-#         condition=either(*conditions),
-#         statement=either(*statements),
-#         native_reader=native_reader,
-#     )
+@TestSketch(Scenario)
+def read_bloom_filter_parquet_files(self):
+    """Read all files from a bloom directory that contains parquet files with bloom filters."""
+
+    file_name = "bloom/multi_column_bloom.gz.parquet"
+    statements = [
+        "*",
+        "f32",
+        "f64",
+        "int",
+        "str",
+        "fixed_str",
+        "array",
+        "f32,f64,int,str,fixed_str,array",
+    ]
+    filter = ["true", "false"]
+    native_reader = "false"
+    conditions = [
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC'",
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
+        "WHERE f32=toFloat32(-15.910733) AND fixed_str IN ('BYYC', 'DCXV') ORDER BY f32 ASC",
+        "WHERE f64 IN (toFloat64(22.89182051713945), toFloat64(68.62704389505595)) ORDER BY f32",
+        "WHERE has(array, 69778) ORDER BY f32 ASC",
+        "WHERE hasAll(array, [69778,58440,2913,64975,92300]) ORDER BY f32 ASC",
+        "WHERE has(array, toInt32(toString(69778)))",
+        "WHERE hasAny(array, [69778,58440,2913,64975,92300]) ORDER BY f32 asc",
+        "WHERE '48' NOT IN 'int' AND fixed_str='BYYC'",
+    ]
+
+    check_parquet_with_bloom(
+        file_name=file_name,
+        bloom_filter=either(*filter),
+        filter_pushdown=either(*filter),
+        condition=either(*conditions),
+        statement=either(*statements),
+        native_reader=native_reader,
+    )
 
 
-# @TestSketch(Scenario)
-# def read_bloom_filter_parquet_files_native_reader(self):
-#     """Read all files from a bloom directory that contains parquet files with bloom filters using the ClickHouse parquet native reader."""
-#
-#     file_name = "bloom/bloom_no_arrays.gz.parquet"
-#     statements = [
-#         "*",
-#         "f32",
-#         "f64",
-#         "int",
-#         "str",
-#         "fixed_str",
-#         "f32,f64,int,str,fixed_str",
-#     ]
-#     filter = ["true", "false"]
-#     native_reader = "true"
-#     conditions = [
-#         "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC'",
-#         "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
-#         "WHERE f32=toFloat32(-15.910733) AND fixed_str IN ('BYYC', 'DCXV') ORDER BY f32 ASC",
-#         "WHERE f64 IN (toFloat64(22.89182051713945), toFloat64(68.62704389505595)) ORDER BY f32",
-#         "WHERE '48' NOT IN 'int' AND fixed_str='BYYC'",
-#     ]
-#
-#     check_parquet_with_bloom(
-#         file_name=file_name,
-#         bloom_filter=either(*filter),
-#         filter_pushdown=either(*filter),
-#         condition=either(*conditions),
-#         statement=either(*statements),
-#         native_reader=native_reader,
-#     )
+@TestSketch(Scenario)
+def read_bloom_filter_parquet_files_native_reader(self):
+    """Read all files from a bloom directory that contains parquet files with bloom filters using the ClickHouse parquet native reader."""
+
+    file_name = "bloom/bloom_no_arrays.gz.parquet"
+    statements = [
+        "*",
+        "f32",
+        "f64",
+        "int",
+        "str",
+        "fixed_str",
+        "f32,f64,int,str,fixed_str",
+    ]
+    filter = ["true", "false"]
+    native_reader = "true"
+    conditions = [
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC'",
+        "WHERE f32=toFloat32(-64.12787) AND fixed_str='BYYC' OR str='KCGEY'",
+        "WHERE f32=toFloat32(-15.910733) AND fixed_str IN ('BYYC', 'DCXV') ORDER BY f32 ASC",
+        "WHERE f64 IN (toFloat64(22.89182051713945), toFloat64(68.62704389505595)) ORDER BY f32",
+        "WHERE '48' NOT IN 'int' AND fixed_str='BYYC'",
+    ]
+
+    check_parquet_with_bloom(
+        file_name=file_name,
+        bloom_filter=either(*filter),
+        filter_pushdown=either(*filter),
+        condition=either(*conditions),
+        statement=either(*statements),
+        native_reader=native_reader,
+    )
 
 
-# @Requirements(
-#     RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex("1.0")
-# )
-# @TestScenario
-# def native_reader_array_bloom(self):
-#     """Read a parquet file with bloom filter and array column using the ClickHouse parquet native reader."""
-#     file = "array_bloom.gz.parquet"
-#
-#     select_from_parquet(
-#         file_name=file,
-#         format="Json",
-#         settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down=false,use_cache_for_count_from_files=false, input_format_parquet_use_native_reader=true",
-#     )
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex("1.0")
+)
+@TestScenario
+def native_reader_array_bloom(self):
+    """Read a parquet file with bloom filter and array column using the ClickHouse parquet native reader."""
+    file = "array_bloom.gz.parquet"
+
+    select_from_parquet(
+        file_name=file,
+        format="Json",
+        settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down=false,use_cache_for_count_from_files=false, input_format_parquet_use_native_reader=true",
+    )
+
+
+@TestStep(Then)
+def check_data_without_parquet_statistics(self, data_with_bloom, data_without_bloom):
+    """Check that the data is the same when reading with bloom filter and without while removing the rows_read values from the output."""
+    data_with_bloom = data_with_bloom.output
+    data_without_bloom = data_without_bloom.output
+
+    data_with_bloom.pop(-1)
+    data_without_bloom.pop(-1)
+
+    assert data_with_bloom == data_without_bloom, error()
+
+
+@TestStep(Given)
+def copy_into_user_files(self, file_path, node=None):
+    """Copy a parquet file into the user files directory."""
+    if node is None:
+        node = self.context.node
+
+    node.command(f"cp {file_path} /var/lib/clickhouse/user_files")
 
 
 @TestStep(Then)
 def check_all_conversions(
     self,
-    generate_parquet,
     parquet_file,
     client,
     column_name,
@@ -253,16 +279,19 @@ def check_all_conversions(
     statement,
     native_reader,
     filter_pushdown,
-    bloom_filter_on_clickhouse,
     conversions,
     snapshot_name,
 ):
     """Check all conversions for the parquet file via checking if the conversion returns an error and loop through all possible ClickHouse data conversions."""
-    with When("I get the total number of rows in the parquet file"):
-        if generate_parquet.exitcode != 0:
-            skip("Incorrect JSON file structure")
+    with When("I copy the parquet file into the user files directory"):
+        copy_into_user_files(
+            file_path=self.context.parquet_output_path + "/" + parquet_file
+        )
 
-        initial_rows = total_number_of_rows(file_name=parquet_file, node=client)
+    with And("I get the total number of rows in the parquet file"):
+        initial_rows = total_number_of_rows(
+            file_name=parquet_file, node=client, stack_trace=False
+        )
 
         for conversion in conversions:
             condition = f"WHERE {column_name} = {conversion}('{data[-1]}')"
@@ -280,6 +309,7 @@ def check_all_conversions(
                         order_by="tuple(*)",
                         node=client,
                         no_checks=True,
+                        stack_trace=False,
                     )
 
                     if check_conversion.errorcode != 0:
@@ -292,7 +322,8 @@ def check_all_conversions(
                         settings=f"input_format_parquet_use_native_reader={native_reader}",
                         order_by="tuple(*)",
                         node=client,
-                        limit=10,
+                        condition=condition,
+                        stack_trace=False,
                     )
 
                     data_with_bloom = select_from_parquet(
@@ -302,31 +333,19 @@ def check_all_conversions(
                         settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
                         order_by="tuple(*)",
                         node=client,
-                        limit=10,
+                        condition=condition,
+                        stack_trace=False,
                     )
 
                     file_structure = get_parquet_structure(file_name=parquet_file)
 
-                with And(
-                    f"selecting and saving the data from a parquet file with bloom filter {bloom_filter_on_clickhouse} and filter pushdown {filter_pushdown}"
-                ):
-                    read_with_bloom = select_from_parquet(
-                        file_name=parquet_file,
-                        statement=statement,
-                        condition=condition,
-                        format="Json",
-                        settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter_on_clickhouse},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-                        order_by="tuple(*)",
-                        node=client,
-                    )
-
                 with Then("I check that the number of rows read is correct"):
-                    read_rows = rows_read(read_with_bloom.output)
+                    read_rows = rows_read(data_with_bloom.output)
 
                     with values() as that:
                         assert that(
                             snapshot(
-                                f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: {condition}",
+                                f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: WHERE {column_name} = {conversion}(value)",
                                 name=f"{snapshot_name}_{conversion}",
                                 id="bloom_filter",
                                 mode=snapshot.UPDATE,
@@ -336,13 +355,10 @@ def check_all_conversions(
                 with And(
                     "I check that the data is the same when reading with bloom filter and without"
                 ):
-                    data_with_bloom = data_with_bloom.output
-                    data_without_bloom = data_without_bloom.output
-
-                    data_with_bloom.pop(-1)
-                    data_without_bloom.pop(-1)
-
-                    assert data_with_bloom == data_without_bloom, error()
+                    check_data_without_parquet_statistics(
+                        data_with_bloom=data_with_bloom,
+                        data_without_bloom=data_without_bloom,
+                    )
 
 
 @TestCheck
@@ -356,7 +372,6 @@ def check_bloom_filter_on_parquet(
     statement,
     native_reader,
     filter_pushdown,
-    bloom_filter_on_clickhouse,
     conversions,
 ):
     """Check if the bloom filter is being used by ClickHouse."""
@@ -370,7 +385,6 @@ def check_bloom_filter_on_parquet(
 
     with Given(
         "I prepare data required for the parquet file",
-        description=f"""{schema_type()}, {writer_version()}, {physical_type()}, {logical_type()}, {compression_value()}""",
     ):
         json_file_name = (
             f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
@@ -430,11 +444,13 @@ def check_bloom_filter_on_parquet(
         )
 
     with And("I open a single ClickHouse client instance"):
+        if generate_parquet.exitcode != 0:
+            skip("Incorrect JSON file structure")
+
         with bash_tools.client(
             client_args={"host": node.name, "statistics": "null"}
         ) as client:
             check_all_conversions(
-                generate_parquet=generate_parquet,
                 parquet_file=parquet_file,
                 client=client,
                 column_name=column_name,
@@ -442,7 +458,6 @@ def check_bloom_filter_on_parquet(
                 statement=statement,
                 native_reader=native_reader,
                 filter_pushdown=filter_pushdown,
-                bloom_filter_on_clickhouse=bloom_filter_on_clickhouse,
                 conversions=conversions,
                 snapshot_name=snapshot_name,
             )
@@ -466,7 +481,6 @@ def read_parquet_with_bloom_filter(self, logical_type, statements=None):
         statement=either(*statements),
         native_reader="false",
         filter_pushdown=either(*filter),
-        bloom_filter_on_clickhouse=either(*filter),
         conversions=conversions,
     )
 
@@ -667,6 +681,40 @@ def no_logical_type_with_bloom_filter(self):
     read_parquet_with_bloom_filter(logical_type=no_logical_type)
 
 
+@TestSuite
+def logical_datatypes(self):
+    """Running checks that the bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types."""
+
+    Scenario(run=utf8_with_bloom_filter)
+    Scenario(run=decimal_with_bloom_filter)
+    Scenario(run=date_with_bloom_filter)
+    Scenario(run=time_millis_with_bloom_filter)
+    Scenario(run=time_micros_with_bloom_filter)
+    Scenario(run=timestamp_millis_with_bloom_filter)
+    Scenario(run=timestamp_micros_with_bloom_filter)
+    Scenario(run=enum_with_bloom_filter)
+    Scenario(run=map_with_bloom_filter)
+    Scenario(run=list_with_bloom_filter)
+    Scenario(run=string_with_bloom_filter)
+    Scenario(run=map_key_value_with_bloom_filter)
+    Scenario(run=time_with_bloom_filter)
+    Scenario(run=integer_with_bloom_filter)
+    Scenario(run=json_with_bloom_filter)
+    Scenario(run=bson_with_bloom_filter)
+    Scenario(run=uuid_with_bloom_filter)
+    Scenario(run=interval_with_bloom_filter)
+    Scenario(run=float16_with_bloom_filter)
+    Scenario(run=uint8_with_bloom_filter)
+    Scenario(run=uint16_with_bloom_filter)
+    Scenario(run=uint32_with_bloom_filter)
+    Scenario(run=uint64_with_bloom_filter)
+    Scenario(run=int8_with_bloom_filter)
+    Scenario(run=int16_with_bloom_filter)
+    Scenario(run=int32_with_bloom_filter)
+    Scenario(run=int64_with_bloom_filter)
+    Scenario(run=no_logical_type_with_bloom_filter)
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter("1.0"))
 @Name("bloom")
@@ -712,5 +760,4 @@ def feature(self, node="clickhouse1", number_of_inserts=1500):
     self.context.parquet_output_path = "/parquet-files"
     self.context.number_of_inserts = number_of_inserts
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    Feature(run=logical_datatypes)
