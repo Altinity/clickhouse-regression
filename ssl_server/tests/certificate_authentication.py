@@ -175,6 +175,10 @@ def feature(self, node="clickhouse1"):
                 f"openssl req -newkey rsa:4096 -x509 -days 3650 -nodes -batch -keyout ca-key.pem -out ca-cert.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=ca'"
             )
 
+        with And("I append the server certificate to the CA certificate"):
+            # This is required on rhel-family systems
+            node.command("cat /etc/clickhouse-server/server.crt >> ca-cert.pem")
+
         with And("I set the caConfig"):
             entries = define(
                 "SSL settings",
