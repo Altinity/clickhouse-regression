@@ -356,7 +356,6 @@ def verify_rows_read(
         f"condition: WHERE {column_name} = {conversion}(value)",
         name=f"{snapshot_name}_{conversion}",
         id="bloom_filter",
-        mode=snapshot.UPDATE,
     )
 
 
