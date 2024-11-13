@@ -4,21 +4,6 @@ from helpers.common import getuid
 from jwt_authentication.requirements import *
 import jwt_authentication.tests.steps as steps
 
-algorithm_to_generate_functions_map = {
-    "RS256": steps.generate_ssh_keys,
-    "RS384": steps.generate_ssh_keys,
-    "RS512": steps.generate_ssh_keys,
-    "ES256": steps.generate_ecdsa_ssh_keys,
-    "ES384": steps.generate_ecdsa_ssh_keys,
-    "ES512": steps.generate_ecdsa_ssh_keys,
-    "ES256K": steps.generate_ecdsa_ssh_keys,
-    "PS256": steps.generate_ssh_keys,
-    "PS384": steps.generate_ssh_keys,
-    "PS512": steps.generate_ssh_keys,
-    "Ed25519": steps.generate_eddsa_ssh_keys,
-    "Ed448": steps.generate_eddsa_ssh_keys,
-}
-
 
 @TestCheck
 def check_validator_with_asymmetric_algorithms(self, algorithm):
@@ -26,9 +11,7 @@ def check_validator_with_asymmetric_algorithms(self, algorithm):
     with Given("defining parameters for new validator"):
         validator_id = define("validator_id", f"validator_{algorithm}")
         algorithm = define("algorithm", algorithm)
-        public_key, private_key_path = algorithm_to_generate_functions_map[algorithm](
-            algorithm=algorithm
-        )
+        public_key, private_key_path = steps.generate_ssh_keys(algorithm=algorithm)
 
     with And("add new validator to the config.xml"):
         steps.add_static_key_validator_to_config_xml(
@@ -53,7 +36,7 @@ def check_validator_with_asymmetric_algorithms(self, algorithm):
 
 
 @TestScenario
-@Name("check adding new jwt validator with asymmetric algorithms")
+@Name("adding validator asymmetric algorithm")
 @Requirements(RQ_SRS_042_JWT_StaticKey)
 def check_static_key_asymmetric_algorithms(self):
     """Check static key jwt authentication with different algorithms:
@@ -72,18 +55,19 @@ def check_static_key_asymmetric_algorithms(self):
         "ES256",
         "ES384",
         "ES512",
-        # "ES256K",
+        "ES256K",
         # "PS256",
         # "PS384",
         # "PS512",
         "Ed25519",
-        # "Ed448",
+        "Ed448",
     ]
 
     for algorithm in algorithms:
         Scenario(
             f"check {algorithm} algorithm",
             test=check_validator_with_asymmetric_algorithms,
+            flags=TE,
         )(algorithm=algorithm)
 
 
@@ -118,7 +102,7 @@ def check_validator_with_symmetric_algorithms(self, algorithm):
 
 
 @TestScenario
-@Name("check adding new jwt validator with symmetric algorithms")
+@Name("adding validator symmetric algorithm")
 def check_static_key_symmetric_algorithms(self):
     """Check static key jwt authentication with symmetric algorithms:
     HS256, HS384, HS512."""
@@ -132,6 +116,7 @@ def check_static_key_symmetric_algorithms(self):
         Scenario(
             f"check {algorithm} algorithm",
             test=check_validator_with_symmetric_algorithms,
+            flags=TE,
         )(algorithm=algorithm)
 
 
@@ -139,6 +124,5 @@ def check_static_key_symmetric_algorithms(self):
 @Name("different algorithms")
 def feature(self):
     """Check static key jwt authentication with different algorithms."""
-
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario, flags=TE)
