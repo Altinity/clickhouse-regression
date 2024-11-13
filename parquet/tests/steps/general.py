@@ -164,6 +164,7 @@ def select_from_parquet(
     no_checks=False,
     limit=False,
     stack_trace=None,
+    key_column=None,
 ):
     """Select from a parquet file."""
     if node is None:
@@ -173,7 +174,12 @@ def select_from_parquet(
         file_type = ", Parquet"
 
     with By(f"selecting the data from the parquet file {file_name}"):
-        r = rf"SELECT {statement} FROM file('{file_name}'{file_type})"
+        r = rf"SELECT {statement} FROM file('{file_name}'{file_type}"
+
+        if key_column is not None:
+            r += rf", '{key_column}'"
+        else:
+            r += ")"
 
         if condition:
             r += rf" {condition}"
