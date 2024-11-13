@@ -177,7 +177,7 @@ def select_from_parquet(
         r = rf"SELECT {statement} FROM file('{file_name}'{file_type}"
 
         if key_column is not None:
-            r += rf", '{key_column}'"
+            r += rf", '{key_column}')"
         else:
             r += ")"
 
