@@ -469,6 +469,7 @@ def verify_rows_read(
     file_structure,
     conversion,
     snapshot_name,
+    condition
 ):
     """Verify the number of rows read from the parquet file."""
     read_rows = rows_read(data_with_bloom.output)
@@ -537,7 +538,6 @@ def check_all_field_type_conversions(
                     data_with_bloom=data_with_bloom,
                     initial_rows=initial_rows,
                     file_structure=file_structure,
-                    column_name=column_name,
                     conversion=conversion,
                     snapshot_name=snapshot_name,
                     condition=f"WHERE {column_name} = {conversion}(value)",
@@ -603,7 +603,6 @@ def check_all_key_column_type_conversions(
                     data_with_bloom=data_with_bloom,
                     initial_rows=initial_rows,
                     file_structure=file_structure,
-                    column_name=column_name,
                     conversion=conversion,
                     snapshot_name=snapshot_name,
                     condition=f"WHERE {column_name} = 'value'",
