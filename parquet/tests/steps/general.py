@@ -163,6 +163,7 @@ def select_from_parquet(
     order_by=False,
     no_checks=False,
     limit=False,
+    stack_trace=None,
 ):
     """Select from a parquet file."""
     if node is None:
@@ -191,7 +192,10 @@ def select_from_parquet(
         if settings is not None:
             r += rf" SETTINGS {settings}"
 
-        output = node.query(r, no_checks=no_checks)
+        if stack_trace is not None:
+            output = node.query(r, no_checks=no_checks, stack_trace=stack_trace)
+        else:
+            output = node.query(r, no_checks=no_checks)
 
     return output
 
