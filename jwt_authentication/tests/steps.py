@@ -14,6 +14,12 @@ from helpers.common import (
     getuid,
 )
 
+HMAC_algorithms = ["HS256", "HS384", "HS512"]
+RSA_algorithms = ["RS256", "RS384", "RS512"]
+ECDSA_algorithms = ["ES256", "ES384", "ES512", "ES256K"]
+PSS_algorithms = ["PS256", "PS384", "PS512"]
+EdDSA_algorithms = ["Ed25519", "Ed448"]
+
 
 def create_static_jwt(
     user_name: str,
@@ -273,131 +279,35 @@ def generate_ssh_keys(self, key_type: str = None, algorithm: str = "RS256"):
     private_key_file = f"private_key_{getuid()}"
     public_key_file = f"{private_key_file}.pub"
 
-    if algorithm.startswith("RS") or algorithm.startswith("PS"):
+    if algorithm in RSA_algorithms + PSS_algorithms:
         key_type = "rsa"
+        command = f"openssl genpkey -algorithm {key_type} -out {private_key_file}"
+    elif algorithm in ECDSA_algorithms:
+        key_type = "ec"
+        curve_map = {
+            "ES256": "prime256v1",
+            "ES384": "secp384r1",
+            "ES512": "secp521r1",
+            "ES256K": "secp256k1",
+        }
+        curve_name = curve_map.get(algorithm)
+        command = (
+            f"openssl ecparam -name {curve_name} -genkey -noout -out {private_key_file}"
+        )
+    elif algorithm in EdDSA_algorithms:
+        key_type = algorithm
+        command = f"openssl genpkey -algorithm {key_type} -out {private_key_file}"
+    else:
+        raise ValueError(f"Unsupported algorithm: {algorithm}")
 
     try:
+        subprocess.run(command, shell=True, check=True)
         subprocess.run(
-            [
-                "ssh-keygen",
-                "-t",
-                key_type,
-                "-N",
-                "",
-                "-m",
-                "PEM",
-                "-f",
-                private_key_file,
-            ],
+            f"openssl pkey -in {private_key_file} -pubout -out {public_key_file}",
+            shell=True,
             check=True,
         )
-        subprocess.run(
-            [
-                "openssl",
-                key_type.lower(),
-                "-in",
-                private_key_file,
-                "-pubout",
-                "-outform",
-                "PEM",
-                "-out",
-                public_key_file,
-            ]
-        )
-        with open(public_key_file, "r") as pub_key_file:
-            public_key = pub_key_file.read()
 
-        yield public_key, private_key_file
-
-    finally:
-        with Finally("clean up files"):
-            if os.path.exists(private_key_file):
-                os.remove(private_key_file)
-            if os.path.exists(public_key_file):
-                os.remove(public_key_file)
-
-
-@TestStep(Given)
-def generate_ecdsa_ssh_keys(self, algorithm: str = "ES256"):
-    """Generate ECDSA SSH keys and return the public key and private key file path."""
-
-    private_key_file = f"private_key_{getuid()}"
-    public_key_file = f"{private_key_file}.pub"
-
-    curves = {
-        "ES256": "prime256v1",
-        "ES384": "secp384r1",
-        "ES512": "secp521r1",
-        "ES256K": "secp256k1",
-    }
-
-    try:
-        subprocess.run(
-            [
-                "openssl",
-                "ecparam",
-                "-name",
-                curves[algorithm],
-                "-genkey",
-                "-noout",
-                "-out",
-                private_key_file,
-            ],
-            check=True,
-        )
-        subprocess.run(
-            [
-                "openssl",
-                "ec",
-                "-in",
-                private_key_file,
-                "-pubout",
-                "-out",
-                public_key_file,
-            ],
-        )
-        with open(public_key_file, "r") as pub_key_file:
-            public_key = pub_key_file.read()
-
-        yield public_key, private_key_file
-
-    finally:
-        with Finally("clean up files"):
-            if os.path.exists(private_key_file):
-                os.remove(private_key_file)
-            if os.path.exists(public_key_file):
-                os.remove(public_key_file)
-
-
-@TestStep(Given)
-def generate_eddsa_ssh_keys(self, algorithm: str = None):
-    """Generate EdDSA SSH keys and return the public key and private key file path."""
-    private_key_file = f"private_key_{getuid()}"
-    public_key_file = f"{private_key_file}.pub"
-
-    try:
-        subprocess.run(
-            [
-                "openssl",
-                "genpkey",
-                "-algorithm",
-                algorithm,
-                "-out",
-                private_key_file,
-            ],
-            check=True,
-        )
-        subprocess.run(
-            [
-                "openssl",
-                "pkey",
-                "-in",
-                private_key_file,
-                "-pubout",
-                "-out",
-                public_key_file,
-            ],
-        )
         with open(public_key_file, "r") as pub_key_file:
             public_key = pub_key_file.read()
 
