@@ -854,6 +854,202 @@ def no_logical_type_to_field_type(self):
     field_type_conversions_with_bloom_filter(logical_type=no_logical_type)
 
 
+@TestSketch(Scenario)
+@Flags(TE)
+def utf8_to_key_column_type(self):
+    """Read parquet files with utf-8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=utf8)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def decimal_to_key_column_type(self):
+    """Read parquet files with decimal logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=decimal)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def date_to_key_column_type(self):
+    """Read parquet files with date logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=date)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def time_millis_to_key_column_type(self):
+    """Read parquet files with time-millis logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=time_millis)
+
+
+@TestSketch
+@Flags(TE)
+def time_micros_to_key_column_type(self):
+    """Read parquet files with time-micros logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=time_micros)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def timestamp_millis_to_key_column_type(self):
+    """Read parquet files with timestamp-millis logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=timestamp_millis)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def timestamp_micros_to_key_column_type(self):
+    """Read parquet files with timestamp-micros logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=timestamp_micros)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def enum_to_key_column_type(self):
+    """Read parquet files with enum logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=enum)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def map_to_key_column_type(self):
+    """Read parquet files with map logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=map)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def list_to_key_column_type(self):
+    """Read parquet files with list logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=list)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def string_to_key_column_type(self):
+    """Read parquet files with string logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=string)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def map_key_value_to_key_column_type(self):
+    """Read parquet files with map key value logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=map_key_value)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def time_to_key_column_type(self):
+    """Read parquet files with time logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=time)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def integer_to_key_column_type(self):
+    """Read parquet files with integer logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=integer)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def json_to_key_column_type(self):
+    """Read parquet files with json logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=json_type)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def bson_to_key_column_type(self):
+    """Read parquet files with bson logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=bson)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uuid_to_key_column_type(self):
+    """Read parquet files with uuid logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=uuid)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def interval_to_key_column_type(self):
+    """Read parquet files with interval logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=interval)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def float16_to_key_column_type(self):
+    """Read parquet files with float16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=float16)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint8_to_key_column_type(self):
+    """Read parquet files with uint8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=uint8)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint16_to_key_column_type(self):
+    """Read parquet files with uint16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=uint16)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint32_to_key_column_type(self):
+    """Read parquet files with uint32 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=uint32)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def uint64_to_key_column_type(self):
+    """Read parquet files with uint64 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=uint64)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int8_to_key_column_type(self):
+    """Read parquet files with int8 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=int8)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int16_to_key_column_type(self):
+    """Read parquet files with int16 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=int16)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int32_to_key_column_type(self):
+    """Read parquet files with int32 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=int32)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def int64_to_key_column_type(self):
+    """Read parquet files with int64 logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=int64)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def no_logical_type_to_key_column_type(self):
+    """Read parquet files with no logical type with bloom filter enabled and validate that the bloom filter is being used by ClickHouse and data integrity is kept."""
+    key_column_type_conversions_with_bloom_filter(logical_type=no_logical_type)
+
+
 @TestSuite
 def sanity_checks(self):
     """Run sanity checks for the bloom filter on parquet files."""
@@ -864,8 +1060,42 @@ def sanity_checks(self):
 
 
 @TestSuite
+def logical_datatypes_key_column_type(self):
+    """Running combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types when using key column type conversion."""
+
+    Scenario(run=utf8_to_key_column_type)
+    Scenario(run=decimal_to_key_column_type)
+    Scenario(run=date_to_key_column_type)
+    Scenario(run=time_millis_to_key_column_type)
+    Scenario(run=time_micros_to_key_column_type)
+    Scenario(run=timestamp_millis_to_key_column_type)
+    Scenario(run=timestamp_micros_to_key_column_type)
+    Scenario(run=enum_to_key_column_type)
+    Scenario(run=map_to_key_column_type)
+    Scenario(run=list_to_key_column_type)
+    Scenario(run=string_to_key_column_type)
+    Scenario(run=map_key_value_to_key_column_type)
+    Scenario(run=time_to_key_column_type)
+    Scenario(run=integer_to_key_column_type)
+    Scenario(run=json_to_key_column_type)
+    Scenario(run=bson_to_key_column_type)
+    Scenario(run=uuid_to_key_column_type)
+    Scenario(run=interval_to_key_column_type)
+    Scenario(run=float16_to_key_column_type)
+    Scenario(run=uint8_to_key_column_type)
+    Scenario(run=uint16_to_key_column_type)
+    Scenario(run=uint32_to_key_column_type)
+    Scenario(run=uint64_to_key_column_type)
+    Scenario(run=int8_to_key_column_type)
+    Scenario(run=int16_to_key_column_type)
+    Scenario(run=int32_to_key_column_type)
+    Scenario(run=int64_to_key_column_type)
+    Scenario(run=no_logical_type_to_key_column_type)
+
+
+@TestSuite
 def logical_datatypes_field_type(self):
-    """Running heavy combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types."""
+    """Running combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types when using field type conversion."""
 
     Scenario(run=utf8_to_field_type)
     Scenario(run=decimal_to_field_type)
@@ -944,3 +1174,4 @@ def feature(self, node="clickhouse1", number_of_inserts=1500):
 
     Feature(run=sanity_checks)
     Feature(run=logical_datatypes_field_type)
+    Feature(run=logical_datatypes_key_column_type)
