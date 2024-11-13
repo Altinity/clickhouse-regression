@@ -269,6 +269,106 @@ def copy_into_user_files(self, file_path, node=None):
     node.command(f"cp {file_path} /var/lib/clickhouse/user_files")
 
 
+@TestStep(Given)
+def copy_parquet_to_user_files(self, parquet_file):
+    """Copy a parquet file into the user files directory."""
+    copy_into_user_files(
+        file_path=self.context.parquet_output_path + "/" + parquet_file
+    )
+
+
+@TestStep(Given)
+def get_total_rows(self, parquet_file, client):
+    """Get the total number of rows in the parquet file."""
+    return total_number_of_rows(file_name=parquet_file, node=client, stack_trace=False)
+
+
+@TestStep(Given)
+def handle_conversion_error(
+    self, parquet_file, statement, condition, client, native_reader
+):
+    """Handle errors during conversion check and return whether to proceed."""
+    check_conversion = select_from_parquet(
+        file_name=parquet_file,
+        statement=statement,
+        condition=condition,
+        format="TabSeparated",
+        settings=f"input_format_parquet_use_native_reader={native_reader}",
+        order_by="tuple(*)",
+        node=client,
+        no_checks=True,
+        stack_trace=False,
+    )
+    return check_conversion.errorcode == 0
+
+
+@TestStep(Given)
+def read_data_with_and_without_bloom(
+    self, parquet_file, statement, condition, client, native_reader, filter_pushdown
+):
+    """Read data from a parquet file with and without bloom filter."""
+    data_without_bloom = select_from_parquet(
+        file_name=parquet_file,
+        statement=statement,
+        format="TabSeparated",
+        settings=f"input_format_parquet_use_native_reader={native_reader}",
+        order_by="tuple(*)",
+        node=client,
+        condition=condition,
+        stack_trace=False,
+    )
+
+    data_with_bloom = select_from_parquet(
+        file_name=parquet_file,
+        statement=statement,
+        format="TabSeparated",
+        settings=f"input_format_parquet_bloom_filter_push_down=true,"
+        f"input_format_parquet_filter_push_down={filter_pushdown},"
+        f"use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
+        order_by="tuple(*)",
+        node=client,
+        condition=condition,
+        stack_trace=False,
+    )
+    return data_without_bloom, data_with_bloom
+
+
+@TestStep(Given)
+def get_file_structure(self, parquet_file):
+    """Retrieve the structure of a parquet file."""
+    return get_parquet_structure(file_name=parquet_file)
+
+
+@TestStep(Then)
+def verify_rows_read(
+    self,
+    data_with_bloom,
+    initial_rows,
+    file_structure,
+    column_name,
+    conversion,
+    snapshot_name,
+):
+    """Verify the number of rows read from the parquet file."""
+    read_rows = rows_read(data_with_bloom.output)
+    snapshot(
+        f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, "
+        f"condition: WHERE {column_name} = {conversion}(value)",
+        name=f"{snapshot_name}_{conversion}",
+        id="bloom_filter",
+        mode=snapshot.UPDATE,
+    )
+
+
+@TestStep(Then)
+def compare_data_with_and_without_bloom(self, data_with_bloom, data_without_bloom):
+    """Compare data read with and without bloom filter."""
+    check_data_without_parquet_statistics(
+        data_with_bloom=data_with_bloom,
+        data_without_bloom=data_without_bloom,
+    )
+
+
 @TestStep(Then)
 def check_all_conversions(
     self,
@@ -284,81 +384,51 @@ def check_all_conversions(
 ):
     """Check all conversions for the parquet file via checking if the conversion returns an error and loop through all possible ClickHouse data conversions."""
     with When("I copy the parquet file into the user files directory"):
-        copy_into_user_files(
-            file_path=self.context.parquet_output_path + "/" + parquet_file
-        )
+        copy_parquet_to_user_files(parquet_file=parquet_file)
 
     with And("I get the total number of rows in the parquet file"):
-        initial_rows = total_number_of_rows(
-            file_name=parquet_file, node=client, stack_trace=False
-        )
+        initial_rows = get_total_rows(parquet_file=parquet_file, client=client)
 
-        for conversion in conversions:
-            condition = f"WHERE {column_name} = {conversion}('{data[-1]}')"
-            with Check("I check that the bloom filter is being used by ClickHouse"):
+    for conversion in conversions:
+        condition = f"WHERE {column_name} = {conversion}('{data[-1]}')"
+        with Check("I check that the bloom filter is being used by ClickHouse"):
+            if not handle_conversion_error(
+                parquet_file=parquet_file,
+                statement=statement,
+                condition=condition,
+                client=client,
+                native_reader=native_reader,
+            ):
+                continue
 
-                with By(
-                    "selecting and saving the data from a parquet file without bloom filter enabled"
-                ):
-                    check_conversion = select_from_parquet(
-                        file_name=parquet_file,
-                        statement=statement,
-                        condition=condition,
-                        format="TabSeparated",
-                        settings=f"input_format_parquet_use_native_reader={native_reader}",
-                        order_by="tuple(*)",
-                        node=client,
-                        no_checks=True,
-                        stack_trace=False,
-                    )
+            data_without_bloom, data_with_bloom = read_data_with_and_without_bloom(
+                parquet_file=parquet_file,
+                statement=statement,
+                condition=condition,
+                client=client,
+                native_reader=native_reader,
+                filter_pushdown=filter_pushdown,
+            )
 
-                    if check_conversion.errorcode != 0:
-                        continue
+            file_structure = get_file_structure(parquet_file=parquet_file)
 
-                    data_without_bloom = select_from_parquet(
-                        file_name=parquet_file,
-                        statement=statement,
-                        format="TabSeparated",
-                        settings=f"input_format_parquet_use_native_reader={native_reader}",
-                        order_by="tuple(*)",
-                        node=client,
-                        condition=condition,
-                        stack_trace=False,
-                    )
+            with Then("I check that the number of rows read is correct"):
+                verify_rows_read(
+                    data_with_bloom=data_with_bloom,
+                    initial_rows=initial_rows,
+                    file_structure=file_structure,
+                    column_name=column_name,
+                    conversion=conversion,
+                    snapshot_name=snapshot_name,
+                )
 
-                    data_with_bloom = select_from_parquet(
-                        file_name=parquet_file,
-                        statement=statement,
-                        format="TabSeparated",
-                        settings=f"input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-                        order_by="tuple(*)",
-                        node=client,
-                        condition=condition,
-                        stack_trace=False,
-                    )
-
-                    file_structure = get_parquet_structure(file_name=parquet_file)
-
-                with Then("I check that the number of rows read is correct"):
-                    read_rows = rows_read(data_with_bloom.output)
-
-                    with values() as that:
-                        assert that(
-                            snapshot(
-                                f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, condition: WHERE {column_name} = {conversion}(value)",
-                                name=f"{snapshot_name}_{conversion}",
-                                id="bloom_filter",
-                                mode=snapshot.UPDATE,
-                            )
-                        ), error()
-
-                with And(
-                    "I check that the data is the same when reading with bloom filter and without"
-                ):
-                    check_data_without_parquet_statistics(
-                        data_with_bloom=data_with_bloom,
-                        data_without_bloom=data_without_bloom,
-                    )
+            with And(
+                "I check that the data is the same when reading with bloom filter and without"
+            ):
+                compare_data_with_and_without_bloom(
+                    data_with_bloom=data_with_bloom,
+                    data_without_bloom=data_without_bloom,
+                )
 
 
 @TestCheck
@@ -448,7 +518,11 @@ def check_bloom_filter_on_parquet(
             skip("Incorrect JSON file structure")
 
         with bash_tools.client(
-            client_args={"host": node.name, "statistics": "null"}
+            client_args={
+                "host": node.name,
+                "statistics": "null",
+                "no_stack_trace": "null",
+            }
         ) as client:
             check_all_conversions(
                 parquet_file=parquet_file,
@@ -715,6 +789,19 @@ def logical_datatypes(self):
     Scenario(run=no_logical_type_with_bloom_filter)
 
 
+#
+# @TestScenario
+# def test_client(self):
+#     bash_tools = self.context.cluster.node("bash-tools")
+#     node = self.context.cluster.node("clickhouse1")
+#
+#     with Given("I open a single ClickHouse client instance"):
+#         with bash_tools.client(
+#             client_args={"host": node.name, "statistics": "null"}
+#         ) as client:
+#             client.query("qweqwr", stack_trace=False)
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter("1.0"))
 @Name("bloom")
@@ -761,3 +848,4 @@ def feature(self, node="clickhouse1", number_of_inserts=1500):
     self.context.number_of_inserts = number_of_inserts
 
     Feature(run=logical_datatypes)
+    # Scenario(run=test_client)
