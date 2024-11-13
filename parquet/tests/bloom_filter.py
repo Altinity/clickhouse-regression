@@ -41,6 +41,118 @@ class JSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
+@TestStep(Given)
+def save_json_definition(self, path, file_definition):
+    """Save the JSON file definition."""
+    with open(path, "w") as json_file:
+        json.dump(file_definition, json_file, cls=JSONEncoder, indent=2)
+
+
+@TestStep(Given)
+def create_parquet_json_definition(
+    self,
+    schema_type,
+    writer_version,
+    physical_type,
+    logical_type,
+    compression_value,
+    parquet_file,
+    data,
+):
+    """Create the JSON definition for the parquet file."""
+    file_definition = {}
+    option_list = {}
+    schema_values = {}
+
+    file_definition.update(parquet_file_name(filename=f"{parquet_file}"))
+    option_list.update(writer_version())
+    option_list.update(compression_value())
+    option_list.update(row_group_size(size=256))
+    option_list.update(page_size(size=1024))
+    option_list.update(encodings())
+    option_list.update(bloom_filter())
+
+    file_definition.update(options(options=option_list))
+    schema_values.update(
+        schema_type(
+            name=logical_type()["logicalType"].lower(),
+            physical_type=physical_type(),
+            logical_type=logical_type(),
+            data=data,
+        )
+    )
+    file_definition.update(schema(schema=schema_values))
+    return file_definition
+
+
+@TestStep(Given)
+def prepare_parquet_file(
+    self, schema_type, writer_version, physical_type, logical_type, compression_value
+):
+    """Prepare the JSON definition and determine necessary parameters for the parquet file."""
+    json_file_name = (
+        f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
+        f"{logical_type()['logicalType']}_" + getuid() + ".json"
+    )
+    path = self.context.json_files_local + "/" + json_file_name
+
+    if logical_type()["logicalType"] == "NONE":
+        data = generate_values(
+            physical_type()["physicalType"], self.context.number_of_inserts
+        )
+        column_name = physical_type()["physicalType"].lower()
+    else:
+        data = generate_values(
+            logical_type()["logicalType"], self.context.number_of_inserts
+        )
+        column_name = logical_type()["logicalType"].lower()
+
+    parquet_file = (
+        f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
+        f"{logical_type()['logicalType']}_" + getuid() + ".parquet"
+    )
+
+    file_definition = create_parquet_json_definition(
+        schema_type=schema_type,
+        writer_version=writer_version,
+        physical_type=physical_type,
+        logical_type=logical_type,
+        compression_value=compression_value,
+        parquet_file=parquet_file,
+        data=data,
+    )
+    snapshot_name = (
+        f"{file_definition['options']['compression']}_{physical_type()['physicalType']}_"
+        f"{logical_type()['logicalType']}_{file_definition['schema'][0]['schemaType']}_"
+        f"{file_definition['options']['writerVersion'].replace('.', '_')}"
+    )
+
+    save_json_definition(path=path, file_definition=file_definition)
+
+    return json_file_name, parquet_file, column_name, data, snapshot_name
+
+
+@TestStep(Given)
+def generate_parquet_file(self, json_file_name):
+    """Generate the parquet file from its JSON definition."""
+    json_file_path = self.context.json_files + "/" + json_file_name
+    return parquetify(
+        json_file=json_file_path,
+        output_path=self.context.parquet_output_path,
+        no_checks=True,
+    )
+
+
+@TestStep(Given)
+def open_client(self):
+    """Open a ClickHouse client instance."""
+    bash_tools = self.context.cluster.node("bash-tools")
+    node = self.context.node
+    return bash_tools.client(
+        client_args={"host": node.name, "statistics": "null", "no_stack_trace": "null"}
+    )
+
+
 @TestStep(When)
 def get_all_columns(self, table_name, database, node=None):
 
@@ -355,7 +467,6 @@ def verify_rows_read(
     data_with_bloom,
     initial_rows,
     file_structure,
-    column_name,
     conversion,
     snapshot_name,
 ):
@@ -363,7 +474,7 @@ def verify_rows_read(
     read_rows = rows_read(data_with_bloom.output)
     snapshot(
         f"{read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, "
-        f"condition: WHERE {column_name} = {conversion}(value)",
+        f"condition: {condition}",
         name=f"{snapshot_name}_{conversion}",
         id="bloom_filter",
     )
@@ -429,6 +540,7 @@ def check_all_field_type_conversions(
                     column_name=column_name,
                     conversion=conversion,
                     snapshot_name=snapshot_name,
+                    condition=f"WHERE {column_name} = {conversion}(value)",
                 )
 
             with And(
@@ -494,6 +606,7 @@ def check_all_key_column_type_conversions(
                     column_name=column_name,
                     conversion=conversion,
                     snapshot_name=snapshot_name,
+                    condition=f"WHERE {column_name} = 'value'",
                 )
 
             with And(
@@ -520,85 +633,24 @@ def check_bloom_filter_on_parquet(
     check,
 ):
     """Check if the bloom filter is being used by ClickHouse."""
-    file_definition = {}
-    option_list = {}
-    schema_values = {}
-
-    node = self.context.node
-    bash_tools = self.context.cluster.node("bash-tools")
-    number_of_inserts = self.context.number_of_inserts
-
-    with Given(
-        "I prepare data required for the parquet file",
-    ):
-        json_file_name = (
-            f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
-            f"{logical_type()['logicalType']}_" + getuid() + ".json"
-        )
-        path = self.context.json_files_local + "/" + json_file_name
-        if logical_type()["logicalType"] == "NONE":
-            data = generate_values(physical_type()["physicalType"], number_of_inserts)
-            column_name = physical_type()["physicalType"].lower()
-
-        else:
-            data = generate_values(logical_type()["logicalType"], number_of_inserts)
-            column_name = logical_type()["logicalType"].lower()
-
-        parquet_file = (
-            f"{compression_value()['compression']}_{physical_type()['physicalType']}_"
-            f"{logical_type()['logicalType']}_" + getuid() + ".parquet"
-        )
-
-    with And("I create a parquet JSON definition"):
-
-        file_definition.update(parquet_file_name(filename=f"{parquet_file}"))
-        option_list.update(writer_version())
-        option_list.update(compression_value())
-        option_list.update(row_group_size(size=256))
-        option_list.update(page_size(size=1024))
-        option_list.update(encodings())
-        option_list.update(bloom_filter())
-
-        file_options = options(options=option_list)
-
-        file_definition.update(file_options)
-
-        schema_values.update(
-            schema_type(
-                name=column_name,
-                physical_type=physical_type(),
-                logical_type=logical_type(),
-                data=data,
+    with Given("I prepare the parquet file"):
+        json_file_name, parquet_file, column_name, data, snapshot_name = (
+            prepare_parquet_file(
+                schema_type=schema_type,
+                writer_version=writer_version,
+                physical_type=physical_type,
+                logical_type=logical_type,
+                compression_value=compression_value,
             )
         )
 
-        file_schema = schema(schema=schema_values)
-
-        file_definition.update(file_schema)
-    with And(f"I save the JSON definition to a file {json_file_name}"):
-        snapshot_name = f"{option_list['compression']}_{physical_type()['physicalType']}_{logical_type()['logicalType']}_{schema_values['schemaType']}_{option_list['writerVersion'].replace('.', '_')}"
-
-        with open(path, "w") as json_file:
-            json.dump(file_definition, json_file, cls=JSONEncoder, indent=2)
-
-    with And(f"generate a parquet file {parquet_file}"):
-        generate_parquet = parquetify(
-            json_file=self.context.json_files + "/" + json_file_name,
-            output_path=self.context.parquet_output_path,
-            no_checks=True,
-        )
+    with And("I generate the parquet file"):
+        generate_parquet = generate_parquet_file(json_file_name=json_file_name)
 
     with And("I open a single ClickHouse client instance"):
         if generate_parquet.exitcode != 0:
             skip("Incorrect JSON file structure")
-
-        with bash_tools.client(
-            client_args={
-                "host": node.name,
-                "statistics": "null",
-                "no_stack_trace": "null",
-            }
-        ) as client:
+        with open_client() as client:
             check(
                 parquet_file=parquet_file,
                 client=client,
