@@ -9,6 +9,16 @@ from decimal import Decimal
 from clickhouse_driver import Client
 from clickhouse_driver.errors import Error
 
+
+def remove_stack_trace(log: str) -> str:
+    """Find the index of "Stack trace" and slice the string up to that point."""
+    stack_trace_index = log.find("Stack trace")
+    return (
+        log[:stack_trace_index].strip()
+        if stack_trace_index != -1
+        else log.strip()
+    )
+
 class JSONEncoder(json.JSONEncoder):
     """
     Custom JSON encoder:
@@ -32,9 +42,10 @@ class JSONEncoder(json.JSONEncoder):
             return str(obj)  # Convert Decimal to string to avoid precision loss
         return super().default(obj)
 
-def clickhouse_client_tty(args, statistics=False):
+def clickhouse_client_tty(args, statistics=False, no_stack_trace=False):
     args_dict = {k: v for k, v in vars(args).items() if v is not None}
     args_dict.pop('statistics', None)
+    args_dict.pop('no_stack_trace', None)
     client = Client(**args_dict)
 
     while True:
@@ -57,7 +68,9 @@ def clickhouse_client_tty(args, statistics=False):
                 print("")
 
         except Error as e:
-            print(f"⇐ 🔥 Exception: {e}")
+            message = remove_stack_trace(str(e)) if no_stack_trace else e
+            print(f"⇐ 🔥 Exception: {message}")
+
 
 
 if __name__ == "__main__":
@@ -90,7 +103,7 @@ if __name__ == "__main__":
     parser.add_argument('--tcp_keepalive', default=False, help='Enables TCP keepalive on established connection.')
     parser.add_argument('--client_revision', default=None, help='Can be used for client version downgrading.')
     parser.add_argument('--statistics', default=False, action='store_true', help='Print statistics after query execution.')
-
+    parser.add_argument('--no_stack_trace', default=False, action='store_true', help='Do not print stack trace after query failure.')
     args = parser.parse_args()
 
-    clickhouse_client_tty(args, statistics=args.statistics)
+    clickhouse_client_tty(args, statistics=args.statistics, no_stack_trace=args.no_stack_trace)
