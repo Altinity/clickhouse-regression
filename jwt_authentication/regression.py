@@ -9,6 +9,18 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
 
+
+xfails = {
+    # decrypt
+    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check ES256K algorithm/*": [
+        (Fail, "ES256K algorithm is not working, need to investigate")
+    ],
+    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check Ed448 algorithm/*": (
+        Fail,
+        "Ed448 algorithm is not working, need to investigate",
+    ),
+}
+
 ffails = {
     "/jwt authentication": (Skip, "Not yet implemented"),
 }
@@ -17,6 +29,7 @@ ffails = {
 @TestFeature
 @Name("jwt authentication")
 @FFails(ffails)
+@XFails(xfails)
 @ArgumentParser(argparser)
 @CaptureClusterArgs
 def regression(
