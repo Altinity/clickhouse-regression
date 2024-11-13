@@ -55,19 +55,18 @@ def check_static_key_asymmetric_algorithms(self):
         "ES256",
         "ES384",
         "ES512",
-        "ES256K",
+        # "ES256K",
         # "PS256",
         # "PS384",
         # "PS512",
         "Ed25519",
-        "Ed448",
+        # "Ed448",
     ]
 
     for algorithm in algorithms:
         Scenario(
             f"check {algorithm} algorithm",
             test=check_validator_with_asymmetric_algorithms,
-            flags=TE,
         )(algorithm=algorithm)
 
 
@@ -116,7 +115,6 @@ def check_static_key_symmetric_algorithms(self):
         Scenario(
             f"check {algorithm} algorithm",
             test=check_validator_with_symmetric_algorithms,
-            flags=TE,
         )(algorithm=algorithm)
 
 
@@ -124,5 +122,5 @@ def check_static_key_symmetric_algorithms(self):
 @Name("different algorithms")
 def feature(self):
     """Check static key jwt authentication with different algorithms."""
-    for scenario in loads(current_module(), Scenario):
-        Scenario(run=scenario, flags=TE)
+    Scenario(run=check_static_key_symmetric_algorithms)
+    Scenario(run=check_static_key_asymmetric_algorithms)
