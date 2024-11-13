@@ -756,8 +756,17 @@ def no_logical_type_with_bloom_filter(self):
 
 
 @TestSuite
+def sanity_checks(self):
+    """Run sanity checks for the bloom filter on parquet files."""
+    Scenario(run=read_and_write_file_with_bloom)
+    Scenario(run=read_bloom_filter_parquet_files)
+    Scenario(run=read_bloom_filter_parquet_files_native_reader)
+    Scenario(run=native_reader_array_bloom)
+
+
+@TestSuite
 def logical_datatypes(self):
-    """Running checks that the bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types."""
+    """Running heavy combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types."""
 
     Scenario(run=utf8_with_bloom_filter)
     Scenario(run=decimal_with_bloom_filter)
@@ -787,19 +796,6 @@ def logical_datatypes(self):
     Scenario(run=int32_with_bloom_filter)
     Scenario(run=int64_with_bloom_filter)
     Scenario(run=no_logical_type_with_bloom_filter)
-
-
-#
-# @TestScenario
-# def test_client(self):
-#     bash_tools = self.context.cluster.node("bash-tools")
-#     node = self.context.cluster.node("clickhouse1")
-#
-#     with Given("I open a single ClickHouse client instance"):
-#         with bash_tools.client(
-#             client_args={"host": node.name, "statistics": "null"}
-#         ) as client:
-#             client.query("qweqwr", stack_trace=False)
 
 
 @TestFeature
@@ -847,5 +843,5 @@ def feature(self, node="clickhouse1", number_of_inserts=1500):
     self.context.parquet_output_path = "/parquet-files"
     self.context.number_of_inserts = number_of_inserts
 
+    Feature(run=sanity_checks)
     Feature(run=logical_datatypes)
-    # Scenario(run=test_client)
