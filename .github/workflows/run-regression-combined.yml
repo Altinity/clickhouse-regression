@@ -17,7 +17,7 @@ on:
         description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
         required: true
-        default: 24.3.12.76.altinitytest
+        default: 24.3.12.76.altinitystable
       flags:
         description: "🚩 Flags"
         type: choice
@@ -145,7 +145,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
-      extra_args: ${{ inputs.flags }} ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
       artifact_name: x86
     
   arm:
@@ -159,5 +159,5 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
-      extra_args: ${{ inputs.flags }} ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
       artifact_name: arm
