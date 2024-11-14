@@ -11,19 +11,19 @@ from helpers.argparser import argparser, CaptureClusterArgs
 
 
 xfails = {
-    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check ES256K algorithm/*": [
+    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check ES256K algorithm": [
         (Fail, "ES256K algorithm is not working, need to investigate")
     ],
-    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check Ed448 algorithm/*": [
+    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check Ed448 algorithm": [
         (
             Fail,
             "Ed448 algorithm is not working, need to investigate",
         )
     ],
-    "/jwt authentication/static jwks/feature/login fails with mismatched algorithm/*": [
+    "/jwt authentication/static jwks/feature/login fails with mismatched algorithm": [
         (Fail, "Needs investigation")
     ],
-    "/jwt authentication/static key/invalid token/login with invalid token/*": [
+    "/jwt authentication/static key/invalid token/login with invalid token": [
         (Fail, "Unexpected LOGICAL_ERROR")
     ],
 }
