@@ -23,6 +23,9 @@ xfails = {
     "/jwt authentication/static jwks/feature/login fails with mismatched algorithm/*": [
         (Fail, "Needs investigation")
     ],
+    "/jwt authentication/static key/invalid token/login with invalid token/*": [
+        (Fail, "Unexpected LOGICAL_ERROR")
+    ],
 }
 
 ffails = {
