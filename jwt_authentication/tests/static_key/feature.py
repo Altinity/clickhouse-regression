@@ -11,3 +11,4 @@ def feature(self, node="clickhouse1"):
     Feature(
         run=load("jwt_authentication.tests.static_key.different_algorithms", "feature")
     )
+    Feature(run=load("jwt_authentication.tests.static_key.invalid_token", "feature"))
