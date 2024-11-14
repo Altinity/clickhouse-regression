@@ -19,7 +19,7 @@ def check_static_key(self):
 
     with When("create jwt token"):
         token = steps.create_static_jwt(user_name=user_name, secret="my_secret")
-        
+
     with Then("check jwt authentication"):
         steps.check_jwt_login(user_name=user_name, token=token)
 
