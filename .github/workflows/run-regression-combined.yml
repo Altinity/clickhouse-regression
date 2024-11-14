@@ -145,7 +145,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
-      extra_args: ${{ inputs.flags }} ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
       artifact_name: x86
     
   arm:
@@ -159,5 +159,5 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
-      extra_args: ${{ inputs.flags }} ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
       artifact_name: arm
