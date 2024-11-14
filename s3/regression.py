@@ -357,7 +357,9 @@ def minio_regression(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-        Feature(test=load("s3.tests.alter", "feature"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(
             uri=uri_bucket_file
         )
@@ -446,7 +448,9 @@ def aws_s3_regression(
             uri=uri, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
         Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
             uri=uri, bucket_prefix=bucket_prefix
@@ -513,7 +517,9 @@ def gcs_regression(
         Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
         Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
         Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
         Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
             uri=uri, bucket_prefix=bucket_prefix

@@ -12,6 +12,7 @@ from s3.tests.common import (
     default_s3_disk_and_volume,
     assert_row_count,
     insert_random,
+    temporary_bucket_path,
 )
 
 COLUMNS = "key UInt32, value1 String, value2 UInt8"
@@ -778,13 +779,17 @@ def columns(self):
 
 @TestFeature
 @Name("alter")
-def feature(self, uri):
+def feature(self, uri, bucket_prefix):
     """Test ALTER commands with s3 disks"""
-
-    self.context.uri = uri
 
     cluster = self.context.cluster
     self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
+
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/backup_bucket"
+        )
+        self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
 
     with Given("I have S3 disks configured"):
         default_s3_disk_and_volume()
