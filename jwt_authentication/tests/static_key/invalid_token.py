@@ -14,7 +14,7 @@ def jwt_authentication_with_invalid_token(self):
 
     with Given("create user with jwt authentication"):
         user_name = f"jwt_user_{getuid()}"
-        steps.add_jwt_user_to_users_xml(user_name=user_name)
+        steps.create_user_with_jwt_auth(user_name=user_name)
 
     with Then("check jwt authentication with None instead of correct token"):
         steps.check_jwt_login(
