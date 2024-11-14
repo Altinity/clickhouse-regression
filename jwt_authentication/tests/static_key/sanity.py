@@ -12,9 +12,8 @@ def check_static_key(self):
     """Check jwt authentication with static key when static key
     validator with static_key "my_secret" is in config.xml."""
 
-    user_name = f"jwt_user_{getuid()}"
-
     with Given("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
         steps.add_jwt_user_to_users_xml(user_name=user_name)
 
     with When("create jwt token"):
@@ -31,9 +30,8 @@ def check_static_key_rbac(self):
     """Check jwt authentication with static key for RBAC user when static key
     validator with static_key "my_secret" is in config.xml."""
 
-    user_name = f"jwt_user_{getuid()}"
-
     with Given("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
         steps.create_user_with_jwt_auth(user_name=user_name)
 
     with When("create jwt token"):
