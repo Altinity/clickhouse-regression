@@ -55,16 +55,16 @@ def check_static_key_asymmetric_algorithms(self):
         "ES256",
         "ES384",
         "ES512",
-        # "ES256K",
+        "ES256K",
         # "PS256",
         # "PS384",
         # "PS512",
         "Ed25519",
-        # "Ed448",
+        "Ed448",
     ]
 
     for algorithm in algorithms:
-        Scenario(
+        Check(
             f"check {algorithm} algorithm",
             test=check_validator_with_asymmetric_algorithms,
         )(algorithm=algorithm)
@@ -112,7 +112,7 @@ def check_static_key_symmetric_algorithms(self):
     ]
 
     for algorithm in algorithms:
-        Scenario(
+        Check(
             f"check {algorithm} algorithm",
             test=check_validator_with_symmetric_algorithms,
         )(algorithm=algorithm)
