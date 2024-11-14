@@ -3,9 +3,12 @@ from testflows.asserts import error
 
 import jwt
 import datetime
-
+import base64
+import json
+from cryptography.hazmat.primitives import serialization
 import subprocess
 import os
+
 
 from helpers.common import (
     create_xml_config_content,
@@ -22,12 +25,14 @@ EdDSA_algorithms = ["Ed25519", "Ed448"]
 
 
 def create_static_jwt(
-    user_name: str,
+    user_name: str = None,
     secret: str = None,
     algorithm: str = "HS256",
     payload: dict = None,
     expiration_minutes: int = None,
     private_key_path: str = None,
+    headers: dict = None,
+    key_id: str = None,
 ) -> str:
     """
     Create a JWT using a static secret and a specified encryption algorithm.
@@ -48,6 +53,11 @@ def create_static_jwt(
     """
     if payload is None:
         payload = {"sub": f"{user_name}"}
+
+    if key_id is not None:
+        if headers is None:
+            headers = {}
+        headers["kid"] = key_id
 
     if expiration_minutes:
         expiration = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
@@ -74,7 +84,8 @@ def create_static_jwt(
         if algorithm.startswith("Ed"):
             algorithm = "EdDSA"
 
-        return jwt.encode(payload, private_key, algorithm=algorithm)
+        note(algorithm)
+        return jwt.encode(payload, private_key, algorithm=algorithm, headers=headers)
 
 
 @TestStep(Given)
@@ -178,6 +189,68 @@ def add_static_key_validator_to_config_xml(
         config_d_dir="/etc/clickhouse-server/config.d",
         preprocessed_name="config.xml",
     )
+
+
+def to_base64_url(data):
+    """Convert data to base64 URL encoding."""
+    return base64.urlsafe_b64encode(data).decode("utf-8").rstrip("=")
+
+
+@TestStep(Given)
+def add_static_jwks_validator_to_config_xml(
+    self,
+    validator_id: str,
+    algorithm: str = "RS256",
+    key_id: str = "mykid",
+    public_key_str: str = None,
+):
+    """Add static key validator to the config.xml."""
+    with By("retrieve modulus and exponent from public key"):
+        public_key = serialization.load_pem_public_key(
+            public_key_str.encode(),
+        )
+        modulus = define(
+            "modulus",
+            to_base64_url(
+                public_key.public_numbers().n.to_bytes(
+                    (public_key.public_numbers().n.bit_length() + 7) // 8,
+                    byteorder="big",
+                )
+            ),
+        )
+        exponent = define(
+            "exponent",
+            to_base64_url(
+                public_key.public_numbers().e.to_bytes(
+                    (public_key.public_numbers().e.bit_length() + 7) // 8,
+                    byteorder="big",
+                )
+            ),
+        )
+
+    with And("build entries and add static jwks validator to the config.xml"):
+        entries = {"jwt_validators": {}}
+        entries["jwt_validators"][f"{validator_id}"] = {}
+        static_jwks_content = {
+            "keys": [
+                {
+                    "kty": "RSA",
+                    "alg": algorithm,
+                    "kid": key_id,
+                    "n": modulus,
+                    "e": exponent,
+                }
+            ]
+        }
+        entries["jwt_validators"][f"{validator_id}"]["static_jwks"] = json.dumps(
+            static_jwks_content
+        )
+
+        change_clickhouse_config(
+            entries=entries,
+            config_d_dir="/etc/clickhouse-server/config.d",
+            preprocessed_name="config.xml",
+        )
 
 
 @TestStep(Given)
