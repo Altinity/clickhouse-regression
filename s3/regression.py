@@ -195,8 +195,15 @@ xfails = {
             check_clickhouse_version("<23.11"),
         )
     ],
-    ":/alter/projection": [
+    ":/alter/:/projection": [
         (Fail, "Wrong error message 22.3", check_clickhouse_version("<22.8")),
+    ],
+    ":/alter/zero copy encrypted/:": [
+        (
+            Fail,
+            "Bug in 23.3 https://github.com/ClickHouse/ClickHouse/pull/68821",
+            check_clickhouse_version("<23.8"),
+        ),
     ],
     ":/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
@@ -286,10 +293,33 @@ ffails = {
         Skip,
         "freeze not enabled with zero copy replication",
     ),
-    ":/alter/update delete": (
+    ":/alter/:/update delete": (
         Skip,
         "Not supported <22.8",
         check_clickhouse_version("<23"),
+    ),
+    ":/alter/zero copy encrypted/update delete": (
+        XError,
+        "Timeout 23.3",
+        check_clickhouse_version("<23.8"),
+    ),
+    ":/alter/zero cop:/projection": (
+        Skip,
+        "Not supported <23",
+        check_clickhouse_version("<23"),
+    ),
+    ":/alter/zero cop:/freeze": (
+        Skip,
+        "not supported <24",
+        check_clickhouse_version("<24"),
+    ),
+    ":/alter/zero cop:/d:": (
+        Skip,
+        "not supported",
+    ),
+    ":/alter/zero cop:/fetch": (
+        Skip,
+        "not supported",
     ),
     ":/backup/:/metadata:": (XFail, "SYSTEM RESTART DISK is not implemented"),
     ":/backup/:/system unfreeze": (
@@ -357,7 +387,9 @@ def minio_regression(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-        Feature(test=load("s3.tests.alter", "feature"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(
             uri=uri_bucket_file
         )
@@ -446,7 +478,9 @@ def aws_s3_regression(
             uri=uri, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
         Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
             uri=uri, bucket_prefix=bucket_prefix
@@ -513,7 +547,9 @@ def gcs_regression(
         Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
         Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
         Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.alter", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
         Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
             uri=uri, bucket_prefix=bucket_prefix
