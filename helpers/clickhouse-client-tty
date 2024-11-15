@@ -39,7 +39,7 @@ class JSONEncoder(json.JSONEncoder):
             except UnicodeDecodeError:
                 return base64.b64encode(obj).decode("ascii")
         if isinstance(obj, Decimal):
-            return str(obj)  # Convert Decimal to string to avoid precision loss
+            return str(obj)
         return super().default(obj)
 
 def clickhouse_client_tty(args, statistics=False, no_stack_trace=False):
