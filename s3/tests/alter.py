@@ -7,11 +7,13 @@ from testflows.combinatorics import product
 
 from helpers.alter import *
 from helpers.queries import optimize
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 from s3.tests.common import (
     default_s3_disk_and_volume,
     assert_row_count,
     insert_random,
+    temporary_bucket_path,
+    s3_storage,
 )
 
 COLUMNS = "key UInt32, value1 String, value2 UInt8"
@@ -58,6 +60,9 @@ def replicated_table_cluster(
         settings = [settings]
 
     settings.append(f"storage_policy='{storage_policy}'")
+
+    if allow_zero_copy is None:
+        allow_zero_copy = getattr(self.context, "allow_zero_copy", None)
 
     if allow_zero_copy is not None:
         settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
@@ -122,7 +127,7 @@ def update_delete(self):
 
     with Given("I have a table"):
         replicated_table_cluster(
-            table_name=table_name, storage_policy="external", columns=columns
+            table_name=table_name, storage_policy=self.context.policy, columns=columns
         )
 
     with And("I insert some data"):
@@ -159,7 +164,9 @@ def order_by(self):
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external")
+        replicated_table_cluster(
+            table_name=table_name, storage_policy=self.context.policy
+        )
 
     with And("I insert some data"):
         insert_random(
@@ -182,7 +189,7 @@ def sample_by(self):
     with Given("I have a table"):
         replicated_table_cluster(
             table_name=table_name,
-            storage_policy="external",
+            storage_policy=self.context.policy,
             primary_key="(key, cityHash64(value1))",
             order_by="(key, cityHash64(value1))",
         )
@@ -206,7 +213,9 @@ def index(self):
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external")
+        replicated_table_cluster(
+            table_name=table_name, storage_policy=self.context.policy
+        )
 
     with And("I insert some data"):
         insert_random(
@@ -249,7 +258,9 @@ def projection(self):
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external")
+        replicated_table_cluster(
+            table_name=table_name, storage_policy=self.context.policy
+        )
 
     with When("I add a projection with success"):
         nodes[0].query(
@@ -285,6 +296,7 @@ def projection(self):
 @Examples("partition", [[""], ["PARTITION 1"]])
 def freeze(self, partition):
     """Check tables work with ALTER TABLE FREEZE."""
+
     nodes = self.context.ch_nodes
     table_name = f"table_{getuid()}"
     backup_name = f"backup_{getuid()}"
@@ -292,8 +304,13 @@ def freeze(self, partition):
     with Given(f"I have a table {table_name}"):
         replicated_table_cluster(
             table_name=table_name,
-            storage_policy="external",
+            storage_policy=self.context.policy,
             partition_by="key % 4",
+            settings=(
+                "disable_freeze_partition_for_zero_copy_replication=0"
+                if self.context.allow_zero_copy
+                else None
+            ),
         )
 
     with When("I insert some data into the table"):
@@ -307,11 +324,17 @@ def freeze(self, partition):
             exitcode=0,
         )
 
-    with Finally("I unfreeze the table"):
+    with And("I unfreeze the table"):
         nodes[0].query(
             f"ALTER TABLE {table_name} UNFREEZE {partition} WITH NAME '{backup_name}'",
             exitcode=0,
         )
+
+    with And("I check the number of rows on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, **retry_args)(
+                node=node, table_name=table_name, rows=INSERT_SIZE
+            )
 
 
 @TestOutline(Scenario)
@@ -324,10 +347,10 @@ def fetch(self, fetch_item):
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
-            storage_policy="external", partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
         _, destination_table_name = replicated_table_cluster(
-            storage_policy="external", partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
@@ -368,10 +391,10 @@ def attach_from(self):
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
-            storage_policy="external", partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
         _, destination_table_name = replicated_table_cluster(
-            storage_policy="external", partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
@@ -412,19 +435,18 @@ def move_to_table(self):
     node = nodes[0]
     fetch_item = "PARTITION 2"
     insert_rows = 1000000
-    storage_policy = "external"
     source_table_name = "table_move_src"
     destination_table_name = "table_move_dest"
 
     with Given("I have two replicated tables"):
         replicated_table_cluster(
             table_name=source_table_name,
-            storage_policy=storage_policy,
+            storage_policy=self.context.policy,
             partition_by="key % 4",
         )
         replicated_table_cluster(
             table_name=destination_table_name,
-            storage_policy=storage_policy,
+            storage_policy=self.context.policy,
             partition_by="key % 4",
         )
 
@@ -478,10 +500,10 @@ def replace(self):
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
-            storage_policy="external", partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
         _, destination_table_name = replicated_table_cluster(
-            storage_policy="external", partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
@@ -537,7 +559,7 @@ def drop(self, drop_item, detach_first):
 
     with Given("I have a replicated tables"):
         _, table_name = replicated_table_cluster(
-            storage_policy="external", partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
@@ -636,11 +658,10 @@ def detach(self, detach_item):
 
     nodes = self.context.ch_nodes
     insert_rows = 1000000
-    storage_policy = "external"
 
     with Given("I have two replicated tables"):
         _, source_table_name = replicated_table_cluster(
-            storage_policy=storage_policy, partition_by="key % 4"
+            storage_policy=self.context.policy, partition_by="key % 4"
         )
 
     with And("I insert data into the first table"):
@@ -679,7 +700,9 @@ def columns(self):
     nodes = self.context.ch_nodes
 
     with Given("I have a table"):
-        replicated_table_cluster(table_name=table_name, storage_policy="external")
+        replicated_table_cluster(
+            table_name=table_name, storage_policy=self.context.policy
+        )
 
     with And("I insert some data"):
         insert_random(
@@ -778,16 +801,55 @@ def columns(self):
 
 @TestFeature
 @Name("alter")
-def feature(self, uri):
+def feature(self, uri, bucket_prefix):
     """Test ALTER commands with s3 disks"""
-
-    self.context.uri = uri
 
     cluster = self.context.cluster
     self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
 
-    with Given("I have S3 disks configured"):
-        default_s3_disk_and_volume()
+    with Given("a temporary s3 path"):
+        temp_s3_path = temporary_bucket_path(
+            bucket_prefix=f"{bucket_prefix}/backup_bucket"
+        )
+        self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    with Given("I have base S3 disks configured"):
+        default_s3_disk_and_volume(restart=True)
+
+    if check_clickhouse_version(">=22.8")(self):
+        with And("I define extra disks and policies"):
+            extra_disks = {
+                "encrypted": {
+                    "type": "encrypted",
+                    "disk": ("s3_cache"),
+                    "key": "uCApvDl3Ro0D0CcS",
+                }
+            }
+            extra_policies = {
+                "encrypted": {"volumes": {"external": {"disk": "encrypted"}}}
+            }
+            s3_storage(
+                disks=extra_disks,
+                policies=extra_policies,
+                restart=True,
+                config_file="z_encrypted_disk.xml",
+            )
+
+    examples = {
+        # Policy, allow zero copy
+        "normal": ["external", None],
+        "encrypted": ["encrypted", None],
+        "zero copy": ["external", True],
+        "zero copy encrypted": ["encrypted", True],
+    }
+
+    for example_name, (policy, allow_zero_copy) in examples.items():
+        if policy == "encrypted" and check_clickhouse_version("<22.8")(self):
+            continue
+
+        with Example(example_name):
+            self.context.policy = policy
+            self.context.allow_zero_copy = allow_zero_copy
+
+            for scenario in loads(current_module(), Scenario):
+                scenario()
