@@ -37,7 +37,7 @@ class JSONEncoder(json.JSONEncoder):
             except UnicodeDecodeError:
                 return base64.b64encode(obj).decode("ascii")
         if isinstance(obj, Decimal):
-            return str(obj)  # Convert Decimal to string to avoid precision loss
+            return str(obj)
         return super().default(obj)
 
 
@@ -469,7 +469,7 @@ def verify_rows_read(
     file_structure,
     conversion,
     snapshot_name,
-    condition
+    condition,
 ):
     """Verify the number of rows read from the parquet file."""
     read_rows = rows_read(data_with_bloom.output)
@@ -478,7 +478,7 @@ def verify_rows_read(
         f"condition: {condition}",
         name=f"{snapshot_name}_{conversion}",
         id="bloom_filter",
-        mode=snapshot.CHECK
+        mode=snapshot.CHECK,
     )
 
 
@@ -1113,7 +1113,13 @@ def sanity_checks(self):
 
 @TestSuite
 def logical_datatypes_key_column_type(self):
-    """Running combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types when using key column type conversion."""
+    """Running combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types when using key column type conversion.
+
+    The following query is considered as key column type conversion:
+
+    SELECT integer_column FORM file('file.parquet', Parquet, 'integer_column String') WHERE column = 'value'
+
+    """
 
     Scenario(run=utf8_to_key_column_type)
     Scenario(run=decimal_to_key_column_type)
@@ -1147,7 +1153,12 @@ def logical_datatypes_key_column_type(self):
 
 @TestSuite
 def logical_datatypes_field_type(self):
-    """Running combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types when using field type conversion."""
+    """Running combinatorial checks that validate bloom filter is correctly utilized by ClickHouse for Parquet files with different logical types when using field type conversion.
+
+    The following query is considered as field type conversion:
+
+    SELECT xyz FORM file('file.parquet', Parquet) WHERE column = toInt32('value')
+    """
 
     Scenario(run=utf8_to_field_type)
     Scenario(run=decimal_to_field_type)
@@ -1182,7 +1193,7 @@ def logical_datatypes_field_type(self):
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter("1.0"))
 @Name("bloom")
-def feature(self, node="clickhouse1", number_of_inserts=1500):
+def feature(self, node="clickhouse1", number_of_inserts=1500, stress_bloom=False):
     """Check if we can read from ap parquet file with bloom filter and validate that the bloom filter is being used
     by ClickHouse.
 
@@ -1225,5 +1236,7 @@ def feature(self, node="clickhouse1", number_of_inserts=1500):
     self.context.number_of_inserts = number_of_inserts
 
     Feature(run=sanity_checks)
-    Feature(run=logical_datatypes_field_type)
-    Feature(run=logical_datatypes_key_column_type)
+
+    if stress_bloom:
+        Feature(run=logical_datatypes_field_type)
+        Feature(run=logical_datatypes_key_column_type)
