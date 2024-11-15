@@ -1,13 +1,15 @@
 from testflows.core import *
 from testflows.asserts import error
 
-import jwt
-import datetime
 import base64
+import datetime
 import json
-from cryptography.hazmat.primitives import serialization
-import subprocess
 import os
+import random
+import subprocess
+
+import jwt
+from cryptography.hazmat.primitives import serialization
 
 
 from helpers.common import (
@@ -281,8 +283,8 @@ def create_user_with_jwt_auth(
 @TestStep(Then)
 def check_clickhouse_client_jwt_login(
     self,
-    user_name: str,
     token: str,
+    user_name: str = None,
     node: Node = None,
     exitcode: int = 0,
     message: str = None,
@@ -306,8 +308,8 @@ def check_clickhouse_client_jwt_login(
 @TestStep(Then)
 def check_http_https_jwt_login(
     self,
-    user_name: str,
     token: str,
+    user_name: str = None,
     ip: str = "localhost",
     https: bool = False,
     node: Node = None,
@@ -330,8 +332,8 @@ def check_http_https_jwt_login(
 @TestStep(Then)
 def check_jwt_login(
     self,
-    user_name: str,
     token: str,
+    user_name: str = None,
     node: Node = None,
     exitcode: int = 0,
     message: str = None,
@@ -392,3 +394,84 @@ def generate_ssh_keys(self, key_type: str = None, algorithm: str = "RS256"):
                 os.remove(private_key_file)
             if os.path.exists(public_key_file):
                 os.remove(public_key_file)
+
+
+def flip_symbol(segment: str) -> str:
+    """Flip a specified number of symbols in a Base64 URL-encoded segment."""
+    base64_url_chars = (
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+    )
+    index = random.randrange(len(segment))
+    new_symbol = random.choice(base64_url_chars.replace(segment[index], ""))
+    return segment[:index] + new_symbol + segment[index + 1 :]
+
+
+def swap_two_random_symbols(segment: str) -> str:
+    """Swap two random symbols in the given segment, ensuring the swap changes the segment."""
+    if len(segment) < 2:
+        return segment
+
+    # Check if all characters are identical
+    if len(set(segment)) == 1:
+        return segment
+
+    segment_list = list(segment)
+
+    while True:
+        idx1, idx2 = random.sample(range(len(segment_list)), 2)
+        if segment_list[idx1] != segment_list[idx2]:
+            break
+
+    segment_list[idx1], segment_list[idx2] = segment_list[idx2], segment_list[idx1]
+    return "".join(segment_list)
+
+
+def corrupt_segment(segment: str, swap: bool, flip: bool) -> str:
+    """Corrupt a segment by swapping or flipping symbols."""
+    if flip:
+        segment = flip_symbol(segment)
+    if swap:
+        segment = swap_two_random_symbols(segment)
+    return segment
+
+
+@TestStep(Given)
+def corrupt_token(
+    self, token: str, part: str = "payload", swap=False, flip=False
+) -> str:
+    """Corrupt the token by swapping two symbols or flipping a symbol
+    in the specified part."""
+
+    header, payload, signature = token.split(".")
+
+    if part == "header":
+        header = corrupt_segment(header, swap, flip)
+    elif part == "payload":
+        payload = corrupt_segment(payload, swap, flip)
+    elif part == "signature":
+        signature = corrupt_segment(signature, swap, flip)
+    else:
+        raise ValueError(
+            "Invalid part specified. Choose 'header', 'payload', or 'signature'."
+        )
+
+    return f"{header}.{payload}.{signature}"
+
+
+@TestStep(Then)
+def check_jwt_login_with_corrupted_token(self, token: str):
+    """Check that JWT authentication fails with a corrupted token."""
+    try:
+        with By("check if authentication fails"):
+            check_jwt_login(
+                token=token,
+                exitcode=4,
+                message=f"DB::Exception:",
+            )
+    except:
+        with By("check if validation of jwt fails"):
+            check_jwt_login(
+                token=token,
+                exitcode=131,
+                message=f"DB::Exception: Failed to validate jwt.",
+            )
