@@ -264,7 +264,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | VARBINARY                       |
 | INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | CHAR                            |
 | INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | SMALLINT_UNSIGNED               |
-| INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | FIXED                           |
+| INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | FIXED            |
 | INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | TINYTEXT                        |
 | INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | NUMERIC                         |
 | INT32         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | DEC                             |
@@ -349,7 +349,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | VARBINARY                       |
 | INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | CHAR                            |
 | INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | SMALLINT_UNSIGNED               |
-| INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | FIXED                           |
+| INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | FIXED            |
 | INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | TINYTEXT                        |
 | INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | NUMERIC                         |
 | INT64         | DECIMAL             | optional      | decimal\tNullable(Decimal(3                                     | DEC                             |
@@ -432,7 +432,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | VARBINARY                       |
 | INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | CHAR                            |
 | INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | SMALLINT_UNSIGNED               |
-| INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | FIXED                           |
+| INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | FIXED            |
 | INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | TINYTEXT                        |
 | INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | NUMERIC                         |
 | INT32         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | DEC                             |
@@ -517,7 +517,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | VARBINARY                       |
 | INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | CHAR                            |
 | INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | SMALLINT_UNSIGNED               |
-| INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | FIXED                           |
+| INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | FIXED            |
 | INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | TINYTEXT                        |
 | INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | NUMERIC                         |
 | INT64         | DECIMAL             | required      | decimal\tNullable(Decimal(3                                     | DEC                             |
@@ -1588,7 +1588,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | VARBINARY                       |
 | INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | CHAR                            |
 | INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | SMALLINT_UNSIGNED               |
-| INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | FIXED                           |
+| INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | FIXED            |
 | INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | TINYTEXT                        |
 | INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | NUMERIC                         |
 | INT32         | UINT8               | optional      | uint8\tNullable(UInt8)                                          | DEC                             |
@@ -1671,7 +1671,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | VARBINARY                       |
 | INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | CHAR                            |
 | INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | SMALLINT_UNSIGNED               |
-| INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | FIXED                           |
+| INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | FIXED            |
 | INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | TINYTEXT                        |
 | INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | NUMERIC                         |
 | INT32         | UINT8               | required      | uint8\tNullable(UInt8)                                          | DEC                             |
@@ -1910,7 +1910,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | CHAR                            |
 | INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | SMALLINT_UNSIGNED               |
 | INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | TIMESTAMP                       |
-| INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | FIXED                           |
+| INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | FIXED            |
 | INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | TINYTEXT                        |
 | INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | NUMERIC                         |
 | INT32         | UINT16              | optional      | uint16\tNullable(UInt16)                                        | DEC                             |
@@ -1997,7 +1997,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | CHAR                            |
 | INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | SMALLINT_UNSIGNED               |
 | INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | TIMESTAMP                       |
-| INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | FIXED                           |
+| INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | FIXED            |
 | INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | TINYTEXT                        |
 | INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | NUMERIC                         |
 | INT32         | UINT16              | required      | uint16\tNullable(UInt16)                                        | DEC                             |
@@ -2471,7 +2471,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | NCHAR                           |
 | INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | VARBINARY                       |
 | INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | CHAR                            |
-| INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | FIXED                           |
+| INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | FIXED            |
 | INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | TINYTEXT                        |
 | INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | NUMERIC                         |
 | INT32         | INT8                | optional      | int8\tNullable(Int8)                                            | DEC                             |
@@ -2555,7 +2555,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | INT8                | required      | int8\tNullable(Int8)                                            | NCHAR                           |
 | INT32         | INT8                | required      | int8\tNullable(Int8)                                            | VARBINARY                       |
 | INT32         | INT8                | required      | int8\tNullable(Int8)                                            | CHAR                            |
-| INT32         | INT8                | required      | int8\tNullable(Int8)                                            | FIXED                           |
+| INT32         | INT8                | required      | int8\tNullable(Int8)                                            | FIXED            |
 | INT32         | INT8                | required      | int8\tNullable(Int8)                                            | TINYTEXT                        |
 | INT32         | INT8                | required      | int8\tNullable(Int8)                                            | NUMERIC                         |
 | INT32         | INT8                | required      | int8\tNullable(Int8)                                            | DEC                             |
@@ -2767,7 +2767,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | NCHAR                           |
 | INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | VARBINARY                       |
 | INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | CHAR                            |
-| INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | FIXED                           |
+| INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | FIXED            |
 | INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | TINYTEXT                        |
 | INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | NUMERIC                         |
 | INT32         | INT16               | optional      | int16\tNullable(Int16)                                          | DEC                             |
@@ -2865,7 +2865,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | INT16               | required      | int16\tNullable(Int16)                                          | CHAR                            |
 | INT32         | INT16               | required      | int16\tNullable(Int16)                                          | SMALLINT_UNSIGNED               |
 | INT32         | INT16               | required      | int16\tNullable(Int16)                                          | TIMESTAMP                       |
-| INT32         | INT16               | required      | int16\tNullable(Int16)                                          | FIXED                           |
+| INT32         | INT16               | required      | int16\tNullable(Int16)                                          | FIXED            |
 | INT32         | INT16               | required      | int16\tNullable(Int16)                                          | TINYTEXT                        |
 | INT32         | INT16               | required      | int16\tNullable(Int16)                                          | NUMERIC                         |
 | INT32         | INT16               | required      | int16\tNullable(Int16)                                          | DEC                             |
@@ -3116,7 +3116,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | CHAR                            |
 | INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | SMALLINT_UNSIGNED               |
 | INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | TIMESTAMP                       |
-| INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | FIXED                           |
+| INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | FIXED            |
 | INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | TINYTEXT                        |
 | INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | NUMERIC                         |
 | INT32         | INT32               | optional      | int32\tNullable(Int32)                                          | DEC                             |
@@ -3192,7 +3192,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | INT32               | required      | int32\tNullable(Int32)                                          | NCHAR                           |
 | INT32         | INT32               | required      | int32\tNullable(Int32)                                          | VARBINARY                       |
 | INT32         | INT32               | required      | int32\tNullable(Int32)                                          | CHAR                            |
-| INT32         | INT32               | required      | int32\tNullable(Int32)                                          | FIXED                           |
+| INT32         | INT32               | required      | int32\tNullable(Int32)                                          | FIXED            |
 | INT32         | INT32               | required      | int32\tNullable(Int32)                                          | TINYTEXT                        |
 | INT32         | INT32               | required      | int32\tNullable(Int32)                                          | NUMERIC                         |
 | INT32         | INT32               | required      | int32\tNullable(Int32)                                          | DEC                             |
@@ -3466,7 +3466,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | NCHAR                           |
 | INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | VARBINARY                       |
 | INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | CHAR                            |
-| INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | FIXED                           |
+| INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | FIXED            |
 | INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | TINYTEXT                        |
 | INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | NUMERIC                         |
 | INT64         | INT64               | optional      | int64\tNullable(Int64)                                          | DEC                             |
@@ -3565,7 +3565,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | INT64               | required      | int64\tNullable(Int64)                                          | CHAR                            |
 | INT64         | INT64               | required      | int64\tNullable(Int64)                                          | SMALLINT_UNSIGNED               |
 | INT64         | INT64               | required      | int64\tNullable(Int64)                                          | TIMESTAMP                       |
-| INT64         | INT64               | required      | int64\tNullable(Int64)                                          | FIXED                           |
+| INT64         | INT64               | required      | int64\tNullable(Int64)                                          | FIXED            |
 | INT64         | INT64               | required      | int64\tNullable(Int64)                                          | TINYTEXT                        |
 | INT64         | INT64               | required      | int64\tNullable(Int64)                                          | NUMERIC                         |
 | INT64         | INT64               | required      | int64\tNullable(Int64)                                          | DEC                             |
@@ -3873,7 +3873,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | NONE                | optional      | none\tNullable(Int32)                                           | NCHAR                           |
 | INT32         | NONE                | optional      | none\tNullable(Int32)                                           | VARBINARY                       |
 | INT32         | NONE                | optional      | none\tNullable(Int32)                                           | CHAR                            |
-| INT32         | NONE                | optional      | none\tNullable(Int32)                                           | FIXED                           |
+| INT32         | NONE                | optional      | none\tNullable(Int32)                                           | FIXED            |
 | INT32         | NONE                | optional      | none\tNullable(Int32)                                           | TINYTEXT                        |
 | INT32         | NONE                | optional      | none\tNullable(Int32)                                           | NUMERIC                         |
 | INT32         | NONE                | optional      | none\tNullable(Int32)                                           | DEC                             |
@@ -3971,7 +3971,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | NONE                | optional      | none\tNullable(Int64)                                           | CHAR                            |
 | INT64         | NONE                | optional      | none\tNullable(Int64)                                           | SMALLINT_UNSIGNED               |
 | INT64         | NONE                | optional      | none\tNullable(Int64)                                           | TIMESTAMP                       |
-| INT64         | NONE                | optional      | none\tNullable(Int64)                                           | FIXED                           |
+| INT64         | NONE                | optional      | none\tNullable(Int64)                                           | FIXED            |
 | INT64         | NONE                | optional      | none\tNullable(Int64)                                           | TINYTEXT                        |
 | INT64         | NONE                | optional      | none\tNullable(Int64)                                           | NUMERIC                         |
 | INT64         | NONE                | optional      | none\tNullable(Int64)                                           | DEC                             |
@@ -4045,38 +4045,38 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | BOOLEAN       | NONE                | optional      | none\tNullable(Bool)                                            | CHAR_LARGE_OBJECT               |
 | BOOLEAN       | NONE                | optional      | none\tNullable(Bool)                                            | NCHAR_VARYING                   |
 | BOOLEAN       | NONE                | optional      | none\tNullable(Bool)                                            | BINARY_LARGE_OBJECT             |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | String                          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | GEOMETRY                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR_VARYING           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | BINARY_VARYING                  |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NCHAR_LARGE_OBJECT              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_VARYING      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_LARGE_OBJECT |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | CHARACTER_VARYING               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | LONGBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | TINYBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | CLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | BLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | MEDIUMTEXT                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | TEXT                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | VARCHAR2                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | CHARACTER_LARGE_OBJECT          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | LONGTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NVARCHAR                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | VARCHAR                         |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | CHAR_VARYING                    |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | MEDIUMBLOB                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NCHAR                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | VARBINARY                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | CHAR                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | TINYTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | BYTEA                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | CHARACTER                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | CHAR_LARGE_OBJECT               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | NCHAR_VARYING                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optional      | none\tNullable(FixedString(3))                                  | BINARY_LARGE_OBJECT             |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | String                          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | GEOMETRY                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR_VARYING           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | BINARY_VARYING                  |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NCHAR_LARGE_OBJECT              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_VARYING      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_LARGE_OBJECT |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | CHARACTER_VARYING               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | LONGBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | TINYBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | CLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | BLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | MEDIUMTEXT                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | TEXT                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | VARCHAR2                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | CHARACTER_LARGE_OBJECT          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | LONGTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NVARCHAR                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | VARCHAR                         |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | CHAR_VARYING                    |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | MEDIUMBLOB                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NCHAR                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | VARBINARY                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | CHAR                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | TINYTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | BYTEA                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | CHARACTER                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | CHAR_LARGE_OBJECT               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | NCHAR_VARYING                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optional      | none\tNullable(FixedString(3))                                  | BINARY_LARGE_OBJECT             |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | Int64                           |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | Int16                           |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | UInt256                         |
@@ -4127,7 +4127,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | CHAR                            |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | SMALLINT_UNSIGNED               |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | TIMESTAMP                       |
-| INT32         | NONE                | required      | none\tNullable(Int32)                                           | FIXED                           |
+| INT32         | NONE                | required      | none\tNullable(Int32)                                           | FIXED            |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | TINYTEXT                        |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | NUMERIC                         |
 | INT32         | NONE                | required      | none\tNullable(Int32)                                           | DEC                             |
@@ -4214,7 +4214,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | NONE                | required      | none\tNullable(Int64)                                           | CHAR                            |
 | INT64         | NONE                | required      | none\tNullable(Int64)                                           | SMALLINT_UNSIGNED               |
 | INT64         | NONE                | required      | none\tNullable(Int64)                                           | TIMESTAMP                       |
-| INT64         | NONE                | required      | none\tNullable(Int64)                                           | FIXED                           |
+| INT64         | NONE                | required      | none\tNullable(Int64)                                           | FIXED            |
 | INT64         | NONE                | required      | none\tNullable(Int64)                                           | TINYTEXT                        |
 | INT64         | NONE                | required      | none\tNullable(Int64)                                           | NUMERIC                         |
 | INT64         | NONE                | required      | none\tNullable(Int64)                                           | DEC                             |
@@ -4288,38 +4288,38 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | BOOLEAN       | NONE                | required      | none\tNullable(Bool)                                            | CHAR_LARGE_OBJECT               |
 | BOOLEAN       | NONE                | required      | none\tNullable(Bool)                                            | NCHAR_VARYING                   |
 | BOOLEAN       | NONE                | required      | none\tNullable(Bool)                                            | BINARY_LARGE_OBJECT             |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | String                          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | GEOMETRY                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR_VARYING           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | BINARY_VARYING                  |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NCHAR_LARGE_OBJECT              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_VARYING      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_LARGE_OBJECT |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | CHARACTER_VARYING               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | LONGBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | TINYBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | CLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | BLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | MEDIUMTEXT                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | TEXT                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | VARCHAR2                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | CHARACTER_LARGE_OBJECT          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | LONGTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NVARCHAR                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | VARCHAR                         |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | CHAR_VARYING                    |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | MEDIUMBLOB                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NCHAR                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | VARBINARY                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | CHAR                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | TINYTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | BYTEA                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | CHARACTER                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | CHAR_LARGE_OBJECT               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | NCHAR_VARYING                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | required      | none\tNullable(FixedString(3))                                  | BINARY_LARGE_OBJECT             |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | String                          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | GEOMETRY                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR_VARYING           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | BINARY_VARYING                  |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NCHAR_LARGE_OBJECT              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_VARYING      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER_LARGE_OBJECT |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHARACTER              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NATIONAL_CHAR                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | CHARACTER_VARYING               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | LONGBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | TINYBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | CLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | BLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | MEDIUMTEXT                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | TEXT                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | VARCHAR2                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | CHARACTER_LARGE_OBJECT          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | LONGTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NVARCHAR                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | VARCHAR                         |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | CHAR_VARYING                    |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | MEDIUMBLOB                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NCHAR                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | VARBINARY                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | CHAR                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | TINYTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | BYTEA                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | CHARACTER                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | CHAR_LARGE_OBJECT               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | NCHAR_VARYING                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | required      | none\tNullable(FixedString(3))                                  | BINARY_LARGE_OBJECT             |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | Int64                           |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | Int16                           |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | String                          |
@@ -4357,7 +4357,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | NCHAR                           |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | VARBINARY                       |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | CHAR                            |
-| INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | FIXED                           |
+| INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | FIXED            |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | TINYTEXT                        |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | NUMERIC                         |
 | INT32         | NONE                | repeated      | none\tArray(Nullable(Int32))                                    | DEC                             |
@@ -4455,7 +4455,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | CHAR                            |
 | INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | SMALLINT_UNSIGNED               |
 | INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | TIMESTAMP                       |
-| INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | FIXED                           |
+| INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | FIXED            |
 | INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | TINYTEXT                        |
 | INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | NUMERIC                         |
 | INT64         | NONE                | repeated      | none\tArray(Nullable(Int64))                                    | DEC                             |
@@ -4529,38 +4529,38 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | BOOLEAN       | NONE                | repeated      | none\tArray(Nullable(Bool))                                     | CHAR_LARGE_OBJECT               |
 | BOOLEAN       | NONE                | repeated      | none\tArray(Nullable(Bool))                                     | NCHAR_VARYING                   |
 | BOOLEAN       | NONE                | repeated      | none\tArray(Nullable(Bool))                                     | BINARY_LARGE_OBJECT             |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | String                          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | GEOMETRY                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHAR_VARYING           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BINARY_VARYING                  |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NCHAR_LARGE_OBJECT              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHARACTER_VARYING      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHARACTER_LARGE_OBJECT |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHARACTER              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHAR                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHARACTER_VARYING               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | LONGBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | TINYBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | MEDIUMTEXT                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | TEXT                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | VARCHAR2                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHARACTER_LARGE_OBJECT          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | LONGTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NVARCHAR                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | VARCHAR                         |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHAR_VARYING                    |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | MEDIUMBLOB                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NCHAR                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | VARBINARY                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHAR                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | TINYTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BYTEA                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHARACTER                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHAR_LARGE_OBJECT               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NCHAR_VARYING                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BINARY_LARGE_OBJECT             |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | String                          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | GEOMETRY                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHAR_VARYING           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BINARY_VARYING                  |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NCHAR_LARGE_OBJECT              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHARACTER_VARYING      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHARACTER_LARGE_OBJECT |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHARACTER              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NATIONAL_CHAR                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHARACTER_VARYING               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | LONGBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | TINYBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | MEDIUMTEXT                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | TEXT                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | VARCHAR2                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHARACTER_LARGE_OBJECT          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | LONGTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NVARCHAR                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | VARCHAR                         |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHAR_VARYING                    |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | MEDIUMBLOB                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NCHAR                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | VARBINARY                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHAR                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | TINYTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BYTEA                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHARACTER                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | CHAR_LARGE_OBJECT               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | NCHAR_VARYING                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeated      | none\tArray(Nullable(FixedString(3)))                           | BINARY_LARGE_OBJECT             |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | Int64                           |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | Int16                           |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | UInt256                         |
@@ -4611,7 +4611,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | CHAR                            |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | SMALLINT_UNSIGNED               |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | TIMESTAMP                       |
-| INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | FIXED                           |
+| INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | FIXED            |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | TINYTEXT                        |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | NUMERIC                         |
 | INT32         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | DEC                             |
@@ -4698,7 +4698,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | CHAR                            |
 | INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | SMALLINT_UNSIGNED               |
 | INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | TIMESTAMP                       |
-| INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | FIXED                           |
+| INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | FIXED            |
 | INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | TINYTEXT                        |
 | INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | NUMERIC                         |
 | INT64         | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | DEC                             |
@@ -4772,38 +4772,38 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | BOOLEAN       | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Bool)))                  | CHAR_LARGE_OBJECT               |
 | BOOLEAN       | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Bool)))                  | NCHAR_VARYING                   |
 | BOOLEAN       | NONE                | optionalGroup | none\tTuple(\\n    none Array(Nullable(Bool)))                  | BINARY_LARGE_OBJECT             |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | String                          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | GEOMETRY                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR_VARYING           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_VARYING                  |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_LARGE_OBJECT              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_VARYING      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_LARGE_OBJECT |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_VARYING               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMTEXT                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TEXT                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR2                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_LARGE_OBJECT          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NVARCHAR                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR                         |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_VARYING                    |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMBLOB                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARBINARY                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BYTEA                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_LARGE_OBJECT               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_VARYING                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_LARGE_OBJECT             |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | String                          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | GEOMETRY                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR_VARYING           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_VARYING                  |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_LARGE_OBJECT              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_VARYING      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_LARGE_OBJECT |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_VARYING               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMTEXT                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TEXT                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR2                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_LARGE_OBJECT          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NVARCHAR                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR                         |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_VARYING                    |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMBLOB                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARBINARY                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BYTEA                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_LARGE_OBJECT               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_VARYING                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | optionalGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_LARGE_OBJECT             |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | Int64                           |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | Int16                           |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | String                          |
@@ -4841,7 +4841,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | NCHAR                           |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | VARBINARY                       |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | CHAR                            |
-| INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | FIXED                           |
+| INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | FIXED            |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | TINYTEXT                        |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | NUMERIC                         |
 | INT32         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int32)))                 | DEC                             |
@@ -4927,7 +4927,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | NCHAR                           |
 | INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | VARBINARY                       |
 | INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | CHAR                            |
-| INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | FIXED                           |
+| INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | FIXED            |
 | INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | TINYTEXT                        |
 | INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | NUMERIC                         |
 | INT64         | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Int64)))                 | DEC                             |
@@ -5013,38 +5013,38 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | BOOLEAN       | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Bool)))                  | CHAR_LARGE_OBJECT               |
 | BOOLEAN       | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Bool)))                  | NCHAR_VARYING                   |
 | BOOLEAN       | NONE                | requiredGroup | none\tTuple(\\n    none Array(Nullable(Bool)))                  | BINARY_LARGE_OBJECT             |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | String                          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | GEOMETRY                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR_VARYING           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_VARYING                  |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_LARGE_OBJECT              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_VARYING      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_LARGE_OBJECT |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_VARYING               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMTEXT                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TEXT                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR2                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_LARGE_OBJECT          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NVARCHAR                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR                         |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_VARYING                    |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMBLOB                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARBINARY                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BYTEA                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_LARGE_OBJECT               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_VARYING                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_LARGE_OBJECT             |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | String                          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | GEOMETRY                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR_VARYING           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_VARYING                  |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_LARGE_OBJECT              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_VARYING      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER_LARGE_OBJECT |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHARACTER              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NATIONAL_CHAR                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_VARYING               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMTEXT                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TEXT                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR2                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER_LARGE_OBJECT          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | LONGTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NVARCHAR                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARCHAR                         |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_VARYING                    |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | MEDIUMBLOB                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | VARBINARY                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | TINYTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BYTEA                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHARACTER                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | CHAR_LARGE_OBJECT               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | NCHAR_VARYING                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | requiredGroup | none\tTuple(\\n    none Array(Nullable(FixedString(3))))        | BINARY_LARGE_OBJECT             |
 | INT32         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int32))))          | Int64                           |
 | INT32         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int32))))          | Int16                           |
 | INT32         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int32))))          | UInt256                         |
@@ -5180,7 +5180,7 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | CHAR                            |
 | INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | SMALLINT_UNSIGNED               |
 | INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | TIMESTAMP                       |
-| INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | FIXED                           |
+| INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | FIXED            |
 | INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | TINYTEXT                        |
 | INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | NUMERIC                         |
 | INT64         | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Int64))))          | DEC                             |
@@ -5254,35 +5254,35 @@ You can read more about the meaning of schema types in [the parquetify wiki](htt
 | BOOLEAN       | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Bool))))           | CHAR_LARGE_OBJECT               |
 | BOOLEAN       | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Bool))))           | NCHAR_VARYING                   |
 | BOOLEAN       | NONE                | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(Bool))))           | BINARY_LARGE_OBJECT             |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | String                          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | GEOMETRY                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHAR_VARYING           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BINARY_VARYING                  |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NCHAR_LARGE_OBJECT              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHARACTER_VARYING      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHARACTER_LARGE_OBJECT |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHARACTER              |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHAR                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHARACTER_VARYING               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | LONGBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | TINYBLOB                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BLOB                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | MEDIUMTEXT                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | TEXT                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | VARCHAR2                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHARACTER_LARGE_OBJECT          |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | LONGTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NVARCHAR                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | VARCHAR                         |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHAR_VARYING                    |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | MEDIUMBLOB                      |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NCHAR                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | VARBINARY                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHAR                            |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | TINYTEXT                        |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BYTEA                           |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHARACTER                       |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHAR_LARGE_OBJECT               |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NCHAR_VARYING                   |
-| FIXED         | LEN_BYTE_ARRAY_NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BINARY_LARGE_OBJECT             |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | String                          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | GEOMETRY                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHAR_VARYING           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BINARY_VARYING                  |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NCHAR_LARGE_OBJECT              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHARACTER_VARYING      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHARACTER_LARGE_OBJECT |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHARACTER              |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NATIONAL_CHAR                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHARACTER_VARYING               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | LONGBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | TINYBLOB                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BLOB                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | MEDIUMTEXT                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | TEXT                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | VARCHAR2                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHARACTER_LARGE_OBJECT          |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | LONGTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NVARCHAR                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | VARCHAR                         |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHAR_VARYING                    |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | MEDIUMBLOB                      |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NCHAR                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | VARBINARY                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHAR                            |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | TINYTEXT                        |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BYTEA                           |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHARACTER                       |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | CHAR_LARGE_OBJECT               |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | NCHAR_VARYING                   |
+| FIXED_LEN_BYTE_ARRAY         | NONE | repeatedGroup | none\tArray(Tuple(\\n    none Array(Nullable(FixedString(3))))) | BINARY_LARGE_OBJECT             |
