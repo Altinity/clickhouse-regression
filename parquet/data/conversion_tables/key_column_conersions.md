@@ -24,6 +24,8 @@ The key column type being 'String'.
 
 If the combination of `physical type`, `logical type`, and `file structure` is listed in the table, it means that the key column conversion was possible.
 
+You can read more about hte meaning of schema types in [the parquetify wiki](https://github.com/Altinity/parquet-regression/wiki/Schema-Types).
+
 | Physical Type | Logical Type        | Schema Type   | File Structure                                                  | Key Column Conversion           |
 |---------------|---------------------|---------------|-----------------------------------------------------------------|---------------------------------|
 | BINARY        | UTF8                | optional      | utf8\tNullable(String)                                          | String                          |
