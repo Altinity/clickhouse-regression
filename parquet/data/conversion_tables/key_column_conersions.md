@@ -18,13 +18,13 @@ The `Key Column Conversion` here means that we ran the query as follows:
 SELECT utf8_column FROM file(file.parquet, Parquet, 'utf8_column String')
 ```
 
-The key column type being 'String'.
+The key column type being `String` means that ClickHouse will interpret this column from the Parquet file as a `String` type.
 
 ## Table
 
 If the combination of `physical type`, `logical type`, and `file structure` is listed in the table, it means that the key column conversion was possible.
 
-You can read more about hte meaning of schema types in [the parquetify wiki](https://github.com/Altinity/parquet-regression/wiki/Schema-Types).
+You can read more about the meaning of schema types in [the parquetify wiki](https://github.com/Altinity/parquet-regression/wiki/Schema-Types).
 
 | Physical Type | Logical Type        | Schema Type   | File Structure                                                  | Key Column Conversion           |
 |---------------|---------------------|---------------|-----------------------------------------------------------------|---------------------------------|
