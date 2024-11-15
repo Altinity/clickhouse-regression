@@ -5,18 +5,20 @@ The following table lists the possible key column conversions for different parq
 For example,
 
 
-| Physical Type | Logical Type | Schema Type | File Structure | Key Column Conversion |
-|---------------|--------------|-------------|----------------|------------------------|
-| BINARY | UTF8 | optional | utf8\tNullable(String) | String |
+| Physical Type | Logical Type | Schema Type | File Structure         | Key Column Conversion |
+|---------------|--------------|-------------|------------------------|-----------------------|
+| BINARY        | UTF8         | optional    | utf8\tNullable(String) | String                |
 
-This line means that there was a file with physical type `BINARY` and logical type `UTF8`, and when the file was read, 
-with ClickHouse the structure was `utf8\tNullable(String)`, and the key column conversion was `String`.
+This line indicates that a Parquet file with a physical type of `BINARY`, a logical type of `UTF8`, and a schema type of 
+`optional` was read using ClickHouse. When processed, the structure was interpreted as `utf8\tNullable(String)`, and the key column was converted to `String`.
 
 The `Key Column Conversion` here means that we ran the query as follows:
 
 ```sql
 SELECT utf8_column FROM file(file.parquet, Parquet, 'utf8_column String')
 ```
+
+The key column type being 'String'.
 
 ## Table
 
