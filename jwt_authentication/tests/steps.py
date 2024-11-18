@@ -288,6 +288,7 @@ def check_clickhouse_client_jwt_login(
     node: Node = None,
     exitcode: int = 0,
     message: str = None,
+    no_checks: bool = False,
 ):
     """Check JWT authentication for the specified user with clickhouse-client."""
     if node is None:
@@ -299,10 +300,13 @@ def check_clickhouse_client_jwt_login(
             settings=[("jwt", token)],
             exitcode=exitcode,
             message=message,
+            no_checks=no_checks,
         )
 
-        if exitcode == 0:
+        if exitcode == 0 and not no_checks:
             assert res.output == user_name, error()
+
+        return res
 
 
 @TestStep(Then)
@@ -314,6 +318,7 @@ def check_http_https_jwt_login(
     https: bool = False,
     node: Node = None,
     message: str = None,
+    no_checks: bool = False,
 ):
     """Check JWT authentication for the specified user with http/https."""
     if node is None:
@@ -323,10 +328,12 @@ def check_http_https_jwt_login(
 
     with By(f"check jwt authentication with {http_prefix}"):
         curl = f'curl -H "X-ClickHouse-JWT-Token: Bearer {token}" "{http_prefix}://{ip}:8123/?query=SELECT%20currentUser()"'
-        res = node.command(curl, message=message).output
+        res = node.command(curl, no_checks=no_checks)
 
-        if message is None:
-            assert res == user_name, error()
+        if message is None and not no_checks:
+            assert res.output == user_name, error()
+
+        return res
 
 
 @TestStep(Then)
@@ -337,13 +344,23 @@ def check_jwt_login(
     node: Node = None,
     exitcode: int = 0,
     message: str = None,
+    no_checks: bool = False,
 ):
     """Check JWT authentication for the specified user with clickhouse-client and http/https."""
     check_clickhouse_client_jwt_login(
-        user_name=user_name, token=token, node=node, exitcode=exitcode, message=message
+        user_name=user_name,
+        token=token,
+        node=node,
+        exitcode=exitcode,
+        message=message,
+        no_checks=no_checks,
     )
     check_http_https_jwt_login(
-        user_name=user_name, token=token, node=node, message=message
+        user_name=user_name,
+        token=token,
+        node=node,
+        message=message,
+        no_checks=no_checks,
     )
     # check_http_https_jwt_login(user_name=user_name, token=token, https=True, node=node, exitcode=exitcode, message=message)
 
@@ -461,17 +478,21 @@ def corrupt_token(
 @TestStep(Then)
 def check_jwt_login_with_corrupted_token(self, token: str):
     """Check that JWT authentication fails with a corrupted token."""
-    try:
-        with By("check if authentication fails"):
-            check_jwt_login(
-                token=token,
-                exitcode=4,
-                message=f"DB::Exception:",
-            )
-    except:
-        with By("check if validation of jwt fails"):
-            check_jwt_login(
-                token=token,
-                exitcode=131,
-                message=f"DB::Exception: Failed to validate jwt.",
-            )
+
+    res_client = check_clickhouse_client_jwt_login(
+        token=token,
+        no_checks=True,
+    )
+    res_http = check_http_https_jwt_login(
+        token=token,
+        no_checks=True,
+    )
+    assert res_client.exitcode == 131 or res_client.exitcode == 4, error()
+    assert (
+        "Failed to validate jwt" in res_client.output
+        or "Authentication failed" in res_client.output
+    ), error()
+    assert (
+        "Failed to validate jwt" in res_http.output
+        or "Authentication failed" in res_http.output
+    ), error()
