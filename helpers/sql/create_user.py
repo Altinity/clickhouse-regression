@@ -390,7 +390,7 @@ class CreateUser(Query):
         password_bytes = password.encode("utf-8")
         salt = bcrypt.gensalt()
         hash_value = (
-            bcrypt.hashpw(password_bytes, salt).decode("utf-8").replace("$", "\$")
+            bcrypt.hashpw(password_bytes, salt).decode("utf-8").replace("$", r"\$")
         )
         if on_cluster:
             for node in current().context.nodes:
