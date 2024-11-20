@@ -585,7 +585,7 @@ def regression(
             flags=parallel,
         )
         Feature(
-            run=load("parquet.tests.bloom_filter", "feature"),
+            test=load("parquet.tests.bloom_filter", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,
