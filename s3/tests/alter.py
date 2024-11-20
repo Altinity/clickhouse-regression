@@ -15,6 +15,7 @@ from s3.tests.common import (
     temporary_bucket_path,
     s3_storage,
 )
+from s3.requirements import RQ_SRS_015_S3_Alter
 
 COLUMNS = "key UInt32, value1 String, value2 UInt8"
 
@@ -800,6 +801,7 @@ def columns(self):
 
 
 @TestFeature
+@Requirements(RQ_SRS_015_S3_Alter("1.0"))
 @Name("alter")
 def feature(self, uri, bucket_prefix):
     """Test ALTER commands with s3 disks"""
@@ -821,7 +823,7 @@ def feature(self, uri, bucket_prefix):
             extra_disks = {
                 "encrypted": {
                     "type": "encrypted",
-                    "disk": ("s3_cache"),
+                    "disk": "s3_cache",
                     "key": "uCApvDl3Ro0D0CcS",
                 }
             }
@@ -832,6 +834,7 @@ def feature(self, uri, bucket_prefix):
                 disks=extra_disks,
                 policies=extra_policies,
                 restart=True,
+                # Make sure config is loaded after the main disk config
                 config_file="z_encrypted_disk.xml",
             )
 
