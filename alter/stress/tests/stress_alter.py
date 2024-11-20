@@ -535,15 +535,6 @@ def full_disk(self):
         limit_disk_space=True,
     )
 
-
-@TestFeature
-def normal(self):
-    """Run stress scenarios."""
-
-    for scenario in loads(current_module(), Scenario):
-        Scenario(run=scenario, tags=["long", "combinatoric"])
-
-
 @TestFeature
 @Name("combinations")
 def feature(self):
@@ -568,4 +559,5 @@ def feature(self):
     with Given("I have S3 disks configured"):
         disk_config()
 
-    Feature(run=normal)
+    for scenario in loads(current_module(), Scenario):
+        Scenario(run=scenario, tags=["long", "combinatoric"])
