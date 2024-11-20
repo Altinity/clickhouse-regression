@@ -17,36 +17,37 @@
     * 4.1.7 [RQ.SRS-015.S3.DataParts](#rqsrs-015s3dataparts)
     * 4.1.8 [RQ.SRS-015.S3.Security.Encryption](#rqsrs-015s3securityencryption)
     * 4.1.9 [RQ.SRS-015.S3.RemoteHostFilter](#rqsrs-015s3remotehostfilter)
-    * 4.1.10 [Backup](#backup)
-      * 4.1.10.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
-      * 4.1.10.2 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
-      * 4.1.10.3 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
-      * 4.1.10.4 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
-      * 4.1.10.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
-      * 4.1.10.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
-      * 4.1.10.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
-      * 4.1.10.8 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
-    * 4.1.11 [Metadata](#metadata)
-      * 4.1.11.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
-      * 4.1.11.2 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
-      * 4.1.11.3 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
-    * 4.1.12 [Metadata Restore](#metadata-restore)
-      * 4.1.12.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
-      * 4.1.12.2 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
-      * 4.1.12.3 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
-      * 4.1.12.4 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
-      * 4.1.12.5 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
-      * 4.1.12.6 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
-      * 4.1.12.7 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
-      * 4.1.12.8 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
-      * 4.1.12.9 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
-    * 4.1.13 [RQ.SRS-015.S3.AWS](#rqsrs-015s3aws)
-    * 4.1.14 [RQ.SRS-015.S3.MinIO](#rqsrs-015s3minio)
-    * 4.1.15 [RQ.SRS-015.S3.GCS](#rqsrs-015s3gcs)
-    * 4.1.16 [Automatic Reconnects](#automatic-reconnects)
-      * 4.1.16.1 [RQ.SRS-015.S3.AutomaticReconnects.GCS](#rqsrs-015s3automaticreconnectsgcs)
-      * 4.1.16.2 [RQ.SRS-015.S3.AutomaticReconnects.AWS](#rqsrs-015s3automaticreconnectsaws)
-      * 4.1.16.3 [RQ.SRS-015.S3.AutomaticReconnects.MinIO](#rqsrs-015s3automaticreconnectsminio)
+    * 4.1.10 [RQ.SRS-015.S3.Alter](#rqsrs-015s3alter)
+    * 4.1.11 [Backup](#backup)
+      * 4.1.11.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
+      * 4.1.11.2 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
+      * 4.1.11.3 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
+      * 4.1.11.4 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
+      * 4.1.11.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
+      * 4.1.11.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
+      * 4.1.11.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
+      * 4.1.11.8 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
+    * 4.1.12 [Metadata](#metadata)
+      * 4.1.12.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
+      * 4.1.12.2 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
+      * 4.1.12.3 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
+    * 4.1.13 [Metadata Restore](#metadata-restore)
+      * 4.1.13.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
+      * 4.1.13.2 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
+      * 4.1.13.3 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
+      * 4.1.13.4 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
+      * 4.1.13.5 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
+      * 4.1.13.6 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
+      * 4.1.13.7 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
+      * 4.1.13.8 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
+      * 4.1.13.9 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
+    * 4.1.14 [RQ.SRS-015.S3.AWS](#rqsrs-015s3aws)
+    * 4.1.15 [RQ.SRS-015.S3.MinIO](#rqsrs-015s3minio)
+    * 4.1.16 [RQ.SRS-015.S3.GCS](#rqsrs-015s3gcs)
+    * 4.1.17 [Automatic Reconnects](#automatic-reconnects)
+      * 4.1.17.1 [RQ.SRS-015.S3.AutomaticReconnects.GCS](#rqsrs-015s3automaticreconnectsgcs)
+      * 4.1.17.2 [RQ.SRS-015.S3.AutomaticReconnects.AWS](#rqsrs-015s3automaticreconnectsaws)
+      * 4.1.17.3 [RQ.SRS-015.S3.AutomaticReconnects.MinIO](#rqsrs-015s3automaticreconnectsminio)
   * 4.2 [Users](#users)
     * 4.2.1 [RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCache](#rqsrs-015s3userconfigurationcache228enablefilesystemcache)
     * 4.2.2 [RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCacheOnWriteOperations](#rqsrs-015s3userconfigurationcache228enablefilesystemcacheonwriteoperations)
@@ -266,6 +267,14 @@ addresses. The remote host filter configuration SHALL be similar to the followin
     </remote_url_allow_hosts>
 </yandex>
 ```
+
+#### RQ.SRS-015.S3.Alter
+version: 1.0
+
+[ClickHouse] SHALL support running `ALTER ...` queries on [S3] storage.
+[ClickHouse] SHALL reproduce these queries across replicas without data loss.
+[ClickHouse] SHALL support the above when configured with one or more of disk cache,
+disk encryption and zero copy replication.
 
 #### Backup
 
