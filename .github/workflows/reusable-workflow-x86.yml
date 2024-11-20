@@ -646,37 +646,52 @@ jobs:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
+  # example:
+  #   runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
+  #   timeout-minutes: 180
+  #   env:
+  #     SUITE: example
+  #   if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
+  #   steps:
+  #     - name: ⤵️ Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ inputs.ref }}
+
+  #     - name: 🛠️ Setup
+  #       run: .github/setup.sh
+
+  #     - name: 🧪 Run ${{ env.SUITE }} suite
+  #       run: python3
+  #             -u ${{ env.SUITE }}/regression.py
+  #             ${{ env.args }} || EXITCODE=$?; 
+  #             .github/add_link_to_logs.sh; 
+  #             exit $EXITCODE
+
+  #     - name: 📝 Create and upload logs
+  #       if: always()
+  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
+  #         path: ${{ env.artifact_paths}}
+  
   example:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: example
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    with:
+      suite: example
+      artifact_name: example-${{ inputs.artifact_name }}-artifacts
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+    secrets: inherit
 
   extended_precision_data_types:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
