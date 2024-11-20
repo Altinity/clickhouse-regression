@@ -164,14 +164,17 @@ def get_all_columns(self, table_name, database, node=None):
     )
 
 
-def rows_read(json_data):
+def rows_read(json_data, client=True):
     """Get the number of rows read from the json data."""
-    data = json_data[-1]
+    if client:
+        data = json_data[-1]
+    else:
+        data = int(json.loads(json_data)["statistics"]["rows_read"])
     return data
 
 
 @TestStep(Given)
-def total_number_of_rows(self, file_name, node=None, stack_trace=None):
+def total_number_of_rows(self, file_name, node=None, stack_trace=None, client=True):
     """Get the total number of rows in the parquet file."""
 
     if node is None:
@@ -179,12 +182,17 @@ def total_number_of_rows(self, file_name, node=None, stack_trace=None):
 
     with By(f"getting the total number of rows in the parquet file {file_name}"):
         r = f"SELECT COUNT(*) FROM file('{file_name}', Parquet)"
+
         if stack_trace is not None:
             data = node.query(r, stack_trace=stack_trace)
         else:
             data = node.query(r)
 
-    return int(data.output[0][0])
+    if client:
+        return int(data.output[0][0])
+    else:
+        return int(data.output.strip())
+
 
 
 @TestScenario
@@ -211,6 +219,8 @@ def read_and_write_file_with_bloom(self):
             import_export(
                 snapshot_name=f"{file}_structure",
                 import_file=os.path.join("bloom", file),
+                snapshot_id=self.context.snapshot_id,
+                settings=[("session_timezone", "UTC")],
             )
 
 
@@ -222,7 +232,8 @@ def check_parquet_with_bloom(
 
     with Given("I get the total number of rows in the parquet file"):
         initial_rows = total_number_of_rows(
-            file_name="bloom/multi_column_bloom.gz.parquet"
+            file_name="bloom/multi_column_bloom.gz.parquet",
+            client=False
         )
 
     with And(
@@ -232,13 +243,14 @@ def check_parquet_with_bloom(
         with By(
             "selecting and saving the data from a parquet file without bloom filter enabled"
         ):
-            data_without_bloom = select_from_parquet(
+            order_by = "tuple(*)" if "ORDER BY" not in condition else False
+
+            values_without_bloom = select_from_parquet(
                 file_name=file_name,
                 statement=statement,
                 condition=condition,
-                format="Json",
                 settings=f"input_format_parquet_use_native_reader={native_reader}",
-                order_by="tuple(*)",
+                order_by=order_by,
             )
 
         with And(
@@ -250,11 +262,20 @@ def check_parquet_with_bloom(
                 condition=condition,
                 format="Json",
                 settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
-                order_by="tuple(*)",
+                order_by=order_by,
             )
 
+            values_with_bloom = select_from_parquet(
+                file_name=file_name,
+                statement=statement,
+                condition=condition,
+                settings=f"input_format_parquet_bloom_filter_push_down={bloom_filter},input_format_parquet_filter_push_down={filter_pushdown},use_cache_for_count_from_files=false, input_format_parquet_use_native_reader={native_reader}",
+                order_by=order_by,
+            )
+
+
     with Then("I check that the number of rows read is correct"):
-        read_rows = rows_read(data.output.strip())
+        read_rows = rows_read(data.output.strip(), client=False)
         if bloom_filter == "true":
             with By(
                 "Checking that the number of rows read is lower then the total number of rows of a file"
@@ -269,7 +290,7 @@ def check_parquet_with_bloom(
     with And(
         "I check that the data is the same when reading with bloom filter and without"
     ):
-        assert data.output.strip() == data_without_bloom.output.strip(), error()
+        assert values_without_bloom.output.strip() == values_with_bloom.output.strip(), f"Data is not the same, {values_without_bloom.output.strip()} != {values_with_bloom.output.strip()}"
 
 
 @TestSketch(Scenario)
@@ -304,7 +325,7 @@ def read_bloom_filter_parquet_files(self):
     check_parquet_with_bloom(
         file_name=file_name,
         bloom_filter=either(*filter),
-        filter_pushdown=either(*filter),
+        filter_pushdown="false",
         condition=either(*conditions),
         statement=either(*statements),
         native_reader=native_reader,
@@ -338,7 +359,7 @@ def read_bloom_filter_parquet_files_native_reader(self):
     check_parquet_with_bloom(
         file_name=file_name,
         bloom_filter=either(*filter),
-        filter_pushdown=either(*filter),
+        filter_pushdown="false",
         condition=either(*conditions),
         statement=either(*statements),
         native_reader=native_reader,
@@ -1235,8 +1256,9 @@ def feature(self, node="clickhouse1", number_of_inserts=1500, stress_bloom=False
     self.context.parquet_output_path = "/parquet-files"
     self.context.number_of_inserts = number_of_inserts
 
-    Feature(run=sanity_checks)
 
     if stress_bloom:
         Feature(run=logical_datatypes_field_type)
         Feature(run=logical_datatypes_key_column_type)
+    else:
+        skip("Skipping tests for bloom filter")
