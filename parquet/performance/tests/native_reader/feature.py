@@ -330,7 +330,8 @@ def hits_dataset(self, repeats):
         json_file_path = os.path.join(
             current_dir(),
             "..",
-            ".." "results",
+            "..",
+            "results",
             "native_reader",
             "hits",
             f"{clickhouse_version}",
