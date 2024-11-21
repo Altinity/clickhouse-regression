@@ -211,10 +211,10 @@ def create_hits_dataset(self, table_name):
 
 
 @TestStep(Given)
-def insert_data_hits(self, table_name, first_number=1, last_number=99, threads=20, max_memory_usage=0):
+def insert_data_hits(self, table_name, first_number=1, last_number=99, threads=10, max_memory_usage=0):
     query = (
         f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com"
-        f"/hits_compatible/athena_partitioned/hits_{{{first_number}..{last_number}}}.parquet') SETTINGS max_insert_threads = {threads}, max_memory_usage={max_memory_usage};;"
+        f"/hits_compatible/athena_partitioned/hits_{{{first_number}..{last_number}}}.parquet') SETTINGS max_insert_threads = {threads}, max_memory_usage={max_memory_usage};"
     )
     return query
 
@@ -263,7 +263,7 @@ def get_clickhouse_version(self):
 
 
 @TestStep(Given)
-def create_parquet_file(self, table_name, parquet_file, threads=20, max_memory_usage=0):
+def create_parquet_file(self, table_name, parquet_file, threads=10, max_memory_usage=0):
     insert_into_parquet = (
         f"SELECT * FROM {table_name} INTO OUTFILE '{parquet_file}' FORMAT Parquet SETTINGS "
         f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage};"
