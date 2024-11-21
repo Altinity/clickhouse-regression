@@ -211,7 +211,7 @@ def create_hits_dataset(self, table_name):
 
 
 @TestStep(Given)
-def insert_data_hits(self, table_name, first_number=1, last_number=10):
+def insert_data_hits(self, table_name, first_number=1, last_number=99):
     query = (
         f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com"
         f"/hits_compatible/athena_partitioned/hits_{{{first_number}..{last_number}}}.parquet');"
