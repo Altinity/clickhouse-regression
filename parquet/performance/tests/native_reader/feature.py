@@ -242,12 +242,16 @@ def clickhouse_local(self, query, statistics=False):
         capture_output=True,
     )
 
+    # Assert that the exit code is 0
+    assert result.returncode == 0, f"ClickHouse local query failed with exit code {result.returncode}. Error: {result.stderr}"
+
     note(f"query: {result.stdout}")
 
     if not statistics:
         return result.stdout
     else:
         return result.stdout, get_memory_usage(result)
+
 
 
 @TestStep(Given)
