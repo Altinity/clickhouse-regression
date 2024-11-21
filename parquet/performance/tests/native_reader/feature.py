@@ -252,7 +252,10 @@ def clickhouse_local(self, query, statistics=False):
     else:
         return result.stdout, get_memory_usage(result)
 
-
+@TestStep(Given)
+def download_hits_dataset(self, filename):
+    """Download the hits dataset."""
+    subprocess.run(f"wget -O {filename} https://datasets.clickhouse.com/hits_compatible/hits.parquet", shell=True)
 
 @TestStep(Given)
 def get_clickhouse_version(self):
@@ -275,21 +278,22 @@ def create_parquet_file(self, table_name, parquet_file, threads=10, max_memory_u
 @TestScenario
 def hits_dataset(self, repeats):
     """Check performance of ClickHouse parquet native reader using the hits dataset."""
-    table_name = f"hits_{getuid()}"
+    file_name = f"hits_{getuid()}.parquet"
     results = {"native_reader": {}, "regular_reader": {}}
     with Given("I create a parquet file with the hits dataset"):
-        clickhouse_local(
-            query=create_hits_dataset(table_name=table_name)
-            + ";"
-            + insert_data_hits(table_name=table_name)
-            + create_parquet_file(
-                table_name=table_name, parquet_file=f"{table_name}.parquet"
-            )
-        )
+        # clickhouse_local(
+        #     query=create_hits_dataset(table_name=table_name)
+        #     + ";"
+        #     + insert_data_hits(table_name=table_name)
+        #     + create_parquet_file(
+        #         table_name=table_name, parquet_file=f"{table_name}.parquet"
+        #     )
+        # )
+        download_hits_dataset(filename=file_name)
 
     with When("I run queries against the parquet file with native parquet reader"):
         queries_with_native_reader = hits_queries(
-            file_name=f"{table_name}.parquet", native_reader=True
+            file_name=f"{file_name}", native_reader=True
         )
 
         for query in queries_with_native_reader:
@@ -310,7 +314,7 @@ def hits_dataset(self, repeats):
 
     with And("I run queries against the parquet file without native parquet reader"):
         queries_without_native_reader = hits_queries(
-            file_name=f"{table_name}.parquet", native_reader=False
+            file_name=f"{file_name}", native_reader=False
         )
 
         for query in queries_without_native_reader:
