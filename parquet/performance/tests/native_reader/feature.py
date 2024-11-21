@@ -98,7 +98,7 @@ def hits_queries(file_name, native_reader=False):
 @TestStep(Given)
 def create_hits_dataset(self, table_name):
     query = f"""
-            CREATE TABLE hits
+            CREATE TABLE {table_name}
         (
             WatchID BIGINT NOT NULL,
             JavaEnable SMALLINT NOT NULL,
@@ -243,7 +243,7 @@ def clickhouse_local(self, query, statistics=False):
     )
 
     # Assert that the exit code is 0
-    assert result.returncode == 0, f"ClickHouse local query failed with exit code {result.returncode}. Error: {result.stderr}"
+    assert result.returncode == 0, f"ClickHouse local {query} failed with exit code {result.returncode}. Error: {result.stderr}"
 
     note(f"query: {result.stdout}")
 
