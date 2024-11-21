@@ -15,6 +15,6 @@ def feature(self, node="clickhouse1"):
     Feature(
         run=load(
             "jwt_authentication.tests.static_key.combinatorial_test",
-            "jwt_authentication",
+            "jwt_authentication_combinatorics",
         )
     )
