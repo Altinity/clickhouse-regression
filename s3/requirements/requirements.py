@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240703.1144231.
+# document by TestFlows v2.0.240813.1212956.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -190,6 +190,25 @@ RQ_SRS_015_S3_RemoteHostFilter = Requirement(
     num="4.1.9",
 )
 
+RQ_SRS_015_S3_Alter = Requirement(
+    name="RQ.SRS-015.S3.Alter",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support running `ALTER ...` queries on [S3] storage.\n"
+        "[ClickHouse] SHALL reproduce these queries across replicas without data loss.\n"
+        "[ClickHouse] SHALL support the above when configured with one or more of disk cache,\n"
+        "disk encryption and zero copy replication.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.1.10",
+)
+
 RQ_SRS_015_S3_Backup_MinIOBackup = Requirement(
     name="RQ.SRS-015.S3.Backup.MinIOBackup",
     version="1.0",
@@ -203,7 +222,7 @@ RQ_SRS_015_S3_Backup_MinIOBackup = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.1",
+    num="4.1.11.1",
 )
 
 RQ_SRS_015_S3_Backup_AWSS3Backup = Requirement(
@@ -219,7 +238,7 @@ RQ_SRS_015_S3_Backup_AWSS3Backup = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.2",
+    num="4.1.11.2",
 )
 
 RQ_SRS_015_S3_Backup_GCSBackup = Requirement(
@@ -235,7 +254,7 @@ RQ_SRS_015_S3_Backup_GCSBackup = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.3",
+    num="4.1.11.3",
 )
 
 RQ_SRS_015_S3_Backup_StoragePolicies = Requirement(
@@ -255,7 +274,7 @@ RQ_SRS_015_S3_Backup_StoragePolicies = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.4",
+    num="4.1.11.4",
 )
 
 RQ_SRS_015_S3_Backup_AlterFreeze = Requirement(
@@ -272,7 +291,7 @@ RQ_SRS_015_S3_Backup_AlterFreeze = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.5",
+    num="4.1.11.5",
 )
 
 RQ_SRS_015_S3_Backup_AlterDetach = Requirement(
@@ -288,7 +307,7 @@ RQ_SRS_015_S3_Backup_AlterDetach = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.6",
+    num="4.1.11.6",
 )
 
 RQ_SRS_015_S3_Backup_AlterAttach = Requirement(
@@ -305,7 +324,7 @@ RQ_SRS_015_S3_Backup_AlterAttach = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.7",
+    num="4.1.11.7",
 )
 
 RQ_SRS_015_S3_Backup_Cleanup = Requirement(
@@ -324,7 +343,7 @@ RQ_SRS_015_S3_Backup_Cleanup = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.10.8",
+    num="4.1.11.8",
 )
 
 RQ_SRS_015_S3_Metadata = Requirement(
@@ -347,7 +366,7 @@ RQ_SRS_015_S3_Metadata = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.11.1",
+    num="4.1.12.1",
 )
 
 RQ_SRS_015_S3_Metadata_Revisions = Requirement(
@@ -366,7 +385,7 @@ RQ_SRS_015_S3_Metadata_Revisions = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.11.2",
+    num="4.1.12.2",
 )
 
 RQ_SRS_015_S3_Metadata_BadBackupNumber = Requirement(
@@ -379,7 +398,7 @@ RQ_SRS_015_S3_Metadata_BadBackupNumber = Requirement(
     description=("[ClickHouse] SHALL\n" "\n"),
     link=None,
     level=4,
-    num="4.1.11.3",
+    num="4.1.12.3",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_RestoreFile = Requirement(
@@ -397,7 +416,7 @@ RQ_SRS_0_5_S3_MetadataRestore_RestoreFile = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.1",
+    num="4.1.13.1",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_BadRestoreFile = Requirement(
@@ -415,7 +434,7 @@ RQ_SRS_0_5_S3_MetadataRestore_BadRestoreFile = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.2",
+    num="4.1.13.2",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_HugeRestoreFile = Requirement(
@@ -433,7 +452,7 @@ RQ_SRS_0_5_S3_MetadataRestore_HugeRestoreFile = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.3",
+    num="4.1.13.3",
 )
 
 RQ_SRS_015_S3_MetadataRestore_NoLocalMetadata = Requirement(
@@ -451,7 +470,7 @@ RQ_SRS_015_S3_MetadataRestore_NoLocalMetadata = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.4",
+    num="4.1.13.4",
 )
 
 RQ_SRS_015_S3_MetadataRestore_BucketPath = Requirement(
@@ -474,7 +493,7 @@ RQ_SRS_015_S3_MetadataRestore_BucketPath = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.5",
+    num="4.1.13.5",
 )
 
 RQ_SRS_015_S3_MetadataRestore_RevisionRestore = Requirement(
@@ -496,7 +515,7 @@ RQ_SRS_015_S3_MetadataRestore_RevisionRestore = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.6",
+    num="4.1.13.6",
 )
 
 RQ_SRS_015_S3_MetadataRestore_Mutations = Requirement(
@@ -512,7 +531,7 @@ RQ_SRS_015_S3_MetadataRestore_Mutations = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.7",
+    num="4.1.13.7",
 )
 
 RQ_SRS_015_S3_MetadataRestore_ParallelMutations = Requirement(
@@ -529,7 +548,7 @@ RQ_SRS_015_S3_MetadataRestore_ParallelMutations = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.8",
+    num="4.1.13.8",
 )
 
 RQ_SRS_015_S3_MetadataRestore_Detached = Requirement(
@@ -551,7 +570,7 @@ RQ_SRS_015_S3_MetadataRestore_Detached = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.12.9",
+    num="4.1.13.9",
 )
 
 RQ_SRS_015_S3_AWS = Requirement(
@@ -566,7 +585,7 @@ RQ_SRS_015_S3_AWS = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.13",
+    num="4.1.14",
 )
 
 RQ_SRS_015_S3_MinIO = Requirement(
@@ -581,7 +600,7 @@ RQ_SRS_015_S3_MinIO = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.14",
+    num="4.1.15",
 )
 
 RQ_SRS_015_S3_GCS = Requirement(
@@ -597,7 +616,7 @@ RQ_SRS_015_S3_GCS = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.15",
+    num="4.1.16",
 )
 
 RQ_SRS_015_S3_AutomaticReconnects_GCS = Requirement(
@@ -613,7 +632,7 @@ RQ_SRS_015_S3_AutomaticReconnects_GCS = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.16.1",
+    num="4.1.17.1",
 )
 
 RQ_SRS_015_S3_AutomaticReconnects_AWS = Requirement(
@@ -629,7 +648,7 @@ RQ_SRS_015_S3_AutomaticReconnects_AWS = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.16.2",
+    num="4.1.17.2",
 )
 
 RQ_SRS_015_S3_AutomaticReconnects_MinIO = Requirement(
@@ -645,7 +664,7 @@ RQ_SRS_015_S3_AutomaticReconnects_MinIO = Requirement(
     ),
     link=None,
     level=4,
-    num="4.1.16.3",
+    num="4.1.17.3",
 )
 
 RQ_SRS_015_S3_User_Configuration_Cache_22_8_EnableFilesystemCache = Requirement(
@@ -2535,61 +2554,62 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         Heading(name="RQ.SRS-015.S3.DataParts", level=3, num="4.1.7"),
         Heading(name="RQ.SRS-015.S3.Security.Encryption", level=3, num="4.1.8"),
         Heading(name="RQ.SRS-015.S3.RemoteHostFilter", level=3, num="4.1.9"),
-        Heading(name="Backup", level=3, num="4.1.10"),
-        Heading(name="RQ.SRS-015.S3.Backup.MinIOBackup", level=4, num="4.1.10.1"),
-        Heading(name="RQ.SRS-015.S3.Backup.AWSS3Backup", level=4, num="4.1.10.2"),
-        Heading(name="RQ.SRS-015.S3.Backup.GCSBackup", level=4, num="4.1.10.3"),
-        Heading(name="RQ.SRS-015.S3.Backup.StoragePolicies", level=4, num="4.1.10.4"),
-        Heading(name="RQ.SRS-015.S3.Backup.AlterFreeze", level=4, num="4.1.10.5"),
-        Heading(name="RQ.SRS-015.S3.Backup.AlterDetach", level=4, num="4.1.10.6"),
-        Heading(name="RQ.SRS-015.S3.Backup.AlterAttach", level=4, num="4.1.10.7"),
-        Heading(name="RQ.SRS-015.S3.Backup.Cleanup", level=4, num="4.1.10.8"),
-        Heading(name="Metadata", level=3, num="4.1.11"),
-        Heading(name="RQ.SRS-015.S3.Metadata", level=4, num="4.1.11.1"),
-        Heading(name="RQ.SRS-015.S3.Metadata.Revisions", level=4, num="4.1.11.2"),
-        Heading(name="RQ.SRS-015.S3.Metadata.BadBackupNumber", level=4, num="4.1.11.3"),
-        Heading(name="Metadata Restore", level=3, num="4.1.12"),
+        Heading(name="RQ.SRS-015.S3.Alter", level=3, num="4.1.10"),
+        Heading(name="Backup", level=3, num="4.1.11"),
+        Heading(name="RQ.SRS-015.S3.Backup.MinIOBackup", level=4, num="4.1.11.1"),
+        Heading(name="RQ.SRS-015.S3.Backup.AWSS3Backup", level=4, num="4.1.11.2"),
+        Heading(name="RQ.SRS-015.S3.Backup.GCSBackup", level=4, num="4.1.11.3"),
+        Heading(name="RQ.SRS-015.S3.Backup.StoragePolicies", level=4, num="4.1.11.4"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterFreeze", level=4, num="4.1.11.5"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterDetach", level=4, num="4.1.11.6"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterAttach", level=4, num="4.1.11.7"),
+        Heading(name="RQ.SRS-015.S3.Backup.Cleanup", level=4, num="4.1.11.8"),
+        Heading(name="Metadata", level=3, num="4.1.12"),
+        Heading(name="RQ.SRS-015.S3.Metadata", level=4, num="4.1.12.1"),
+        Heading(name="RQ.SRS-015.S3.Metadata.Revisions", level=4, num="4.1.12.2"),
+        Heading(name="RQ.SRS-015.S3.Metadata.BadBackupNumber", level=4, num="4.1.12.3"),
+        Heading(name="Metadata Restore", level=3, num="4.1.13"),
         Heading(
-            name="RQ.SRS-0.5.S3.MetadataRestore.RestoreFile", level=4, num="4.1.12.1"
+            name="RQ.SRS-0.5.S3.MetadataRestore.RestoreFile", level=4, num="4.1.13.1"
         ),
         Heading(
-            name="RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile", level=4, num="4.1.12.2"
+            name="RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile", level=4, num="4.1.13.2"
         ),
         Heading(
             name="RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile",
             level=4,
-            num="4.1.12.3",
+            num="4.1.13.3",
         ),
         Heading(
             name="RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata",
             level=4,
-            num="4.1.12.4",
+            num="4.1.13.4",
         ),
         Heading(
-            name="RQ.SRS-015.S3.MetadataRestore.BucketPath", level=4, num="4.1.12.5"
+            name="RQ.SRS-015.S3.MetadataRestore.BucketPath", level=4, num="4.1.13.5"
         ),
         Heading(
             name="RQ.SRS-015.S3.MetadataRestore.RevisionRestore",
             level=4,
-            num="4.1.12.6",
+            num="4.1.13.6",
         ),
         Heading(
-            name="RQ.SRS-015.S3.MetadataRestore.Mutations", level=4, num="4.1.12.7"
+            name="RQ.SRS-015.S3.MetadataRestore.Mutations", level=4, num="4.1.13.7"
         ),
         Heading(
             name="RQ.SRS-015.S3.MetadataRestore.ParallelMutations",
             level=4,
-            num="4.1.12.8",
+            num="4.1.13.8",
         ),
-        Heading(name="RQ.SRS-015.S3.MetadataRestore.Detached", level=4, num="4.1.12.9"),
-        Heading(name="RQ.SRS-015.S3.AWS", level=3, num="4.1.13"),
-        Heading(name="RQ.SRS-015.S3.MinIO", level=3, num="4.1.14"),
-        Heading(name="RQ.SRS-015.S3.GCS", level=3, num="4.1.15"),
-        Heading(name="Automatic Reconnects", level=3, num="4.1.16"),
-        Heading(name="RQ.SRS-015.S3.AutomaticReconnects.GCS", level=4, num="4.1.16.1"),
-        Heading(name="RQ.SRS-015.S3.AutomaticReconnects.AWS", level=4, num="4.1.16.2"),
+        Heading(name="RQ.SRS-015.S3.MetadataRestore.Detached", level=4, num="4.1.13.9"),
+        Heading(name="RQ.SRS-015.S3.AWS", level=3, num="4.1.14"),
+        Heading(name="RQ.SRS-015.S3.MinIO", level=3, num="4.1.15"),
+        Heading(name="RQ.SRS-015.S3.GCS", level=3, num="4.1.16"),
+        Heading(name="Automatic Reconnects", level=3, num="4.1.17"),
+        Heading(name="RQ.SRS-015.S3.AutomaticReconnects.GCS", level=4, num="4.1.17.1"),
+        Heading(name="RQ.SRS-015.S3.AutomaticReconnects.AWS", level=4, num="4.1.17.2"),
         Heading(
-            name="RQ.SRS-015.S3.AutomaticReconnects.MinIO", level=4, num="4.1.16.3"
+            name="RQ.SRS-015.S3.AutomaticReconnects.MinIO", level=4, num="4.1.17.3"
         ),
         Heading(name="Users", level=2, num="4.2"),
         Heading(
@@ -2897,6 +2917,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_DataParts,
         RQ_SRS_015_S3_Security_Encryption,
         RQ_SRS_015_S3_RemoteHostFilter,
+        RQ_SRS_015_S3_Alter,
         RQ_SRS_015_S3_Backup_MinIOBackup,
         RQ_SRS_015_S3_Backup_AWSS3Backup,
         RQ_SRS_015_S3_Backup_GCSBackup,
@@ -3036,36 +3057,37 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
     * 4.1.7 [RQ.SRS-015.S3.DataParts](#rqsrs-015s3dataparts)
     * 4.1.8 [RQ.SRS-015.S3.Security.Encryption](#rqsrs-015s3securityencryption)
     * 4.1.9 [RQ.SRS-015.S3.RemoteHostFilter](#rqsrs-015s3remotehostfilter)
-    * 4.1.10 [Backup](#backup)
-      * 4.1.10.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
-      * 4.1.10.2 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
-      * 4.1.10.3 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
-      * 4.1.10.4 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
-      * 4.1.10.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
-      * 4.1.10.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
-      * 4.1.10.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
-      * 4.1.10.8 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
-    * 4.1.11 [Metadata](#metadata)
-      * 4.1.11.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
-      * 4.1.11.2 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
-      * 4.1.11.3 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
-    * 4.1.12 [Metadata Restore](#metadata-restore)
-      * 4.1.12.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
-      * 4.1.12.2 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
-      * 4.1.12.3 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
-      * 4.1.12.4 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
-      * 4.1.12.5 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
-      * 4.1.12.6 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
-      * 4.1.12.7 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
-      * 4.1.12.8 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
-      * 4.1.12.9 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
-    * 4.1.13 [RQ.SRS-015.S3.AWS](#rqsrs-015s3aws)
-    * 4.1.14 [RQ.SRS-015.S3.MinIO](#rqsrs-015s3minio)
-    * 4.1.15 [RQ.SRS-015.S3.GCS](#rqsrs-015s3gcs)
-    * 4.1.16 [Automatic Reconnects](#automatic-reconnects)
-      * 4.1.16.1 [RQ.SRS-015.S3.AutomaticReconnects.GCS](#rqsrs-015s3automaticreconnectsgcs)
-      * 4.1.16.2 [RQ.SRS-015.S3.AutomaticReconnects.AWS](#rqsrs-015s3automaticreconnectsaws)
-      * 4.1.16.3 [RQ.SRS-015.S3.AutomaticReconnects.MinIO](#rqsrs-015s3automaticreconnectsminio)
+    * 4.1.10 [RQ.SRS-015.S3.Alter](#rqsrs-015s3alter)
+    * 4.1.11 [Backup](#backup)
+      * 4.1.11.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
+      * 4.1.11.2 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
+      * 4.1.11.3 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
+      * 4.1.11.4 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
+      * 4.1.11.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
+      * 4.1.11.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
+      * 4.1.11.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
+      * 4.1.11.8 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
+    * 4.1.12 [Metadata](#metadata)
+      * 4.1.12.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
+      * 4.1.12.2 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
+      * 4.1.12.3 [RQ.SRS-015.S3.Metadata.BadBackupNumber](#rqsrs-015s3metadatabadbackupnumber)
+    * 4.1.13 [Metadata Restore](#metadata-restore)
+      * 4.1.13.1 [RQ.SRS-0.5.S3.MetadataRestore.RestoreFile](#rqsrs-05s3metadatarestorerestorefile)
+      * 4.1.13.2 [RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile](#rqsrs-05s3metadatarestorebadrestorefile)
+      * 4.1.13.3 [RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile](#rqsrs-05s3metadatarestorehugerestorefile)
+      * 4.1.13.4 [RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata](#rqsrs-015s3metadatarestorenolocalmetadata)
+      * 4.1.13.5 [RQ.SRS-015.S3.MetadataRestore.BucketPath](#rqsrs-015s3metadatarestorebucketpath)
+      * 4.1.13.6 [RQ.SRS-015.S3.MetadataRestore.RevisionRestore](#rqsrs-015s3metadatarestorerevisionrestore)
+      * 4.1.13.7 [RQ.SRS-015.S3.MetadataRestore.Mutations](#rqsrs-015s3metadatarestoremutations)
+      * 4.1.13.8 [RQ.SRS-015.S3.MetadataRestore.ParallelMutations](#rqsrs-015s3metadatarestoreparallelmutations)
+      * 4.1.13.9 [RQ.SRS-015.S3.MetadataRestore.Detached](#rqsrs-015s3metadatarestoredetached)
+    * 4.1.14 [RQ.SRS-015.S3.AWS](#rqsrs-015s3aws)
+    * 4.1.15 [RQ.SRS-015.S3.MinIO](#rqsrs-015s3minio)
+    * 4.1.16 [RQ.SRS-015.S3.GCS](#rqsrs-015s3gcs)
+    * 4.1.17 [Automatic Reconnects](#automatic-reconnects)
+      * 4.1.17.1 [RQ.SRS-015.S3.AutomaticReconnects.GCS](#rqsrs-015s3automaticreconnectsgcs)
+      * 4.1.17.2 [RQ.SRS-015.S3.AutomaticReconnects.AWS](#rqsrs-015s3automaticreconnectsaws)
+      * 4.1.17.3 [RQ.SRS-015.S3.AutomaticReconnects.MinIO](#rqsrs-015s3automaticreconnectsminio)
   * 4.2 [Users](#users)
     * 4.2.1 [RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCache](#rqsrs-015s3userconfigurationcache228enablefilesystemcache)
     * 4.2.2 [RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCacheOnWriteOperations](#rqsrs-015s3userconfigurationcache228enablefilesystemcacheonwriteoperations)
@@ -3285,6 +3307,14 @@ addresses. The remote host filter configuration SHALL be similar to the followin
     </remote_url_allow_hosts>
 </yandex>
 ```
+
+#### RQ.SRS-015.S3.Alter
+version: 1.0
+
+[ClickHouse] SHALL support running `ALTER ...` queries on [S3] storage.
+[ClickHouse] SHALL reproduce these queries across replicas without data loss.
+[ClickHouse] SHALL support the above when configured with one or more of disk cache,
+disk encryption and zero copy replication.
 
 #### Backup
 
