@@ -1,6 +1,8 @@
+import json
 import os
 import re
 import subprocess
+import time
 
 from testflows.core import *
 from helpers.common import getuid
@@ -245,7 +247,15 @@ def clickhouse_local(self, query, statistics=False):
     if not statistics:
         return result.stdout
     else:
-        return result.stdout, get_memory_usage(result.stderr)
+        return result.stdout, get_memory_usage(result)
+
+
+@TestStep(Given)
+def get_clickhouse_version(self):
+    """Get the ClickHouse version."""
+    version = clickhouse_local(query="SELECT version();")
+
+    return version
 
 
 @TestStep(Given)
@@ -259,10 +269,10 @@ def create_parquet_file(self, table_name, parquet_file, threads=20, max_memory_u
 
 
 @TestScenario
-def hits_dataset(self):
+def hits_dataset(self, repeats):
     """Check performance of ClickHouse parquet native reader using the hits dataset."""
     table_name = f"hits_{getuid()}"
-
+    results = {"native_reader": {}, "regular_reader": {}}
     with Given("I create a parquet file with the hits dataset"):
         clickhouse_local(
             query=create_hits_dataset(table_name=table_name)
@@ -273,20 +283,70 @@ def hits_dataset(self):
             )
         )
 
-    with When("I run queries against the parquet file"):
-        queries = hits_queries(file_name=f"{table_name}.parquet", native_reader=True)
+    with When("I run queries against the parquet file with native parquet reader"):
+        queries_with_native_reader = hits_queries(
+            file_name=f"{table_name}.parquet", native_reader=True
+        )
 
-        for query in queries:
-            clear_filesystem_and_flush_cache()
-            result = clickhouse_local(query=query, statistics=True)
+        for query in queries_with_native_reader:
+            for i in range(repeats):
+                clear_filesystem_and_flush_cache()
+                start_time = time.time()
+                result, memory_used = clickhouse_local(query=query, statistics=True)
+                clickhouse_run_time = time.time() - start_time
 
-            note(get_memory_usage(result.stderr))
-            break
+                if query not in results["native_reader"]:
+                    results["native_reader"][query] = {
+                        f"time_{i}": clickhouse_run_time,
+                        f"memory_{i}": memory_used,
+                    }
+                else:
+                    results["native_reader"][query][f"time_{i}"] = clickhouse_run_time
+                    results["native_reader"][query][f"memory_{i}"] = memory_used
+
+    with And("I run queries against the parquet file without native parquet reader"):
+        queries_without_native_reader = hits_queries(
+            file_name=f"{table_name}.parquet", native_reader=False
+        )
+
+        for query in queries_without_native_reader:
+            for i in range(repeats):
+                clear_filesystem_and_flush_cache()
+                start_time = time.time()
+                result, memory_used = clickhouse_local(query=query, statistics=True)
+                clickhouse_run_time = time.time() - start_time
+
+                if query not in results["regular_reader"]:
+                    results["regular_reader"][query] = {
+                        f"time_{i}": clickhouse_run_time,
+                        f"memory_{i}": memory_used,
+                    }
+                else:
+                    results["regular_reader"][query][f"time_{i}"] = clickhouse_run_time
+                    results["regular_reader"][query][f"memory_{i}"] = memory_used
+
+    with Then("I write results into a JSON file"):
+        clickhouse_version = get_clickhouse_version().strip()
+        json_file_path = os.path.join(
+            current_dir(),
+            "..",
+            ".." "results",
+            "native_reader",
+            "hits",
+            f"{clickhouse_version}",
+            "results.json",
+        )
+
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
+
+        # Write the results dictionary to a JSON file
+        with open(json_file_path, "w") as json_file:
+            json.dump(results, json_file, indent=2)
+
 
 @TestFeature
 @Name("native reader")
-def feature(
-    self,
-):
-    Scenario(run=hits_dataset)
-    """Compare parquet performance between single node clickhouse and duckdb"""
+def feature(self, repeats=3):
+    """Check performance of ClickHouse parquet native reader."""
+    Scenario(test=hits_dataset)(repeats=repeats)
