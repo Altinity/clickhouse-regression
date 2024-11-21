@@ -108,7 +108,7 @@ def check_jwt_authentication(self, user_name, token, validator):
 
 
 @TestScenario
-def jwt_authentication(self):
+def jwt_authentication_combinatorics(self):
     """Check jwt authentication with static key validator."""
     user_names = [f"user1_{getuid()}", f"user2_{getuid()}"]
     token_algorithms = [
