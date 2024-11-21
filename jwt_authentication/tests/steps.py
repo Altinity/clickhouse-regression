@@ -61,7 +61,7 @@ def create_static_jwt(
             headers = {}
         headers["kid"] = key_id
 
-    if expiration_minutes:
+    if expiration_minutes is not None:
         expiration = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=expiration_minutes
         )
@@ -98,6 +98,7 @@ def change_clickhouse_config(
     restart: bool = True,
     format: str = None,
     user: str = None,
+    config_file="change_settings.xml",
     config_d_dir: str = "/etc/clickhouse-server/users.d",
     preprocessed_name: str = "users.xml",
     node: Node = None,
@@ -106,7 +107,7 @@ def change_clickhouse_config(
     with By("converting config file content to xml"):
         config = create_xml_config_content(
             entries,
-            "change_settings.xml",
+            config_file=config_file,
             config_d_dir=config_d_dir,
             preprocessed_name=preprocessed_name,
         )
@@ -168,8 +169,9 @@ def add_static_key_validator_to_config_xml(
     validator_id: str,
     algorithm: str = "hs256",
     secret: str = None,
-    static_key_in_base64: str = "false",
+    static_key_in_base64: str = None,
     public_key: str = None,
+    restart=True,
 ):
     """Add static key validator to the config.xml."""
 
@@ -179,9 +181,10 @@ def add_static_key_validator_to_config_xml(
 
     if secret is not None:
         entries["jwt_validators"][f"{validator_id}"]["static_key"] = secret
-        entries["jwt_validators"][f"{validator_id}"][
-            "static_key_in_base64"
-        ] = static_key_in_base64
+        if static_key_in_base64 is not None:
+            entries["jwt_validators"][f"{validator_id}"][
+                "static_key_in_base64"
+            ] = static_key_in_base64
 
     if public_key is not None:
         entries["jwt_validators"][f"{validator_id}"]["public_key"] = public_key
@@ -190,12 +193,20 @@ def add_static_key_validator_to_config_xml(
         entries=entries,
         config_d_dir="/etc/clickhouse-server/config.d",
         preprocessed_name="config.xml",
+        restart=restart,
+        config_file=f"{validator_id}.xml",
     )
 
 
 def to_base64_url(data):
     """Convert data to base64 URL encoding."""
     return base64.urlsafe_b64encode(data).decode("utf-8").rstrip("=")
+
+
+def to_base64(data: str) -> str:
+    """Convert string to base64 encoding."""
+    base64_data = base64.b64encode(data.encode("utf-8")).decode("utf-8")
+    return base64_data
 
 
 @TestStep(Given)
