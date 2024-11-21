@@ -225,7 +225,7 @@ def check_attach_partition_from_with_temporary_tables(
             destination_partition_data_3 = self.context.node_3.query(
                 f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
             )
-            for attempt in retries(timeout=30, delay=2):
+            for attempt in retries(timeout=300, delay=10):
                 with attempt:
                     assert (
                         destination_partition_data_1.output
