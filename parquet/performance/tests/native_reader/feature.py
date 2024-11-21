@@ -37,7 +37,7 @@ def get_memory_usage(output):
             "MemoryTrackerPeakUsage": int(memory_tracker_peak_usage.group(1)),
         }
     else:
-        return {"error": "Failed to extract MemoryTracker values."}
+        return {"error": output}
 
 
 def hits_queries(file_name, native_reader=False):
