@@ -98,7 +98,7 @@ def hits_queries(file_name, native_reader=False):
 @TestStep(Given)
 def create_hits_dataset(self, table_name):
     query = f"""
-            CREATE TABLE {table_name}
+            CREATE TABLE hits
         (
             WatchID BIGINT NOT NULL,
             JavaEnable SMALLINT NOT NULL,
@@ -211,10 +211,10 @@ def create_hits_dataset(self, table_name):
 
 
 @TestStep(Given)
-def insert_data_hits(self, table_name, first_number=1, last_number=99):
+def insert_data_hits(self, table_name, first_number=1, last_number=99, threads=20, max_memory_usage=0):
     query = (
         f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com"
-        f"/hits_compatible/athena_partitioned/hits_{{{first_number}..{last_number}}}.parquet');"
+        f"/hits_compatible/athena_partitioned/hits_{{{first_number}..{last_number}}}.parquet') SETTINGS max_insert_threads = {threads}, max_memory_usage={max_memory_usage};;"
     )
     return query
 
