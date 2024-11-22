@@ -12,18 +12,6 @@ random.seed(42)
 
 
 @TestStep(Given)
-def create_users(self, user_names):
-    """Create users with jwt authentication."""
-    users = []
-    for user_name in user_names:
-        user = helpers.User(user_name=user_name, auth_type="jwt")
-        user.create_user()
-        users.append(user)
-
-    return users
-
-
-@TestStep(Given)
 def create_tokens(
     self, user_names, token_algorithms, token_secrets, expiration_minutes
 ):
