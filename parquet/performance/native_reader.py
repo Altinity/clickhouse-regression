@@ -24,8 +24,8 @@ def argparser(parser):
 
 
 @TestStep(Given)
-def get_binary_and_copy_here(self, clickhouse_binary_path):
-    """Get the ClickHouse binary from the docker container and copy it to the current directory."""
+def get_binary_clickhouse_binary(self, clickhouse_binary_path):
+    """Get the ClickHouse binary from the docker container."""
     binary_path = get_binary_from_docker_container(
         clickhouse_binary_path,
     )
@@ -39,7 +39,7 @@ def module(self, clickhouse_path=None):
     """Running performance tests for Parquet native reader in ClickHouse."""
 
     with Given("I get the ClickHouse binary from the docker container"):
-        self.context.clickhouse_binary = get_binary_and_copy_here(
+        self.context.clickhouse_binary = get_binary_clickhouse_binary(
             clickhouse_binary_path=clickhouse_path
         )
 
