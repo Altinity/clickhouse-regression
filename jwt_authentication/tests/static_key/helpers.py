@@ -67,6 +67,12 @@ def model(user, token, validator):
         message = f"DB::Exception:"
         return exitcode, message
 
+    if token.expiration_minutes is not None:
+        if token.expiration_minutes < 0:
+            exitcode = 4
+            message = "DB::Exception:"
+            return exitcode, message
+
     if (
         token.algorithm == validator.algorithm
         and token.user_name == user.user_name
