@@ -146,7 +146,7 @@ def hits_queries(file_name, native_reader=False):
             RefererHash BIGINT NOT NULL,
             URLHash BIGINT NOT NULL,
             CLID INTEGER NOT NULL"""
-    
+
     if native_reader:
         native_reader = "1"
     else:
@@ -189,13 +189,13 @@ def hits_queries(file_name, native_reader=False):
         rf"SELECT URL, COUNT(*) AS c FROM file('{file_name}', Parquet, '{table_schema}') GROUP BY URL ORDER BY c DESC LIMIT 10 SETTINGS input_format_parquet_use_native_reader={native_reader};",
         rf"SELECT 1, URL, COUNT(*) AS c FROM file('{file_name}', Parquet, '{table_schema}') GROUP BY 1, URL ORDER BY c DESC LIMIT 10 SETTINGS input_format_parquet_use_native_reader={native_reader};",
         rf"SELECT ClientIP, ClientIP - 1, ClientIP - 2, ClientIP - 3, COUNT(*) AS c FROM file('{file_name}', Parquet, '{table_schema}') GROUP BY ClientIP, ClientIP - 1, ClientIP - 2, ClientIP - 3 ORDER BY c DESC LIMIT 10 SETTINGS input_format_parquet_use_native_reader={native_reader};",
-        rf"SELECT URL, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND DontCountHits('{file_name}') = 0 AND IsRefresh = 0 AND URL <> '' GROUP BY URL ORDER BY PageViews DESC LIMIT 10 SETTINGS input_format_parquet_use_native_reader={native_reader};",
-        rf"SELECT Title, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND DontCountHits('{file_name}') = 0 AND IsRefresh = 0 AND Title <> '' GROUP BY Title ORDER BY PageViews DESC LIMIT 10 SETTINGS input_format_parquet_use_native_reader={native_reader};",
+        rf"SELECT URL, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND DontCountHits = 0 AND IsRefresh = 0 AND URL <> '' GROUP BY URL ORDER BY PageViews DESC LIMIT 10 SETTINGS input_format_parquet_use_native_reader={native_reader};",
+        rf"SELECT Title, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND DontCountHits = 0 AND IsRefresh = 0 AND Title <> '' GROUP BY Title ORDER BY PageViews DESC LIMIT 10 SETTINGS input_format_parquet_use_native_reader={native_reader};",
         rf"SELECT URL, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND IsRefresh = 0 AND IsLink <> 0 AND IsDownload = 0 GROUP BY URL ORDER BY PageViews DESC LIMIT 10 OFFSET 1000 SETTINGS input_format_parquet_use_native_reader={native_reader};",
         rf"SELECT TraficSourceID, SearchEngineID, AdvEngineID, CASE WHEN (SearchEngineID = 0 AND AdvEngineID = 0) THEN Referer ELSE '' END AS Src, URL AS Dst, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND IsRefresh = 0 GROUP BY TraficSourceID, SearchEngineID, AdvEngineID, Src, Dst ORDER BY PageViews DESC LIMIT 10 OFFSET 1000 SETTINGS input_format_parquet_use_native_reader={native_reader};",
         rf"SELECT URLHash, EventDate, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND IsRefresh = 0 AND TraficSourceID IN (-1, 6) AND RefererHash = 3594120000172545465 GROUP BY URLHash, EventDate ORDER BY PageViews DESC LIMIT 10 OFFSET 100 SETTINGS input_format_parquet_use_native_reader={native_reader};",
-        rf"SELECT WindowClientWidth, WindowClientHeight, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND IsRefresh = 0 AND DontCountHits('{file_name}') = 0 AND URLHash = 2868770270353813622 GROUP BY WindowClientWidth, WindowClientHeight ORDER BY PageViews DESC LIMIT 10 OFFSET 10000 SETTINGS input_format_parquet_use_native_reader={native_reader};",
-        rf"SELECT DATE_TRUNC('minute', EventTime) AS M, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-14' AND EventDate <= '2013-07-15' AND IsRefresh = 0 AND DontCountHits('{file_name}') = 0 GROUP BY DATE_TRUNC('minute', EventTime) ORDER BY DATE_TRUNC('minute', EventTime) LIMIT 10 OFFSET 1000 SETTINGS input_format_parquet_use_native_reader={native_reader};",
+        rf"SELECT WindowClientWidth, WindowClientHeight, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-01' AND EventDate <= '2013-07-31' AND IsRefresh = 0 AND DontCountHits = 0 AND URLHash = 2868770270353813622 GROUP BY WindowClientWidth, WindowClientHeight ORDER BY PageViews DESC LIMIT 10 OFFSET 10000 SETTINGS input_format_parquet_use_native_reader={native_reader};",
+        rf"SELECT DATE_TRUNC('minute', EventTime) AS M, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-14' AND EventDate <= '2013-07-15' AND IsRefresh = 0 AND DontCountHits = 0 GROUP BY DATE_TRUNC('minute', EventTime) ORDER BY DATE_TRUNC('minute', EventTime) LIMIT 10 OFFSET 1000 SETTINGS input_format_parquet_use_native_reader={native_reader};",
     ]
 
     return queries
@@ -416,42 +416,50 @@ def hits_dataset(self, repeats):
             file_name=f"{file_name}", native_reader=True
         )
 
-        for query in queries_with_native_reader:
+        for index, query in enumerate(queries_with_native_reader):
             for i in range(repeats):
                 clear_filesystem_and_flush_cache()
                 start_time = time.time()
                 result, memory_used = clickhouse_local(query=query, statistics=True)
                 clickhouse_run_time = time.time() - start_time
 
-                if query not in results["native_reader"]:
-                    results["native_reader"][query] = {
+                if f"query_{index}" not in results["native_reader"]:
+                    results["native_reader"][f"query_{index}"] = {
                         f"time_{i}": clickhouse_run_time,
                         f"memory_{i}": memory_used,
                     }
                 else:
-                    results["native_reader"][query][f"time_{i}"] = clickhouse_run_time
-                    results["native_reader"][query][f"memory_{i}"] = memory_used
+                    results["native_reader"][f"query_{index}"][
+                        f"time_{i}"
+                    ] = clickhouse_run_time
+                    results["native_reader"][f"query_{index}"][
+                        f"memory_{i}"
+                    ] = memory_used
 
     with And("I run queries against the parquet file without native parquet reader"):
         queries_without_native_reader = hits_queries(
             file_name=f"{file_name}", native_reader=False
         )
 
-        for query in queries_without_native_reader:
+        for index, query in enumerate(queries_without_native_reader):
             for i in range(repeats):
                 clear_filesystem_and_flush_cache()
                 start_time = time.time()
                 result, memory_used = clickhouse_local(query=query, statistics=True)
                 clickhouse_run_time = time.time() - start_time
 
-                if query not in results["regular_reader"]:
-                    results["regular_reader"][query] = {
+                if f"query_{index}" not in results["regular_reader"]:
+                    results["regular_reader"][f"query_{index}"] = {
                         f"time_{i}": clickhouse_run_time,
                         f"memory_{i}": memory_used,
                     }
                 else:
-                    results["regular_reader"][query][f"time_{i}"] = clickhouse_run_time
-                    results["regular_reader"][query][f"memory_{i}"] = memory_used
+                    results["regular_reader"][f"query_{index}"][
+                        f"time_{i}"
+                    ] = clickhouse_run_time
+                    results["regular_reader"][f"query_{index}"][
+                        f"memory_{i}"
+                    ] = memory_used
 
     with Then("I write results into a JSON file"):
         clickhouse_version = get_clickhouse_version().strip()
