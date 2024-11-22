@@ -1,4 +1,4 @@
-# Table of contents
+# Table of Contents
 
 - [Comparison Table of Native Reader Performance](#comparison-table-of-native-reader-performance)
 - [Charts](#charts)
