@@ -1,0 +1,40 @@
+{
+  "native_reader": {
+    "SELECT COUNT(*) FROM file('hits_5901af3b_a84d_11ef_a7d1_514d91c95930.parquet') SETTINGS input_format_parquet_use_native_reader=1;": {
+      "time_0": 0.8337430953979492,
+      "memory_0": {
+        "MemoryTrackerUsage": 2309006,
+        "MemoryTrackerPeakUsage": 2309006
+      },
+      "time_1": 0.821791410446167,
+      "memory_1": {
+        "MemoryTrackerUsage": 2562782,
+        "MemoryTrackerPeakUsage": 2562782
+      },
+      "time_2": 0.8143610954284668,
+      "memory_2": {
+        "MemoryTrackerUsage": 2768614,
+        "MemoryTrackerPeakUsage": 2768614
+      }
+    }
+  },
+  "regular_reader": {
+    "SELECT COUNT(*) FROM file('hits_5901af3b_a84d_11ef_a7d1_514d91c95930.parquet') SETTINGS input_format_parquet_use_native_reader=0;": {
+      "time_0": 0.8308947086334229,
+      "memory_0": {
+        "MemoryTrackerUsage": 2308558,
+        "MemoryTrackerPeakUsage": 2308558
+      },
+      "time_1": 0.8368682861328125,
+      "memory_1": {
+        "MemoryTrackerUsage": 3165862,
+        "MemoryTrackerPeakUsage": 3165862
+      },
+      "time_2": 0.8289697170257568,
+      "memory_2": {
+        "MemoryTrackerUsage": 2322822,
+        "MemoryTrackerPeakUsage": 2322822
+      }
+    }
+  }
+}
