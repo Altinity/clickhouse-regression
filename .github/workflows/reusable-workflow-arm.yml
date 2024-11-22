@@ -85,6 +85,7 @@ env:
     ./*/_instances/*/logs/*.log
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
+  ACTIONS_RUNNER_DEBUG: true
 
 jobs:
   aes_encryption:

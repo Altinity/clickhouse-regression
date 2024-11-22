@@ -16,14 +16,13 @@ def check_recreate_user_config(self):
 
     with Given("create user with jwt authentication and a token for this user"):
         steps.add_jwt_user_to_users_xml(user_name=user_name)
-        token = steps.create_static_jwt(user_name=user_name)
+        token = steps.create_static_jwt(user_name=user_name, secret="my_secret")
 
     with And("check that user can authenticate with jwt"):
         steps.check_jwt_login(user_name=user_name, token=token)
 
     with And("drop user"):
-        entries = {"users": {f"{user_name}": {"jwt": {}}}}
-        steps.remove_jwt_user_from_users_xml(entries=entries)
+        steps.remove_jwt_user_from_users_xml(user_name=user_name)
 
     with And("check that authentication is failing"):
         steps.check_jwt_login(
@@ -55,7 +54,7 @@ def check_recreate_user_rbac(self):
 
     with Given("create user with jwt authentication and token for this user"):
         steps.create_user_with_jwt_auth(user_name=user_name)
-        token = steps.create_static_jwt(user_name=user_name)
+        token = steps.create_static_jwt(user_name=user_name, secret="my_secret")
 
     with And("check that user can authenticate with jwt"):
         steps.check_jwt_login(user_name=user_name, token=token)

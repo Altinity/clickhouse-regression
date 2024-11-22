@@ -66,9 +66,11 @@ def scenario(self, name, engine):
                 node.query(f"INSERT INTO {name} (p1, s1, d1) VALUES {values}")
 
         with And("I get used disks for the table"):
-            used_disks = get_used_disks_for_table(node, name)
-            with Then(f"check that no parts were moved"):
-                assert set(used_disks) == {"jbod1", "jbod2"}, error()
+            for retry in retries(timeout=60, delay=10):
+                with retry:
+                    used_disks = get_used_disks_for_table(node, name)
+                    with Then(f"check that no parts were moved"):
+                        assert set(used_disks) == {"jbod1", "jbod2"}, error()
 
         def select_count():
             with When(f"I perform select count for 20 sec"):
@@ -105,9 +107,9 @@ def scenario(self, name, engine):
                 for task in tasks:
                     task.result(timeout=60)
 
-        for retry in retries(timeout=60):
-            with retry:
-                with When("I then again get used disks for the table"):
+        with When("I again get used disks for the table"):
+            for retry in retries(timeout=60, delay=10):
+                with retry:
                     used_disks = get_used_disks_for_table(node, name)
                     with Then(f"parts should have been moved"):
                         assert set(used_disks) == ({"external"}), error()

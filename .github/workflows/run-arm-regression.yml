@@ -15,7 +15,7 @@ on:
         description: "🎯 Expected version. Example: 23.3.13.7.altinitytest"
         type: string
         required: true
-        default: 24.3.12.76.altinitytest
+        default: 24.3.12.76.altinitystable
       flags:
         description: "🚩 Flags"
         type: choice

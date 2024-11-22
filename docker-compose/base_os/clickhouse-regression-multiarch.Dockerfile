@@ -1,4 +1,4 @@
-ARG BASE_OS
+ARG BASE_OS=altinityinfra/clickhouse-regression-multiarch:3.0
 FROM $BASE_OS
 
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
