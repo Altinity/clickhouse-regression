@@ -251,7 +251,7 @@ def attach_partition_detached_with_temporary_tables(self):
         "VersionedCollapsingMergeTree",
         "GraphiteMergeTree",
     }
-    with Pool(5) as executor:
+    with Pool(1) as executor:
         for table, engine in product(tables, engines):
             Scenario(
                 f"{table.__name__}_{engine}",
@@ -286,7 +286,7 @@ def attach_partition_from_with_temporary_tables(self):
         "GraphiteMergeTree",
     }
 
-    with Pool(5) as executor:
+    with Pool(1) as executor:
         for (
             source_table,
             destination_table,
