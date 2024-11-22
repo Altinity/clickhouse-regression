@@ -1,6 +1,7 @@
 # Queries for Parquet with native reader
 
-0. "SELECT COUNT(*) FROM file('{file_name}', Parquet, '{table_schema}') SETTINGS input_format_parquet_use_native_reader={native_reader};",
+```sql
+0. "SELECT COUNT(*) FROM file('{file_name}', Parquet, '{table_schema}') SETTINGS input_format_parquet_use_native_reader={native_reader};"
 
 
 1. "SELECT COUNT(*) FROM file('{file_name}', Parquet, '{table_schema}') WHERE AdvEngineID <> 0 SETTINGS input_format_parquet_use_native_reader={native_reader};",
@@ -128,3 +129,4 @@
 
 
 42. "SELECT DATE_TRUNC('minute', EventTime) AS M, COUNT(*) AS PageViews FROM file('{file_name}', Parquet, '{table_schema}') WHERE CounterID = 62 AND EventDate >= '2013-07-14' AND EventDate <= '2013-07-15' AND IsRefresh = 0 AND DontCountHits = 0 GROUP BY DATE_TRUNC('minute', EventTime) ORDER BY DATE_TRUNC('minute', EventTime) LIMIT 10 OFFSET 1000 SETTINGS input_format_parquet_use_native_reader={native_reader};",
+```
