@@ -1,3 +1,5 @@
+# Queries for Parquet with native reader
+
 0. "SELECT COUNT(*) FROM file('{file_name}', Parquet, '{table_schema}') SETTINGS input_format_parquet_use_native_reader={native_reader};",
 
 
