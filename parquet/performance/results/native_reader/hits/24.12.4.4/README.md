@@ -2,7 +2,7 @@
 
 The table below represents the comparison of the performance of the same queries between `native parquet reader` and the `regular parquet reader`.
 
-| Native Reader | Query ID | Time 0             | Memory 0 | Time 1             | Memory 1 | Time 2             | Memory 2 |
+| Native Reader | Query ID | Time 0 (Seconds)             | Memory 0 (Bytes) | Time 1 (Seconds)             | Memory 1 (Bytes) | Time 2 (Seconds)             | Memory 2 (Bytes) |
 |---------------|----------|--------------------|----------|--------------------|----------|--------------------|----------|
 | True          | query_0  | 0.6969590187072754 | 16821032 | 0.7177548408508301 | 16821032 | 0.7146885395050049 | 16821032 |
 | False         | query_0  | 0.6015362739562988 | 16821032 | 0.7046184539794922 | 16821032 | 0.635699987411499  | 16821032 |
