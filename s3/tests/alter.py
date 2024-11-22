@@ -180,6 +180,12 @@ def order_by(self):
             exitcode=0,
         )
 
+    with And("I check the number of rows on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, **retry_args)(
+                node=node, table_name=table_name, rows=INSERT_SIZE
+            )
+
 
 @TestScenario
 def sample_by(self):
@@ -205,6 +211,12 @@ def sample_by(self):
             f"ALTER TABLE {table_name} MODIFY SAMPLE BY cityHash64(value1)",
             exitcode=0,
         )
+
+    with And("I check the number of rows on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, **retry_args)(
+                node=node, table_name=table_name, rows=INSERT_SIZE
+            )
 
 
 @TestScenario
@@ -251,6 +263,12 @@ def index(self):
                 exitcode=0,
             )
 
+    with Then("I check the number of rows on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, **retry_args)(
+                node=node, table_name=table_name, rows=INSERT_SIZE
+            )
+
 
 @TestScenario
 def projection(self):
@@ -291,6 +309,12 @@ def projection(self):
             f"ALTER TABLE {table_name} DROP PROJECTION value1_projection",
             exitcode=0,
         )
+
+    with And("I check the number of rows on all nodes"):
+        for node in nodes:
+            retry(assert_row_count, **retry_args)(
+                node=node, table_name=table_name, rows=INSERT_SIZE
+            )
 
 
 @TestOutline(Scenario)
@@ -797,7 +821,10 @@ def columns(self):
         assert "column comment" not in r.output, error(r)
 
     with And("The table should contain all rows"):
-        assert_row_count(node=nodes[2], table_name=table_name, rows=INSERT_SIZE)
+        for node in nodes:
+            retry(assert_row_count, **retry_args)(
+                node=node, table_name=table_name, rows=INSERT_SIZE
+            )
 
 
 @TestFeature
