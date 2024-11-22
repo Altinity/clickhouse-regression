@@ -1,3 +1,8 @@
+# Table of contents
+
+- [Comparison Table of Native Reader Performance](#comparison-table-of-native-reader-performance)
+- [Charts](#charts)
+
 # Comparison Table of Native Reader Performance
 
 **Dataset:** https://datasets.clickhouse.com/hits_compatible/hits.parquet
