@@ -301,7 +301,7 @@ RQ_SRS_042_JWT_StaticKey_SupportedAlgorithms = Requirement(
     description=(
         "[ClickHouse] SHALL support the following algorithms for static key validation:\n"
         "\n"
-        "| HMSC  | RSA   | ECDSA  | PSS   | EdDSA   |\n"
+        "| HMAC  | RSA   | ECDSA  | PSS   | EdDSA   |\n"
         "| ----- | ----- | ------ | ----- | ------- |\n"
         "| HS256 | RS256 | ES256  | PS256 | Ed25519 |\n"
         "| HS384 | RS384 | ES384  | PS384 | Ed448   |\n"
@@ -1389,7 +1389,7 @@ version: 1.0
 
 [ClickHouse] SHALL support the following algorithms for static key validation:
 
-| HMSC  | RSA   | ECDSA  | PSS   | EdDSA   |
+| HMAC  | RSA   | ECDSA  | PSS   | EdDSA   |
 | ----- | ----- | ------ | ----- | ------- |
 | HS256 | RS256 | ES256  | PS256 | Ed25519 |
 | HS384 | RS384 | ES384  | PS384 | Ed448   |

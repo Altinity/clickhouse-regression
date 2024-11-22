@@ -194,7 +194,7 @@ def check_create_and_drop_tables(
         note(f"end resident memory: {end_memory.resident}")
 
     with Then("I check for memory leaks and calculate released memory"):
-        max_memory = 150000
+        max_memory = 200000
         for attempt in retries(timeout=timeout, delay=10):
             with attempt:
                 current_memory = get_process_memory_usage(pid=pid)

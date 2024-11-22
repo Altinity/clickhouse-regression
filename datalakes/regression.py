@@ -51,10 +51,10 @@ def argparser(parser):
 
 xfails = {}
 ffails = {
-    # "/data lakes": (
-    #     Skip,
-    #     "Under development",
-    # ),
+    "/data lakes": (
+        Skip,
+        "Under development",
+    ),
 }
 
 

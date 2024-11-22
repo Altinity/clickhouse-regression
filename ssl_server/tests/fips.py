@@ -18,6 +18,9 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
     self.context.connection_port = port
     tls1_2_status = "work" if tls1_2_enabled else "be rejected"
 
+    hostname = self.context.node.name
+    bash_tools = self.context.cluster.node("bash-tools")
+
     with Given(
         "server is configured to accept only FIPS compatible connections",
         description=f"on port {port}",
@@ -29,6 +32,8 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
             options="-no_tls1 -no_tls1_1 -no_tls1_2 -no_tls1_3",
             success=False,
             message="no protocols available",
+            node=bash_tools,
+            hostname=hostname,
         )
 
     with Check(f"TLSv1_2 suite connection should {tls1_2_status}"):
@@ -42,29 +47,50 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
                     config_file="ssl_disable_requireTLSv1_2.xml",
                     restart=True,
                 )
-        openssl_client_connection(options="-tls1_2", success=tls1_2_enabled)
+        openssl_client_connection(
+            options="-tls1_2",
+            success=tls1_2_enabled,
+            node=bash_tools,
+            hostname=hostname,
+        )
 
     with Check("TLSv1 suite connection should be rejected"):
         openssl_client_connection(
-            options="-tls1", success=False, message="no protocols available"
+            options="-tls1",
+            success=False,
+            message="no protocols available",
+            node=bash_tools,
+            hostname=hostname,
         )
 
     with Check("TLSv1_1 suite connection should be rejected"):
         openssl_client_connection(
-            options="-tls1_1", success=False, message="no protocols available"
+            options="-tls1_1",
+            success=False,
+            message="no protocols available",
+            node=bash_tools,
+            hostname=hostname,
         )
 
     with Check("TLSv1_3 suite connection should be rejected"):
-        openssl_client_connection(options="-tls1_3", success=False)
+        openssl_client_connection(
+            options="-tls1_3", success=False, node=bash_tools, hostname=hostname
+        )
 
     with Check("any DTLS suite connection should be rejected"):
-        openssl_client_connection(options="-dtls", success=False)
+        openssl_client_connection(
+            options="-dtls", success=False, node=bash_tools, hostname=hostname
+        )
 
     with Check("DTLSv1 suite connection should be rejected"):
-        openssl_client_connection(options="-dtls1", success=False)
+        openssl_client_connection(
+            options="-dtls1", success=False, node=bash_tools, hostname=hostname
+        )
 
     with Check("DTLSv1_2 suite connection should be rejected"):
-        openssl_client_connection(options="-dtls1.2", success=False)
+        openssl_client_connection(
+            options="-dtls1.2", success=False, node=bash_tools, hostname=hostname
+        )
 
     with Check("just disabling"):
         workaround_options = ""
@@ -86,19 +112,32 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
 
         with Check(f"TLSv1, suite connection should {tls1_2_status}"):
             openssl_client_connection(
-                options="-no_tls1" + workaround_options, success=tls1_2_enabled
+                options="-no_tls1" + workaround_options,
+                success=tls1_2_enabled,
+                node=bash_tools,
+                hostname=hostname,
             )
 
         with Check(f"TLSv1_1, suite connection should {tls1_2_status}"):
             openssl_client_connection(
-                options="-no_tls1_1" + workaround_options, success=tls1_2_enabled
+                options="-no_tls1_1" + workaround_options,
+                success=tls1_2_enabled,
+                node=bash_tools,
+                hostname=hostname,
             )
 
         with Check(f"TLSv1_3, suite connection should {tls1_2_status}"):
-            openssl_client_connection(options="-no_tls1_3", success=tls1_2_enabled)
+            openssl_client_connection(
+                options="-no_tls1_3",
+                success=tls1_2_enabled,
+                node=bash_tools,
+                hostname=hostname,
+            )
 
     with Check("disabling TLSv1_2 suite connection should be rejected"):
-        openssl_client_connection(options="-no_tls1_2", success=False)
+        openssl_client_connection(
+            options="-no_tls1_2", success=False, node=bash_tools, hostname=hostname
+        )
 
     if check_clickhouse_version(">=24.4")(self):
         workaround_options = ""
@@ -124,6 +163,8 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
             openssl_client_connection(
                 options=f'-cipher "{cipher}"' + workaround_options,
                 success=tls1_2_enabled,
+                node=bash_tools,
+                hostname=hostname,
             )
 
     for cipher in all_ciphers:
@@ -133,7 +174,10 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
             openssl_client_connection(
-                options=f'-cipher "{cipher}"' + workaround_options, success=False
+                options=f'-cipher "{cipher}"' + workaround_options,
+                success=False,
+                node=bash_tools,
+                hostname=hostname,
             )
 
 
@@ -769,13 +813,14 @@ def server_as_client(self):
 
     with Given("I generate private key and certificate for https server"):
         bash_tools = self.context.cluster.node("bash-tools")
-        add_trusted_ca_certificate(
+        ca_cert = add_trusted_ca_certificate(
             node=bash_tools, certificate=self.context.my_own_ca_crt
         )
         create_crt_and_key(
             name="https_server",
             common_name="bash-tools",
             node=bash_tools,
+            node_ca_crt=ca_cert,
         )
 
     Feature(run=url_table_function)

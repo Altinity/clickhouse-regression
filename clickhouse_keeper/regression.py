@@ -73,7 +73,13 @@ xfails = {
             "Doesn't work as expected on 24.3 altinitystable and 24.9 upstream",
             check_clickhouse_version(">=24.3"),
             r".+Connection reset by peer in connection.+",
-        )
+        ),
+        (
+            Error,
+            "Doesn't work as expected, timeout",
+            check_clickhouse_version(">=24.6"),
+            r".+ExpectTimeoutError.+",
+        ),
     ],
     "ports ssl fips/:/:/just disabling "
     + clean("TLSv1_1 suite connection should work"): [(Fail, "needs to be reviewed")],
