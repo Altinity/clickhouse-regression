@@ -1,5 +1,9 @@
 # Comparison Table of Native Reader Performance
 
+**Dataset:** https://datasets.clickhouse.com/hits_compatible/hits.parquet
+
+**Rows:** `100 000 000`
+
 The table below represents the comparison of the performance of the same queries between `native parquet reader` and the `regular parquet reader`.
 
 Each query was executed three times, and the results of each run are presented in the table below.
