@@ -2,6 +2,8 @@
 
 The table below represents the comparison of the performance of the same queries between `native parquet reader` and the `regular parquet reader`.
 
+Each query was executed three times, and the results of each run are presented in the table below.
+
 The queries with their corresponding IDs can be found [here](https://github.com/Altinity/clickhouse-regression/blob/run_bloom_filter_tests/parquet/performance/results/native_reader/queries/queries.md).
 
 | Native Reader | Query ID | Time 0 (Seconds)             | Memory 0 (Bytes) | Time 1 (Seconds)             | Memory 1 (Bytes) | Time 2 (Seconds)             | Memory 2 (Bytes) |
