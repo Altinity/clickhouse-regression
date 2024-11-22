@@ -43,10 +43,10 @@ def get_memory_usage(output):
 
 @TestStep(Given)
 def clear_filesystem_and_flush_cache(self):
-    """Clear filesystem cache and flush cache."""
+    """Clear filesystem and flush cache."""
     subprocess.run("sync", shell=True)
     subprocess.run("echo 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null", shell=True)
-    note("Filesystem cache cleared and flushed.")
+    note("Filesystem cleared and cache flushed.")
 
 
 @TestStep(Given)
