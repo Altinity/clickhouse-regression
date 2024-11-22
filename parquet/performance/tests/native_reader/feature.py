@@ -274,14 +274,6 @@ def hits_dataset(self, repeats):
     file_name = f"hits.parquet"
     results = {"native_reader": {}, "regular_reader": {}}
     with Given("I create a parquet file with the hits dataset"):
-        # clickhouse_local(
-        #     query=create_hits_dataset(table_name=table_name)
-        #     + ";"
-        #     + insert_data_hits(table_name=table_name)
-        #     + create_parquet_file(
-        #         table_name=table_name, parquet_file=f"{table_name}.parquet"
-        #     )
-        # )
         download_hits_dataset(filename=file_name)
 
     with When("I run queries against the parquet file with native parquet reader"):
