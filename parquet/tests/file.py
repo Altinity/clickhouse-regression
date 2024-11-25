@@ -58,9 +58,17 @@ def insert_into_engine(self):
     with Check(
         "I check that the data inserted into the table was correctly written to the file"
     ):
-        node.command(
-            f"cp /var/lib/clickhouse/data/default/{table_name_parquet_file}/data.Parquet /var/lib/clickhouse/user_files/{table_name_parquet_file}.Parquet"
-        )
+        if check_clickhouse_version(">=24.10")(self):
+            symlink = node.command(
+                f"readlink -f /var/lib/clickhouse/data/default/{table_name_parquet_file}"
+            ).output.strip()
+            node.command(
+                f"cp {symlink} /var/lib/clickhouse/user_files/{table_name_parquet_file}.Parquet"
+            )
+        else:
+            node.command(
+                f"cp /var/lib/clickhouse/data/default/{table_name_parquet_file}/data.Parquet /var/lib/clickhouse/user_files/{table_name_parquet_file}.Parquet"
+            )
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name_parquet_file}.Parquet",
             reference_table_name=table_name_merge_tree,
@@ -135,9 +143,18 @@ def engine_to_file_to_engine(self):
     with Check(
         "I check that the data inserted into the table was correctly written into the file"
     ):
-        node.command(
-            f"cp /var/lib/clickhouse/data/default/{table0_name}/data.Parquet /var/lib/clickhouse/user_files/{table0_name}.Parquet"
-        )
+        if check_clickhouse_version(">=24.10")(self):
+            symlink = node.command(
+                f"readlink -f /var/lib/clickhouse/data/default/{table0_name}"
+            ).output.strip()
+            node.command(
+                f"cp {symlink} /var/lib/clickhouse/user_files/{table0_name}.Parquet"
+            )
+        else:
+            node.command(
+                f"cp /var/lib/clickhouse/data/default/{table0_name}/data.Parquet /var/lib/clickhouse/user_files/{table0_name}.Parquet"
+            )
+
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table0_name}.Parquet",
             reference_table_name=table0_name,
@@ -145,9 +162,14 @@ def engine_to_file_to_engine(self):
 
     with When("I copy of the Parquet source file to a new directory"):
         node.command(f"mkdir /var/lib/clickhouse/user_files/{table1_name}")
-        node.command(
-            f"cp /var/lib/clickhouse/data/default/{table0_name}/data.Parquet /var/lib/clickhouse/user_files/{table1_name}/data.Parquet"
-        )
+        if check_clickhouse_version(">=24.10")(self):
+            node.command(
+                f"cp {symlink} /var/lib/clickhouse/user_files/{table1_name}/data.Parquet"
+            )
+        else:
+            node.command(
+                f"cp /var/lib/clickhouse/data/default/{table0_name}/data.Parquet /var/lib/clickhouse/user_files/{table1_name}/data.Parquet"
+            )
 
     with And(
         "I attach a new table on top of the Parquet source file created by the previous table"
@@ -366,9 +388,17 @@ def insert_into_function_auto_cast_types(self):
         table.insert_test_data(row_count=2)
 
     with When("I copy the Parquet file created by the table"):
-        node.command(
-            f"cp /var/lib/clickhouse/data/default/{table_name}/data.Parquet /var/lib/clickhouse/user_files/{file_name}.Parquet"
-        )
+        if check_clickhouse_version(">=24.10")(self):
+            symlink = node.command(
+                f"readlink -f /var/lib/clickhouse/data/default/{table_name}"
+            ).output.strip()
+            node.command(
+                f"cp {symlink} /var/lib/clickhouse/user_files/{file_name}.Parquet"
+            )
+        else:
+            node.command(
+                f"cp /var/lib/clickhouse/data/default/{table_name}/data.Parquet /var/lib/clickhouse/user_files/{file_name}.Parquet"
+            )
 
     with And("I generate test values"):
         columns_values = [
