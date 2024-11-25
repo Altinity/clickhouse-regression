@@ -231,7 +231,7 @@ xfails = {
         )
     ],
     "/rbac/multiple authentication methods/ssh key/multiple ssh keys exceeding limit/*": [
-        (Fail, issue_70898, check_clickhouse_version("<24.12")),
+        (Fail, issue_70898),
     ],
 }
 
