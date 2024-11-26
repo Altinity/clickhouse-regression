@@ -230,7 +230,7 @@ jobs:
     secrets: inherit
     with:
       name: benchmark_minio
-      suite: benchmark
+      suite: ontime_benchmark
       runner_type: type-cax51
       timeout: 180
       extra_args: ${{ inputs.extra_args }} --storage minio
