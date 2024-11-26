@@ -34,7 +34,6 @@ on:
       artifact_name:
         description: "Artifact name."
         type: string
-        default: x86
       runner_type:
         description: "Runner to use."
         type: string
@@ -54,8 +53,6 @@ on:
         required: true
       AWS_REPORT_REGION:
         required: true
-      AWS_BUCKET:
-        required: true
       DOCKER_USERNAME:
         required: true
       DOCKER_PASSWORD:
@@ -71,7 +68,6 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-  AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
