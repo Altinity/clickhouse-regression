@@ -21,41 +21,35 @@ class Validator:
     def __init__(
         self,
         validator_id,
-        algorithm,
-        secret,
-        static_key_in_base64,
-        config_static_key_in_base64,
+        keys,
     ):
         self.validator_id = validator_id
-        self.algorithm = algorithm
-        self.secret = secret
-        self.static_key_in_base64 = static_key_in_base64
-        self.config_static_key_in_base64 = config_static_key_in_base64
+        self.keys = keys
 
     def add_to_config(self, restart=True):
-        steps.add_static_key_validator_to_config_xml(
+        steps.add_static_jwks_validator_to_config_xml(
+            keys=self.keys,
             validator_id=self.validator_id,
-            algorithm=self.algorithm,
-            secret=self.secret,
-            static_key_in_base64=self.config_static_key_in_base64,
-            restart=restart,
         )
         return self
 
 
 class Token:
-    def __init__(self, user_name, secret, algorithm, expiration_minutes=None):
+    def __init__(
+        self, user_name, private_key, algorithm, key_id, expiration_minutes=None
+    ):
         self.user_name = user_name
         self.expiration_minutes = expiration_minutes
-        self.secret = secret
+        self.private_key = private_key
         self.algorithm = algorithm
+        self.key_id = key_id
 
     def create_token(self):
         token = steps.create_static_jwt(
             user_name=self.user_name,
-            secret=self.secret,
             algorithm=self.algorithm,
-            expiration_minutes=self.expiration_minutes,
+            private_key_path=self.private_key,
+            key_id=self.key_id,
         )
         self.jwt_token = token
         return self
@@ -73,20 +67,5 @@ def model(user, token, validator):
             message = "DB::Exception:"
             return exitcode, message
 
-    if (
-        token.algorithm == validator.algorithm
-        and token.user_name == user.user_name
-        and validator.static_key_in_base64 == validator.config_static_key_in_base64
-    ):
-        if validator.static_key_in_base64 == "true":
-            if steps.to_base64(token.secret) == validator.secret:
-                exitcode = 0
-                message = None
-                return exitcode, message
-        else:
-            if token.secret == validator.secret:
-                exitcode = 0
-                message = None
-                return exitcode, message
 
     return 4, "DB::Exception:"
