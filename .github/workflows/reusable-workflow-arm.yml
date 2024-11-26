@@ -64,7 +64,6 @@ env:
   PYTHONIOENCODING: utf-8
   clickhouse_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
-  keeper_or_zookeeper: zookeeper
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --no-colors

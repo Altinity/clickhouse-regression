@@ -90,6 +90,12 @@ else
   thread_fuzzer="without_thread_fuzzer"
 fi
 
+if [[ $args == *'--use-keeper'* ]]; then
+  keeper_or_zookeeper="keeper"
+else
+  keeper_or_zookeeper="zookeeper"
+fi
+
 JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
 
 echo "confidential=$confidential" >>$GITHUB_ENV
